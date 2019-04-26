@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.database.sql.TransactionNotFinishException;
 
 /**
  * 
@@ -30,8 +29,8 @@ public abstract class AbstractSession {
 	
 	public void close() {
 		if(!connection.isFinishTransaction()) {
-			logger.error("当前[{}]的事物没有处理结束: commit 或 rollback", getClass());
-			throw new TransactionNotFinishException("当前["+getClass()+"]的事物没有处理结束: commit 或 rollback");
+			logger.error("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass());
+			connection.commit();
 		}
 	}
 	
