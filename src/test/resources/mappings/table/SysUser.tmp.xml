@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration type="table">
+	<table name="SYS_USER" className="com.douglei.test.SysUser">
+		<columns>
+			<column name="id" propertyName="id" dataType="string" />
+			<column name="name" propertyName="name" dataType="string" />
+			<column name="age" propertyName="age" dataType="integer" />
+			<column name="sex" propertyName="sex" dataType="char" />
+		</columns>
+		
+		<primary-key>
+			<column-name value="id" />
+		</primary-key>
+	</table>
+</mapping-configuration>
