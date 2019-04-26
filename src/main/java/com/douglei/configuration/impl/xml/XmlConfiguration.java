@@ -71,7 +71,7 @@ public class XmlConfiguration implements Configuration {
 	 */
 	private void initXmlConfiguration() {
 		try {
-			logger.debug("开始初始化jdb-access系统的配置信息");
+			logger.debug("开始初始化jdb-orm系统的配置信息");
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
@@ -79,12 +79,12 @@ public class XmlConfiguration implements Configuration {
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.elements("properties")));
 			setEnvironment(new XmlEnvironment(root.elements("environment"), properties));
-			logger.debug("结束初始化jdb-access系统的配置信息");
+			logger.debug("结束初始化jdb-orm系统的配置信息");
 		} catch (Exception e) {
-			logger.error("初始化jdb-access系统的配置信息时，出现异常");
+			logger.error("初始化jdb-orm系统的配置信息时，出现异常");
 			logger.error("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			logger.error("异常信息为:{}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ConfigurationInitialException("jdb-access程序在初始化时出现异常", e);
+			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
 		} finally {
 			doDestroy();
 		}
