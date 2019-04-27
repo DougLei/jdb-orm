@@ -25,20 +25,10 @@ public class PreparedStatementHandlerTest {
 	}
 	
 	@Test
-	public void insertTest() {
+	public void executeUpdateTest() {
 		parameters.add("id_" + new Date().getTime());
 		parameters.add("name_" + new Date().getTime());
 		session.executeUpdate("insert into sys_user (id, name) values(?,?)", parameters);
-	}
-	
-	@Test
-	public void deleteTest() {
-		
-	}
-	
-	@Test
-	public void updateTest() {
-		
 	}
 	
 	@Test

@@ -22,18 +22,9 @@ public class StatementHandlerTest {
 	}
 	
 	@Test
-	public void insertTest() {
-		
-	}
-	
-	@Test
-	public void deleteTest() {
-		
-	}
-	
-	@Test
-	public void updateTest() {
-		
+	public void executeUpdateTest() {
+		session.executeUpdate("insert into sys_user (id, name) values('id','name')");
+		session.executeUpdate("insert into sys_user (id, name) values('id','name')");
 	}
 	
 	@Test
