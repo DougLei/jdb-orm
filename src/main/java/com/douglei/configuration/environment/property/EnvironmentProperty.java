@@ -13,9 +13,5 @@ public interface EnvironmentProperty {
 	
 	public TransactionIsolationLevel getTransactionIsolationLevel();
 	
-	/**
-	 * 获取是否启用session缓存
-	 * @return
-	 */
 	public boolean getEnableSessionCache();
 }

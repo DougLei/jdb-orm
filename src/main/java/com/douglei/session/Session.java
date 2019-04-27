@@ -16,10 +16,9 @@ public interface Session {
 	
 	/**
 	 * 保存对象
-	 * @param entityName
 	 * @param map
 	 */
-	void save(String entityName, Map<String, Object> map);
+	void save(Map<String, Object> map);
 	
 	/**
 	 * 关闭session实例

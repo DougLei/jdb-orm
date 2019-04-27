@@ -35,8 +35,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private TransactionIsolationLevel transactionIsolationLevel;
 	
 	@FieldMetaData
-	private boolean enableSessionCache;
-	
+	private boolean enableSessionCache = true;
 	
 	public XmlEnvironmentProperty() {
 	}
@@ -104,15 +103,21 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 
 	
 	void setDialect(String value) {
-		logger.debug("EnvironmentProperty.setDialect() parameter value is {}", value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("{}.setDialect(), parameter value is {}", getClass(), value);
+		}
 		this.dialect = DialectMapping.getDialect(value);
 	}
 	void setTransactionIsolationLevel(String value) {
-		logger.debug("EnvironmentProperty.setTransactionIsolationLevel() parameter value is {}", value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("{}.setTransactionIsolationLevel(), parameter value is {}", getClass(), value);
+		}
 		this.transactionIsolationLevel = TransactionIsolationLevel.toValue(value);
 	}
 	void setEnableSessionCache(String value) {
-		logger.debug("EnvironmentProperty.setEnableSessionCache() parameter value is {}", value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass(), value);
+		}
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
 		}

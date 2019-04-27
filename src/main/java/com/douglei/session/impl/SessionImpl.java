@@ -35,14 +35,15 @@ public class SessionImpl extends AbstractSession implements Session {
 		
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
-			logger.debug("不存在映射: {}", code);
-			throw new NullPointerException("不存在映射: " + code);
+			logger.debug("不存在code为[{}]映射", code);
+			throw new NullPointerException("不存在code为["+code+"]映射");
 		}
 		
 		
 	}
+	
 	@Override
-	public void save(String entityName, Map<String, Object> map) {
+	public void save(Map<String, Object> map) {
 		
 	}
 
