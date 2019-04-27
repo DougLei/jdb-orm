@@ -1,7 +1,5 @@
 package com.douglei.session.impl;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,10 +38,11 @@ public class SessionImpl extends AbstractSession implements Session {
 		}
 		
 		
+		
 	}
 	
 	@Override
-	public void save(Map<String, Object> map) {
+	public void save(EntityMap entity) {
 		
 	}
 

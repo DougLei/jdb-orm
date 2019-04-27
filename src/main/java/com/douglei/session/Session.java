@@ -1,6 +1,6 @@
 package com.douglei.session;
 
-import java.util.Map;
+import com.douglei.session.impl.EntityMap;
 
 /**
  * 和数据库交互的session接口
@@ -16,9 +16,9 @@ public interface Session {
 	
 	/**
 	 * 保存对象
-	 * @param map
+	 * @param entity
 	 */
-	void save(Map<String, Object> map);
+	void save(EntityMap entity);
 	
 	/**
 	 * 关闭session实例
