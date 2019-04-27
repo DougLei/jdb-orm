@@ -12,17 +12,20 @@ public interface SqlSession {
 	/**
 	 * 执行查询
 	 * @param sql
-	 * @return
-	 */
-	List<Map<String, Object>> query(String sql);
-	
-	/**
-	 * 执行查询
-	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return
 	 */
 	List<Map<String, Object>> query(String sql, List<Object> parameters);
+	List<Map<String, Object>> query(String sql);
+	
+	/**
+	 * 执行增删改查操作
+	 * @param string
+	 * @param parameters
+	 * @return
+	 */
+	int executeUpdate(String sql, List<Object> parameters);
+	int executeUpdate(String sql);
 	
 	/**
 	 * 关闭session实例

@@ -24,4 +24,11 @@ public interface StatementHandler {
 	 * @return
 	 */
 	List<Map<String, Object>> getQueryResultList(List<Object> parameters);
+	
+	/**
+	 * 执行增删改操作, 返回操作数据的数量
+	 * @param parameters
+	 * @return
+	 */
+	int executeUpdate(List<Object> parameters);
 }

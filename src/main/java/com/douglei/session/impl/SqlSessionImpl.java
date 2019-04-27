@@ -25,7 +25,6 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	private Map<String, StatementHandler> statementHandlerCache;
 	
-	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 	}
@@ -57,24 +56,23 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		return statementHandler;
 	}
 	
-	@Override
-	public List<Map<String, Object>> query(String sql) {
-		return query(sql, null);
-	}
-
-	@Override
-	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+	private void log(String sql, List<Object> parameters, String methodDescription) {
 		if(StringUtil.isEmpty(sql)) {
-			throw new NullPointerException(getClass() + "query(String, List<Object>)查询传入的sql语句不能为空");
+			throw new NullPointerException(getClass() +" "+ methodDescription + " 查询传入的sql语句不能为空");
 		}
 		if(logger.isDebugEnabled()) {
-			logger.debug("要执行query的sql语句为: {}", sql);
+			logger.debug("{} {}要执行的sql语句为: {}", getClass(), methodDescription, sql);
 			if(parameters==null || parameters.size() == 0) {
 				logger.debug("没有传入的参数");
 			}else {
 				logger.debug("传入的参数为: {}", parameters.toString());
 			}
 		}
+	}
+	
+	@Override
+	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+		log(sql, parameters, "query(String, List<Object>)");
 		StatementHandler statementHandler = null;
 		try {
 			boolean noParameter = (parameters == null || parameters.size() == 0);
@@ -87,6 +85,31 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		}
 	}
 	
+	@Override
+	public List<Map<String, Object>> query(String sql) {
+		return query(sql, null);
+	}
+	
+	@Override
+	public int executeUpdate(String sql, List<Object> parameters) {
+		log(sql, parameters, "executeUpdate(String, List<Object>)");
+		StatementHandler statementHandler = null;
+		try {
+			boolean noParameter = (parameters == null || parameters.size() == 0);
+			statementHandler = getStatementHandler(sql, noParameter);
+			return statementHandler.executeUpdate(parameters);
+		} finally {
+			if(!enableSessionCache) {
+				statementHandler.close();
+			}
+		}
+	}
+	
+	@Override
+	public int executeUpdate(String sql) {
+		return executeUpdate(sql, null);
+	}
+
 	@Override
 	protected void flush() {
 	}

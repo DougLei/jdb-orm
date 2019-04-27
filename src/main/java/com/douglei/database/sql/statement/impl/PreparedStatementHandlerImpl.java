@@ -1,7 +1,6 @@
 package com.douglei.database.sql.statement.impl;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +53,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			return getQueryResultList();
 		}
 		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
 			if(parameters != null && parameters.size() > 0) {
 				int index = 1;
 				for (Object object : parameters) {
@@ -61,9 +63,28 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 				}
 			}
 			return executeQuery(preparedStatement.executeQuery());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.error("{} getQueryResultList(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));
 			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
+		} 
+	}
+	
+	@Override
+	public int executeUpdate(List<Object> parameters) {
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			if(parameters != null && parameters.size() > 0) {
+				int index = 1;
+				for (Object object : parameters) {
+					preparedStatement.setObject(index++, object);
+				}
+			}
+			return preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			logger.error("{} executeUpdate(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));
+			throw new RuntimeException(getClass()+" executeUpdate(List<Object>)时出现异常", e);
 		} 
 	}
 

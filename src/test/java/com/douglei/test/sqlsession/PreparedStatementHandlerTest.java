@@ -1,6 +1,7 @@
 package com.douglei.test.sqlsession;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +17,7 @@ public class PreparedStatementHandlerTest {
 	
 	@Test
 	public void queryTest() {
-		List<Object> parameters = new ArrayList<Object>();
 		parameters.add("哈哈");
-		
 		List<Map<String, Object>> list = session.query("select * from sys_user where name = ?", parameters);
 		for (Map<String, Object> map : list) {
 			System.out.println(map);
@@ -27,7 +26,9 @@ public class PreparedStatementHandlerTest {
 	
 	@Test
 	public void insertTest() {
-		
+		parameters.add("id_" + new Date().getTime());
+		parameters.add("name_" + new Date().getTime());
+		session.executeUpdate("insert into sys_user (id, name) values(?,?)", parameters);
 	}
 	
 	@Test
@@ -51,11 +52,13 @@ public class PreparedStatementHandlerTest {
 	
 	private Configuration conf;
 	private SqlSession session;
+	private List<Object> parameters;
 	
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
 		session = conf.buildSessionFactory().openSqlSession(false);
+		parameters = new ArrayList<Object>();
 	}
 	
 	@After
