@@ -71,7 +71,7 @@ public class SessionImpl extends AbstractSession implements Session {
 	@Override
 	public void save(EntityMap entity) {
 		String code = entity.getName();
-		logger.debug("对实体对象{} 进行save操作", code);
+		logger.debug("对{} 实例 {} 进行save操作", entity.getClass(), code);
 		
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
