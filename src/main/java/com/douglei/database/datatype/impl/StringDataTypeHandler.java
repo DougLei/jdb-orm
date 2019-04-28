@@ -8,8 +8,4 @@ import com.douglei.database.datatype.DataTypeHandler;
  */
 public class StringDataTypeHandler implements DataTypeHandler {
 
-	@Override
-	public String getDataType() {
-		return "string";
-	}
 }

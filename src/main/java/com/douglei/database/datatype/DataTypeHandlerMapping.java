@@ -55,7 +55,7 @@ public class DataTypeHandlerMapping {
 			throw new NullPointerException("要注册的 "+DataTypeHandler.class+" 实例不能为空");
 		}
 		
-		String dataType = dataTypeHandler.getDataType();
+		String dataType = dataTypeHandler.getClass().getName();
 		if(DATATYPE_HANDLER_MAP.containsKey(dataType)) {
 			logger.error("已经存在dataTypeHandler-dataType值为[{}]的映射实例:{}", dataType, DATATYPE_HANDLER_MAP.get(dataType).getClass());
 			throw new RepeatDataTypeHandlerException("已经存在dataTypeHandler-dataType值为["+dataType+"]的映射实例:" + DATATYPE_HANDLER_MAP.get(dataType).getClass());

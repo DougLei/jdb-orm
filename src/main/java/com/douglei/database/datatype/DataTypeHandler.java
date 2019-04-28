@@ -6,9 +6,4 @@ package com.douglei.database.datatype;
  */
 public interface DataTypeHandler {
 
-	/**
-	 * 获取类型的名称
-	 * @return
-	 */
-	String getDataType();
 }
