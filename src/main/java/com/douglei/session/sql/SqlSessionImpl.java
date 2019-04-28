@@ -30,10 +30,10 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	/**
 	 * 获取StatementHandler
 	 * @param sql
-	 * @param noParameter
+	 * @param parameters
 	 * @return
 	 */
-	private StatementHandler getStatementHandler(String sql, boolean noParameter){
+	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
 		StatementHandler statementHandler = null;
 		if(enableSessionCache) {
 			String code = CryptographyUtil.encodeMD5(sql);
@@ -45,11 +45,11 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 			}
 			
 			if(statementHandler == null) {
-				statementHandler = connection.createStatementHandler(sql, noParameter);
+				statementHandler = connection.createStatementHandler(sql, parameters);
 				statementHandlerCache.put(code, statementHandler);
 			}
 		}else {
-			statementHandler = connection.createStatementHandler(sql, noParameter);
+			statementHandler = connection.createStatementHandler(sql, parameters);
 		}
 		return statementHandler;
 	}
@@ -70,8 +70,7 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		log(sql, parameters, "query(String, List<Object>)");
 		StatementHandler statementHandler = null;
 		try {
-			boolean noParameter = (parameters == null || parameters.size() == 0);
-			statementHandler = getStatementHandler(sql, noParameter);
+			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.getQueryResultList(parameters);
 		} finally {
 			if(!enableSessionCache) {
@@ -90,8 +89,7 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		log(sql, parameters, "executeUpdate(String, List<Object>)");
 		StatementHandler statementHandler = null;
 		try {
-			boolean noParameter = (parameters == null || parameters.size() == 0);
-			statementHandler = getStatementHandler(sql, noParameter);
+			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.executeUpdate(parameters);
 		} finally {
 			if(!enableSessionCache) {

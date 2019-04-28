@@ -42,7 +42,7 @@ public class StatementHandlerTest {
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openSqlSession(false);
+		session = conf.buildSessionFactory().openSqlSession();
 	}
 	@After
 	public void end() {

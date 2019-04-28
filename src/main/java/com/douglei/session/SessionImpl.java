@@ -1,6 +1,9 @@
 package com.douglei.session;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,8 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -17,8 +22,6 @@ import com.douglei.database.sql.ConnectionWrapper;
  */
 public class SessionImpl extends AbstractSession implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
-	
-	
 	
 	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
@@ -36,10 +39,33 @@ public class SessionImpl extends AbstractSession implements Session {
 		}
 		
 		TableMetadata tableMetadata = (TableMetadata) mapping.getMetadata();
-		List<String> columnNames = tableMetadata.getColumnNames();
+		
+		Map<String, Object> propertyMap = IntrospectorUtil.getProperyValues(object, tableMetadata.getColumnMetadataCodes());
+		
+		List<Object> parameters = new ArrayList<Object>();
+		StringBuffer insertSql = new StringBuffer("insert into ");
+		insertSql.append(tableMetadata.getName()).append("(");
+		StringBuffer valuesSql = new StringBuffer("values(");
 		
 		
+		Object value = null;
+		Set<String> codesets = propertyMap.keySet();
+		for (String cs : codesets) {
+			value = propertyMap.get(cs);
+			if(value != null) {
+				insertSql.append(tableMetadata.getColumnMetadata(cs).getName()).append(",");
+				valuesSql.append("?,");
+				parameters.add(value);
+			}
+		}
+		insertSql.setLength(insertSql.length()-1);
+		insertSql.append(") ");
+		valuesSql.setLength(valuesSql.length()-1);
+		valuesSql.append(") ");
 		
+		
+		StatementHandler statementHandler = connection.createStatementHandler(insertSql.append(valuesSql).toString(), parameters);
+		statementHandler.executeUpdate(parameters);
 	}
 	
 	@Override

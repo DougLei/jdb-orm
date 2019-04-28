@@ -19,14 +19,17 @@ public class EntityMap {
 	private Map<String, Object> map;
 	
 	public EntityMap(String name) {
+		this(name, new HashMap<String, Object>());
+	}
+	public EntityMap(String name, Map<String, Object> map) {
 		if(StringUtil.isEmpty(name)) {
 			logger.error("{} 的name属性值不能为空", getClass());
 			throw new NullPointerException(getClass() + " 的name属性值不能为空");
 		}
 		this.name = name;
-		this.map = new HashMap<String, Object>();
+		this.map = map;
 	}
-	
+
 	/**
 	 * 设置属性值
 	 * @param propertyName

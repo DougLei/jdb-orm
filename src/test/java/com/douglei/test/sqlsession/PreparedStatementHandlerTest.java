@@ -47,7 +47,7 @@ public class PreparedStatementHandlerTest {
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openSqlSession(false);
+		session = conf.buildSessionFactory().openSqlSession();
 		parameters = new ArrayList<Object>();
 	}
 	

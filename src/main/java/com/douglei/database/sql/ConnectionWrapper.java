@@ -2,6 +2,7 @@ package com.douglei.database.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -50,17 +51,17 @@ public class ConnectionWrapper {
 			throw new RuntimeException("从数据源["+dataSource.getClass()+"]获取Connection时出现异常", e);
 		}
 	}
-
+	
 	/**
 	 * 创建StatementHandler实例
 	 * @param sql
-	 * @param noParameter
+	 * @param parameters
 	 * @return
 	 */
-	public StatementHandler createStatementHandler(String sql, boolean noParameter) {
+	public StatementHandler createStatementHandler(String sql, List<Object> parameters) {
 		try {
 			logger.debug("创建StatementHandler实例");
-			if(noParameter) {
+			if(parameters==null || parameters.size()==0) {
 				logger.debug("没有参数, 创建StatementHandlerImpl实例");
 				return new StatementHandlerImpl(connection.createStatement(), sql);
 			}else {

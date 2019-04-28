@@ -21,6 +21,7 @@ public class ColumnMetadata extends Metadata{
 	 * </pre>
 	 */
 	private String propertyName;
+	private boolean propertyNameIsNull;
 	
 	/**
 	 * 数据类型
@@ -34,7 +35,7 @@ public class ColumnMetadata extends Metadata{
 	}
 	private void setPropertyName(String propertyName) {
 		if(StringUtil.isEmpty(propertyName)) {
-			propertyName = name;
+			propertyNameIsNull = true;
 		}
 		this.propertyName = propertyName;
 	}
@@ -43,15 +44,41 @@ public class ColumnMetadata extends Metadata{
 	 * <pre>
 	 * 	如果指定了propertyName, 则返回propertyName
 	 * 	否则返回name, 即列名
-	 * 	
-	 * 	@see setPropertyName(String)
 	 * </pre>
 	 * @return
 	 */
+	public String getCode() {
+		if(propertyName == null) {
+			return name;
+		}
+		return propertyName;
+	}
+	
+	/**
+	 * <pre>
+	 * 	修正propertyName的值
+	 * 	如果TableMetadata没有配置className值, 则ColumnMetadata的propertyName值应该无效, 置为name的值, 即列名
+	 * 	因为TableMetadata没有配置className值, 证明是使用纯映射进行数据表数据操作, 这时ColumnMetadata的映射名应该以列名为基础
+	 * </pre>
+	 * @param tableMetadataClassNameNotNull
+	 */
+	public void fixPropertyNameValue(boolean tableMetadataClassNameNotNull) {
+		if(!tableMetadataClassNameNotNull && !propertyNameIsNull) {
+			propertyNameIsNull = true;
+			this.propertyName = null;
+		}
+	}
+	
+	public String getName() {
+		return name;
+	}
 	public String getPropertyName() {
 		return propertyName;
 	}
 	public DataType getDataType() {
 		return dataType;
+	}
+	public boolean propertyNameIsNull() {
+		return propertyNameIsNull;
 	}
 }

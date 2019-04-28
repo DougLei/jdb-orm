@@ -21,12 +21,9 @@ public class TableMetadata extends Metadata{
 	private String name;
 	/**
 	 * 映射的代码类名
-	 * <pre>
-	 * 	如果没有配置，默认用java.util.HashMap，HashMap的size为columns的size
-	 * </pre>
 	 */
 	private String className;
-	private static final String DEFAULT_CLASS_NAME = "java.util.HashMap";
+	private boolean classNameNotNull;
 	
 	/**
 	 * 包含的列元数据集合
@@ -51,12 +48,12 @@ public class TableMetadata extends Metadata{
 		if(columns == null) {
 			columns = new HashMap<String, ColumnMetadata>();
 		}
-		columns.put(columnMetadata.getPropertyName(), columnMetadata);
+		columns.put(columnMetadata.getCode(), columnMetadata);
 	}
 	
 	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
 		if(primaryKeyColumns == null) {
-			primaryKeyColumns = new ArrayList<ColumnMetadata>(2);
+			primaryKeyColumns = new ArrayList<ColumnMetadata>(3);
 		}
 		primaryKeyColumns.add(columnMetadata);
 	}
@@ -69,7 +66,7 @@ public class TableMetadata extends Metadata{
 	 * @return
 	 */
 	public String getCode() {
-		if(className == DEFAULT_CLASS_NAME) {
+		if(className == null) {
 			return name;
 		}
 		return className;
@@ -84,20 +81,18 @@ public class TableMetadata extends Metadata{
 		return className;
 	}
 	private void setClassName(String className) {
-		if(StringUtil.isEmpty(className)) {
-			className = DEFAULT_CLASS_NAME;
+		if(StringUtil.notEmpty(className)) {
+			classNameNotNull = true;
+			this.className = className;
 		}
-		this.className = className;
 	}
-	public List<String> getColumnNames() {
-		List<String> columnNames = new ArrayList<String>(columns.size());
-		Set<String> tmp = columns.keySet();
-		for (String t : tmp) {
-			columnNames.add(t);
-		}
-		return columnNames;
+	public Set<String> getColumnMetadataCodes() {
+		return columns.keySet();
 	}
-	public ColumnMetadata getColumnMetadata(String columnName) {
-		return columns.get(columnName);
+	public ColumnMetadata getColumnMetadata(String code) {
+		return columns.get(code);
+	}
+	public boolean classNameNotNull() {
+		return classNameNotNull;
 	}
 }
