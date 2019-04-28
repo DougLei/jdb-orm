@@ -1,5 +1,7 @@
 package com.douglei.configuration.environment.mapping;
 
+import com.douglei.database.metadata.Metadata;
+
 /**
  * 
  * @author DougLei
@@ -20,4 +22,6 @@ public interface Mapping {
 	 * @return
 	 */
 	MappingType getMappingType();
+
+	Metadata getMetadata();
 }

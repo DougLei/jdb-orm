@@ -12,6 +12,7 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.configuration.impl.xml.util.ElementUtil;
+import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
@@ -79,7 +80,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			if(StringUtil.isEmpty(primaryKeyColumnName)) {
 				throw new NullPointerException("<primary-key>元素下配置的<column-name>元素中, value属性值不能为空");
 			}
-			columnMetadata = tableMetadata.getColumns().get(primaryKeyColumnName);
+			columnMetadata = tableMetadata.getColumnMetadata(primaryKeyColumnName);
 			if(columnMetadata == null) {
 				throw new NullPointerException("<primary-key>元素下配置的<column-name value=\""+primaryKeyColumnName+"\">, 不存名为["+primaryKeyColumnName+"]的列信息");
 			}
@@ -94,5 +95,10 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 
 	public String getCode() {
 		return tableMetadata.getCode();
+	}
+
+	@Override
+	public Metadata getMetadata() {
+		return tableMetadata;
 	}
 }

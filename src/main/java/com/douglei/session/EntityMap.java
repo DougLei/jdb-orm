@@ -1,4 +1,4 @@
-package com.douglei.session.impl;
+package com.douglei.session;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +32,9 @@ public class EntityMap {
 	 * @param propertyName
 	 * @param propertyValue
 	 */
-	public void setProperty(String propertyName, Object propertyValue) {
+	public EntityMap setProperty(String propertyName, Object propertyValue) {
 		map.put(propertyName, propertyValue);
+		return this;
 	}
 	
 	public String getName() {

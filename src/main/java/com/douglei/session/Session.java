@@ -1,7 +1,5 @@
 package com.douglei.session;
 
-import com.douglei.session.impl.EntityMap;
-
 /**
  * 和数据库交互的session接口
  * @author DougLei

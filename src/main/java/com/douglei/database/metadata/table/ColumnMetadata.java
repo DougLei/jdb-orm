@@ -38,10 +38,16 @@ public class ColumnMetadata extends Metadata{
 		}
 		this.propertyName = propertyName;
 	}
-
-	public String getName() {
-		return name;
-	}
+	
+	/**
+	 * <pre>
+	 * 	如果指定了propertyName, 则返回propertyName
+	 * 	否则返回name, 即列名
+	 * 	
+	 * 	@see setPropertyName(String)
+	 * </pre>
+	 * @return
+	 */
 	public String getPropertyName() {
 		return propertyName;
 	}

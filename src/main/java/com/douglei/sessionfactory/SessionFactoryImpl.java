@@ -8,9 +8,9 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.session.Session;
-import com.douglei.session.SqlSession;
-import com.douglei.session.impl.SessionImpl;
-import com.douglei.session.impl.SqlSessionImpl;
+import com.douglei.session.SessionImpl;
+import com.douglei.session.sql.SqlSession;
+import com.douglei.session.sql.SqlSessionImpl;
 
 /**
  * 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.douglei.database.metadata.Metadata;
 import com.douglei.utils.StringUtil;
@@ -50,7 +51,7 @@ public class TableMetadata extends Metadata{
 		if(columns == null) {
 			columns = new HashMap<String, ColumnMetadata>();
 		}
-		columns.put(columnMetadata.getName(), columnMetadata);
+		columns.put(columnMetadata.getPropertyName(), columnMetadata);
 	}
 	
 	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
@@ -88,7 +89,15 @@ public class TableMetadata extends Metadata{
 		}
 		this.className = className;
 	}
-	public Map<String, ColumnMetadata> getColumns() {
-		return columns;
+	public List<String> getColumnNames() {
+		List<String> columnNames = new ArrayList<String>(columns.size());
+		Set<String> tmp = columns.keySet();
+		for (String t : tmp) {
+			columnNames.add(t);
+		}
+		return columnNames;
+	}
+	public ColumnMetadata getColumnMetadata(String columnName) {
+		return columns.get(columnName);
 	}
 }

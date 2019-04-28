@@ -1,4 +1,4 @@
-package com.douglei.session.impl;
+package com.douglei.session.sql;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,9 +13,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.session.AbstractSession;
-import com.douglei.session.SqlSession;
 import com.douglei.utils.CryptographyUtil;
-import com.douglei.utils.StringUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -57,9 +55,6 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 	
 	private void log(String sql, List<Object> parameters, String methodDescription) {
-		if(StringUtil.isEmpty(sql)) {
-			throw new NullPointerException(getClass() +" "+ methodDescription + " 查询传入的sql语句不能为空");
-		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} {}要执行的sql语句为: {}", getClass(), methodDescription, sql);
 			if(parameters==null || parameters.size() == 0) {
