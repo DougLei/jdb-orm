@@ -10,7 +10,7 @@ public enum TransactionIsolationLevel {
 	/**
 	 * 没有隔离支持
 	 */
-	NONE(-1),
+	NONE(0),
 	/**
 	 * 读取未提交: 处于此模式下可能会出现脏读、幻象读、不可重复读
 	 */
@@ -22,11 +22,11 @@ public enum TransactionIsolationLevel {
 	/**
 	 * 可重复读: 处于此模式下可能会出现幻象读
 	 */
-	REPEATABLE_READ(3),//
+	REPEATABLE_READ(4),//
 	/**
 	 * 串行: 不会出现幻象读
 	 */
-	SERIALIZABLE(4);
+	SERIALIZABLE(8);
 	
 	/**
 	 * 隔离的级别，越高则隔离的效果越强

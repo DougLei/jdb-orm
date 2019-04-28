@@ -1,7 +1,7 @@
 package com.douglei.database.dialect;
 
 /**
- * dialect重复异常
+ * Dialect实例重复异常
  * @author DougLei
  */
 public class RepeatDialectException extends RuntimeException{
