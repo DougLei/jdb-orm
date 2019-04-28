@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration type="table">
-	<table name="SYS_USER">
+	<table name="SYS_USER" className="com.douglei.test.session.SysUser">
 		<columns>
 			<column name="id" propertyName="id" dataType="string" />
 			<column name="name" propertyName="name" dataType="string" />

@@ -79,6 +79,33 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
 		}
 		
+		TableMetadata tableMetadata = (TableMetadata) mapping.getMetadata();
+		
+		Map<String, Object> propertyMap = entity.filterColumnMetadataPropertyMap(tableMetadata);
+		
+		List<Object> parameters = new ArrayList<Object>();
+		StringBuffer insertSql = new StringBuffer("insert into ");
+		insertSql.append(tableMetadata.getName()).append("(");
+		StringBuffer valuesSql = new StringBuffer("values(");
+		
+		Object value = null;
+		Set<String> codesets = propertyMap.keySet();
+		for (String cs : codesets) {
+			value = propertyMap.get(cs);
+			if(value != null) {
+				insertSql.append(tableMetadata.getColumnMetadata(cs).getName()).append(",");
+				valuesSql.append("?,");
+				parameters.add(value);
+			}
+		}
+		insertSql.setLength(insertSql.length()-1);
+		insertSql.append(") ");
+		valuesSql.setLength(valuesSql.length()-1);
+		valuesSql.append(") ");
+		
+		
+		StatementHandler statementHandler = connection.createStatementHandler(insertSql.append(valuesSql).toString(), parameters);
+		statementHandler.executeUpdate(parameters);
 	}
 	
 	@Override
