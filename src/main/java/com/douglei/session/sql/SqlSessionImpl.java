@@ -36,6 +36,7 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
 		StatementHandler statementHandler = null;
 		if(enableSessionCache) {
+			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
 			String code = CryptographyUtil.encodeMD5(sql);
 			
 			if(statementHandlerCache == null) {
@@ -45,29 +46,19 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 			}
 			
 			if(statementHandler == null) {
+				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并放到缓存中");
 				statementHandler = connection.createStatementHandler(sql, parameters);
 				statementHandlerCache.put(code, statementHandler);
 			}
 		}else {
+			logger.debug("没有开启缓存, 创建StatementHandler实例");
 			statementHandler = connection.createStatementHandler(sql, parameters);
 		}
 		return statementHandler;
 	}
 	
-	private void log(String sql, List<Object> parameters, String methodDescription) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} {}要执行的sql语句为: {}", getClass(), methodDescription, sql);
-			if(parameters==null || parameters.size() == 0) {
-				logger.debug("没有传入的参数");
-			}else {
-				logger.debug("传入的参数为: {}", parameters.toString());
-			}
-		}
-	}
-	
 	@Override
 	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
-		log(sql, parameters, "query(String, List<Object>)");
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -86,7 +77,6 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	
 	@Override
 	public int executeUpdate(String sql, List<Object> parameters) {
-		log(sql, parameters, "executeUpdate(String, List<Object>)");
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);

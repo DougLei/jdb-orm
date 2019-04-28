@@ -60,12 +60,18 @@ public class ConnectionWrapper {
 	 */
 	public StatementHandler createStatementHandler(String sql, List<Object> parameters) {
 		try {
-			logger.debug("创建StatementHandler实例");
+			if(logger.isDebugEnabled()) {
+				logger.debug("创建StatementHandler实例");
+				logger.debug("sql语句为: {}", sql);
+			}
 			if(parameters==null || parameters.size()==0) {
 				logger.debug("没有参数, 创建StatementHandlerImpl实例");
 				return new StatementHandlerImpl(connection.createStatement(), sql);
 			}else {
-				logger.debug("有参数, 创建PreparedStatementHandler实例");
+				if(logger.isDebugEnabled()) {
+					logger.debug("有参数, 创建PreparedStatementHandler实例");
+					logger.debug("参数为: {}", parameters.toString());
+				}
 				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql));
 			}
 		} catch (SQLException e) {
