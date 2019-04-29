@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.datatype.DataTypeHandler;
-import com.douglei.utils.DateUtil;
 import com.douglei.utils.StringUtil;
+import com.douglei.utils.datatype.DateTypeUtil;
 
 /**
  * 
@@ -37,7 +37,7 @@ public final class TimestampDataTypeHandler implements DataTypeHandler {
 			}
 			preparedStatement.setNull(parameterIndex, Types.TIMESTAMP);
 		}else {
-			preparedStatement.setTimestamp(parameterIndex, DateUtil.parseSqlTimestamp(value));
+			preparedStatement.setTimestamp(parameterIndex, DateTypeUtil.parseSqlTimestamp(value));
 		}
 	}
 
