@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.datatype.impl.ObjectDataTypeHandler;
+import com.douglei.database.datatype.impl.big_.BigByteDataTypeHandler;
+import com.douglei.database.datatype.impl.big_.BigDecimalDataTypeHandler;
+import com.douglei.database.datatype.impl.big_.BigStringDataTypeHandler;
 import com.douglei.database.datatype.impl.boolean_.BooleanDataTypeHandler;
 import com.douglei.database.datatype.impl.char_.CharDataTypeHandler;
 import com.douglei.database.datatype.impl.char_.NCharDataTypeHandler;
@@ -14,7 +17,6 @@ import com.douglei.database.datatype.impl.date_.DateDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.TimestampDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.string_.DateDataStringTypeHandler;
 import com.douglei.database.datatype.impl.date_.string_.TimestampStringDataTypeHandler;
-import com.douglei.database.datatype.impl.number_.BigDecimalDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.DoubleDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.FloatDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.IntegerDataTypeHandler;
@@ -41,7 +43,6 @@ public class DataTypeHandlerMapping {
 		register("integer", IntegerDataTypeHandler.singleInstance());
 		register("float", FloatDataTypeHandler.singleInstance());
 		register("double", DoubleDataTypeHandler.singleInstance());
-		register("bigdecimal", BigDecimalDataTypeHandler.singleInstance());
 		
 		register("date", DateDataTypeHandler.singleInstance());
 		register("timestamp", TimestampDataTypeHandler.singleInstance());
@@ -50,8 +51,9 @@ public class DataTypeHandlerMapping {
 		
 		register("boolean", BooleanDataTypeHandler.singleInstance());
 		
-		register("bigstring", null);
-		register("bytes", null);
+		register("big_decimal", BigDecimalDataTypeHandler.singleInstance());
+		register("big_string", BigStringDataTypeHandler.singleInstance());
+		register("big_byte", BigByteDataTypeHandler.singleInstance());
 	}
 	private static void register(String dataTypeHandlerCode, DataTypeHandler dataTypeHandler) {
 		DATATYPE_HANDLER_MAP.put(dataTypeHandlerCode, dataTypeHandler);

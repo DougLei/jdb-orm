@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.datatype.DataTypeHandler;
-import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
 /**
@@ -42,13 +41,10 @@ public final class DoubleDataTypeHandler implements DataTypeHandler {
 
 	@Override
 	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		String value = resultSet.getString(columnIndex);
+		Double value = resultSet.getDouble(columnIndex);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - getValue's value is {}", getClass(), value);
 		}
-		if(StringUtil.isEmpty(value)) {
-			return null;
-		}
-		return Double.parseDouble(value.toString());
+		return value;
 	}
 }
