@@ -18,12 +18,12 @@ public final class ObjectDataTypeHandler implements DataTypeHandler {
 	}
 	
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int index, Object value) throws SQLException {
-		preparedStatement.setObject(index, value);
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+		preparedStatement.setObject(parameterIndex, value);
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int index) throws SQLException {
-		return resultSet.getObject(index);
+	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
+		return resultSet.getObject(columnIndex);
 	}
 }

@@ -13,18 +13,18 @@ public interface DataTypeHandler {
 	/**
 	 * 设置值
 	 * @param preparedStatement
-	 * @param index
+	 * @param parameterIndex
 	 * @param value
 	 * @throws SQLException
 	 */
-	void setValue(PreparedStatement preparedStatement, int index, Object value) throws SQLException;
+	void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
 	
 	/**
 	 * 获取值
 	 * @param resultSet
-	 * @param index
+	 * @param columnIndex
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getValue(ResultSet resultSet, int index) throws SQLException;
+	Object getValue(ResultSet resultSet, int columnIndex) throws SQLException;
 }

@@ -2,6 +2,7 @@ package com.douglei.database.sql.statement.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,23 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 				index++;
 			}
 		}
+	}
+	
+	/**
+	 * 将List<Object>转换为List<Parameter>集合
+	 * @param parameters
+	 * @return
+	 */
+	private List<Parameter> turnToParameters(List<Object> parameters){
+		List<Parameter> actualParameters = new ArrayList<Parameter>(parameters.size());
+		for (Object object : parameters) {
+			if(object instanceof Parameter) {
+				actualParameters.add((Parameter)object);
+			}else {
+				actualParameters.add(new Parameter(object));
+			}
+		}
+		return actualParameters;
 	}
 	
 	/**

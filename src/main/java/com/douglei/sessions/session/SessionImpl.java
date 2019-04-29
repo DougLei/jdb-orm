@@ -14,6 +14,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
 import com.douglei.utils.reflect.IntrospectorUtil;
@@ -57,7 +58,7 @@ public class SessionImpl extends AbstractSession implements Session {
 			if(value != null) {
 				insertSql.append(tableMetadata.getColumnMetadata(cs).getName()).append(",");
 				valuesSql.append("?,");
-				parameters.add(value);
+				parameters.add(new Parameter(value, tableMetadata.getColumnMetadata(cs).getDataType()));
 			}
 		}
 		insertSql.setLength(insertSql.length()-1);

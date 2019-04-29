@@ -36,7 +36,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		try {
 			return DataTypeHandlerMapping.getDataTypeHandler(dataType);
 		} catch (Exception e) {
-			throw new MetadataValidateException("<column>元素的dataType属性值: " + e.getMessage());
+			throw new MetadataValidateException("<column>元素的dataType属性值: ", e);
 		}
 	}
 }

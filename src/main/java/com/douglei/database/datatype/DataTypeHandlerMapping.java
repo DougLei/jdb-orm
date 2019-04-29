@@ -7,6 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.datatype.impl.ObjectDataTypeHandler;
+import com.douglei.database.datatype.impl.boolean_.BooleanDataTypeHandler;
+import com.douglei.database.datatype.impl.char_.CharDataTypeHandler;
+import com.douglei.database.datatype.impl.char_.NCharDataTypeHandler;
+import com.douglei.database.datatype.impl.date_.DateDataTypeHandler;
+import com.douglei.database.datatype.impl.date_.TimestampDataTypeHandler;
+import com.douglei.database.datatype.impl.number_.DoubleDataTypeHandler;
+import com.douglei.database.datatype.impl.number_.IntegerDataTypeHandler;
+import com.douglei.database.datatype.impl.string_.NStringDataTypeHandler;
+import com.douglei.database.datatype.impl.string_.StringDataTypeHandler;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -19,10 +28,25 @@ public class DataTypeHandlerMapping {
 	private static final ObjectDataTypeHandler defaultDataTypeHandler = ObjectDataTypeHandler.singleInstance();
 	private static final Map<String, DataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(16);
 	static {
+		register("string", StringDataTypeHandler.singleInstance());
+		register("nstring", NStringDataTypeHandler.singleInstance());
 		
+		register("char", CharDataTypeHandler.singleInstance());
+		register("nchar", NCharDataTypeHandler.singleInstance());
 		
+		register("integer", IntegerDataTypeHandler.singleInstance());
+		register("double", DoubleDataTypeHandler.singleInstance());
 		
+		register("date", DateDataTypeHandler.singleInstance());
+		register("timestamp", TimestampDataTypeHandler.singleInstance());
 		
+		register("boolean", BooleanDataTypeHandler.singleInstance());
+		
+		register("bigstring", null);
+		register("bytes", null);
+	}
+	private static void register(String dataTypeHandlerCode, DataTypeHandler dataTypeHandler) {
+		DATATYPE_HANDLER_MAP.put(dataTypeHandlerCode, dataTypeHandler);
 	}
 	
 	

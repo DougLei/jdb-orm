@@ -5,7 +5,7 @@ package com.douglei.database.metadata;
  * @author DougLei
  */
 public class MetadataValidateException extends RuntimeException{
-	private static final long serialVersionUID = 3979326127557070569L;
+	private static final long serialVersionUID = 5851859376135598907L;
 
 	public MetadataValidateException() {
 		super();
@@ -13,5 +13,9 @@ public class MetadataValidateException extends RuntimeException{
 
 	public MetadataValidateException(String message) {
 		super(message);
+	}
+
+	public MetadataValidateException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }
