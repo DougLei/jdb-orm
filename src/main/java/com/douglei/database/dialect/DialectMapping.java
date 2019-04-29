@@ -32,9 +32,7 @@ public class DialectMapping {
 	 * @return
 	 */
 	public static Dialect getDialect(String code) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取code值为{} 的{}实例", code, Dialect.class);
-		}
+		logger.debug("获取code值为{} 的{}实例", code, Dialect.class);
 		if(StringUtil.isEmpty(code)) {
 			logger.error("code的参数值不能为空");
 			throw new NullPointerException("code的参数值不能为空");
@@ -45,9 +43,8 @@ public class DialectMapping {
 			logger.error("系统目前不支持[{}], 目前支持的code值包括:{}", code, DIALECT_MAP.keySet());
 			throw new NullPointerException("系统目前不支持["+code+"], 目前支持的code值包括:"+DIALECT_MAP.keySet());
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取code值为{} 的{}实例", code, dialect.getClass());
-		}
+		
+		logger.debug("获取code值为{} 的{}实例", code, dialect.getClass());
 		return dialect;
 	}
 	

@@ -1,6 +1,7 @@
 package com.douglei.database.sql.statement.impl;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,17 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		return false;
 	}
 	
+	private void setParameters(List<Object> parameters) throws SQLException {
+		if(parameters != null && parameters.size() > 0) {
+			List<Parameter> actualParameters = turnToParameters(parameters);
+			int index = 1;
+			for (Parameter parameter : actualParameters) {
+				parameter.setValue(index, preparedStatement);
+				index++;
+			}
+		}
+	}
+	
 	/**
 	 * 获取查询的结果集合
 	 * @param parameters
@@ -56,12 +68,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			if(isClosed()) {
 				throw new Exception("无法执行, 连接已经关闭");
 			}
-			if(parameters != null && parameters.size() > 0) {
-				int index = 1;
-				for (Object object : parameters) {
-					preparedStatement.setObject(index++, object);
-				}
-			}
+			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
 		} catch (Exception e) {
 			logger.error("{} getQueryResultList(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));
@@ -75,12 +82,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			if(isClosed()) {
 				throw new Exception("无法执行, 连接已经关闭");
 			}
-			if(parameters != null && parameters.size() > 0) {
-				int index = 1;
-				for (Object object : parameters) {
-					preparedStatement.setObject(index++, object);
-				}
-			}
+			setParameters(parameters);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
 			logger.error("{} executeUpdate(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));

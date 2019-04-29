@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.database.datatype.impl.ObjectDataTypeHandler;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -15,9 +16,14 @@ import com.douglei.utils.StringUtil;
 public class DataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(DataTypeHandlerMapping.class);
 	
+	private static final ObjectDataTypeHandler defaultDataTypeHandler = new ObjectDataTypeHandler();
 	private static final Map<String, DataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(16);
 	static {
 		
+	}
+	
+	public static DataTypeHandler getDefaultDataTypeHandler() {
+		return defaultDataTypeHandler;
 	}
 	
 	/**
@@ -26,22 +32,24 @@ public class DataTypeHandlerMapping {
 	 * @return
 	 */
 	public static DataTypeHandler getDataTypeHandler(String dataType) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取dataType值为{} 的{}实例", dataType, DataTypeHandler.class);
-		}
+		logger.debug("获取dataTypeHandler值为{} 的{}实例", dataType, DataTypeHandler.class);
+		DataTypeHandler dataTypeHandler = null;
+		
 		if(StringUtil.isEmpty(dataType)) {
-			logger.error("dataType的参数值不能为空");
-			throw new NullPointerException("dataType的参数值不能为空");
+			logger.debug("没有指定dataType, 使用默认的DataTypeHandler: {}",  defaultDataTypeHandler.getClass());
+			dataTypeHandler = defaultDataTypeHandler;
+		}else {
+			dataTypeHandler = DATATYPE_HANDLER_MAP.get(dataType.trim().toUpperCase());
+			if(dataTypeHandler == null) {
+				if(logger.isDebugEnabled()) {
+					logger.debug("系统目前不支持[{}], 目前支持的dataType值包括:{}", dataType, DATATYPE_HANDLER_MAP.keySet());
+					logger.debug("使用默认的DataTypeHandler: {}",  defaultDataTypeHandler.getClass());
+				}
+				dataTypeHandler = defaultDataTypeHandler;
+			}
 		}
 		
-		DataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(dataType.trim().toUpperCase());
-		if(dataTypeHandler == null) {
-			logger.error("系统目前不支持[{}], 目前支持的dataType值包括:{}", dataType, DATATYPE_HANDLER_MAP.keySet());
-			throw new NullPointerException("系统目前不支持["+dataType+"], 目前支持的dataType值包括:"+DATATYPE_HANDLER_MAP.keySet());
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取dataType值为{} 的{}实例", dataType, dataTypeHandler.getClass());
-		}
+		logger.debug("获取dataType值为{} 的{}实例", dataType, dataTypeHandler.getClass());
 		return dataTypeHandler;
 	}
 	
@@ -57,8 +65,8 @@ public class DataTypeHandlerMapping {
 		
 		String dataType = dataTypeHandler.getClass().getName();
 		if(DATATYPE_HANDLER_MAP.containsKey(dataType)) {
-			logger.error("已经存在dataTypeHandler-dataType值为[{}]的映射实例:{}", dataType, DATATYPE_HANDLER_MAP.get(dataType).getClass());
-			throw new RepeatDataTypeHandlerException("已经存在dataTypeHandler-dataType值为["+dataType+"]的映射实例:" + DATATYPE_HANDLER_MAP.get(dataType).getClass());
+			logger.error("已经存在dataType值为[{}]的映射实例:{}", dataType, DATATYPE_HANDLER_MAP.get(dataType).getClass());
+			throw new RepeatDataTypeHandlerException("已经存在dataType值为["+dataType+"]的映射实例:" + DATATYPE_HANDLER_MAP.get(dataType).getClass());
 		}
 		DATATYPE_HANDLER_MAP.put(dataType, dataTypeHandler);
 		if(logger.isDebugEnabled()) {

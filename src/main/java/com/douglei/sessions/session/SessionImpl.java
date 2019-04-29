@@ -1,4 +1,4 @@
-package com.douglei.session;
+package com.douglei.sessions.session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.sessions.AbstractSession;
+import com.douglei.sessions.Session;
 import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**

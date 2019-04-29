@@ -1,4 +1,4 @@
-package com.douglei.session;
+package com.douglei.sessions.session;
 
 import java.util.HashMap;
 import java.util.Map;

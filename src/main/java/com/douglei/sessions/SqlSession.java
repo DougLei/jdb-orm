@@ -1,4 +1,4 @@
-package com.douglei.session.sql;
+package com.douglei.sessions;
 
 import java.util.List;
 import java.util.Map;

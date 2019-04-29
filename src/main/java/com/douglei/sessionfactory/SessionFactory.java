@@ -1,7 +1,7 @@
 package com.douglei.sessionfactory;
 
-import com.douglei.session.Session;
-import com.douglei.session.sql.SqlSession;
+import com.douglei.sessions.Session;
+import com.douglei.sessions.SqlSession;
 
 /**
  * 创建session的factory接口

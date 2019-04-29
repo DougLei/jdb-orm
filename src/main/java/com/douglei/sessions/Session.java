@@ -1,4 +1,6 @@
-package com.douglei.session;
+package com.douglei.sessions;
+
+import com.douglei.sessions.session.EntityMap;
 
 /**
  * 和数据库交互的session接口

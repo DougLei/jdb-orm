@@ -1,6 +1,6 @@
 package com.douglei.database.metadata.table;
 
-import com.douglei.database.datatype.DataType;
+import com.douglei.database.datatype.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.utils.StringUtil;
 
@@ -26,11 +26,11 @@ public class ColumnMetadata extends Metadata{
 	/**
 	 * 数据类型
 	 */
-	private DataType dataType;
+	private DataTypeHandler dataTypeHandler;
 	
-	public ColumnMetadata(String name, DataType dataType, String propertyName) {
+	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String propertyName) {
 		this.name = name;
-		this.dataType = dataType;
+		this.dataTypeHandler = dataTypeHandler;
 		setPropertyName(propertyName);
 	}
 	private void setPropertyName(String propertyName) {
@@ -75,8 +75,8 @@ public class ColumnMetadata extends Metadata{
 	public String getPropertyName() {
 		return propertyName;
 	}
-	public DataType getDataType() {
-		return dataType;
+	public DataTypeHandler getDataType() {
+		return dataTypeHandler;
 	}
 	public boolean propertyNameIsNull() {
 		return propertyNameIsNull;

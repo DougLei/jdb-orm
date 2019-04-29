@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.impl.xml.XmlConfiguration;
-import com.douglei.session.sql.SqlSession;
+import com.douglei.sessions.SqlSession;
 
 public class StatementHandlerTest {
 	

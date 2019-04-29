@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -32,6 +33,23 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void recordStatementHandlerIsExecuted() {
 		this.isExecuted = true;
+	}
+	
+	/**
+	 * 将List<Object>转换为List<Parameter>集合
+	 * @param parameters
+	 * @return
+	 */
+	protected List<Parameter> turnToParameters(List<Object> parameters){
+		List<Parameter> actualParameters = new ArrayList<Parameter>(parameters.size());
+		for (Object object : parameters) {
+			if(object instanceof Parameter) {
+				actualParameters.add((Parameter)object);
+			}else {
+				actualParameters.add(new Parameter(object));
+			}
+		}
+		return actualParameters;
 	}
 	
 	/**

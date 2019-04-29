@@ -1,4 +1,4 @@
-package com.douglei.session.sql;
+package com.douglei.sessions.sqlsession;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +12,8 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
-import com.douglei.session.AbstractSession;
+import com.douglei.sessions.AbstractSession;
+import com.douglei.sessions.SqlSession;
 import com.douglei.utils.CryptographyUtil;
 
 /**
