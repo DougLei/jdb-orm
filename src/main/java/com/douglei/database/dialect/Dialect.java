@@ -7,10 +7,10 @@ package com.douglei.database.dialect;
 public interface Dialect {
 	
 	/**
-	 * 获取编码值, 绝对唯一
+	 * 获取数据库编码值, 绝对唯一
 	 * @return
 	 */
-	String getCode();
+	String getDatabaseCode();
 	
 	/**
 	 * 获取数据库默认支持的事物隔离级别

@@ -7,9 +7,14 @@ import com.douglei.database.dialect.TransactionIsolationLevel;
  * 
  * @author DougLei
  */
-public class OracleDialect implements Dialect{
+public final class OracleDialect implements Dialect{
+	private OracleDialect() {}
+	private static final OracleDialect instance =new OracleDialect();
+	public static final OracleDialect singleInstance() {
+		return instance;
+	}
 	
-	public String getCode() {
+	public String getDatabaseCode() {
 		return "ORACLE";
 	}
 	

@@ -7,11 +7,16 @@ import java.sql.SQLException;
 import com.douglei.database.datatype.DataTypeHandler;
 
 /**
- * string类型
+ * object类型, 作为系统的默认类型
  * @author DougLei
  */
-public class ObjectDataTypeHandler implements DataTypeHandler {
-
+public final class ObjectDataTypeHandler implements DataTypeHandler {
+	private ObjectDataTypeHandler() {}
+	private static final ObjectDataTypeHandler handler = new ObjectDataTypeHandler();
+	public static final ObjectDataTypeHandler singleInstance() {
+		return handler;
+	}
+	
 	@Override
 	public void setValue(PreparedStatement preparedStatement, int index, Object value) throws SQLException {
 		preparedStatement.setObject(index, value);

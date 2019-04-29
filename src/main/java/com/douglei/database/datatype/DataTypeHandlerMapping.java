@@ -16,11 +16,15 @@ import com.douglei.utils.StringUtil;
 public class DataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(DataTypeHandlerMapping.class);
 	
-	private static final ObjectDataTypeHandler defaultDataTypeHandler = new ObjectDataTypeHandler();
+	private static final ObjectDataTypeHandler defaultDataTypeHandler = ObjectDataTypeHandler.singleInstance();
 	private static final Map<String, DataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(16);
 	static {
 		
+		
+		
+		
 	}
+	
 	
 	public static DataTypeHandler getDefaultDataTypeHandler() {
 		return defaultDataTypeHandler;
@@ -30,22 +34,28 @@ public class DataTypeHandlerMapping {
 	 * 获取DataTypeHandler实例
 	 * @param dataType
 	 * @return
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public static DataTypeHandler getDataTypeHandler(String dataType) {
-		logger.debug("获取dataTypeHandler值为{} 的{}实例", dataType, DataTypeHandler.class);
+	public static DataTypeHandler getDataTypeHandler(String dataType) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		logger.debug("获取dataType值为{} 的{}实例", dataType, DataTypeHandler.class);
 		DataTypeHandler dataTypeHandler = null;
 		
 		if(StringUtil.isEmpty(dataType)) {
 			logger.debug("没有指定dataType, 使用默认的DataTypeHandler: {}",  defaultDataTypeHandler.getClass());
 			dataTypeHandler = defaultDataTypeHandler;
 		}else {
-			dataTypeHandler = DATATYPE_HANDLER_MAP.get(dataType.trim().toUpperCase());
+			dataType = dataType.trim();
+			dataTypeHandler = DATATYPE_HANDLER_MAP.get(dataType);
 			if(dataTypeHandler == null) {
-				if(logger.isDebugEnabled()) {
-					logger.debug("系统目前不支持[{}], 目前支持的dataType值包括:{}", dataType, DATATYPE_HANDLER_MAP.keySet());
-					logger.debug("使用默认的DataTypeHandler: {}",  defaultDataTypeHandler.getClass());
+				logger.debug("没有获取到dataType=[{}]的实例, 尝试加载该自定义DataTypeHandler类", dataType);
+				Object obj = Class.forName(dataType).newInstance();
+				if(!(obj instanceof DataTypeHandler)) {
+					throw new ClassCastException("类["+dataType+"]必须实现["+DataTypeHandler.class+"]接口");
 				}
-				dataTypeHandler = defaultDataTypeHandler;
+				dataTypeHandler = (DataTypeHandler) obj;
+				register(dataTypeHandler);
 			}
 		}
 		
@@ -57,20 +67,13 @@ public class DataTypeHandlerMapping {
 	 * 注册新的DataTypeHandler实例
 	 * @param dataTypeHandler
 	 */
-	public static void register(DataTypeHandler dataTypeHandler) {
-		if(dataTypeHandler == null) {
-			logger.error("要注册的 {} 实例不能为空", DataTypeHandler.class);
-			throw new NullPointerException("要注册的 "+DataTypeHandler.class+" 实例不能为空");
+	private static void register(DataTypeHandler dataTypeHandler) {
+		String dataTypeHandlerClassName = dataTypeHandler.getClass().getName();
+		if(DATATYPE_HANDLER_MAP.containsKey(dataTypeHandlerClassName)) {
+			logger.error("已经存在dataTypeHandlerClassName=[{}]的映射实例", dataTypeHandlerClassName);
+			throw new RepeatDataTypeHandlerException("已经存在dataTypeHandlerClassName=["+dataTypeHandlerClassName+"]的映射实例");
 		}
-		
-		String dataType = dataTypeHandler.getClass().getName();
-		if(DATATYPE_HANDLER_MAP.containsKey(dataType)) {
-			logger.error("已经存在dataType值为[{}]的映射实例:{}", dataType, DATATYPE_HANDLER_MAP.get(dataType).getClass());
-			throw new RepeatDataTypeHandlerException("已经存在dataType值为["+dataType+"]的映射实例:" + DATATYPE_HANDLER_MAP.get(dataType).getClass());
-		}
-		DATATYPE_HANDLER_MAP.put(dataType, dataTypeHandler);
-		if(logger.isDebugEnabled()) {
-			logger.debug("注册dataType值为{} 的{}实例", dataType, dataTypeHandler.getClass());
-		}
+		DATATYPE_HANDLER_MAP.put(dataTypeHandlerClassName, dataTypeHandler);
+		logger.debug("注册dataTypeHandlerClassName=[{}]的实例", dataTypeHandlerClassName);
 	}
 }

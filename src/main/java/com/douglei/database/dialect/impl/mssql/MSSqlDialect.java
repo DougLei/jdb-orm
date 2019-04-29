@@ -7,9 +7,14 @@ import com.douglei.database.dialect.TransactionIsolationLevel;
  * 
  * @author DougLei
  */
-public class MSSqlDialect implements Dialect{
-
-	public String getCode() {
+public final class MSSqlDialect implements Dialect{
+	private MSSqlDialect() {}
+	private static final MSSqlDialect instance =new MSSqlDialect();
+	public static final MSSqlDialect singleInstance() {
+		return instance;
+	}
+	
+	public String getDatabaseCode() {
 		return "MSSQL";
 	}
 	
