@@ -1,4 +1,4 @@
-package com.douglei.database.datatype.impl.date_;
+package com.douglei.database.datatype.impl.date_.string_;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,12 +17,12 @@ import com.douglei.utils.StringUtil;
  * 
  * @author DougLei
  */
-public final class DateDataTypeHandler implements DataTypeHandler {
-	private static final Logger logger = LoggerFactory.getLogger(DateDataTypeHandler.class);
+public final class DateDataStringTypeHandler implements DataTypeHandler {
+	private static final Logger logger = LoggerFactory.getLogger(DateDataStringTypeHandler.class);
 	
-	private DateDataTypeHandler() {}
-	private static final DateDataTypeHandler handler = new DateDataTypeHandler();
-	public static final DateDataTypeHandler singleInstance() {
+	private DateDataStringTypeHandler() {}
+	private static final DateDataStringTypeHandler handler = new DateDataStringTypeHandler();
+	public static final DateDataStringTypeHandler singleInstance() {
 		return handler;
 	}
 	
@@ -47,6 +47,9 @@ public final class DateDataTypeHandler implements DataTypeHandler {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - getValue's value is {}", getClass(), date);
 		}
-		return date;
+		if(date != null) {
+			return DateUtil.simpleFormat(date);
+		}
+		return null;
 	}
 }

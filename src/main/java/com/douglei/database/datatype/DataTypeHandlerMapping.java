@@ -12,7 +12,11 @@ import com.douglei.database.datatype.impl.char_.CharDataTypeHandler;
 import com.douglei.database.datatype.impl.char_.NCharDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.DateDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.TimestampDataTypeHandler;
+import com.douglei.database.datatype.impl.date_.string_.DateDataStringTypeHandler;
+import com.douglei.database.datatype.impl.date_.string_.TimestampStringDataTypeHandler;
+import com.douglei.database.datatype.impl.number_.BigDecimalDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.DoubleDataTypeHandler;
+import com.douglei.database.datatype.impl.number_.FloatDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.IntegerDataTypeHandler;
 import com.douglei.database.datatype.impl.string_.NStringDataTypeHandler;
 import com.douglei.database.datatype.impl.string_.StringDataTypeHandler;
@@ -35,10 +39,14 @@ public class DataTypeHandlerMapping {
 		register("nchar", NCharDataTypeHandler.singleInstance());
 		
 		register("integer", IntegerDataTypeHandler.singleInstance());
+		register("float", FloatDataTypeHandler.singleInstance());
 		register("double", DoubleDataTypeHandler.singleInstance());
+		register("bigdecimal", BigDecimalDataTypeHandler.singleInstance());
 		
 		register("date", DateDataTypeHandler.singleInstance());
 		register("timestamp", TimestampDataTypeHandler.singleInstance());
+		register("date_string", DateDataStringTypeHandler.singleInstance());
+		register("timestamp_string", TimestampStringDataTypeHandler.singleInstance());
 		
 		register("boolean", BooleanDataTypeHandler.singleInstance());
 		

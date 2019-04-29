@@ -1,9 +1,9 @@
-package com.douglei.database.datatype.impl.date_;
+package com.douglei.database.datatype.impl.date_.string_;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.slf4j.Logger;
@@ -17,12 +17,12 @@ import com.douglei.utils.StringUtil;
  * 
  * @author DougLei
  */
-public final class DateDataTypeHandler implements DataTypeHandler {
-	private static final Logger logger = LoggerFactory.getLogger(DateDataTypeHandler.class);
+public final class TimestampStringDataTypeHandler implements DataTypeHandler {
+	private static final Logger logger = LoggerFactory.getLogger(TimestampStringDataTypeHandler.class);
 	
-	private DateDataTypeHandler() {}
-	private static final DateDataTypeHandler handler = new DateDataTypeHandler();
-	public static final DateDataTypeHandler singleInstance() {
+	private TimestampStringDataTypeHandler() {}
+	private static final TimestampStringDataTypeHandler handler = new TimestampStringDataTypeHandler();
+	public static final TimestampStringDataTypeHandler singleInstance() {
 		return handler;
 	}
 	
@@ -35,18 +35,21 @@ public final class DateDataTypeHandler implements DataTypeHandler {
 			if(logger.isDebugEnabled()) {
 				logger.debug("{} - value的值为空, 数据库做null值处理", getClass(), value);
 			}
-			preparedStatement.setNull(parameterIndex, Types.DATE);
+			preparedStatement.setNull(parameterIndex, Types.TIMESTAMP);
 		}else {
-			preparedStatement.setDate(parameterIndex, DateUtil.parseSqlDate(value));
+			preparedStatement.setTimestamp(parameterIndex, DateUtil.parseSqlTimestamp(value));
 		}
 	}
 
 	@Override
 	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		Date date = resultSet.getDate(columnIndex);
+		Timestamp date = resultSet.getTimestamp(columnIndex);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - getValue's value is {}", getClass(), date);
 		}
-		return date;
+		if(date != null) {
+			return DateUtil.detailFormat(date);
+		}
+		return null;
 	}
 }

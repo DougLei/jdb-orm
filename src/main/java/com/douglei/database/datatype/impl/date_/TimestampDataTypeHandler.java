@@ -3,6 +3,7 @@ package com.douglei.database.datatype.impl.date_;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.slf4j.Logger;
@@ -27,6 +28,9 @@ public final class TimestampDataTypeHandler implements DataTypeHandler {
 	
 	@Override
 	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+		if(logger.isDebugEnabled()) {
+			logger.debug("{} - setValue's value is {}", getClass(), value);
+		}
 		if(StringUtil.isEmpty(value)) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("{} - value的值为空, 数据库做null值处理", getClass(), value);
@@ -39,6 +43,10 @@ public final class TimestampDataTypeHandler implements DataTypeHandler {
 
 	@Override
 	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		return resultSet.getString(columnIndex);
+		Timestamp date = resultSet.getTimestamp(columnIndex);
+		if(logger.isDebugEnabled()) {
+			logger.debug("{} - getValue's value is {}", getClass(), date);
+		}
+		return date;
 	}
 }

@@ -16,12 +16,12 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public final class IntegerDataTypeHandler implements DataTypeHandler {
-	private static final Logger logger = LoggerFactory.getLogger(IntegerDataTypeHandler.class);
+public final class FloatDataTypeHandler implements DataTypeHandler {
+	private static final Logger logger = LoggerFactory.getLogger(FloatDataTypeHandler.class);
 	
-	private IntegerDataTypeHandler() {}
-	private static final IntegerDataTypeHandler handler = new IntegerDataTypeHandler();
-	public static final IntegerDataTypeHandler singleInstance() {
+	private FloatDataTypeHandler() {}
+	private static final FloatDataTypeHandler handler = new FloatDataTypeHandler();
+	public static final FloatDataTypeHandler singleInstance() {
 		return handler;
 	}
 	
@@ -30,13 +30,13 @@ public final class IntegerDataTypeHandler implements DataTypeHandler {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - setValue's value is {}", getClass(), value);
 		}
-		if(ValidationUtil.isInteger(value)) {
-			preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString().trim()));
+		if(ValidationUtil.isNumber(value)) {
+			preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString().trim()));
 		}else {
 			if(logger.isDebugEnabled()) {
-				logger.debug("{} - value的值为[{}], 不是integer类型, 数据库做null值处理", getClass(), value);
+				logger.debug("{} - value的值为[{}], 不是float类型, 数据库做null值处理", getClass(), value);
 			}
-			preparedStatement.setNull(parameterIndex, Types.INTEGER);
+			preparedStatement.setNull(parameterIndex, Types.DECIMAL);
 		}
 	}
 
@@ -49,6 +49,6 @@ public final class IntegerDataTypeHandler implements DataTypeHandler {
 		if(StringUtil.isEmpty(value)) {
 			return null;
 		}
-		return Integer.parseInt(value.toString());
+		return Float.parseFloat(value.toString());
 	}
 }

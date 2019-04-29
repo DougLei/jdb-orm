@@ -1,5 +1,6 @@
 package com.douglei.database.datatype.impl.number_;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +17,12 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public final class IntegerDataTypeHandler implements DataTypeHandler {
-	private static final Logger logger = LoggerFactory.getLogger(IntegerDataTypeHandler.class);
+public final class BigDecimalDataTypeHandler implements DataTypeHandler {
+	private static final Logger logger = LoggerFactory.getLogger(BigDecimalDataTypeHandler.class);
 	
-	private IntegerDataTypeHandler() {}
-	private static final IntegerDataTypeHandler handler = new IntegerDataTypeHandler();
-	public static final IntegerDataTypeHandler singleInstance() {
+	private BigDecimalDataTypeHandler() {}
+	private static final BigDecimalDataTypeHandler handler = new BigDecimalDataTypeHandler();
+	public static final BigDecimalDataTypeHandler singleInstance() {
 		return handler;
 	}
 	
@@ -30,13 +31,13 @@ public final class IntegerDataTypeHandler implements DataTypeHandler {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - setValue's value is {}", getClass(), value);
 		}
-		if(ValidationUtil.isInteger(value)) {
-			preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString().trim()));
+		if(ValidationUtil.isNumber(value)) {
+			preparedStatement.setBigDecimal(parameterIndex, new BigDecimal(value.toString().trim()));
 		}else {
 			if(logger.isDebugEnabled()) {
-				logger.debug("{} - value的值为[{}], 不是integer类型, 数据库做null值处理", getClass(), value);
+				logger.debug("{} - value的值为[{}], 不是BigDecimal类型, 数据库做null值处理", getClass(), value);
 			}
-			preparedStatement.setNull(parameterIndex, Types.INTEGER);
+			preparedStatement.setNull(parameterIndex, Types.DECIMAL);
 		}
 	}
 
@@ -49,6 +50,6 @@ public final class IntegerDataTypeHandler implements DataTypeHandler {
 		if(StringUtil.isEmpty(value)) {
 			return null;
 		}
-		return Integer.parseInt(value.toString());
+		return new BigDecimal(value.toString());
 	}
 }
