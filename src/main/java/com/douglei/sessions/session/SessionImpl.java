@@ -1,6 +1,8 @@
 package com.douglei.sessions.session;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -12,7 +14,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
-import com.douglei.sessions.session.persistent.Persistent;
+import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.PersistentObjectIdentity;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
@@ -24,9 +26,10 @@ import com.douglei.utils.StringUtil;
  */
 public class SessionImpl extends AbstractSession implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
-	private Map<String, Map<PersistentObjectIdentity, Object>> insertPersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
-	private Map<String, Map<PersistentObjectIdentity, Object>> updatePersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
-	private Map<String, Map<PersistentObjectIdentity, Object>> deletePersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
+	private Map<String, Map<PersistentObjectIdentity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity, PersistentObject>>();
+	private List<PersistentObject> insertCache = new ArrayList<PersistentObject>();
+	private List<PersistentObject> updateCache = new ArrayList<PersistentObject>();
+	private List<PersistentObject> deleteCache = new ArrayList<PersistentObject>();
 	
 	/**
 	 * 获取缓存集合
@@ -34,11 +37,11 @@ public class SessionImpl extends AbstractSession implements Session {
 	 * @param cacheMap
 	 * @return
 	 */
-	private Map<PersistentObjectIdentity, Object> getCache(String code, Map<String, Map<PersistentObjectIdentity, Object>> cacheMap){
-		Map<PersistentObjectIdentity, Object> cache = cacheMap.get(code);
+	private Map<PersistentObjectIdentity, PersistentObject> getCache(String code){
+		Map<PersistentObjectIdentity, PersistentObject> cache = persistentObjectCache.get(code);
 		if(cache == null) {
-			cache = new HashMap<PersistentObjectIdentity, Object>();
-			cacheMap.put(code, cache);
+			cache = new HashMap<PersistentObjectIdentity, PersistentObject>();
+			persistentObjectCache.put(code, cache);
 		}
 		return cache;
 	}
@@ -50,42 +53,42 @@ public class SessionImpl extends AbstractSession implements Session {
 	@Override
 	public void save(Object object) {
 		Mapping mapping = getMapping(object, "save");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "save");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void update(Object object) {
 		Mapping mapping = getMapping(object, "update");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
 		putUpdatePersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void update(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "update");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
 		putUpdatePersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void delete(Object object) {
 		Mapping mapping = getMapping(object, "delete");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
 		putDeletePersistentObjectCache(persistent);
 	}
 
 	@Override
 	public void delete(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "delete");
-		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
 		putDeletePersistentObjectCache(persistent);
 	}
 	
@@ -93,9 +96,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 * 将要【保存的持久化对象】放到缓存中
 	 * @param persistent
 	 */
-	private void putInsertPersistentObjectCache(Persistent persistent) {
+	private void putInsertPersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, Object> cache = getCache(code, insertPersistentObjectCache);
+		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
 		
 		PersistentObjectIdentity id = persistent.getId();
 		if(id.isNull()) {
@@ -105,15 +108,16 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new RepeatPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
 		}
 		cache.put(id, persistent);
+		insertCache.add(persistent);
 	}
 	
 	/**
 	 * 将要【修改的持久化对象】放到缓存中
 	 * @param persistent
 	 */
-	private void putUpdatePersistentObjectCache(Persistent persistent) {
+	private void putUpdatePersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, Object> cache = getCache(code, updatePersistentObjectCache);
+		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
 		
 		PersistentObjectIdentity id = persistent.getId();
 		if(id.isNull()) {
@@ -128,15 +132,16 @@ public class SessionImpl extends AbstractSession implements Session {
 			}
 		}
 		cache.put(id, persistent);
+		updateCache.add(persistent);
 	}
 	
 	/**
 	 * 将要【删除的持久化对象】放到缓存中
 	 * @param persistent
 	 */
-	private void putDeletePersistentObjectCache(Persistent persistent) {
+	private void putDeletePersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, Object> cache = getCache(code, deletePersistentObjectCache);
+		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
 		
 		PersistentObjectIdentity id = persistent.getId();
 		if(id.isNull()) {
@@ -152,6 +157,7 @@ public class SessionImpl extends AbstractSession implements Session {
 			return;
 		}
 		cache.put(id, persistent);
+		deleteCache.add(persistent);
 	}
 	
 	/**

@@ -4,7 +4,7 @@ package com.douglei.sessions.session.persistent;
  * 持久化接口
  * @author DougLei
  */
-public interface Persistent {
+public interface PersistentObject {
 	
 	/**
 	 * 获取唯一编码值

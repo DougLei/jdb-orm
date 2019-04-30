@@ -9,7 +9,7 @@ import com.douglei.database.metadata.table.TableMetadata;
  */
 public class PersistentFactory {
 	
-	public static final Persistent buildPersistent(Metadata metadata, Object propertyObject) {
+	public static final PersistentObject buildPersistent(Metadata metadata, Object propertyObject) {
 		switch(metadata.getMetadataType()) {
 			case TABLE:
 				return new PersistentTable((TableMetadata)metadata, propertyObject);

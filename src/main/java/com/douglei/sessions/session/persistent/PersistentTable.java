@@ -16,7 +16,7 @@ import com.douglei.utils.reflect.IntrospectorUtil;
  * 
  * @author DougLei
  */
-public class PersistentTable implements Persistent{
+public class PersistentTable implements PersistentObject{
 	private static final Logger logger = LoggerFactory.getLogger(PersistentTable.class);
 	
 	private TableMetadata tableMetadata;
