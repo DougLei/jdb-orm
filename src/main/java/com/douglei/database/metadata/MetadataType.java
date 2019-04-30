@@ -4,6 +4,9 @@ package com.douglei.database.metadata;
  * 
  * @author DougLei
  */
-public interface Metadata {
-	MetadataType getMetadataType();
+public enum MetadataType {
+	TABLE,
+	COLUMN,
+	
+	SQL;
 }

@@ -2,13 +2,14 @@ package com.douglei.database.metadata.table;
 
 import com.douglei.database.datatype.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
+import com.douglei.database.metadata.MetadataType;
 import com.douglei.utils.StringUtil;
 
 /**
  * 列元数据
  * @author DougLei
  */
-public class ColumnMetadata extends Metadata{
+public class ColumnMetadata implements Metadata{
 	
 	/**
 	 * 列名
@@ -80,5 +81,10 @@ public class ColumnMetadata extends Metadata{
 	}
 	public boolean propertyNameIsNull() {
 		return propertyNameIsNull;
+	}
+	
+	@Override
+	public MetadataType getMetadataType() {
+		return MetadataType.COLUMN;
 	}
 }

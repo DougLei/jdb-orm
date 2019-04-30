@@ -7,13 +7,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.douglei.database.metadata.Metadata;
+import com.douglei.database.metadata.MetadataType;
 import com.douglei.utils.StringUtil;
 
 /**
  * 表元数据
  * @author DougLei
  */
-public class TableMetadata extends Metadata{
+public class TableMetadata implements Metadata{
 	
 	/**
 	 * 表名
@@ -94,5 +95,10 @@ public class TableMetadata extends Metadata{
 	}
 	public boolean classNameNotNull() {
 		return classNameNotNull;
+	}
+	
+	@Override
+	public MetadataType getMetadataType() {
+		return MetadataType.TABLE;
 	}
 }

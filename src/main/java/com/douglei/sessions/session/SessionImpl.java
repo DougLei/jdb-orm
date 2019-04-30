@@ -1,9 +1,7 @@
 package com.douglei.sessions.session;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +9,14 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
-import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.database.metadata.Metadata;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.database.sql.statement.StatementHandler;
-import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
-import com.douglei.utils.reflect.IntrospectorUtil;
+import com.douglei.sessions.session.persistent.Persistent;
+import com.douglei.sessions.session.persistent.PersistentFactory;
+import com.douglei.sessions.session.persistent.PersistentObject;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -25,13 +24,30 @@ import com.douglei.utils.reflect.IntrospectorUtil;
  */
 public class SessionImpl extends AbstractSession implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
+	private Map<String, PersistentObject> insertPersistentObjectCache;
+	private Map<String, PersistentObject> updatePersistentObjectCache;
+	private Map<String, PersistentObject> deletePersistentObjectCache;
 	
 	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
+		if(enableSessionCache) {
+			initialSessionCaches();
+		}
+	}
+	
+	// 初始化session caches
+	private void initialSessionCaches() {
+		insertPersistentObjectCache = new HashMap<String, PersistentObject>();
+		updatePersistentObjectCache = new HashMap<String, PersistentObject>();
+		deletePersistentObjectCache = new HashMap<String, PersistentObject>();
 	}
 
 	@Override
 	public void save(Object object) {
+		if(object == null) {
+			logger.debug("要save的对象不能为空");
+			throw new NullPointerException("要save的对象不能为空");
+		}
 		String code = object.getClass().getName();
 		logger.debug("对实体对象{} 进行save操作", code);
 		
@@ -41,40 +57,20 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
 		}
 		
-		TableMetadata tableMetadata = (TableMetadata) mapping.getMetadata();
-		
-		Map<String, Object> propertyMap = IntrospectorUtil.getProperyValues(object, tableMetadata.getColumnMetadataCodes());
-		
-		List<Object> parameters = new ArrayList<Object>();
-		StringBuffer insertSql = new StringBuffer("insert into ");
-		insertSql.append(tableMetadata.getName()).append("(");
-		StringBuffer valuesSql = new StringBuffer("values(");
+		Metadata metadata = mapping.getMetadata();
+		Persistent persistent = PersistentFactory.buildPersistent(metadata, object);
 		
 		
-		Object value = null;
-		Set<String> codesets = propertyMap.keySet();
-		for (String cs : codesets) {
-			value = propertyMap.get(cs);
-			if(value != null) {
-				insertSql.append(tableMetadata.getColumnMetadata(cs).getName()).append(",");
-				valuesSql.append("?,");
-				parameters.add(new Parameter(value, tableMetadata.getColumnMetadata(cs).getDataType()));
-			}
-		}
-		insertSql.setLength(insertSql.length()-1);
-		insertSql.append(") ");
-		valuesSql.setLength(valuesSql.length()-1);
-		valuesSql.append(") ");
 		
-		
-		StatementHandler statementHandler = connection.createStatementHandler(insertSql.append(valuesSql).toString(), parameters);
-		statementHandler.executeUpdate(parameters);
 	}
 	
 	@Override
-	public void save(EntityMap entity) {
-		String code = entity.getName();
-		logger.debug("对{} 实例 {} 进行save操作", entity.getClass(), code);
+	public void save(String code, Map<String, Object> propertyMap) {
+		if(StringUtil.isEmpty(code)) {
+			logger.debug("要save的对象的code值不能为空");
+			throw new NullPointerException("要save的对象的code值不能为空");
+		}
+		logger.debug("对code={} 的对象进行save操作", code);
 		
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
@@ -82,37 +78,20 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
 		}
 		
-		TableMetadata tableMetadata = (TableMetadata) mapping.getMetadata();
-		
-		Map<String, Object> propertyMap = entity.filterColumnMetadataPropertyMap(tableMetadata);
-		
-		List<Object> parameters = new ArrayList<Object>();
-		StringBuffer insertSql = new StringBuffer("insert into ");
-		insertSql.append(tableMetadata.getName()).append("(");
-		StringBuffer valuesSql = new StringBuffer("values(");
-		
-		Object value = null;
-		Set<String> codesets = propertyMap.keySet();
-		for (String cs : codesets) {
-			value = propertyMap.get(cs);
-			if(value != null) {
-				insertSql.append(tableMetadata.getColumnMetadata(cs).getName()).append(",");
-				valuesSql.append("?,");
-				parameters.add(value);
-			}
-		}
-		insertSql.setLength(insertSql.length()-1);
-		insertSql.append(") ");
-		valuesSql.setLength(valuesSql.length()-1);
-		valuesSql.append(") ");
+		Metadata metadata = mapping.getMetadata();
+		Persistent persistent = PersistentFactory.buildPersistent(metadata, propertyMap);
 		
 		
-		StatementHandler statementHandler = connection.createStatementHandler(insertSql.append(valuesSql).toString(), parameters);
-		statementHandler.executeUpdate(parameters);
+		
+		
 	}
+	
 	
 	@Override
 	protected void flush() {
+		if(enableSessionCache) {
+			
+		}
 	}
 
 	@Override
