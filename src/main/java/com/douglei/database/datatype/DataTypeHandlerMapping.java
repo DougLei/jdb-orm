@@ -104,7 +104,6 @@ public class DataTypeHandlerMapping {
 	private static void register(DataTypeHandler dataTypeHandler) {
 		String dataTypeHandlerClassName = dataTypeHandler.getClass().getName();
 		if(DATATYPE_HANDLER_MAP.containsKey(dataTypeHandlerClassName)) {
-			logger.error("已经存在dataTypeHandlerClassName=[{}]的映射实例", dataTypeHandlerClassName);
 			throw new RepeatDataTypeHandlerException("已经存在dataTypeHandlerClassName=["+dataTypeHandlerClassName+"]的映射实例");
 		}
 		DATATYPE_HANDLER_MAP.put(dataTypeHandlerClassName, dataTypeHandler);

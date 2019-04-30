@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.database.sql.statement.impl.PreparedStatementHandlerImpl;
 import com.douglei.database.sql.statement.impl.StatementHandlerImpl;
-import com.douglei.utils.ExceptionUtil;
 
 /**
  * java.sql.Connection包装类
@@ -47,7 +46,6 @@ public class ConnectionWrapper {
 				logger.debug("最终设置jdbc事物autoCommit值为 {}", connection.getAutoCommit());
 			}
 		} catch (SQLException e) {
-			logger.error("从数据源[]获取Connection实例时出现异常: {}", dataSource.getClass(), ExceptionUtil.getExceptionDetailMessage(e));
 			throw new RuntimeException("从数据源["+dataSource.getClass()+"]获取Connection时出现异常", e);
 		}
 	}
@@ -75,7 +73,6 @@ public class ConnectionWrapper {
 				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql));
 			}
 		} catch (SQLException e) {
-			logger.debug("创建StatementHander实例时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new RuntimeException("创建StatementHander实例时出现异常", e);
 		}
 	}
@@ -87,7 +84,6 @@ public class ConnectionWrapper {
 			try {
 				connection.commit();
 			} catch (SQLException e) {
-				logger.debug("commit 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw new RuntimeException("commit 时出现异常", e);
 			}
 			return;
@@ -102,7 +98,6 @@ public class ConnectionWrapper {
 			try {
 				connection.rollback();
 			} catch (SQLException e) {
-				logger.debug("rollback 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw new RuntimeException("rollback 时出现异常", e);
 			}
 			return;

@@ -69,7 +69,7 @@ public class PersistentTable implements Persistent{
 		return tableMetadata.getCode();
 	}
 	
-	public PersistentObjectIdentity getPersistentObjectIdentity() {
+	public PersistentObjectIdentity getId() {
 		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
 		Object id;
 		if(primaryKeyColumns.size() == 1) {
@@ -83,5 +83,10 @@ public class PersistentTable implements Persistent{
 		}
 		logger.debug("获取持久化对象id为: {}", id);
 		return new PersistentObjectIdentity(id);
+	}
+	
+	@Override
+	public String toString() {
+		return propertyMap.toString();
 	}
 }

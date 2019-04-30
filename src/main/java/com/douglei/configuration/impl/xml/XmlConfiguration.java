@@ -21,7 +21,6 @@ import com.douglei.configuration.impl.xml.element.properties.Properties;
 import com.douglei.sessionfactory.SessionFactory;
 import com.douglei.sessionfactory.SessionFactoryImpl;
 import com.douglei.utils.CloseUtil;
-import com.douglei.utils.ExceptionUtil;
 import com.douglei.utils.IdentityUtil;
 import com.douglei.utils.StringUtil;
 
@@ -81,9 +80,6 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(root.elements("environment"), properties));
 			logger.debug("结束初始化jdb-orm系统的配置信息");
 		} catch (Exception e) {
-			logger.error("初始化jdb-orm系统的配置信息时，出现异常");
-			logger.error("初始化的xml配置内容为: {}", xmlDocument.asXML());
-			logger.error("异常信息为:{}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
 		} finally {
 			doDestroy();

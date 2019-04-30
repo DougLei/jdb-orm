@@ -1,5 +1,7 @@
 package com.douglei.sessions.session.persistent;
 
+import java.util.Map;
+
 /**
  * 持久化对象
  * @author DougLei
@@ -8,9 +10,6 @@ public class PersistentObjectIdentity {
 	private Object id;
 
 	public PersistentObjectIdentity(Object id) {
-		if(id == null) {
-			throw new NullPointerException("id不能为空");
-		}
 		this.id = id;
 	}
 
@@ -38,5 +37,26 @@ public class PersistentObjectIdentity {
 			return false;
 		}
 		return id.equals(other.id);
+	}
+	
+	@Override
+	public String toString() {
+		if(id == null) {
+			return null;
+		}
+		if(id instanceof Map) {
+			if(((Map<?, ?>)id).size() == 0) {
+				return null;
+			}
+		}
+		return id.toString();
+	}
+
+	/**
+	 * id值是否为空
+	 * @return
+	 */
+	public boolean isNull() {
+		return false;
 	}
 }

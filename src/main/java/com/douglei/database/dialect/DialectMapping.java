@@ -35,13 +35,11 @@ public class DialectMapping {
 	public static Dialect getDialect(String databaseCode) {
 		logger.debug("获取databaseCode值为{} 的{}实例", databaseCode, Dialect.class);
 		if(StringUtil.isEmpty(databaseCode)) {
-			logger.error("databaseCode的参数值不能为空");
 			throw new NullPointerException("databaseCode的参数值不能为空");
 		}
 		
 		Dialect dialect = DIALECT_MAP.get(databaseCode.trim().toUpperCase());
 		if(dialect == null) {
-			logger.error("系统目前不支持[{}], 目前支持的databaseCode值包括:{}", databaseCode, DIALECT_MAP.keySet());
 			throw new NullPointerException("系统目前不支持["+databaseCode+"], 目前支持的databaseCode值包括:"+DIALECT_MAP.keySet());
 		}
 		

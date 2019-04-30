@@ -6,19 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.database.sql.statement.AbstractStatementHandler;
 import com.douglei.utils.CloseUtil;
-import com.douglei.utils.ExceptionUtil;
 
 /**
  * java.sql.PreparedStatement的处理器
  * @author DougLei
  */
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
-	private static final Logger logger = LoggerFactory.getLogger(PreparedStatementHandlerImpl.class);
 	
 	private PreparedStatement preparedStatement;
 	private List<Object> parameters;
@@ -89,7 +84,6 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
 		} catch (Exception e) {
-			logger.error("{} getQueryResultList(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));
 			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
 		} 
 	}
@@ -103,7 +97,6 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			logger.error("{} executeUpdate(List<Object>)时出现异常: {}", getClass(), ExceptionUtil.getExceptionDetailMessage(e));
 			throw new RuntimeException(getClass()+" executeUpdate(List<Object>)时出现异常", e);
 		} 
 	}
