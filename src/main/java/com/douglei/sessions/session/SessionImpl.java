@@ -195,7 +195,7 @@ public class SessionImpl extends AbstractSession implements Session {
 
 	@Override
 	protected void flush() {
-		
+		// TODO 搞定这些flush insert update delete
 	}
 
 	@Override
