@@ -34,7 +34,6 @@ public class TableMetadata implements Metadata{
 	 * </pre>
 	 */
 	private Map<String, ColumnMetadata> columns;
-	
 	/**
 	 * 主键列元数据集合
 	 */
@@ -96,7 +95,10 @@ public class TableMetadata implements Metadata{
 	public boolean classNameNotNull() {
 		return classNameNotNull;
 	}
-	
+	public List<ColumnMetadata> getPrimaryKeyColumns() {
+		return primaryKeyColumns;
+	}
+
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.TABLE;

@@ -23,9 +23,11 @@ import com.douglei.utils.CryptographyUtil;
 public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	private Map<String, StatementHandler> statementHandlerCache;
+	private boolean enableSessionCache;// 是否启用session缓存
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
+		this.enableSessionCache = environmentProperty.getEnableSessionCache();
 	}
 
 	/**

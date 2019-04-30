@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
-import com.douglei.database.metadata.Metadata;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
 import com.douglei.sessions.session.persistent.Persistent;
 import com.douglei.sessions.session.persistent.PersistentFactory;
-import com.douglei.sessions.session.persistent.PersistentObject;
+import com.douglei.sessions.session.persistent.PersistentObjectIdentity;
+import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -24,22 +24,12 @@ import com.douglei.utils.StringUtil;
  */
 public class SessionImpl extends AbstractSession implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
-	private Map<String, PersistentObject> insertPersistentObjectCache;
-	private Map<String, PersistentObject> updatePersistentObjectCache;
-	private Map<String, PersistentObject> deletePersistentObjectCache;
+	private Map<String, Map<PersistentObjectIdentity, Object>> insertPersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
+	private Map<String, Map<PersistentObjectIdentity, Object>> updatePersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
+	private Map<String, Map<PersistentObjectIdentity, Object>> deletePersistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity,Object>>();
 	
 	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
-		if(enableSessionCache) {
-			initialSessionCaches();
-		}
-	}
-	
-	// 初始化session caches
-	private void initialSessionCaches() {
-		insertPersistentObjectCache = new HashMap<String, PersistentObject>();
-		updatePersistentObjectCache = new HashMap<String, PersistentObject>();
-		deletePersistentObjectCache = new HashMap<String, PersistentObject>();
 	}
 
 	@Override
@@ -57,11 +47,8 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
 		}
 		
-		Metadata metadata = mapping.getMetadata();
-		Persistent persistent = PersistentFactory.buildPersistent(metadata, object);
-		
-		
-		
+		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
@@ -78,20 +65,43 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
 		}
 		
-		Metadata metadata = mapping.getMetadata();
-		Persistent persistent = PersistentFactory.buildPersistent(metadata, propertyMap);
-		
-		
-		
-		
+		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		putInsertPersistentObjectCache(persistent);
 	}
 	
+	/**
+	 * 将要保存的持久化对象放到缓存中
+	 * @param persistent
+	 */
+	private void putInsertPersistentObjectCache(Persistent persistent) {
+		Map<PersistentObjectIdentity, Object> cache = getCache(persistent.getCode(), insertPersistentObjectCache);
+		
+		PersistentObjectIdentity id = persistent.getPersistentObjectIdentity();
+		if(cache.containsKey(id)) {
+			logger.error("保存的对象[{}]出现重复的id值:{}", persistent.getCode(), id.toString());
+			throw new RepeatPersistentObjectException("保存的对象["+persistent.getCode()+"]出现重复的id值:" + id.toString());
+		}
+		cache.put(id, persistent);
+	}
 	
+	/**
+	 * 获取缓存集合
+	 * @param code
+	 * @param cacheMap
+	 * @return
+	 */
+	private Map<PersistentObjectIdentity, Object> getCache(String code, Map<String, Map<PersistentObjectIdentity, Object>> cacheMap){
+		Map<PersistentObjectIdentity, Object> cache = cacheMap.get(code);
+		if(cache == null) {
+			cache = new HashMap<PersistentObjectIdentity, Object>();
+			cacheMap.put(code, cache);
+		}
+		return cache;
+	}
+
 	@Override
 	protected void flush() {
-		if(enableSessionCache) {
-			
-		}
+		
 	}
 
 	@Override

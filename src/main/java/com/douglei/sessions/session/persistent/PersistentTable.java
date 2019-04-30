@@ -1,6 +1,7 @@
 package com.douglei.sessions.session.persistent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class PersistentTable implements Persistent{
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
 	
+	@SuppressWarnings("unchecked")
 	public PersistentTable(TableMetadata tableMetadata, Object propertyObject) {
 		if(propertyObject instanceof Map) {
 			logger.debug("propertyObject is Map type, 从该map中, 筛选出相关列的数据信息");
@@ -61,5 +63,25 @@ public class PersistentTable implements Persistent{
 			}
 		}
 		return resultPropertyMap;
+	}
+	
+	public String getCode() {
+		return tableMetadata.getCode();
+	}
+	
+	public PersistentObjectIdentity getPersistentObjectIdentity() {
+		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
+		Object id;
+		if(primaryKeyColumns.size() == 1) {
+			id = propertyMap.get(primaryKeyColumns.get(0).getCode());
+		}else {
+			Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumns.size());
+			for (ColumnMetadata cm : primaryKeyColumns) {
+				idMap.put(cm.getCode(), propertyMap.get(cm.getCode()));
+			}
+			id = idMap;
+		}
+		logger.debug("获取持久化对象id为: {}", id);
+		return new PersistentObjectIdentity(id);
 	}
 }

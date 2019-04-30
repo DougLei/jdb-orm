@@ -19,14 +19,12 @@ public abstract class AbstractSession {
 	protected EnvironmentProperty environmentProperty;
 	protected MappingWrapper mappingWrapper;
 	
-	protected boolean enableSessionCache;// 是否启用session缓存
+
 	
 	public AbstractSession(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
-		
-		this.enableSessionCache = environmentProperty.getEnableSessionCache();
 	}
 	
 	public void close() {
