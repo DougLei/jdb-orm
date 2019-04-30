@@ -75,6 +75,20 @@ public class SessionImpl extends AbstractSession implements Session {
 		putUpdatePersistentObjectCache(persistent);
 	}
 	
+	@Override
+	public void delete(Object object) {
+		Mapping mapping = getMapping(object, "delete");
+		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		putDeletePersistentObjectCache(persistent);
+	}
+
+	@Override
+	public void delete(String code, Map<String, Object> propertyMap) {
+		Mapping mapping = getMapping(code, "delete");
+		Persistent persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		putDeletePersistentObjectCache(persistent);
+	}
+	
 	/**
 	 * 将要【保存的持久化对象】放到缓存中
 	 * @param persistent
@@ -112,6 +126,30 @@ public class SessionImpl extends AbstractSession implements Session {
 				logger.debug("本次修改的对象信息为: {}", persistent.toString());
 				logger.debug("本次对象信息, 覆盖源对象信息");
 			}
+		}
+		cache.put(id, persistent);
+	}
+	
+	/**
+	 * 将要【删除的持久化对象】放到缓存中
+	 * @param persistent
+	 */
+	private void putDeletePersistentObjectCache(Persistent persistent) {
+		String code = persistent.getCode();
+		Map<PersistentObjectIdentity, Object> cache = getCache(code, deletePersistentObjectCache);
+		
+		PersistentObjectIdentity id = persistent.getId();
+		if(id.isNull()) {
+			throw new NullPointerException("删除的对象["+code+"], id值不能为空");
+		}
+		if(cache.containsKey(id)) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("删除的对象[{}]出现重复的id值:{}", code, id.toString());
+				logger.debug("源对象信息为: {}", cache.get(id).toString());
+				logger.debug("本次删除的对象信息为: {}", persistent.toString());
+				logger.debug("不将本次对象, 覆盖添加到缓存中");
+			}
+			return;
 		}
 		cache.put(id, persistent);
 	}

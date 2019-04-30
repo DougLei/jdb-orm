@@ -32,6 +32,18 @@ public interface Session {
 	 */
 	void update(String code, Map<String, Object> propertyMap);
 	
+	/**
+	 * 删除对象
+	 * @param object
+	 */
+	void delete(Object object);
+	/**
+	 * 删除对象
+	 * @param code <table>元素中的name属性值
+	 * @param propertyMap
+	 */
+	void delete(String code, Map<String, Object> propertyMap);
+	
 	
 	
 	/**
