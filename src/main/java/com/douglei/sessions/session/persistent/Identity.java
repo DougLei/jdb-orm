@@ -57,6 +57,14 @@ public class Identity {
 	 * @return
 	 */
 	public boolean isNull() {
+		if(id == null) {
+			return true;
+		}
+		if(id instanceof Map<?, ?>) {
+			if(((Map<?, ?>)id).size() == 0) {
+				return true;
+			}
+		}
 		return false;
 	}
 }

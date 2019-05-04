@@ -14,10 +14,11 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
-import com.douglei.sessions.session.persistent.PersistentObject;
-import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.Identity;
+import com.douglei.sessions.session.persistent.PersistentFactory;
+import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
+import com.douglei.sessions.session.persistent.State;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -107,6 +108,8 @@ public class SessionImpl extends AbstractSession implements Session {
 		if(cache.containsKey(id)) {
 			throw new RepeatPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
 		}
+		
+		persistent.setState(State.NEW_INSTANCE);
 		cache.put(id, persistent);
 		insertCache.add(persistent);
 	}
@@ -116,6 +119,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 * @param persistent
 	 */
 	private void putUpdatePersistentObjectCache(PersistentObject persistent) {
+		if(persistent.getState() == null) {
+			throw new NullPointerException("修改对象时, 对象的State枚举不能为空");
+		}
 		String code = persistent.getCode();
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
@@ -123,16 +129,45 @@ public class SessionImpl extends AbstractSession implements Session {
 		if(id.isNull()) {
 			throw new NullPointerException("修改的对象["+code+"], id值不能为空");
 		}
+		
+		cache.put(id, persistent);
+		switch(persistent.getState()) {
+			case NEW_INSTANCE:
+				logger.debug("修改一个NEW_INSTANCE状态的数据对象, 将之前insert + cache集合中的持久化对象覆盖");
+				coverPersistentObjectListCache(insertCache, id, persistent);
+				break;
+			case PERSISTENT:
+				logger.debug("修改一个PERSISTENT状态的数据对象, 将之前update + cache集合中的持久化对象覆盖");
+				coverPersistentObjectListCache(updateCache, id, persistent);
+				break;
+		}
+	}
+	
+	/**
+	 * 覆盖cache集合中对应的持久化对象
+	 * @param cacheList
+	 * @param id
+	 * @param persistent
+	 */
+	private void coverPersistentObjectListCache(List<PersistentObject> cacheList, Identity id, PersistentObject persistent) {
 		if(logger.isDebugEnabled()) {
-			if(cache.containsKey(id)) {
-				logger.debug("修改的对象[{}]出现重复的id值:{}", code, id.toString());
-				logger.debug("源对象信息为: {}", cache.get(id).toString());
-				logger.debug("本次修改的对象信息为: {}", persistent.toString());
-				logger.debug("本次对象信息, 覆盖源对象信息");
+			logger.debug("覆盖的cache集合中对应的持久化对象");
+			logger.debug("id={}", id.toString());
+			logger.debug("新的persistent={}", persistent.toString());
+		}
+		if(cacheList.size() > 0) {
+			PersistentObject oldPersistent = null ;
+			for (int i = 0; i < cacheList.size(); i++) {
+				if(cacheList.get(i).getId() == id) {
+					oldPersistent = cacheList.remove(i);
+					break;
+				}
+			}
+			if(oldPersistent != null && logger.isDebugEnabled()) {
+				logger.debug("源persistent={}", oldPersistent.toString());
 			}
 		}
-		cache.put(id, persistent);
-		updateCache.add(persistent);
+		cacheList.add(persistent);
 	}
 	
 	/**
@@ -207,7 +242,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	}
 
 	private void flushDeletePersistentObject() {
-		// TODO Auto-generated method stub
+		if(deleteCache.size() > 0) {
+			// TODO Auto-generated method stub
+		}
 	}
 
 	private void flushInsertPersistentObject() {

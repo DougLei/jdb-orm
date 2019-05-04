@@ -17,4 +17,15 @@ public interface PersistentObject {
 	 * @return
 	 */
 	Identity getId();
+	
+	/**
+	 * 获取持久化对象的状态
+	 * @return
+	 */
+	State getState();
+	/**
+	 * 设置持久化对象的状态
+	 * @param state
+	 */
+	void setState(State state);
 }

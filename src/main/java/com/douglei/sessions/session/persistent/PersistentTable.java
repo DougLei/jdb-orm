@@ -21,6 +21,7 @@ public class PersistentTable implements PersistentObject{
 	
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
+	private State state;
 	
 	@SuppressWarnings("unchecked")
 	public PersistentTable(TableMetadata tableMetadata, Object propertyObject) {
@@ -69,24 +70,36 @@ public class PersistentTable implements PersistentObject{
 		return tableMetadata.getCode();
 	}
 	
+	private Identity id;
 	public Identity getId() {
-		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
-		Object id;
-		if(primaryKeyColumns.size() == 1) {
-			id = propertyMap.get(primaryKeyColumns.get(0).getCode());
-		}else {
-			Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumns.size());
-			for (ColumnMetadata cm : primaryKeyColumns) {
-				idMap.put(cm.getCode(), propertyMap.get(cm.getCode()));
+		if(id == null) {
+			List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
+			Object id;
+			if(primaryKeyColumns.size() == 1) {
+				id = propertyMap.get(primaryKeyColumns.get(0).getCode());
+			}else {
+				Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumns.size());
+				for (ColumnMetadata cm : primaryKeyColumns) {
+					idMap.put(cm.getCode(), propertyMap.get(cm.getCode()));
+				}
+				id = idMap;
 			}
-			id = idMap;
+			logger.debug("获取持久化对象id为: {}", id);
+			this.id = new Identity(id);
 		}
-		logger.debug("获取持久化对象id为: {}", id);
-		return new Identity(id);
+		return id;
 	}
 	
 	@Override
 	public String toString() {
 		return propertyMap.toString();
+	}
+	@Override
+	public State getState() {
+		return state;
+	}
+	@Override
+	public void setState(State state) {
+		this.state = state;
 	}
 }
