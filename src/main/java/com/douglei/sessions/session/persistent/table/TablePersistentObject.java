@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.persistent;
+package com.douglei.sessions.session.persistent.table;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,21 +10,26 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.sessions.session.persistent.ExecutionHolder;
+import com.douglei.sessions.session.persistent.ExecutionType;
+import com.douglei.sessions.session.persistent.Identity;
+import com.douglei.sessions.session.persistent.PersistentObject;
+import com.douglei.sessions.session.persistent.State;
 import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class PersistentTable implements PersistentObject{
-	private static final Logger logger = LoggerFactory.getLogger(PersistentTable.class);
+public class TablePersistentObject implements PersistentObject{
+	private static final Logger logger = LoggerFactory.getLogger(TablePersistentObject.class);
 	
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
 	private State state;
 	
 	@SuppressWarnings("unchecked")
-	public PersistentTable(TableMetadata tableMetadata, Object propertyObject) {
+	public TablePersistentObject(TableMetadata tableMetadata, Object propertyObject) {
 		if(propertyObject instanceof Map) {
 			logger.debug("propertyObject is Map type, 从该map中, 筛选出相关列的数据信息");
 			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)propertyObject);
@@ -66,11 +71,13 @@ public class PersistentTable implements PersistentObject{
 		return resultPropertyMap;
 	}
 	
+	@Override
 	public String getCode() {
 		return tableMetadata.getCode();
 	}
 	
 	private Identity id;
+	@Override
 	public Identity getId() {
 		if(id == null) {
 			List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
@@ -101,5 +108,21 @@ public class PersistentTable implements PersistentObject{
 	@Override
 	public void setState(State state) {
 		this.state = state;
+	}
+	
+	@Override
+	public ExecutionHolder getExecutionHolder(ExecutionType executionType) {
+		switch(executionType) {
+			case INSERT:
+				// TODO
+				return null;
+			case DELETE:
+				// TODO
+				return null;
+			case UPDATE:
+				// TODO
+				return null;
+		}
+		return null;
 	}
 }

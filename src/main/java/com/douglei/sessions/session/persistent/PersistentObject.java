@@ -28,4 +28,11 @@ public interface PersistentObject {
 	 * @param state
 	 */
 	void setState(State state);
+	
+	/**
+	 * 获取执行对象
+	 * @param executionType
+	 * @return
+	 */
+	ExecutionHolder getExecutionHolder(ExecutionType executionType);
 }

@@ -12,6 +12,8 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.sessions.session.persistent.ExecutionHolder;
+import com.douglei.sessions.session.persistent.ExecutionType;
 import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.PersistentObject;
@@ -267,28 +269,21 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 		return mapping;
 	}
 
-	private StringBuilder sql;
 	@Override
 	protected void flush() {
-		sql = new StringBuilder();
-		flushDeletePersistentObject();
-		flushInsertPersistentObject();
-		flushUpdatePersistentObject();
-		sql.setLength(0);
+		flushPersistentObject(insertCache, ExecutionType.INSERT);
+		flushPersistentObject(updateCache, ExecutionType.UPDATE);
+		flushPersistentObject(deleteCache, ExecutionType.DELETE);
 	}
 
-	private void flushDeletePersistentObject() {
-		if(deleteCache.size() > 0) {
-			// TODO Auto-generated method stub
+	private void flushPersistentObject(List<PersistentObject> cacheList, ExecutionType executionType) {
+		if(cacheList.size() > 0) {
+			ExecutionHolder executionHolder = null;
+			for (PersistentObject persistentObject : cacheList) {
+				executionHolder = persistentObject.getExecutionHolder(executionType);
+				executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
+			}
 		}
-	}
-
-	private void flushInsertPersistentObject() {
-		// TODO Auto-generated method stub
-	}
-
-	private void flushUpdatePersistentObject() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
