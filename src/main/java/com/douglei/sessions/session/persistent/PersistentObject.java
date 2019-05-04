@@ -16,5 +16,5 @@ public interface PersistentObject {
 	 * 获取持久化对象id
 	 * @return
 	 */
-	PersistentObjectIdentity getId();
+	Identity getId();
 }

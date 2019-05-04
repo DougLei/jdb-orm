@@ -16,7 +16,7 @@ import com.douglei.sessions.AbstractSession;
 import com.douglei.sessions.Session;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.PersistentFactory;
-import com.douglei.sessions.session.persistent.PersistentObjectIdentity;
+import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.utils.StringUtil;
 
@@ -26,7 +26,7 @@ import com.douglei.utils.StringUtil;
  */
 public class SessionImpl extends AbstractSession implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
-	private Map<String, Map<PersistentObjectIdentity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<PersistentObjectIdentity, PersistentObject>>();
+	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>();
 	private List<PersistentObject> insertCache = new ArrayList<PersistentObject>();
 	private List<PersistentObject> updateCache = new ArrayList<PersistentObject>();
 	private List<PersistentObject> deleteCache = new ArrayList<PersistentObject>();
@@ -37,10 +37,10 @@ public class SessionImpl extends AbstractSession implements Session {
 	 * @param cacheMap
 	 * @return
 	 */
-	private Map<PersistentObjectIdentity, PersistentObject> getCache(String code){
-		Map<PersistentObjectIdentity, PersistentObject> cache = persistentObjectCache.get(code);
+	private Map<Identity, PersistentObject> getCache(String code){
+		Map<Identity, PersistentObject> cache = persistentObjectCache.get(code);
 		if(cache == null) {
-			cache = new HashMap<PersistentObjectIdentity, PersistentObject>();
+			cache = new HashMap<Identity, PersistentObject>();
 			persistentObjectCache.put(code, cache);
 		}
 		return cache;
@@ -98,9 +98,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 */
 	private void putInsertPersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
+		Map<Identity, PersistentObject> cache = getCache(code);
 		
-		PersistentObjectIdentity id = persistent.getId();
+		Identity id = persistent.getId();
 		if(id.isNull()) {
 			throw new NullPointerException("保存的对象["+code+"], id值不能为空");
 		}
@@ -117,9 +117,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 */
 	private void putUpdatePersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
+		Map<Identity, PersistentObject> cache = getCache(code);
 		
-		PersistentObjectIdentity id = persistent.getId();
+		Identity id = persistent.getId();
 		if(id.isNull()) {
 			throw new NullPointerException("修改的对象["+code+"], id值不能为空");
 		}
@@ -141,9 +141,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 */
 	private void putDeletePersistentObjectCache(PersistentObject persistent) {
 		String code = persistent.getCode();
-		Map<PersistentObjectIdentity, PersistentObject> cache = getCache(code);
+		Map<Identity, PersistentObject> cache = getCache(code);
 		
-		PersistentObjectIdentity id = persistent.getId();
+		Identity id = persistent.getId();
 		if(id.isNull()) {
 			throw new NullPointerException("删除的对象["+code+"], id值不能为空");
 		}
@@ -154,9 +154,9 @@ public class SessionImpl extends AbstractSession implements Session {
 				logger.debug("本次删除的对象信息为: {}", persistent.toString());
 				logger.debug("不将本次对象, 覆盖添加到缓存中");
 			}
-			return;
+		}else {
+			cache.put(id, persistent);
 		}
-		cache.put(id, persistent);
 		deleteCache.add(persistent);
 	}
 	

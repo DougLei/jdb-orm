@@ -6,10 +6,10 @@ import java.util.Map;
  * 持久化对象
  * @author DougLei
  */
-public class PersistentObjectIdentity {
+public class Identity {
 	private Object id;
 
-	public PersistentObjectIdentity(Object id) {
+	public Identity(Object id) {
 		this.id = id;
 	}
 
@@ -29,7 +29,7 @@ public class PersistentObjectIdentity {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		PersistentObjectIdentity other = (PersistentObjectIdentity) obj;
+		Identity other = (Identity) obj;
 		if (id == null) {
 			if (other.id == null) {
 				return true;
