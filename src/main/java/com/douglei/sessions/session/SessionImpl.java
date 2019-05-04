@@ -120,7 +120,7 @@ public class SessionImpl extends AbstractSession implements Session {
 	 */
 	private void putUpdatePersistentObjectCache(PersistentObject persistent) {
 		if(persistent.getState() == null) {
-			throw new NullPointerException("修改对象时, 对象的State枚举不能为空");
+			throw new NullPointerException("修改对象时, 对象的State枚举属性值不能为空");
 		}
 		String code = persistent.getCode();
 		Map<Identity, PersistentObject> cache = getCache(code);
@@ -130,14 +130,16 @@ public class SessionImpl extends AbstractSession implements Session {
 			throw new NullPointerException("修改的对象["+code+"], id值不能为空");
 		}
 		
+		logger.debug("将persistentObjectCache集合中对应的持久化对象覆盖");
 		cache.put(id, persistent);
+		
 		switch(persistent.getState()) {
 			case NEW_INSTANCE:
-				logger.debug("修改一个NEW_INSTANCE状态的数据对象, 将之前insert + cache集合中的持久化对象覆盖");
+				logger.debug("修改一个NEW_INSTANCE状态的数据对象, 将之前insertCache集合中的持久化对象覆盖");
 				coverPersistentObjectListCache(insertCache, id, persistent);
 				break;
 			case PERSISTENT:
-				logger.debug("修改一个PERSISTENT状态的数据对象, 将之前update + cache集合中的持久化对象覆盖");
+				logger.debug("修改一个PERSISTENT状态的数据对象, 将之前updateCache集合中的持久化对象覆盖");
 				coverPersistentObjectListCache(updateCache, id, persistent);
 				break;
 		}
@@ -175,6 +177,9 @@ public class SessionImpl extends AbstractSession implements Session {
 	 * @param persistent
 	 */
 	private void putDeletePersistentObjectCache(PersistentObject persistent) {
+		if(persistent.getState() == null) {
+			throw new NullPointerException("删除对象时, 对象的State枚举属性值不能为空");
+		}
 		String code = persistent.getCode();
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
@@ -182,18 +187,47 @@ public class SessionImpl extends AbstractSession implements Session {
 		if(id.isNull()) {
 			throw new NullPointerException("删除的对象["+code+"], id值不能为空");
 		}
+		
 		if(cache.containsKey(id)) {
-			if(logger.isDebugEnabled()) {
-				logger.debug("删除的对象[{}]出现重复的id值:{}", code, id.toString());
-				logger.debug("源对象信息为: {}", cache.get(id).toString());
-				logger.debug("本次删除的对象信息为: {}", persistent.toString());
-				logger.debug("不将本次对象, 覆盖添加到缓存中");
-			}
-		}else {
-			cache.put(id, persistent);
+			logger.debug("将persistentObjectCache集合中对应的持久化对象移除");
+			cache.remove(id);
 		}
-		deleteCache.add(persistent);
+		
+		switch(persistent.getState()) {
+			case NEW_INSTANCE:
+				logger.debug("删除一个NEW_INSTANCE状态的数据对象, 将之前insertCache集合中的持久化对象移除");
+				removePersistentObjectListCache(insertCache, id, persistent);
+				break;
+			case PERSISTENT:
+				logger.debug("删除一个PERSISTENT状态的数据对象, 判断updateCache集合中是否有对该对象的修改, 如果有, 则将之前updateCache集合中的持久化对象移除");
+				removePersistentObjectListCache(updateCache, id, persistent);
+				deleteCache.add(persistent);
+				break;
+		}
 	}
+	
+	/**
+	 * 覆盖cache集合中对应的持久化对象
+	 * @param cacheList
+	 * @param id
+	 * @param persistent
+	 */
+	private void removePersistentObjectListCache(List<PersistentObject> cacheList, Identity id, PersistentObject persistent) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("移除的cache集合中对应的持久化对象");
+			logger.debug("id={}", id.toString());
+			logger.debug("persistent={}", persistent.toString());
+		}
+		if(cacheList.size() > 0) {
+			for (int i = 0; i < cacheList.size(); i++) {
+				if(cacheList.get(i).getId() == id) {
+					cacheList.remove(i);
+					break;
+				}
+			}
+		}
+	}
+	
 	
 	/**
 	 * 获取mapping实例
