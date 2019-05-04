@@ -201,7 +201,21 @@ public class SessionImpl extends AbstractSession implements Session {
 
 	@Override
 	protected void flush() {
-		// TODO 搞定这些flush insert update delete
+		flushDeletePersistentObject();
+		flushInsertPersistentObject();
+		flushUpdatePersistentObject();
+	}
+
+	private void flushDeletePersistentObject() {
+		// TODO Auto-generated method stub
+	}
+
+	private void flushInsertPersistentObject() {
+		// TODO Auto-generated method stub
+	}
+
+	private void flushUpdatePersistentObject() {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
