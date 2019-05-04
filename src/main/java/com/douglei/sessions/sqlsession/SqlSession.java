@@ -1,13 +1,15 @@
-package com.douglei.sessions;
+package com.douglei.sessions.sqlsession;
 
 import java.util.List;
 import java.util.Map;
+
+import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的sql session接口
  * @author DougLei
  */
-public interface SqlSession {
+public interface SqlSession extends BasicSession{
 
 	/**
 	 * 执行查询
@@ -16,6 +18,11 @@ public interface SqlSession {
 	 * @return
 	 */
 	List<Map<String, Object>> query(String sql, List<Object> parameters);
+	/**
+	 * 执行查询
+	 * @param sql
+	 * @return
+	 */
 	List<Map<String, Object>> query(String sql);
 	
 	/**
@@ -25,13 +32,10 @@ public interface SqlSession {
 	 * @return
 	 */
 	int executeUpdate(String sql, List<Object> parameters);
-	int executeUpdate(String sql);
-	
 	/**
-	 * 关闭session实例
+	 * 执行增删改查操作
+	 * @param sql
+	 * @return
 	 */
-	void close();
-	
-	void commit();
-	void rollback();
+	int executeUpdate(String sql);
 }

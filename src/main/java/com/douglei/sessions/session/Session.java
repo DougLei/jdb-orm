@@ -1,12 +1,14 @@
-package com.douglei.sessions;
+package com.douglei.sessions.session;
 
 import java.util.Map;
+
+import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的session接口
  * @author DougLei
  */
-public interface Session {
+public interface Session extends BasicSession{
 
 	/**
 	 * 保存对象
@@ -44,13 +46,11 @@ public interface Session {
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
 	
-	
-	
 	/**
-	 * 关闭session实例
+	 * 根据id获取对象
+	 * @param clz
+	 * @param id
+	 * @return
 	 */
-	void close();
-	
-	void commit();
-	void rollback();
+	Object get(Class<?> clz, Object id);
 }

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.impl.xml.XmlConfiguration;
-import com.douglei.sessions.SqlSession;
+import com.douglei.sessions.sqlsession.SqlSession;
 
 public class PreparedStatementHandlerTest {
 	

@@ -12,21 +12,26 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
-import com.douglei.sessions.AbstractSession;
-import com.douglei.sessions.SqlSession;
 import com.douglei.utils.CryptographyUtil;
 
 /**
  * 执行sql语句的session实现类
  * @author DougLei
  */
-public class SqlSessionImpl extends AbstractSession implements SqlSession{
+public class SqlSessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
+	
+	protected ConnectionWrapper connection;
+	protected EnvironmentProperty environmentProperty;
+	protected MappingWrapper mappingWrapper;
+	
+	protected boolean enableSessionCache;// 是否启用session缓存
 	private Map<String, StatementHandler> statementHandlerCache;
-	private boolean enableSessionCache;// 是否启用session缓存
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
-		super(connection, environmentProperty, mappingWrapper);
+		this.connection = connection;
+		this.environmentProperty = environmentProperty;
+		this.mappingWrapper = mappingWrapper;
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
 	}
 
@@ -96,14 +101,23 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		return executeUpdate(sql, null);
 	}
 
-	@Override
+	public void commit() {
+		connection.commit();
+	}
+	public void rollback() {
+		connection.rollback();
+	}
+	
 	protected void flush() {
 	}
 
 	@Override
 	public void close() {
 		flush();
-		super.close();
+		if(!connection.isFinishTransaction()) {
+			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass());
+			connection.commit();
+		}
 		if(enableSessionCache) {
 			if(statementHandlerCache != null && statementHandlerCache.size() > 0) {
 				Collection<StatementHandler> statementHandlers = statementHandlerCache.values();

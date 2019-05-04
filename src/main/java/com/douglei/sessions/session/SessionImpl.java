@@ -12,20 +12,19 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.sessions.AbstractSession;
-import com.douglei.sessions.Session;
 import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.sessions.session.persistent.State;
+import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class SessionImpl extends AbstractSession implements Session {
+public class SessionImpl extends SqlSessionImpl implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>();
 	private List<PersistentObject> insertCache = new ArrayList<PersistentObject>();
@@ -268,11 +267,14 @@ public class SessionImpl extends AbstractSession implements Session {
 		return mapping;
 	}
 
+	private StringBuilder sql;
 	@Override
 	protected void flush() {
+		sql = new StringBuilder();
 		flushDeletePersistentObject();
 		flushInsertPersistentObject();
 		flushUpdatePersistentObject();
+		sql.setLength(0);
 	}
 
 	private void flushDeletePersistentObject() {
@@ -293,5 +295,11 @@ public class SessionImpl extends AbstractSession implements Session {
 	public void close() {
 		flush();
 		super.close();
+	}
+
+	@Override
+	public Object get(Class<?> clz, Object id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
