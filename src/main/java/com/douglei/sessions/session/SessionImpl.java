@@ -270,8 +270,7 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 		return mapping;
 	}
 
-	@Override
-	protected void flush() {
+	private void flush() {
 		flushPersistentObject(insertCache, ExecutionType.INSERT);
 		flushPersistentObject(updateCache, ExecutionType.UPDATE);
 		flushPersistentObject(deleteCache, ExecutionType.DELETE);
