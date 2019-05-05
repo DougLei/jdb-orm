@@ -12,6 +12,12 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.statement.impl.Parameter;
+import com.douglei.sessions.session.persistent.Identity;
+import com.douglei.sessions.session.persistent.PersistentObject;
+import com.douglei.sessions.session.persistent.State;
+import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
+import com.douglei.sessions.session.persistent.execution.ExecutionType;
+import com.douglei.sessions.session.table.impl.persistent.execution.TableExecutionHolder;
 import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**

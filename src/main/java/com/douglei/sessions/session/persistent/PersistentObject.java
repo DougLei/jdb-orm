@@ -1,7 +1,10 @@
-package com.douglei.sessions.session.table.impl.persistent;
+package com.douglei.sessions.session.persistent;
+
+import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
+import com.douglei.sessions.session.persistent.execution.ExecutionType;
 
 /**
- * 持久化接口
+ * 持久化对象接口
  * @author DougLei
  */
 public interface PersistentObject {
