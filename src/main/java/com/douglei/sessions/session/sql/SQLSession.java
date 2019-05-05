@@ -1,13 +1,13 @@
 package com.douglei.sessions.session.sql;
 
-import java.util.List;
 import java.util.Map;
 
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.sessions.session.QueryMismatchingException;
 import com.douglei.sessions.session.Session;
-import com.douglei.sessions.session.query.Query;
+import com.douglei.sessions.session.table.TableQuery;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 
 /**
@@ -56,22 +56,9 @@ public class SQLSession extends SqlSessionImpl implements Session {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	@Override
-	public Query createQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public <T> List<T> query(Query query) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T> T uniqueQuery(Query query) {
-		// TODO Auto-generated method stub
-		return null;
+	public TableQuery createTableQuery() {
+		throw new QueryMismatchingException("无法创建TableQuery实例");
 	}
 }
