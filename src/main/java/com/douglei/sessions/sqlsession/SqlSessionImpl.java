@@ -1,6 +1,5 @@
 package com.douglei.sessions.sqlsession;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -85,55 +84,59 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> clz, String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = query(sql, parameters);
-		if(listMap.size() > 0) {
-			List<T> tlist = new ArrayList<T>(listMap.size());
-			for (Map<String, Object> map : listMap) {
-				tlist.add(mapToClass(clz, map));
-			}
-			return tlist;
-		}
-		return null;
-	}
-	
-	@Override
 	public Map<String, Object> uniqueQuery(String sql) {
 		return uniqueQuery(sql, null);
 	}
 	
 	@Override
 	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = query(sql, parameters);
-		if(listMap.size() > 0) {
-			if(listMap.size() > 1) {
-				throw new UnUniqueDataException("进行uniqueQuery时, 查询结果为多个: " + listMap.size());
+		StatementHandler statementHandler = null;
+		try {
+			statementHandler = getStatementHandler(sql, parameters);
+			return statementHandler.getQueryUniqueResult(parameters);
+		} finally {
+			if(!enableSessionCache) {
+				statementHandler.close();
 			}
-			return listMap.get(0);
 		}
-		return null;
 	}
 	
 	@Override
-	public <T> T uniqueQuery(Class<T> clz, String sql, List<Object> parameters) {
-		Map<String, Object> map = uniqueQuery(sql, parameters);
-		if(map != null) {
-			return mapToClass(clz, map);
-		}
-		return null;
-	}
-	
-	/**
-	 * 将Map转换为class对象
-	 * @param clz
-	 * @param map
-	 * @return
-	 */
-	private <T> T mapToClass(Class<T> clz, Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Object[]> query_(String sql) {
+		return query_(sql, null);
 	}
 
+	@Override
+	public List<Object[]> query_(String sql, List<Object> parameters) {
+		StatementHandler statementHandler = null;
+		try {
+			statementHandler = getStatementHandler(sql, parameters);
+			return statementHandler.getQueryResultList_(parameters);
+		} finally {
+			if(!enableSessionCache) {
+				statementHandler.close();
+			}
+		}
+	}
+
+	@Override
+	public Object[] uniqueQuery_(String sql) {
+		return uniqueQuery_(sql, null);
+	}
+
+	@Override
+	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
+		StatementHandler statementHandler = null;
+		try {
+			statementHandler = getStatementHandler(sql, parameters);
+			return statementHandler.getQueryUniqueResult_(parameters);
+		} finally {
+			if(!enableSessionCache) {
+				statementHandler.close();
+			}
+		}
+	}
+	
 	@Override
 	public int executeUpdate(String sql) {
 		return executeUpdate(sql, null);

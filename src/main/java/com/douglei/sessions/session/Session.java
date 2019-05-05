@@ -8,7 +8,7 @@ import com.douglei.sessions.BasicSession;
  * 和数据库交互的session接口
  * @author DougLei
  */
-public interface Session extends BasicSession{
+public interface Session extends BasicSession, QuerySession{
 
 	/**
 	 * 保存对象

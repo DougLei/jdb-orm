@@ -14,46 +14,58 @@ public interface SqlSession extends BasicSession{
 	/**
 	 * 执行批量查询
 	 * @param sql
-	 * @return
+	 * @return 返回<列名:值>的list-map集合
 	 */
 	List<Map<String, Object>> query(String sql);
 	/**
 	 * 执行批量查询
 	 * @param sql
 	 * @param parameters 传入的参数
-	 * @return
+	 * @return 返回<列名:值>的list-map集合
 	 */
 	List<Map<String, Object>> query(String sql, List<Object> parameters);
-	/**
-	 * 执行批量查询
-	 * @param clz
-	 * @param sql
-	 * @param parameters 传入的参数
-	 * @return
-	 */
-	<T> List<T> query(Class<T> clz, String sql, List<Object> parameters);
 	
 	/**
 	 * 执行唯一查询
 	 * @param sql
-	 * @return
+	 * @return 返回<列名:值>的map集合
 	 */
 	Map<String, Object> uniqueQuery(String sql);
 	/**
 	 * 执行唯一查询
 	 * @param sql
 	 * @param parameters 传入的参数
-	 * @return
+	 * @return 返回<列名:值>的map集合
 	 */
 	Map<String, Object> uniqueQuery(String sql, List<Object> parameters);
+	
 	/**
-	 * 执行唯一查询
-	 * @param clz
+	 * 执行批量查询
+	 * @param sql
+	 * @return 返回<值>的list-数组集合
+	 */
+	List<Object[]> query_(String sql);
+	/**
+	 * 执行批量查询
 	 * @param sql
 	 * @param parameters 传入的参数
-	 * @return
+	 * @return 返回<值>的list-数组集合
 	 */
-	<T> T uniqueQuery(Class<T> clz, String sql, List<Object> parameters);
+	List<Object[]> query_(String sql, List<Object> parameters);
+	
+	/**
+	 * 执行唯一查询
+	 * @param sql
+	 * @return 返回<值>的数组
+	 */
+	Object[] uniqueQuery_(String sql);
+	/**
+	 * 执行唯一查询
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 返回<值>的数组
+	 */
+	Object[] uniqueQuery_(String sql, List<Object> parameters);
 	
 	/**
 	 * 执行增删改查操作

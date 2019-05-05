@@ -39,6 +39,57 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 	
 	@Override
+	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
+		if(isExecuted()) {
+			return getQueryUniqueResult();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			return executeUniqueQuery(statement.executeQuery(sql));
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+		} finally {
+			close();
+		}
+	}
+	
+	@Override
+	public List<Object[]> getQueryResultList_(List<Object> parameters) {
+		if(isExecuted()) {
+			return getQueryResultList_();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			return executeQuery_(statement.executeQuery(sql));
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
+		} finally {
+			close();
+		}
+	}
+
+	@Override
+	public Object[] getQueryUniqueResult_(List<Object> parameters) {
+		if(isExecuted()) {
+			return getQueryUniqueResult_();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			return executeUniqueQuery_(statement.executeQuery(sql));
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+		} finally {
+			close();
+		}
+	}
+	
+	@Override
 	public int executeUpdate(List<? extends Object> parameters) {
 		try {
 			return statement.executeUpdate(sql);

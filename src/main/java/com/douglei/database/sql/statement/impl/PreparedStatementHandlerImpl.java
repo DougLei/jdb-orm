@@ -89,6 +89,54 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
+	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
+		if(isExecuted() && isSameParameters(parameters)) {
+			return getQueryUniqueResult();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			setParameters(parameters);
+			return executeUniqueQuery(preparedStatement.executeQuery());
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+		} 
+	}
+	
+	@Override
+	public List<Object[]> getQueryResultList_(List<Object> parameters) {
+		if(isExecuted() && isSameParameters(parameters)) {
+			return getQueryResultList_();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			setParameters(parameters);
+			return executeQuery_(preparedStatement.executeQuery());
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
+		} 
+	}
+
+	@Override
+	public Object[] getQueryUniqueResult_(List<Object> parameters) {
+		if(isExecuted() && isSameParameters(parameters)) {
+			return getQueryUniqueResult_();
+		}
+		try {
+			if(isClosed()) {
+				throw new Exception("无法执行, 连接已经关闭");
+			}
+			setParameters(parameters);
+			return executeUniqueQuery_(preparedStatement.executeQuery());
+		} catch (Exception e) {
+			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+		} 
+	}
+	
+	@Override
 	public int executeUpdate(List<? extends Object> parameters) {
 		try {
 			if(isClosed()) {
