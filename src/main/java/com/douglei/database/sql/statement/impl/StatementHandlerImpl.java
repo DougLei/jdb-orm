@@ -39,7 +39,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 	
 	@Override
-	public int executeUpdate(List<Object> parameters) {
+	public int executeUpdate(List<? extends Object> parameters) {
 		try {
 			return statement.executeUpdate(sql);
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.douglei.sessions.session.persistent.table;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.session.persistent.ExecutionHolder;
 import com.douglei.sessions.session.persistent.ExecutionType;
 import com.douglei.sessions.session.persistent.Identity;
@@ -56,16 +58,12 @@ public class TablePersistentObject implements PersistentObject{
 		Set<String> columnMetadataCodes = tableMetadata.getColumnMetadataCodes();
 		Map<String, Object> resultPropertyMap = new HashMap<String, Object>(columnMetadataCodes.size());
 		
-		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		Set<String> propertyMapKeys = propertyMap.keySet();
 		for (String pmkey : propertyMapKeys) {
-			value = propertyMap.get(pmkey);
-			if(value != null) {
-				columnMetadata = tableMetadata.getColumnMetadata(pmkey);
-				if(columnMetadata != null) {
-					resultPropertyMap.put(columnMetadata.getCode(), value);
-				}
+			columnMetadata = tableMetadata.getColumnMetadata(pmkey);
+			if(columnMetadata != null) {
+				resultPropertyMap.put(columnMetadata.getCode(), propertyMap.get(pmkey));
 			}
 		}
 		return resultPropertyMap;
@@ -91,7 +89,9 @@ public class TablePersistentObject implements PersistentObject{
 				}
 				id = idMap;
 			}
-			logger.debug("获取持久化对象id为: {}", id);
+			if(logger.isDebugEnabled()) {
+				logger.debug("获取持久化对象id为: {}", id.toString());
+			}
 			this.id = new Identity(id);
 		}
 		return id;
@@ -114,15 +114,115 @@ public class TablePersistentObject implements PersistentObject{
 	public ExecutionHolder getExecutionHolder(ExecutionType executionType) {
 		switch(executionType) {
 			case INSERT:
-				// TODO
-				return null;
+				return newInsertExecutionHolderInstance();
 			case DELETE:
-				// TODO
-				return null;
+				return newDeleteExecutionHolderInstance();
 			case UPDATE:
-				// TODO
-				return null;
+				return newUpdateExecutionHolderInstance();
 		}
 		return null;
+	}
+	
+	private ExecutionHolder newInsertExecutionHolderInstance() {
+		StringBuilder insertSql = new StringBuilder();
+		insertSql.append("insert into ").append(tableMetadata.getName()).append("(");
+		
+		StringBuilder values = new StringBuilder();
+		values.append(" values(");
+		
+		int size = propertyMap.size();
+		List<Parameter> parameters = new ArrayList<Parameter>(size);
+		
+		int index = 1;
+		Object value = null;
+		ColumnMetadata columnMetadata = null;
+		Set<String> codes = propertyMap.keySet();
+		for (String code : codes) {
+			value = propertyMap.get(code);
+			if(value != null) {// 只保存不为空的值
+				columnMetadata = tableMetadata.getColumnMetadata(code);
+				
+				insertSql.append(columnMetadata.getName());
+				values.append("?");
+				parameters.add(new Parameter(value, columnMetadata.getDataType()));
+				
+				if(index < size) {
+					insertSql.append(",");
+					values.append(",");
+				}
+			}
+			index++;
+		}
+		
+		insertSql.append(")").append(values).append(")");
+		return new TableExecutionHolder(insertSql.toString(), parameters);
+	}
+	
+	private ExecutionHolder newDeleteExecutionHolderInstance() {
+		StringBuilder deleteSql = new StringBuilder();
+		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
+		
+		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
+		int size = primaryKeyColumns.size();
+		
+		List<Parameter> parameters = new ArrayList<Parameter>(size);
+		
+		int index = 1;
+		for (ColumnMetadata pkColumn : primaryKeyColumns) {
+			deleteSql.append(pkColumn.getName()).append("=?");
+			parameters.add(new Parameter(propertyMap.get(pkColumn.getCode()), pkColumn.getDataType()));
+			
+			if(index < size) {
+				deleteSql.append(" and ");
+			}
+			index++;
+		}
+		return new TableExecutionHolder(deleteSql.toString(), parameters);
+	}
+	
+	private ExecutionHolder newUpdateExecutionHolderInstance() {
+		StringBuilder updateSql = new StringBuilder();
+		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
+		
+		int size = propertyMap.size();
+		List<Parameter> parameters = new ArrayList<Parameter>(size);
+		
+		// 处理update set值
+		int index = 1;
+		Set<String> codes = propertyMap.keySet();
+		Object value = null;
+		ColumnMetadata columnMetadata = null;
+		for (String code : codes) {
+			if(!tableMetadata.isPrimaryKeyColumn(code)) {
+				value = propertyMap.get(code);
+				if(value != null) {// 只修改不为空的值
+					columnMetadata = tableMetadata.getColumnMetadata(code);
+					
+					updateSql.append(columnMetadata.getName()).append("=?");
+					parameters.add(new Parameter(value, columnMetadata.getDataType()));
+					
+					if(index < size) {
+						updateSql.append(",");
+					}
+				}
+			}
+			index++;
+		}
+		updateSql.append(" where ");
+		
+		// 处理where值
+		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
+		size = primaryKeyColumns.size();
+		index = 1;
+		for (ColumnMetadata pkColumn : primaryKeyColumns) {
+			updateSql.append(pkColumn.getName()).append("=?");
+			parameters.add(new Parameter(propertyMap.get(pkColumn.getCode()), pkColumn.getDataType()));
+			
+			if(index < size) {
+				updateSql.append(" and ");
+			}
+			index++;
+		}
+		return new TableExecutionHolder(updateSql.toString(), parameters);
 	}
 }

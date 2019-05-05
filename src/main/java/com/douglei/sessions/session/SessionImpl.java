@@ -281,6 +281,15 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 			ExecutionHolder executionHolder = null;
 			for (PersistentObject persistentObject : cacheList) {
 				executionHolder = persistentObject.getExecutionHolder(executionType);
+				if(executionHolder == null) {
+					if(logger.isDebugEnabled()) {
+						logger.debug("执行executionType={}, persistentObject={}, 获取的ExecutionHolder实例为null", executionType.toString(), persistentObject.toString());
+					}
+					continue;
+				}
+				if(logger.isDebugEnabled()) {
+					logger.debug("执行executionType={}, persistentObject={}, 获取的ExecutionHolder {} = {}", executionType.toString(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
+				}
 				executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
 			}
 		}

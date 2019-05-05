@@ -42,6 +42,7 @@ public class TableMetadata implements Metadata{
 	public TableMetadata(String name, String className) {
 		setName(name);
 		setClassName(className);
+		setCode();
 	}
 	
 	public void addColumnMetadata(ColumnMetadata columnMetadata) {
@@ -66,11 +67,18 @@ public class TableMetadata implements Metadata{
 	 * @return
 	 */
 	public String getCode() {
-		if(className == null) {
-			return name;
-		}
-		return className;
+		return code;
 	}
+	private String code;
+	private void setCode() {
+		if(className == null) {
+			code = name;
+		}else {
+			code = className;
+		}
+	}
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -92,11 +100,21 @@ public class TableMetadata implements Metadata{
 	public ColumnMetadata getColumnMetadata(String code) {
 		return columns.get(code);
 	}
-	public boolean classNameNotNull() {
-		return classNameNotNull;
-	}
 	public List<ColumnMetadata> getPrimaryKeyColumns() {
 		return primaryKeyColumns;
+	}
+	
+	public boolean isPrimaryKeyColumn(String code) {
+		for (ColumnMetadata pkColumn : primaryKeyColumns) {
+			if(code.equals(pkColumn.getCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean classNameNotNull() {
+		return classNameNotNull;
 	}
 
 	@Override

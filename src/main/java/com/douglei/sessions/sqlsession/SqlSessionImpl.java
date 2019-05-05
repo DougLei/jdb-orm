@@ -41,7 +41,7 @@ public class SqlSessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
+	private StatementHandler getStatementHandler(String sql, List<? extends Object> parameters){
 		StatementHandler statementHandler = null;
 		if(enableSessionCache) {
 			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
@@ -84,7 +84,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public int executeUpdate(String sql, List<Object> parameters) {
+	public int executeUpdate(String sql, List<? extends Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);

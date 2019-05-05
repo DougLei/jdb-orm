@@ -30,5 +30,5 @@ public interface StatementHandler {
 	 * @param parameters
 	 * @return
 	 */
-	int executeUpdate(List<Object> parameters);
+	int executeUpdate(List<? extends Object> parameters);
 }

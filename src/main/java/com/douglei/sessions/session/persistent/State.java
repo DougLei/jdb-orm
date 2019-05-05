@@ -1,7 +1,7 @@
 package com.douglei.sessions.session.persistent;
 
 /**
- * 持久化对象的状态
+ * 
  * @author DougLei
  */
 public enum State {

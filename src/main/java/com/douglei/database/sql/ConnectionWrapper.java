@@ -56,7 +56,7 @@ public class ConnectionWrapper {
 	 * @param parameters
 	 * @return
 	 */
-	public StatementHandler createStatementHandler(String sql, List<Object> parameters) {
+	public StatementHandler createStatementHandler(String sql, List<? extends Object> parameters) {
 		try {
 			if(logger.isDebugEnabled()) {
 				logger.debug("创建StatementHandler实例");

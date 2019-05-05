@@ -31,7 +31,7 @@ public interface SqlSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	int executeUpdate(String sql, List<Object> parameters);
+	int executeUpdate(String sql, List<? extends Object> parameters);
 	/**
 	 * 执行增删改查操作
 	 * @param sql

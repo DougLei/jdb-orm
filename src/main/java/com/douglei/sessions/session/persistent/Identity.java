@@ -1,12 +1,18 @@
 package com.douglei.sessions.session.persistent;
 
+import java.util.Collection;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 持久化对象
  * @author DougLei
  */
 public class Identity {
+	private static final Logger logger = LoggerFactory.getLogger(Identity.class);
+	
 	private Object id;
 
 	public Identity(Object id) {
@@ -58,11 +64,22 @@ public class Identity {
 	 */
 	public boolean isNull() {
 		if(id == null) {
+			logger.debug("id is null");
 			return true;
 		}
 		if(id instanceof Map<?, ?>) {
-			if(((Map<?, ?>)id).size() == 0) {
+			logger.debug("id is map");
+			Map<?, ?> tmap = (Map<?, ?>) id;
+ 			if(tmap.size() == 0) {
+ 				logger.debug("id map's size is 0");
 				return true;
+			}
+ 			Collection<?> values = tmap.values();
+ 			for (Object value : values) {
+				if(value == null) {
+					logger.debug("id map, one of values is null");
+					return true;
+				}
 			}
 		}
 		return false;

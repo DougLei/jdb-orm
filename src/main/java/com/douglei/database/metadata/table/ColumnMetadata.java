@@ -33,6 +33,7 @@ public class ColumnMetadata implements Metadata{
 		this.name = name;
 		this.dataTypeHandler = dataTypeHandler;
 		setPropertyName(propertyName);
+		setCode();
 	}
 	private void setPropertyName(String propertyName) {
 		if(StringUtil.isEmpty(propertyName)) {
@@ -49,10 +50,15 @@ public class ColumnMetadata implements Metadata{
 	 * @return
 	 */
 	public String getCode() {
+		return code;
+	}
+	private String code;
+	private void setCode() {
 		if(propertyName == null) {
-			return name;
+			code = name;
+		}else {
+			code = propertyName;
 		}
-		return propertyName;
 	}
 	
 	/**
