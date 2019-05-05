@@ -1,7 +1,10 @@
 package com.douglei.sessions.session.table.impl.persistent.execution;
 
 import java.util.List;
+import java.util.Map;
 
+import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.utils.StringUtil;
 
@@ -9,22 +12,24 @@ import com.douglei.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class TableExecutionHolder implements ExecutionHolder{
-	private String sql;
-	private List<? extends Object> parameters;
+public abstract class TableExecutionHolder implements ExecutionHolder{
+	protected TableMetadata tableMetadata;
+	protected Map<String, Object> propertyMap;
 	
-	public TableExecutionHolder(String sql, List<? extends Object> parameters) {
-		if(StringUtil.isEmpty(sql)) {
-			throw new NullPointerException("要执行的sql语句不能为空");
-		}
-		this.sql = sql;
-		this.parameters = parameters;
+	public TableExecutionHolder(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+		this.tableMetadata = tableMetadata;
+		this.propertyMap = propertyMap;
+		initialInstance();
 	}
 
-	@Override
-	public String toString() {
-		return (StringUtil.isEmpty(sql)?"sql is null":sql) + " -- " + ((parameters==null || parameters.size()==0)?"parameters is null":parameters.toString());
-	}
+	/**
+	 * 初始化实例
+	 */
+	protected abstract void initialInstance();
+	
+	
+	protected String sql;
+	protected List<Parameter> parameters;
 	
 	@Override
 	public String getSql() {
@@ -34,5 +39,10 @@ public class TableExecutionHolder implements ExecutionHolder{
 	@Override
 	public List<? extends Object> getParameters() {
 		return parameters;
+	}
+	
+	@Override
+	public String toString() {
+		return (StringUtil.isEmpty(sql)?"sql is null":sql) + " -- " + ((parameters==null || parameters.size()==0)?"parameters is null":parameters.toString());
 	}
 }
