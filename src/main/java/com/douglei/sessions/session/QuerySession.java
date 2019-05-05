@@ -1,12 +1,20 @@
-package com.douglei.sessions.session.query;
+package com.douglei.sessions.session;
 
 import java.util.List;
+
+import com.douglei.sessions.session.query.Query;
 
 /**
  * 
  * @author DougLei
  */
 public interface QuerySession {
+	
+	/**
+	 * 创建query实例
+	 * @return
+	 */
+	Query createQuery();
 	
 	/**
 	 * 查询数据集合

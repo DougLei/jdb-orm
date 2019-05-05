@@ -3,7 +3,6 @@ package com.douglei.sessions.session;
 import java.util.Map;
 
 import com.douglei.sessions.BasicSession;
-import com.douglei.sessions.session.query.QuerySession;
 
 /**
  * 和数据库交互的session接口

@@ -1,4 +1,4 @@
-package com.douglei.sessions.session;
+package com.douglei.sessions.session.table;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,17 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.Mapping;
+import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.sessions.session.MappingMismatchingException;
+import com.douglei.sessions.session.Session;
 import com.douglei.sessions.session.persistent.ExecutionHolder;
 import com.douglei.sessions.session.persistent.ExecutionType;
 import com.douglei.sessions.session.persistent.Identity;
-import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.sessions.session.persistent.State;
+import com.douglei.sessions.session.persistent.table.TablePersistentObject;
 import com.douglei.sessions.session.query.Query;
+import com.douglei.sessions.session.query.table.TableQuery;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 
@@ -27,8 +32,8 @@ import com.douglei.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class SessionImpl extends SqlSessionImpl implements Session {
-	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
+public class TableSession extends SqlSessionImpl implements Session {
+	private static final Logger logger = LoggerFactory.getLogger(TableSession.class);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>();
 	private List<PersistentObject> insertCache = new ArrayList<PersistentObject>();
 	private List<PersistentObject> updateCache = new ArrayList<PersistentObject>();
@@ -49,49 +54,49 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 		return cache;
 	}
 	
-	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
+	public TableSession(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 	}
 
 	@Override
 	public void save(Object object) {
 		Mapping mapping = getMapping(object, "save");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "save");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void update(Object object) {
 		Mapping mapping = getMapping(object, "update");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object);
 		putUpdatePersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void update(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "update");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap);
 		putUpdatePersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void delete(Object object) {
 		Mapping mapping = getMapping(object, "delete");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), object);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object);
 		putDeletePersistentObjectCache(persistent);
 	}
 
 	@Override
 	public void delete(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "delete");
-		PersistentObject persistent = PersistentFactory.buildPersistent(mapping.getMetadata(), propertyMap);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap);
 		putDeletePersistentObjectCache(persistent);
 	}
 	
@@ -243,12 +248,7 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 		}
 		String code = object.getClass().getName();
 		logger.debug("对实体对象{} 进行{}操作", code, description);
-		
-		Mapping mapping = mappingWrapper.getMapping(code);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+code+"]的映射");
-		}
-		return mapping;
+		return getMapping(code);
 	}
 	
 	/**
@@ -262,10 +262,16 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 			throw new NullPointerException("要"+description+"的对象的code值不能为空");
 		}
 		logger.debug("对code={} 的对象进行{}操作", code, description);
-		
+		return getMapping(code);
+	}
+	
+	private Mapping getMapping(String code) {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
+		}
+		if(mapping.getMappingType() != MappingType.TABLE) {
+			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
 		}
 		return mapping;
 	}
@@ -302,8 +308,12 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 	}
 	
 	@Override
+	public Query createQuery() {
+		return new TableQuery();
+	}
+	
+	@Override
 	public <T> List<T> query(Query query) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

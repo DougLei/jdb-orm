@@ -35,7 +35,7 @@ public class SessionTest {
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openSession();
+		session = conf.buildSessionFactory().openTableSession();
 	}
 	@After
 	public void end() {

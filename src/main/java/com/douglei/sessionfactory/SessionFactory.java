@@ -11,21 +11,39 @@ public interface SessionFactory {
 	
 	/**
 	 * <pre>
-	 * 	开启session实例
+	 * 	开启TableSession实例
 	 * 	默认开启事物
 	 * </pre>
 	 * @return
 	 */
-	Session openSession();
+	Session openTableSession();
 	
 	/**
 	 * <pre>
-	 * 	开启session实例
+	 * 	开启TableSession实例
 	 * </pre>
 	 * @param beginTransaction 是否开启事物
 	 * @return
 	 */
-	Session openSession(boolean beginTransaction);
+	Session openTableSession(boolean beginTransaction);
+	
+	/**
+	 * <pre>
+	 * 	开启SQLSession实例
+	 * 	默认开启事物
+	 * </pre>
+	 * @return
+	 */
+	Session openSQLSession();
+	
+	/**
+	 * <pre>
+	 * 	开启SQLSession实例
+	 * </pre>
+	 * @param beginTransaction 是否开启事物
+	 * @return
+	 */
+	Session openSQLSession(boolean beginTransaction);
 	
 	/**
 	 * <pre>
