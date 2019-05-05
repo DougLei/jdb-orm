@@ -1,6 +1,7 @@
 package com.douglei.sessionfactory;
 
-import com.douglei.sessions.session.Session;
+import com.douglei.sessions.session.sql.SQLSession;
+import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.sqlsession.SqlSession;
 
 /**
@@ -16,7 +17,7 @@ public interface SessionFactory {
 	 * </pre>
 	 * @return
 	 */
-	Session openTableSession();
+	TableSession openTableSession();
 	
 	/**
 	 * <pre>
@@ -25,7 +26,7 @@ public interface SessionFactory {
 	 * @param beginTransaction 是否开启事物
 	 * @return
 	 */
-	Session openTableSession(boolean beginTransaction);
+	TableSession openTableSession(boolean beginTransaction);
 	
 	/**
 	 * <pre>
@@ -34,7 +35,7 @@ public interface SessionFactory {
 	 * </pre>
 	 * @return
 	 */
-	Session openSQLSession();
+	SQLSession openSQLSession();
 	
 	/**
 	 * <pre>
@@ -43,7 +44,7 @@ public interface SessionFactory {
 	 * @param beginTransaction 是否开启事物
 	 * @return
 	 */
-	Session openSQLSession(boolean beginTransaction);
+	SQLSession openSQLSession(boolean beginTransaction);
 	
 	/**
 	 * <pre>

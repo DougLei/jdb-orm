@@ -7,9 +7,10 @@ import com.douglei.configuration.Configuration;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.sessions.session.Session;
 import com.douglei.sessions.session.sql.SQLSession;
+import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
 import com.douglei.sessions.session.table.TableSession;
+import com.douglei.sessions.session.table.impl.TableSessionImpl;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 
@@ -35,25 +36,29 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public Session openTableSession() {
+	public TableSession openTableSession() {
 		return openTableSession(true);
 	}
 
 	@Override
-	public Session openTableSession(boolean beginTransaction) {
-		logger.debug("open table-session 实例, 获取connection实例, 是否开启事务: {}", beginTransaction);
-		return new TableSession(openConnection(beginTransaction), environmentProperty, mappingWrapper);
+	public TableSession openTableSession(boolean beginTransaction) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", TableSessionImpl.class, beginTransaction);
+		}
+		return new TableSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
-	public Session openSQLSession() {
+	public SQLSession openSQLSession() {
 		return openSQLSession(true);
 	}
 
 	@Override
-	public Session openSQLSession(boolean beginTransaction) {
-		logger.debug("open sql-session 实例, 获取connection实例, 是否开启事务: {}", beginTransaction);
-		return new SQLSession(openConnection(beginTransaction), environmentProperty, mappingWrapper);
+	public SQLSession openSQLSession(boolean beginTransaction) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", SQLSessionImpl.class, beginTransaction);
+		}
+		return new SQLSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
@@ -63,7 +68,9 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public SqlSession openSqlSession(boolean beginTransaction) {
-		logger.debug("open sql session 实例, 获取connection实例, 是否开启事务: {}", beginTransaction);
+		if(logger.isDebugEnabled()) {
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", SqlSessionImpl.class, beginTransaction);
+		}
 		return new SqlSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
 	}
 }

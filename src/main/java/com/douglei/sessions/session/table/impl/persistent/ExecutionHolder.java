@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.persistent;
+package com.douglei.sessions.session.table.impl.persistent;
 
 import java.util.List;
 

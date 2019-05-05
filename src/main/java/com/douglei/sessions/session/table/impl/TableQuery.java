@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.table;
+package com.douglei.sessions.session.table.impl;
 
 /**
  * 

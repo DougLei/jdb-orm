@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.impl.xml.XmlConfiguration;
-import com.douglei.sessions.session.Session;
+import com.douglei.sessions.session.table.TableSession;
 
 public class SessionTest {
 	
@@ -30,7 +30,7 @@ public class SessionTest {
 	// --------------------------------------------------------------------------------------
 	
 	private Configuration conf;
-	private Session session;
+	private TableSession session;
 	
 	@Before
 	public void before() {

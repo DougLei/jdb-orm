@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.persistent.table;
+package com.douglei.sessions.session.table.impl.persistent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.statement.impl.Parameter;
-import com.douglei.sessions.session.persistent.ExecutionHolder;
-import com.douglei.sessions.session.persistent.ExecutionType;
-import com.douglei.sessions.session.persistent.Identity;
-import com.douglei.sessions.session.persistent.PersistentObject;
-import com.douglei.sessions.session.persistent.State;
 import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**

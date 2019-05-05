@@ -1,8 +1,7 @@
-package com.douglei.sessions.session.persistent.table;
+package com.douglei.sessions.session.table.impl.persistent;
 
 import java.util.List;
 
-import com.douglei.sessions.session.persistent.ExecutionHolder;
 import com.douglei.utils.StringUtil;
 
 /**

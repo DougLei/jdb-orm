@@ -1,6 +1,6 @@
-package com.douglei.sessions.session;
+package com.douglei.sessions.session.table;
 
-import com.douglei.sessions.session.table.TableQuery;
+import com.douglei.sessions.session.table.impl.TableQuery;
 
 /**
  * 
