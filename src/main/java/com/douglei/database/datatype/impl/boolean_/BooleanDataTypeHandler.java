@@ -1,7 +1,6 @@
 package com.douglei.database.datatype.impl.boolean_;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
@@ -37,14 +36,8 @@ public final class BooleanDataTypeHandler implements DataTypeHandler {
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		String value = resultSet.getString(columnIndex);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} - getValue's value is {}", getClass(), value);
-		}
-		if(StringUtil.isEmpty(value)) {
-			return false;
-		}
-		return Boolean.parseBoolean(value.toString());
+	public Object turnValueToTargetDataType(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

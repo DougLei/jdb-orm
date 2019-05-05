@@ -1,7 +1,6 @@
 package com.douglei.database.datatype.impl.big_;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
@@ -31,12 +30,8 @@ public final class BigStringDataTypeHandler implements DataTypeHandler {
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		Object value = resultSet.getObject(columnIndex);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} - getValue's value is {}", getClass(), value);
-		}
-		// TODO
-		return value;
+	public Object turnValueToTargetDataType(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

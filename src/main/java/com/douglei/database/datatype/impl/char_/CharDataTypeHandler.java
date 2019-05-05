@@ -1,7 +1,6 @@
 package com.douglei.database.datatype.impl.char_;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -36,11 +35,8 @@ public final class CharDataTypeHandler implements DataTypeHandler {
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		String value = resultSet.getString(columnIndex);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} - getValue's value is {}", getClass(), value);
-		}
-		return value;
+	public Object turnValueToTargetDataType(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

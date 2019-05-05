@@ -1,7 +1,6 @@
 package com.douglei.database.datatype;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,11 +19,9 @@ public interface DataTypeHandler {
 	void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
 	
 	/**
-	 * 获取值
-	 * @param resultSet
-	 * @param columnIndex
+	 * 将值格式化成对应的数据类型
+	 * @param value
 	 * @return
-	 * @throws SQLException
 	 */
-	Object getValue(ResultSet resultSet, int columnIndex) throws SQLException;
+	Object turnValueToTargetDataType(Object value);
 }

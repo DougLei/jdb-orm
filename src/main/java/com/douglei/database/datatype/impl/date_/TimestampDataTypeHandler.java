@@ -1,9 +1,7 @@
 package com.douglei.database.datatype.impl.date_;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.slf4j.Logger;
@@ -42,11 +40,8 @@ public final class TimestampDataTypeHandler implements DataTypeHandler {
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		Timestamp date = resultSet.getTimestamp(columnIndex);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} - getValue's value is {}", getClass(), date);
-		}
-		return date;
+	public Object turnValueToTargetDataType(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

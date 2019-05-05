@@ -1,8 +1,6 @@
 package com.douglei.database.datatype.impl.date_;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -42,11 +40,8 @@ public final class DateDataTypeHandler implements DataTypeHandler {
 	}
 
 	@Override
-	public Object getValue(ResultSet resultSet, int columnIndex) throws SQLException {
-		Date date = resultSet.getDate(columnIndex);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} - getValue's value is {}", getClass(), date);
-		}
-		return date;
+	public Object turnValueToTargetDataType(Object value) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

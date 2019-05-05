@@ -45,12 +45,4 @@ public interface Session extends BasicSession{
 	 * @param propertyMap
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
-	
-	/**
-	 * 根据id获取对象
-	 * @param clz
-	 * @param id
-	 * @return
-	 */
-	Object get(Class<?> clz, Object id);
 }

@@ -300,10 +300,4 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 		flush();
 		super.close();
 	}
-
-	@Override
-	public Object get(Class<?> clz, Object id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

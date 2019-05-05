@@ -1,7 +1,6 @@
 package com.douglei.database.sql.statement.impl;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
@@ -33,9 +32,5 @@ public class Parameter {
 
 	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
 		dataTypeHandler.setValue(preparedStatement, index, value);
-	}
-	
-	public Object getValue(int index, ResultSet resultSet) throws SQLException {
-		return dataTypeHandler.getValue(resultSet, index);
 	}
 }
