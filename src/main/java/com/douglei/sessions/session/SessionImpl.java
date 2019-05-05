@@ -19,6 +19,7 @@ import com.douglei.sessions.session.persistent.PersistentFactory;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.sessions.session.persistent.State;
+import com.douglei.sessions.session.query.Query;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 
@@ -299,5 +300,17 @@ public class SessionImpl extends SqlSessionImpl implements Session {
 	public void close() {
 		flush();
 		super.close();
+	}
+	
+	@Override
+	public <T> List<T> query(Query query) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T uniqueQuery(Query query) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
