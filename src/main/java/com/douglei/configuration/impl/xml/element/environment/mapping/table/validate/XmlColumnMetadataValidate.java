@@ -9,6 +9,7 @@ import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.utils.StringUtil;
+import com.douglei.utils.datatype.ValidationUtil;
 
 /**
  * 列元数据验证
@@ -26,7 +27,8 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
 		DataTypeHandler dataTypeHandler = validateDataType(element.attributeValue("dataType"));
-		return new ColumnMetadata(name, dataTypeHandler, element.attributeValue("propertyName"));
+		boolean lazyload = validateLazyload(element.attributeValue("lazyload"), dataTypeHandler);
+		return new ColumnMetadata(name, dataTypeHandler, element.attributeValue("propertyName"), lazyload);
 	}
 
 	private DataTypeHandler validateDataType(String dataType) throws MetadataValidateException {
@@ -38,5 +40,15 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值: ", e);
 		}
+	}
+	
+	private boolean validateLazyload(String lazyload, DataTypeHandler dataTypeHandler) {
+		if(ValidationUtil.isBoolean(lazyload)) {
+			return Boolean.parseBoolean(lazyload);
+		}
+		if(dataTypeHandler.isIOStream()) {
+			return true;
+		}
+		return false;
 	}
 }

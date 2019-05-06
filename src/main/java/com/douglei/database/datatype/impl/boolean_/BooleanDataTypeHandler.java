@@ -31,7 +31,7 @@ public final class BooleanDataTypeHandler implements DataTypeHandler {
 		if(StringUtil.isEmpty(value) || !ValidationUtil.isBoolean(value)) {
 			preparedStatement.setString(parameterIndex, "false");
 		}else {
-			preparedStatement.setString(parameterIndex, value.toString().trim().toLowerCase());
+			preparedStatement.setString(parameterIndex, value.toString().toLowerCase());
 		}
 	}
 
@@ -39,5 +39,10 @@ public final class BooleanDataTypeHandler implements DataTypeHandler {
 	public Object turnValueToTargetDataType(Object value) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
 	}
 }

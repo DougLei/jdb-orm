@@ -30,7 +30,7 @@ public final class BigDecimalDataTypeHandler implements DataTypeHandler {
 			logger.debug("{} - setValue's value is {}", getClass(), value);
 		}
 		if(ValidationUtil.isNumber(value)) {
-			preparedStatement.setBigDecimal(parameterIndex, new BigDecimal(value.toString().trim()));
+			preparedStatement.setBigDecimal(parameterIndex, new BigDecimal(value.toString()));
 		}else {
 			if(logger.isDebugEnabled()) {
 				logger.debug("{} - value的值为[{}], 不是BigDecimal类型, 数据库做null值处理", getClass(), value);
@@ -43,5 +43,10 @@ public final class BigDecimalDataTypeHandler implements DataTypeHandler {
 	public Object turnValueToTargetDataType(Object value) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
 	}
 }

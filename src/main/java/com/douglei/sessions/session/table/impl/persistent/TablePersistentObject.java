@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.State;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.execution.ExecutionType;
+import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
 import com.douglei.sessions.session.table.impl.persistent.execution.UpdateExecutionHolder;
@@ -27,18 +27,21 @@ import com.douglei.utils.reflect.IntrospectorUtil;
 public class TablePersistentObject implements PersistentObject{
 	private static final Logger logger = LoggerFactory.getLogger(TablePersistentObject.class);
 	
+	// 记录传入的对象[Object originObject]
+	private Object originObject;
+	
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
 	private State state;
 	
 	@SuppressWarnings("unchecked")
-	public TablePersistentObject(TableMetadata tableMetadata, Object propertyObject) {
-		if(propertyObject instanceof Map) {
+	public TablePersistentObject(TableMetadata tableMetadata, Object originObject) {
+		if(originObject instanceof Map) {
 			logger.debug("propertyObject is Map type, 从该map中, 筛选出相关列的数据信息");
-			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)propertyObject);
+			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
 		}else {
 			logger.debug("propertyObject is Object type, 从该object中, 通过java内省机制, 获取相关列的数据信息");
-			propertyMap = IntrospectorUtil.getProperyValues(propertyObject, tableMetadata.getColumnMetadataCodes());
+			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnMetadataCodes());
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取的最终propertyMap为: {}", propertyMap.toString());
@@ -48,6 +51,7 @@ public class TablePersistentObject implements PersistentObject{
 			throw new NullPointerException("要操作的数据不能为空");
 		}
 		this.tableMetadata = tableMetadata;
+		setOriginObject(originObject);
 	}
 	/**
 	 * 从propertyMap集合中, 筛选出相关列的数据信息
@@ -123,5 +127,14 @@ public class TablePersistentObject implements PersistentObject{
 			default:
 				return null;
 		}
+	}
+	
+	@Override
+	public Object getOriginObject() {
+		return originObject;
+	}
+	@Override
+	public void setOriginObject(Object originObject) {
+		this.originObject = originObject;
 	}
 }

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.datatype.DataTypeHandler;
-import com.douglei.utils.datatype.ValidationUtil;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -28,13 +28,13 @@ public final class DoubleDataTypeHandler implements DataTypeHandler {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} - setValue's value is {}", getClass(), value);
 		}
-		if(ValidationUtil.isNumber(value)) {
-			preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString().trim()));
-		}else {
+		if(StringUtil.isEmpty(value)) {
 			if(logger.isDebugEnabled()) {
-				logger.debug("{} - value的值为[{}], 不是double类型, 数据库做null值处理", getClass(), value);
+				logger.debug("{} - value的值为空, 数据库做null值处理", getClass(), value);
 			}
 			preparedStatement.setNull(parameterIndex, Types.DECIMAL);
+		}else {
+			preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString()));
 		}
 	}
 
@@ -42,5 +42,10 @@ public final class DoubleDataTypeHandler implements DataTypeHandler {
 	public Object turnValueToTargetDataType(Object value) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
 	}
 }

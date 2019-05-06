@@ -37,7 +37,7 @@ public enum TransactionIsolationLevel {
 	}
 
 	public static TransactionIsolationLevel toValue(String value) {
-		value = value.trim().toUpperCase();
+		value = value.toUpperCase();
 		
 		TransactionIsolationLevel[] tils = TransactionIsolationLevel.values();
 		for (TransactionIsolationLevel transactionIsolationLevel : tils) {

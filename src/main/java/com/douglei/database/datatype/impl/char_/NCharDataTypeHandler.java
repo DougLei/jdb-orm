@@ -39,4 +39,9 @@ public final class NCharDataTypeHandler implements DataTypeHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
+	}
 }

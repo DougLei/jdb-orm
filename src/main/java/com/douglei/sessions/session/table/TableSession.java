@@ -45,4 +45,21 @@ public interface TableSession extends BasicSession{
 	 * @param propertyMap
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
+	
+	/**
+	 * 根据id, 查询对应的数据
+	 * @param targetClass
+	 * @param id 基础类型值 或 Map<String, 基础类型值>
+	 * @return
+	 */
+	<T> T queryById(Class<T> targetClass, Object id);
+	
+	/**
+	 * 根据id, 查询对应的数据
+	 * @param targetClass
+	 * @param code
+	 * @param id id 基础类型值 或 Map<String, 基础类型值>
+	 * @return
+	 */
+	<T> T queryById(Class<T> targetClass, String code, Object id);
 }

@@ -44,4 +44,9 @@ public final class DateDataTypeHandler implements DataTypeHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
+	}
 }

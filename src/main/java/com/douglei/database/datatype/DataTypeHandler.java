@@ -24,4 +24,10 @@ public interface DataTypeHandler {
 	 * @return
 	 */
 	Object turnValueToTargetDataType(Object value);
+
+	/**
+	 * 该datatype是否是IO流
+	 * @return
+	 */
+	boolean isIOStream();
 }

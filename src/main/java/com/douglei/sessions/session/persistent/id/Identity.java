@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.persistent;
+package com.douglei.sessions.session.persistent.id;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,6 +17,12 @@ public class Identity {
 
 	public Identity(Object id) {
 		this.id = id;
+		if(isNull()) {
+			throw new NullPointerException("id不能为空");
+		}
+		if(!(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map)) {
+			throw new UnsupportedIdentityDataTypeException("目前id只支持[java.lang.Integer类型]、[java.lang.String类型]或[java.util.Map<String, Object>类型]");
+		}
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class Identity {
 	 * id值是否为空
 	 * @return
 	 */
-	public boolean isNull() {
+	private boolean isNull() {
 		if(id == null) {
 			logger.debug("id is null");
 			return true;
@@ -83,5 +89,19 @@ public class Identity {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 获取主键值
+	 * @param pkCode
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public Object getPKValue(String pkCode) {
+		if(id instanceof Map) {
+			return ((Map<String, Object>)id).get(pkCode);
+		}else {
+			return id;
+		}
 	}
 }

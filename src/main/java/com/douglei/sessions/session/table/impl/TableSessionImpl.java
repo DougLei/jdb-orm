@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,19 +13,23 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.session.MappingMismatchingException;
-import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
 import com.douglei.sessions.session.persistent.State;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.execution.ExecutionType;
+import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.persistent.TablePersistentObject;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
+import com.douglei.utils.reflect.ConstructorUtil;
+import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -107,9 +112,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
 		Identity id = persistent.getId();
-		if(id.isNull()) {
-			throw new NullPointerException("保存的对象["+code+"], id值不能为空");
-		}
 		if(cache.containsKey(id)) {
 			throw new RepeatPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
 		}
@@ -131,10 +133,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
 		Identity id = persistent.getId();
-		if(id.isNull()) {
-			throw new NullPointerException("修改的对象["+code+"], id值不能为空");
-		}
-		
 		logger.debug("将persistentObjectCache集合中对应的持久化对象覆盖");
 		cache.put(id, persistent);
 		
@@ -165,7 +163,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(cacheList.size() > 0) {
 			PersistentObject oldPersistent = null ;
 			for (int i = 0; i < cacheList.size(); i++) {
-				if(cacheList.get(i).getId() == id) {
+				if(cacheList.get(i).getId().equals(id)) {
 					oldPersistent = cacheList.remove(i);
 					break;
 				}
@@ -189,10 +187,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
 		Identity id = persistent.getId();
-		if(id.isNull()) {
-			throw new NullPointerException("删除的对象["+code+"], id值不能为空");
-		}
-		
 		if(cache.containsKey(id)) {
 			logger.debug("将persistentObjectCache集合中对应的持久化对象移除");
 			cache.remove(id);
@@ -225,7 +219,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 		if(cacheList.size() > 0) {
 			for (int i = 0; i < cacheList.size(); i++) {
-				if(cacheList.get(i).getId() == id) {
+				if(cacheList.get(i).getId().equals(id)) {
 					cacheList.remove(i);
 					break;
 				}
@@ -294,7 +288,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 				if(logger.isDebugEnabled()) {
 					logger.debug("执行executionType={}, persistentObject={}, 获取的ExecutionHolder {} = {}", executionType.toString(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
 				}
-				executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
+				super.executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
 			}
 		}
 	}
@@ -304,4 +298,92 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		flush();
 		super.close();
 	}
+
+	@Override
+	public <T> T queryById(Class<T> targetClass, Object id) {
+		return queryById(targetClass, targetClass.getName(), id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T queryById(Class<T> targetClass, String code, Object id) {
+		Identity identity = new Identity(id);
+		
+		// 先从缓存中取
+		Object cacheObject = null;
+		PersistentObject persistentObject = null;
+		Map<Identity, PersistentObject> cache = getCache(code);
+		if(cache != null && cache.size() > 0) {
+			Set<Identity> identities = cache.keySet();
+			for (Identity identity_ : identities) {
+				if(identity.equals(identity_)) {
+					persistentObject = cache.get(identity);
+					cacheObject = persistentObject.getOriginObject();
+				}
+			}
+		}
+		if(cacheObject != null) {
+			if(cacheObject instanceof Map) {
+				cacheObject = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), (Map<String, Object>)cacheObject);
+				persistentObject.setOriginObject(cacheObject);
+			}
+			return (T) cacheObject;
+		}
+		
+		// 缓存中没有, 再去数据库中查询
+		return queryById(targetClass, code, identity, cache);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private <T> T queryById(Class<T> targetClass, String code, Identity id, Map<Identity, PersistentObject> cache) {
+		TableMetadata tableMetadata = (TableMetadata) getMapping(code, "queryById").getMetadata();
+		
+		
+		StringBuilder selectSql = new StringBuilder();
+		selectSql.append("select ");
+		Set<String> codes = tableMetadata.getColumnMetadataCodes();
+		int size = codes.size();
+		int index = 1;
+		ColumnMetadata column = null;
+		for (String cd : codes) {
+			column = tableMetadata.getColumnMetadata(cd);
+			if(!column.isLazyload()) {
+				selectSql.append(column.getName());
+				if(index<size) {
+					selectSql.append(",");
+				}
+			}
+			index++;
+		}
+		
+		
+		
+		selectSql.append(" from ").append(tableMetadata.getName()).append(" where ");
+		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
+		size = primaryKeyColumns.size();
+		
+		List<Parameter> parameters = new ArrayList<Parameter>(size);
+		index = 1;
+		for (ColumnMetadata pkColumn : primaryKeyColumns) {
+			selectSql.append(pkColumn.getName()).append("=?");
+			parameters.add(new Parameter(id.getPKValue(pkColumn.getCode()), pkColumn.getDataType()));
+			
+			if(index < size) {
+				selectSql.append(" and ");
+			}
+			index++;
+		}
+		
+		Map<String, Object> map = super.uniqueQuery(selectSql.toString(), parameters);
+		if(map.size() > 0) {
+			Object object = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object);
+			persistentObject.setState(State.PERSISTENT);
+			cache.put(id, persistentObject);
+			
+			return (T) object;
+		}
+		return null;
+	}
+	
 }

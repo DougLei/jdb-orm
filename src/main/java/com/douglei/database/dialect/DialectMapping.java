@@ -38,7 +38,7 @@ public class DialectMapping {
 			throw new NullPointerException("databaseCode的参数值不能为空");
 		}
 		
-		Dialect dialect = DIALECT_MAP.get(databaseCode.trim().toUpperCase());
+		Dialect dialect = DIALECT_MAP.get(databaseCode.toUpperCase());
 		if(dialect == null) {
 			throw new NullPointerException("系统目前不支持["+databaseCode+"], 目前支持的databaseCode值包括:"+DIALECT_MAP.keySet());
 		}

@@ -34,4 +34,9 @@ public final class BigStringDataTypeHandler implements DataTypeHandler {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean isIOStream() {
+		return true;
+	}
 }

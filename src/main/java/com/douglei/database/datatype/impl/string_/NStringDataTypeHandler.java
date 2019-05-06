@@ -33,10 +33,15 @@ public final class NStringDataTypeHandler implements DataTypeHandler {
 			preparedStatement.setNString(parameterIndex, value.toString());
 		}
 	}
-
+	
 	@Override
 	public Object turnValueToTargetDataType(Object value) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean isIOStream() {
+		return false;
 	}
 }

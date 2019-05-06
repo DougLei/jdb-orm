@@ -29,9 +29,18 @@ public class ColumnMetadata implements Metadata{
 	 */
 	private DataTypeHandler dataTypeHandler;
 	
-	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String propertyName) {
+	/**
+	 * 是否是懒加载
+	 * <pre>
+	 * 	默认流字段, 就是懒加载
+	 * </pre>
+	 */
+	private boolean lazyload;
+	
+	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String propertyName, boolean lazyload) {
 		this.name = name;
 		this.dataTypeHandler = dataTypeHandler;
+		this.lazyload = lazyload;
 		setPropertyName(propertyName);
 		setCode();
 	}
@@ -92,5 +101,16 @@ public class ColumnMetadata implements Metadata{
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.COLUMN;
+	}
+	
+	/**
+	 * <pre>
+	 * 	是否支持自动查询
+	 * 	即一些大字段, 是不会直接查询的, 如果需要查询大字段内容, 则只能写sql语句查询
+	 * </pre>
+	 * @return
+	 */
+	public boolean isLazyload() {
+		return lazyload;
 	}
 }
