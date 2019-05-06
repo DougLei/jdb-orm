@@ -40,9 +40,20 @@ public interface PersistentObject {
 	Object getOriginObject();
 	/**
 	 * set源对象
-	 * @return
+	 * @param originObject
 	 */
 	void setOriginObject(Object originObject);
+	/**
+	 * 获取类对象
+	 * @return
+	 */
+	Object getClassObject();
+	/**
+	 * set类对象
+	 * @param classObject
+	 * @return
+	 */
+	void setClassObject(Object classObject);
 	
 	/**
 	 * 获取执行对象

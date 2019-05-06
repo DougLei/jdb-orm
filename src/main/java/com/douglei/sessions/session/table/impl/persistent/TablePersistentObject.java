@@ -27,31 +27,16 @@ import com.douglei.utils.reflect.IntrospectorUtil;
 public class TablePersistentObject implements PersistentObject{
 	private static final Logger logger = LoggerFactory.getLogger(TablePersistentObject.class);
 	
-	// 记录传入的对象[Object originObject]
 	private Object originObject;
+	private Object classObject;
+	private State state;
 	
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
-	private State state;
 	
-	@SuppressWarnings("unchecked")
 	public TablePersistentObject(TableMetadata tableMetadata, Object originObject) {
-		if(originObject instanceof Map) {
-			logger.debug("propertyObject is Map type, 从该map中, 筛选出相关列的数据信息");
-			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
-		}else {
-			logger.debug("propertyObject is Object type, 从该object中, 通过java内省机制, 获取相关列的数据信息");
-			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnMetadataCodes());
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取的最终propertyMap为: {}", propertyMap.toString());
-		}
-		if(propertyMap == null || propertyMap.size() == 0) {
-			logger.debug("最终propertyMap为空");
-			throw new NullPointerException("要操作的数据不能为空");
-		}
-		this.tableMetadata = tableMetadata;
 		setOriginObject(originObject);
+		this.tableMetadata = tableMetadata;
 	}
 	/**
 	 * 从propertyMap集合中, 筛选出相关列的数据信息
@@ -104,15 +89,7 @@ public class TablePersistentObject implements PersistentObject{
 	
 	@Override
 	public String toString() {
-		return propertyMap.toString();
-	}
-	@Override
-	public State getState() {
-		return state;
-	}
-	@Override
-	public void setState(State state) {
-		this.state = state;
+		return originObject.toString();
 	}
 	
 	@Override
@@ -130,11 +107,47 @@ public class TablePersistentObject implements PersistentObject{
 	}
 	
 	@Override
+	public State getState() {
+		return state;
+	}
+	@Override
+	public void setState(State state) {
+		this.state = state;
+	}
+	
+	@Override
+	public Object getClassObject() {
+		return classObject;
+	}
+	
+	@Override
+	public void setClassObject(Object classObject) {
+		this.classObject = classObject;
+	}
+	
+	@Override
 	public Object getOriginObject() {
 		return originObject;
 	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setOriginObject(Object originObject) {
+		if(originObject instanceof Map) {
+			logger.debug("propertyObject is Map type, 从该map中, 筛选出相关列的数据信息");
+			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
+		}else {
+			logger.debug("propertyObject is Object type, 从该object中, 通过java内省机制, 获取相关列的数据信息");
+			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnMetadataCodes());
+			setClassObject(originObject);
+		}
+		if(propertyMap == null || propertyMap.size() == 0) {
+			logger.debug("最终propertyMap为空");
+			throw new NullPointerException("要操作的数据不能为空");
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取的最终propertyMap为: {}", propertyMap.toString());
+		}
 		this.originObject = originObject;
 	}
 }

@@ -117,6 +117,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 		
 		persistent.setState(State.NEW_INSTANCE);
+		
 		cache.put(id, persistent);
 		insertCache.add(persistent);
 	}
@@ -310,7 +311,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Identity identity = new Identity(id);
 		
 		// 先从缓存中取
-		Object cacheObject = null;
+		Object originObjectInCache = null;
 		PersistentObject persistentObject = null;
 		Map<Identity, PersistentObject> cache = getCache(code);
 		if(cache != null && cache.size() > 0) {
@@ -318,16 +319,18 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			for (Identity identity_ : identities) {
 				if(identity.equals(identity_)) {
 					persistentObject = cache.get(identity);
-					cacheObject = persistentObject.getOriginObject();
+					originObjectInCache = persistentObject.getOriginObject();
+					break;
 				}
 			}
 		}
-		if(cacheObject != null) {
-			if(cacheObject instanceof Map) {
-				cacheObject = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), (Map<String, Object>)cacheObject);
-				persistentObject.setOriginObject(cacheObject);
+		if(originObjectInCache != null) {
+			Object object = originObjectInCache;
+			if(originObjectInCache instanceof Map) {
+				object = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), (Map<String, Object>)originObjectInCache);
+				persistentObject.setClassObject(object);
 			}
-			return (T) cacheObject;
+			return (T) object;
 		}
 		
 		// 缓存中没有, 再去数据库中查询
