@@ -1,5 +1,6 @@
 package com.douglei.sessions.sqlsession;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.utils.CryptographyUtil;
+import com.douglei.utils.reflect.ConstructorUtil;
+import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -190,5 +193,34 @@ public class SqlSessionImpl implements SqlSession{
 				statementHandlerCache.clear();
 			}
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+		List<Map<String, Object>> listMap = query(sql, parameters);
+		if(listMap.size() > 0) {
+			List<T> listT = new ArrayList<T>(listMap.size());
+			Object obj = null;
+			for (Map<String, Object> map : listMap) {
+				obj = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+				if(obj == null) {
+					listT.add(null);
+				}else {
+					listT.add((T)obj);
+				}
+			}
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+		Map<String, Object> map = uniqueQuery(sql, parameters);
+		if(map.size() > 0) {
+			return (T)IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+		}
+		return null;
 	}
 }
