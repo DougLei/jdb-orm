@@ -1,14 +1,16 @@
 package com.douglei.sessions.session.table;
 
+import java.util.List;
 import java.util.Map;
 
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的session接口
  * @author DougLei
  */
-public interface TableSession extends BasicSession, QuerySession{
+public interface TableSession extends BasicSession{
 
 	/**
 	 * 保存对象
@@ -45,4 +47,22 @@ public interface TableSession extends BasicSession, QuerySession{
 	 * @param propertyMap
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
+	
+	/**
+	 * 查询结果集
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> query(Class<T> targetClass, String sql, List<Parameter> parameters);
+	
+	/**
+	 * 查询唯一结果
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Parameter> parameters);
 }

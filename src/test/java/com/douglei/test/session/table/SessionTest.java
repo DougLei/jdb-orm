@@ -1,4 +1,4 @@
-package com.douglei.test.session;
+package com.douglei.test.session.table;
 
 import org.junit.After;
 import org.junit.Before;

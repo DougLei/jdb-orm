@@ -1,4 +1,4 @@
-package com.douglei.test.session;
+package com.douglei.test.session.table;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,5 +51,10 @@ public class SysUser {
 	
 	public static List<SysUser> getList(){
 		return list;
+	}
+	
+	@Override
+	public String toString() {
+		return "SysUser [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + "]";
 	}
 }

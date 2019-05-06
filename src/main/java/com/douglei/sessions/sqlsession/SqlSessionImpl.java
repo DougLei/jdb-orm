@@ -57,6 +57,16 @@ public class SqlSessionImpl implements SqlSession{
 				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并放到缓存中");
 				statementHandler = connection.createStatementHandler(sql, parameters);
 				statementHandlerCache.put(code, statementHandler);
+			}else {
+				if(logger.isDebugEnabled()) {
+					logger.debug("缓存中存在{}实例", statementHandler.getClass());
+					logger.debug("sql语句为: {}", sql);
+					if(parameters==null || parameters.size()==0) {
+						logger.debug("本次没有参数");
+					}else {
+						logger.debug("本次参数为: {}", parameters.toString());
+					}
+				}
 			}
 		}else {
 			logger.debug("没有开启缓存, 创建StatementHandler实例");
@@ -71,7 +81,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
+	public List<Map<String, Object>> query(String sql, List<? extends Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -89,7 +99,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
+	public Map<String, Object> uniqueQuery(String sql, List<? extends Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -107,7 +117,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public List<Object[]> query_(String sql, List<Object> parameters) {
+	public List<Object[]> query_(String sql, List<? extends Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -125,7 +135,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
+	public Object[] uniqueQuery_(String sql, List<? extends Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);

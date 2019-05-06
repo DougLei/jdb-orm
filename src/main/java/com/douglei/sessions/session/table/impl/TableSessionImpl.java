@@ -14,6 +14,7 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.Identity;
 import com.douglei.sessions.session.persistent.PersistentObject;
@@ -25,6 +26,8 @@ import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.persistent.TablePersistentObject;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
+import com.douglei.utils.reflect.ConstructorUtil;
+import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -305,11 +308,34 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		super.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public TableQuery createTableQuery() {
-		return new TableQuery();
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Parameter> parameters) {
+		List<Map<String, Object>> listMap = super.query(sql, parameters);
+		if(listMap.size() > 0) {
+			List<T> listT = new ArrayList<T>(listMap.size());
+			Object obj = null;
+			for (Map<String, Object> map : listMap) {
+				obj = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+				if(obj == null) {
+					listT.add(null);
+				}else {
+					listT.add((T)obj);
+				}
+			}
+		}
+		return null;
 	}
-	
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Parameter> parameters) {
+		Map<String, Object> map = super.uniqueQuery(sql, parameters);
+		if(map.size() > 0) {
+			return (T)IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+		}
+		return null;
+	}
+
 	
 }

@@ -22,7 +22,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 
 	@Override
-	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
+	public List<Map<String, Object>> getQueryResultList(List<? extends Object> parameters) {
 		if(isExecuted()) {
 			return getQueryResultList();
 		}
@@ -39,7 +39,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 	
 	@Override
-	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
+	public Map<String, Object> getQueryUniqueResult(List<? extends Object> parameters) {
 		if(isExecuted()) {
 			return getQueryUniqueResult();
 		}
@@ -56,7 +56,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 	
 	@Override
-	public List<Object[]> getQueryResultList_(List<Object> parameters) {
+	public List<Object[]> getQueryResultList_(List<? extends Object> parameters) {
 		if(isExecuted()) {
 			return getQueryResultList_();
 		}
@@ -73,7 +73,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<Object> parameters) {
+	public Object[] getQueryUniqueResult_(List<? extends Object> parameters) {
 		if(isExecuted()) {
 			return getQueryUniqueResult_();
 		}

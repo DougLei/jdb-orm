@@ -27,7 +27,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param newParameters
 	 * @return
 	 */
-	private boolean isSameParameters(List<Object> newParameters) {
+	private boolean isSameParameters(List<? extends Object> newParameters) {
 		if(parameters == newParameters) {
 			return true;
 		}
@@ -73,7 +73,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param parameters
 	 * @return
 	 */
-	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
+	public List<Map<String, Object>> getQueryResultList(List<? extends Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryResultList();
 		}
@@ -89,7 +89,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
+	public Map<String, Object> getQueryUniqueResult(List<? extends Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryUniqueResult();
 		}
@@ -105,7 +105,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public List<Object[]> getQueryResultList_(List<Object> parameters) {
+	public List<Object[]> getQueryResultList_(List<? extends Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryResultList_();
 		}
@@ -121,7 +121,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<Object> parameters) {
+	public Object[] getQueryUniqueResult_(List<? extends Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryUniqueResult_();
 		}
