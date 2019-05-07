@@ -190,5 +190,6 @@ public class SqlSessionImpl implements SqlSession{
 				statementHandlerCache.clear();
 			}
 		}
+		logger.debug("end");
 	}
 }

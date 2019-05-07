@@ -74,21 +74,21 @@ public class ColumnMetadata implements Metadata{
 	/**
 	 * <pre>
 	 * 	修正propertyName的值
-	 * 	如果配置了类名, 则属性名必须存在, 如果配置了就使用, 没有配置, 就将列名转换为属性名
 	 * 	如果没有配置类名, 则属性名必须不存在, 如果配置了就置空, 没有配置就不处理
+	 * 	如果配置了类名, 则属性名必须存在, 如果配置了就使用, 没有配置, 就将列名转换为属性名
 	 * </pre>
-	 * @param tableMetadataClassNameNotNull
+	 * @param classNameIsNull
 	 */
-	public void fixPropertyNameValue(boolean tableMetadataClassNameNotNull) {
-		if(tableMetadataClassNameNotNull) {
-			if(propertyNameIsNull) {
-				propertyNameIsNull = false;
-				propertyName = NamingUtil.columnName2PropertyName(name);
-			}
-		}else {
+	public void fixPropertyNameValue(boolean classNameIsNull) {
+		if(classNameIsNull) {
 			if(!propertyNameIsNull) {
 				propertyNameIsNull = true;
 				propertyName = null;
+			}
+		}else {
+			if(propertyNameIsNull) {
+				propertyNameIsNull = false;
+				propertyName = NamingUtil.columnName2PropertyName(name);
 			}
 		}
 	}

@@ -22,7 +22,7 @@ public class TableMetadata implements Metadata{
 	 * 映射的代码类名
 	 */
 	private String className;
-	private boolean classNameNotNull;
+	private boolean classNameIsNull;
 	
 	/**
 	 * 包含的列元数据集合
@@ -87,8 +87,9 @@ public class TableMetadata implements Metadata{
 		return className;
 	}
 	private void setClassName(String className) {
-		if(StringUtil.notEmpty(className)) {
-			classNameNotNull = true;
+		if(StringUtil.isEmpty(className)) {
+			classNameIsNull = true;
+		}else {
 			this.className = className;
 		}
 	}
@@ -112,8 +113,8 @@ public class TableMetadata implements Metadata{
 		return primaryKeyColumns.containsKey(code);
 	}
 	
-	public boolean classNameNotNull() {
-		return classNameNotNull;
+	public boolean classNameIsNull() {
+		return classNameIsNull;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.utils.NamingUtil;
@@ -300,13 +301,26 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		super.close();
 	}
 
+	private TableMetadata getTableMetadata(String code) {
+		Mapping mapping = mappingWrapper.getMapping(code);
+		if(mapping == null) {
+			throw new NullPointerException("不存在code为["+code+"]的映射");
+		}
+		if(mapping.getMappingType() != MappingType.TABLE) {
+			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
+		}
+		logger.debug("获取code={} tablemetadata", code);
+		return (TableMetadata) mapping.getMetadata();
+	}
+	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		if(listMap.size() > 0) {
+			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 			List<T> listT = new ArrayList<T>(listMap.size());
 			for (Map<String, Object> map : listMap) {
-				listT.add(map2Class(targetClass, map));
+				listT.add(map2Class(targetClass, map, tableMetadata));
 			}
 			return listT;
 		}
@@ -316,16 +330,24 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
-		return map2Class(targetClass, map);
+		if(map.size() > 0) {
+			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
+			return map2Class(targetClass, map, tableMetadata);
+		}
+		return null;
 	}
 	
 	// 将map转换为类
 	@SuppressWarnings("unchecked")
-	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
+	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
 		if(map.size() == 0) {
 			return null;
 		}
-		map = mapKey2PropertyName(map);
+		if(tableMetadata == null || tableMetadata.classNameIsNull()) { // 没有配置映射, 或没有配置映射的类, 则将列名转换为属性名
+			map = mapKey2PropertyName(map); 
+		}else {
+			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
+		}
 		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
 	}
 
@@ -335,6 +357,19 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Set<String> keys = map.keySet();
 		for (String key : keys) {
 			targetMap.put(NamingUtil.columnName2PropertyName(key), map.get(key));
+		}
+		return targetMap;
+	}
+	
+	// 将map的key, 由列名转换成映射的属性名
+	private Map<String, Object> mapKey2MappingPropertyName(Map<String, Object> map, TableMetadata tableMetadata) {
+		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
+		
+		ColumnMetadata column = null;
+		Set<String> codes = tableMetadata.getColumnMetadataCodes();
+		for (String code : codes) {
+			column = tableMetadata.getColumnMetadata(code);
+			targetMap.put(column.getPropertyName(), map.get(column.getName().toUpperCase()));
 		}
 		return targetMap;
 	}

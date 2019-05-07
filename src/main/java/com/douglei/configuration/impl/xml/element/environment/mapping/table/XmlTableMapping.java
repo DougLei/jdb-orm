@@ -58,11 +58,11 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
 		}
 		
-		boolean classNameNotNull = tableMetadata.classNameNotNull();
+		boolean classNameIsNull = tableMetadata.classNameIsNull();
 		ColumnMetadata columnMetadata = null;
 		for (Object object : elems) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
-			columnMetadata.fixPropertyNameValue(classNameNotNull);
+			columnMetadata.fixPropertyNameValue(classNameIsNull);
 			tableMetadata.addColumnMetadata(columnMetadata);
 		}
 	}
