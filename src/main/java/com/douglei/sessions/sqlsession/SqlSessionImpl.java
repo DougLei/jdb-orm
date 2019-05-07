@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.page.PageResult;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.utils.CryptographyUtil;
 
@@ -191,5 +192,16 @@ public class SqlSessionImpl implements SqlSession{
 			}
 		}
 		logger.debug("end");
+	}
+
+	@Override
+	public PageResult pageQuery(String sql) {
+		return pageQuery(sql, null);
+	}
+
+	@Override
+	public PageResult pageQuery(String sql, List<? extends Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -3,6 +3,7 @@ package com.douglei.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.database.sql.page.PageResult;
 import com.douglei.sessions.BasicSession;
 
 /**
@@ -80,4 +81,19 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	int executeUpdate(String sql, List<? extends Object> parameters);
+	
+	/**
+	 * 分页查询
+	 * @param sql
+	 * @return 
+	 */
+	PageResult pageQuery(String sql);
+	
+	/**
+	 * 分页查询
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 
+	 */
+	PageResult pageQuery(String sql, List<? extends Object> parameters);
 }
