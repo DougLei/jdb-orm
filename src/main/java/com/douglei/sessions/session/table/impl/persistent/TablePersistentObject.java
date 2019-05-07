@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.sessions.session.persistent.PersistentObject;
-import com.douglei.sessions.session.persistent.State;
+import com.douglei.sessions.session.persistent.OperationState;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
@@ -25,15 +25,15 @@ public class TablePersistentObject implements PersistentObject{
 	private static final Logger logger = LoggerFactory.getLogger(TablePersistentObject.class);
 	
 	private Object originObject;
-	private State state;
+	private OperationState operationState;
 	
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
 	
-	public TablePersistentObject(TableMetadata tableMetadata, Object originObject, State state) {
-		setOriginObject(originObject);
+	public TablePersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
 		this.tableMetadata = tableMetadata;
-		setState(state);
+		setOriginObject(originObject);
+		setOperationState(operationState);
 	}
 	
 	@Override
@@ -69,14 +69,14 @@ public class TablePersistentObject implements PersistentObject{
 	@Override
 	public String toString() {
 		return "\n"
-				+ "state:" + state 
+				+ "operationState:" + operationState 
 				+ "\n" 
 				+ originObject.toString();
 	}
 	
 	@Override
 	public ExecutionHolder getExecutionHolder() {
-		switch(state) {
+		switch(operationState) {
 			case CREATE:
 				return new InsertExecutionHolder(tableMetadata, propertyMap);
 			case DELETE:
@@ -89,12 +89,12 @@ public class TablePersistentObject implements PersistentObject{
 	}
 	
 	@Override
-	public State getState() {
-		return state;
+	public OperationState getOperationState() {
+		return operationState;
 	}
 	@Override
-	public void setState(State state) {
-		this.state = state;
+	public void setOperationState(OperationState operationState) {
+		this.operationState = operationState;
 	}
 	
 	@Override

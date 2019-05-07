@@ -26,12 +26,12 @@ public interface PersistentObject {
 	 * 获取持久化对象的状态
 	 * @return
 	 */
-	State getState();
+	OperationState getOperationState();
 	/**
 	 * 设置持久化对象的状态
-	 * @param state
+	 * @param operationState
 	 */
-	void setState(State state);
+	void setOperationState(OperationState operationState);
 	
 	/**
 	 * 获取源对象

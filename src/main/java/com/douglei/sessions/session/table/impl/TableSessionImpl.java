@@ -16,10 +16,11 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.utils.NamingUtil;
 import com.douglei.sessions.session.MappingMismatchingException;
+import com.douglei.sessions.session.persistent.OperationState;
 import com.douglei.sessions.session.persistent.PersistentObject;
 import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
-import com.douglei.sessions.session.persistent.State;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
@@ -60,14 +61,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public void save(Object object) {
 		Mapping mapping = getMapping(object, "save");
-		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object, State.CREATE);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getMapping(code, "save");
-		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, State.CREATE);
+		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
@@ -160,7 +161,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(cache.containsKey(id)) {
 			logger.debug("缓存中存在要修改的数据持久化对象");
 			PersistentObject persistentObject = cache.get(id);
-			switch(persistentObject.getState()) {
+			switch(persistentObject.getOperationState()) {
 				case CREATE:
 				case UPDATE:
 					logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());
@@ -171,7 +172,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			}
 		}else {
 			logger.debug("缓存中不存在要修改的数据持久化对象");
-			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, State.UPDATE);
+			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, OperationState.UPDATE);
 			persistentObject.setIdentity(id);
 			cache.put(id, persistentObject);
 		}
@@ -200,20 +201,21 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(cache.containsKey(id)) {
 			logger.debug("缓存中存在要删除的数据持久化对象");
 			PersistentObject persistentObject = cache.get(id);
-			switch(persistentObject.getState()) {
+			switch(persistentObject.getOperationState()) {
 				case CREATE:
 					logger.debug("将create状态的数据, 从缓存中移除, 完成delete");
 					cache.remove(id);
 					return;
 				case UPDATE:
 					logger.debug("将update状态的数据, 改成delete状态, 完成delete");
+					persistentObject.setOperationState(OperationState.DELETE);
 					return;
 				case DELETE:
 					throw new IllegalArgumentException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
 			}
 		}else {
 			logger.debug("缓存中不存在要删除的数据持久化对象");
-			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, State.DELETE);
+			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, OperationState.DELETE);
 			persistentObject.setIdentity(id);
 			cache.put(id, persistentObject);
 		}
@@ -278,12 +280,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 						executionHolder = persistentObject.getExecutionHolder();
 						if(executionHolder == null) {
 							if(logger.isDebugEnabled()) {
-								logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder实例为null", persistentObject.getState(), persistentObject.toString());
+								logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder实例为null", persistentObject.getOperationState(), persistentObject.toString());
 							}
 							continue;
 						}
 						if(logger.isDebugEnabled()) {
-							logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
+							logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
 						}
 						super.executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
 					}
@@ -298,34 +300,42 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		super.close();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
-		// TODO 列还没有匹配属性
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		if(listMap.size() > 0) {
 			List<T> listT = new ArrayList<T>(listMap.size());
-			Object obj = null;
 			for (Map<String, Object> map : listMap) {
-				obj = IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
-				if(obj == null) {
-					listT.add(null);
-				}else {
-					listT.add((T)obj);
-				}
+				listT.add(map2Class(targetClass, map));
 			}
+			return listT;
 		}
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
-		// TODO 列还没有匹配属性
 		Map<String, Object> map = uniqueQuery(sql, parameters);
-		if(map.size() > 0) {
-			return (T)IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+		return map2Class(targetClass, map);
+	}
+	
+	// 将map转换为类
+	@SuppressWarnings("unchecked")
+	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
+		if(map.size() == 0) {
+			return null;
 		}
-		return null;
+		map = mapKey2PropertyName(map);
+		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+	}
+
+	// 将map的key, 由列名转换成属性名
+	private Map<String, Object> mapKey2PropertyName(Map<String, Object> map) {
+		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
+		Set<String> columnNames = map.keySet();
+		for (String columnName : columnNames) {
+			targetMap.put(NamingUtil.columnName2PropertyName(columnName), map.get(columnName));
+		}
+		return targetMap;
 	}
 }

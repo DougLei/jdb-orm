@@ -1,5 +1,7 @@
 package com.douglei.test.session.table;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,10 @@ public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		
+		List<SysUser> users = session.query(SysUser.class, "select * from sys_user", null);
+		for (SysUser sysUser : users) {
+			System.out.println(sysUser);
+		}
 	}
 	
 	@Test
