@@ -7,5 +7,6 @@ package com.douglei.sessions.session.persistent;
 public enum OperationState {
 	CREATE,
 	UPDATE,
+	CREATE_DELETE,//标识create创建的数据, 又被删除
 	DELETE;
 }

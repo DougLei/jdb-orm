@@ -24,6 +24,7 @@ public class SessionTest {
 	public void saveTest() {
 		session.save(SysUser.getList().get(1));
 		session.delete(SysUser.getList().get(1));
+		session.delete(SysUser.getList().get(1));
 	}
 	
 	@Test

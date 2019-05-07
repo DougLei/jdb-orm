@@ -26,6 +26,7 @@ import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.persistent.TablePersistentObject;
+import com.douglei.sessions.session.table.impl.persistent.execution.AlreadyDeletedException;
 import com.douglei.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
@@ -168,8 +169,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 					logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());
 					persistentObject.setOriginObject(object);
 					return;
-				case DELETE:
-					throw new IllegalArgumentException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
+				default:
+					throw new AlreadyDeletedException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
 			}
 		}else {
 			logger.debug("缓存中不存在要修改的数据持久化对象");
@@ -204,15 +205,15 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			PersistentObject persistentObject = cache.get(id);
 			switch(persistentObject.getOperationState()) {
 				case CREATE:
-					logger.debug("将create状态的数据, 从缓存中移除, 完成delete");
-					cache.remove(id);
+					logger.debug("将create状态的数据, 改成create_delete状态, 完成delete");
+					persistentObject.setOperationState(OperationState.CREATE_DELETE);
 					return;
 				case UPDATE:
 					logger.debug("将update状态的数据, 改成delete状态, 完成delete");
 					persistentObject.setOperationState(OperationState.DELETE);
 					return;
-				case DELETE:
-					throw new IllegalArgumentException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
+				default:
+					throw new AlreadyDeletedException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
 			}
 		}else {
 			logger.debug("缓存中不存在要删除的数据持久化对象");
