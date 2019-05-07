@@ -58,7 +58,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				int columnCount = resultSetMetaData.getColumnCount();
 				resutSetColumnNames = new ArrayList<String>(columnCount);
 				for(int i=1;i<=columnCount;i++) {
-					resutSetColumnNames.add(resultSetMetaData.getColumnName(i));
+					resutSetColumnNames.add(resultSetMetaData.getColumnName(i).toUpperCase());
 				}
 			}
 			if(logger.isDebugEnabled()) {
