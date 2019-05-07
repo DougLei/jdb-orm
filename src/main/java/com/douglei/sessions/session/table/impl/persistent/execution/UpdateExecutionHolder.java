@@ -1,7 +1,6 @@
 package com.douglei.sessions.session.table.impl.persistent.execution;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,12 +50,14 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		updateSql.append(" where ");
 		
 		// 处理where值
-		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
-		size = primaryKeyColumns.size();
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+		size = primaryKeyColumnMetadataCodes.size();
 		index = 1;
-		for (ColumnMetadata pkColumn : primaryKeyColumns) {
-			updateSql.append(pkColumn.getName()).append("=?");
-			parameters.add(new Parameter(propertyMap.get(pkColumn.getCode()), pkColumn.getDataType()));
+		for (String pkCode : primaryKeyColumnMetadataCodes) {
+			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
+			
+			updateSql.append(columnMetadata.getName()).append("=?");
+			parameters.add(new Parameter(propertyMap.get(columnMetadata.getCode()), columnMetadata.getDataType()));
 			
 			if(index < size) {
 				updateSql.append(" and ");

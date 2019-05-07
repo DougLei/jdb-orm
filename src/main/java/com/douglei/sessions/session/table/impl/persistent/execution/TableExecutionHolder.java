@@ -43,6 +43,9 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	
 	@Override
 	public String toString() {
-		return (StringUtil.isEmpty(sql)?"sql is null":sql) + " -- " + ((parameters==null || parameters.size()==0)?"parameters is null":parameters.toString());
+		return "\n" + 
+				(StringUtil.isEmpty(sql)?"sql is null":sql) + 
+				" \n------------------------------------------------------------\n " + 
+				((parameters==null || parameters.size()==0)?"parameters is null":parameters.toString());
 	}
 }

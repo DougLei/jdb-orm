@@ -80,22 +80,4 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	int executeUpdate(String sql, List<? extends Object> parameters);
-	
-	/**
-	 * 查询结果集
-	 * @param targetClass
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
-	
-	/**
-	 * 查询唯一结果
-	 * @param targetClass
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 }

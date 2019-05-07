@@ -6,6 +6,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.utils.StringUtil;
+
 /**
  * 持久化对象
  * @author DougLei
@@ -22,6 +24,9 @@ public class Identity {
 		}
 		if(!(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map)) {
 			throw new UnsupportedIdentityDataTypeException("目前id只支持[java.lang.Integer类型]、[java.lang.String类型]或[java.util.Map<String, Object>类型]");
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取持久化对象id为: {} -- {}", id.getClass(), id.toString());
 		}
 	}
 
@@ -82,7 +87,7 @@ public class Identity {
 			}
  			Collection<?> values = tmap.values();
  			for (Object value : values) {
-				if(value == null) {
+				if(StringUtil.isEmpty(value)) {
 					logger.debug("id map, one of values is null");
 					return true;
 				}

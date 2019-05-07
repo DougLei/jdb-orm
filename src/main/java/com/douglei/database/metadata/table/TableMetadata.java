@@ -1,8 +1,6 @@
 package com.douglei.database.metadata.table;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +35,7 @@ public class TableMetadata implements Metadata{
 	/**
 	 * 主键列元数据集合
 	 */
-	private List<ColumnMetadata> primaryKeyColumns;
+	private Map<String, ColumnMetadata> primaryKeyColumns;
 	
 	public TableMetadata(String name, String className) {
 		setName(name);
@@ -54,9 +52,9 @@ public class TableMetadata implements Metadata{
 	
 	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
 		if(primaryKeyColumns == null) {
-			primaryKeyColumns = new ArrayList<ColumnMetadata>(3);
+			primaryKeyColumns = new HashMap<String, ColumnMetadata>(3);
 		}
-		primaryKeyColumns.add(columnMetadata);
+		primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
 	}
 	
 	/**
@@ -100,17 +98,18 @@ public class TableMetadata implements Metadata{
 	public ColumnMetadata getColumnMetadata(String code) {
 		return columns.get(code);
 	}
-	public List<ColumnMetadata> getPrimaryKeyColumns() {
-		return primaryKeyColumns;
+	public boolean isColumn(String code) {
+		return columns.containsKey(code);
 	}
 	
+	public Set<String> getPrimaryKeyColumnMetadataCodes(){
+		return primaryKeyColumns.keySet();
+	}
+	public ColumnMetadata getPrimaryKeyColumnMetadata(String code) {
+		return primaryKeyColumns.get(code);
+	}
 	public boolean isPrimaryKeyColumn(String code) {
-		for (ColumnMetadata pkColumn : primaryKeyColumns) {
-			if(code.equals(pkColumn.getCode())) {
-				return true;
-			}
-		}
-		return false;
+		return primaryKeyColumns.containsKey(code);
 	}
 	
 	public boolean classNameNotNull() {

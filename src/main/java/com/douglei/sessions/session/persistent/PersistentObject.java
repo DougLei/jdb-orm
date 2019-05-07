@@ -1,7 +1,6 @@
 package com.douglei.sessions.session.persistent;
 
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
-import com.douglei.sessions.session.persistent.execution.ExecutionType;
 import com.douglei.sessions.session.persistent.id.Identity;
 
 /**
@@ -21,6 +20,7 @@ public interface PersistentObject {
 	 * @return
 	 */
 	Identity getId();
+	void setIdentity(Identity identity);
 	
 	/**
 	 * 获取持久化对象的状态
@@ -43,22 +43,10 @@ public interface PersistentObject {
 	 * @param originObject
 	 */
 	void setOriginObject(Object originObject);
-	/**
-	 * 获取类对象
-	 * @return
-	 */
-	Object getClassObject();
-	/**
-	 * set类对象
-	 * @param classObject
-	 * @return
-	 */
-	void setClassObject(Object classObject);
 	
 	/**
 	 * 获取执行对象
-	 * @param executionType
 	 * @return
 	 */
-	ExecutionHolder getExecutionHolder(ExecutionType executionType);
+	ExecutionHolder getExecutionHolder();
 }

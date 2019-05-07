@@ -1,5 +1,6 @@
 package com.douglei.sessions.session.table;
 
+import java.util.List;
 import java.util.Map;
 
 import com.douglei.sessions.BasicSession;
@@ -47,19 +48,20 @@ public interface TableSession extends BasicSession{
 	void delete(String code, Map<String, Object> propertyMap);
 	
 	/**
-	 * 根据id, 查询对应的数据
+	 * 查询结果集
 	 * @param targetClass
-	 * @param id 基础类型值 或 Map<String, 基础类型值>
+	 * @param sql
+	 * @param parameters
 	 * @return
 	 */
-	<T> T queryById(Class<T> targetClass, Object id);
+	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
-	 * 根据id, 查询对应的数据
+	 * 查询唯一结果
 	 * @param targetClass
-	 * @param code
-	 * @param id id 基础类型值 或 Map<String, 基础类型值>
+	 * @param sql
+	 * @param parameters
 	 * @return
 	 */
-	<T> T queryById(Class<T> targetClass, String code, Object id);
+	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 }

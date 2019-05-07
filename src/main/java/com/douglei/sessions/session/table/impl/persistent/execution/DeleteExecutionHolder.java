@@ -1,8 +1,8 @@
 package com.douglei.sessions.session.table.impl.persistent.execution;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
@@ -23,15 +23,19 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 		StringBuilder deleteSql = new StringBuilder();
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
-		List<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns();
-		int size = primaryKeyColumns.size();
+		// 处理where值
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+		int size = primaryKeyColumnMetadataCodes.size();
 		
 		parameters = new ArrayList<Parameter>(size);// 使用TableExecutionHolder.parameters属性
 		
+		ColumnMetadata primaryKeyColumnMetadata = null;
 		int index = 1;
-		for (ColumnMetadata pkColumn : primaryKeyColumns) {
-			deleteSql.append(pkColumn.getName()).append("=?");
-			parameters.add(new Parameter(propertyMap.get(pkColumn.getCode()), pkColumn.getDataType()));
+		for (String pkCode : primaryKeyColumnMetadataCodes) {
+			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
+			
+			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
+			parameters.add(new Parameter(propertyMap.get(primaryKeyColumnMetadata.getCode()), primaryKeyColumnMetadata.getDataType()));
 			
 			if(index < size) {
 				deleteSql.append(" and ");
