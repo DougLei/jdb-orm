@@ -332,9 +332,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	// 将map的key, 由列名转换成属性名
 	private Map<String, Object> mapKey2PropertyName(Map<String, Object> map) {
 		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
-		Set<String> columnNames = map.keySet();
-		for (String columnName : columnNames) {
-			targetMap.put(NamingUtil.columnName2PropertyName(columnName), map.get(columnName));
+		Set<String> keys = map.keySet();
+		for (String key : keys) {
+			targetMap.put(NamingUtil.columnName2PropertyName(key), map.get(key));
 		}
 		return targetMap;
 	}
