@@ -57,7 +57,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
-			parameters.add(new Parameter(propertyMap.get(columnMetadata.getCode()), columnMetadata.getDataType()));
+			parameters.add(new Parameter(propertyMap.get(pkCode), columnMetadata.getDataType()));
 			
 			if(index < size) {
 				updateSql.append(" and ");

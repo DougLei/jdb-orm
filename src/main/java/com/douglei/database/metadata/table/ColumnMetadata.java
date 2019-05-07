@@ -3,6 +3,7 @@ package com.douglei.database.metadata.table;
 import com.douglei.database.datatype.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.database.utils.NamingUtil;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -17,9 +18,6 @@ public class ColumnMetadata implements Metadata{
 	private String name;
 	/**
 	 * 映射的代码类中的属性名
-	 * <pre>
-	 * 	如果没有配置，默认就和name的值一致
-	 * </pre>
 	 */
 	private String propertyName;
 	private boolean propertyNameIsNull;
@@ -47,6 +45,9 @@ public class ColumnMetadata implements Metadata{
 	private void setPropertyName(String propertyName) {
 		if(StringUtil.isEmpty(propertyName)) {
 			propertyNameIsNull = true;
+			if(propertyName != null) {
+				propertyName = null;
+			}
 		}
 		this.propertyName = propertyName;
 	}
@@ -73,15 +74,22 @@ public class ColumnMetadata implements Metadata{
 	/**
 	 * <pre>
 	 * 	修正propertyName的值
-	 * 	如果TableMetadata没有配置className值, 则ColumnMetadata的propertyName值应该无效, 置为name的值, 即列名
-	 * 	因为TableMetadata没有配置className值, 证明是使用纯映射进行数据表数据操作, 这时ColumnMetadata的映射名应该以列名为基础
+	 * 	如果配置了类名, 则属性名必须存在, 如果配置了就使用, 没有配置, 就将列名转换为属性名
+	 * 	如果没有配置类名, 则属性名必须不存在, 如果配置了就置空, 没有配置就不处理
 	 * </pre>
 	 * @param tableMetadataClassNameNotNull
 	 */
 	public void fixPropertyNameValue(boolean tableMetadataClassNameNotNull) {
-		if(!tableMetadataClassNameNotNull && !propertyNameIsNull) {
-			propertyNameIsNull = true;
-			this.propertyName = null;
+		if(tableMetadataClassNameNotNull) {
+			if(propertyNameIsNull) {
+				propertyNameIsNull = false;
+				propertyName = NamingUtil.columnName2PropertyName(name);
+			}
+		}else {
+			if(!propertyNameIsNull) {
+				propertyNameIsNull = true;
+				propertyName = null;
+			}
 		}
 	}
 	
@@ -93,9 +101,6 @@ public class ColumnMetadata implements Metadata{
 	}
 	public DataTypeHandler getDataType() {
 		return dataTypeHandler;
-	}
-	public boolean propertyNameIsNull() {
-		return propertyNameIsNull;
 	}
 	
 	@Override

@@ -81,7 +81,7 @@ public class TableMetadata implements Metadata{
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.name = name.toUpperCase();
 	}
 	public String getClassName() {
 		return className;

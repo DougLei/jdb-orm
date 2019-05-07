@@ -137,7 +137,7 @@ public class TablePersistentObject implements PersistentObject{
 		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
 		for (String originPMkey : originPropertyMapKeys) {
 			if(tableMetadata.isColumn(originPMkey)) {
-				resultPropertyMap.put(tableMetadata.getColumnMetadata(originPMkey).getCode(), originPropertyMap.get(originPMkey));
+				resultPropertyMap.put(originPMkey, originPropertyMap.get(originPMkey));
 				if(index == columnSize) {
 					break;
 				}
