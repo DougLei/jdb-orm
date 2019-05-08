@@ -231,6 +231,6 @@ public class SqlSessionImpl implements SqlSession{
 	 * @return
 	 */
 	private long queryTotalCount(String sql, List<? extends Object> parameters) {
-		return (long) uniqueQuery_("select count(1) from ("+sql+") _jdb_orm_qt_", parameters)[0];
+		return (long) uniqueQuery_("select count(1) from ("+sql+") jdb_orm_qt_", parameters)[0];
 	}
 }
