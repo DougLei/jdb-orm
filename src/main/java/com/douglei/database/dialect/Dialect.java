@@ -20,10 +20,10 @@ public interface Dialect {
 
 	/**
 	 * 组装成分页查询的sql语句
+	 * @param pageNum 
 	 * @param pageSize 
-	 * @param pageNo 
 	 * @param sql
 	 * @return
 	 */
-	String installPageQuerySql(int pageNo, int pageSize, String sql);
+	String installPageQuerySql(int pageNum, int pageSize, String sql);
 }

@@ -17,7 +17,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.database.sql.page.PageResult;
+import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.utils.NamingUtil;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.OperationState;
@@ -382,14 +382,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql) {
-		return pageQuery(targetClass, pageNo, pageSize, sql, null);
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
+		return pageQuery(targetClass, pageNum, pageSize, sql, null);
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
-		logger.debug("开始执行分页查询");
-		PageResult<Map<String, Object>> pageResult = super.pageQuery(pageNo, pageSize, sql, parameters);
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<? extends Object> parameters) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
+		}
+		PageResult<Map<String, Object>> pageResult = super.pageQuery(pageNum, pageSize, sql, parameters);
 		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
 		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas()));
 		if(logger.isDebugEnabled()) {

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
-import com.douglei.database.sql.page.PageResult;
+import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.utils.CryptographyUtil;
 
@@ -195,18 +195,26 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql) {
-		return pageQuery(pageNo, pageSize, sql, null);
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql) {
+		return pageQuery(pageNum, pageSize, sql, null);
 	}
 
 	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
-		logger.debug("开始执行分页查询");
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<? extends Object> parameters) {
+		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
+		if(pageNum < 0) {
+			logger.debug("pageNum实际值={}, pageNum<0, 修正pageNum=1", pageNum);
+			pageNum = 1;
+		}
+		if(pageSize < 0) {
+			logger.debug("pageSize实际值={}, pageSize<0, 修正pageSize=10", pageNum);
+			pageSize = 10;
+		}
 		long totalCount = queryTotalCount(sql, parameters);
 		logger.debug("查询到的数据总量为:{}条", totalCount);
-		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNo, pageSize, totalCount);
+		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = environmentProperty.getDialect().installPageQuerySql(pageNo, pageSize, sql);
+			sql = environmentProperty.getDialect().installPageQuerySql(pageNum, pageSize, sql);
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}

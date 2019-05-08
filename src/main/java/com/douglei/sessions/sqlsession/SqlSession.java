@@ -3,7 +3,7 @@ package com.douglei.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.database.sql.page.PageResult;
+import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.sessions.BasicSession;
 
 /**
@@ -84,20 +84,20 @@ public interface SqlSession extends BasicSession{
 	
 	/**
 	 * 分页查询
-	 * @param pageNo
+	 * @param pageNum
 	 * @param pageSize
 	 * @param sql
 	 * @return
 	 */
-	PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql);
+	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql);
 	
 	/**
 	 * 分页查询
-	 * @param pageNo
+	 * @param pageNum
 	 * @param pageSize
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql, List<? extends Object> parameters);
+	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<? extends Object> parameters);
 }
