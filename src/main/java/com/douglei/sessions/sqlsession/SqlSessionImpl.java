@@ -201,12 +201,17 @@ public class SqlSessionImpl implements SqlSession{
 
 	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
+		logger.debug("开始执行分页查询");
 		long totalCount = queryTotalCount(sql, parameters);
+		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNo, pageSize, totalCount);
 		if(totalCount > 0) {
 			sql = environmentProperty.getDialect().installPageQuerySql(pageNo, pageSize, sql);
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("分页查询的结果: {}", pageResult.toString());
 		}
 		return pageResult;
 	}

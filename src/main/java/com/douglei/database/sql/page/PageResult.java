@@ -71,4 +71,9 @@ public class PageResult<T> {
 	public int getTotalPageNo() {
 		return totalPageNo;
 	}
+	
+	@Override
+	public String toString() {
+		return null;
+	}
 }

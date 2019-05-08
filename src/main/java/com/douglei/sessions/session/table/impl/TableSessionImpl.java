@@ -388,9 +388,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
+		logger.debug("开始执行分页查询");
 		PageResult<Map<String, Object>> pageResult = super.pageQuery(pageNo, pageSize, sql, parameters);
 		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
 		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas()));
+		if(logger.isDebugEnabled()) {
+			logger.debug("分页查询的结果: {}", finalPageResult.toString());
+		}
 		return finalPageResult;
 	}
 }
