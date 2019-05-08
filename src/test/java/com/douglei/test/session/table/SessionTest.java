@@ -8,13 +8,18 @@ import org.junit.Test;
 
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.impl.xml.XmlConfiguration;
+import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.sessions.session.table.TableSession;
 
 public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		List<SysUser> users = session.query(SysUser.class, "select * from sys_user", null);
+		PageResult<SysUser> page = session.pageQuery(SysUser.class, 1, 5, "select * from sys_user");
+		
+		System.out.println(page.toString());
+		
+		List<SysUser> users = page.getResultDatas();
 		for (SysUser sysUser : users) {
 			System.out.println(sysUser);
 		}

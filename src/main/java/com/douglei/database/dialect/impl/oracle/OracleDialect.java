@@ -31,13 +31,13 @@ public final class OracleDialect implements Dialect{
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {
 		int maxIndex = pageNum*pageSize;
 		
-		StringBuilder pageQuerySql = new StringBuilder(180 + sql.length());
-		pageQuerySql.append("select thrid_query_.* from (select second_query_rownum_.*, rownum rn from (");
+		StringBuilder pageQuerySql = new StringBuilder(200 + sql.length());
+		pageQuerySql.append("select jdb_orm_thrid_query_.* from (select jdb_orm_second_query_.*, rownum rn from (");
 		pageQuerySql.append(sql);
-		pageQuerySql.append(") second_query_rownum_ where rownum <= ");
+		pageQuerySql.append(") jdb_orm_second_query_ where rownum <= ");
 		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(") thrid_query_ where thrid_query_.rn > ");
-		pageQuerySql.append(maxIndex-pageNum);
+		pageQuerySql.append(") jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn > ");
+		pageQuerySql.append(maxIndex-pageSize);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass(), pageQuerySql.toString());
 		}

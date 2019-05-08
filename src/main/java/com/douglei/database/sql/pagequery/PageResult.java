@@ -119,9 +119,11 @@ public class PageResult<T> {
 	public boolean isLastPageNum() {
 		return pageNum == pageTotalNum;
 	}
-	
+
 	@Override
 	public String toString() {
-		return null;
+		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", totalCount=" + totalCount
+				+ ", firstDataIndex=" + firstDataIndex + ", pageTotalNum=" + pageTotalNum + ", resultDatas="
+				+ resultDatas + "]";
 	}
 }
