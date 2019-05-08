@@ -29,18 +29,13 @@ public final class MySqlDialect implements Dialect{
 	
 	@Override
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {
-		int maxIndex = pageNum*pageSize;
-		
 		StringBuilder pageQuerySql = new StringBuilder(10000 + sql.length());
-	
-		
-		
-		
-		
-		
-		
-		
-		
+		pageQuerySql.append("select jdb_orm_second_query_.* from (");
+		pageQuerySql.append(sql);
+		pageQuerySql.append(") jdb_orm_second_query_ limit ");
+		pageQuerySql.append((pageNum-1)*pageSize);
+		pageQuerySql.append(",");
+		pageQuerySql.append(pageSize);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass(), pageQuerySql.toString());
 		}

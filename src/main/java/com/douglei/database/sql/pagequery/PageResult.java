@@ -22,14 +22,6 @@ public class PageResult<T> {
 	private long totalCount;
 	
 	/**
-	 * <pre>
-	 * 	第一条数据的下标
-	 * 	即分页查询结果集的第一条数据, 在整个查询结果集中, 其所在的下标, 下标值从1开始
-	 * </pre>
-	 */
-	private int firstDataIndex;
-	
-	/**
 	 * 总页数
 	 */
 	private int pageTotalNum;
@@ -49,7 +41,6 @@ public class PageResult<T> {
 		this.pageSize = other.pageSize;
 		this.totalCount = other.totalCount;
 		this.pageTotalNum = other.pageTotalNum;
-		this.firstDataIndex = other.firstDataIndex;
 	}
 	
 	public PageResult(int pageNum, int pageSize, long totalCount) {
@@ -63,7 +54,6 @@ public class PageResult<T> {
 	private void calcPageDataInfo() {
 		if(totalCount > 0) { // 只有有数据的时候, 才进行计算
 			calcAndSetPageTotalNum();
-			calcAndSetFirstDataIndex();
 		}
 	}
 	
@@ -78,11 +68,6 @@ public class PageResult<T> {
 		}
 	}
 	
-	// 计算并set firstDataIndex 第一条数据的下标
-	private void calcAndSetFirstDataIndex() {
-		firstDataIndex = (pageNum * pageSize) - (pageSize - 1);
-	}
-	
 	public long getTotalCount() {
 		return totalCount;
 	}
@@ -94,9 +79,6 @@ public class PageResult<T> {
 	}
 	public int getPageTotalNum() {
 		return pageTotalNum;
-	}
-	public int getFirstDataIndex() {
-		return firstDataIndex;
 	}
 	public List<T> getResultDatas() {
 		return resultDatas;
@@ -123,7 +105,7 @@ public class PageResult<T> {
 	@Override
 	public String toString() {
 		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", totalCount=" + totalCount
-				+ ", firstDataIndex=" + firstDataIndex + ", pageTotalNum=" + pageTotalNum + ", resultDatas="
+				+ ", pageTotalNum=" + pageTotalNum + ", resultDatas="
 				+ resultDatas + "]";
 	}
 }

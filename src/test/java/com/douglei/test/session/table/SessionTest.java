@@ -15,7 +15,7 @@ public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		PageResult<SysUser> page = session.pageQuery(SysUser.class, 1, 5, "select * from sys_user");
+		PageResult<SysUser> page = session.pageQuery(SysUser.class, 3, 5, "select * from sys_user");
 		
 		System.out.println(page.toString());
 		
