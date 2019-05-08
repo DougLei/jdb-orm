@@ -3,6 +3,7 @@ package com.douglei.sessions.session.table;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.database.sql.page.PageResult;
 import com.douglei.sessions.BasicSession;
 
 /**
@@ -54,7 +55,7 @@ public interface TableSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> List<T> query(Class<T> targetClass, String sql, List<? extends Object> parameters);
 	
 	/**
 	 * 查询唯一结果
@@ -63,5 +64,26 @@ public interface TableSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> T uniqueQuery(Class<T> targetClass, String sql, List<? extends Object> parameters);
+	
+	/**
+	 * 分页查询
+	 * @param targetClass
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sql
+	 * @return
+	 */
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql);
+	
+	/**
+	 * 分页查询
+	 * @param targetClass
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql, List<? extends Object> parameters);
 }

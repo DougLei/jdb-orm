@@ -17,6 +17,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.page.PageResult;
 import com.douglei.database.utils.NamingUtil;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.OperationState;
@@ -315,8 +316,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+	public <T> List<T> query(Class<T> targetClass, String sql, List<? extends Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
+		return listMap2listClass(targetClass, listMap);
+	}
+	
+	// listMap转换为listClass
+	private <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
 		if(listMap.size() > 0) {
 			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 			List<T> listT = new ArrayList<T>(listMap.size());
@@ -329,7 +335,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<? extends Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
 		if(map.size() > 0) {
 			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
@@ -373,5 +379,18 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			targetMap.put(column.getPropertyName(), map.get(column.getName().toUpperCase()));
 		}
 		return targetMap;
+	}
+
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql) {
+		return pageQuery(targetClass, pageNo, pageSize, sql, null);
+	}
+
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
+		PageResult<Map<String, Object>> pageResult = super.pageQuery(pageNo, pageSize, sql, parameters);
+		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
+		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas()));
+		return finalPageResult;
 	}
 }

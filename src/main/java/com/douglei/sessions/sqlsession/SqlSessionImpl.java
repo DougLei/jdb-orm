@@ -195,13 +195,29 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public PageResult pageQuery(String sql) {
-		return pageQuery(sql, null);
+	public PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql) {
+		return pageQuery(pageNo, pageSize, sql, null);
 	}
 
 	@Override
-	public PageResult pageQuery(String sql, List<? extends Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql, List<? extends Object> parameters) {
+		long totalCount = queryTotalCount(sql, parameters);
+		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNo, pageSize, totalCount);
+		if(totalCount > 0) {
+			sql = environmentProperty.getDialect().installPageQuerySql(pageNo, pageSize, sql);
+			List<Map<String, Object>> listMap = query(sql, parameters);
+			pageResult.setResultDatas(listMap);
+		}
+		return pageResult;
+	}
+	
+	/**
+	 * 查询总数量
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	private long queryTotalCount(String sql, List<? extends Object> parameters) {
+		return (long) uniqueQuery_("select count(1) from ("+sql+") _jdb_orm_qt_", parameters)[0];
 	}
 }

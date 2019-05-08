@@ -34,7 +34,11 @@ public final class DoubleDataTypeHandler implements DataTypeHandler {
 			}
 			preparedStatement.setNull(parameterIndex, Types.DECIMAL);
 		}else {
-			preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString()));
+			if(value instanceof Double) {
+				preparedStatement.setDouble(parameterIndex, (double)value);
+			}else {
+				preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString()));
+			}
 		}
 	}
 

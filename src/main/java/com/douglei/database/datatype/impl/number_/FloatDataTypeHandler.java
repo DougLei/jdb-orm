@@ -34,7 +34,11 @@ public final class FloatDataTypeHandler implements DataTypeHandler {
 			}
 			preparedStatement.setNull(parameterIndex, Types.DECIMAL);
 		}else {
-			preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString()));
+			if(value instanceof Float) {
+				preparedStatement.setFloat(parameterIndex, (Float)value);
+			}else {
+				preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString()));
+			}
 		}
 	}
 	

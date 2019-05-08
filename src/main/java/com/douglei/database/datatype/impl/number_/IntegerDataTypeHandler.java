@@ -34,7 +34,11 @@ public final class IntegerDataTypeHandler implements DataTypeHandler {
 			}
 			preparedStatement.setNull(parameterIndex, Types.INTEGER);
 		}else {
-			preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString()));
+			if(value instanceof Integer) {
+				preparedStatement.setInt(parameterIndex, (Integer)value);
+			}else {
+				preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString()));
+			}
 		}
 	}
 	

@@ -17,12 +17,13 @@ public interface Dialect {
 	 * @return
 	 */
 	TransactionIsolationLevel getDefaultTransactionIsolationLevel();
-	
-	
-	
 
-
-//	   mysql                 64          
-//	   oracle                 30         
-//	   mssql                128          
+	/**
+	 * 组装成分页查询的sql语句
+	 * @param pageSize 
+	 * @param pageNo 
+	 * @param sql
+	 * @return
+	 */
+	String installPageQuerySql(int pageNo, int pageSize, String sql);
 }

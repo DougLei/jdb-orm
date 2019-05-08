@@ -15,8 +15,6 @@ import com.douglei.database.datatype.impl.char_.CharDataTypeHandler;
 import com.douglei.database.datatype.impl.char_.NCharDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.DateDataTypeHandler;
 import com.douglei.database.datatype.impl.date_.TimestampDataTypeHandler;
-import com.douglei.database.datatype.impl.date_.string_.DateDataStringTypeHandler;
-import com.douglei.database.datatype.impl.date_.string_.TimestampStringDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.DoubleDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.FloatDataTypeHandler;
 import com.douglei.database.datatype.impl.number_.IntegerDataTypeHandler;
@@ -46,8 +44,6 @@ public class DataTypeHandlerMapping {
 		
 		register("date", DateDataTypeHandler.singleInstance());
 		register("timestamp", TimestampDataTypeHandler.singleInstance());
-		register("date_string", DateDataStringTypeHandler.singleInstance());
-		register("timestamp_string", TimestampStringDataTypeHandler.singleInstance());
 		
 		register("boolean", BooleanDataTypeHandler.singleInstance());
 		

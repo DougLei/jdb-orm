@@ -84,16 +84,20 @@ public interface SqlSession extends BasicSession{
 	
 	/**
 	 * 分页查询
+	 * @param pageNo
+	 * @param pageSize
 	 * @param sql
-	 * @return 
+	 * @return
 	 */
-	PageResult pageQuery(String sql);
+	PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql);
 	
 	/**
 	 * 分页查询
+	 * @param pageNo
+	 * @param pageSize
 	 * @param sql
-	 * @param parameters 传入的参数
-	 * @return 
+	 * @param parameters
+	 * @return
 	 */
-	PageResult pageQuery(String sql, List<? extends Object> parameters);
+	PageResult<Map<String, Object>> pageQuery(int pageNo, int pageSize, String sql, List<? extends Object> parameters);
 }
