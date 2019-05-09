@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.datatype.DataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 
 /**
@@ -20,10 +19,11 @@ public class Parameter {
 	private DataTypeHandler dataTypeHandler;
 	
 	public Parameter(Object value) {
-		this(value, DataTypeHandlerMapping.getDefaultDataTypeHandler());
-		if(logger.isDebugEnabled()) {
-			logger.debug("参数值 {}, 使用默认的数据类型 {}", value, DataTypeHandlerMapping.getDefaultDataTypeHandler().getClass());
-		}
+		// TODO
+//		this(value, DataTypeHandlerMapping.getDefaultDataTypeHandler());
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("参数值 {}, 使用默认的数据类型 {}", value, DataTypeHandlerMapping.getDefaultDataTypeHandler().getClass());
+//		}
 	}
 	public Parameter(Object value, DataTypeHandler dataTypeHandler) {
 		this.value = value;
@@ -31,6 +31,6 @@ public class Parameter {
 	}
 
 	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
-		dataTypeHandler.setValue(preparedStatement, index, value);
+//		dataTypeHandler.setValue(preparedStatement, index, value);
 	}
 }

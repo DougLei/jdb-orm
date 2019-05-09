@@ -101,6 +101,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			logger.debug("{}.setDialect(), parameter value is {}", getClass(), value);
 		}
 		this.dialect = DialectMapping.getDialect(value);
+		
 	}
 	void setEnableSessionCache(String value) {
 		if(logger.isDebugEnabled()) {

@@ -12,6 +12,18 @@ import com.douglei.sessions.sqlsession.SqlSession;
 public interface SessionFactory {
 	
 	/**
+	 * 动态添加映射, 如果存在, 则覆盖
+	 * @param mappingConfigurationContent
+	 */
+	void dynamicAddMapping(String mappingConfigurationContent);
+	
+	/**
+	 * 移除映射
+	 * @param mappingCode
+	 */
+	void removeMapping(String mappingCode);
+	
+	/**
 	 * <pre>
 	 * 	开启TableSession实例
 	 * 	默认开启事物

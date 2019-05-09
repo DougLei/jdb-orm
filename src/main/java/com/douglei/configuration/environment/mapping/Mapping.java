@@ -23,5 +23,9 @@ public interface Mapping {
 	 */
 	MappingType getMappingType();
 
+	/**
+	 * 获取元数据信息
+	 * @return
+	 */
 	Metadata getMetadata();
 }
