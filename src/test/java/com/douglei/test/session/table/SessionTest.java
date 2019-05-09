@@ -1,5 +1,6 @@
 package com.douglei.test.session.table;
 
+import java.sql.DriverManager;
 import java.util.List;
 
 import org.junit.After;
@@ -33,8 +34,14 @@ public class SessionTest {
 	}
 	
 	@Test
-	public void procedureTest() {
+	public void procedureTest() throws Exception {
+		String className = "com.mysql.cj.jdbc.Driver";
+		String url =  "jdbc:mysql://localhost:3306/douglei?characterEncoding=utf8&useSSL=true";
+		String username = "root";
+		String pwd = "root";
 		
+		Class.forName(className);
+		System.out.println(DriverManager.getConnection(url, username, pwd).getTransactionIsolation());
 	}
 	
 	
