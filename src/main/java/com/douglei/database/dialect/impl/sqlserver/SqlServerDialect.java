@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.mssql;
+package com.douglei.database.dialect.impl.sqlserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,17 +10,17 @@ import com.douglei.database.dialect.TransactionIsolationLevel;
  * 
  * @author DougLei
  */
-public final class MSSqlDialect implements Dialect{
-	private static final Logger logger = LoggerFactory.getLogger(MSSqlDialect.class);
+public final class SqlServerDialect implements Dialect{
+	private static final Logger logger = LoggerFactory.getLogger(SqlServerDialect.class);
 	
-	private MSSqlDialect() {}
-	private static final MSSqlDialect instance =new MSSqlDialect();
-	public static final MSSqlDialect singleInstance() {
+	private SqlServerDialect() {}
+	private static final SqlServerDialect instance =new SqlServerDialect();
+	public static final SqlServerDialect singleInstance() {
 		return instance;
 	}
 	
 	public String getDatabaseCode() {
-		return "MSSQL";
+		return "SQLSERVER";
 	}
 	
 	public TransactionIsolationLevel getDefaultTransactionIsolationLevel() {

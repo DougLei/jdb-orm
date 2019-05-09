@@ -1,5 +1,7 @@
 package com.douglei.configuration.impl.xml.element.environment;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +47,9 @@ public class XmlEnvironment implements Environment{
 		Element element = ElementUtil.getNecessaryAndSingleElement("<environment>", environmentElements);
 		this.properties = properties;
 		
-		setEnvironmentProperties(element.elements("property"));// 处理environment下的所有property元素
-
 		setDataSourceWrapper(element.elements("datasource"));// 处理配置的数据源
+		
+		setEnvironmentProperties(element.elements("property"));// 处理environment下的所有property元素
 		
 		setMappingWrapper(element.elements("mappings"));// 处理配置的映射文件
 		
@@ -75,17 +77,6 @@ public class XmlEnvironment implements Environment{
 	}
 	
 	/**
-	 * 处理environment下的所有property元素
-	 * @param elements
-	 */
-	private void setEnvironmentProperties(List<?> elements) {
-		logger.debug("开始处理<environment>下的所有property元素");
-		Map<String, String> propertyMap = elementListToPropertyMap(elements);
-		environmentProperty = new XmlEnvironmentProperty(propertyMap);
-		logger.debug("处理<environment>下的所有property元素结束");
-	}
-	
-	/**
 	 * 处理environment下的datasource元素
 	 * @param elements
 	 * @throws ClassNotFoundException 
@@ -108,6 +99,29 @@ public class XmlEnvironment implements Environment{
 		Map<String, String> propertyMap = elementListToPropertyMap(datasourceElement.elements("property"));
 		dataSourceWrapper = new XmlDataSourceWrapper((DataSource)dataSourceInstance, datasourceElement.attributeValue("closeMethod"), propertyMap, this);
 		logger.debug("处理<environment>下的<datasource>元素结束");
+	}
+	
+	/**
+	 * 处理environment下的所有property元素
+	 * @param elements
+	 * @throws SQLException 
+	 */
+	private void setEnvironmentProperties(List<?> elements) throws SQLException {
+		logger.debug("开始处理<environment>下的所有property元素");
+		Map<String, String> propertyMap = elementListToPropertyMap(elements);
+		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(propertyMap);
+		
+		if(xmlEnvironmentProperty.getDialect() == null) {
+			Connection connection = dataSourceWrapper.getConnection(false, null).getConnection();
+			String JDBCUrl = connection.getMetaData().getURL();
+			connection.close();
+			if(logger.isDebugEnabled()) {
+				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的JDBCUrl={}", JDBCUrl);
+			}
+			xmlEnvironmentProperty.setDialectByJDBCUrl(JDBCUrl);
+		}
+		this.environmentProperty = xmlEnvironmentProperty;
+		logger.debug("处理<environment>下的所有property元素结束");
 	}
 	
 	/**

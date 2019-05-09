@@ -6,9 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.dialect.impl.mssql.MSSqlDialect;
 import com.douglei.database.dialect.impl.mysql.MySqlDialect;
 import com.douglei.database.dialect.impl.oracle.OracleDialect;
+import com.douglei.database.dialect.impl.sqlserver.SqlServerDialect;
 import com.douglei.utils.StringUtil;
 
 
@@ -22,7 +22,7 @@ public class DialectMapping {
 	
 	private static final Map<String, Dialect> DIALECT_MAP = new HashMap<String, Dialect>(3);
 	static {
-		register(MSSqlDialect.singleInstance());
+		register(SqlServerDialect.singleInstance());
 		register(MySqlDialect.singleInstance());
 		register(OracleDialect.singleInstance());
 	}
@@ -45,6 +45,36 @@ public class DialectMapping {
 		
 		logger.debug("获取databaseCode值为{} 的{}实例", databaseCode, dialect.getClass());
 		return dialect;
+	}
+	
+	/**
+	 * 根据jdbc的连接url获取对应的Dialect
+	 * @param JDBCUrl
+	 * @return
+	 */
+	public static Dialect getDialectByJDBCUrl(String JDBCUrl) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("根据jdbc的连接url={}, 获取对应的Dialect", JDBCUrl);
+		}
+		int i=0, a=0, b=0;
+		while(a==0) {
+			if(JDBCUrl.charAt(i++) == ':') {
+				a = i;
+			}
+		}
+		while(b==0) {
+			if(JDBCUrl.charAt(i++) == ':') {
+				b = i;
+			}
+		}
+		if(b-1 <= a) {
+			throw new ArithmeticException("JDBCUrl=" + JDBCUrl + ", 无法从中截取到对应的数据库类型信息, 第一个冒号的下标="+a+", 第二个冒号的下标="+b);
+		}
+		return getDialect(JDBCUrl.substring(a, b-1));
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(1/0);
 	}
 	
 	/**

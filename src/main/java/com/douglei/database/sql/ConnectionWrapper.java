@@ -76,6 +76,10 @@ public class ConnectionWrapper {
 		}
 	}
 
+	public Connection getConnection() {
+		return connection;
+	}
+	
 	/**
 	 * 创建StatementHandler实例
 	 * @param sql

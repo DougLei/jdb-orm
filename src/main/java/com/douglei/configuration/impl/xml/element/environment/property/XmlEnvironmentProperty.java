@@ -27,7 +27,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean propertyMapIsEmpty;
 	
 	
-	@FieldMetaData(isRequired=true, isnullOfErrorMessage="<environment>节点中, 必须配置<property name=\"dialect\" value=\"xxx\">的元素, 用来指定dialect")
+	@FieldMetaData
 	private Dialect dialect;
 	
 	@FieldMetaData
@@ -109,6 +109,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
 		}
+	}
+	
+	public void setDialectByJDBCUrl(String JDBCUrl) {
+		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
 	}
 	
 	@Override

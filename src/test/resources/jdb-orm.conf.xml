@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration id="">
 	<environment>
-		<property name="dialect" value="mysql" /><!-- mysql, oracle, mssql -->>
-		<property name="transactionIsolationLevel" value="read_committed" />
-		<property name="enableSessionCache" value="true" />
+		<!-- <property name="dialect" value="mysql" /> --><!-- mysql, oracle, sqlserver -->
+		<!-- <property name="enableSessionCache" value="true" /> -->
 	
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>
