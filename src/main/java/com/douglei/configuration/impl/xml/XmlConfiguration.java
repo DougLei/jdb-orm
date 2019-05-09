@@ -5,7 +5,6 @@ import java.io.InputStream;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class XmlConfiguration implements Configuration {
 	public XmlConfiguration(InputStream in) {
 		logger.info("根据xml配置文件，初始化configuration实例");
 		try {
-			xmlDocument = new SAXReader().read(in);
+			xmlDocument = LocalXmlConfigurationData.getConfigurationSAXReader().read(in);
 			initXmlConfiguration();
 		} catch (DocumentException e) {
 			e.printStackTrace();

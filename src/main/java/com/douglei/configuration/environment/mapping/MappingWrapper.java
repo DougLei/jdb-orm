@@ -27,12 +27,6 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
-	 * 动态添加映射, 如果存在, 则覆盖
-	 * @param mappingConfigurationContent
-	 */
-	public abstract void dynamicAddMapping(String mappingConfigurationContent);
-	
-	/**
 	 * 添加映射
 	 * <pre>
 	 * 	如果已经存在相同code的mapping，则抛出异常
@@ -54,6 +48,12 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
+	 * 动态添加映射, 如果存在, 则覆盖
+	 * @param mappingConfigurationContent
+	 */
+	public abstract void dynamicAddMapping(String mappingConfigurationContent);
+	
+	/**
 	 * 覆盖映射
 	 * @param mapping
 	 */
@@ -72,14 +72,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
-	 * 移除映射
+	 * 动态移除映射
 	 * @param mappingCode
 	 */
-	public Object removeMapping(String mappingCode) {
-		if(mappings.containsKey(mappingCode)) {
-			return mappings.remove(mappingCode);
-		}
-		return null;
+	public void dynamicRemoveMapping(String mappingCode) {
+		mappings.remove(mappingCode);
 	}
 	
 	/**

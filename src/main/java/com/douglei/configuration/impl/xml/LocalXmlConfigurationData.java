@@ -7,15 +7,35 @@ import org.dom4j.io.SAXReader;
  * @author DougLei
  */
 public class LocalXmlConfigurationData {
-	private static final ThreadLocal<SAXReader> mappingSAXReader = new ThreadLocal<SAXReader>();// 读取xml映射文件的SAXReader实例
+	private static final ThreadLocal<Data> data = new ThreadLocal<Data>();
 	
-	public static SAXReader getMappingSAXReader() {
-		SAXReader reader = mappingSAXReader.get();
-		if(reader == null) {
-			reader = new SAXReader();
-			mappingSAXReader.set(reader);
+	private static Data getData() {
+		Data d = data.get();
+		if(d == null) {
+			d = new Data();
+			data.set(d);
 		}
-		return reader;
+		return d;
 	}
+	
+	public static SAXReader getConfigurationSAXReader() {
+		Data data = getData();
+		if(data.configurationSAXReader == null) {
+			data.configurationSAXReader = new SAXReader();
+		}
+		return data.configurationSAXReader;
+	}
+	public static SAXReader getMappingSAXReader() {
+		Data data = getData();
+		if(data.mappingSAXReader == null) {
+			data.mappingSAXReader = new SAXReader();
+		}
+		return data.mappingSAXReader;
+	}
+}
+
+class Data{
+	SAXReader configurationSAXReader;// 读取xml configuration文件的SAXReader实例
+	SAXReader mappingSAXReader;// 读取xml映射文件的SAXReader实例
 }
 

@@ -44,8 +44,8 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void removeMapping(String mappingCode) {
-		mappingWrapper.removeMapping(mappingCode);
+	public void dynamicRemoveMapping(String mappingCode) {
+		mappingWrapper.dynamicRemoveMapping(mappingCode);
 	}
 	
 	@Override

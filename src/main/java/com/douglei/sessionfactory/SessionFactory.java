@@ -18,10 +18,10 @@ public interface SessionFactory {
 	void dynamicAddMapping(String mappingConfigurationContent);
 	
 	/**
-	 * 移除映射
+	 * 动态移除映射
 	 * @param mappingCode
 	 */
-	void removeMapping(String mappingCode);
+	void dynamicRemoveMapping(String mappingCode);
 	
 	/**
 	 * <pre>
