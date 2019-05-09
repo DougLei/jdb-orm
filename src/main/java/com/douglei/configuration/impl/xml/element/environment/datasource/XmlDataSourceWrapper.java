@@ -11,6 +11,7 @@ import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.configuration.impl.xml.element.environment.XmlEnvironment;
+import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.IntrospectorUtil;
@@ -68,8 +69,8 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	}
 	
 	@Override
-	public ConnectionWrapper getConnection(boolean beginTransaction) {
-		return new ConnectionWrapper(dataSource, beginTransaction);
+	public ConnectionWrapper getConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return new ConnectionWrapper(dataSource, beginTransaction, transactionIsolationLevel);
 	}
 	
 	@Override

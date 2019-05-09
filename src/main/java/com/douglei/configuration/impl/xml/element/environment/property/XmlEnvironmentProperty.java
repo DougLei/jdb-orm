@@ -13,7 +13,6 @@ import com.douglei.configuration.environment.property.FieldMetaData;
 import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
-import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -32,13 +31,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private Dialect dialect;
 	
 	@FieldMetaData
-	private TransactionIsolationLevel transactionIsolationLevel;
-	
-	@FieldMetaData
 	private boolean enableSessionCache = true;
 	
-	public XmlEnvironmentProperty() {
-	}
 	public XmlEnvironmentProperty(Map<String, String> propertyMap) {
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
@@ -108,12 +102,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 		this.dialect = DialectMapping.getDialect(value);
 	}
-	void setTransactionIsolationLevel(String value) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setTransactionIsolationLevel(), parameter value is {}", getClass(), value);
-		}
-		this.transactionIsolationLevel = TransactionIsolationLevel.toValue(value);
-	}
 	void setEnableSessionCache(String value) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass(), value);
@@ -126,14 +114,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public Dialect getDialect() {
 		return dialect;
-	}
-	@Override
-	public TransactionIsolationLevel getTransactionIsolationLevel() {
-		if(transactionIsolationLevel == null) {
-			transactionIsolationLevel = dialect.getDefaultTransactionIsolationLevel();
-			logger.debug("使用dialect=[{}] 默认的事物隔离级别: {}", dialect.getClass(),transactionIsolationLevel);
-		}
-		return transactionIsolationLevel;
 	}
 	@Override
 	public boolean getEnableSessionCache() {

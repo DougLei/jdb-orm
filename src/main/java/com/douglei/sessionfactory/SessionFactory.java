@@ -1,5 +1,6 @@
 package com.douglei.sessionfactory;
 
+import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.sqlsession.SqlSession;
@@ -30,6 +31,16 @@ public interface SessionFactory {
 	
 	/**
 	 * <pre>
+	 * 	开启TableSession实例
+	 * </pre>
+	 * @param beginTransaction 是否开启事物
+	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
+	 * @return
+	 */
+	TableSession openTableSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
+	
+	/**
+	 * <pre>
 	 * 	开启SQLSession实例
 	 * 	默认开启事物
 	 * </pre>
@@ -48,6 +59,16 @@ public interface SessionFactory {
 	
 	/**
 	 * <pre>
+	 * 	开启SQLSession实例
+	 * </pre>
+	 * @param beginTransaction 是否开启事物
+	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
+	 * @return
+	 */
+	SQLSession openSQLSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
+	
+	/**
+	 * <pre>
 	 * 	开启sql session实例
 	 * 	默认开启事物
 	 * </pre>
@@ -63,4 +84,14 @@ public interface SessionFactory {
 	 * @return
 	 */
 	SqlSession openSqlSession(boolean beginTransaction);
+	
+	/**
+	 * <pre>
+	 * 	开启sql session实例
+	 * </pre>
+	 * @param beginTransaction 是否开启事物
+	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
+	 * @return
+	 */
+	SqlSession openSqlSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
 }

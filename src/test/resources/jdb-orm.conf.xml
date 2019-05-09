@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration id="">
 	<environment>
-		<property name="dialect" value="mysql" />
+		<property name="dialect" value="mysql" /><!-- mysql, oracle, mssql -->>
 		<property name="transactionIsolationLevel" value="read_committed" />
 		<property name="enableSessionCache" value="true" />
 	

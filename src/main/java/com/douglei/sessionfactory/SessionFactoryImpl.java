@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
@@ -31,8 +32,8 @@ public class SessionFactoryImpl implements SessionFactory {
 		this.mappingWrapper = configuration.getMappingWrapper();
 	}
 	
-	private ConnectionWrapper openConnection(boolean beginTransaction) {
-		return configuration.getDataSourceWrapper().getConnection(beginTransaction);
+	private ConnectionWrapper openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return configuration.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}
 	
 	@Override
@@ -42,10 +43,15 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public TableSession openTableSession(boolean beginTransaction) {
+		return openTableSession(beginTransaction, null);
+	}
+	
+	@Override
+	public TableSession openTableSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", TableSessionImpl.class, beginTransaction);
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", TableSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new TableSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
+		return new TableSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
@@ -55,10 +61,15 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public SQLSession openSQLSession(boolean beginTransaction) {
+		return openSQLSession(beginTransaction, null);
+	}
+	
+	@Override
+	public SQLSession openSQLSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", SQLSessionImpl.class, beginTransaction);
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SQLSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SQLSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
+		return new SQLSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
@@ -68,9 +79,14 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public SqlSession openSqlSession(boolean beginTransaction) {
+		return openSqlSession(beginTransaction, null);
+	}
+
+	@Override
+	public SqlSession openSqlSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}", SqlSessionImpl.class, beginTransaction);
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SqlSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SqlSessionImpl(openConnection(beginTransaction), environmentProperty, mappingWrapper);
+		return new SqlSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 }
