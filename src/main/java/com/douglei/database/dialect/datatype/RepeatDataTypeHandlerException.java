@@ -1,4 +1,4 @@
-package com.douglei.database.datatype;
+package com.douglei.database.dialect.datatype;
 
 /**
  * DataTypeHandler实例重复异常

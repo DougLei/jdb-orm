@@ -3,30 +3,28 @@ package com.douglei.database.dialect.impl.oracle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.dialect.Dialect;
-import com.douglei.database.dialect.TransactionIsolationLevel;
+import com.douglei.database.dialect.impl.AbstractDialect;
 
 /**
  * 
  * @author DougLei
  */
-public final class OracleDialect implements Dialect{
+public final class OracleDialect extends AbstractDialect{
 	private static final Logger logger = LoggerFactory.getLogger(OracleDialect.class);
 	
-	private OracleDialect() {}
+	private OracleDialect() {
+		setDataTypeHandlerMapping(DataTypeHandlerMapping.singleInstance());
+	}
 	private static final OracleDialect instance =new OracleDialect();
 	public static final OracleDialect singleInstance() {
 		return instance;
 	}
 	
+	@Override
 	public String getDatabaseCode() {
 		return "ORACLE";
 	}
 	
-	public TransactionIsolationLevel getDefaultTransactionIsolationLevel() {
-		return TransactionIsolationLevel.READ_COMMITTED;
-	}
-
 	@Override
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {
 		int maxIndex = pageNum*pageSize;

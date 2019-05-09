@@ -24,7 +24,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
 		int size = propertyMap.size();
-		parameters = new ArrayList<Parameter>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
 		
 		// 处理update set值
 		int index = 1;

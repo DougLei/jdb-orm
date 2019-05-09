@@ -3,28 +3,26 @@ package com.douglei.database.dialect.impl.mysql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.dialect.Dialect;
-import com.douglei.database.dialect.TransactionIsolationLevel;
+import com.douglei.database.dialect.impl.AbstractDialect;
 
 /**
  * 
  * @author DougLei
  */
-public final class MySqlDialect implements Dialect{
+public final class MySqlDialect extends AbstractDialect{
 	private static final Logger logger = LoggerFactory.getLogger(MySqlDialect.class);
 	
-	private MySqlDialect() {}
+	private MySqlDialect() {
+		setDataTypeHandlerMapping(DataTypeHandlerMapping.singleInstance());
+	}
 	private static final MySqlDialect instance =new MySqlDialect();
 	public static final MySqlDialect singleInstance() {
 		return instance;
 	}
-
+	
+	@Override
 	public String getDatabaseCode() {
 		return "MYSQL";
-	}
-	
-	public TransactionIsolationLevel getDefaultTransactionIsolationLevel() {
-		return TransactionIsolationLevel.READ_COMMITTED;
 	}
 	
 	@Override

@@ -27,7 +27,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 		values.append(" values(");
 		
 		int size = propertyMap.size();
-		parameters = new ArrayList<Parameter>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
 		
 		int index = 1;
 		Object value = null;

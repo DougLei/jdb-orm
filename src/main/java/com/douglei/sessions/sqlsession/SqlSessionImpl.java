@@ -42,7 +42,7 @@ public class SqlSessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	private StatementHandler getStatementHandler(String sql, List<? extends Object> parameters){
+	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
 		StatementHandler statementHandler = null;
 		if(enableSessionCache) {
 			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
@@ -82,7 +82,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public List<Map<String, Object>> query(String sql, List<? extends Object> parameters) {
+	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -100,7 +100,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public Map<String, Object> uniqueQuery(String sql, List<? extends Object> parameters) {
+	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -118,7 +118,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public List<Object[]> query_(String sql, List<? extends Object> parameters) {
+	public List<Object[]> query_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -136,7 +136,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public Object[] uniqueQuery_(String sql, List<? extends Object> parameters) {
+	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -154,7 +154,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public int executeUpdate(String sql, List<? extends Object> parameters) {
+	public int executeUpdate(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = null;
 		try {
 			statementHandler = getStatementHandler(sql, parameters);
@@ -200,7 +200,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 
 	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<? extends Object> parameters) {
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		if(pageNum < 0) {
 			logger.debug("pageNum实际值={}, pageNum<0, 修正pageNum=1", pageNum);
@@ -230,7 +230,7 @@ public class SqlSessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	private long queryTotalCount(String sql, List<? extends Object> parameters) {
+	private long queryTotalCount(String sql, List<Object> parameters) {
 		Object totalCount =  uniqueQuery_("select count(1) from ("+sql+") jdb_orm_qt_", parameters)[0];
 		return Long.parseLong(totalCount.toString());
 	}

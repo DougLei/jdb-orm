@@ -2,8 +2,8 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 
 import org.dom4j.Element;
 
-import com.douglei.database.datatype.DataTypeHandler;
 import com.douglei.database.datatype.DataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;

@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.datatype.DataTypeHandler;
 import com.douglei.database.datatype.DataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.DataTypeHandler;
 
 /**
  * 

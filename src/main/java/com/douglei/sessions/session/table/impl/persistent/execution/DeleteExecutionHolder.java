@@ -27,7 +27,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
 		int size = primaryKeyColumnMetadataCodes.size();
 		
-		parameters = new ArrayList<Parameter>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
 		
 		ColumnMetadata primaryKeyColumnMetadata = null;
 		int index = 1;

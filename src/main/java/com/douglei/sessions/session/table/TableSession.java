@@ -55,7 +55,7 @@ public interface TableSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	<T> List<T> query(Class<T> targetClass, String sql, List<? extends Object> parameters);
+	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
 	 * 查询唯一结果
@@ -64,7 +64,7 @@ public interface TableSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql, List<? extends Object> parameters);
+	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
 	 * 分页查询
@@ -85,5 +85,5 @@ public interface TableSession extends BasicSession{
 	 * @param parameters
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<? extends Object> parameters);
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 }

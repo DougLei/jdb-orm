@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface ExecutionHolder {
 	String getSql();
-	List<? extends Object> getParameters();
+	List<Object> getParameters();
 }

@@ -27,7 +27,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param newParameters
 	 * @return
 	 */
-	private boolean isSameParameters(List<? extends Object> newParameters) {
+	private boolean isSameParameters(List<Object> newParameters) {
 		if(parameters == newParameters) {
 			return true;
 		}
@@ -40,7 +40,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		return false;
 	}
 	
-	private void setParameters(List<? extends Object> parameters) throws SQLException {
+	private void setParameters(List<Object> parameters) throws SQLException {
 		if(parameters != null && parameters.size() > 0) {
 			List<Parameter> actualParameters = turnToParameters(parameters);
 			int index = 1;
@@ -56,7 +56,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param parameters
 	 * @return
 	 */
-	private List<Parameter> turnToParameters(List<? extends Object> parameters){
+	private List<Parameter> turnToParameters(List<Object> parameters){
 		List<Parameter> actualParameters = new ArrayList<Parameter>(parameters.size());
 		for (Object object : parameters) {
 			if(object instanceof Parameter) {
@@ -73,7 +73,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param parameters
 	 * @return
 	 */
-	public List<Map<String, Object>> getQueryResultList(List<? extends Object> parameters) {
+	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryResultList();
 		}
@@ -89,7 +89,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public Map<String, Object> getQueryUniqueResult(List<? extends Object> parameters) {
+	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryUniqueResult();
 		}
@@ -105,7 +105,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public List<Object[]> getQueryResultList_(List<? extends Object> parameters) {
+	public List<Object[]> getQueryResultList_(List<Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryResultList_();
 		}
@@ -121,7 +121,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<? extends Object> parameters) {
+	public Object[] getQueryUniqueResult_(List<Object> parameters) {
 		if(isExecuted() && isSameParameters(parameters)) {
 			return getQueryUniqueResult_();
 		}
@@ -137,7 +137,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public int executeUpdate(List<? extends Object> parameters) {
+	public int executeUpdate(List<Object> parameters) {
 		try {
 			if(isClosed()) {
 				throw new Exception("无法执行, 连接已经关闭");

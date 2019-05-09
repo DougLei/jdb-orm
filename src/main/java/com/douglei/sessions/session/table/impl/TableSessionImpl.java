@@ -316,7 +316,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<? extends Object> parameters) {
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		return listMap2listClass(targetClass, listMap);
 	}
@@ -335,7 +335,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<? extends Object> parameters) {
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
 		if(map.size() > 0) {
 			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
@@ -387,7 +387,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<? extends Object> parameters) {
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
 		}

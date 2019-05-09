@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.sql.statement.impl.Parameter;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.utils.StringUtil;
 
@@ -29,7 +28,7 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	
 	
 	protected String sql;
-	protected List<Parameter> parameters;
+	protected List<Object> parameters;
 	
 	@Override
 	public String getSql() {
@@ -37,7 +36,7 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	}
 
 	@Override
-	public List<? extends Object> getParameters() {
+	public List<Object> getParameters() {
 		return parameters;
 	}
 	
