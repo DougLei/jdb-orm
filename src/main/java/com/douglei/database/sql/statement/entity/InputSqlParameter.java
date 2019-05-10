@@ -1,4 +1,4 @@
-package com.douglei.database.sql.statement.impl;
+package com.douglei.database.sql.statement.entity;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -7,25 +7,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.sql.statement.LocalDialect;
 
 /**
- * 
+ * 输入的sql参数对象
  * @author DougLei
  */
-public class Parameter {
-	private static final Logger logger = LoggerFactory.getLogger(Parameter.class);
+public class InputSqlParameter {
+	private static final Logger logger = LoggerFactory.getLogger(InputSqlParameter.class);
 	
 	private Object value;
 	private DataTypeHandler dataTypeHandler;
 	
-	public Parameter(Object value) {
+	public InputSqlParameter(Object value) {
 		this.value = value;
-		this.dataTypeHandler = LocalDialect.getDialect().getDataTypeHandler(value);
+		this.dataTypeHandler = LocalDialect.getDialect().getDataTypeHandlerByValueClassType(value);
 		if(logger.isDebugEnabled()) {
 			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
 		}
 	}
-	public Parameter(Object value, DataTypeHandler dataTypeHandler) {
+	public InputSqlParameter(Object value, DataTypeHandler dataTypeHandler) {
 		this.value = value;
 		this.dataTypeHandler = dataTypeHandler;
 	}

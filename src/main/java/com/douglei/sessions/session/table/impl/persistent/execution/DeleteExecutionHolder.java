@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.sql.statement.impl.Parameter;
+import com.douglei.database.sql.statement.entity.InputSqlParameter;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
-			parameters.add(new Parameter(propertyMap.get(pkCode), primaryKeyColumnMetadata.getDataType()));
+			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), primaryKeyColumnMetadata.getDataType()));
 			
 			if(index < size) {
 				deleteSql.append(" and ");

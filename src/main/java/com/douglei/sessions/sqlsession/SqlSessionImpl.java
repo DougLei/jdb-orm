@@ -12,8 +12,8 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
+import com.douglei.database.sql.statement.LocalDialect;
 import com.douglei.database.sql.statement.StatementHandler;
-import com.douglei.database.sql.statement.impl.LocalDialect;
 import com.douglei.utils.CryptographyUtil;
 
 /**
@@ -216,7 +216,7 @@ public class SqlSessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = environmentProperty.getDialect().installPageQuerySql(pageNum, pageSize, sql);
+			sql = LocalDialect.getDialect().installPageQuerySql(pageNum, pageSize, sql);
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}

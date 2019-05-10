@@ -1,8 +1,12 @@
 package com.douglei.test.sqlsession;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
-
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import org.junit.Test;
+
 
 public class JDBCTest {
 	
@@ -36,6 +40,18 @@ public class JDBCTest {
 		String pwd = "root";
 		
 		Class.forName(className);
-		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
+		Connection conn = DriverManager.getConnection(url, username, pwd);
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery("select * from sys_user");
+		
+		
+		ResultSetMetaData metadata = rs.getMetaData();
+		int count = metadata.getColumnCount();
+		for (int i = 0; i <count; i++) {
+			System.out.println(metadata.getColumnType(i+1));
+			System.out.println(metadata.getColumnTypeName(i+1));
+			System.out.println("---------------------------------------");
+		}
+		
 	}
 }

@@ -11,19 +11,7 @@ import com.douglei.database.dialect.impl.AbstractDialect;
  */
 public final class OracleDialect extends AbstractDialect{
 	private static final Logger logger = LoggerFactory.getLogger(OracleDialect.class);
-	
-	private OracleDialect() {
-		setDataTypeHandlerMapping(DataTypeHandlerMapping.singleInstance());
-	}
-	private static final OracleDialect instance =new OracleDialect();
-	public static final OracleDialect singleInstance() {
-		return instance;
-	}
-	
-	@Override
-	public String getDatabaseCode() {
-		return "ORACLE";
-	}
+	public static final String DATABASE_CODE = "ORACLE";
 	
 	@Override
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {

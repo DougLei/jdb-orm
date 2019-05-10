@@ -1,4 +1,4 @@
-package com.douglei.database.sql.statement.impl;
+package com.douglei.database.sql.statement;
 
 import com.douglei.database.dialect.Dialect;
 

@@ -9,12 +9,6 @@ import com.douglei.database.dialect.datatype.DataTypeHandler;
 public interface Dialect {
 	
 	/**
-	 * 获取数据库编码值, 绝对唯一
-	 * @return
-	 */
-	String getDatabaseCode();
-	
-	/**
 	 * 组装成分页查询的sql语句
 	 * @param pageNum 
 	 * @param pageSize 
@@ -29,4 +23,18 @@ public interface Dialect {
 	 * @return
 	 */
 	DataTypeHandler getDataTypeHandlerByCode(String code);
+
+	/**
+	 * 根据value的classType, 获取对应的DataTypeHandler
+	 * @param value
+	 * @return
+	 */
+	DataTypeHandler getDataTypeHandlerByValueClassType(Object value);
+
+	/**
+	 * 根据数据库的ResultSetMetadata的ColumnType, 获取对应的DataTypeHandler
+	 * @param columnType
+	 * @return
+	 */
+	DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType);
 }

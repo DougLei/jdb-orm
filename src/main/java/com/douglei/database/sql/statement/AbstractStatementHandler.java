@@ -11,6 +11,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.database.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -28,8 +29,8 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	// <列名:值>
 	private Map<String, Object> queryUniqueResult;
 	private List<Map<String, Object>> queryResultList;
-	// 结果集的列名, map中的key来自这里
-	private List<String> resutSetColumnNames;
+	// 结果集的元数据
+	private List<SqlResultsetMetadata> resultsetMetadatas;
 	
 	// <值> [数组]
 	private Object[] queryUniqueResult_;
@@ -48,25 +49,25 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @throws SQLException 
 	 */
 	private boolean setResutSetColumnNames() throws SQLException {
-		logger.debug("开始获取查询结果集的列名信息");
+		logger.debug("开始获取查询结果集的元数据信息");
 		if(resultSet != null && resultSet.next()) {
 			logger.debug("查询结果集ResultSet实例中存在数据");
-			if(resutSetColumnNames == null) {
-				logger.debug("resutSetColumnNames集合为空, 需要设置结果集列名");
+			if(resultsetMetadatas == null) {
+				logger.debug("resultsetMetadatas集合为空, 需要设置结果集元数据");
 				
 				ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 				int columnCount = resultSetMetaData.getColumnCount();
-				resutSetColumnNames = new ArrayList<String>(columnCount);
+				resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
 				for(int i=1;i<=columnCount;i++) {
-					resutSetColumnNames.add(resultSetMetaData.getColumnName(i).toUpperCase());
+					resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i), resultSetMetaData.getColumnType(i)));
 				}
 			}
 			if(logger.isDebugEnabled()) {
-				logger.debug("查询结果集列名集合为: {}", resutSetColumnNames.toString());
+				logger.debug("查询结果集元数据信息为: {}", resultsetMetadatas.toString());
 			}
 			return true;
 		}
-		logger.debug("查询结果集中没有数据, 无法获取结果集列名信息");
+		logger.debug("查询结果集中没有数据, 无法获取结果集元数据信息");
 		return false;
 	}
 	
@@ -90,12 +91,14 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		initialQueryResultList();
 		
 		if(setResutSetColumnNames()) {
-			int columnCount = resutSetColumnNames.size();
+			int count = resultsetMetadatas.size();
 			Map<String,Object> map = null;
+			SqlResultsetMetadata sqlResultsetMetadata = null;
 			do {
-				map = new HashMap<String, Object>(columnCount);
-				for(int i=0;i<columnCount;i++) {
-					map.put(resutSetColumnNames.get(i), resultSet.getObject((i+1)));
+				map = new HashMap<String, Object>(count);
+				for(int i=0;i<count;i++) {
+					sqlResultsetMetadata = resultsetMetadatas.get(i);
+					map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet));
 				}
 				queryResultList.add(map);
 			}while(resultSet.next());
@@ -121,11 +124,13 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private void setQueryUniqueResult() throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
 		if(setResutSetColumnNames()) {
-			int columnCount = resutSetColumnNames.size();
-			initialQueryUniqueResult(columnCount);
+			int count = resultsetMetadatas.size();
+			initialQueryUniqueResult(count);
 			
-			for(int i=0;i<columnCount;i++) {
-				queryUniqueResult.put(resutSetColumnNames.get(i), resultSet.getObject((i+1)));
+			SqlResultsetMetadata sqlResultsetMetadata = null;
+			for(int i=0;i<count;i++) {
+				sqlResultsetMetadata = resultsetMetadatas.get(i);
+				queryUniqueResult.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet));
 			}
 			
 			if(resultSet.next()) {
@@ -244,8 +249,8 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	@Override
 	public void close() {
 		isClosed = true;
-		if(resutSetColumnNames != null && resutSetColumnNames.size() > 0) {
-			resutSetColumnNames.clear();
+		if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) {
+			resultsetMetadatas.clear();
 		}
 		CloseUtil.closeDBConn(resultSet);
 	}

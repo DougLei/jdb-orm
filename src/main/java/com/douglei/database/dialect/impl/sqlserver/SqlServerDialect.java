@@ -11,19 +11,7 @@ import com.douglei.database.dialect.impl.AbstractDialect;
  */
 public final class SqlServerDialect extends AbstractDialect{
 	private static final Logger logger = LoggerFactory.getLogger(SqlServerDialect.class);
-	
-	private SqlServerDialect() {
-		setDataTypeHandlerMapping(DataTypeHandlerMapping.singleInstance());
-	}
-	private static final SqlServerDialect instance =new SqlServerDialect();
-	public static final SqlServerDialect singleInstance() {
-		return instance;
-	}
-	
-	@Override
-	public String getDatabaseCode() {
-		return "SQLSERVER";
-	}
+	public static final String DATABASE_CODE = "SQLSERVER";
 	
 	@Override
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {

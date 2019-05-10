@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.database.sql.statement.AbstractStatementHandler;
+import com.douglei.database.sql.statement.entity.InputSqlParameter;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -42,9 +43,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	private void setParameters(List<Object> parameters) throws SQLException {
 		if(parameters != null && parameters.size() > 0) {
-			List<Parameter> actualParameters = turnToParameters(parameters);
+			List<InputSqlParameter> actualParameters = turnToParameters(parameters);
 			int index = 1;
-			for (Parameter parameter : actualParameters) {
+			for (InputSqlParameter parameter : actualParameters) {
 				parameter.setValue(index, preparedStatement);
 				index++;
 			}
@@ -56,13 +57,13 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @param parameters
 	 * @return
 	 */
-	private List<Parameter> turnToParameters(List<Object> parameters){
-		List<Parameter> actualParameters = new ArrayList<Parameter>(parameters.size());
+	private List<InputSqlParameter> turnToParameters(List<Object> parameters){
+		List<InputSqlParameter> actualParameters = new ArrayList<InputSqlParameter>(parameters.size());
 		for (Object object : parameters) {
-			if(object instanceof Parameter) {
-				actualParameters.add((Parameter)object);
+			if(object instanceof InputSqlParameter) {
+				actualParameters.add((InputSqlParameter)object);
 			}else {
-				actualParameters.add(new Parameter(object));
+				actualParameters.add(new InputSqlParameter(object));
 			}
 		}
 		return actualParameters;

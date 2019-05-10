@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.sql.statement.impl.Parameter;
+import com.douglei.database.sql.statement.entity.InputSqlParameter;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 				
 				insertSql.append(columnMetadata.getName());
 				values.append("?");
-				parameters.add(new Parameter(value, columnMetadata.getDataType()));
+				parameters.add(new InputSqlParameter(value, columnMetadata.getDataType()));
 				
 				if(index < size) {
 					insertSql.append(",");

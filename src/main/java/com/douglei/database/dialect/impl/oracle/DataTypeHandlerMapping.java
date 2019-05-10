@@ -10,7 +10,7 @@ class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 	static {
 		
 	}
-	
+
 	private DataTypeHandlerMapping() {}
 	private static final DataTypeHandlerMapping instance =new DataTypeHandlerMapping();
 	public static final DataTypeHandlerMapping singleInstance() {

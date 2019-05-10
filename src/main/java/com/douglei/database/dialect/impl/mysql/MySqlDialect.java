@@ -11,19 +11,7 @@ import com.douglei.database.dialect.impl.AbstractDialect;
  */
 public final class MySqlDialect extends AbstractDialect{
 	private static final Logger logger = LoggerFactory.getLogger(MySqlDialect.class);
-	
-	private MySqlDialect() {
-		setDataTypeHandlerMapping(DataTypeHandlerMapping.singleInstance());
-	}
-	private static final MySqlDialect instance =new MySqlDialect();
-	public static final MySqlDialect singleInstance() {
-		return instance;
-	}
-	
-	@Override
-	public String getDatabaseCode() {
-		return "MYSQL";
-	}
+	public static final String DATABASE_CODE = "MYSQL";
 	
 	@Override
 	public String installPageQuerySql(int pageNum, int pageSize, String sql) {

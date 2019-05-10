@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.sql.statement.impl.Parameter;
+import com.douglei.database.sql.statement.entity.InputSqlParameter;
 
 /**
  * 
@@ -38,7 +38,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 					columnMetadata = tableMetadata.getColumnMetadata(code);
 					
 					updateSql.append(columnMetadata.getName()).append("=?");
-					parameters.add(new Parameter(value, columnMetadata.getDataType()));
+					parameters.add(new InputSqlParameter(value, columnMetadata.getDataType()));
 					
 					if(index < size) {
 						updateSql.append(",");
@@ -57,7 +57,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
-			parameters.add(new Parameter(propertyMap.get(pkCode), columnMetadata.getDataType()));
+			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), columnMetadata.getDataType()));
 			
 			if(index < size) {
 				updateSql.append(" and ");
