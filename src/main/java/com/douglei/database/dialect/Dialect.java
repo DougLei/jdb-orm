@@ -28,12 +28,5 @@ public interface Dialect {
 	 * @param code
 	 * @return
 	 */
-	DataTypeHandler getDataTypeHandler(String code);
-	
-	/**
-	 * 根据值的class, 获取对应的DataTypeHandler
-	 * @param value
-	 * @return
-	 */
-	DataTypeHandler getDataTypeHandler(Object value);
+	DataTypeHandler getDataTypeHandlerByCode(String code);
 }

@@ -34,7 +34,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			throw new MetadataValidateException("<column>元素的dataType属性值不能为空");
 		}
 		try {
-			return LocalConfigurationData.getDialect().getDataTypeHandler(dataType);
+			return LocalConfigurationData.getDialect().getDataTypeHandlerByCode(dataType);
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值: ", e);
 		}

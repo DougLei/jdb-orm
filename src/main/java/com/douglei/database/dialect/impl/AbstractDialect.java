@@ -21,21 +21,11 @@ public abstract class AbstractDialect implements Dialect{
 	
 	
 	@Override
-	public DataTypeHandler getDataTypeHandler(String code) {
+	public DataTypeHandler getDataTypeHandlerByCode(String code) {
 		logger.debug("获得code={}的DataTypeHandler", code);
-		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandler(code);
+		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandlerByCode(code);
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取code={}的 {}实例", code, dataTypeHandler.getClass().getName());
-		}
-		return dataTypeHandler;
-	}
-
-	@Override
-	public DataTypeHandler getDataTypeHandler(Object value) {
-		logger.debug("获得object value={}的DataTypeHandler", value);
-		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandler(value);
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取object value={}的 {}实例", value, dataTypeHandler.getClass().getName());
 		}
 		return dataTypeHandler;
 	}

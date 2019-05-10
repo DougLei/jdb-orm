@@ -8,29 +8,24 @@ import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
- * 
+ * 每种数据库都有自己的DataTypeHandlerMapping实现
  * @author DougLei
  */
 public abstract class AbstractDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataTypeHandlerMapping.class);
 	
-	private static final DefaultDataTypeHandler DEFAULT_DATA_TYPE_HANDLER = new DefaultDataTypeHandler();// 默认的DataTypeHandler
-	
 	private static final Map<String, DataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(16);// DataTypeHandler映射集合
 	
 	/**
-	 * 获取DataTypeHandler实例
+	 * 根据code, 获取DataTypeHandler实例
 	 * @param code
 	 * @return
 	 */
-	public DataTypeHandler getDataTypeHandler(String code) {
+	public DataTypeHandler getDataTypeHandlerByCode(String code) {
 		DataTypeHandler dataTypeHandler = null;
 		
 		if(StringUtil.isEmpty(code)) {
-			if(logger.isDebugEnabled()) {
-				logger.debug("没有指定code, 使用默认的DataTypeHandler={}",  DEFAULT_DATA_TYPE_HANDLER.getClass().getName());
-			}
-			dataTypeHandler = DEFAULT_DATA_TYPE_HANDLER;
+			throw new NullPointerException("必须指定DataTypeHandler的code");
 		}else {
 			code = code.trim();
 			dataTypeHandler = DATATYPE_HANDLER_MAP.get(code);
@@ -49,13 +44,6 @@ public abstract class AbstractDataTypeHandlerMapping {
 	}
 	
 	/**
-	 * 根据value的数据类型, 匹配到对应的DataTypeHandler
-	 * @param value
-	 * @return
-	 */
-	public abstract DataTypeHandler getDataTypeHandler(Object value);
-	
-	/**
 	 * 注册新的DataTypeHandler实例
 	 * @param dataTypeHandler
 	 */
@@ -68,7 +56,10 @@ public abstract class AbstractDataTypeHandlerMapping {
 	}
 	
 	/**
-	 * 将新的DataTypeHandler实例, put到DataTypeHandler Map集合中
+	 * <pre>
+	 * 	将新的DataTypeHandler实例, put到DataTypeHandler Map集合中
+	 * 	这个方法也给子类提供, 在static块中注册系统提供的一些DataTypeHandler
+	 * </pre>
 	 * @param dataTypeHandler
 	 */
 	protected static void register_(DataTypeHandler dataTypeHandler) {
