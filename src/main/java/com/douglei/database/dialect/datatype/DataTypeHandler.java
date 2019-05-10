@@ -27,12 +27,12 @@ public abstract class DataTypeHandler {
 	 * @param value
 	 * @throws SQLException
 	 */
-	abstract void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
+	public abstract void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
 	
 	/**
 	 * 将值格式化成对应的数据类型
 	 * @param value
 	 * @return
 	 */
-	abstract Object turnValueToTargetDataType(Object value);
+	public abstract Object turnValueToTargetDataType(Object value);
 }

@@ -13,6 +13,7 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.database.sql.statement.impl.LocalDialect;
 import com.douglei.utils.CryptographyUtil;
 
 /**
@@ -34,6 +35,7 @@ public class SqlSessionImpl implements SqlSession{
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
+		LocalDialect.setDialect(environmentProperty.getDialect());
 	}
 
 	/**

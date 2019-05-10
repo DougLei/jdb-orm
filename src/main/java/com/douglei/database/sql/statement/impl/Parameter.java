@@ -19,11 +19,11 @@ public class Parameter {
 	private DataTypeHandler dataTypeHandler;
 	
 	public Parameter(Object value) {
-		// TODO
-//		this(value, DataTypeHandlerMapping.getDefaultDataTypeHandler());
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("参数值 {}, 使用默认的数据类型 {}", value, DataTypeHandlerMapping.getDefaultDataTypeHandler().getClass());
-//		}
+		this.value = value;
+		this.dataTypeHandler = LocalDialect.getDialect().getDataTypeHandler(value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
+		}
 	}
 	public Parameter(Object value, DataTypeHandler dataTypeHandler) {
 		this.value = value;
@@ -31,6 +31,6 @@ public class Parameter {
 	}
 
 	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
-//		dataTypeHandler.setValue(preparedStatement, index, value);
+		dataTypeHandler.setValue(preparedStatement, index, value);
 	}
 }
