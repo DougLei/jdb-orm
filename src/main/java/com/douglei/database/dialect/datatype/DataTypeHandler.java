@@ -22,6 +22,24 @@ public abstract class DataTypeHandler {
 	}
 	
 	/**
+	 * <pre>
+	 * 	支持处理的Class
+	 * 	可以通过Object value, 获取对应的DataTypeHandler
+	 * </pre>
+	 * @return
+	 */
+	public abstract Class<?> supportClass();
+	
+	/**
+	 * <pre>
+	 * 	支持处理的ColumnType
+	 * 	可以通过java.sql.ResultSet中结果集列的元数据ColumnType, 获取对应的DataTypeHandler
+	 * </pre>
+	 * @return
+	 */
+	public abstract int supportColumnType();
+	
+	/**
 	 * 给preparedStatement设置对应的参数值
 	 * @param preparedStatement
 	 * @param parameterIndex
@@ -38,4 +56,9 @@ public abstract class DataTypeHandler {
 	 * @throws SQLException
 	 */
 	public abstract Object getValue(int columnIndex, ResultSet resultSet)  throws SQLException;
+	
+	@Override
+	public String toString() {
+		return getClass().getName() + " [code="+getCode()+", supportClass="+supportClass()+", supportColumnType="+supportColumnType() + "]";
+	}
 }

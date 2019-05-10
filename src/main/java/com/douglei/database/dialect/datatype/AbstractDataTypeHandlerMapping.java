@@ -14,8 +14,11 @@ import com.douglei.utils.reflect.ConstructorUtil;
  */
 public abstract class AbstractDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataTypeHandlerMapping.class);
+	private static final int count = 16;
 	
-	private static final Map<String, DataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(16);// DataTypeHandler映射集合
+	private final Map<String, DataTypeHandler> CODE_DATATYPE_HANDLER_MAP = new HashMap<String, DataTypeHandler>(count);// DataTypeHandler映射集合------------以getCode()值为key
+	private final Map<Class<?>, DataTypeHandler> CLASS_DATATYPE_HANDLER_MAP = new HashMap<Class<?>, DataTypeHandler>(count);// DataTypeHandler映射集合------------以supportClass()值为key
+	private final Map<Integer, DataTypeHandler> COLUMNTYPE_DATATYPE_HANDLER_MAP = new HashMap<Integer, DataTypeHandler>(count);// DataTypeHandler映射集合------------以supportColumnType()值为key
 	
 	/**
 	 * <pre>
@@ -24,11 +27,13 @@ public abstract class AbstractDataTypeHandlerMapping {
 	 * </pre>
 	 * @param dataTypeHandler
 	 */
-	protected static void register_(DataTypeHandler dataTypeHandler) {
+	protected void register_(DataTypeHandler dataTypeHandler) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("注册DataTypeHandler, code={}, 实例={}", dataTypeHandler.getCode(), dataTypeHandler.getClass().getName());
+			logger.debug("注册DataTypeHandler, code={}, 实例={}", dataTypeHandler.getCode(), dataTypeHandler.toString());
 		}
-		DATATYPE_HANDLER_MAP.put(dataTypeHandler.getCode(), dataTypeHandler);
+		CODE_DATATYPE_HANDLER_MAP.put(dataTypeHandler.getCode(), dataTypeHandler);
+		CLASS_DATATYPE_HANDLER_MAP.put(dataTypeHandler.supportClass(), dataTypeHandler);
+		COLUMNTYPE_DATATYPE_HANDLER_MAP.put(dataTypeHandler.supportColumnType(), dataTypeHandler);
 	}
 	
 	/**
@@ -36,9 +41,19 @@ public abstract class AbstractDataTypeHandlerMapping {
 	 * @param dataTypeHandler
 	 */
 	private void register(DataTypeHandler dataTypeHandler) {
-		String code = dataTypeHandler.getCode();
-		if(DATATYPE_HANDLER_MAP.containsKey(code)) {
-			throw new RepeatDataTypeHandlerException("已经存在code=["+code+"]的映射实例 " + DATATYPE_HANDLER_MAP.get(code).getClass().getName())  ;
+		if(logger.isDebugEnabled()) {
+			if(CODE_DATATYPE_HANDLER_MAP.containsKey(dataTypeHandler.getCode())) {
+				logger.debug("已经存在code={}的DataTypeHandler实例={}", dataTypeHandler.getCode(), CODE_DATATYPE_HANDLER_MAP.get(dataTypeHandler.getCode()).toString());
+				logger.debug("【覆盖】用当前新实例={}", dataTypeHandler.toString());
+			}
+			if(CLASS_DATATYPE_HANDLER_MAP.containsKey(dataTypeHandler.supportClass())) {
+				logger.debug("已经存在supportClass={}的DataTypeHandler实例={}", dataTypeHandler.supportClass(), CLASS_DATATYPE_HANDLER_MAP.get(dataTypeHandler.supportClass()).toString());
+				logger.debug("【覆盖】用当前新实例={}", dataTypeHandler.toString());
+			}
+			if(COLUMNTYPE_DATATYPE_HANDLER_MAP.containsKey(dataTypeHandler.supportColumnType())) {
+				logger.debug("已经存在supportColumnType={}的DataTypeHandler实例={}", dataTypeHandler.supportColumnType(), COLUMNTYPE_DATATYPE_HANDLER_MAP.get(dataTypeHandler.supportColumnType()).toString());
+				logger.debug("【覆盖】用当前新实例={}", dataTypeHandler.toString());
+			}
 		}
 		register_(dataTypeHandler);
 	}
@@ -49,7 +64,7 @@ public abstract class AbstractDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByCode(String code) {
-		DataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(code);
+		DataTypeHandler dataTypeHandler = CODE_DATATYPE_HANDLER_MAP.get(code);
 		if(dataTypeHandler == null) {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义DataTypeHandler实现子类", code);
 			Object obj = ConstructorUtil.newInstance(code);
@@ -59,7 +74,7 @@ public abstract class AbstractDataTypeHandlerMapping {
 			dataTypeHandler = (DataTypeHandler) obj;
 			register(dataTypeHandler);
 		}
-		logger.debug("获取code值为{} 的{}实例", code, dataTypeHandler.getClass());
+		logger.debug("获取code={} 的DataTypeHandler实例 {}", code, dataTypeHandler.toString());
 		return dataTypeHandler;
 	}
 	
@@ -69,7 +84,14 @@ public abstract class AbstractDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByValueClassType(Object value) {
-		return null;
+		DataTypeHandler dataTypeHandler = CLASS_DATATYPE_HANDLER_MAP.get(value.getClass());
+		if(dataTypeHandler == null) {
+			throw new UnSupportDataTypeHandlerException("目前不支持处理 ["+value.getClass().getName()+"]类型");
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取supportClass={} 的DataTypeHandler实例 {}", value.getClass().getName(), dataTypeHandler.toString());
+		}
+		return dataTypeHandler;
 	}
 	
 	/**
@@ -78,6 +100,13 @@ public abstract class AbstractDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType) {
-		return null;
+		DataTypeHandler dataTypeHandler = COLUMNTYPE_DATATYPE_HANDLER_MAP.get(columnType);
+		if(dataTypeHandler == null) {
+			throw new UnSupportDataTypeHandlerException("目前不支持处理 columnType="+columnType+"");
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取supportColumnType={} 的DataTypeHandler实例 {}", columnType, dataTypeHandler.toString());
+		}
+		return dataTypeHandler;
 	}
 }
