@@ -216,7 +216,7 @@ public class SqlSessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = LocalDialect.getDialect().installPageQuerySql(pageNum, pageSize, sql);
+			sql = LocalDialect.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, sql);
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}

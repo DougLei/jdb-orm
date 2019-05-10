@@ -1,30 +1,19 @@
 package com.douglei.database.dialect.impl.mysql;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.database.dialect.impl.AbstractDialect;
+import com.douglei.database.dialect.impl.mysql.datatype.DataTypeHandlerMapping;
+import com.douglei.database.dialect.impl.mysql.sql.SqlHandlerImpl;
 
 /**
  * 
  * @author DougLei
  */
 public final class MySqlDialect extends AbstractDialect{
-	private static final Logger logger = LoggerFactory.getLogger(MySqlDialect.class);
 	public static final String DATABASE_CODE = "MYSQL";
 	
 	@Override
-	public String installPageQuerySql(int pageNum, int pageSize, String sql) {
-		StringBuilder pageQuerySql = new StringBuilder(10000 + sql.length());
-		pageQuerySql.append("select jdb_orm_second_query_.* from (");
-		pageQuerySql.append(sql);
-		pageQuerySql.append(") jdb_orm_second_query_ limit ");
-		pageQuerySql.append((pageNum-1)*pageSize);
-		pageQuerySql.append(",");
-		pageQuerySql.append(pageSize);
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} 进行分页查询的sql语句为: {}", getClass(), pageQuerySql.toString());
-		}
-		return pageQuerySql.toString();
+	protected void initialize() {
+		super.sqlHandler = new SqlHandlerImpl();
+		super.dataTypeHandlerMapping = new DataTypeHandlerMapping();
 	}
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration id="">
 	<environment>
-		<!-- <property name="dialect" value="mysql" /> --><!-- mysql, oracle, sqlserver -->
+		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver -->
 		<!-- <property name="enableSessionCache" value="true" /> -->
 	
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
@@ -21,6 +21,10 @@
 		<mappings>
 			<mapping-scan base-path="mappings/table" />
 		</mappings>
+		
+		<datatypes>
+			<datatype type="" class="" /><!-- type的值包括: ormtype, classtype, resultset-columntype -->
+		</datatypes>
 	</environment>
 	
 	<properties placeholderPrefix="${" placeholderSuffix="}">
