@@ -8,7 +8,6 @@ import com.douglei.database.sql.statement.LocalDialect;
  * @author DougLei
  */
 public class SqlResultsetMetadata {
-	
 	// 列名
 	private String columnName;
 	// 要进行数据处理的DataTypeHandler

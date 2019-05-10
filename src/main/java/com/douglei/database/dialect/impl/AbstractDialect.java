@@ -25,7 +25,7 @@ public abstract class AbstractDialect implements Dialect{
 	public DataTypeHandler getDataTypeHandlerByCode(String code) {
 		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandlerByCode(code);
 		if(logger.isDebugEnabled()) {
-			logger.debug("获取code={}的 {}实例", code, dataTypeHandler.getClass().getName());
+			logger.debug("获取code={}的DataTypeHandler实例 {}", code, dataTypeHandler.getClass().getName());
 		}
 		return dataTypeHandler;
 	}
@@ -34,7 +34,7 @@ public abstract class AbstractDialect implements Dialect{
 	public DataTypeHandler getDataTypeHandlerByValueClassType(Object value) {
 		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandlerByValueClassType(value);
 		if(logger.isDebugEnabled()) {
-			logger.debug("获取value={}, valueClassType={}的 {}实例", value, value.getClass().getName(), dataTypeHandler.getClass().getName());
+			logger.debug("获取value={}, valueClassType={}的DataTypeHandler实例 {}", value, value.getClass().getName(), dataTypeHandler.getClass().getName());
 		}
 		return dataTypeHandler;
 	}
@@ -43,7 +43,7 @@ public abstract class AbstractDialect implements Dialect{
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType) {
 		DataTypeHandler dataTypeHandler = dataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType);
 		if(logger.isDebugEnabled()) {
-			logger.debug("获取columnType={}, {}实例", columnType, dataTypeHandler.getClass().getName());
+			logger.debug("获取columnType={}的DataTypeHandler实例 {}", columnType, dataTypeHandler.getClass().getName());
 		}
 		return dataTypeHandler;
 	}
