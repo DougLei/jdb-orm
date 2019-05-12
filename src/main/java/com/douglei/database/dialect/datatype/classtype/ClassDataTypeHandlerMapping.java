@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeException;
-import com.douglei.database.dialect.datatype.classtype.impl.StringClassDataTypeHandler;
 
 /**
  * 
@@ -14,14 +13,7 @@ import com.douglei.database.dialect.datatype.classtype.impl.StringClassDataTypeH
 public class ClassDataTypeHandlerMapping {
 	private final Map<Class<?>, ClassDataHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataHandler>(16);
 	
-	/**
-	 * 初始化
-	 */
-	protected void initialize() {
-		register(new StringClassDataTypeHandler());
-		// TODO register其他的类型
-	}
-	private void register(ClassDataHandler classDataHandler) {
+	public void register(ClassDataHandler classDataHandler) {
 		DATATYPE_HANDLER_MAP.put(classDataHandler.supportClass(), classDataHandler);
 	}
 

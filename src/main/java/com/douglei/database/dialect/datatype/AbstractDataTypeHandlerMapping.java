@@ -1,5 +1,6 @@
 package com.douglei.database.dialect.datatype;
 
+import com.douglei.database.dialect.datatype.classtype.ClassDataHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandler;
 import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandlerMapping;
@@ -11,15 +12,20 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * @author DougLei
  */
 public abstract class AbstractDataTypeHandlerMapping{
+	private final ClassDataTypeHandlerMapping classDataTypeHandlerMapping = new ClassDataTypeHandlerMapping();
 	private final OrmDataTypeHandlerMapping ormDataTypeHandlerMapping = new OrmDataTypeHandlerMapping();
 	private final ResultSetColumnDataTypeHandlerMapping resultsetColumnDataTypeHandlerMapping = new ResultSetColumnDataTypeHandlerMapping();
-	private final ClassDataTypeHandlerMapping classDataTypeHandlerMapping = new ClassDataTypeHandlerMapping();
 	
 	public AbstractDataTypeHandlerMapping() {
+		initialRegisterClassDataTypeHandlers();
 		initialRegisterOrmDataTypeHandlers();
 		initialRegisterResultsetColumnDataTypeHandlers();
 	}
 	
+	protected abstract void initialRegisterClassDataTypeHandlers();
+	protected void registerClassDataTypeHandler(ClassDataHandler classDataHandler) {
+		classDataTypeHandlerMapping.register(classDataHandler);
+	}
 	protected abstract void initialRegisterOrmDataTypeHandlers();
 	protected void registerOrmDataTypeHandler(OrmDataTypeHandler ormDataTypeHandler) {
 		ormDataTypeHandlerMapping.register(ormDataTypeHandler);
@@ -29,14 +35,12 @@ public abstract class AbstractDataTypeHandlerMapping{
 		resultsetColumnDataTypeHandlerMapping.register(resultSetColumnDatatTypeHandler);
 	}
 	
-	public DataTypeHandler getDataTypeHandlerByCode(String code) {
-		return ormDataTypeHandlerMapping.getDataTypeHandlerByClassType(code);
-	}
-	
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);
 	}
-	
+	public DataTypeHandler getDataTypeHandlerByCode(String code) {
+		return ormDataTypeHandlerMapping.getDataTypeHandlerByClassType(code);
+	}
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType) {
 		return resultsetColumnDataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType);
 	}

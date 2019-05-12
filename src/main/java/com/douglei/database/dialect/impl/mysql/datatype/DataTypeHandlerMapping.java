@@ -7,7 +7,13 @@ import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
  * @author DougLei
  */
 public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
-
+	
+	@Override
+	protected void initialRegisterClassDataTypeHandlers() {
+		// TODO 
+//		registerClassDataTypeHandler(classDataHandler);
+	}
+	
 	@Override
 	protected void initialRegisterOrmDataTypeHandlers() {
 		// TODO
