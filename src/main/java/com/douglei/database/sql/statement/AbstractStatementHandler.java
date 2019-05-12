@@ -160,13 +160,15 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private void setQueryResultList_() throws SQLException {
 		logger.debug("开始设置查询结果集集合");
 		initialQueryResultList_();
-		if(resultSet.next()) {
-			int columnCount = resultSet.getMetaData().getColumnCount();
+		if(setResutSetColumnNames()) {
+			int count = resultsetMetadatas.size();
 			Object[] array = null;
+			SqlResultsetMetadata sqlResultsetMetadata = null;
 			do {
-				array = new Object[columnCount];
-				for(int i=0;i<columnCount;i++) {
-					array[i] = resultSet.getObject((i+1)); 
+				array = new Object[count];
+				for(int i=0;i<count;i++) {
+					sqlResultsetMetadata = resultsetMetadatas.get(i);
+					array[i] = sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet); 
 				}
 				queryResultList_.add(array);
 			}while(resultSet.next());
@@ -183,12 +185,14 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryUniqueResult_() throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
-		if(resultSet.next()) {
-			int columnCount = resultSet.getMetaData().getColumnCount();
-			queryUniqueResult_ = new Object[columnCount];
+		if(setResutSetColumnNames()) {
+			int count = resultsetMetadatas.size();
+			queryUniqueResult_ = new Object[count];
 			
-			for(int i=0;i<columnCount;i++) {
-				queryUniqueResult_[i] = resultSet.getObject((i+1)); 
+			SqlResultsetMetadata sqlResultsetMetadata = null;
+			for(int i=0;i<count;i++) {
+				sqlResultsetMetadata = resultsetMetadatas.get(i);
+				queryUniqueResult_[i] = sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet); 
 			}
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
