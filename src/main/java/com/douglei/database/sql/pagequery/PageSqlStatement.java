@@ -66,7 +66,7 @@ public class PageSqlStatement {
 				
 				for(;i<length;i++) {
 					c = originSql.charAt(i);
-					if(c == ' ' || c == '\r' || c == '\n') {
+					if(c == ' ' || c == '\r' || c == '\n' || c == '\t') {
 						continue;
 					}else {
 						if(c != ',') {
