@@ -11,6 +11,12 @@ import java.sql.SQLException;
 public interface DataTypeHandler {
 	
 	/**
+	 * 获取类型
+	 * @return
+	 */
+	DataTypeHandlerType getType();
+	
+	/**
 	 * 给preparedStatement设置对应的参数值
 	 * @param preparedStatement
 	 * @param parameterIndex

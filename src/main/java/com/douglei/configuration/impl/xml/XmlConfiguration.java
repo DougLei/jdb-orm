@@ -15,7 +15,9 @@ import com.douglei.configuration.environment.Environment;
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.configuration.extconfiguration.ExtConfiguration;
 import com.douglei.configuration.impl.xml.element.environment.XmlEnvironment;
+import com.douglei.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
 import com.douglei.configuration.impl.xml.element.properties.Properties;
 import com.douglei.sessionfactory.SessionFactory;
 import com.douglei.sessionfactory.SessionFactoryImpl;
@@ -40,6 +42,10 @@ public class XmlConfiguration implements Configuration {
 	 * 对应<properties>节点
 	 */
 	private Properties properties;
+	/**
+	 * 对应<ext-configuration>节点
+	 */
+	private ExtConfiguration extConfiguration;
 	/**
 	 * 对应<environment>节点
 	 */
@@ -76,7 +82,8 @@ public class XmlConfiguration implements Configuration {
 			Element root = xmlDocument.getRootElement();
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.elements("properties")));
-			setEnvironment(new XmlEnvironment(root.elements("environment"), properties));
+			setExtConfiguration(new XmlExtConfiguration(root.elements("ext-configuration")));
+			setEnvironment(new XmlEnvironment(root.elements("environment"), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm系统的配置信息");
 		} catch (Exception e) {
 			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
@@ -103,6 +110,9 @@ public class XmlConfiguration implements Configuration {
 		logger.debug("{} 开始 destroy", getClass());
 		if(properties != null) {
 			properties.doDestroy();
+		}
+		if(extConfiguration != null) {
+			extConfiguration.doDestroy();
 		}
 		if(environment != null) {
 			environment.doDestroy();
@@ -140,6 +150,9 @@ public class XmlConfiguration implements Configuration {
 	}
 	private void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+	private void setExtConfiguration(ExtConfiguration extConfiguration) {
+		this.extConfiguration = extConfiguration;
 	}
 	private void setEnvironment(Environment environment) {
 		this.environment = environment;

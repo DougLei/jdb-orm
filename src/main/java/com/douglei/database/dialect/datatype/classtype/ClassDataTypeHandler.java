@@ -4,12 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 
 /**
  * 用于处理根据class类型, 获取对应的DataTypeHandler
  * @author DougLei
  */
-public abstract class ClassDataHandler implements DataTypeHandler {
+public abstract class ClassDataTypeHandler implements DataTypeHandler {
 
 	/**
 	 * 支持处理的Class类型
@@ -26,5 +27,10 @@ public abstract class ClassDataHandler implements DataTypeHandler {
 	@Override
 	public String toString() {
 		return getClass().getName() + " supportClass=["+supportClass()+"]";
+	}
+
+	@Override
+	public DataTypeHandlerType getType() {
+		return DataTypeHandlerType.CLASS;
 	}
 }

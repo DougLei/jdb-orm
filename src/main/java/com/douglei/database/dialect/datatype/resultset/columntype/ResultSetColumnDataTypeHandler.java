@@ -4,12 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 
 /**
  * 用于处理根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
  * @author DougLei
  */
-public abstract class ResultSetColumnDatatTypeHandler implements DataTypeHandler{
+public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 
 	/**
 	 * 支持处理的ColumnType类型
@@ -25,5 +26,11 @@ public abstract class ResultSetColumnDatatTypeHandler implements DataTypeHandler
 	@Override
 	public String toString() {
 		return getClass().getName() + " supportColumnType=["+supportColumnType()+"]";
+	}
+	
+
+	@Override
+	public DataTypeHandlerType getType() {
+		return DataTypeHandlerType.RESULTSET_COLUMN;
 	}
 }

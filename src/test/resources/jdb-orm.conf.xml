@@ -21,13 +21,15 @@
 		<mappings>
 			<mapping-scan base-path="mappings/table" />
 		</mappings>
-		
-		<datatypes>
-			<datatype type="" class="" /><!-- type的值包括: ormtype, classtype, resultset-columntype -->
-		</datatypes>
 	</environment>
 	
 	<properties placeholderPrefix="${" placeholderSuffix="}">
 		<resource path="jdbc.properties" />
 	</properties>
+	
+	<ext-configuration>
+		<datatype-handlers>
+			<datatype-handler dialect="" class="" /><!-- dialect如果不填, 就用[property dialect]的值 -->
+		</datatype-handlers>
+	</ext-configuration>
 </configuration>

@@ -11,9 +11,9 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeExcepti
  * @author DougLei
  */
 public class ClassDataTypeHandlerMapping {
-	private final Map<Class<?>, ClassDataHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataHandler>(16);
+	private final Map<Class<?>, ClassDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
-	public void register(ClassDataHandler classDataHandler) {
+	public void register(ClassDataTypeHandler classDataHandler) {
 		DATATYPE_HANDLER_MAP.put(classDataHandler.supportClass(), classDataHandler);
 	}
 
@@ -23,7 +23,7 @@ public class ClassDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
-		ClassDataHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(value.getClass());
+		ClassDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(value.getClass());
 		if(dataTypeHandler == null) {
 			throw new UnsupportDataTypeHandlerCodeException("目前无法处理class=["+value.getClass().getName()+"]的数据类型");
 		}

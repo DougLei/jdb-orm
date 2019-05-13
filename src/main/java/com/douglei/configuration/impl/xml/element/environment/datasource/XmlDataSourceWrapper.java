@@ -41,7 +41,7 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	 * 
 	 */
 	private void invokeSetMethod() {
-		logger.debug("开始给数据源 {} 的属性设置值", dataSource.getClass());
+		logger.debug("开始给数据源 {} 的属性设置值", dataSource.getClass().getName());
 		if(propertyMap == null || propertyMap.size() == 0) {
 			throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
 		}

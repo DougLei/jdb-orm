@@ -19,6 +19,7 @@ import com.douglei.configuration.environment.Environment;
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.configuration.extconfiguration.ExtConfiguration;
 import com.douglei.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
 import com.douglei.configuration.impl.xml.element.environment.mapping.RepeatMappingsElementException;
 import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
@@ -34,6 +35,7 @@ import com.douglei.utils.StringUtil;
 public class XmlEnvironment implements Environment{
 	private static final Logger logger = LoggerFactory.getLogger(XmlEnvironment.class);
 	private Properties properties;
+	private ExtConfiguration extConfiguration;
 	
 	private EnvironmentProperty environmentProperty;
 	
@@ -43,10 +45,11 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(List<?> environmentElements, Properties properties) throws Exception {
+	public XmlEnvironment(List<?> environmentElements, Properties properties, ExtConfiguration extConfiguration) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		Element element = ElementUtil.getNecessaryAndSingleElement("<environment>", environmentElements);
 		this.properties = properties;
+		this.extConfiguration = extConfiguration;
 		
 		setDataSourceWrapper(element.elements("datasource"));// 处理配置的数据源
 		
@@ -121,6 +124,8 @@ public class XmlEnvironment implements Environment{
 			}
 			xmlEnvironmentProperty.setDialectByJDBCUrl(JDBCUrl);
 		}
+		xmlEnvironmentProperty.setExtDataTypeHandlers(extConfiguration.getExtDataTypeHandlerList());
+		
 		this.environmentProperty = xmlEnvironmentProperty;
 		logger.debug("处理<environment>下的所有property元素结束");
 	}
@@ -151,6 +156,9 @@ public class XmlEnvironment implements Environment{
 		logger.debug("{} 开始 destroy", getClass());
 		if(dataSourceWrapper != null) {
 			dataSourceWrapper.doDestroy();
+		}
+		if(mappingWrapper != null) {
+			mappingWrapper.doDestroy();
 		}
 		logger.debug("{} 结束 destroy", getClass());
 	}

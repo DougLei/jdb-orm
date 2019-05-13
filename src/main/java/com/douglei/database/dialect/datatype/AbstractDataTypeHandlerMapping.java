@@ -1,11 +1,12 @@
 package com.douglei.database.dialect.datatype;
 
-import com.douglei.database.dialect.datatype.classtype.ClassDataHandler;
+import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandler;
 import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
-import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDatatTypeHandler;
+import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 
@@ -23,7 +24,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	
 	protected abstract void initialRegisterClassDataTypeHandlers();
-	protected void registerClassDataTypeHandler(ClassDataHandler classDataHandler) {
+	protected void registerClassDataTypeHandler(ClassDataTypeHandler classDataHandler) {
 		classDataTypeHandlerMapping.register(classDataHandler);
 	}
 	protected abstract void initialRegisterOrmDataTypeHandlers();
@@ -31,7 +32,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 		ormDataTypeHandlerMapping.register(ormDataTypeHandler);
 	}
 	protected abstract void initialRegisterResultsetColumnDataTypeHandlers();
-	protected void registerResultsetColumnDataTypeHandler(ResultSetColumnDatatTypeHandler resultSetColumnDatatTypeHandler) {
+	protected void registerResultsetColumnDataTypeHandler(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
 		resultsetColumnDataTypeHandlerMapping.register(resultSetColumnDatatTypeHandler);
 	}
 	
@@ -43,5 +44,23 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType) {
 		return resultsetColumnDataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType);
+	}
+	
+	/**
+	 * 注册扩展的DataTypeHandler
+	 * @param extDataTypeHandler
+	 */
+	public void registerExtDataTypeHandler(ExtDataTypeHandler extDataTypeHandler) {
+		switch(extDataTypeHandler.getType()) {
+			case CLASS:
+				classDataTypeHandlerMapping.register(extDataTypeHandler.getClassDataTypeHandler());
+				return;
+			case ORM:
+				ormDataTypeHandlerMapping.register(extDataTypeHandler.getOrmsDataTypeHandler());
+				return;
+			case RESULTSET_COLUMN:
+				resultsetColumnDataTypeHandlerMapping.register(extDataTypeHandler.getResultsetColumnDataTypeHandler());
+				return;
+		}
 	}
 }

@@ -11,7 +11,7 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeExcepti
  * @author DougLei
  */
 public class ResultSetColumnDataTypeHandlerMapping {
-	private final Map<Integer, ResultSetColumnDatatTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDatatTypeHandler>();
+	private final Map<Integer, ResultSetColumnDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDataTypeHandler>();
 	
 	/**
 	 * 根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
@@ -19,14 +19,14 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType) {
-		ResultSetColumnDatatTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
+		ResultSetColumnDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
 		if(dataTypeHandler == null) {
 			throw new UnsupportDataTypeHandlerCodeException("目前无法处理columnType=["+columnType+"]的数据类型");
 		}
 		return dataTypeHandler;
 	}
 
-	public void register(ResultSetColumnDatatTypeHandler resultSetColumnDatatTypeHandler) {
+	public void register(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
 		DATATYPE_HANDLER_MAP.put(resultSetColumnDatatTypeHandler.supportColumnType(), resultSetColumnDatatTypeHandler);
 	}
 }

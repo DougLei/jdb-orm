@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
+import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
@@ -114,6 +115,18 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	public void setDialectByJDBCUrl(String JDBCUrl) {
 		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
+	}
+	public void setExtDataTypeHandlers(List<ExtDataTypeHandler> extDataTypeHandlerList) {
+		if(extDataTypeHandlerList != null  && extDataTypeHandlerList.size() > 0) {
+			Dialect dialect = null;
+			for (ExtDataTypeHandler extDataTypeHandler : extDataTypeHandlerList) {
+				dialect = extDataTypeHandler.getDialect();
+				if(dialect == null) {
+					dialect = this.dialect;
+				}
+				dialect.getDataTypeHandlerMapping().registerExtDataTypeHandler(extDataTypeHandler);
+			}
+		}
 	}
 	
 	@Override

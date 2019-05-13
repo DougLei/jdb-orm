@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 
 /**
  * 用于处理映射文件中dataType属性
@@ -31,5 +32,11 @@ public abstract class OrmDataTypeHandler implements DataTypeHandler{
 	@Override
 	public String toString() {
 		return getClass().getName() + " code=["+getCode()+"]";
+	}
+	
+
+	@Override
+	public DataTypeHandlerType getType() {
+		return DataTypeHandlerType.ORM;
 	}
 }
