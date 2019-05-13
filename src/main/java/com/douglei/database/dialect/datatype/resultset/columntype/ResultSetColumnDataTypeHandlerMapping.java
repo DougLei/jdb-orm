@@ -13,6 +13,10 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeExcepti
 public class ResultSetColumnDataTypeHandlerMapping {
 	private final Map<Integer, ResultSetColumnDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDataTypeHandler>();
 	
+	public void initialRegister(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
+		DATATYPE_HANDLER_MAP.put(resultSetColumnDatatTypeHandler.supportColumnType(), resultSetColumnDatatTypeHandler);
+	}
+	
 	/**
 	 * 根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
 	 * @param columnType
@@ -24,9 +28,5 @@ public class ResultSetColumnDataTypeHandlerMapping {
 			throw new UnsupportDataTypeHandlerCodeException("目前无法处理columnType=["+columnType+"]的数据类型");
 		}
 		return dataTypeHandler;
-	}
-
-	public void initialRegister(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
-		DATATYPE_HANDLER_MAP.put(resultSetColumnDatatTypeHandler.supportColumnType(), resultSetColumnDatatTypeHandler);
 	}
 }
