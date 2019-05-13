@@ -43,7 +43,7 @@ public class OrmDataTypeHandlerMapping {
 	private void dynamicRegister(OrmDataTypeHandler ormDataTypeHandler) {
 		String code = ormDataTypeHandler.getCode();
 		if(DATATYPE_HANDLER_MAP.containsKey(code)) {
-			throw new RepeatedDataTypeHandlerCodeException("已经存在code="+code+" 的OrmDataTypeHandler实例, " + DATATYPE_HANDLER_MAP.get(code).toString());
+			throw new RepeatedDataTypeHandlerCodeException("[dynamicRegister] 已经存在code="+code+" 的OrmDataTypeHandler实例, " + DATATYPE_HANDLER_MAP.get(code).toString());
 		}
 		initialRegister(ormDataTypeHandler);
 	}
