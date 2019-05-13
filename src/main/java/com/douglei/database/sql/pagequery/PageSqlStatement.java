@@ -69,8 +69,8 @@ public class PageSqlStatement {
 					if(c == ' ' || c == '\r' || c == '\n' || c == '\t') {
 						continue;
 					}else {
+						index = i++;
 						if(c != ',') {
-							index = i++;
 							isContinue = false;
 						}
 						break;
