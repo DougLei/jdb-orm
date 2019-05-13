@@ -12,6 +12,7 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
+import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.LocalDialect;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.utils.CryptographyUtil;
@@ -212,11 +213,12 @@ public class SqlSessionImpl implements SqlSession{
 			logger.debug("pageSize实际值={}, pageSize<0, 修正pageSize=10", pageNum);
 			pageSize = 10;
 		}
-		long totalCount = queryTotalCount(sql, parameters);
+		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
+		long totalCount = queryTotalCount(pageSqlStatement, parameters);
 		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = LocalDialect.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, sql);
+			sql = LocalDialect.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}
@@ -228,12 +230,12 @@ public class SqlSessionImpl implements SqlSession{
 	
 	/**
 	 * 查询总数量
-	 * @param sql
+	 * @param pageSqlStatement
 	 * @param parameters
 	 * @return
 	 */
-	private long queryTotalCount(String sql, List<Object> parameters) {
-		Object totalCount =  uniqueQuery_("select count(1) from ("+sql+") jdb_orm_qt_", parameters)[0];
+	private long queryTotalCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
+		Object totalCount =  uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0];
 		return Long.parseLong(totalCount.toString());
 	}
 }

@@ -10,8 +10,9 @@ public interface SqlHandler {
 	 * 组装成分页查询的sql语句
 	 * @param pageNum 
 	 * @param pageSize 
+	 * @param withClause
 	 * @param sql
 	 * @return
 	 */
-	String installPageQuerySql(int pageNum, int pageSize, String sql);
+	String installPageQuerySql(int pageNum, int pageSize, String withClause, String sql);
 }

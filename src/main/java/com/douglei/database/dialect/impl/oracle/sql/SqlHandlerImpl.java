@@ -13,11 +13,12 @@ public class SqlHandlerImpl implements SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
-	public String installPageQuerySql(int pageNum, int pageSize, String sql) {
+	public String installPageQuerySql(int pageNum, int pageSize, String withClause, String sql) {
 		int maxIndex = pageNum*pageSize;
 		
-		StringBuilder pageQuerySql = new StringBuilder(200 + sql.length());
-		pageQuerySql.append("select jdb_orm_thrid_query_.* from (select jdb_orm_second_query_.*, rownum rn from (");
+		StringBuilder pageQuerySql = new StringBuilder(200 + withClause.length() + sql.length());
+		pageQuerySql.append(withClause);
+		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select jdb_orm_second_query_.*, rownum rn from (");
 		pageQuerySql.append(sql);
 		pageQuerySql.append(") jdb_orm_second_query_ where rownum <= ");
 		pageQuerySql.append(maxIndex);
