@@ -13,7 +13,7 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeExcepti
 public class ClassDataTypeHandlerMapping {
 	private final Map<Class<?>, ClassDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
-	public void register(ClassDataTypeHandler classDataHandler) {
+	public void initialRegister(ClassDataTypeHandler classDataHandler) {
 		DATATYPE_HANDLER_MAP.put(classDataHandler.supportClass(), classDataHandler);
 	}
 

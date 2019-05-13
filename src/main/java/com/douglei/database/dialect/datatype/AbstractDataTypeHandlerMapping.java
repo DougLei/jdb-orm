@@ -25,15 +25,15 @@ public abstract class AbstractDataTypeHandlerMapping{
 	
 	protected abstract void initialRegisterClassDataTypeHandlers();
 	protected void registerClassDataTypeHandler(ClassDataTypeHandler classDataHandler) {
-		classDataTypeHandlerMapping.register(classDataHandler);
+		classDataTypeHandlerMapping.initialRegister(classDataHandler);
 	}
 	protected abstract void initialRegisterOrmDataTypeHandlers();
 	protected void registerOrmDataTypeHandler(OrmDataTypeHandler ormDataTypeHandler) {
-		ormDataTypeHandlerMapping.register(ormDataTypeHandler);
+		ormDataTypeHandlerMapping.initialRegister(ormDataTypeHandler);
 	}
 	protected abstract void initialRegisterResultsetColumnDataTypeHandlers();
 	protected void registerResultsetColumnDataTypeHandler(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
-		resultsetColumnDataTypeHandlerMapping.register(resultSetColumnDatatTypeHandler);
+		resultsetColumnDataTypeHandlerMapping.initialRegister(resultSetColumnDatatTypeHandler);
 	}
 	
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
@@ -53,13 +53,13 @@ public abstract class AbstractDataTypeHandlerMapping{
 	public void registerExtDataTypeHandler(ExtDataTypeHandler extDataTypeHandler) {
 		switch(extDataTypeHandler.getType()) {
 			case CLASS:
-				classDataTypeHandlerMapping.register(extDataTypeHandler.getClassDataTypeHandler());
+				classDataTypeHandlerMapping.initialRegister(extDataTypeHandler.getClassDataTypeHandler());
 				return;
 			case ORM:
-				ormDataTypeHandlerMapping.register(extDataTypeHandler.getOrmsDataTypeHandler());
+				ormDataTypeHandlerMapping.initialRegister(extDataTypeHandler.getOrmsDataTypeHandler());
 				return;
 			case RESULTSET_COLUMN:
-				resultsetColumnDataTypeHandlerMapping.register(extDataTypeHandler.getResultsetColumnDataTypeHandler());
+				resultsetColumnDataTypeHandlerMapping.initialRegister(extDataTypeHandler.getResultsetColumnDataTypeHandler());
 				return;
 		}
 	}

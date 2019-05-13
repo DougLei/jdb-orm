@@ -26,7 +26,7 @@ public class ResultSetColumnDataTypeHandlerMapping {
 		return dataTypeHandler;
 	}
 
-	public void register(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
+	public void initialRegister(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
 		DATATYPE_HANDLER_MAP.put(resultSetColumnDatatTypeHandler.supportColumnType(), resultSetColumnDatatTypeHandler);
 	}
 }
