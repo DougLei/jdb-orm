@@ -26,9 +26,7 @@ public class ClassDataTypeHandlerMapping {
 		CODE_DATATYPE_HANDLER_MAP.put(classDataTypeHandler.getCode(), classDataTypeHandler);
 		
 		Class<?>[] supportClasses = classDataTypeHandler.supportClasses();
-		if(supportClasses == null) {
-			logger.debug("supportClasses is null");
-		}else {
+		if(supportClasses != null && supportClasses.length > 0) {
 			for (Class<?> sc : supportClasses) {
 				SUPPORTCLASS_DATATYPE_HANDLER_MAP.put(sc, classDataTypeHandler);
 			}
