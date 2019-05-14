@@ -2,6 +2,7 @@ package com.douglei.database.dialect.datatype.resultset.columntype;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.DataTypeHandlerType;
@@ -16,7 +17,7 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 	 * 支持处理的ColumnType类型
 	 * @return
 	 */
-	public abstract int supportColumnType();
+	public abstract int[] supportColumnTypes();
 	
 	@Deprecated
 	@Override
@@ -25,7 +26,7 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " supportColumnType=["+supportColumnType()+"]";
+		return getClass().getName() + " supportColumnTypes=["+Arrays.toString(supportColumnTypes())+"]";
 	}
 	
 

@@ -2,6 +2,7 @@ package com.douglei.database.dialect.datatype.classtype;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.DataTypeHandlerType;
@@ -16,7 +17,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler {
 	 * 支持处理的Class类型
 	 * @return
 	 */
-	public abstract Class<?> supportClass();
+	public abstract Class<?>[] supportClasses();
 	
 	@Deprecated
 	@Override
@@ -26,7 +27,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler {
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " supportClass=["+supportClass()+"]";
+		return getClass().getName() + " supportClasses=["+Arrays.toString(supportClasses())+"]";
 	}
 
 	@Override

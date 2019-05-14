@@ -3,6 +3,9 @@ package com.douglei.database.dialect.datatype.classtype;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeException;
 
@@ -11,10 +14,21 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeExcepti
  * @author DougLei
  */
 public class ClassDataTypeHandlerMapping {
+	private static final Logger logger = LoggerFactory.getLogger(ClassDataTypeHandlerMapping.class);
 	private final Map<Class<?>, ClassDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
 	public void initialRegister(ClassDataTypeHandler classDataHandler) {
-		DATATYPE_HANDLER_MAP.put(classDataHandler.supportClass(), classDataHandler);
+		if(logger.isDebugEnabled()) {
+			logger.debug("register {}", classDataHandler.toString());
+		}
+		Class<?>[] classes = classDataHandler.supportClasses();
+		if(classes == null) {
+			logger.debug("supportClasses is null");
+		}else {
+			for (Class<?> clz : classes) {
+				DATATYPE_HANDLER_MAP.put(clz, classDataHandler);
+			}
+		}
 	}
 
 	/**

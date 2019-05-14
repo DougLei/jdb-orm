@@ -18,6 +18,9 @@ public class OrmDataTypeHandlerMapping {
 	private final Map<String, OrmDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, OrmDataTypeHandler>(16);
 	
 	public void initialRegister(OrmDataTypeHandler ormDataTypeHandler) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("register {}", ormDataTypeHandler.toString());
+		}
 		DATATYPE_HANDLER_MAP.put(ormDataTypeHandler.getCode(), ormDataTypeHandler);
 	}
 	
