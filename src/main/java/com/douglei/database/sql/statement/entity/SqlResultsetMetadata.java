@@ -13,9 +13,9 @@ public class SqlResultsetMetadata {
 	// 要进行数据处理的DataTypeHandler
 	private DataTypeHandler dataTypeHandler;
 	
-	public SqlResultsetMetadata(String columnName, int columnType) {
+	public SqlResultsetMetadata(String columnName, int columnType, String columnTypeName) {
 		this.columnName = columnName.toUpperCase();
-		this.dataTypeHandler = LocalDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnType);
+		this.dataTypeHandler = LocalDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnType, columnTypeName);
 	}
 
 	public String getColumnName() {
