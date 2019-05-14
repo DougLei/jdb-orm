@@ -45,7 +45,7 @@ public class StatementHandlerTest {
 		session = conf.buildSessionFactory().openSqlSession();
 	}
 	@After
-	public void end() {
+	public void after() {
 		session.close();
 	}
 }

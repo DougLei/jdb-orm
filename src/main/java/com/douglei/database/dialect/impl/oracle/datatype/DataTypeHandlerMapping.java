@@ -1,6 +1,7 @@
 package com.douglei.database.dialect.impl.oracle.datatype;
 
 import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.StringClassDataTypeHandler;
 
 /**
  * oracle datatype handler mapping
@@ -10,8 +11,7 @@ public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 
 	@Override
 	protected void initialRegisterClassDataTypeHandlers() {
-		// TODO 
-//		registerClassDataTypeHandler(classDataHandler);
+		registerClassDataTypeHandler(new StringClassDataTypeHandler());
 	}
 	
 	@Override

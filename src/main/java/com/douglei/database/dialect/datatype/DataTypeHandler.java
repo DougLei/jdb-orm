@@ -28,9 +28,9 @@ public interface DataTypeHandler {
 	/**
 	 * 从resultset中获取对应的列值
 	 * @param columnIndex
-	 * @param resultSet
+	 * @param rs
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getValue(int columnIndex, ResultSet resultSet)  throws SQLException;
+	Object getValue(int columnIndex, ResultSet rs)  throws SQLException;
 }
