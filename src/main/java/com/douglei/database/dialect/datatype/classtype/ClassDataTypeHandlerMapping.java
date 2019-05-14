@@ -16,6 +16,7 @@ import com.douglei.utils.reflect.ConstructorUtil;
  */
 public class ClassDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(ClassDataTypeHandlerMapping.class);
+	
 	private final Map<String, ClassDataTypeHandler> CODE_DATATYPE_HANDLER_MAP = new HashMap<String, ClassDataTypeHandler>(16);
 	private final Map<Class<?>, ClassDataTypeHandler> SUPPORTCLASS_DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
