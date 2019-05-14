@@ -1,14 +1,15 @@
 package com.douglei.test.datatype;
 
 import java.io.ByteArrayInputStream;
-import java.io.Reader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.After;
@@ -35,7 +36,7 @@ public class MySqlTest {
 	
 	@Test
 	public void floatTest() throws Exception {// number
-		
+		insertPst.setDouble(1, 22.22);
 	}
 	
 	@Test
@@ -58,9 +59,9 @@ public class MySqlTest {
 	
 	@Before
 	public void before() throws Exception {
-		String className = "com.mysql.cj.jdbc.Driver";
-		String url =  "jdbc:mysql://localhost:3306/douglei?characterEncoding=utf8&useSSL=true";
-		String username = "root";
+		String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
+		String username = "sa";
 		String pwd = "root";
 		Class.forName(className);
 		conn = DriverManager.getConnection(url, username, pwd);
@@ -72,31 +73,35 @@ public class MySqlTest {
 		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
 		if(rs.next()) {
 //			System.err.println("读取的列值为 = "+rs.getString(1));
-//			InputStream in = rs.getBinaryStream(1);
-//			if(in == null) {
-//				return;
-//			}
-//			ByteArrayOutputStream out = new ByteArrayOutputStream();
-//			byte[] b = new byte[1024];
-//			int length = 0;
-//			
-//			while((length=in.read(b)) != -1) {
-//				out.write(b, 0, length);
-//			}
-			Reader reader = rs.getCharacterStream(1);
-			if(reader == null) {
-				System.err.println(1);
+//			System.err.println(rs.getDate(1));
+			InputStream in = rs.getBinaryStream(1);
+			if(in == null) {
 				return;
 			}
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			byte[] b = new byte[1024];
+			int length = 0;
 			
-			StringWriter writer = null;
-			writer = new StringWriter();
-			int length;
-			char[] ch = new char[512];
-			while((length = reader.read(ch)) != -1) {
-				writer.write(ch, 0, length);
+			while((length=in.read(b)) != -1) {
+				out.write(b, 0, length);
 			}
-			System.err.println("读取的列值为 = "+writer.toString());
+			System.out.println(Arrays.toString(out.toByteArray()));
+			System.out.println(Arrays.toString("     哈哈哈哈哈哈哈啊fjsalkjflksajf     ".getBytes()));
+			
+//			Reader reader = rs.getCharacterStream(1);
+//			if(reader == null) {
+//				System.err.println(1);
+//				return;
+//			}
+//			
+//			StringWriter writer = null;
+//			writer = new StringWriter();
+//			int length;
+//			char[] ch = new char[512];
+//			while((length = reader.read(ch)) != -1) {
+//				writer.write(ch, 0, length);
+//			}
+//			System.err.println("读取的列值为 = "+writer.toString());
 		}
 	}
 	@After

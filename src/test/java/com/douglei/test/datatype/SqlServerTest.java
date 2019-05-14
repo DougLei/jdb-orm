@@ -35,7 +35,7 @@ public class SqlServerTest {
 	
 	@Test
 	public void floatTest() throws Exception {// number
-		
+		insertPst.setDouble(1, 22.22);
 	}
 	
 	@Test
@@ -71,7 +71,8 @@ public class SqlServerTest {
 		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
 		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
 		if(rs.next()) {
-//			System.err.println("读取的列值为 = "+rs.getString(1));
+			System.err.println("读取的列值为 = "+rs.getString(1));
+//			System.err.println(rs.getDate(1));
 //			InputStream in = rs.getBinaryStream(1);
 //			if(in == null) {
 //				return;
@@ -83,6 +84,9 @@ public class SqlServerTest {
 //			while((length=in.read(b)) != -1) {
 //				out.write(b, 0, length);
 //			}
+//			System.out.println(Arrays.toString(out.toByteArray()));
+//			System.out.println(Arrays.toString("     哈哈哈哈哈哈哈啊fjsalkjflksajf     ".getBytes()));
+			
 			Reader reader = rs.getCharacterStream(1);
 			if(reader == null) {
 				System.err.println(1);
