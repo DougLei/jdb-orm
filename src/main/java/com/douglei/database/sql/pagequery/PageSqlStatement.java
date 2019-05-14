@@ -22,8 +22,6 @@ public class PageSqlStatement {
 	private String sql;
 	
 	public PageSqlStatement(String originSql) {
-		logger.debug("进行 {} 实例化, originSql is: {}", PageSqlStatement.class.getName(), originSql);
-		
 		int withClauseEndIndex = withClauseEndIndex(originSql);
 		if(withClauseEndIndex == -1) {
 			withClause = ""; 
@@ -31,6 +29,12 @@ public class PageSqlStatement {
 		}else {
 			withClause = originSql.substring(0, withClauseEndIndex);
 			sql = originSql.substring(withClauseEndIndex);
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("完成 {} 实例化, originSql is: {}", PageSqlStatement.class.getName(), originSql);
+			logger.debug("with clause sql is: {}", withClause);
+			logger.debug("sql is: {}", sql);
 		}
 	}
 	
