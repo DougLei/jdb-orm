@@ -9,8 +9,7 @@ import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
 public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 
 	@Override
-	protected String[] dataTypeHandlerBasePackages() {
-		return new String[] {"com.douglei.database.dialect.impl.sqlserver.datatype.classtype", 
-				"com.douglei.database.dialect.impl.sqlserver.datatype.resultset.columntype"};
+	protected String getResultsetColumnDataTypeHandlerBasePackage() {
+		return "com.douglei.database.dialect.impl.sqlserver.datatype.resultset.columntype";
 	}
 }

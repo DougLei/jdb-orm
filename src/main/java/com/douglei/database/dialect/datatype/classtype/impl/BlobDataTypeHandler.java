@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.oracle.datatype.classtype;
+package com.douglei.database.dialect.datatype.classtype.impl;
 
 import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ public class BlobDataTypeHandler extends ClassDataTypeHandler{
 	public Class<?>[] supportClasses(){
 		return supportClasses;
 	}
-	private static final Class<?>[] supportClasses = {Blob.class}; // TODO
+	private static final Class<?>[] supportClasses = {Blob.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {

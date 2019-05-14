@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.oracle.datatype.classtype;
+package com.douglei.database.dialect.datatype.classtype.impl;
 
 import java.io.StringReader;
 import java.sql.PreparedStatement;

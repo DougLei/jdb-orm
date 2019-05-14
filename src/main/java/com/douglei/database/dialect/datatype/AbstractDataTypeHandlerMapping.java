@@ -3,7 +3,6 @@ package com.douglei.database.dialect.datatype;
 import java.util.List;
 
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
@@ -19,14 +18,12 @@ public abstract class AbstractDataTypeHandlerMapping{
 	private final ResultSetColumnDataTypeHandlerMapping resultsetColumnDataTypeHandlerMapping = new ResultSetColumnDataTypeHandlerMapping();
 	
 	public AbstractDataTypeHandlerMapping() {
-		List<String> classPaths = new ClassScanner().multiScan(dataTypeHandlerBasePackages());
+		List<String> classPaths = new ClassScanner().scan(getResultsetColumnDataTypeHandlerBasePackage());
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
 				obj = ConstructorUtil.newInstance(cp);
-				if(obj instanceof ClassDataTypeHandler) {
-					classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
-				}else if(obj instanceof ResultSetColumnDataTypeHandler) {
+				if(obj instanceof ResultSetColumnDataTypeHandler) {
 					resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
 				}
 			}
@@ -34,10 +31,10 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	
 	/**
-	 * 获取各种类型的DataTypeHandler的根包路径数组
+	 * 获取java.sql.ResultSet columnType类型的DataTypeHandler的根包路径
 	 * @return
 	 */
-	protected abstract String[] dataTypeHandlerBasePackages();
+	protected abstract String getResultsetColumnDataTypeHandlerBasePackage();
 	
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);

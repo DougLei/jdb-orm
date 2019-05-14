@@ -1,8 +1,7 @@
-package com.douglei.database.dialect.impl.oracle.datatype.classtype;
+package com.douglei.database.dialect.datatype.classtype.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
 
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
 import com.douglei.utils.datatype.ValidationUtil;
@@ -11,7 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class DateDataTypeHandler extends ClassDataTypeHandler{
+public class DoubleDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {
@@ -22,7 +21,7 @@ public class DateDataTypeHandler extends ClassDataTypeHandler{
 	public Class<?>[] supportClasses(){
 		return supportClasses;
 	}
-	private static final Class<?>[] supportClasses = {Date.class};
+	private static final Class<?>[] supportClasses = {double.class, Double.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
