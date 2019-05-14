@@ -59,9 +59,9 @@ public class MySqlTest {
 	
 	@Before
 	public void before() throws Exception {
-		String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
-		String username = "sa";
+		String className = "com.mysql.cj.jdbc.Driver";
+		String url =  "jdbc:mysql://localhost:3306/douglei?characterEncoding=utf8&useSSL=true";
+		String username = "root";
 		String pwd = "root";
 		Class.forName(className);
 		conn = DriverManager.getConnection(url, username, pwd);
@@ -72,7 +72,7 @@ public class MySqlTest {
 		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
 		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
 		if(rs.next()) {
-//			System.err.println("读取的列值为 = "+rs.getString(1));
+			System.err.println("读取的列值为 = "+rs.getString(1));
 //			System.err.println(rs.getDate(1));
 			InputStream in = rs.getBinaryStream(1);
 			if(in == null) {
@@ -101,7 +101,7 @@ public class MySqlTest {
 //			while((length = reader.read(ch)) != -1) {
 //				writer.write(ch, 0, length);
 //			}
-//			System.err.println("读取的列值为 = "+writer.toString());
+//			System.err.println("reader: 读取的列值为 = "+writer.toString());
 		}
 	}
 	@After
