@@ -17,7 +17,7 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(ResultSetColumnDataTypeHandlerMapping.class);
 	private final Map<Integer, ResultSetColumnDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDataTypeHandler>();
 	
-	public void initialRegister(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
+	public void register(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("register {}", resultSetColumnDatatTypeHandler.toString());
 		}

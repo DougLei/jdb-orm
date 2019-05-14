@@ -20,14 +20,11 @@ public class OracleTest {
 	@Test
 	public void stringTest() throws Exception {// varchar2, nvarchar2, char, nchar
 		insertPst.setString(1, "哈哈123-(varchar2, nvarchar2, char, nchar)");
-		if(rs.next()) {
-			System.err.println("读取的列值为 = "+rs.getNString(1));
-		}
 	}
 	
 	@Test
 	public void intTest() throws Exception {// number
-		
+		insertPst.setInt(1, 78);
 	}
 	
 	@Test
@@ -63,6 +60,9 @@ public class OracleTest {
 		rs = selectPst.executeQuery();
 		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
 		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
+		if(rs.next()) {
+			System.err.println("读取的列值为 = "+rs.getNString(1));
+		}
 	}
 	@After
 	public void after() throws Exception {

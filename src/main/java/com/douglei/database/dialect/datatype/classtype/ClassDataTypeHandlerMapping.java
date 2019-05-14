@@ -17,7 +17,7 @@ public class ClassDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(ClassDataTypeHandlerMapping.class);
 	private final Map<Class<?>, ClassDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
-	public void initialRegister(ClassDataTypeHandler classDataHandler) {
+	public void register(ClassDataTypeHandler classDataHandler) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("register {}", classDataHandler.toString());
 		}

@@ -17,7 +17,7 @@ public class OrmDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(OrmDataTypeHandlerMapping.class);
 	private final Map<String, OrmDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<String, OrmDataTypeHandler>(16);
 	
-	public void initialRegister(OrmDataTypeHandler ormDataTypeHandler) {
+	public void register(OrmDataTypeHandler ormDataTypeHandler) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("register {}", ormDataTypeHandler.toString());
 		}
@@ -48,6 +48,6 @@ public class OrmDataTypeHandlerMapping {
 		if(DATATYPE_HANDLER_MAP.containsKey(code)) {
 			throw new RepeatedDataTypeHandlerCodeException("[dynamicRegister] 已经存在code="+code+" 的OrmDataTypeHandler实例, " + DATATYPE_HANDLER_MAP.get(code).toString());
 		}
-		initialRegister(ormDataTypeHandler);
+		register(ormDataTypeHandler);
 	}
 }

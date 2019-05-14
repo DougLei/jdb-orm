@@ -9,7 +9,7 @@ import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandler;
  * 
  * @author DougLei
  */
-public class StringDataTypeHandler extends OrmDataTypeHandler{
+public class StringOrmDataTypeHandler extends OrmDataTypeHandler{
 
 	@Override
 	public String getCode() {

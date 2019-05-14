@@ -9,22 +9,9 @@ import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
 public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 
 	@Override
-	protected void initialRegisterClassDataTypeHandlers() {
-		// TODO 
-//		registerClassDataTypeHandler(classDataHandler);
-	}
-	
-	@Override
-	protected void initialRegisterOrmDataTypeHandlers() {
-		// TODO
-//		registerOrmDataTypeHandler(ormDataTypeHandler);
-		
-	}
-
-	@Override
-	protected void initialRegisterResultsetColumnDataTypeHandlers() {
-		// TODO
-//		registerResultsetColumnDataTypeHandler(resultSetColumnDatatTypeHandler);
-		
+	protected String[] dataTypeHandlerBasePackages() {
+		return new String[] {"com.douglei.database.dialect.impl.sqlserver.datatype.classtype", 
+				"com.douglei.database.dialect.impl.sqlserver.datatype.ormtype", 
+				"com.douglei.database.dialect.impl.sqlserver.datatype.resultset.columntype"};
 	}
 }
