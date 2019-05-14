@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.datatype.ormtype;
+package com.douglei.database.dialect.datatype.classtype;
 
 /**
  * 重复的DataTypeHandler code异常

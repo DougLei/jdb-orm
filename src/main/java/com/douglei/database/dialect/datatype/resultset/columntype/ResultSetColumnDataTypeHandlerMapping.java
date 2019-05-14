@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerCodeException;
+import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerException;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnTypeName) {
 		ResultSetColumnDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
 		if(dataTypeHandler == null) {
-			throw new UnsupportDataTypeHandlerCodeException("目前无法处理columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");
+			throw new UnsupportDataTypeHandlerException("目前无法处理columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");
 		}
 		return dataTypeHandler;
 	}

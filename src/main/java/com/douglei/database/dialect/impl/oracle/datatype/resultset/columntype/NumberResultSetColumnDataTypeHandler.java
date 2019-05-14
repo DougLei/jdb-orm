@@ -9,17 +9,17 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
-			12, 	// varchar2 
-			-9, 	// nvarchar2
-			1,		// char
-			-15		// nchar
+			2	// number 
 			};
 	
 	@Override
 	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
-		return rs.getString(columnIndex);
+		if(rs.getMetaData().getScale(columnIndex) == 0) {
+			return rs.getInt(columnIndex);
+		}
+		return rs.getDouble(columnIndex);
 	}
 
 	@Override

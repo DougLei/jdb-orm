@@ -7,7 +7,6 @@ import com.douglei.database.dialect.DialectMapping;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
-import com.douglei.database.dialect.datatype.ormtype.OrmDataTypeHandler;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
@@ -27,8 +26,8 @@ public class XmlExtDataTypeHandler implements ExtDataTypeHandler {
 		}
 		
 		Object obj = ConstructorUtil.newInstance(clz);													   
-		if(!((obj instanceof ClassDataTypeHandler) || (obj instanceof OrmDataTypeHandler) || (obj instanceof ResultSetColumnDataTypeHandler))) {
-			throw new DataTypeHandlerClassCastException("扩展的DataTypeHandler=["+clz+"], 必须继承 ["+ClassDataTypeHandler.class.getName()+"]或 ["+OrmDataTypeHandler.class.getName()+"]或 ["+ResultSetColumnDataTypeHandler.class.getName()+"] 三个类之一");
+		if(!((obj instanceof ClassDataTypeHandler) || (obj instanceof ResultSetColumnDataTypeHandler))) {
+			throw new DataTypeHandlerClassCastException("扩展的DataTypeHandler=["+clz+"], 必须继承 ["+ClassDataTypeHandler.class.getName()+"] 或 ["+ResultSetColumnDataTypeHandler.class.getName()+"] 两个类之一");
 		}
 		this.dataTypeHandler = (DataTypeHandler) obj;
 	}
@@ -46,11 +45,6 @@ public class XmlExtDataTypeHandler implements ExtDataTypeHandler {
 	@Override
 	public ClassDataTypeHandler getClassDataTypeHandler() {
 		return (ClassDataTypeHandler) dataTypeHandler;
-	}
-
-	@Override
-	public OrmDataTypeHandler getOrmsDataTypeHandler() {
-		return (OrmDataTypeHandler) dataTypeHandler;
 	}
 
 	@Override

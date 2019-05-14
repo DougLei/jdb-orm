@@ -11,7 +11,6 @@ public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 	@Override
 	protected String[] dataTypeHandlerBasePackages() {
 		return new String[] {"com.douglei.database.dialect.impl.oracle.datatype.classtype", 
-				"com.douglei.database.dialect.impl.oracle.datatype.ormtype", 
 				"com.douglei.database.dialect.impl.oracle.datatype.resultset.columntype"};
 	}
 }

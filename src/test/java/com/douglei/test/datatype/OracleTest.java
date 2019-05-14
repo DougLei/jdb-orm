@@ -1,9 +1,15 @@
 package com.douglei.test.datatype;
 
+import java.io.ByteArrayInputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,17 +40,20 @@ public class OracleTest {
 	
 	@Test
 	public void dateTest() throws Exception {// date
-		
+		insertPst.setTimestamp(1, new Timestamp(new Date().getTime()));
 	}
 	
 	@Test
 	public void clobTest() throws Exception {// clob
-		
+		String clob = "     哈哈哈哈哈哈哈啊fjsalkjflksajf     ";
+		insertPst.setCharacterStream(1, new StringReader(clob), clob.length());
 	}
 	
 	@Test
 	public void blobTest() throws Exception {// blob
-		
+		String clob = "     哈哈哈哈哈哈哈啊fjsalkjflksajf     ";
+		byte[] b = clob.getBytes();
+		insertPst.setBinaryStream(1, new ByteArrayInputStream(b), b.length);
 	}
 	
 	@Before
@@ -60,8 +69,34 @@ public class OracleTest {
 		rs = selectPst.executeQuery();
 		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
 		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
+		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
 		if(rs.next()) {
-			System.err.println("读取的列值为 = "+rs.getNString(1));
+//			System.err.println("读取的列值为 = "+rs.getString(1));
+//			InputStream in = rs.getBinaryStream(1);
+//			if(in == null) {
+//				return;
+//			}
+//			ByteArrayOutputStream out = new ByteArrayOutputStream();
+//			byte[] b = new byte[1024];
+//			int length = 0;
+//			
+//			while((length=in.read(b)) != -1) {
+//				out.write(b, 0, length);
+//			}
+			Reader reader = rs.getCharacterStream(1);
+			if(reader == null) {
+				System.err.println(1);
+				return;
+			}
+			
+			StringWriter writer = null;
+			writer = new StringWriter();
+			int length;
+			char[] ch = new char[512];
+			while((length = reader.read(ch)) != -1) {
+				writer.write(ch, 0, length);
+			}
+			System.err.println("读取的列值为 = "+writer.toString());
 		}
 	}
 	@After

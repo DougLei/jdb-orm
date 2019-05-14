@@ -6,6 +6,5 @@ package com.douglei.database.dialect.datatype;
  */
 public enum DataTypeHandlerType {
 	CLASS,
-	ORM,
 	RESULTSET_COLUMN;
 }
