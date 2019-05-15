@@ -2,19 +2,16 @@ package com.douglei.configuration.impl.xml.element.environment.mapping;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.configuration.DestroyException;
-import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
-import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
 import com.douglei.configuration.impl.xml.LocalXmlConfigurationData;
 import com.douglei.instances.scanner.FileScanner;
 import com.douglei.utils.StringUtil;
@@ -26,18 +23,20 @@ import com.douglei.utils.StringUtil;
 public class XmlMappingWrapper extends MappingWrapper{
 	private static final Logger logger = LoggerFactory.getLogger(XmlMappingWrapper.class);
 	
-	public XmlMappingWrapper() {
-		initialDefaultMappingsMap();
+	public XmlMappingWrapper(MappingStore mappingStore) {
+		super(mappingStore);
 	}
-	public XmlMappingWrapper(List<?> scanElements, List<?> pathElements) throws Exception {
+	public XmlMappingWrapper(List<?> scanElements, List<?> pathElements, MappingStore mappingStore) throws Exception {
+		super(mappingStore);
+		
 		FileScanner fileScanner = new FileScanner(MappingType.getFinalMappingFileSuffix());
 		scanMappingFiles(fileScanner, scanElements, "base-path");
 		scanMappingFiles(fileScanner, pathElements, "path");
 		
 		List<String> list = fileScanner.getResult();
-		if(list.size()>0) {
-			mappings = new HashMap<String, Mapping>(list.size());
+		if(list.size() > 0) {
 			try {
+				initialMappingStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newInstanceByXml(mappingConfigFilePath, LocalXmlConfigurationData.getMappingSAXReader().read(new File(mappingConfigFilePath))));
 				}
@@ -47,7 +46,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 				fileScanner.destroy();
 			}
 		}else {
-			initialDefaultMappingsMap();
+			initialMappingStoreSize(0);
 		}
 	}
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements, String attributeName) {
@@ -70,18 +69,5 @@ public class XmlMappingWrapper extends MappingWrapper{
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}
-	}
-	
-	@Override
-	public void doDestroy() throws DestroyException {
-		logger.debug("{} 开始 destroy", getClass());
-		if(mappings != null && mappings.size() > 0) {
-			mappings.clear();
-		}
-		logger.debug("{} 结束 destroy", getClass());
-	}
-
-	@Override
-	public void selfChecking() throws SelfCheckingException {
 	}
 }

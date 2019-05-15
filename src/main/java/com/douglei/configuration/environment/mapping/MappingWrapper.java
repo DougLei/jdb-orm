@@ -1,12 +1,12 @@
 package com.douglei.configuration.environment.mapping;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.configuration.DestroyException;
+import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.SelfProcessing;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
 
 /**
  * 
@@ -15,15 +15,17 @@ import com.douglei.configuration.SelfProcessing;
 public abstract class MappingWrapper implements SelfProcessing{
 	private static final Logger logger = LoggerFactory.getLogger(MappingWrapper.class);
 	
-	protected static final int DEFAULT_MAPPINGS_SIZE = 32;
-	
-	protected Map<String, Mapping> mappings;
+	private MappingStore mappingStore;
+	public MappingWrapper(MappingStore mappingStore) {
+		this.mappingStore = mappingStore;
+	}
 	
 	/**
-	 * 初始化默认的mapping map集合
+	 * 初始化存储空间大小
+	 * @param size
 	 */
-	protected void initialDefaultMappingsMap() {
-		mappings = new HashMap<String, Mapping>(DEFAULT_MAPPINGS_SIZE);
+	protected void initialMappingStoreSize(int size) {
+		mappingStore.initialStoreSize(size);
 	}
 	
 	/**
@@ -34,17 +36,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 */
 	protected void addMapping(Mapping mapping){
-		if(mapping == null) {
-			throw new NullPointerException("要添加的"+Mapping.class+"实例不能为空");
-		}
-		String code = mapping.getCode();
-		if(mappings.containsKey(code)) {
-			throw new RepeatMappingCodeException("已经存在code为["+code+"]的映射对象: " + mappings.get(code).getClass());
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("添加新的映射信息: {}", mapping.toString());
-		}
-		mappings.put(code, mapping);
+		mappingStore.addMapping(mapping);
 	}
 	
 	/**
@@ -58,17 +50,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 */
 	protected void coverMapping(Mapping mapping) {
-		if(mapping == null) {
-			throw new NullPointerException("要添加的"+Mapping.class+"实例不能为空");
-		}
-		String code = mapping.getCode();
-		if(logger.isDebugEnabled()) {
-			if(mappings.containsKey(code)) {
-				logger.debug("覆盖映射信息时, 存在同code的旧信息: {}", mappings.get(code).toString());
-			}
-			logger.debug("进行覆盖的映射信息: {}", mapping.toString());
-		}
-		mappings.put(code, mapping);
+		mappingStore.coverMapping(mapping);
 	}
 	
 	/**
@@ -76,7 +58,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingCode
 	 */
 	public void dynamicRemoveMapping(String mappingCode) {
-		mappings.remove(mappingCode);
+		mappingStore.dynamicRemoveMapping(mappingCode);
 	}
 	
 	/**
@@ -85,10 +67,17 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return
 	 */
 	public Mapping getMapping(String mappingCode) {
-		Mapping mp = mappings.get(mappingCode);
-		if(mp == null) {
-			throw new NullPointerException("不存在code为["+mappingCode+"]的映射对象");
-		}
-		return mp;
+		return mappingStore.getMapping(mappingCode);
+	}
+
+	@Override
+	public void doDestroy() throws DestroyException {
+		logger.debug("{} 开始 destroy", getClass());
+		mappingStore.doDestroy();
+		logger.debug("{} 结束 destroy", getClass());
+	}
+
+	@Override
+	public void selfChecking() throws SelfCheckingException {
 	}
 }

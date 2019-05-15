@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration id="">
 	<environment>
+		<!-- <property name="" value="" /> -->
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver -->
 		<!-- <property name="enableSessionCache" value="true" /> -->
+		<!-- <property name="mappingStore" value="application" /> -->
 	
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>

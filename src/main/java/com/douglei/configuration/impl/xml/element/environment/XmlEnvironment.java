@@ -144,9 +144,9 @@ public class XmlEnvironment implements Environment{
 			LocalConfigurationData.setDialect(environmentProperty.getDialect());
 			
 			Element elem = ((Element) elements.get(0));
-			mappingWrapper = new XmlMappingWrapper(elem.elements("mapping-scan"), elem.elements("mapping"));
+			mappingWrapper = new XmlMappingWrapper(elem.elements("mapping-scan"), elem.elements("mapping"), environmentProperty.getMappingStore());
 		}else {
-			mappingWrapper = new XmlMappingWrapper();
+			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingStore());
 		}
 		logger.debug("处理<environment>下的<mappings>元素结束");
 	}

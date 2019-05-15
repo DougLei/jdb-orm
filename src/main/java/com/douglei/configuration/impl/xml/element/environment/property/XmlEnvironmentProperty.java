@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStoreContext;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
@@ -33,6 +35,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	@FieldMetaData
 	private boolean enableSessionCache = true;
+	
+	@FieldMetaData
+	private MappingStore mappingStore;
 	
 	public XmlEnvironmentProperty(Map<String, String> propertyMap) {
 		this.propertyMap = propertyMap;
@@ -99,20 +104,30 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	void setDialect(String value) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setDialect(), parameter value is {}", getClass(), value);
+			logger.debug("{}.setDialect(), parameter value is {}", getClass().getName(), value);
 		}
 		this.dialect = DialectMapping.getDialect(value);
 		
 	}
 	void setEnableSessionCache(String value) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass(), value);
+			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass().getName(), value);
 		}
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
+	void setMappingStore(String value) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("{}.setMappingStore(), parameter value is {}", getClass().getName(), value);
+		}
+		if(!MappingStoreContext.containsType(value)) {
+			value = "application";// 使用默认的 ApplicationMappingStore
+		}
+		this.mappingStore = MappingStoreContext.getMappingStore(value);
+	}
 	
+
 	public void setDialectByJDBCUrl(String JDBCUrl) {
 		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
 	}
@@ -136,5 +151,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean getEnableSessionCache() {
 		return enableSessionCache;
+	}
+	@Override
+	public MappingStore getMappingStore() {
+		return mappingStore;
 	}
 }

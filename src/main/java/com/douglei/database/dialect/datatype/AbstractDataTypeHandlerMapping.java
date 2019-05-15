@@ -18,7 +18,8 @@ public abstract class AbstractDataTypeHandlerMapping{
 	private final ResultSetColumnDataTypeHandlerMapping resultsetColumnDataTypeHandlerMapping = new ResultSetColumnDataTypeHandlerMapping();
 	
 	public AbstractDataTypeHandlerMapping() {
-		List<String> classPaths = new ClassScanner().scan(getResultsetColumnDataTypeHandlerBasePackage());
+		ClassScanner cs = new ClassScanner();
+		List<String> classPaths = cs.scan(getResultsetColumnDataTypeHandlerBasePackage());
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
@@ -28,6 +29,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 				}
 			}
 		}
+		cs.destroy();
 	}
 	
 	/**
