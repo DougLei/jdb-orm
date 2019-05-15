@@ -76,7 +76,7 @@ public interface SqlSession extends BasicSession{
 	int executeUpdate(String sql);
 	/**
 	 * 执行增删改查操作
-	 * @param string
+	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
