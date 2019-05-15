@@ -26,13 +26,20 @@ public class ClassDataTypeHandlerMapping {
 	private final Map<String, ClassDataTypeHandler> CODE_DATATYPE_HANDLER_MAP = new HashMap<String, ClassDataTypeHandler>(16);
 	private final Map<Class<?>, ClassDataTypeHandler> SUPPORTCLASS_DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(16);
 	
+	private static final StringDataTypeHandler string_ = new StringDataTypeHandler();
+	private static final IntegerDataTypeHandler integer_ = new IntegerDataTypeHandler();
+	private static final DoubleDataTypeHandler double_ = new DoubleDataTypeHandler();
+	private static final DateDataTypeHandler date_ = new DateDataTypeHandler();
+	private static final ClobDataTypeHandler clob_ = new ClobDataTypeHandler();
+	private static final BlobDataTypeHandler blob_ = new BlobDataTypeHandler();
+	
 	public ClassDataTypeHandlerMapping() {
-		register(new StringDataTypeHandler());
-		register(new IntegerDataTypeHandler());
-		register(new DoubleDataTypeHandler());
-		register(new DateDataTypeHandler());
-		register(new ClobDataTypeHandler());
-		register(new BlobDataTypeHandler());
+		register(string_);
+		register(integer_);
+		register(double_);
+		register(date_);
+		register(clob_);
+		register(blob_);
 	}
 	
 	public void register(ClassDataTypeHandler classDataTypeHandler) {
@@ -60,7 +67,7 @@ public class ClassDataTypeHandlerMapping {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义ClassDataTypeHandler实现子类", code);
 			Object obj = ConstructorUtil.newInstance(code);
 			if(!(obj instanceof ClassDataTypeHandler)) {
-				throw new ClassCastException("类["+code+"]必须继承["+ClassDataTypeHandler.class.getName()+"]");
+				throw new ClassCastException("code=["+code+"]的类必须继承["+ClassDataTypeHandler.class.getName()+"]");
 			}
 			dataTypeHandler = (ClassDataTypeHandler) obj;
 			dynamicRegister(dataTypeHandler);
