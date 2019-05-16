@@ -2,9 +2,8 @@ package com.douglei.test.sqlsession;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+
 import org.junit.Test;
 
 
@@ -19,6 +18,13 @@ public class JDBCTest {
 		
 		Class.forName(className);
 		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
+		
+		Connection conn = DriverManager.getConnection(url, username, pwd);
+		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
+				+ "delete sys_user where id = ?");
+		pst.setString(1, "1");
+		pst.setString(2, "2");
+		pst.executeUpdate();
 	}
 	
 	@Test
@@ -29,7 +35,15 @@ public class JDBCTest {
 		String pwd = "root";
 		
 		Class.forName(className);
-		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
+//		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
+		
+		Connection conn = DriverManager.getConnection(url, username, pwd);
+		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
+				+ "delete sys_user where id = ?");
+		pst.setString(1, "1");
+		pst.setString(2, "2");
+		System.out.println(pst.executeUpdate());
+		conn.commit();
 	}
 	
 	@Test
@@ -41,17 +55,23 @@ public class JDBCTest {
 		
 		Class.forName(className);
 		Connection conn = DriverManager.getConnection(url, username, pwd);
-		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("select * from sys_user");
+//		Statement st = conn.createStatement();
+//		ResultSet rs = st.executeQuery("select * from sys_user");
+//		
+//		
+//		ResultSetMetaData metadata = rs.getMetaData();
+//		int count = metadata.getColumnCount();
+//		for (int i = 0; i <count; i++) {
+//			System.out.println(metadata.getColumnType(i+1));
+//			System.out.println(metadata.getColumnTypeName(i+1));
+//			System.out.println("---------------------------------------");
+//		}
 		
 		
-		ResultSetMetaData metadata = rs.getMetaData();
-		int count = metadata.getColumnCount();
-		for (int i = 0; i <count; i++) {
-			System.out.println(metadata.getColumnType(i+1));
-			System.out.println(metadata.getColumnTypeName(i+1));
-			System.out.println("---------------------------------------");
-		}
-		
+		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
+				+ "delete sys_user where id = ?");
+		pst.setString(1, "1");
+		pst.setString(2, "2");
+		pst.executeUpdate();
 	}
 }

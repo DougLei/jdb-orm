@@ -10,11 +10,11 @@ import com.douglei.database.dialect.impl.mysql.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class MySqlDialect extends AbstractDialect{
-	public static final DialectType TYPE = DialectType.MYSQL;
+	public static final DialectType DIALECT_TYPE = DialectType.MYSQL;
 	
 	@Override
 	public DialectType getType() {
-		return TYPE;
+		return DIALECT_TYPE;
 	}
 	
 	@Override

@@ -10,11 +10,11 @@ import com.douglei.database.dialect.impl.oracle.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class OracleDialect extends AbstractDialect{
-	public static final DialectType TYPE = DialectType.ORACLE;
+	public static final DialectType DIALECT_TYPE = DialectType.ORACLE;
 	
 	@Override
 	public DialectType getType() {
-		return TYPE;
+		return DIALECT_TYPE;
 	}
 	
 	@Override

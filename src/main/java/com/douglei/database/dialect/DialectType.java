@@ -5,6 +5,8 @@ package com.douglei.database.dialect;
  * @author DougLei
  */
 public enum DialectType {
+	ALL,
+	
 	ORACLE,
 	MYSQL,
 	SQLSERVER;

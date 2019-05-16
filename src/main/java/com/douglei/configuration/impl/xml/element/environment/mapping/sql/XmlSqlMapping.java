@@ -38,7 +38,6 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			Element sqlElement = ElementUtil.getNecessaryAndSingleElement("<sql>", rootElement.elements("sql"));
 			sqlMetadata = (SqlMetadata) sqlMetadataValidate.doValidate(sqlElement);
 			List<?> contents = getContents(sqlElement);
-			sqlMetadata.initialContentSize(contents.size());
 			for (Object content : contents) {
 				sqlMetadata.addContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(content));
 			}

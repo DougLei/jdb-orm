@@ -19,15 +19,15 @@ import com.douglei.utils.reflect.ConstructorUtil;
  */
 public class DialectMapping {
 	private static final Logger logger = LoggerFactory.getLogger(DialectMapping.class);
-	private static final int count = 3;
+	private static final int count = 3;// 
 	
 	private static final Map<String, Class<? extends Dialect>> DIALECT_CLASS_MAP = new HashMap<String, Class<? extends Dialect>>(count);// Dialect类映射
 	private static final Map<String, Dialect> DIALECT_MAP = new HashMap<String, Dialect>(count);// Dialect实例映射
 	
 	static {
-		registerDialectClass(SqlServerDialect.TYPE.getCode(), SqlServerDialect.class);
-		registerDialectClass(MySqlDialect.TYPE.getCode(), MySqlDialect.class);
-		registerDialectClass(OracleDialect.TYPE.getCode(), OracleDialect.class);
+		registerDialectClass(SqlServerDialect.DIALECT_TYPE.getCode(), SqlServerDialect.class);
+		registerDialectClass(MySqlDialect.DIALECT_TYPE.getCode(), MySqlDialect.class);
+		registerDialectClass(OracleDialect.DIALECT_TYPE.getCode(), OracleDialect.class);
 	}
 	// 注册新的Dialect类
 	private static void registerDialectClass(String databaseCode, Class<? extends Dialect> dialectClass) {

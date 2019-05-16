@@ -10,11 +10,11 @@ import com.douglei.database.dialect.impl.sqlserver.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class SqlServerDialect extends AbstractDialect{
-	public static final DialectType TYPE = DialectType.SQLSERVER;
+	public static final DialectType DIALECT_TYPE = DialectType.SQLSERVER;
 	
 	@Override
 	public DialectType getType() {
-		return TYPE;
+		return DIALECT_TYPE;
 	}
 	
 	@Override

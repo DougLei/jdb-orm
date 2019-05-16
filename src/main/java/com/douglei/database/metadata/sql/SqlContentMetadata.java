@@ -15,7 +15,7 @@ import com.douglei.database.metadata.MetadataType;
  */
 public class SqlContentMetadata implements Metadata{
 	
-	private DialectType dialect;
+	private String dialectTypeCode;
 	private String content;
 	
 	// sql参数名的顺序, 按照配置中${}$的顺序记录, 同一个参数可能会使用多次, 所以这里按照顺都记录下来
@@ -23,8 +23,8 @@ public class SqlContentMetadata implements Metadata{
 	// sql参数, 这里只记录参数, 和配置中的顺序无关, 同一个名称的参数, 只记录一次
 	private List<SqlParameterMetadata> sqlParameters;
 	
-	public SqlContentMetadata(DialectType dialect, String content) {
-		this.dialect = dialect;
+	public SqlContentMetadata(DialectType dialectType, String content) {
+		this.dialectTypeCode = dialectType.getCode();
 		this.content = content;
 		resolvingParameters();
 	}
@@ -68,11 +68,11 @@ public class SqlContentMetadata implements Metadata{
 	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
 	
 	/**
-	 * 即dialect的code, 用来区分不同dialect, 调用不同的sql语句
+	 * 即dialectType的code, 用来区分不同dialect, 调用不同的sql语句
 	 */
 	@Override
 	public String getCode() {
-		return dialect.getCode();
+		return dialectTypeCode;
 	}
 	
 	@Override
