@@ -2,7 +2,11 @@
 <mapping-configuration type="sql">
 	<sql name="queryUser">
 		<content dialect=""><!-- 如果不写, 默认是当前系统的dialect -->
-			select * from sys_user
+			select name, ${sex, dataType=string, usePlaceholder=false}$ from sys_user 
+				where 
+					id = ${id, dataType=string, usePlaceholder=true}$ 
+					or 
+					name = ${name, dataType=string}$
 		</content>
 	</sql>
 </mapping-configuration>

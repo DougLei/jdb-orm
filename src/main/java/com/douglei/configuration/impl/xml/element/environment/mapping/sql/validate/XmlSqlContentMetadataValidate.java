@@ -24,8 +24,8 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	}
 
 	private SqlContentMetadata doValidate(Element element) {
-		String content = getSqlContent(element.getTextTrim());
 		DialectType dialectType = getDialectType(element.attributeValue("dialect"));
+		String content = getSqlContent(element.getTextTrim());
 		return new SqlContentMetadata(dialectType, content);
 	}
 

@@ -13,12 +13,11 @@ import com.douglei.database.metadata.MetadataType;
 public class SqlMetadata implements Metadata{
 	
 	private String name;
+	private Map<String, SqlContentMetadata> contents;
 	
 	public SqlMetadata(String name) {
 		this.name = name;
 	}
-	
-	private Map<String, SqlContentMetadata> contents;
 	
 	/**
 	 * 初始化sql content的长度

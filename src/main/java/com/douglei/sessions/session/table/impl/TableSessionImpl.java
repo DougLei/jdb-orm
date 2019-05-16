@@ -376,7 +376,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		Set<String> codes = tableMetadata.getColumnMetadataCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnMetadata(code);
-			targetMap.put(column.getPropertyName(), map.get(column.getName().toUpperCase()));
+			targetMap.put(column.getPropertyName(), map.get(column.getName()));
 		}
 		return targetMap;
 	}

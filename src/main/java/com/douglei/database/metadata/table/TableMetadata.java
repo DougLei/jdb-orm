@@ -38,7 +38,7 @@ public class TableMetadata implements Metadata{
 	private Map<String, ColumnMetadata> primaryKeyColumns;
 	
 	public TableMetadata(String name, String className) {
-		setName(name);
+		this.name = name.toUpperCase();
 		setClassName(className);
 		setCode();
 	}
@@ -82,7 +82,7 @@ public class TableMetadata implements Metadata{
 		return name;
 	}
 	public void setName(String name) {
-		this.name = name.toUpperCase();
+		
 	}
 	public String getClassName() {
 		return className;

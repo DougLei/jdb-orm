@@ -28,7 +28,7 @@ public class ColumnMetadata implements Metadata{
 	private DataTypeHandler dataTypeHandler;
 	
 	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String propertyName) {
-		this.name = name;
+		this.name = name.toUpperCase();
 		this.dataTypeHandler = dataTypeHandler;
 		setPropertyName(propertyName);
 		setCode();
