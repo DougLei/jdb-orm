@@ -1,4 +1,4 @@
-package com.douglei.sessions.sqlsession;
+package com.douglei.sessions.sqlsession.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +15,8 @@ import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.LocalDialect;
 import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.sessions.sqlsession.ProcedureExecutor;
+import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
 
 /**
@@ -237,5 +239,10 @@ public class SqlSessionImpl implements SqlSession{
 	private long queryTotalCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
 		Object totalCount =  uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0];
 		return Long.parseLong(totalCount.toString());
+	}
+
+	@Override
+	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
+		return procedureExecutor.execute(connection.getConnection());
 	}
 }

@@ -100,4 +100,11 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 执行存储过程
+	 * @param procedureExecutor
+	 * @return
+	 */
+	Object executeProcedure(ProcedureExecutor procedureExecutor);
 }

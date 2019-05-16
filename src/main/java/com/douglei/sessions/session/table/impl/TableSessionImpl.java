@@ -28,7 +28,7 @@ import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.persistent.TablePersistentObject;
 import com.douglei.sessions.session.table.impl.persistent.execution.AlreadyDeletedException;
-import com.douglei.sessions.sqlsession.SqlSessionImpl;
+import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
 import com.douglei.utils.reflect.IntrospectorUtil;

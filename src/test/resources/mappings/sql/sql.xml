@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration type="sql">
-	<content type="select">
-		select * from sys_user
-	</content>
+	<sql name="queryUser">
+		<content type="select">
+			select * from sys_user
+		</content>
+	</sql>
 </mapping-configuration>

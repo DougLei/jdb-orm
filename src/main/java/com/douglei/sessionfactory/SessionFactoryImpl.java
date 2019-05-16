@@ -14,7 +14,7 @@ import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.TableSessionImpl;
 import com.douglei.sessions.sqlsession.SqlSession;
-import com.douglei.sessions.sqlsession.SqlSessionImpl;
+import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
 
 /**
  * 
