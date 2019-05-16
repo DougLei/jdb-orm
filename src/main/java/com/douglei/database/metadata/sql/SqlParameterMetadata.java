@@ -14,6 +14,7 @@ import com.douglei.database.metadata.MetadataType;
  */
 public class SqlParameterMetadata implements Metadata{
 	private static final Logger logger = LoggerFactory.getLogger(SqlParameterMetadata.class);
+	private String originConfigurationText;
 	
 	/**
 	 * 参数名
@@ -38,8 +39,10 @@ public class SqlParameterMetadata implements Metadata{
 	private String placeholderSuffix = "'";
 	
 	
-	public SqlParameterMetadata(String configurationString) {
-		String[] cs = configurationString.split(",");
+	public SqlParameterMetadata(String configurationText) {
+		this.originConfigurationText = configurationText;
+		
+		String[] cs = configurationText.split(",");
 		int length = cs.length;
 		
 		if(length < 2) {
@@ -70,6 +73,10 @@ public class SqlParameterMetadata implements Metadata{
 		return value;
 	}
 
+	
+	public String getOriginConfigurationText() {
+		return originConfigurationText;
+	}
 	public String getName() {
 		return name;
 	}

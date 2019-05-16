@@ -24,6 +24,6 @@ public class XmlSqlMetadataValidate implements MetadataValidate {
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
 		}
-		return new SqlMetadata(name);
+		return new SqlMetadata(element.attributeValue("namespace"), name);
 	}
 }

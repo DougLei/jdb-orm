@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.utils.StringUtil;
 
 /**
  * sql元数据
@@ -14,13 +15,21 @@ import com.douglei.database.metadata.MetadataType;
  */
 public class SqlMetadata implements Metadata{
 	
+	private String namespace;
 	private String name;
 	private Map<String, List<SqlContentMetadata>> contentMap;
 	
-	public SqlMetadata(String name) {
+	public SqlMetadata(String namespace, String name) {
+		setNamespace(namespace);
 		this.name = name;
 	}
-	
+	private void setNamespace(String namespace) {
+		if(StringUtil.isEmpty(namespace)) {
+			namespace = null;
+		}
+		this.namespace = namespace;
+	}
+
 	/**
 	 * 添加 sql content
 	 * @param sqlContentMetadata
@@ -40,11 +49,17 @@ public class SqlMetadata implements Metadata{
 	}
 
 	/**
-	 * name必须唯一
+	 * <pre>
+	 * 	如果namespace为空, 返回name
+	 * 	如果namespace不为空, 返回namespace.name
+	 * </pre>
 	 */
 	@Override
 	public String getCode() {
-		return name;
+		if(namespace == null) {
+			return name;
+		}
+		return namespace+"."+name;
 	}
 	
 	@Override
