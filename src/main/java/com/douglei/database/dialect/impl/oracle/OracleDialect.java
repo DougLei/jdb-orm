@@ -1,5 +1,6 @@
 package com.douglei.database.dialect.impl.oracle;
 
+import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.oracle.datatype.DataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.oracle.sql.SqlHandlerImpl;
@@ -9,7 +10,12 @@ import com.douglei.database.dialect.impl.oracle.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class OracleDialect extends AbstractDialect{
-	public static final String DATABASE_CODE = "ORACLE";
+	public static final DialectType TYPE = DialectType.ORACLE;
+	
+	@Override
+	public DialectType getType() {
+		return TYPE;
+	}
 	
 	@Override
 	protected void initialize() {

@@ -1,5 +1,6 @@
 package com.douglei.database.metadata.sql;
 
+import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 
@@ -8,10 +9,18 @@ import com.douglei.database.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
+	
+	private DialectType dialect;
+	private String content;
+	
+	public SqlContentMetadata(DialectType dialect, String content) {
+		this.dialect = dialect;
+		this.content = content;
+	}
 
 	@Override
 	public String getCode() {
-		return null;
+		return dialect.getCode();
 	}
 	
 	@Override

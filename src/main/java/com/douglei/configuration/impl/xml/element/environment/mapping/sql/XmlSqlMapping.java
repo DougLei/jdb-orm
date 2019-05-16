@@ -57,7 +57,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	private List<?> getContents(Element sqlElement) {
 		List<?> contents = sqlElement.elements("content");
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException("至少有一个<content>元素");
+			throw new MetadataValidateException("至少有一个<content>元素");
 		}
 		return contents;
 	}

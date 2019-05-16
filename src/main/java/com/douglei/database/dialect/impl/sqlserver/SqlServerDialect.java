@@ -1,5 +1,6 @@
 package com.douglei.database.dialect.impl.sqlserver;
 
+import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.sqlserver.datatype.DataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.sqlserver.sql.SqlHandlerImpl;
@@ -9,7 +10,12 @@ import com.douglei.database.dialect.impl.sqlserver.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class SqlServerDialect extends AbstractDialect{
-	public static final String DATABASE_CODE = "SQLSERVER";
+	public static final DialectType TYPE = DialectType.SQLSERVER;
+	
+	@Override
+	public DialectType getType() {
+		return TYPE;
+	}
 	
 	@Override
 	protected void initialize() {

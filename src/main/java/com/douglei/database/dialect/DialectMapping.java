@@ -25,9 +25,9 @@ public class DialectMapping {
 	private static final Map<String, Dialect> DIALECT_MAP = new HashMap<String, Dialect>(count);// Dialect实例映射
 	
 	static {
-		registerDialectClass(SqlServerDialect.DATABASE_CODE, SqlServerDialect.class);
-		registerDialectClass(MySqlDialect.DATABASE_CODE, MySqlDialect.class);
-		registerDialectClass(OracleDialect.DATABASE_CODE, OracleDialect.class);
+		registerDialectClass(SqlServerDialect.TYPE.getCode(), SqlServerDialect.class);
+		registerDialectClass(MySqlDialect.TYPE.getCode(), MySqlDialect.class);
+		registerDialectClass(OracleDialect.TYPE.getCode(), OracleDialect.class);
 	}
 	// 注册新的Dialect类
 	private static void registerDialectClass(String databaseCode, Class<? extends Dialect> dialectClass) {

@@ -9,6 +9,7 @@ import com.douglei.database.dialect.sql.SqlHandler;
  */
 public interface Dialect {
 	
+	DialectType getType();
 	/**
 	 * 
 	 * @return

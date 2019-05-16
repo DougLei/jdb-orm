@@ -1,5 +1,6 @@
 package com.douglei.database.dialect.impl.mysql;
 
+import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.mysql.datatype.DataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.mysql.sql.SqlHandlerImpl;
@@ -9,7 +10,12 @@ import com.douglei.database.dialect.impl.mysql.sql.SqlHandlerImpl;
  * @author DougLei
  */
 public final class MySqlDialect extends AbstractDialect{
-	public static final String DATABASE_CODE = "MYSQL";
+	public static final DialectType TYPE = DialectType.MYSQL;
+	
+	@Override
+	public DialectType getType() {
+		return TYPE;
+	}
 	
 	@Override
 	protected void initialize() {
