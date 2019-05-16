@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
 import com.douglei.utils.StringUtil;
 
@@ -37,8 +38,7 @@ public class XmlMappingFactory {
 			case TABLE:
 				return new XmlTableMapping(configFileName, rootElement);
 			case SQL:
-				// TODO 还未实现
-				return null;
+				return new XmlSqlMapping(configFileName, rootElement);
 		}
 		return null;
 	}

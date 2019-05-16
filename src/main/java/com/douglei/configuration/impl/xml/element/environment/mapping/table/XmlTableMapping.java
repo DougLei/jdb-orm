@@ -26,10 +26,10 @@ import com.douglei.utils.StringUtil;
 public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
 	
-	private TableMetadata tableMetadata;
+	private static final MetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
+	private static final MetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
 	
-	private MetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
-	private MetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
+	private TableMetadata tableMetadata;
 	
 	public XmlTableMapping(String configFileName, Element rootElement) {
 		super(configFileName);

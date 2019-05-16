@@ -50,6 +50,7 @@ public class ColumnMetadata implements Metadata{
 	 * </pre>
 	 * @return
 	 */
+	@Override
 	public String getCode() {
 		return code;
 	}

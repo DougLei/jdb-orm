@@ -64,6 +64,7 @@ public class TableMetadata implements Metadata{
 	 * </pre>
 	 * @return
 	 */
+	@Override
 	public String getCode() {
 		return code;
 	}
