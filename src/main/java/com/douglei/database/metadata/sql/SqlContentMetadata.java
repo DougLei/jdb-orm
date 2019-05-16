@@ -67,6 +67,9 @@ public class SqlContentMetadata implements Metadata{
 	}
 	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
 	
+	/**
+	 * 即dialect的code, 用来区分不同dialect, 调用不同的sql语句
+	 */
 	@Override
 	public String getCode() {
 		return dialect.getCode();

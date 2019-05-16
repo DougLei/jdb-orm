@@ -49,23 +49,24 @@ public class SqlParameterMetadata implements Metadata{
 		this.dataTypeHandler = LocalConfigurationData.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(getValue(cs[1]));
 		
 		if(length > 2) {
-			logger.debug("获取usePlaceholder配置值");
+			logger.debug("设置usePlaceholder配置值");
 			this.usePlaceholder = Boolean.parseBoolean(getValue(cs[2]));
-		}
-		if(length > 3) {
-			logger.debug("获取placeholderPrefix配置值");
-			this.placeholderPrefix = getValue(cs[3]);
-		}
-		if(length > 4) {
-			logger.debug("获取placeholderSuffix配置值");
-			this.placeholderSuffix = getValue(cs[4]);
+			
+			if(length > 3) {
+				logger.debug("设置placeholderPrefix配置值");
+				this.placeholderPrefix = getValue(cs[3]);
+				
+				if(length > 4) {
+					logger.debug("设置placeholderSuffix配置值");
+					this.placeholderSuffix = getValue(cs[4]);
+				}
+			}
 		}
 	}
 	
 	private String getValue(String key_value) {
 		logger.debug("从 {} 中获取value值", key_value);
 		String value = key_value.substring(key_value.indexOf("=")+1).trim();
-		logger.debug("value值为 {}", value);
 		return value;
 	}
 
