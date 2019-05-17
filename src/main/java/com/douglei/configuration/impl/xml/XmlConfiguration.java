@@ -88,8 +88,6 @@ public class XmlConfiguration implements Configuration {
 		} catch (Exception e) {
 			doDestroy();
 			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
-		} finally {
-			releaseMemory();
 		}
 	}
 	
@@ -106,20 +104,15 @@ public class XmlConfiguration implements Configuration {
 		return buildSessionFactory();
 	}
 	
-	// 释放内存
-	private void releaseMemory() {
+	@Override
+	public void doDestroy() {
+		logger.debug("{} 开始 destroy", getClass());
 		if(properties != null) {
 			properties.doDestroy();
 		}
 		if(extConfiguration != null) {
 			extConfiguration.doDestroy();
 		}
-	}
-	
-	@Override
-	public void doDestroy() {
-		logger.debug("{} 开始 destroy", getClass());
-		releaseMemory();
 		if(environment != null) {
 			environment.doDestroy();
 		}
