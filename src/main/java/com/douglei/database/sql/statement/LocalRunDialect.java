@@ -3,19 +3,19 @@ package com.douglei.database.sql.statement;
 import com.douglei.database.dialect.Dialect;
 
 /**
- * 当前Dialect对象
+ * 当前系统运行时Dialect对象
  * @author DougLei
  */
-public class LocalDialect {
-	private static final ThreadLocal<Dialect> data = new ThreadLocal<Dialect>();
+public class LocalRunDialect {
+	private static final ThreadLocal<Dialect> DIALECT = new ThreadLocal<Dialect>();
 	
 	public static void setDialect(Dialect dialect) {
-		if(data.get() == null) {
-			data.set(dialect);
+		if(DIALECT.get() == null) {
+			DIALECT.set(dialect);
 		}
 	}
 	public static Dialect getDialect() {
-		return data.get();
+		return DIALECT.get();
 	}
 }
 

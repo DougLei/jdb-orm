@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.configuration.LocalConfigurationData;
+import com.douglei.configuration.LocalConfigurationDialect;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.metadata.Metadata;
@@ -95,7 +95,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(StringUtil.isEmpty(dataType)) {
 			this.dataTypeHandler = ClassDataTypeHandlerMapping.getDefaultDataTypeHandler();
 		}else {
-			this.dataTypeHandler = LocalConfigurationData.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+			this.dataTypeHandler = LocalConfigurationDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		}
 	}
 	void setUsePlaceholder(String usePlaceholder) {

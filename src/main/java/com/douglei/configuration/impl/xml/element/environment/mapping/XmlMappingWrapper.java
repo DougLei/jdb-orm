@@ -12,7 +12,7 @@ import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
-import com.douglei.configuration.impl.xml.LocalXmlConfigurationData;
+import com.douglei.configuration.impl.xml.LocalXmlConfigurationSAXReader;
 import com.douglei.instances.scanner.FileScanner;
 import com.douglei.utils.StringUtil;
 
@@ -38,7 +38,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 			try {
 				initialMappingStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
-					addMapping(XmlMappingFactory.newInstanceByXml(mappingConfigFilePath, LocalXmlConfigurationData.getMappingSAXReader().read(new File(mappingConfigFilePath))));
+					addMapping(XmlMappingFactory.newInstanceByXml(mappingConfigFilePath, LocalXmlConfigurationSAXReader.getMappingSAXReader().read(new File(mappingConfigFilePath))));
 				}
 			} catch (Exception e) {
 				throw e;
@@ -65,7 +65,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public void dynamicAddMapping(String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add mapping: {}", mappingConfigurationContent);
-			coverMapping(XmlMappingFactory.newInstanceByXml(mappingConfigurationContent, LocalXmlConfigurationData.getMappingSAXReader().read(new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")))));
+			coverMapping(XmlMappingFactory.newInstanceByXml(mappingConfigurationContent, LocalXmlConfigurationSAXReader.getMappingSAXReader().read(new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")))));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}

@@ -27,5 +27,4 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 }

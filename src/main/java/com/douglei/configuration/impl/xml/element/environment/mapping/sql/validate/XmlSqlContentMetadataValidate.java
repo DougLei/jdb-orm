@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.dom4j.Element;
 
-import com.douglei.configuration.LocalConfigurationData;
+import com.douglei.configuration.LocalConfigurationDialect;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -39,7 +39,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	private DialectType getDialectType(String dialect) {
 		DialectType type = null;
 		if(StringUtil.isEmpty(dialect)) {
-			type = LocalConfigurationData.getDialect().getType();
+			type = LocalConfigurationDialect.getDialect().getType();
 		}else {
 			type = DialectType.toValue(dialect);
 			if(type == null) {
