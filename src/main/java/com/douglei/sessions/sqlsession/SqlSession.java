@@ -69,20 +69,6 @@ public interface SqlSession extends BasicSession{
 	Object[] uniqueQuery_(String sql, List<Object> parameters);
 	
 	/**
-	 * 执行增删改查操作
-	 * @param sql
-	 * @return
-	 */
-	int executeUpdate(String sql);
-	/**
-	 * 执行增删改查操作
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	int executeUpdate(String sql, List<Object> parameters);
-	
-	/**
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
@@ -100,6 +86,20 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 执行增删改查操作
+	 * @param sql
+	 * @return
+	 */
+	int executeUpdate(String sql);
+	/**
+	 * 执行增删改查操作
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	int executeUpdate(String sql, List<Object> parameters);
 	
 	/**
 	 * 执行存储过程

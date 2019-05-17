@@ -1,26 +1,46 @@
 package com.douglei.sessions.session.sql.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.sql.SqlMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.sessions.session.MappingMismatchingException;
+import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.sql.SQLSession;
+import com.douglei.sessions.session.sql.impl.persistent.execution.SqlExecutionHolder;
 import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
-//	private static final Logger logger = LoggerFactory.getLogger(SQLSession.class);
 	
 	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 	}
 	
-	private Mapping getMapping(String code) {
+	// 获取code值
+	private String getCode(String namespace, String name) {
+		if(StringUtil.isEmpty(name)) {
+			throw new NullPointerException("参数name值不能为空");
+		}
+		if(namespace == null) {
+			return name;
+		}
+		return namespace+"."+name;
+	}
+	
+	// 获取SqlMetadata实例
+	private SqlMetadata getSqlMetadata(String namespace, String name) {
+		String code = getCode(namespace, name);
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
@@ -28,6 +48,78 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		if(mapping.getMappingType() != MappingType.SQL) {
 			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 		}
-		return mapping;
+		return (SqlMetadata) mapping.getMetadata();
+	}
+	
+	// 获取ExecutionHolder
+	private ExecutionHolder getExecutionHolder(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
+		return new SqlExecutionHolder(sqlMetadata, sqlParameterMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> query(String namespace, String name) {
+		return query(namespace, name, null);
+	}
+
+	@Override
+	public List<Map<String, Object>> query(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.query(executionHolder.getSql(), executionHolder.getParameters());
+	}
+
+	@Override
+	public Map<String, Object> uniqueQuery(String namespace, String name) {
+		return uniqueQuery(namespace, name, null);
+	}
+
+	@Override
+	public Map<String, Object> uniqueQuery(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.uniqueQuery(executionHolder.getSql(), executionHolder.getParameters());
+	}
+
+	@Override
+	public List<Object[]> query_(String namespace, String name) {
+		return query_(namespace, name, null);
+	}
+
+	@Override
+	public List<Object[]> query_(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.query_(executionHolder.getSql(), executionHolder.getParameters());
+	}
+
+	@Override
+	public Object[] uniqueQuery_(String namespace, String name) {
+		return uniqueQuery_(namespace, name, null);
+	}
+
+	@Override
+	public Object[] uniqueQuery_(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.uniqueQuery_(executionHolder.getSql(), executionHolder.getParameters());
+	}
+
+	@Override
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name) {
+		return pageQuery(pageNum, pageSize, namespace, name, null);
+	}
+
+	@Override
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.pageQuery(pageNum, pageSize, executionHolder.getSql(), executionHolder.getParameters());
+	}
+	
+	@Override
+	public int executeUpdate(String namespace, String name) {
+		return executeUpdate(namespace, name, null);
+	}
+
+	@Override
+	public int executeUpdate(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+		return super.executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
 	}
 }

@@ -19,7 +19,7 @@ public interface TableSession extends BasicSession{
 	void save(Object object);
 	/**
 	 * 保存对象
-	 * @param code <table>元素中的name属性值
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void save(String code, Map<String, Object> propertyMap);
@@ -31,7 +31,7 @@ public interface TableSession extends BasicSession{
 	void update(Object object);
 	/**
 	 * 修改对象
-	 * @param code <table>元素中的name属性值
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void update(String code, Map<String, Object> propertyMap);
@@ -43,7 +43,7 @@ public interface TableSession extends BasicSession{
 	void delete(Object object);
 	/**
 	 * 删除对象
-	 * @param code <table>元素中的name属性值
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
