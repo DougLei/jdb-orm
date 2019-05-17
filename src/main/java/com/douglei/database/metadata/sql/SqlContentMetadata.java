@@ -17,6 +17,7 @@ public class SqlContentMetadata implements Metadata{
 	
 	private String dialectTypeCode;
 	private String content;
+	private int placeholderCount;
 	
 	// sql参数, 按照配置中定义的顺序记录
 	private List<SqlParameterMetadata> sqlParameterOrders;
@@ -27,26 +28,6 @@ public class SqlContentMetadata implements Metadata{
 		resolvingParameters();
 	}
 	
-	// 添加 sql parameter
-	private void addSqlParameter(String configurationText) {
-		if(sqlParameterOrders == null) {
-			sqlParameterOrders = new ArrayList<SqlParameterMetadata>();
-		}
-		
-		SqlParameterMetadata sqlParameter = new SqlParameterMetadata(configurationText);
-		sqlParameterOrders.add(sqlParameter);
-		replaceSqlContent(configurationText, sqlParameter);
-	}
-	
-	// 替换Sql内容
-	private void replaceSqlContent(String configurationText, SqlParameterMetadata sqlParameter) {
-		if(sqlParameter.isUsePlaceholder()) {
-			content = content.replaceAll("${"+configurationText+"$}", "?");
-		}else{
-			content = content.replaceAll(configurationText, sqlParameter.getName());
-		}
-	}
-
 	/**
 	 * 从content中解析出parameter集合
 	 */
@@ -65,8 +46,36 @@ public class SqlContentMetadata implements Metadata{
 	}
 	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
 	
+	// 添加 sql parameter
+	private void addSqlParameter(String configurationText) {
+		if(sqlParameterOrders == null) {
+			sqlParameterOrders = new ArrayList<SqlParameterMetadata>();
+		}
+		
+		SqlParameterMetadata sqlParameter = new SqlParameterMetadata(configurationText);
+		sqlParameterOrders.add(sqlParameter);
+		replaceSqlContent(configurationText, sqlParameter);
+	}
+	
+	// 替换Sql语句内容
+	private void replaceSqlContent(String configurationText, SqlParameterMetadata sqlParameter) {
+		if(sqlParameter.isUsePlaceholder()) {
+			placeholderCount++;
+			content = content.replaceAll("${"+configurationText+"$}", "?");
+		}else{
+			content = content.replaceAll(configurationText, sqlParameter.getName());
+		}
+	}
+	
+	
+	public String getContent() {
+		return content;
+	}
 	public List<SqlParameterMetadata> getSqlParameterOrders() {
 		return sqlParameterOrders;
+	}
+	public int getPlaceholderCount() {
+		return placeholderCount;
 	}
 
 	/**

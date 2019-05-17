@@ -51,7 +51,7 @@ public class SqlMetadata implements Metadata{
 		
 		addParameterMetadata(dialectTypeCode, sqlContentMetadata);
 	}
-
+	
 	// 添加sql参数元数据
 	private void addParameterMetadata(String dialectTypeCode, SqlContentMetadata sqlContentMetadata) {
 		List<SqlParameterMetadata> spms = sqlContentMetadata.getSqlParameterOrders();
@@ -101,10 +101,11 @@ public class SqlMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public Map<String, List<SqlContentMetadata>> getContentMap() {
-		return contentMap;
-	}
-	public Map<String, List<String>> getParameterMap() {
-		return parameterMap;
+	public List<SqlContentMetadata> getContents(String dialectTypeCode) {
+		List<SqlContentMetadata> contents = contentMap.get(dialectTypeCode);
+		if(contents == null || contents.size() == 0) {
+			contents = contentMap.get(DialectType.ALL.getCode());// 如果没有找到, 用ALL再找
+		}
+		return contents;
 	}
 }
