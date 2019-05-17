@@ -8,7 +8,7 @@
 					or 
 					name = ${name, dataType=string}$
 					or 
-					sex = ${sex, dataType=string, usePlaceholder=true}
+					sex = ${sex, dataType=string, usePlaceholder=true}$
 		</content>
 	</sql>
 </mapping-configuration>

@@ -44,7 +44,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		try {
 			return LocalConfigurationDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		} catch (Exception e) {
-			throw new MetadataValidateException("<column>元素的dataType属性值: ", e);
+			throw new MetadataValidateException("<column>元素的dataType属性值异常: " + e.getMessage());
 		}
 	}
 }

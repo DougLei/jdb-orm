@@ -20,6 +20,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  */
 public class SqlParameterMetadata implements Metadata{
 	private static final Logger logger = LoggerFactory.getLogger(SqlParameterMetadata.class);
+	private String configurationText;
 	
 	/**
 	 * 参数名
@@ -44,6 +45,8 @@ public class SqlParameterMetadata implements Metadata{
 	private String placeholderSuffix;
 	
 	public SqlParameterMetadata(String configurationText) {
+		this.configurationText = configurationText;
+		
 		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
 		setDataTypeHandler(propertyMap.get("dataTypeHandler"));
@@ -124,6 +127,9 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	
+	public String getConfigurationText() {
+		return configurationText;
+	}
 	public String getName() {
 		return name;
 	}
@@ -148,5 +154,12 @@ public class SqlParameterMetadata implements Metadata{
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.SQL_PARAMETER;
+	}
+
+	@Override
+	public String toString() {
+		return "SqlParameterMetadata [name=" + name + ", dataTypeHandler=" + dataTypeHandler + ", usePlaceholder="
+				+ usePlaceholder + ", placeholderPrefix=" + placeholderPrefix + ", placeholderSuffix="
+				+ placeholderSuffix + "]";
 	}
 }

@@ -73,6 +73,9 @@ public class ClassDataTypeHandlerMapping {
 	 * @return
 	 */
 	public DataTypeHandler getDataTypeHandlerByClassType(String code) {
+		if(code.equalsIgnoreCase("char")) {
+			System.out.println("wati");
+		}
 		ClassDataTypeHandler dataTypeHandler = CODE_DATATYPE_HANDLER_MAP.get(code);
 		if(dataTypeHandler == null) {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义ClassDataTypeHandler实现子类", code);

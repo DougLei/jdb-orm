@@ -33,14 +33,15 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	
 	/**
 	 * 根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
+	 * @param columnName
 	 * @param columnType
 	 * @param columnTypeName
 	 * @return
 	 */
-	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnTypeName) {
+	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(String columnName, int columnType, String columnTypeName) {
 		ResultSetColumnDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
 		if(dataTypeHandler == null) {
-			throw new UnsupportDataTypeHandlerException("目前无法处理columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");
+			throw new UnsupportDataTypeHandlerException("目前无法处理columnName=["+columnName+"], columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");
 		}
 		return dataTypeHandler;
 	}

@@ -5,7 +5,7 @@
 			<column name="id" propertyName="id" dataType="string" />
 			<column name="name" propertyName="name" dataType="string" />
 			<column name="age" propertyName="age" dataType="integer" />
-			<column name="sex" propertyName="sex" dataType="char" />
+			<column name="sex" propertyName="sex" dataType="string" />
 		</columns>
 		
 		<primary-key>

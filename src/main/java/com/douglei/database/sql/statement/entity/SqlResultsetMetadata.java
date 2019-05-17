@@ -15,7 +15,7 @@ public class SqlResultsetMetadata {
 	
 	public SqlResultsetMetadata(String columnName, int columnType, String columnTypeName) {
 		this.columnName = columnName.toUpperCase();
-		this.dataTypeHandler = LocalRunDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnType, columnTypeName);
+		this.dataTypeHandler = LocalRunDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnName, columnType, columnTypeName);
 	}
 
 	public String getColumnName() {

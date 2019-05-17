@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlMetadata;
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
@@ -16,6 +19,7 @@ import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
  * @author DougLei
  */
 public class SqlExecutionHolder implements ExecutionHolder{
+	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Map<String, Object> sqlParameterMap) {
 		String dialectTypeCode = LocalRunDialect.getDialect().getType().getCode();
@@ -32,8 +36,8 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		for (SqlContentMetadata content : contents) {
 			sqlParameters = content.getSqlParameterOrders();
 			if(sqlParameters == null || sqlParameters.size() == 0) {
-				executeSqls.add(content.getContent());
-				parametersList.add(null);
+				addExecuteSql(content.getContent());
+				addParameters(null);
 			}else {
 				setExecuteSql(content.getContent(), content.getPlaceholderCount(), sqlParameters, sqlParameterMap);
 			}
@@ -51,11 +55,22 @@ public class SqlExecutionHolder implements ExecutionHolder{
 			if(parameter.isUsePlaceholder()) {
 				parameters.add(new InputSqlParameter(value, parameter.getDataTypeHandler()));
 			}else {
-				content = content.replaceFirst("${"+parameter.getName()+"}$", parameter.getPlaceholderPrefix()+value+parameter.getPlaceholderSuffix());
+				content = content.replaceFirst("\\$\\{"+parameter.getName()+"\\}\\$", parameter.getPlaceholderPrefix()+value+parameter.getPlaceholderSuffix());
 			}
 		}
 
-		executeSqls.add(content);
+		addExecuteSql(content);
+		addParameters(parameters);
+	}
+	
+	private void addExecuteSql(String sqlContent) {
+		logger.debug("要执行的sql content= {}", sqlContent);
+		executeSqls.add(sqlContent);
+	}
+	private void addParameters(List<Object> parameters) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("对应的parameters= {}", parameters==null?"无参数": parameters.toString());
+		}
 		parametersList.add(parameters);
 	}
 
@@ -77,11 +92,17 @@ public class SqlExecutionHolder implements ExecutionHolder{
 
 	@Override
 	public String getCurrentSql() {
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取第{}个 executeSql", executeSqlIndex+1);
+		}
 		return executeSqls.get(executeSqlIndex);
 	}
 
 	@Override
 	public List<Object> getCurrentParameters() {
+		if(logger.isDebugEnabled()) {
+			logger.debug("获取第{}个 parameters", executeSqlIndex+1);
+		}
 		return parametersList.get(executeSqlIndex);
 	}
 

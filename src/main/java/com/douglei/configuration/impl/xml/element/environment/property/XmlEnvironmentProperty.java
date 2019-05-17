@@ -34,7 +34,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private Dialect dialect;
 	
 	@FieldMetaData
-	private boolean enableSessionCache = true;
+	private boolean enableSessionCache;
 	
 	@FieldMetaData
 	private MappingStore mappingStore;
@@ -80,21 +80,19 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	 * @param fieldNames
 	 */
 	private void invokeSetMethodByFieldName(List<String> fieldNames) {
-		if(propertyMap != null) {
-			Class<?> clz = getClass();
-			String value = null;
+		Class<?> clz = getClass();
+		String value = null;
+		String fieldName_ = null;
+		try {
 			for (String fieldName : fieldNames) {
 				logger.debug("invoke EnvironmentProperty.{} Field's setXXX method", fieldName);
+				fieldName_ = fieldName;
 				
 				value = propertyMapIsEmpty?null:propertyMap.get(fieldName);
-				if(StringUtil.notEmpty(value)){
-					try {
-						clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
-					} catch (Exception e) {
-						throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(fieldName)+"] 时出现异常", e);
-					}
-				}
+				clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
 			}
+		} catch (Exception e) {
+			throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(fieldName_)+"] 时出现异常", e);
 		}
 	}
 	private String fieldNameToSetMethodName(String fieldName) {
@@ -102,6 +100,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 
 	void setDialect(String value) {
+		if(StringUtil.isEmpty(value)) {
+			return;
+		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("{}.setDialect(), parameter value is {}", getClass().getName(), value);
 		}
@@ -109,6 +110,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		
 	}
 	void setEnableSessionCache(String value) {
+		if(StringUtil.isEmpty(value)) {
+			this.enableSessionCache = true;
+			return;
+		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass().getName(), value);
 		}
@@ -117,11 +122,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setMappingStore(String value) {
+		if(StringUtil.isEmpty(value) || !MappingStoreContext.containsType(value)) {
+			value = "application";// 使用默认的 ApplicationMappingStore
+		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("{}.setMappingStore(), parameter value is {}", getClass().getName(), value);
-		}
-		if(!MappingStoreContext.containsType(value)) {
-			value = "application";// 使用默认的 ApplicationMappingStore
 		}
 		this.mappingStore = MappingStoreContext.getMappingStore(value);
 	}

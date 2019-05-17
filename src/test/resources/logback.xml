@@ -2,7 +2,7 @@
 <configuration scan="false">
 	<property name="log_name" value="jdb-orm"/>
 	<property name="log_home" value="logs"/>
-	<property name="custom_log_pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %logger -%msg%n"/>
+	<property name="custom_log_pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level %logger.%M -%msg%n"/>
 	<property name="custom_log_filename_pattern" value="%d{yyyy-MM-dd}.%i.log" />
 
 	<contextName>${log_name}</contextName>

@@ -34,4 +34,9 @@ public class InputSqlParameter {
 	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
 		dataTypeHandler.setValue(preparedStatement, index, value);
 	}
+	
+	@Override
+	public String toString() {
+		return "value="+value+", dataTypeHandler="+dataTypeHandler;
+	}
 }

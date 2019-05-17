@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
@@ -14,6 +17,7 @@ import com.douglei.database.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
+	private static final Logger logger = LoggerFactory.getLogger(SqlContentMetadata.class);
 	
 	private String dialectTypeCode;
 	private String content;
@@ -26,6 +30,10 @@ public class SqlContentMetadata implements Metadata{
 		this.dialectTypeCode = dialectType.getCode();
 		this.content = content;
 		resolvingParameters();
+		if(logger.isDebugEnabled()) {
+			logger.debug("解析出的sql content={}", content);
+			logger.debug("解析出的sql parameters={}", sqlParameterOrders==null?"无参数":sqlParameterOrders.toString());
+		}
 	}
 	
 	/**
@@ -43,6 +51,12 @@ public class SqlContentMetadata implements Metadata{
 				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
 			}
 		}
+		
+		if(sqlParameterOrders != null) {
+			for (SqlParameterMetadata sqlParameter : sqlParameterOrders) {
+				replaceSqlParameterInSqlContent(sqlParameter);
+			}
+		}
 	}
 	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
 	
@@ -54,16 +68,15 @@ public class SqlContentMetadata implements Metadata{
 		
 		SqlParameterMetadata sqlParameter = new SqlParameterMetadata(configurationText);
 		sqlParameterOrders.add(sqlParameter);
-		replaceSqlContent(configurationText, sqlParameter);
 	}
 	
-	// 替换Sql语句内容
-	private void replaceSqlContent(String configurationText, SqlParameterMetadata sqlParameter) {
+	// 替换Sql语句内容中的参数
+	private void replaceSqlParameterInSqlContent(SqlParameterMetadata sqlParameter) {
 		if(sqlParameter.isUsePlaceholder()) {
 			placeholderCount++;
-			content = content.replaceAll("${"+configurationText+"$}", "?");
+			content = content.replaceAll("\\$\\{"+sqlParameter.getConfigurationText()+"\\}\\$", "?");
 		}else{
-			content = content.replaceAll(configurationText, sqlParameter.getName());
+			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
 		}
 	}
 	

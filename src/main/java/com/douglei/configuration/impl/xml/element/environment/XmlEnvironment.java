@@ -101,6 +101,10 @@ public class XmlEnvironment implements Environment{
 		}
 		
 		Map<String, String> propertyMap = elementListToPropertyMap(datasourceElement.elements("property"));
+		if(propertyMap == null || propertyMap.size() == 0) {
+			throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
+		}
+		
 		dataSourceWrapper = new XmlDataSourceWrapper((DataSource)dataSourceInstance, datasourceElement.attributeValue("closeMethod"), propertyMap, this);
 		logger.debug("处理<environment>下的<datasource>元素结束");
 	}

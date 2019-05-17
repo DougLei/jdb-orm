@@ -21,6 +21,7 @@
 		</datasource>
 		
 		<mappings>
+			<mapping-scan base-path="mappings/sql" />
 			<mapping-scan base-path="mappings/table" />
 		</mappings>
 	</environment>

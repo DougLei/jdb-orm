@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.oracle.datatype.resultset.columntype;
+package com.douglei.database.dialect.impl.sqlserver.datatype.resultset.columntype;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,21 +9,14 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class BigIntegerResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
-			2	// number 
+			-5	// bigint 
 			};
 	
 	@Override
 	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
-		if(rs.getMetaData().getScale(columnIndex) == 0) {
-			long value = rs.getLong(columnIndex);
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
-				return (int)value;
-			}
-			return value;
-		}
-		return rs.getDouble(columnIndex);
+		return rs.getLong(columnIndex);
 	}
 
 	@Override
