@@ -10,6 +10,7 @@ import com.douglei.configuration.Configuration;
 import com.douglei.configuration.impl.xml.XmlConfiguration;
 import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.sessions.session.table.TableSession;
+import com.douglei.test.session.SysUser;
 
 public class SessionTest {
 	

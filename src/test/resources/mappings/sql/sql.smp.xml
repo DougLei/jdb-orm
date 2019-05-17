@@ -2,13 +2,7 @@
 <mapping-configuration type="sql">
 	<sql namespace="com.test" name="queryUser">
 		<content dialect=""><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
-			select name, ${sex, dataType=string, usePlaceholder=false}$ from sys_user 
-				where 
-					id = ${id, dataType=string, usePlaceholder=true}$ 
-					or 
-					name = ${name, dataType=string}$
-					or 
-					sex = ${sex, dataType=string, usePlaceholder=true}$
+			select * from sys_user
 		</content>
 	</sql>
 </mapping-configuration>

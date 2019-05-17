@@ -1,4 +1,4 @@
-package com.douglei.test.session.table;
+package com.douglei.test.session;
 
 import java.util.ArrayList;
 import java.util.List;
