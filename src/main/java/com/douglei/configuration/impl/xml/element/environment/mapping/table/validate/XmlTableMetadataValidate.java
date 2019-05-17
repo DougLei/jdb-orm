@@ -23,6 +23,6 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<table>元素的name属性值不能为空");
 		}
-		return new TableMetadata(name, element.attributeValue("className"));
+		return new TableMetadata(name, element.attributeValue("class"));
 	}
 }

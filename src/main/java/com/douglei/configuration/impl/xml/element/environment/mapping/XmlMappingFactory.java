@@ -34,7 +34,11 @@ public class XmlMappingFactory {
 		}
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", configFileName, type);
 		
-		switch(MappingType.toValue(type)) {
+		MappingType mappingType = MappingType.toValue(type);
+		if(mappingType == null) {
+			throw new NullPointerException("在文件["+configFileName+"]中, <mapping-configuration>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(MappingType.values()));
+		}
+		switch(mappingType) {
 			case TABLE:
 				return new XmlTableMapping(configFileName, rootElement);
 			case SQL:

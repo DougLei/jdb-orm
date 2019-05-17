@@ -19,28 +19,28 @@ public class ColumnMetadata implements Metadata{
 	/**
 	 * 映射的代码类中的属性名
 	 */
-	private String propertyName;
-	private boolean propertyNameIsNull;
+	private String property;
+	private boolean propertyIsNull;
 	
 	/**
 	 * 数据类型
 	 */
 	private DataTypeHandler dataTypeHandler;
 	
-	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String propertyName) {
+	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String property) {
 		this.name = name.toUpperCase();
 		this.dataTypeHandler = dataTypeHandler;
-		setPropertyName(propertyName);
+		setProperty(property);
 		setCode();
 	}
-	private void setPropertyName(String propertyName) {
-		if(StringUtil.isEmpty(propertyName)) {
-			propertyNameIsNull = true;
-			if(propertyName != null) {
-				propertyName = null;
+	private void setProperty(String property) {
+		if(StringUtil.isEmpty(property)) {
+			propertyIsNull = true;
+			if(property != null) {
+				property = null;
 			}
 		}
-		this.propertyName = propertyName;
+		this.property = property;
 	}
 	
 	/**
@@ -56,10 +56,10 @@ public class ColumnMetadata implements Metadata{
 	}
 	private String code;
 	private void setCode() {
-		if(propertyName == null) {
+		if(property == null) {
 			code = name;
 		}else {
-			code = propertyName;
+			code = property;
 		}
 	}
 	
@@ -73,14 +73,14 @@ public class ColumnMetadata implements Metadata{
 	 */
 	public void fixPropertyNameValue(boolean classNameIsNull) {
 		if(classNameIsNull) {
-			if(!propertyNameIsNull) {
-				propertyNameIsNull = true;
-				propertyName = null;
+			if(!propertyIsNull) {
+				propertyIsNull = true;
+				property = null;
 			}
 		}else {
-			if(propertyNameIsNull) {
-				propertyNameIsNull = false;
-				propertyName = NamingUtil.columnName2PropertyName(name);
+			if(propertyIsNull) {
+				propertyIsNull = false;
+				property = NamingUtil.columnName2PropertyName(name);
 			}
 		}
 	}
@@ -88,8 +88,8 @@ public class ColumnMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public String getPropertyName() {
-		return propertyName;
+	public String getProperty() {
+		return property;
 	}
 	public DataTypeHandler getDataType() {
 		return dataTypeHandler;

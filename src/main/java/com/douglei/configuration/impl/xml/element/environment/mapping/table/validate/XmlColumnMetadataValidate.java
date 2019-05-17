@@ -31,7 +31,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
 		DataTypeHandler dataTypeHandler = validateDataType(element.attributeValue("dataType"));
-		return new ColumnMetadata(name, dataTypeHandler, element.attributeValue("propertyName"));
+		return new ColumnMetadata(name, dataTypeHandler, element.attributeValue("property"));
 	}
 
 	private DataTypeHandler validateDataType(String dataType) throws MetadataValidateException {

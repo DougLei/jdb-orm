@@ -1,7 +1,5 @@
 package com.douglei.database.dialect;
 
-import java.util.Arrays;
-
 /**
  * 事物隔离级别
  * @author DougLei
@@ -34,18 +32,6 @@ public enum TransactionIsolationLevel {
 	private int level;
 	private TransactionIsolationLevel(int level) {
 		this.level = level;
-	}
-
-	public static TransactionIsolationLevel toValue(String value) {
-		value = value.toUpperCase();
-		
-		TransactionIsolationLevel[] tils = TransactionIsolationLevel.values();
-		for (TransactionIsolationLevel transactionIsolationLevel : tils) {
-			if(transactionIsolationLevel.name().equals(value)) {
-				return transactionIsolationLevel;
-			}
-		}
-		throw new IllegalArgumentException("配置的值[\""+value+"\"]错误, 目前支持的值包括：["+Arrays.toString(tils)+"]");
 	}
 
 	public int getLevel() {

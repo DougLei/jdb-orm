@@ -20,14 +20,16 @@ public class SqlContentMetadata implements Metadata{
 	private static final Logger logger = LoggerFactory.getLogger(SqlContentMetadata.class);
 	
 	private String dialectTypeCode;
+	private SqlContentType type;
 	private String content;
 	private int placeholderCount;
 	
 	// sql参数, 按照配置中定义的顺序记录
 	private List<SqlParameterMetadata> sqlParameterOrders;
 	
-	public SqlContentMetadata(DialectType dialectType, String content) {
+	public SqlContentMetadata(DialectType dialectType, SqlContentType type, String content) {
 		this.dialectTypeCode = dialectType.getCode();
+		this.type = type;
 		this.content = content;
 		resolvingParameters();
 		if(logger.isDebugEnabled()) {
@@ -79,6 +81,9 @@ public class SqlContentMetadata implements Metadata{
 	}
 	
 	
+	public SqlContentType getType() {
+		return type;
+	}
 	public String getContent() {
 		return content;
 	}

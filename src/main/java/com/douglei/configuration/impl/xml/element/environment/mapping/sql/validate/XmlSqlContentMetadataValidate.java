@@ -10,6 +10,7 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
+import com.douglei.database.metadata.sql.SqlContentType;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -25,17 +26,11 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 
 	private SqlContentMetadata doValidate(Element element) {
 		DialectType dialectType = getDialectType(element.attributeValue("dialect"));
+		SqlContentType type = getSqlContentType(element.attributeValue("type"));
 		String content = getSqlContent(element.getTextTrim());
-		return new SqlContentMetadata(dialectType, content);
+		return new SqlContentMetadata(dialectType, type, content);
 	}
 
-	private String getSqlContent(String content) {
-		if(StringUtil.isEmpty(content)) {
-			throw new MetadataValidateException("<content>元素中的sql语句不能为空");
-		}
-		return content;
-	}
-	
 	private DialectType getDialectType(String dialect) {
 		DialectType type = null;
 		if(StringUtil.isEmpty(dialect)) {
@@ -47,5 +42,23 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 			}
 		}
 		return type;
+	}
+	
+	private SqlContentType getSqlContentType(String type) {
+		SqlContentType sqlContentType = null;
+		if(StringUtil.notEmpty(type)) {
+			sqlContentType = SqlContentType.toValue(type);
+			if(sqlContentType == null) {
+				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
+			}
+		}
+		return sqlContentType;
+	}
+	
+	private String getSqlContent(String content) {
+		if(StringUtil.isEmpty(content)) {
+			throw new MetadataValidateException("<content>元素中的sql语句不能为空");
+		}
+		return content;
 	}
 }

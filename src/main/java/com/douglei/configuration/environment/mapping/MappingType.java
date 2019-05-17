@@ -1,7 +1,5 @@
 package com.douglei.configuration.environment.mapping;
 
-import java.util.Arrays;
-
 /**
  * 映射的类型
  * @author DougLei
@@ -17,17 +15,15 @@ public enum MappingType {
 		this.mappingFileSuffix = mappingFileSuffix;
 	}
 
-	
-	public static MappingType toValue(String value) {
-		value = value.trim().toUpperCase();
-		
+	public static MappingType toValue(String type) {
+		type = type.toUpperCase();
 		MappingType[] mts = MappingType.values();
 		for (MappingType mappingType : mts) {
-			if(mappingType.name().equals(value)) {
+			if(mappingType.name().equals(type)) {
 				return mappingType;
 			}
 		}
-		throw new IllegalArgumentException("配置的值[\""+value+"\"]错误, 目前支持的值包括：["+Arrays.toString(mts)+"]");
+		return null;
 	}
 	
 	/**
