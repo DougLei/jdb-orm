@@ -48,7 +48,7 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 
 	@Deprecated
 	@Override
-	public boolean nextSql() {
+	public boolean next() {
 		return false;
 	}
 

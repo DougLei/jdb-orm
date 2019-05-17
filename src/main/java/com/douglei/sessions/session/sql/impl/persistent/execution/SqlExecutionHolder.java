@@ -12,21 +12,22 @@ import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
  */
 public class SqlExecutionHolder implements ExecutionHolder{
 
+	public SqlExecutionHolder(SqlMetadata sqlMetadata, Map<String, Object> sqlParameterMap) {
+		// TODO Auto-generated constructor stub
+	}
+	
+
 	private int executeSqlIndex; // 从0开始
 	private List<String> executeSqls;
 	private List<List<Object>> parameters;
 	
-	public SqlExecutionHolder(SqlMetadata sqlMetadata, Map<String, Object> sqlParameterMap) {
-		// TODO Auto-generated constructor stub
-	}
-
 	@Override
 	public int executeSqlCount() {
 		return executeSqls.size();
 	}
 
 	@Override
-	public boolean nextSql() {
+	public boolean next() {
 		executeSqlIndex++;
 		return executeSqlIndex < executeSqls.size();
 	}

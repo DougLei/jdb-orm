@@ -123,7 +123,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		int updateRowCount = 0;
 		do {
 			updateRowCount += super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
-		}while(executionHolder.nextSql());
+		}while(executionHolder.next());
 		return updateRowCount;
 	}
 }

@@ -16,9 +16,9 @@ public interface ExecutionHolder {
 	
 	/**
 	 * 移动到下一个sql语句和parameters
-	 * @return
+	 * @return 如果next后还有要执行的sql, 返回true, 否则返回false
 	 */
-	boolean nextSql();
+	boolean next();
 	
 	/**
 	 * 获取当前要执行的sql语句
