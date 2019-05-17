@@ -3,6 +3,10 @@
 	<sql namespace="com.test" name="queryUser">
 		<content dialect=""><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
 			select * from sys_user
+			
+				where name = ${name, datatype=string}$
+				
+				
 		</content>
 	</sql>
 </mapping-configuration>

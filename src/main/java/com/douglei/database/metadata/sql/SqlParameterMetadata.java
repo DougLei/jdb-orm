@@ -49,10 +49,10 @@ public class SqlParameterMetadata implements Metadata{
 		
 		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
-		setDataTypeHandler(propertyMap.get("dataTypeHandler"));
-		setUsePlaceholder(propertyMap.get("usePlaceholder"));
-		setPlaceholderPrefix(propertyMap.get("placeholderPrefix"));
-		setPlaceholderSuffix(propertyMap.get("placeholderSuffix"));
+		setDataTypeHandler(propertyMap.get("datatypehandler"));
+		setUsePlaceholder(propertyMap.get("useplaceholder"));
+		setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
+		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
 	}
 	
 	// 解析出属性map集合
@@ -63,7 +63,7 @@ public class SqlParameterMetadata implements Metadata{
 			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");
 		}
 		Map<String, String> propertyMap = new HashMap<String, String>(length);
-		propertyMap.put("name", cts[0].trim().toUpperCase());
+		propertyMap.put("name", cts[0].trim());
 		
 		if(length > 1) {
 			String[] keyValue = null;
@@ -82,7 +82,7 @@ public class SqlParameterMetadata implements Metadata{
 			int equalIndex = confText.indexOf("=");
 			if(equalIndex > 0 && equalIndex < (confText.length()-1)) {
 				String[] keyValue = new String[2];
-				keyValue[0] = confText.substring(0, equalIndex).trim();
+				keyValue[0] = confText.substring(0, equalIndex).trim().toLowerCase();
 				keyValue[1] = confText.substring(equalIndex+1).trim();
 				return keyValue;
 			}

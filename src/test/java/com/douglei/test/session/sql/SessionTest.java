@@ -1,5 +1,6 @@
 package com.douglei.test.session.sql;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,10 @@ public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		List<Map<String, Object>> list = session.query("com.test", "queryUser");
+		Map<String, Object> p = new HashMap<String, Object>();
+		p.put("name", "哈哈7");
+		
+		List<Map<String, Object>> list = session.query("com.test", "queryUser", p);
 		System.out.println(list.size());
 		for (Map<String, Object> map : list) {
 			System.out.println(map);

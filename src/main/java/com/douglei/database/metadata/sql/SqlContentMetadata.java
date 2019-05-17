@@ -31,8 +31,8 @@ public class SqlContentMetadata implements Metadata{
 		this.content = content;
 		resolvingParameters();
 		if(logger.isDebugEnabled()) {
-			logger.debug("解析出的sql content={}", content);
-			logger.debug("解析出的sql parameters={}", sqlParameterOrders==null?"无参数":sqlParameterOrders.toString());
+			logger.debug("解析出的sql content= {}", this.content);
+			logger.debug("解析出的sql parameters= {}", sqlParameterOrders==null?"无参数":sqlParameterOrders.toString());
 		}
 	}
 	
@@ -65,9 +65,7 @@ public class SqlContentMetadata implements Metadata{
 		if(sqlParameterOrders == null) {
 			sqlParameterOrders = new ArrayList<SqlParameterMetadata>();
 		}
-		
-		SqlParameterMetadata sqlParameter = new SqlParameterMetadata(configurationText);
-		sqlParameterOrders.add(sqlParameter);
+		sqlParameterOrders.add(new SqlParameterMetadata(configurationText));
 	}
 	
 	// 替换Sql语句内容中的参数
