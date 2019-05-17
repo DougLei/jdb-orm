@@ -65,7 +65,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public List<Map<String, Object>> query(String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.query(executionHolder.getSql(), executionHolder.getParameters());
+		return super.query(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public Map<String, Object> uniqueQuery(String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.uniqueQuery(executionHolder.getSql(), executionHolder.getParameters());
+		return super.uniqueQuery(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public List<Object[]> query_(String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.query_(executionHolder.getSql(), executionHolder.getParameters());
+		return super.query_(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public Object[] uniqueQuery_(String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.uniqueQuery_(executionHolder.getSql(), executionHolder.getParameters());
+		return super.uniqueQuery_(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.pageQuery(pageNum, pageSize, executionHolder.getSql(), executionHolder.getParameters());
+		return super.pageQuery(pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 	
 	@Override
@@ -120,6 +120,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	@Override
 	public int executeUpdate(String namespace, String name, Map<String, Object> sqlParameterMap) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
-		return super.executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
+		int updateRowCount = 0;
+		do {
+			updateRowCount += super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
+		}while(executionHolder.nextSql());
+		return updateRowCount;
 	}
 }

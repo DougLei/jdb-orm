@@ -31,15 +31,27 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	protected List<Object> parameters;
 	
 	@Override
-	public String getSql() {
+	public String getCurrentSql() {
 		return sql;
 	}
 
 	@Override
-	public List<Object> getParameters() {
+	public List<Object> getCurrentParameters() {
 		return parameters;
 	}
 	
+	@Deprecated
+	@Override
+	public int executeSqlCount() {
+		return 1;
+	}
+
+	@Deprecated
+	@Override
+	public boolean nextSql() {
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		return "\n" + 

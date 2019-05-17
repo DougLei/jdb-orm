@@ -1,4 +1,4 @@
-package com.douglei.sessions.session.table.impl.persistent.execution;
+package com.douglei.sessions.session.table.impl;
 
 /**
  * 已经被删除异常

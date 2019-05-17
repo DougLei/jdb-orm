@@ -94,4 +94,17 @@ public class SqlMetadata implements Metadata{
 	public MetadataType getMetadataType() {
 		return MetadataType.SQL;
 	}
+	
+	public String getNamespace() {
+		return namespace;
+	}
+	public String getName() {
+		return name;
+	}
+	public Map<String, List<SqlContentMetadata>> getContentMap() {
+		return contentMap;
+	}
+	public Map<String, List<String>> getParameterMap() {
+		return parameterMap;
+	}
 }

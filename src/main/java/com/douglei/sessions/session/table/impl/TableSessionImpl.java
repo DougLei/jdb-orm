@@ -27,7 +27,6 @@ import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.session.table.impl.persistent.TablePersistentObject;
-import com.douglei.sessions.session.table.impl.persistent.execution.AlreadyDeletedException;
 import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
@@ -290,7 +289,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 						if(logger.isDebugEnabled()) {
 							logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
 						}
-						super.executeUpdate(executionHolder.getSql(), executionHolder.getParameters());
+						super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 					}
 				}
 			}
