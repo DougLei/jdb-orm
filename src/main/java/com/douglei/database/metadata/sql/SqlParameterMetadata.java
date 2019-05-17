@@ -1,12 +1,18 @@
 package com.douglei.database.metadata.sql;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.LocalConfigurationData;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.utils.StringUtil;
+import com.douglei.utils.datatype.ValidationUtil;
 
 /**
  * sql参数元数据
@@ -14,7 +20,6 @@ import com.douglei.database.metadata.MetadataType;
  */
 public class SqlParameterMetadata implements Metadata{
 	private static final Logger logger = LoggerFactory.getLogger(SqlParameterMetadata.class);
-	private String originConfigurationText;
 	
 	/**
 	 * 参数名
@@ -28,55 +33,97 @@ public class SqlParameterMetadata implements Metadata{
 	/**
 	 * 是否使用占位符?
 	 */
-	private boolean usePlaceholder = true;
+	private boolean usePlaceholder;
 	/**
 	 * 如果不使用占位符, 参数值的前缀
 	 */
-	private String placeholderPrefix = "'";
+	private String placeholderPrefix;
 	/**
 	 * 如果不使用占位符, 参数值的后缀
 	 */
-	private String placeholderSuffix = "'";
-	
+	private String placeholderSuffix;
 	
 	public SqlParameterMetadata(String configurationText) {
-		this.originConfigurationText = configurationText;
-		
-		String[] cs = configurationText.split(",");
-		int length = cs.length;
-		
-		if(length < 2) {
-			throw new MatchingSqlParameterException("sql参数, 必须配置参数名和参数类型");
+		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
+		setName(propertyMap.get("name"));
+		setDataTypeHandler(propertyMap.get("dataTypeHandler"));
+		setUsePlaceholder(propertyMap.get("usePlaceholder"));
+		setPlaceholderPrefix(propertyMap.get("placeholderPrefix"));
+		setPlaceholderSuffix(propertyMap.get("placeholderSuffix"));
+	}
+	
+	// 解析出属性map集合
+	private Map<String, String> resolvingPropertyMap(String configurationText) {
+		String[] cts = configurationText.split(",");
+		int length = cts.length;
+		if(length < 1) {
+			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");
 		}
-		this.name = cs[0].trim().toUpperCase();
-		this.dataTypeHandler = LocalConfigurationData.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(getValue(cs[1]));
+		Map<String, String> propertyMap = new HashMap<String, String>(length);
+		propertyMap.put("name", cts[0].trim().toUpperCase());
 		
-		if(length > 2) {
-			logger.debug("设置usePlaceholder配置值");
-			this.usePlaceholder = Boolean.parseBoolean(getValue(cs[2]));
-			
-			if(length > 3) {
-				logger.debug("设置placeholderPrefix配置值");
-				this.placeholderPrefix = getValue(cs[3]);
-				
-				if(length > 4) {
-					logger.debug("设置placeholderSuffix配置值");
-					this.placeholderSuffix = getValue(cs[4]);
+		if(length > 1) {
+			String[] keyValue = null;
+			for(int i=1;i<length;i++) {
+				keyValue = getKeyValue(cts[i]);
+				if(keyValue != null) {
+					propertyMap.put(keyValue[0], keyValue[1]);
 				}
 			}
 		}
+		return propertyMap;
+	}
+	private String[] getKeyValue(String confText) {
+		if(confText != null) {
+			confText = confText.trim();
+			int equalIndex = confText.indexOf("=");
+			if(equalIndex > 0 && equalIndex < (confText.length()-1)) {
+				String[] keyValue = new String[2];
+				keyValue[0] = confText.substring(0, equalIndex).trim();
+				keyValue[1] = confText.substring(equalIndex+1).trim();
+				return keyValue;
+			}
+		}
+		return null;
 	}
 	
-	private String getValue(String key_value) {
-		logger.debug("从 {} 中获取value值", key_value);
-		String value = key_value.substring(key_value.indexOf("=")+1).trim();
-		return value;
+	void setName(String name) {
+		this.name = name;
 	}
-
+	void setDataTypeHandler(String dataType) {
+		logger.debug("设置dataType配置值");
+		if(StringUtil.isEmpty(dataType)) {
+			this.dataTypeHandler = ClassDataTypeHandlerMapping.getDefaultDataTypeHandler();
+		}else {
+			this.dataTypeHandler = LocalConfigurationData.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+		}
+	}
+	void setUsePlaceholder(String usePlaceholder) {
+		logger.debug("设置usePlaceholder配置值");
+		if(ValidationUtil.isBoolean(usePlaceholder)) {
+			this.usePlaceholder = Boolean.parseBoolean(usePlaceholder);
+		}else {
+			this.usePlaceholder = true;
+		}
+	}
+	void setPlaceholderPrefix(String placeholderPrefix) {
+		logger.debug("设置placeholderPrefix配置值");
+		if(StringUtil.isEmpty(placeholderPrefix)) {
+			this.placeholderPrefix = "'";
+		}else {
+			this.placeholderPrefix = placeholderPrefix;
+		}
+	}
+	void setPlaceholderSuffix(String placeholderSuffix) {
+		logger.debug("设置placeholderSuffix配置值");
+		if(StringUtil.isEmpty(placeholderSuffix)) {
+			this.placeholderSuffix = "'";
+		}else {
+			this.placeholderSuffix = placeholderSuffix;
+		}
+	}
 	
-	public String getOriginConfigurationText() {
-		return originConfigurationText;
-	}
+	
 	public String getName() {
 		return name;
 	}

@@ -33,6 +33,17 @@ public class ClassDataTypeHandlerMapping {
 	private static final ClobDataTypeHandler clob_ = new ClobDataTypeHandler();
 	private static final BlobDataTypeHandler blob_ = new BlobDataTypeHandler();
 	
+	/**
+	 * <pre>
+	 * 	获取系统默认的dataTypeHandler
+	 * 	string_
+	 * </pre>
+	 * @return
+	 */
+	public static final DataTypeHandler getDefaultDataTypeHandler() {
+		return string_;
+	}
+	
 	public ClassDataTypeHandlerMapping() {
 		register(string_);
 		register(integer_);

@@ -101,7 +101,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
 	}
 
-	
 	void setDialect(String value) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("{}.setDialect(), parameter value is {}", getClass().getName(), value);

@@ -18,10 +18,8 @@ public class SqlContentMetadata implements Metadata{
 	private String dialectTypeCode;
 	private String content;
 	
-	// sql参数名的顺序, 按照配置中${}$的顺序记录, 同一个参数可能会使用多次, 所以这里按照顺都记录下来
-	private List<String> sqlParameterNameOrders;
-	// sql参数, 这里只记录参数, 和配置中的顺序无关, 同一个名称的参数, 只记录一次
-	private List<SqlParameterMetadata> sqlParameters;
+	// sql参数, 按照配置中定义的顺序记录
+	private List<SqlParameterMetadata> sqlParameterOrders;
 	
 	public SqlContentMetadata(DialectType dialectType, String content) {
 		this.dialectTypeCode = dialectType.getCode();
@@ -29,23 +27,24 @@ public class SqlContentMetadata implements Metadata{
 		resolvingParameters();
 	}
 	
-	// 初始化参数集合
-	private void initParameterCollection() {
-		if(sqlParameterNameOrders == null) {
-			sqlParameterNameOrders = new ArrayList<String>();
+	// 添加 sql parameter
+	private void addSqlParameter(String configurationText) {
+		if(sqlParameterOrders == null) {
+			sqlParameterOrders = new ArrayList<SqlParameterMetadata>();
 		}
-		if(sqlParameters == null) {
-			sqlParameters = new ArrayList<SqlParameterMetadata>();
-		}
+		
+		SqlParameterMetadata sqlParameter = new SqlParameterMetadata(configurationText);
+		sqlParameterOrders.add(sqlParameter);
+		replaceSqlContent(configurationText, sqlParameter);
 	}
 	
-	// 添加 sql parameter
-	private void addSqlParameter(SqlParameterMetadata sqlParameter) {
-		String sqlParameterName = sqlParameter.getName();
-		if(!sqlParameterNameOrders.contains(sqlParameterName)) {
-			sqlParameters.add(sqlParameter);
+	// 替换Sql内容
+	private void replaceSqlContent(String configurationText, SqlParameterMetadata sqlParameter) {
+		if(sqlParameter.isUsePlaceholder()) {
+			content = content.replaceAll("${"+configurationText+"$}", "?");
+		}else{
+			content = content.replaceAll(configurationText, sqlParameter.getName());
 		}
-		sqlParameterNameOrders.add(sqlParameterName);
 	}
 
 	/**
@@ -55,11 +54,10 @@ public class SqlContentMetadata implements Metadata{
 		Matcher matcher = pattern.matcher(content);
 		int startIndex, endIndex;
 		while(matcher.find()) {
-			initParameterCollection();
 			startIndex = matcher.start();
 			if(matcher.find()) {
 				endIndex = matcher.start();
-				addSqlParameter(new SqlParameterMetadata(content.substring(startIndex+2, endIndex-1)));
+				addSqlParameter(content.substring(startIndex+2, endIndex-1));
 			}else {
 				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
 			}
@@ -67,6 +65,10 @@ public class SqlContentMetadata implements Metadata{
 	}
 	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
 	
+	public List<SqlParameterMetadata> getSqlParameterOrders() {
+		return sqlParameterOrders;
+	}
+
 	/**
 	 * 即dialectType的code, 用来区分不同dialect, 调用不同的sql语句
 	 */

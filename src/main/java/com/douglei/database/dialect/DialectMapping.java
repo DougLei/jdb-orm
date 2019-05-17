@@ -19,7 +19,7 @@ import com.douglei.utils.reflect.ConstructorUtil;
  */
 public class DialectMapping {
 	private static final Logger logger = LoggerFactory.getLogger(DialectMapping.class);
-	private static final int count = 3;// 
+	private static final int count = DialectType.values().length;
 	
 	private static final Map<String, Class<? extends Dialect>> DIALECT_CLASS_MAP = new HashMap<String, Class<? extends Dialect>>(count);// Dialect类映射
 	private static final Map<String, Dialect> DIALECT_MAP = new HashMap<String, Dialect>(count);// Dialect实例映射
