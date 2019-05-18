@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.database.metadata.sql.content.SqlContentType;
 
 /**
  * sql内容元数据
@@ -67,7 +69,15 @@ public class SqlContentMetadata implements Metadata{
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public static void main(String[] args) throws Exception{
-		String content = new SAXReader().read(new File("D:\\softwares\\developments\\workspaces\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql").element("content").asXML();
+		Element element = new SAXReader().read(new File("D:\\EclipseWorkspace\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql")
+				.element("content");
+		
+		List<?> els = element.elements();
+		for (Object object : els) {
+			System.out.println(((Element)object).asXML());
+		}
+		
+		String content = element.getStringValue();
 		System.out.println(content);
 		
 		Matcher perfixMatcher = prefixPattern.matcher(content);

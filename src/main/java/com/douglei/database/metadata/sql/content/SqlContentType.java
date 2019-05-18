@@ -1,4 +1,4 @@
-package com.douglei.database.metadata.sql;
+package com.douglei.database.metadata.sql.content;
 
 /**
  * 

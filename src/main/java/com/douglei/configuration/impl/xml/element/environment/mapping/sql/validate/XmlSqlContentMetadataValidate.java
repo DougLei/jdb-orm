@@ -10,7 +10,7 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.SqlContentType;
+import com.douglei.database.metadata.sql.content.SqlContentType;
 import com.douglei.utils.StringUtil;
 
 /**
