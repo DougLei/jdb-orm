@@ -1,10 +1,12 @@
 package com.douglei.database.metadata.sql;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,14 @@ public class SqlContentMetadata implements Metadata{
 	 * 从content中解析出parameter集合
 	 */
 	private void resolvingParameters() {
-		Matcher matcher = pattern.matcher(content);
+		Matcher perfixMatcher = prefixPattern.matcher(content);
+		Matcher suffixMatcher = suffixPattern.matcher(content);
 		int startIndex, endIndex;
-		while(matcher.find()) {
-			startIndex = matcher.start();
-			if(matcher.find()) {
-				endIndex = matcher.start();
-				addSqlParameter(content.substring(startIndex+2, endIndex-1));
+		while(perfixMatcher.find()) {
+			startIndex = perfixMatcher.start();
+			if(suffixMatcher.find()) {
+				endIndex = suffixMatcher.start();
+				addSqlParameter(content.substring(startIndex+2, endIndex));
 			}else {
 				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
 			}
@@ -60,7 +63,26 @@ public class SqlContentMetadata implements Metadata{
 			}
 		}
 	}
-	private static final Pattern pattern = Pattern.compile("[\\$]", Pattern.MULTILINE);// 匹配$
+	private static final Pattern prefixPattern = Pattern.compile("(\\$\\{)", Pattern.MULTILINE);// 匹配${
+	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
+	
+	public static void main(String[] args) throws Exception{
+		String content = new SAXReader().read(new File("D:\\softwares\\developments\\workspaces\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql").element("content").asXML();
+		System.out.println(content);
+		
+		Matcher perfixMatcher = prefixPattern.matcher(content);
+		Matcher suffixMatcher = suffixPattern.matcher(content);
+		int startIndex, endIndex;
+		while(perfixMatcher.find()) {
+			startIndex = perfixMatcher.start();
+			if(suffixMatcher.find()) {
+				endIndex = suffixMatcher.start();
+				System.out.println(content.substring(startIndex+2, endIndex));
+			}else {
+				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
+			}
+		}
+	}
 	
 	// 添加 sql parameter
 	private void addSqlParameter(String configurationText) {
