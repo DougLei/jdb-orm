@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.database.metadata.sql.content.SqlContentType;
+import com.douglei.database.metadata.sql.content.SqlNode;
+import com.douglei.database.metadata.sql.content.Type;
 
 /**
  * sql内容元数据
@@ -24,17 +25,18 @@ public class SqlContentMetadata implements Metadata{
 	private static final Logger logger = LoggerFactory.getLogger(SqlContentMetadata.class);
 	
 	private String dialectTypeCode;
-	private SqlContentType type;
+	private Type type;
 	private String content;
 	private int placeholderCount;
+	
+	private List<SqlNode> sqlNodes;
 	
 	// sql参数, 按照配置中定义的顺序记录
 	private List<SqlParameterMetadata> sqlParameterOrders;
 	
-	public SqlContentMetadata(DialectType dialectType, SqlContentType type, String content) {
+	public SqlContentMetadata(DialectType dialectType, Type type) {
 		this.dialectTypeCode = dialectType.getCode();
 		this.type = type;
-		this.content = content;
 		resolvingParameters();
 		if(logger.isDebugEnabled()) {
 			logger.debug("解析出的sql content= {}", this.content);
@@ -72,26 +74,29 @@ public class SqlContentMetadata implements Metadata{
 		Element element = new SAXReader().read(new File("D:\\softwares\\developments\\workspaces\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql")
 				.element("content");
 		
+		
 		List<?> els = element.elements();
 		for (Object object : els) {
-			System.out.println(((Element)object).asXML());
+			System.out.println(object);
 		}
 		
-		String content = element.getStringValue();
-		System.out.println(content);
 		
-		Matcher perfixMatcher = prefixPattern.matcher(content);
-		Matcher suffixMatcher = suffixPattern.matcher(content);
-		int startIndex, endIndex;
-		while(perfixMatcher.find()) {
-			startIndex = perfixMatcher.start();
-			if(suffixMatcher.find()) {
-				endIndex = suffixMatcher.start();
-				System.out.println(content.substring(startIndex+2, endIndex));
-			}else {
-				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
-			}
-		}
+		
+//		String content = element.getStringValue();
+//		System.out.println(content);
+//		
+//		Matcher perfixMatcher = prefixPattern.matcher(content);
+//		Matcher suffixMatcher = suffixPattern.matcher(content);
+//		int startIndex, endIndex;
+//		while(perfixMatcher.find()) {
+//			startIndex = perfixMatcher.start();
+//			if(suffixMatcher.find()) {
+//				endIndex = suffixMatcher.start();
+//				System.out.println(content.substring(startIndex+2, endIndex));
+//			}else {
+//				throw new MatchingSqlParameterException("sql content中, 配置的参数异常, [$]标识符不匹配(多一个/少一个), 请检查");
+//			}
+//		}
 	}
 	
 	// 添加 sql parameter
@@ -113,7 +118,7 @@ public class SqlContentMetadata implements Metadata{
 	}
 	
 	
-	public SqlContentType getType() {
+	public Type getType() {
 		return type;
 	}
 	public String getContent() {

@@ -10,6 +10,16 @@
 					and sex = '男'
 				</if>
 				
+				someblock...........
+				
+				<if test="name2 == 哈哈">
+					and sex = '男'
+				</if>
+				
+				<where>
+					where something
+				</where>
+				
 				and age = 23
 		</content>
 	</sql>
