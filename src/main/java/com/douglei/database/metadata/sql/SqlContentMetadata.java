@@ -69,7 +69,7 @@ public class SqlContentMetadata implements Metadata{
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public static void main(String[] args) throws Exception{
-		Element element = new SAXReader().read(new File("D:\\EclipseWorkspace\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql")
+		Element element = new SAXReader().read(new File("D:\\softwares\\developments\\workspaces\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml")).getRootElement().element("sql")
 				.element("content");
 		
 		List<?> els = element.elements();
