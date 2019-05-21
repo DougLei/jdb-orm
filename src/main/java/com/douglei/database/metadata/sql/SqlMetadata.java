@@ -19,7 +19,6 @@ public class SqlMetadata implements Metadata{
 	private String namespace;
 	private String name;
 	private Map<String, List<SqlContentMetadata>> contentMap;
-	private Map<String, List<String>> parameterMap;
 	
 	public SqlMetadata(String namespace, String name) {
 		setNamespace(namespace);
@@ -27,7 +26,9 @@ public class SqlMetadata implements Metadata{
 	}
 	private void setNamespace(String namespace) {
 		if(StringUtil.isEmpty(namespace)) {
-			namespace = null;
+			if(namespace != null) {
+				namespace = null;
+			}
 		}
 		this.namespace = namespace;
 	}
@@ -44,36 +45,10 @@ public class SqlMetadata implements Metadata{
 		String dialectTypeCode = sqlContentMetadata.getCode();
 		List<SqlContentMetadata> contents = contentMap.get(dialectTypeCode);
 		if(contents == null) {
-			contents = new ArrayList<SqlContentMetadata>(4);
+			contents = new ArrayList<SqlContentMetadata>(5);
 			contentMap.put(dialectTypeCode, contents);
 		}
 		contents.add(sqlContentMetadata);
-		
-		addParameterMetadata(dialectTypeCode, sqlContentMetadata);
-	}
-	
-	// 添加sql参数元数据
-	private void addParameterMetadata(String dialectTypeCode, SqlContentMetadata sqlContentMetadata) {
-		List<SqlParameterMetadata> spms = sqlContentMetadata.getSqlParameterOrders();
-		if(spms != null && spms.size() > 0) {
-			if(parameterMap == null) {
-				parameterMap = new HashMap<String, List<String>>(DialectType.values().length);
-			}
-			
-			List<String> parameterNames = parameterMap.get(dialectTypeCode);
-			if(parameterNames == null) {
-				parameterNames = new ArrayList<String>();
-				parameterMap.put(dialectTypeCode, parameterNames);
-			}
-			
-			String sqlParameterName = null;
-			for (SqlParameterMetadata spm : spms) {
-				sqlParameterName = spm.getName();
-				if(!parameterNames.contains(sqlParameterName)) {
-					parameterNames.add(sqlParameterName);
-				}
-			}
-		}
 	}
 	
 	/**

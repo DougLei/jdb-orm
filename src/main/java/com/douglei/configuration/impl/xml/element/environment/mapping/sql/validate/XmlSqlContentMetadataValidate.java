@@ -4,14 +4,16 @@ import java.util.Arrays;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.LocalConfigurationDialect;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.NodeMetadataValidateMapping;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.content.Type;
+import com.douglei.database.metadata.sql.Type;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -30,11 +32,18 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		
 		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect").getNodeValue());
 		Type type = getSqlContentType(attributeMap.getNamedItem("type").getNodeValue());
-		SqlContentMetadata sqlContentMetadata =  new SqlContentMetadata(dialectType, type);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
 		
-		
-		
-		
+		NodeList children = contentNode.getChildNodes();
+		int length = children.getLength();
+		Node node = null;
+		for(int i=0;i<length;i++) {
+			node = children.item(i);
+			if(node.getNodeType() == Node.COMMENT_NODE) {
+				continue;
+			}
+			sqlContentMetadata.addNodeMetadata(NodeMetadataValidateMapping.doValidate(node));
+		}
 		return sqlContentMetadata;
 	}
 

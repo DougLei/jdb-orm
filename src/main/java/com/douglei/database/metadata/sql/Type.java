@@ -1,4 +1,4 @@
-package com.douglei.database.metadata.sql.content;
+package com.douglei.database.metadata.sql;
 
 /**
  * 
@@ -8,7 +8,9 @@ public enum Type {
 	INSERT,
 	DELETE,
 	UPDATE,
-	SELECT;
+	SELECT,
+	
+	PROCEDURE;
 	
 	public static Type toValue(String type) {
 		type = type.toUpperCase();

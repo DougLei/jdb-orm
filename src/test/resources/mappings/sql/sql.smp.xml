@@ -3,7 +3,6 @@
 	<sql namespace="com.test" name="queryUser">
 		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
 			select * from sys_user
-			
 				where name = ${name, datatype=string}
 				
 				<if test="name == 哈哈">
@@ -17,7 +16,8 @@
 				</if>
 				
 				<where>
-					where something
+					where
+					<append>append</append>
 				</where>
 				
 				and age = 23

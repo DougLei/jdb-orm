@@ -2,7 +2,7 @@ package com.douglei.database.dialect.impl.sqlserver;
 
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
-import com.douglei.database.dialect.impl.sqlserver.datatype.DataTypeHandlerMapping;
+import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.sqlserver.sql.SqlHandlerImpl;
 
 /**
@@ -20,6 +20,6 @@ public final class SqlServerDialect extends AbstractDialect{
 	@Override
 	protected void initialize() {
 		super.sqlHandler = new SqlHandlerImpl();
-		super.dataTypeHandlerMapping = new DataTypeHandlerMapping();
+		super.dataTypeHandlerMapping = new SqlServerDataTypeHandlerMapping();
 	}
 }

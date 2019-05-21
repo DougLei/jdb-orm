@@ -19,7 +19,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	
 	public AbstractDataTypeHandlerMapping() {
 		ClassScanner cs = new ClassScanner();
-		List<String> classPaths = cs.scan(getResultsetColumnDataTypeHandlerBasePackage());
+		List<String> classPaths = cs.scan(getClass().getPackage().getName() + ".resultset.columntype");
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
@@ -31,12 +31,6 @@ public abstract class AbstractDataTypeHandlerMapping{
 		}
 		cs.destroy();
 	}
-	
-	/**
-	 * 获取java.sql.ResultSet columnType类型的DataTypeHandler的根包路径
-	 * @return
-	 */
-	protected abstract String getResultsetColumnDataTypeHandlerBasePackage();
 	
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);

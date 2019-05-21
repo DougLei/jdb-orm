@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlMetadata;
-import com.douglei.database.metadata.sql.SqlParameterMetadata;
 import com.douglei.database.sql.statement.LocalRunDialect;
-import com.douglei.database.sql.statement.entity.InputSqlParameter;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 
 /**
@@ -29,55 +27,16 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		}
 		
 		executeSqlCount = contents.size();
-		executeSqls = new ArrayList<String>(executeSqlCount);
-		parametersList = new ArrayList<List<Object>>(executeSqlCount);
+		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
-		List<SqlParameterMetadata> sqlParameters;
 		for (SqlContentMetadata content : contents) {
-			sqlParameters = content.getSqlParameterOrders();
-			if(sqlParameters == null || sqlParameters.size() == 0) {
-				addExecuteSql(content.getContent());
-				addParameters(null);
-			}else {
-				setExecuteSql(content.getContent(), content.getPlaceholderCount(), sqlParameters, sqlParameterMap);
-			}
+			executeSqls.add(new ExecuteSql(content, sqlParameterMap));
 		}
 	}
 	
-	// 设置 executeSql 和 parameters, 将结果add到executeSqls和parametersList集合中
-	private void setExecuteSql(String content, int placeholderCount, List<SqlParameterMetadata> sqlParameters, Map<String, Object> sqlParameterMap) {
-		List<Object> parameters = new ArrayList<Object>(placeholderCount);
-		
-		Object value = null;
-		for (SqlParameterMetadata parameter : sqlParameters) {
-			value = sqlParameterMap.get(parameter.getName());
-			
-			if(parameter.isUsePlaceholder()) {
-				parameters.add(new InputSqlParameter(value, parameter.getDataTypeHandler()));
-			}else {
-				content = content.replaceFirst("\\$\\{"+parameter.getName()+"\\}\\$", parameter.getPlaceholderPrefix()+value+parameter.getPlaceholderSuffix());
-			}
-		}
-
-		addExecuteSql(content);
-		addParameters(parameters);
-	}
-	
-	private void addExecuteSql(String sqlContent) {
-		logger.debug("要执行的sql content= {}", sqlContent);
-		executeSqls.add(sqlContent);
-	}
-	private void addParameters(List<Object> parameters) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("对应的parameters= {}", parameters==null?"无参数": parameters.toString());
-		}
-		parametersList.add(parameters);
-	}
-
 	private int executeSqlCount;
 	private int executeSqlIndex; // 从0开始
-	private List<String> executeSqls;
-	private List<List<Object>> parametersList;
+	private List<ExecuteSql> executeSqls;
 	
 	@Override
 	public int executeSqlCount() {
@@ -95,7 +54,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取第{}个 executeSql", executeSqlIndex+1);
 		}
-		return executeSqls.get(executeSqlIndex);
+		return executeSqls.get(executeSqlIndex).getContent();
 	}
 
 	@Override
@@ -103,7 +62,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取第{}个 parameters", executeSqlIndex+1);
 		}
-		return parametersList.get(executeSqlIndex);
+		return executeSqls.get(executeSqlIndex).getParameters();
 	}
 
 }
