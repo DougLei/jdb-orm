@@ -1,6 +1,7 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate;
 
-import org.dom4j.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -16,14 +17,15 @@ public class XmlSqlMetadataValidate implements MetadataValidate {
 
 	@Override
 	public Metadata doValidate(Object obj) throws MetadataValidateException {
-		return doValidate((Element)obj);
+		return doValidate((Node)obj);
 	}
 	
-	private SqlMetadata doValidate(Element element) {
-		String name = element.attributeValue("name");
+	private SqlMetadata doValidate(Node sqlNode) {
+		NamedNodeMap attributeMap = sqlNode.getAttributes();
+		String name = attributeMap.getNamedItem("name").getNodeValue();
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
 		}
-		return new SqlMetadata(element.attributeValue("namespace"), name);
+		return new SqlMetadata(attributeMap.getNamedItem("namespace").getNodeValue(), name);
 	}
 }

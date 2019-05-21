@@ -1,17 +1,19 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping.sql;
 
-import java.util.List;
-
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.sql.SqlMapping;
+import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReader;
 import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
-import com.douglei.configuration.impl.xml.util.ElementUtil;
+import com.douglei.configuration.impl.xml.util.NotExistsElementException;
+import com.douglei.configuration.impl.xml.util.RepeatElementException;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -35,11 +37,12 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		logger.debug("开始解析sql类型的映射文件: {}", configFileName);
 		
 		try {
-			Element sqlElement = ElementUtil.getNecessaryAndSingleElement("<sql>", rootElement.elements("sql"));
-			sqlMetadata = (SqlMetadata) sqlMetadataValidate.doValidate(sqlElement);
-			List<?> contents = getContents(sqlElement);
-			for (Object content : contents) {
-				sqlMetadata.addContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(content));
+			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
+			sqlMetadata = (SqlMetadata) sqlMetadataValidate.doValidate(sqlNode);
+			NodeList contentNodeList = getContents(sqlNode);
+			int length = contentNodeList.getLength();
+			for (int i=0;i<length ;i++) {
+				sqlMetadata.addContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
@@ -49,16 +52,31 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	}
 	
 	/**
-	 * 获取<content>元素集合
-	 * @param sqlElement
+	 * 获取唯一的<sql>元素
+	 * @param sqlNodeList
 	 * @return
 	 */
-	private List<?> getContents(Element sqlElement) {
-		List<?> contents = sqlElement.elements("content");
-		if(contents == null || contents.size() == 0) {
+	private Node getSqlNode(NodeList sqlNodeList) {
+		if(sqlNodeList == null || sqlNodeList.getLength() == 0) {
+			throw new NotExistsElementException("没有配置<sql>元素");
+		}
+		if(sqlNodeList.getLength() > 1) {
+			throw new RepeatElementException("<sql>元素最多只能配置一个");
+		}
+		return sqlNodeList.item(0);
+	}
+
+	/**
+	 * 获取<content>元素集合
+	 * @param sqlNode
+	 * @return
+	 */
+	private NodeList getContents(Node sqlNode) {
+		NodeList contentNodeList = LocalXmlConfigurationXMLReader.getContentNodeList(sqlNode);
+		if(contentNodeList == null || contentNodeList.getLength() == 0) {
 			throw new MetadataValidateException("至少有一个<content>元素");
 		}
-		return contents;
+		return contentNodeList;
 	}
 
 	@Override

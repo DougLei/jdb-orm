@@ -1,10 +1,9 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.dom4j.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import com.douglei.configuration.LocalConfigurationDialect;
 import com.douglei.database.dialect.DialectType;
@@ -12,7 +11,6 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.content.SqlNode;
 import com.douglei.database.metadata.sql.content.Type;
 import com.douglei.utils.StringUtil;
 
@@ -24,16 +22,17 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 
 	@Override
 	public Metadata doValidate(Object obj) throws MetadataValidateException {
-		return doValidate((Element)obj);
+		return doValidate((Node)obj);
 	}
 
-	private SqlContentMetadata doValidate(Element element) {
-		DialectType dialectType = getDialectType(element.attributeValue("dialect"));
-		Type type = getSqlContentType(element.attributeValue("type"));
+	private SqlContentMetadata doValidate(Node contentNode) {
+		NamedNodeMap attributeMap = contentNode.getAttributes();
+		
+		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect").getNodeValue());
+		Type type = getSqlContentType(attributeMap.getNamedItem("type").getNodeValue());
 		SqlContentMetadata sqlContentMetadata =  new SqlContentMetadata(dialectType, type);
 		
-		// TODO
-		List<SqlNode> sqlNodes = new ArrayList<SqlNode>();
+		
 		
 		
 		return sqlContentMetadata;

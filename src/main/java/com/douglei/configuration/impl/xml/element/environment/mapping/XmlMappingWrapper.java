@@ -35,7 +35,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 			try {
 				initialMappingStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
-					addMapping(XmlMappingFactory.newInstanceByXml_initial(mappingConfigFilePath));
+					addMapping(XmlMappingFactory.newInstance_initial(mappingConfigFilePath));
 				}
 			} catch (Exception e) {
 				throw e;
@@ -62,7 +62,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add mapping: {}", mappingConfigurationContent);
-			coverMapping(XmlMappingFactory.newInstanceByXml_dynamicAdd(mappingType, mappingConfigurationContent));
+			coverMapping(XmlMappingFactory.newInstance_dynamicAdd(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}

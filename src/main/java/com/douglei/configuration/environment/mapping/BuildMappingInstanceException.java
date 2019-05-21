@@ -1,7 +1,7 @@
 package com.douglei.configuration.environment.mapping;
 
 /**
- * build mapping实例异常
+ * build Mapping实例异常
  * @author DougLei
  */
 public class BuildMappingInstanceException extends RuntimeException{

@@ -1,20 +1,23 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping;
 
-import java.io.File;
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
-import com.douglei.configuration.environment.mapping.BuildMappingInstanceException;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReader;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
+import com.douglei.utils.CloseUtil;
 
 /**
  * 
@@ -31,23 +34,16 @@ public class XmlMappingFactory {
 	 * @param mappingConfigurationXmlFilePath
 	 * @param mappingConfigurationXmlFile
 	 * @return
+	 * @throws IOException 
+	 * @throws SAXException 
 	 * @throws DocumentException 
+	 * @throws FileNotFoundException 
 	 */
-	public static Mapping newInstanceByXml_initial(String mappingConfigurationXmlFilePath) throws DocumentException {
+	public static Mapping newInstance_initial(String mappingConfigurationXmlFilePath) throws FileNotFoundException, DocumentException, SAXException, IOException {
 		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationXmlFilePath, mappingType);
-		
-		switch(mappingType) {
-			case TABLE:
-				Document xmlDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(new File(mappingConfigurationXmlFilePath));
-				Element rootElement = xmlDocument.getRootElement();
-				return new XmlTableMapping(mappingConfigurationXmlFilePath, rootElement);
-			case SQL:
-				return null;
-		}
-		throw new BuildMappingInstanceException("没有匹配到对应的mappingType, 创建mapping实例失败");
+		return newInstance(mappingType, mappingConfigurationXmlFilePath, new FileInputStream(mappingConfigurationXmlFilePath));
 	}
-	
 	
 	/**
 	 * <pre>
@@ -58,19 +54,40 @@ public class XmlMappingFactory {
 	 * @param mappingConfigurationContent
 	 * @return
 	 * @throws DocumentException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static Mapping newInstanceByXml_dynamicAdd(MappingType mappingType, String mappingConfigurationContent) throws DocumentException {
+	public static Mapping newInstance_dynamicAdd(MappingType mappingType, String mappingConfigurationContent) throws DocumentException, SAXException, IOException {
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationContent, mappingType);
-		
-		switch(mappingType) {
-			case TABLE:
-				Document xmlDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(new StringReader(mappingConfigurationContent));
-				Element rootElement = xmlDocument.getRootElement();
-				return new XmlTableMapping(mappingConfigurationContent, rootElement);
-			case SQL:
-				return null;
+		return newInstance(mappingType, mappingConfigurationContent, new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")));
+	}
+	
+	/**
+	 * 创建mapping实例
+	 * @param mappingType
+	 * @param mappingConfigurationXmlName
+	 * @param input
+	 * @return
+	 * @throws DocumentException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
+	private static Mapping newInstance(MappingType mappingType, String mappingConfigurationXmlName, InputStream input) throws DocumentException, SAXException, IOException {
+		try {
+			switch(mappingType) {
+				case TABLE:
+					org.dom4j.Document tableDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(input);
+					org.dom4j.Element tableRootElement = tableDocument.getRootElement();
+					return new XmlTableMapping(mappingConfigurationXmlName, tableRootElement);
+				case SQL:
+					org.w3c.dom.Document sqlDocument = LocalXmlConfigurationXMLReader.getSqlMappingReader().parse(input);
+					org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
+					return new XmlSqlMapping(mappingConfigurationXmlName, sqlRootElement);
+			}
+			return null;
+		} finally {
+			CloseUtil.closeIO(input);
 		}
-		return null;
 	}
 }
