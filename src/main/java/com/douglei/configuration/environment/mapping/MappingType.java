@@ -5,13 +5,11 @@ package com.douglei.configuration.environment.mapping;
  * @author DougLei
  */
 public enum MappingType {
-	TABLE(1, ".tmp.xml"),
-	SQL(2, ".smp.xml");
+	TABLE(".tmp.xml"),
+	SQL(".smp.xml");
 	
-	private int id;
 	private String mappingFileSuffix;
-	private MappingType(int id, String mappingFileSuffix) {
-		this.id = id;
+	private MappingType(String mappingFileSuffix) {
 		this.mappingFileSuffix = mappingFileSuffix;
 	}
 
@@ -26,11 +24,20 @@ public enum MappingType {
 		return null;
 	}
 	
+	public static MappingType toValueByMappingConfigurationFileName(String mappingConfigurationFileName) {
+		if(mappingConfigurationFileName.endsWith(TABLE.mappingFileSuffix)) {
+			return TABLE;
+		}else if(mappingConfigurationFileName.endsWith(SQL.mappingFileSuffix)) {
+			return SQL;
+		}
+		throw new NullPointerException("传入的" + mappingConfigurationFileName + ", 没哟匹配到对应的MappingType");
+	}
+	
 	/**
-	 * 获取映射文件的后缀
+	 * 获取映射文件的后缀数组
 	 * @return
 	 */
-	public static String[] getFinalMappingFileSuffix() {
+	public static String[] getMappingFileSuffixArray() {
 		if(mappingFileSuffixArray == null) {
 			MappingType[] mts = MappingType.values();
 			int length = mts.length;
@@ -43,8 +50,4 @@ public enum MappingType {
 		return mappingFileSuffixArray;
 	}
 	private static String[] mappingFileSuffixArray;
-
-	public int getId() {
-		return id;
-	}
 }

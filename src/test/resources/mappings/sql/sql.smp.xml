@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mapping-configuration type="sql">
+<mapping-configuration>
 	<sql namespace="com.test" name="queryUser">
 		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
 			select * from sys_user
@@ -21,6 +21,10 @@
 				</where>
 				
 				and age = 23
+		</content>
+		
+		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
+			two
 		</content>
 	</sql>
 </mapping-configuration>

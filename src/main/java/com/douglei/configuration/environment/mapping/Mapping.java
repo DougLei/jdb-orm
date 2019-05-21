@@ -7,7 +7,6 @@ import com.douglei.database.metadata.Metadata;
  * @author DougLei
  */
 public interface Mapping {
-	
 	/**
 	 * 获取映射编码，绝对唯一
 	 * <pre>

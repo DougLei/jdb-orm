@@ -1,5 +1,6 @@
 package com.douglei.sessionfactory;
 
+import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.table.TableSession;
@@ -13,9 +14,10 @@ public interface SessionFactory {
 	
 	/**
 	 * 动态添加映射, 如果存在, 则覆盖
+	 * @param mappingType
 	 * @param mappingConfigurationContent
 	 */
-	void dynamicAddMapping(String mappingConfigurationContent);
+	void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
 	
 	/**
 	 * 动态移除映射

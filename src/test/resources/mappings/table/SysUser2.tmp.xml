@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mapping-configuration type="table">
+<mapping-configuration>
 	<table name="SYS_USER" class="com.douglei.test.session.SysUser">
 		<columns>
 			<column name="id" property="id" dataType="string" />

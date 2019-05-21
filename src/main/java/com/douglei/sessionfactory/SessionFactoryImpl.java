@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.Configuration;
 import com.douglei.configuration.LocalConfigurationDialect;
+import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.database.dialect.TransactionIsolationLevel;
@@ -38,9 +39,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicAddMapping(String mappingConfigurationContent) {
+	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		LocalConfigurationDialect.setDialect(environmentProperty.getDialect());
-		mappingWrapper.dynamicAddMapping(mappingConfigurationContent);
+		mappingWrapper.dynamicAddMapping(mappingType, mappingConfigurationContent);
 	}
 	
 	@Override

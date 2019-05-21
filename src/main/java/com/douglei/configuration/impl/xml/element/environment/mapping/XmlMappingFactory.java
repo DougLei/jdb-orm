@@ -1,17 +1,20 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping;
 
-import java.util.Arrays;
+import java.io.File;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.configuration.environment.mapping.BuildMappingInstanceException;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
-import com.douglei.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
+import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReader;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
-import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -21,28 +24,52 @@ public class XmlMappingFactory {
 	private static final Logger logger = LoggerFactory.getLogger(XmlMappingFactory.class);
 	
 	/**
-	 * 根据xml创建mapping实例
-	 * @param configFileName
-	 * @param xmlDocument
+	 * <pre>
+	 * 	根据xml创建mapping实例
+	 * 	在初始化时, 加载配置文件时, 创建mapping实例的方法
+	 * </pre>
+	 * @param mappingConfigurationXmlFilePath
+	 * @param mappingConfigurationXmlFile
 	 * @return
+	 * @throws DocumentException 
 	 */
-	public static Mapping newInstanceByXml(String configFileName, Document xmlDocument) {
-		Element rootElement = xmlDocument.getRootElement();
-		String type = rootElement.attributeValue("type");
-		if(StringUtil.isEmpty(type)) {
-			throw new NullPointerException("在文件["+configFileName+"]中, <mapping-configuration>中的type属性值不能为空, 目前支持的值包括: [" + Arrays.toString(MappingType.values())+"]");
-		}
-		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", configFileName, type);
+	public static Mapping newInstanceByXml_initial(String mappingConfigurationXmlFilePath) throws DocumentException {
+		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
+		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationXmlFilePath, mappingType);
 		
-		MappingType mappingType = MappingType.toValue(type);
-		if(mappingType == null) {
-			throw new NullPointerException("在文件["+configFileName+"]中, <mapping-configuration>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(MappingType.values()));
-		}
 		switch(mappingType) {
 			case TABLE:
-				return new XmlTableMapping(configFileName, rootElement);
+				Document xmlDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(new File(mappingConfigurationXmlFilePath));
+				Element rootElement = xmlDocument.getRootElement();
+				return new XmlTableMapping(mappingConfigurationXmlFilePath, rootElement);
 			case SQL:
-				return new XmlSqlMapping(configFileName, rootElement);
+				return null;
+		}
+		throw new BuildMappingInstanceException("没有匹配到对应的mappingType, 创建mapping实例失败");
+	}
+	
+	
+	/**
+	 * <pre>
+	 * 	根据xml创建mapping实例
+	 * 	系统运行后, 动态添加新的映射文件时, 创建mapping实例的方法
+	 * </pre>
+	 * @param mappingType
+	 * @param mappingConfigurationContent
+	 * @return
+	 * @throws DocumentException 
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static Mapping newInstanceByXml_dynamicAdd(MappingType mappingType, String mappingConfigurationContent) throws DocumentException {
+		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationContent, mappingType);
+		
+		switch(mappingType) {
+			case TABLE:
+				Document xmlDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(new StringReader(mappingConfigurationContent));
+				Element rootElement = xmlDocument.getRootElement();
+				return new XmlTableMapping(mappingConfigurationContent, rootElement);
+			case SQL:
+				return null;
 		}
 		return null;
 	}

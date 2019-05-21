@@ -41,9 +41,10 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * 动态添加映射, 如果存在, 则覆盖
+	 * @param mappingType
 	 * @param mappingConfigurationContent
 	 */
-	public abstract void dynamicAddMapping(String mappingConfigurationContent);
+	public abstract void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
 	
 	/**
 	 * 覆盖映射

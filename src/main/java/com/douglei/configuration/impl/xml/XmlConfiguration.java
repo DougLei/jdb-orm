@@ -61,7 +61,7 @@ public class XmlConfiguration implements Configuration {
 	public XmlConfiguration(InputStream in) {
 		logger.info("根据xml配置文件，初始化configuration实例");
 		try {
-			xmlDocument = LocalXmlConfigurationSAXReader.getConfigurationSAXReader().read(in);
+			xmlDocument = LocalXmlConfigurationXMLReader.getConfigurationSAXReader().read(in);
 			initXmlConfiguration();
 		} catch (DocumentException e) {
 			e.printStackTrace();

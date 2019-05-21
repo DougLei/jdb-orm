@@ -1,7 +1,5 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.List;
 
 import org.dom4j.Element;
@@ -12,7 +10,6 @@ import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
-import com.douglei.configuration.impl.xml.LocalXmlConfigurationSAXReader;
 import com.douglei.instances.scanner.FileScanner;
 import com.douglei.utils.StringUtil;
 
@@ -29,7 +26,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public XmlMappingWrapper(List<?> scanElements, List<?> pathElements, MappingStore mappingStore) throws Exception {
 		super(mappingStore);
 		
-		FileScanner fileScanner = new FileScanner(MappingType.getFinalMappingFileSuffix());
+		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
 		scanMappingFiles(fileScanner, scanElements, "base-path");
 		scanMappingFiles(fileScanner, pathElements, "path");
 		
@@ -38,7 +35,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 			try {
 				initialMappingStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
-					addMapping(XmlMappingFactory.newInstanceByXml(mappingConfigFilePath, LocalXmlConfigurationSAXReader.getMappingSAXReader().read(new File(mappingConfigFilePath))));
+					addMapping(XmlMappingFactory.newInstanceByXml_initial(mappingConfigFilePath));
 				}
 			} catch (Exception e) {
 				throw e;
@@ -62,10 +59,10 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public void dynamicAddMapping(String mappingConfigurationContent) {
+	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add mapping: {}", mappingConfigurationContent);
-			coverMapping(XmlMappingFactory.newInstanceByXml(mappingConfigurationContent, LocalXmlConfigurationSAXReader.getMappingSAXReader().read(new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")))));
+			coverMapping(XmlMappingFactory.newInstanceByXml_dynamicAdd(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}
