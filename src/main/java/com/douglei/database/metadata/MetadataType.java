@@ -10,5 +10,7 @@ public enum MetadataType {
 	
 	SQL,
 	SQL_CONTENT,
-	SQL_PARAMETER;
+	SQL_PARAMETER,
+	
+	SQL_CONTENT_TEXT_NODE;
 }

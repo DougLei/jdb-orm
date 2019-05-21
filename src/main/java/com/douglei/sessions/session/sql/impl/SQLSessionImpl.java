@@ -126,4 +126,15 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		}while(executionHolder.next());
 		return updateRowCount;
 	}
+
+	@Override
+	public Object executeProcedure(String namespace, String name) {
+		return executeProcedure(namespace, name, null);
+	}
+
+	@Override
+	public Object executeProcedure(String namespace, String name, Map<String, Object> sqlParameterMap) {
+		// TODO executeProcedure(String namespace, String name, Map<String, Object> sqlParameterMap)
+		return null;
+	}
 }

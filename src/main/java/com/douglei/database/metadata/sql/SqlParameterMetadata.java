@@ -162,4 +162,14 @@ public class SqlParameterMetadata implements Metadata{
 				+ usePlaceholder + ", placeholderPrefix=" + placeholderPrefix + ", placeholderSuffix="
 				+ placeholderSuffix + "]";
 	}
+	
+	/**
+	 * 获取值
+	 * @param sqlParameterMap
+	 * @return
+	 */
+	public Object getValue(Map<String, Object> sqlParameterMap) {
+		// TODO 后续可以加入默认值
+		return sqlParameterMap.get(name);
+	}
 }
