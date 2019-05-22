@@ -17,7 +17,6 @@ import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.utils.StringUtil;
 
 /**
  * table 映射
@@ -39,7 +38,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			Element tableElement = ElementUtil.getNecessaryAndSingleElement("<table>", rootElement.elements("table"));
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
-			setPrimaryKeyColumn(ElementUtil.getNecessaryAndSingleElement(" <primary-key>", tableElement.elements("primary-key")));
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}
@@ -64,31 +62,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			columnMetadata.fixPropertyNameValue(classNameIsNull);
 			tableMetadata.addColumnMetadata(columnMetadata);
-		}
-	}
-	
-	/**
-	 * 设置主键列元数据
-	 * @param primaryKeyElement
-	 */
-	private void setPrimaryKeyColumn(Element primaryKeyElement) {
-		List<?> elems = primaryKeyElement.elements("column-name");
-		if(elems == null || elems.size() == 0) {
-			throw new NullPointerException("<primary-key>元素下至少配置一个<column-name>元素，标明主键列");
-		}
-		
-		String primaryKeyColumnName = null;
-		ColumnMetadata columnMetadata = null;
-		for (Object object : elems) {
-			primaryKeyColumnName = ((Element)object).attributeValue("value");
-			if(StringUtil.isEmpty(primaryKeyColumnName)) {
-				throw new NullPointerException("<primary-key>元素下配置的<column-name>元素中, value属性值不能为空");
-			}
-			columnMetadata = tableMetadata.getColumnMetadata(primaryKeyColumnName);
-			if(columnMetadata == null) {
-				throw new NullPointerException("<primary-key>元素下配置的<column-name value=\""+primaryKeyColumnName+"\">, 不存名为["+primaryKeyColumnName+"]的列信息");
-			}
-			tableMetadata.addPrimaryKeyColumnMetadata(columnMetadata);
 		}
 	}
 	

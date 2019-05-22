@@ -48,13 +48,15 @@ public class TableMetadata implements Metadata{
 			columns = new HashMap<String, ColumnMetadata>();
 		}
 		columns.put(columnMetadata.getCode(), columnMetadata);
+		addPrimaryKeyColumnMetadata(columnMetadata);
 	}
-	
-	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
-		if(primaryKeyColumns == null) {
-			primaryKeyColumns = new HashMap<String, ColumnMetadata>(3);
+	private void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
+		if(columnMetadata.isPrimaryKey()) {
+			if(primaryKeyColumns == null) {
+				primaryKeyColumns = new HashMap<String, ColumnMetadata>(3);
+			}
+			primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
 		}
-		primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
 	}
 	
 	/**

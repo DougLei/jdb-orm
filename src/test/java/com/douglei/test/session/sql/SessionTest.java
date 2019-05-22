@@ -17,7 +17,7 @@ public class SessionTest {
 	@Test
 	public void queryTest() {
 		Map<String, Object> p = new HashMap<String, Object>();
-		p.put("name", "哈哈7");
+		p.put("name", "哈哈");
 		
 		List<Map<String, Object>> list = session.query("com.test", "queryUser", p);
 		System.out.println(list.size());

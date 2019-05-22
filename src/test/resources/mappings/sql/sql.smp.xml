@@ -4,27 +4,6 @@
 		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
 			select * from sys_user
 				where name = ${name, datatype=string}
-				
-				<if test="name == 哈哈">
-					and sex = '男'
-				</if>
-				
-				someblock...........
-				
-				<if test="name2 == 哈哈">
-					and sex = '男'
-				</if>
-				
-				<where>
-					where
-					<append>append</append>
-				</where>
-				
-				and age = 23
-		</content>
-		
-		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
-			two
 		</content>
 	</sql>
 </mapping-configuration>

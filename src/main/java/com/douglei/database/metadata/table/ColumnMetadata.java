@@ -20,27 +20,28 @@ public class ColumnMetadata implements Metadata{
 	 * 映射的代码类中的属性名
 	 */
 	private String property;
-	private boolean propertyIsNull;
 	
 	/**
 	 * 数据类型
 	 */
 	private DataTypeHandler dataTypeHandler;
 	
-	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String property) {
+	/**
+	 * 是否是主键
+	 */
+	private boolean primaryKey;
+	
+	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String property, boolean primaryKey) {
 		this.name = name.toUpperCase();
 		this.dataTypeHandler = dataTypeHandler;
+		this.primaryKey = primaryKey;
 		setProperty(property);
 		setCode();
 	}
 	private void setProperty(String property) {
-		if(StringUtil.isEmpty(property)) {
-			propertyIsNull = true;
-			if(property != null) {
-				property = null;
-			}
+		if(StringUtil.notEmpty(property)) {
+			this.property = property;
 		}
-		this.property = property;
 	}
 	
 	/**
@@ -73,14 +74,14 @@ public class ColumnMetadata implements Metadata{
 	 */
 	public void fixPropertyNameValue(boolean classNameIsNull) {
 		if(classNameIsNull) {
-			if(!propertyIsNull) {
-				propertyIsNull = true;
+			if(property != null) {
 				property = null;
+				setCode();
 			}
 		}else {
-			if(propertyIsNull) {
-				propertyIsNull = false;
+			if(property == null) {
 				property = NamingUtil.columnName2PropertyName(name);
+				setCode();
 			}
 		}
 	}
@@ -93,6 +94,9 @@ public class ColumnMetadata implements Metadata{
 	}
 	public DataTypeHandler getDataType() {
 		return dataTypeHandler;
+	}
+	public boolean isPrimaryKey() {
+		return primaryKey;
 	}
 	
 	@Override

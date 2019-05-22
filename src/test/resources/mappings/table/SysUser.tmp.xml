@@ -2,14 +2,10 @@
 <mapping-configuration>
 	<table name="SYS_USER">
 		<columns>
-			<column name="id" propertyName="id" dataType="string" />
+			<column name="id" propertyName="id" dataType="string" primaryKey="true" />
 			<column name="name" propertyName="name" dataType="string" />
 			<column name="age" propertyName="age" dataType="integer" />
 			<column name="sex" propertyName="sex" dataType="string" />
 		</columns>
-		
-		<primary-key>
-			<column-name value="id" />
-		</primary-key>
 	</table>
 </mapping-configuration>
