@@ -19,19 +19,19 @@ public class ExecuteSql {
 	public ExecuteSql(SqlContentMetadata contentMetadata, Map<String, Object> sqlParameterMap) {
 		StringBuilder sqlContent = new StringBuilder();
 		
-		List<SqlNode> sqlNodes = contentMetadata.getSqlNodes();
+		List<SqlNode> rootSqlNodes = contentMetadata.getRootSqlNodes();
 		
-		ExecuteSqlNode executeSqlNode = null;
-		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.isMatching(sqlParameterMap)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameterMap);
-				if(executeSqlNode.existsParameter()) {
+		ExecuteSqlNode rootExecuteSqlNode = null;
+		for (SqlNode rootSqlNode : rootSqlNodes) {
+			if(rootSqlNode.matching(sqlParameterMap)) {
+				rootExecuteSqlNode = rootSqlNode.getExecuteSqlNode(sqlParameterMap);
+				if(rootExecuteSqlNode.existsParameter()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();
 					}
-					parameters.addAll(executeSqlNode.getParameters());
+					parameters.addAll(rootExecuteSqlNode.getParameters());
 				}
-				sqlContent.append(executeSqlNode.getContent()).append(" ");
+				sqlContent.append(rootExecuteSqlNode.getContent()).append(" ");
 			}
 		}
 		

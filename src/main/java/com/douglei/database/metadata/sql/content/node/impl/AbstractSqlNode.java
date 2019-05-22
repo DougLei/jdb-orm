@@ -25,7 +25,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public AbstractSqlNode(String content) {
-		this.content = content;
+		this.content = content.trim();
 		resolvingParameters();
 	}
 	

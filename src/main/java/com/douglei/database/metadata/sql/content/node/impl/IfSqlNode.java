@@ -18,7 +18,7 @@ public class IfSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean isMatching(Map<String, Object> sqlParameterMap) {
+	public boolean matching(Map<String, Object> sqlParameterMap) {
 		if(StringUtil.isEmpty(expression)) {
 			return true;
 		}

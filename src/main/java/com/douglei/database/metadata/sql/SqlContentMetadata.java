@@ -16,28 +16,28 @@ public class SqlContentMetadata implements Metadata{
 	private String dialectTypeCode;
 	private Type type;
 	
-	private List<SqlNode> sqlNodes;
+	private List<SqlNode> rootSqlNodes;
 	
 	public SqlContentMetadata(DialectType dialectType, Type type) {
 		this.dialectTypeCode = dialectType.getCode();
 		this.type = type;
 	}
 	
-	public void addSqlNode(SqlNode sqlNode) {
-		if(sqlNode == null) {
+	public void addRootSqlNode(SqlNode rootSqlNode) {
+		if(rootSqlNode == null) {
 			return;
 		}
-		if(sqlNodes == null) {
-			sqlNodes = new ArrayList<SqlNode>();
+		if(rootSqlNodes == null) {
+			rootSqlNodes = new ArrayList<SqlNode>();
 		}
-		sqlNodes.add(sqlNode);
+		rootSqlNodes.add(rootSqlNode);
 	}
 	
 	public Type getType() {
 		return type;
 	}
-	public List<SqlNode> getSqlNodes() {
-		return sqlNodes;
+	public List<SqlNode> getRootSqlNodes() {
+		return rootSqlNodes;
 	}
 
 	/**

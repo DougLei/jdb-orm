@@ -14,12 +14,12 @@ import com.douglei.utils.StringUtil;
  */
 public class TrimSqlNode implements SqlNode {
 	private String prefix;
-	private String[] prefixoverride;
-	
 	private String suffix;
+	
+	private String[] prefixoverride;
 	private String[] suffixoverride;
 	
-	public TrimSqlNode(String prefix, String prefixoverride, String suffix, String suffixoverride) {
+	public TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
 		this.prefix = prefix;
 		this.suffix = suffix;
 		if(StringUtil.notEmpty(prefixoverride)) {
@@ -41,16 +41,56 @@ public class TrimSqlNode implements SqlNode {
 		sqlNodes.add(sqlNode);
 	}
 	
-	private Map<String, Object> sqlParameterMap;
 	@Override
-	public boolean isMatching(Map<String, Object> sqlParameterMap) {
-		this.sqlParameterMap = sqlParameterMap;
+	public boolean matching(Map<String, Object> sqlParameterMap) {
 		return true;
 	}
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sqlContent = new StringBuilder();
+		List<Object> parameters = null;
+		
+		ExecuteSqlNode executeSqlNode = null;
+		for (SqlNode sqlNode : sqlNodes) {
+			if(sqlNode.matching(sqlParameterMap)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameterMap);
+				if(executeSqlNode.existsParameter()) {
+					if(parameters == null) {
+						parameters = new ArrayList<Object>();
+					}
+					parameters.addAll(executeSqlNode.getParameters());
+				}
+				sqlContent.append(executeSqlNode.getContent()).append(" ");
+			}
+		}
+		return new ExecuteSqlNode(getTrimContent(sqlContent), parameters);
+	}
+
+	private String getTrimContent(StringBuilder sqlContent) {
+		String trimContent = sqlContent.toString();
+		if(prefixoverride != null) {
+			for (String po : prefixoverride) {
+				if(trimContent.startsWith(po)) {
+					trimContent = trimContent.substring(0, po.length());
+					break;
+				}
+			}
+		}
+		if(suffixoverride != null) {
+			for (String so : suffixoverride) {
+				if(trimContent.endsWith(so)) {
+					trimContent = trimContent.substring(0, trimContent.length()-so.length());
+					break;
+				}
+			}
+		}
+		if(prefix != null) {
+			trimContent = prefix + " " + trimContent;
+		}
+		if(suffix != null) {
+			trimContent = trimContent + " " + suffix;
+		}
+		return trimContent;
 	}
 }

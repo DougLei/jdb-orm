@@ -25,8 +25,8 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 		NamedNodeMap attributeMap = node.getAttributes();
 		TrimSqlNode trimSqlNode = new TrimSqlNode(
 				attributeMap.getNamedItem("prefix").getNodeValue(),
-				attributeMap.getNamedItem("prefixoverride").getNodeValue(),
 				attributeMap.getNamedItem("suffix").getNodeValue(),
+				attributeMap.getNamedItem("prefixoverride").getNodeValue(),
 				attributeMap.getNamedItem("suffixoverride").getNodeValue());
 		
 		NodeList childrens = node.getChildNodes();

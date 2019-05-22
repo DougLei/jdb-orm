@@ -13,7 +13,7 @@ public class TextSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean isMatching(Map<String, Object> sqlParameterMap) {
+	public boolean matching(Map<String, Object> sqlParameterMap) {
 		return true;
 	}
 }

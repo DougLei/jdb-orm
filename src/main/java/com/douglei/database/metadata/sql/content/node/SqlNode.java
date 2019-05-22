@@ -13,7 +13,7 @@ public interface SqlNode {
 	 * @param sqlParameterMap
 	 * @return
 	 */
-	boolean isMatching(Map<String, Object> sqlParameterMap);
+	boolean matching(Map<String, Object> sqlParameterMap);
 	
 	/**
 	 * 获取可执行的sql node

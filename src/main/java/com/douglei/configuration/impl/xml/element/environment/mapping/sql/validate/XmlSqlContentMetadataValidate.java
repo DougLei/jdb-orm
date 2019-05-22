@@ -39,7 +39,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		Node node = null;
 		for(int i=0;i<length;i++) {
 			node = children.item(i);
-			sqlContentMetadata.addSqlNode(SqlNodeHandlerMapping.doHandler(node));
+			sqlContentMetadata.addRootSqlNode(SqlNodeHandlerMapping.doHandler(node));
 		}
 		return sqlContentMetadata;
 	}

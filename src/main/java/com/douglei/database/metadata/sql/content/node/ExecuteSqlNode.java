@@ -35,6 +35,11 @@ public class ExecuteSqlNode {
 		this.content = content;
 	}
 	
+	public ExecuteSqlNode(String finalContent, List<Object> parameters) {
+		this.content = finalContent;
+		this.parameters = parameters;
+	}
+
 	public String getContent() {
 		return content;
 	}
