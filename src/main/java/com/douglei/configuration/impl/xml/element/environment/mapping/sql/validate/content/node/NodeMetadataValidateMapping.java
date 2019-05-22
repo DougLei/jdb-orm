@@ -15,11 +15,11 @@ import com.douglei.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public class NodeMetadataValidateMapping {
-	private static Map<Short, NodeMetadataValidate> NODE_METADATA_VALIDATE_MAPPING;
+	private static Map<String, NodeMetadataValidate> NODE_METADATA_VALIDATE_MAPPING;
 	static {
 		ClassScanner cs = new ClassScanner();
 		List<String> classPaths = cs.scan(NodeMetadataValidateMapping.class.getPackage().getName() + ".impl");
-		NODE_METADATA_VALIDATE_MAPPING = new HashMap<Short, NodeMetadataValidate>(classPaths.size());
+		NODE_METADATA_VALIDATE_MAPPING = new HashMap<String, NodeMetadataValidate>(classPaths.size());
 		
 		Object obj = null;
 		NodeMetadataValidate nodeMetadataValidate = null;
@@ -27,14 +27,14 @@ public class NodeMetadataValidateMapping {
 			obj = ConstructorUtil.newInstance(cp);
 			if(obj instanceof NodeMetadataValidate) {
 				nodeMetadataValidate= (NodeMetadataValidate) obj;
-				NODE_METADATA_VALIDATE_MAPPING.put(nodeMetadataValidate.getNodeType(), nodeMetadataValidate);
+				NODE_METADATA_VALIDATE_MAPPING.put(nodeMetadataValidate.getNodeName(), nodeMetadataValidate);
 			}
 		}
 		cs.destroy();
 	}
 	
 	public static NodeMetadata doValidate(Node node) {
-		NodeMetadataValidate nodeMetadataValidate = NODE_METADATA_VALIDATE_MAPPING.get(node.getNodeType());
+		NodeMetadataValidate nodeMetadataValidate = NODE_METADATA_VALIDATE_MAPPING.get(node.getNodeName());
 		if(nodeMetadataValidate == null) {
 			throw new NullPointerException("目前系统不支持nodeType=["+node.getNodeType()+"]的元素");
 		}

@@ -12,7 +12,7 @@ import com.douglei.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class TextNodeMetadataValidate implements NodeMetadataValidate {
+public class IfNodeMetadataValidate implements NodeMetadataValidate {
 
 	@Override
 	public Metadata doValidate(Object obj) throws MetadataValidateException {
@@ -29,6 +29,6 @@ public class TextNodeMetadataValidate implements NodeMetadataValidate {
 
 	@Override
 	public String getNodeName() {
-		return "#text";
+		return "if";
 	}
 }

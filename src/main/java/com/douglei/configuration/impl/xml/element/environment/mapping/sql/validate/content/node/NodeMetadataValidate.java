@@ -9,9 +9,8 @@ import com.douglei.database.metadata.MetadataValidate;
 public interface NodeMetadataValidate extends MetadataValidate{
 
 	/**
-	 * 获取节点类型
-	 * @see org.w3c.dom.Node
+	 * @see org.w3c.dom.Node.getNodeName()
 	 * @return
 	 */
-	short getNodeType();
+	String getNodeName();
 }

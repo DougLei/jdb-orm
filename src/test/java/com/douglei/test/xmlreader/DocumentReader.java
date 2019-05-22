@@ -56,7 +56,7 @@ public class DocumentReader {
 			}
 			
 			System.out.println("----------------------------------------------------------------------------------------------");
-			System.out.println(node.getNodeName() + "\t" + node.getNodeType() + "\t" + node.getNodeValue());
+			System.out.println(node.getNodeName() + "\t"+node.getNodeName().equals("if") + "\t" + node.getNodeType() + "\t" + node.getNodeValue());
 		}
 		
 	} 
