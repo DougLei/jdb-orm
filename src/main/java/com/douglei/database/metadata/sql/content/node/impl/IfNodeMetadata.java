@@ -3,7 +3,7 @@ package com.douglei.database.metadata.sql.content.node.impl;
 import java.util.Map;
 
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.sessions.LocalRunData;
+import com.douglei.sessions.LocalRunDataHolder;
 
 /**
  * 
@@ -19,7 +19,7 @@ public class IfNodeMetadata extends AbstractNodeMetadata {
 
 	@Override
 	public boolean isMatching(Map<String, Object> sqlParameterMap) {
-		return LocalRunData.getExpressionResolverHandler().resolveToBoolean(expression, sqlParameterMap);
+		return LocalRunDataHolder.getExpressionResolverHandler().resolveToBoolean(expression, sqlParameterMap);
 	}
 
 	@Override

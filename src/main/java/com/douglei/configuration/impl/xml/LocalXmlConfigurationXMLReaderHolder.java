@@ -13,10 +13,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 当前系统进行xml配置解析时XMLReader对象
+ * 当前系统进行xml配置解析时XMLReader对象持有者
  * @author DougLei
  */
-public class LocalXmlConfigurationXMLReader {
+public class LocalXmlConfigurationXMLReaderHolder {
 	private static final ThreadLocal<XmlReader> XML_READER = new ThreadLocal<XmlReader>();
 	
 	private static XmlReader getXmlReader() {

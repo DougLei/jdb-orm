@@ -12,7 +12,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.configuration.LocalConfigurationDialect;
+import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.Environment;
@@ -145,7 +145,7 @@ public class XmlEnvironment implements Environment{
 			if(elements.size() > 1) {
 				throw new RepeatMappingsElementException("<environment>下的<mappings>元素最多只能配置一个");
 			}
-			LocalConfigurationDialect.setDialect(environmentProperty.getDialect());
+			LocalConfigurationDialectHolder.setDialect(environmentProperty.getDialect());
 			
 			Element elem = ((Element) elements.get(0));
 			mappingWrapper = new XmlMappingWrapper(elem.elements("mapping-scan"), elem.elements("mapping"), environmentProperty.getMappingStore());

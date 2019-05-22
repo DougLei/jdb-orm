@@ -4,7 +4,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.configuration.LocalConfigurationDialect;
+import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
@@ -42,7 +42,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			return ClassDataTypeHandlerMapping.getDefaultDataTypeHandler();
 		}
 		try {
-			return LocalConfigurationDialect.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+			return LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值异常: " + e.getMessage());
 		}

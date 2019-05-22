@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
-import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReader;
+import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReaderHolder;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
 import com.douglei.utils.CloseUtil;
@@ -77,11 +77,11 @@ public class XmlMappingFactory {
 		try {
 			switch(mappingType) {
 				case TABLE:
-					org.dom4j.Document tableDocument = LocalXmlConfigurationXMLReader.getTableMappingReader().read(input);
+					org.dom4j.Document tableDocument = LocalXmlConfigurationXMLReaderHolder.getTableMappingReader().read(input);
 					org.dom4j.Element tableRootElement = tableDocument.getRootElement();
 					return new XmlTableMapping(mappingConfigurationXmlName, tableRootElement);
 				case SQL:
-					org.w3c.dom.Document sqlDocument = LocalXmlConfigurationXMLReader.getSqlMappingReader().parse(input);
+					org.w3c.dom.Document sqlDocument = LocalXmlConfigurationXMLReaderHolder.getSqlMappingReader().parse(input);
 					org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
 					return new XmlSqlMapping(mappingConfigurationXmlName, sqlRootElement);
 			}

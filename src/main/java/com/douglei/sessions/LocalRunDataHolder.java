@@ -4,10 +4,10 @@ import com.douglei.database.dialect.Dialect;
 import com.douglei.instances.expression.resolver.ExpressionResolverHandler;
 
 /**
- * 当前系统运行时所需要的相关数据对象实例
+ * 当前系统运行时所需要的相关数据持有者
  * @author DougLei
  */
-public class LocalRunData {
+public class LocalRunDataHolder {
 	private static final ThreadLocal<RunData> RUN_DATA = new ThreadLocal<RunData>();
 	
 	private static RunData getRunData() {

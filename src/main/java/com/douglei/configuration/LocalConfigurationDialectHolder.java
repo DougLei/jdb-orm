@@ -3,10 +3,10 @@ package com.douglei.configuration;
 import com.douglei.database.dialect.Dialect;
 
 /**
- * 当前系统进行配置解析时Dialect对象
+ * 当前系统进行配置解析时Dialect对象持有者
  * @author DougLei
  */
-public class LocalConfigurationDialect {
+public class LocalConfigurationDialectHolder {
 	private static final ThreadLocal<Dialect> DIALECT = new ThreadLocal<Dialect>();
 	
 	public static void setDialect(Dialect dialect) {
