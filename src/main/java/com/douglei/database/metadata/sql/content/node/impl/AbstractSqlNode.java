@@ -2,11 +2,13 @@ package com.douglei.database.metadata.sql.content.node.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.douglei.database.metadata.sql.MatchingSqlParameterException;
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
+import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 
 /**
@@ -67,13 +69,9 @@ public abstract class AbstractSqlNode implements SqlNode{
 			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
 		}
 	}
-	
+
 	@Override
-	public String getContent() {
-		return content;
-	}
-	@Override
-	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders() {
-		return sqlParameterByDefinedOrders;
+	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
+		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameterMap);
 	}
 }

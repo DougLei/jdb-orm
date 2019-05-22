@@ -34,10 +34,13 @@ public class SqlNodeHandlerMapping {
 	}
 	
 	public static SqlNode doHandler(Node node) {
-		SqlNodeHandler sqlNodeHandler = SQL_NODE_HANDLER_MAPPING.get(node.getNodeName());
-		if(sqlNodeHandler == null) {
-			throw new NullPointerException("目前系统不支持nodeName=["+node.getNodeName()+"]的元素");
+		if(node.getNodeType() != Node.COMMENT_NODE) {
+			SqlNodeHandler sqlNodeHandler = SQL_NODE_HANDLER_MAPPING.get(node.getNodeName());
+			if(sqlNodeHandler == null) {
+				throw new NullPointerException("目前系统不支持nodeName=["+node.getNodeName()+"]的元素");
+			}
+			return (SqlNode) sqlNodeHandler.doHandler(node);
 		}
-		return (SqlNode) sqlNodeHandler.doHandler(node);
+		return null;
 	}
 }

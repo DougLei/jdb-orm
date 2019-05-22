@@ -1,9 +1,6 @@
 package com.douglei.database.metadata.sql.content.node;
 
-import java.util.List;
 import java.util.Map;
-
-import com.douglei.database.metadata.sql.SqlParameterMetadata;
 
 /**
  * 
@@ -11,14 +8,17 @@ import com.douglei.database.metadata.sql.SqlParameterMetadata;
  */
 public interface SqlNode {
 	
-	String getContent();
-	List<SqlParameterMetadata> getSqlParameterByDefinedOrders();
-	
 	/**
 	 * 该node是否满足匹配
 	 * @param sqlParameterMap
 	 * @return
 	 */
 	boolean isMatching(Map<String, Object> sqlParameterMap);
-
+	
+	/**
+	 * 获取可执行的sql node
+	 * @param sqlParameterMap
+	 * @return
+	 */
+	ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap);
 }

@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.SqlParameterMetadata;
+import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
-import com.douglei.database.sql.statement.entity.InputSqlParameter;
 
 /**
  * 要执行的sql实体
@@ -22,29 +21,17 @@ public class ExecuteSql {
 		
 		List<SqlNode> sqlNodes = contentMetadata.getSqlNodes();
 		
-		String tmpContent = null;
-		List<SqlParameterMetadata> parametersInNode = null;
-		Object parameterValue = null;
+		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.isMatching(sqlParameterMap)) {
-				tmpContent = sqlNode.getContent();
-				parametersInNode = sqlNode.getSqlParameterByDefinedOrders();
-				
-				if(parametersInNode != null) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameterMap);
+				if(executeSqlNode.existsParameter()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();
 					}
-					
-					for (SqlParameterMetadata parameter : parametersInNode) {
-						parameterValue = parameter.getValue(sqlParameterMap);
-						if(parameter.isUsePlaceholder()) {
-							parameters.add(new InputSqlParameter(parameterValue, parameter.getDataTypeHandler()));
-						}else {
-							tmpContent = tmpContent.replaceFirst("\\$\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
-						}
-					}
+					parameters.addAll(executeSqlNode.getParameters());
 				}
-				sqlContent.append(tmpContent).append(" ");
+				sqlContent.append(executeSqlNode.getContent()).append(" ");
 			}
 		}
 		
