@@ -27,6 +27,22 @@ public interface SqlSession extends BasicSession{
 	List<Map<String, Object>> query(String sql, List<Object> parameters);
 	
 	/**
+	 * 执行批量查询
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> List<T> query(Class<T> targetClass, String sql);
+	/**
+	 * 执行批量查询
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 
+	 */
+	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
+	
+	/**
 	 * 执行唯一查询
 	 * @param sql
 	 * @return 返回<列名:值>的map集合
@@ -39,6 +55,22 @@ public interface SqlSession extends BasicSession{
 	 * @return 返回<列名:值>的map集合
 	 */
 	Map<String, Object> uniqueQuery(String sql, List<Object> parameters);
+	
+	/**
+	 * 执行唯一查询
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> T uniqueQuery(Class<T> targetClass, String sql);
+	/**
+	 * 执行唯一查询
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 
+	 */
+	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
 	 * 执行批量查询
@@ -86,6 +118,27 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 分页查询
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param sql
+	 * @return
+	 */
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
+	
+	/**
+	 * 分页查询
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
 	/**
 	 * 执行增删改查操作

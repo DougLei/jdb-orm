@@ -1,23 +1,30 @@
 package com.douglei.sessions.sqlsession.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.LocalRunDialect;
 import com.douglei.database.sql.statement.StatementHandler;
+import com.douglei.database.utils.NamingUtil;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
+import com.douglei.utils.reflect.ConstructorUtil;
+import com.douglei.utils.reflect.IntrospectorUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -244,5 +251,99 @@ public class SqlSessionImpl implements SqlSession{
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
 		return procedureExecutor.execute(connection.getConnection());
+	}
+
+	
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql) {
+		return query(targetClass, sql, null);
+	}
+
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+		List<Map<String, Object>> listMap = query(sql, parameters);
+		return listMap2listClass(targetClass, listMap, null);
+	}
+	
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
+		return uniqueQuery(targetClass, sql, null);
+	}
+
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+		Map<String, Object> map = uniqueQuery(sql, parameters);
+		if(map.size() > 0) {
+			return map2Class(targetClass, map, null);
+		}
+		return null;
+	}
+	
+	// listMap转换为listClass
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap, TableMetadata tableMetadata) {
+		if(listMap.size() > 0) {
+			List<T> listT = new ArrayList<T>(listMap.size());
+			for (Map<String, Object> map : listMap) {
+				listT.add(map2Class(targetClass, map, tableMetadata));
+			}
+			return listT;
+		}
+		return null;
+	}
+	
+	// 将map转换为类
+	@SuppressWarnings("unchecked")
+	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
+		if(map.size() == 0) {
+			return null;
+		}
+		if(tableMetadata == null || tableMetadata.classNameIsNull()) { // 没有配置映射, 或没有配置映射的类, 则将列名转换为属性名
+			map = mapKey2PropertyName(map); 
+		}else {
+			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
+		}
+		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+	}
+	
+	// 将map的key, 由列名转换成属性名
+	protected Map<String, Object> mapKey2PropertyName(Map<String, Object> map) {
+		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
+		Set<String> keys = map.keySet();
+		for (String key : keys) {
+			targetMap.put(NamingUtil.columnName2PropertyName(key), map.get(key));
+		}
+		return targetMap;
+	}
+	
+	// 将map的key, 由列名转换成映射的属性名
+	protected Map<String, Object> mapKey2MappingPropertyName(Map<String, Object> map, TableMetadata tableMetadata) {
+		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
+		
+		ColumnMetadata column = null;
+		Set<String> codes = tableMetadata.getColumnMetadataCodes();
+		for (String code : codes) {
+			column = tableMetadata.getColumnMetadata(code);
+			targetMap.put(column.getProperty(), map.get(column.getName()));
+		}
+		return targetMap;
+	}
+
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
+		return pageQuery(targetClass, pageNum, pageSize, sql, null);
+	}
+
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
+		}
+		PageResult<Map<String, Object>> pageResult = pageQuery(pageNum, pageSize, sql, parameters);
+		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
+		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas(), null));
+		if(logger.isDebugEnabled()) {
+			logger.debug("分页查询的结果: {}", finalPageResult.toString());
+		}
+		return finalPageResult;
 	}
 }
