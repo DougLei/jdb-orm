@@ -40,9 +40,9 @@ public class DocumentReader {
 		Node node = null;
 		for(int i=0;i<length;i++) {
 			node = children.item(i);
-			if("if".equals(node.getNodeName())) {
+			if("trim".equals(node.getNodeName())) {
+				System.out.println(node.getNodeName());
 				System.out.println(node.getTextContent());
-				System.out.println(node.getAttributes().getNamedItem("test").getNodeValue());
 			}
 		}
 		

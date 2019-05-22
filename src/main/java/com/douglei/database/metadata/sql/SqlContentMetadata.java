@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.database.metadata.sql.content.node.NodeMetadata;
+import com.douglei.database.metadata.sql.content.node.SqlNode;
 
 /**
  * sql内容元数据
@@ -16,28 +16,28 @@ public class SqlContentMetadata implements Metadata{
 	private String dialectTypeCode;
 	private Type type;
 	
-	private List<NodeMetadata> nodes;
+	private List<SqlNode> sqlNodes;
 	
 	public SqlContentMetadata(DialectType dialectType, Type type) {
 		this.dialectTypeCode = dialectType.getCode();
 		this.type = type;
 	}
 	
-	public void addNodeMetadata(NodeMetadata node) {
-		if(node == null) {
+	public void addSqlNode(SqlNode sqlNode) {
+		if(sqlNode == null) {
 			return;
 		}
-		if(nodes == null) {
-			nodes = new ArrayList<NodeMetadata>();
+		if(sqlNodes == null) {
+			sqlNodes = new ArrayList<SqlNode>();
 		}
-		nodes.add(node);
+		sqlNodes.add(sqlNode);
 	}
 	
 	public Type getType() {
 		return type;
 	}
-	public List<NodeMetadata> getNodes() {
-		return nodes;
+	public List<SqlNode> getSqlNodes() {
+		return sqlNodes;
 	}
 
 	/**

@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 
 import com.douglei.database.metadata.sql.MatchingSqlParameterException;
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
-import com.douglei.database.metadata.sql.content.node.NodeMetadata;
+import com.douglei.database.metadata.sql.content.node.SqlNode;
 
 /**
  * 
  * @author DougLei
  */
-public abstract class AbstractNodeMetadata implements NodeMetadata{
+public abstract class AbstractSqlNode implements SqlNode{
 	
 	private String content;
 	
@@ -22,7 +22,7 @@ public abstract class AbstractNodeMetadata implements NodeMetadata{
 	private static final Pattern prefixPattern = Pattern.compile("(\\$\\{)", Pattern.MULTILINE);// 匹配${
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
-	public AbstractNodeMetadata(String content) {
+	public AbstractSqlNode(String content) {
 		this.content = content;
 		resolvingParameters();
 	}
@@ -75,11 +75,5 @@ public abstract class AbstractNodeMetadata implements NodeMetadata{
 	@Override
 	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders() {
 		return sqlParameterByDefinedOrders;
-	}
-
-	@Deprecated
-	@Override
-	public String getCode() {
-		return null;
 	}
 }

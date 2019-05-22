@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.LocalConfigurationDialectHolder;
-import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.NodeMetadataValidateMapping;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -42,7 +42,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 			if(node.getNodeType() == Node.COMMENT_NODE) {
 				continue;
 			}
-			sqlContentMetadata.addNodeMetadata(NodeMetadataValidateMapping.doValidate(node));
+			sqlContentMetadata.addSqlNode(SqlNodeHandlerMapping.doHandler(node));
 		}
 		return sqlContentMetadata;
 	}
