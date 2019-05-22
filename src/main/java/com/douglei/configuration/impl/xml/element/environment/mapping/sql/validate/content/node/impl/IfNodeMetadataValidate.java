@@ -5,7 +5,7 @@ import org.w3c.dom.Node;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.NodeMetadataValidate;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.sql.content.node.impl.TextNodeMetadata;
+import com.douglei.database.metadata.sql.content.node.impl.IfNodeMetadata;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -20,11 +20,15 @@ public class IfNodeMetadataValidate implements NodeMetadataValidate {
 	}
 	
 	private Metadata doValidate(Node node) {
-		String content = node.getNodeValue();
+		String content = node.getTextContent();
 		if(StringUtil.isEmpty(content)) {
-			return null;
+			throw new MetadataValidateException("<if>标签中的内容不能为空");
 		}
-		return new TextNodeMetadata(content);
+		String expression = node.getAttributes().getNamedItem("test").getNodeValue();
+		if(StringUtil.isEmpty(expression)) {
+			throw new MetadataValidateException("<if>标签中的test属性值(即条件表达式)不能为空");
+		}
+		return new IfNodeMetadata(expression, content);
 	}
 
 	@Override

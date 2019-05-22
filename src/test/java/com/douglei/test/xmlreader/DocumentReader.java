@@ -23,19 +23,9 @@ public class DocumentReader {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		final DocumentBuilder builder = factory.newDocumentBuilder();
 		
-		String name = Thread.currentThread().getName()+"===>";
-		
 		Document document = builder.parse(new FileInputStream(xmlFilePath));
-		System.err.println("builder:" + builder);
-		System.err.println("document:" + document);
-		
-		
 		Element root = document.getDocumentElement();
-		System.out.println(root.getNodeName());
-		System.out.println(name + "type="+root.getAttribute("type"));
-		
 		NodeList sqlNodeList = root.getElementsByTagName("sql");
-		System.out.println(sqlNodeList.getLength());
 		Node sqlNode = sqlNodeList.item(0);
 		
 		XPath xpath = XPathFactory.newInstance().newXPath();
@@ -45,18 +35,15 @@ public class DocumentReader {
 		Node contentNode = nl.item(0);
 		
 		NodeList children = contentNode.getChildNodes();
-		System.out.println(children.getLength());
 		
 		int length = children.getLength();
 		Node node = null;
 		for(int i=0;i<length;i++) {
 			node = children.item(i);
-			if(node.getNodeType() == Node.COMMENT_NODE) {
-				continue;
+			if("if".equals(node.getNodeName())) {
+				System.out.println(node.getTextContent());
+				System.out.println(node.getAttributes().getNamedItem("test").getNodeValue());
 			}
-			
-			System.out.println("----------------------------------------------------------------------------------------------");
-			System.out.println(node.getNodeName() + "\t"+node.getNodeName().equals("if") + "\t" + node.getNodeType() + "\t" + node.getNodeValue());
 		}
 		
 	} 

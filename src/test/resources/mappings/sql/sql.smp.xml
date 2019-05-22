@@ -5,7 +5,7 @@
 			select * from sys_user
 				where name = ${name, datatype=string}
 				
-				<if test="">
+				<if test="name = '哈哈'">
 					and sex = '1'
 				</if>
 				
