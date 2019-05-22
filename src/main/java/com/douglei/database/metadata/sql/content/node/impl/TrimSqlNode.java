@@ -13,15 +13,21 @@ import com.douglei.utils.StringUtil;
  * @author DougLei
  */
 public class TrimSqlNode implements SqlNode {
-	private String prefix;
-	private String suffix;
+	private TextSqlNode prefixAttributeNode;
+	private TextSqlNode suffixAttributeNode;
 	
 	private String[] prefixoverride;
 	private String[] suffixoverride;
 	
 	public TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
-		this.prefix = prefix;
-		this.suffix = suffix;
+		if(StringUtil.notEmpty(prefix)) {
+			this.prefixAttributeNode = new TextSqlNode(prefix);
+			addSqlNode(prefixAttributeNode);
+		}
+		if(StringUtil.notEmpty(suffix)) {
+			this.suffixAttributeNode = new TextSqlNode(suffix);
+			addSqlNode(suffixAttributeNode);
+		}
 		if(StringUtil.notEmpty(prefixoverride)) {
 			this.prefixoverride = prefixoverride.split("|");
 		}
@@ -48,7 +54,7 @@ public class TrimSqlNode implements SqlNode {
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
-		StringBuilder sqlContent = new StringBuilder();
+		List<String> sqlContents = null;
 		List<Object> parameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
@@ -61,36 +67,45 @@ public class TrimSqlNode implements SqlNode {
 					}
 					parameters.addAll(executeSqlNode.getParameters());
 				}
-				sqlContent.append(executeSqlNode.getContent()).append(" ");
+				if(sqlContents == null) {
+					sqlContents = new ArrayList<String>();
+				}
+				sqlContents.add(executeSqlNode.getContent());
 			}
 		}
-		return new ExecuteSqlNode(getTrimContent(sqlContent), parameters);
-	}
-
-	private String getTrimContent(StringBuilder sqlContent) {
-		String trimContent = sqlContent.toString();
-		if(prefixoverride != null) {
-			for (String po : prefixoverride) {
-				if(trimContent.startsWith(po)) {
-					trimContent = trimContent.substring(0, po.length());
-					break;
+		
+		StringBuilder sqlContent = new StringBuilder();
+		String tmpSqlContent = null;
+		int index=0, length=sqlContents.size();
+		boolean unProcessPrefixoverride = prefixoverride != null, unProcessSuffixoverride = suffixoverride != null;
+		while(index < length) {
+			tmpSqlContent = sqlContents.get(index);
+			if(unProcessPrefixoverride) {
+				if((prefixAttributeNode == null && index == 0) || (prefixAttributeNode != null && index == 1)) {
+					for (String po : prefixoverride) {
+						if(tmpSqlContent.startsWith(po)) {
+							tmpSqlContent = tmpSqlContent.substring(0, po.length());
+							break;
+						}
+					}
+					unProcessPrefixoverride = false;
 				}
 			}
-		}
-		if(suffixoverride != null) {
-			for (String so : suffixoverride) {
-				if(trimContent.endsWith(so)) {
-					trimContent = trimContent.substring(0, trimContent.length()-so.length());
-					break;
+			
+			if(unProcessSuffixoverride) {
+				if((suffixAttributeNode == null && index == length-1) || (suffixAttributeNode != null && index == length-2)) {
+					for (String so : suffixoverride) {
+						if(tmpSqlContent.endsWith(so)) {
+							tmpSqlContent = tmpSqlContent.substring(0, tmpSqlContent.length()-so.length());
+							break;
+						}
+					}
+					unProcessSuffixoverride = false;
 				}
 			}
+			sqlContent.append(tmpSqlContent).append(" ");
+			index++;
 		}
-		if(prefix != null) {
-			trimContent = prefix + " " + trimContent;
-		}
-		if(suffix != null) {
-			trimContent = trimContent + " " + suffix;
-		}
-		return trimContent;
+		return new ExecuteSqlNode(sqlContent.toString(), parameters);
 	}
 }

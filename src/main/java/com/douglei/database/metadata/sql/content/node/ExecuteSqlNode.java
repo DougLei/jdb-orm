@@ -18,14 +18,13 @@ public class ExecuteSqlNode {
 	
 	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Map<String, Object> sqlParameterMap) {
 		if(sqlParameterByDefinedOrders != null) {
-			if(parameters == null) {
-				parameters = new ArrayList<Object>();
-			}
-			
 			Object parameterValue = null;
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
 				parameterValue = parameter.getValue(sqlParameterMap);
 				if(parameter.isUsePlaceholder()) {
+					if(parameters == null) {
+						parameters = new ArrayList<Object>();
+					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataTypeHandler()));
 				}else {
 					content = content.replaceFirst("\\$\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
@@ -49,6 +48,6 @@ public class ExecuteSqlNode {
 	}
 	
 	public boolean existsParameter() {
-		return parameters != null && parameters.size() > 0;
+		return parameters != null;
 	}
 }
