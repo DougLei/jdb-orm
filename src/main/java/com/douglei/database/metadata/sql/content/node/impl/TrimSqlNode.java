@@ -8,12 +8,13 @@ import org.w3c.dom.Node;
 
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 
 /**
  * 
  * @author DougLei
  */
-public class TrimSqlNode implements SqlNode {
+public class TrimSqlNode extends AbstractNestingNode {
 	private TextSqlNode prefixAttributeNode;
 	private TextSqlNode suffixAttributeNode;
 	
@@ -35,17 +36,6 @@ public class TrimSqlNode implements SqlNode {
 		if(suffixoverride != null) {
 			this.suffixoverride = suffixoverride.getNodeValue().split("|");
 		}
-	}
-	
-	private List<SqlNode> sqlNodes;
-	public void addSqlNode(SqlNode sqlNode) {
-		if(sqlNode == null) {
-			return;
-		}
-		if(sqlNodes == null) {
-			sqlNodes = new ArrayList<SqlNode>();
-		}
-		sqlNodes.add(sqlNode);
 	}
 	
 	@Override
@@ -84,7 +74,7 @@ public class TrimSqlNode implements SqlNode {
 			if(unProcessPrefixoverride) {
 				if((prefixAttributeNode == null && index == 0) || (prefixAttributeNode != null && index == 1)) {
 					for (String po : prefixoverride) {
-						if(tmpSqlContent.startsWith(po)) {
+						if(po.equalsIgnoreCase(tmpSqlContent.substring(0, po.length()))) {
 							tmpSqlContent = tmpSqlContent.substring(0, po.length());
 							break;
 						}
@@ -96,7 +86,7 @@ public class TrimSqlNode implements SqlNode {
 			if(unProcessSuffixoverride) {
 				if((suffixAttributeNode == null && index == length-1) || (suffixAttributeNode != null && index == length-2)) {
 					for (String so : suffixoverride) {
-						if(tmpSqlContent.endsWith(so)) {
+						if(so.equalsIgnoreCase(tmpSqlContent.substring(tmpSqlContent.length()-so.length()))) {
 							tmpSqlContent = tmpSqlContent.substring(0, tmpSqlContent.length()-so.length());
 							break;
 						}
@@ -109,8 +99,9 @@ public class TrimSqlNode implements SqlNode {
 		}
 		return new ExecuteSqlNode(sqlContent.toString(), parameters);
 	}
-
-	public boolean existsSqlNode() {
-		return sqlNodes != null;
+	
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.TRIM;
 	}
 }

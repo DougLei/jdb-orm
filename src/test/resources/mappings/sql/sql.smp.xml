@@ -4,13 +4,32 @@
 		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
 			select * from sys_user
 				
-				<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
-				a
-					<if test="name == '哈哈'">
-					b
-					</if>
-				</trim>
+		<!-- 	
+			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
+			a
+				<if test="name == '哈哈'">
+				b
+				</if>
+			</trim> 
+		-->
+			
+			<switch>
+			
+				<if test="name != null">
+					and name = #{name}
+				</if>
+				<if test="sex != null">
+					and sex = #{sex}
+				</if>
+				<else>
+					and age = #{age}
+				</else>
+			</switch>
+			
+			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 				
+			</foreach>
+			
 		</content>
 	</sql>
 </mapping-configuration>

@@ -8,6 +8,8 @@ import java.util.Map;
  */
 public interface SqlNode {
 	
+	SqlNodeType getType();
+	
 	/**
 	 * 该node是否满足匹配
 	 * @param sqlParameterMap

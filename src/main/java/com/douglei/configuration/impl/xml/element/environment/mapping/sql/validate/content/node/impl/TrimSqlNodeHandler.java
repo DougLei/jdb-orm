@@ -20,7 +20,7 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
 		if(cl == 0) {
-			return null;
+			throw new NullPointerException("<trim>元素中不存在任何sql语句");
 		}
 		
 		NamedNodeMap attributeMap = node.getAttributes();
@@ -36,7 +36,7 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 		if(trimSqlNode.existsSqlNode()) {
 			return trimSqlNode;
 		}
-		return null;
+		throw new NullPointerException("<trim>元素中不存在任何sql语句");
 	}
 	
 	@Override
