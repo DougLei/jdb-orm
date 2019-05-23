@@ -21,6 +21,23 @@ public class TrimSqlNode extends AbstractNestingNode {
 	private String[] prefixoverride;
 	private String[] suffixoverride;
 	
+	// 给子类使用的构造函数
+	protected TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
+		if(prefix != null) {
+			this.prefixAttributeNode = new TextSqlNode(prefix);
+			addSqlNode(prefixAttributeNode);
+		}
+		if(suffix != null) {
+			this.suffixAttributeNode = new TextSqlNode(suffix);
+			addSqlNode(suffixAttributeNode);
+		}
+		if(prefixoverride != null) {
+			this.prefixoverride = prefixoverride.split("|");
+		}
+		if(suffixoverride != null) {
+			this.suffixoverride = suffixoverride.split("|");
+		}
+	}
 	public TrimSqlNode(Node prefix, Node suffix, Node prefixoverride, Node suffixoverride) {
 		if(prefix != null) {
 			this.prefixAttributeNode = new TextSqlNode(prefix.getNodeValue());
