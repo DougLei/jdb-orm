@@ -12,9 +12,8 @@
 				</if>
 			</trim> 
 		-->
-			
+		<!-- 
 			<switch>
-			
 				<if test="name != null">
 					and name = #{name}
 				</if>
@@ -25,7 +24,8 @@
 					and age = #{age}
 				</else>
 			</switch>
-			
+		-->
+		
 			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
 				
 			</foreach>
