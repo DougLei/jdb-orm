@@ -19,7 +19,7 @@ import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.database.utils.NamingUtil;
-import com.douglei.sessions.LocalRunDataHolder;
+import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
@@ -45,7 +45,7 @@ public class SqlSessionImpl implements SqlSession{
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
-		LocalRunDataHolder.setDialect(environmentProperty.getDialect());
+		LocalRunDialectHolder.setDialect(environmentProperty.getDialect());
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class SqlSessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = LocalRunDataHolder.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
+			sql = LocalRunDialectHolder.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}

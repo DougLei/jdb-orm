@@ -3,7 +3,7 @@ package com.douglei.database.metadata.sql.content.node.impl;
 import java.util.Map;
 
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
-import com.douglei.sessions.LocalRunDataHolder;
+import com.douglei.instances.ognl.OgnlHandler;
 
 /**
  * 
@@ -19,7 +19,7 @@ public class IfSqlNode extends AbstractSqlNode {
 
 	@Override
 	public boolean matching(Map<String, Object> sqlParameterMap) {
-		return LocalRunDataHolder.getExpressionResolverHandler().resolveToBoolean(expression, sqlParameterMap);
+		return OgnlHandler.singleInstance().getBooleanValue(expression, sqlParameterMap);
 	}
 	
 	@Override

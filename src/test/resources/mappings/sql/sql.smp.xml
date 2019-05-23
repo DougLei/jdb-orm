@@ -40,7 +40,7 @@
 			</switch>
 		-->
 		
-			<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			<foreach collection="list" index="index" alias="obj" open="(" separator="," close=")">
 				
 			</foreach>
 			
