@@ -14,7 +14,6 @@ import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.Type;
-import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -30,8 +29,8 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	private SqlContentMetadata doValidate(Node contentNode) {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		
-		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect").getNodeValue());
-		Type type = getSqlContentType(attributeMap.getNamedItem("type").getNodeValue());
+		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
+		Type type = getSqlContentType(attributeMap.getNamedItem("type"));
 		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
 		
 		NodeList children = contentNode.getChildNodes();
@@ -44,12 +43,12 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		return sqlContentMetadata;
 	}
 
-	private DialectType getDialectType(String dialect) {
+	private DialectType getDialectType(Node dialect) {
 		DialectType type = null;
-		if(StringUtil.isEmpty(dialect)) {
+		if(dialect == null) {
 			type = LocalConfigurationDialectHolder.getDialect().getType();
 		}else {
-			type = DialectType.toValue(dialect);
+			type = DialectType.toValue(dialect.getNodeValue());
 			if(type == null) {
 				throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
 			}
@@ -57,14 +56,15 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		return type;
 	}
 	
-	private Type getSqlContentType(String type) {
-		Type sqlContentType = null;
-		if(StringUtil.notEmpty(type)) {
-			sqlContentType = Type.toValue(type);
+	private Type getSqlContentType(Node type) {
+		if(type == null) {
+			throw new MetadataValidateException("<content>元素的type属性值不能为空");
+		}else {
+			Type sqlContentType = Type.toValue(type.getNodeValue());
 			if(sqlContentType == null) {
 				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(Type.values()));
 			}
+			return sqlContentType;
 		}
-		return sqlContentType;
 	}
 }

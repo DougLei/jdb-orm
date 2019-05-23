@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Node;
+
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
-import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -19,20 +20,20 @@ public class TrimSqlNode implements SqlNode {
 	private String[] prefixoverride;
 	private String[] suffixoverride;
 	
-	public TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
-		if(StringUtil.notEmpty(prefix)) {
-			this.prefixAttributeNode = new TextSqlNode(prefix);
+	public TrimSqlNode(Node prefix, Node suffix, Node prefixoverride, Node suffixoverride) {
+		if(prefix != null) {
+			this.prefixAttributeNode = new TextSqlNode(prefix.getNodeValue());
 			addSqlNode(prefixAttributeNode);
 		}
-		if(StringUtil.notEmpty(suffix)) {
-			this.suffixAttributeNode = new TextSqlNode(suffix);
+		if(suffix != null) {
+			this.suffixAttributeNode = new TextSqlNode(suffix.getNodeValue());
 			addSqlNode(suffixAttributeNode);
 		}
-		if(StringUtil.notEmpty(prefixoverride)) {
-			this.prefixoverride = prefixoverride.split("|");
+		if(prefixoverride != null) {
+			this.prefixoverride = prefixoverride.getNodeValue().split("|");
 		}
-		if(StringUtil.notEmpty(suffixoverride)) {
-			this.suffixoverride = suffixoverride.split("|");
+		if(suffixoverride != null) {
+			this.suffixoverride = suffixoverride.getNodeValue().split("|");
 		}
 	}
 	
@@ -107,5 +108,9 @@ public class TrimSqlNode implements SqlNode {
 			index++;
 		}
 		return new ExecuteSqlNode(sqlContent.toString(), parameters);
+	}
+
+	public boolean existsSqlNode() {
+		return sqlNodes != null;
 	}
 }

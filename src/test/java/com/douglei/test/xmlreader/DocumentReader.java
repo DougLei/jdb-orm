@@ -43,6 +43,7 @@ public class DocumentReader {
 			if("trim".equals(node.getNodeName())) {
 				System.out.println(node.getNodeName());
 				System.out.println(node.getTextContent());
+				System.out.println(node.getAttributes().getNamedItem("xxx"));
 			}
 		}
 		

@@ -8,7 +8,6 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.sql.valida
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.impl.TrimSqlNode;
-import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -18,23 +17,26 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 
 	@Override
 	public SqlNode doHandler(Node node) {
-		String allContent = node.getTextContent();
-		if(StringUtil.isEmpty(allContent)) {
-			return null;
-		}
-		NamedNodeMap attributeMap = node.getAttributes();
-		TrimSqlNode trimSqlNode = new TrimSqlNode(
-				attributeMap.getNamedItem("prefix").getNodeValue(),
-				attributeMap.getNamedItem("suffix").getNodeValue(),
-				attributeMap.getNamedItem("prefixoverride").getNodeValue(),
-				attributeMap.getNamedItem("suffixoverride").getNodeValue());
-		
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
+		if(cl == 0) {
+			return null;
+		}
+		
+		NamedNodeMap attributeMap = node.getAttributes();
+		TrimSqlNode trimSqlNode = new TrimSqlNode(
+				attributeMap.getNamedItem("prefix"),
+				attributeMap.getNamedItem("suffix"),
+				attributeMap.getNamedItem("prefixoverride"),
+				attributeMap.getNamedItem("suffixoverride"));
+		
 		for(int i=0;i<cl;i++) {
 			trimSqlNode.addSqlNode(SqlNodeHandlerMapping.doHandler(childrens.item(i)));
 		}
-		return trimSqlNode;
+		if(trimSqlNode.existsSqlNode()) {
+			return trimSqlNode;
+		}
+		return null;
 	}
 	
 	@Override

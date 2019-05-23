@@ -10,6 +10,7 @@ import com.douglei.database.metadata.sql.MatchingSqlParameterException;
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -33,6 +34,9 @@ public abstract class AbstractSqlNode implements SqlNode{
 	 * 从content中解析出parameter集合
 	 */
 	private void resolvingParameters() {
+		if(StringUtil.isEmpty(content)) {
+			return;
+		}
 		Matcher perfixMatcher = prefixPattern.matcher(content);
 		Matcher suffixMatcher = suffixPattern.matcher(content);
 		int startIndex, endIndex;
