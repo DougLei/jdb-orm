@@ -29,7 +29,7 @@
 		<!-- 
 			<switch>
 				<if test="name != null">
-					and name = #{name}
+					and name = #{user.name}
 				</if>
 				<if test="sex != null">
 					and sex = #{sex}
@@ -40,8 +40,8 @@
 			</switch>
 		-->
 		
-			<foreach collection="users" alias="user" open="(" separator="," close=")">
-					#{user.id, dataType=string}
+			<foreach collection="users" open="(" separator="," close=")">
+				#{userId, dataType=string}
 			</foreach>
 			
 		</content>

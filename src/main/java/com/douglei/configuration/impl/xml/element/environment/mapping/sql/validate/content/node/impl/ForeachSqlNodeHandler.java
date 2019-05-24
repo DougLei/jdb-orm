@@ -30,7 +30,6 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 		return new ForeachSqlNode(
 				content,
 				collectionAttributeNode.getNodeValue(),
-				attributeMap.getNamedItem("alias"),
 				attributeMap.getNamedItem("open"),
 				attributeMap.getNamedItem("separator"),
 				attributeMap.getNamedItem("close"));

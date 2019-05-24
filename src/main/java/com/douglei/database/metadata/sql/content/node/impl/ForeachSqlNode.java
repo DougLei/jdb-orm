@@ -20,18 +20,14 @@ public class ForeachSqlNode implements SqlNode {
 	private TextSqlNode content;
 	
 	private String collection;
-	private String alias;
 	
 	private String open = "";
 	private String separator = ",";
 	private String close = "";
 	
-	public ForeachSqlNode(String content, String collection, Node aliasAttributeNode, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
+	public ForeachSqlNode(String content, String collection, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
 		this.content = new TextSqlNode(content);
 		this.collection = collection;
-		if(aliasAttributeNode != null) {
-			alias = aliasAttributeNode.getNodeValue();
-		}
 		if(openAttributeNode != null) {
 			open = openAttributeNode.getNodeValue();
 		}
