@@ -55,11 +55,6 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public boolean matching(Object sqlParameter) {
-		return true;
-	}
-	
-	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		List<String> sqlContents = null;
 		List<Object> parameters = null;

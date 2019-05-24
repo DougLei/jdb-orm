@@ -45,7 +45,13 @@
 		
 		<!-- 
 			<foreach collection="users" alias="user" open="(" separator="," close=")">
-				<if test="user.id != null">
+				<if test="user.id != null && user.name == null">
+					#{user.id, dataType=string}
+				</if>
+			</foreach>
+			
+			<foreach collection="userIds" alias="userId" open="(" separator="," close=")">
+				<if test="userId != null">
 					#{user.id, dataType=string}
 				</if>
 			</foreach>

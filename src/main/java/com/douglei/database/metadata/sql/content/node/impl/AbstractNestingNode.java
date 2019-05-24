@@ -28,6 +28,16 @@ public abstract class AbstractNestingNode implements SqlNode{
 	}
 	
 	@Override
+	public boolean matching(Object sqlParameter) {
+		return matching(sqlParameter, null);
+	}
+	
+	@Override
+	public boolean matching(Object sqlParameter, String alias) {
+		return true;
+	}
+	
+	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
 		return getExecuteSqlNode(sqlParameter, null);
 	}

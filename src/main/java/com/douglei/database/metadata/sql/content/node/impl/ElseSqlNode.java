@@ -13,11 +13,6 @@ public class ElseSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean matching(Object sqlParameter) {
-		return true;
-	}
-
-	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.ELSE;
 	}

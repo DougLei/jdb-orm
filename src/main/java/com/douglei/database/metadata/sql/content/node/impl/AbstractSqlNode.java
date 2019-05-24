@@ -72,6 +72,16 @@ public abstract class AbstractSqlNode implements SqlNode{
 			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
 		}
 	}
+	
+	@Override
+	public boolean matching(Object sqlParameter) {
+		return matching(sqlParameter, null);
+	}
+	
+	@Override
+	public boolean matching(Object sqlParameter, String alias) {
+		return true;
+	}
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {

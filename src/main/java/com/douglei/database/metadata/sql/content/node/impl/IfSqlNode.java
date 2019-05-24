@@ -16,10 +16,27 @@ public class IfSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean matching(Object sqlParameter) {
+	public boolean matching(Object sqlParameter, String alias) {
+		processExpression(alias);
 		return OgnlHandler.singleInstance().getBooleanValue(expression, sqlParameter);
 	}
 	
+	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认都没有处理
+	private void processExpression(String alias) {
+		if(unProcessExpression) {
+			unProcessExpression = false;
+			
+			if(alias != null && expression.indexOf(alias+".") != -1) {
+				expression = expression.replace(alias+".", "");
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+		String a = "user.id != null && user.name == null";
+		System.out.println(a.replace("user.", ""));
+	}
+
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.IF;

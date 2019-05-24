@@ -9,6 +9,7 @@ import org.w3c.dom.Node;
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
+import com.douglei.database.metadata.sql.content.node.UnsupportCollectionTypeException;
 import com.douglei.instances.ognl.OgnlHandler;
 
 /**
@@ -39,16 +40,6 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public boolean matching(Object sqlParameter) {
-		return true;
-	}
-	
-	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
-		return getExecuteSqlNode(sqlParameter, null);
-	}
-	
-	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
 		if(collectionObject == null) {
@@ -74,7 +65,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		int length = array.length;
 		for(int i=0;i<length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
-				if(sqlNode.matching(sqlParameter)) {
+				if(sqlNode.matching(sqlParameter, alias)) {
 					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
 					if(executeSqlNode.existsParameter()) {
 						if(parameters == null) {

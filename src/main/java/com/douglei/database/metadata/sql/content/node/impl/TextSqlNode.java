@@ -13,11 +13,6 @@ public class TextSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean matching(Object sqlParameter) {
-		return true;
-	}
-	
-	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.TEXT;
 	}

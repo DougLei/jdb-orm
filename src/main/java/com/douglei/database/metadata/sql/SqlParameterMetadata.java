@@ -183,7 +183,7 @@ public class SqlParameterMetadata implements Metadata{
 	/**
 	 * 获取值
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix
+	 * @param sqlParameterNamePrefix 即如果是alias.xxx, 要去除alias.
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter, String sqlParameterNamePrefix) {

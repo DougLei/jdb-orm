@@ -16,6 +16,14 @@ public interface SqlNode {
 	boolean matching(Object sqlParameter);
 	
 	/**
+	 * 该node是否满足匹配
+	 * @param sqlParameter
+	 * @param alias
+	 * @return
+	 */
+	boolean matching(Object sqlParameter, String alias);
+	
+	/**
 	 * 获取可执行的sql node
 	 * @param sqlParameter
 	 * @return

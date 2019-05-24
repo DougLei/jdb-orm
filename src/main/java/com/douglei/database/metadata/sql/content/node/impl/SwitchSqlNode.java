@@ -11,11 +11,6 @@ import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 public class SwitchSqlNode extends AbstractNestingNode {
 
 	@Override
-	public boolean matching(Object sqlParameter) {
-		return true;
-	}
-	
-	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
