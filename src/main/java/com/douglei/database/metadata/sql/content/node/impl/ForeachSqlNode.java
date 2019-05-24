@@ -15,9 +15,7 @@ import com.douglei.instances.ognl.OgnlHandler;
  * 
  * @author DougLei
  */
-public class ForeachSqlNode implements SqlNode {
-	
-	private TextSqlNode content;
+public class ForeachSqlNode extends AbstractNestingNode {
 	
 	private String collection;
 	private String alias;
@@ -26,8 +24,7 @@ public class ForeachSqlNode implements SqlNode {
 	private String separator = ",";
 	private String close = "";
 	
-	public ForeachSqlNode(String content, String collection, String alias, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
-		this.content = new TextSqlNode(content);
+	public ForeachSqlNode(String collection, String alias, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
 		this.collection = collection;
 		this.alias = alias;
 		if(openAttributeNode != null) {
@@ -76,14 +73,18 @@ public class ForeachSqlNode implements SqlNode {
 		ExecuteSqlNode executeSqlNode = null;
 		int length = array.length;
 		for(int i=0;i<length;i++) {
-			executeSqlNode = content.getExecuteSqlNode(array[i], alias);
-			if(executeSqlNode.existsParameter()) {
-				if(parameters == null) {
-					parameters = new ArrayList<Object>();
+			for (SqlNode sqlNode : sqlNodes) {
+				if(sqlNode.matching(sqlParameter)) {
+					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
+					if(executeSqlNode.existsParameter()) {
+						if(parameters == null) {
+							parameters = new ArrayList<Object>();
+						}
+						parameters.addAll(executeSqlNode.getParameters());
+					}
+					sqlContent.append(executeSqlNode.getContent()).append(" ");
 				}
-				parameters.addAll(executeSqlNode.getParameters());
 			}
-			sqlContent.append(executeSqlNode.getContent()).append(" ");
 			
 			if(i < length-1) {
 				sqlContent.append(separator).append(" ");

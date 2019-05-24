@@ -44,8 +44,10 @@
 		-->
 		
 		<!-- 
-			<foreach collection="userIds" alias="uid" open="(" separator="," close=")">
-				#{uid, dataType=string}
+			<foreach collection="users" alias="user" open="(" separator="," close=")">
+				<if test="user.id != null">
+					#{user.id, dataType=string}
+				</if>
 			</foreach>
 		-->	
 		

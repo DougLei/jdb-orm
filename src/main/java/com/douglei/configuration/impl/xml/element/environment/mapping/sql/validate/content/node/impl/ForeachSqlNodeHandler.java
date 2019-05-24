@@ -2,8 +2,10 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.sql.valid
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.impl.ForeachSqlNode;
 import com.douglei.utils.StringUtil;
@@ -16,33 +18,39 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 
 	@Override
 	public SqlNode doHandler(Node node) {
-		String content = node.getTextContent();
-		if(StringUtil.isEmpty(content)) {
+		NodeList childrens = node.getChildNodes();
+		int cl = childrens.getLength();
+		if(cl == 0) {
 			throw new NullPointerException("<foreach>元素中不存在任何sql语句");
 		}
 		
 		NamedNodeMap attributeMap = node.getAttributes();
+		
 		Node collectionAttributeNode = attributeMap.getNamedItem("collection");
-		if(collectionAttributeNode == null) {
+		String collection = null;
+		if(collectionAttributeNode == null || StringUtil.isEmpty((collection = collectionAttributeNode.getNodeValue()))) {
 			throw new NullPointerException("<foreach>元素中的collection属性值不能为空");
 		}
 		
-		String alias = null;
 		Node aliasAttributeNode = attributeMap.getNamedItem("alias");
-		if(aliasAttributeNode != null) {
-			String tmpAlias = aliasAttributeNode.getNodeValue();
-			if(StringUtil.notEmpty(tmpAlias)) {
-				alias = tmpAlias.trim();
-			}
+		String alias = null;
+		if(aliasAttributeNode == null || StringUtil.isEmpty((alias = aliasAttributeNode.getNodeValue()))) {
+			throw new NullPointerException("<foreach>元素中的alias属性值不能为空");
 		}
 		
-		return new ForeachSqlNode(
-				content,
-				collectionAttributeNode.getNodeValue(),
-				alias,
+		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(
+				collection.trim(), alias.trim(),
 				attributeMap.getNamedItem("open"),
 				attributeMap.getNamedItem("separator"),
 				attributeMap.getNamedItem("close"));
+		
+		for(int i=0;i<cl;i++) {
+			foreachSqlNode.addSqlNode(SqlNodeHandlerMapping.doHandler(childrens.item(i)));
+		}
+		if(foreachSqlNode.existsSqlNode()) {
+			return foreachSqlNode;
+		}
+		throw new NullPointerException("<foreach>元素中不存在任何sql语句");
 	}
 	
 	@Override
