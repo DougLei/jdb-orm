@@ -19,19 +19,12 @@ public class MappingStoreContext {
 		// TODO 后续可以集成其他缓存, 存储映射信息, 如果这里新加了其他缓存实现, 请修改cache map集合的初始化size值
 	}
 	
-	private static final Map<String, MappingStore> INSTANCE_MAP = new HashMap<String, MappingStore>(count);
-	
 	public static MappingStore getMappingStore(String type) {
 		type = type.toUpperCase();
-		MappingStore mappingStore = INSTANCE_MAP.get(type);
-		if(mappingStore == null) {
-			Class<? extends MappingStore> mappingStoreClass = CLASS_MAP.get(type);
-			if(mappingStoreClass == null) {
-				throw new NullPointerException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+CLASS_MAP.keySet());
-			}
-			mappingStore = (MappingStore) ConstructorUtil.newInstance(mappingStoreClass);
-			INSTANCE_MAP.put(type, mappingStore);
+		Class<? extends MappingStore> mappingStoreClass = CLASS_MAP.get(type);
+		if(mappingStoreClass == null) {
+			throw new NullPointerException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+CLASS_MAP.keySet());
 		}
-		return mappingStore;
+		return (MappingStore) ConstructorUtil.newInstance(mappingStoreClass);
 	}
 }
