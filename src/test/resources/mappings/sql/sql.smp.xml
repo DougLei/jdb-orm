@@ -20,9 +20,9 @@
 		-->		
 		<!-- 	
 			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
-			a
+				a
 				<if test="name == '哈哈'">
-				b
+					b
 				</if>
 			</trim> 
 		-->
@@ -40,8 +40,8 @@
 			</switch>
 		-->
 		
-			<foreach collection="list" index="index" alias="obj" open="(" separator="," close=")">
-				
+			<foreach collection="users" alias="user" open="(" separator="," close=")">
+					#{user.id, dataType=string}
 			</foreach>
 			
 		</content>

@@ -2,7 +2,6 @@ package com.douglei.database.metadata.sql.content.node.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.w3c.dom.Node;
 
@@ -56,19 +55,19 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public boolean matching(Map<String, Object> sqlParameterMap) {
+	public boolean matching(Object sqlParameter) {
 		return true;
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
 		List<String> sqlContents = null;
 		List<Object> parameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameterMap)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameterMap);
+			if(sqlNode.matching(sqlParameter)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameter);
 				if(executeSqlNode.existsParameter()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();

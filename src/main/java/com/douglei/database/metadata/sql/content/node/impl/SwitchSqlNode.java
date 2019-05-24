@@ -1,7 +1,5 @@
 package com.douglei.database.metadata.sql.content.node.impl;
 
-import java.util.Map;
-
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
@@ -13,15 +11,15 @@ import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 public class SwitchSqlNode extends AbstractNestingNode {
 
 	@Override
-	public boolean matching(Map<String, Object> sqlParameterMap) {
+	public boolean matching(Object sqlParameter) {
 		return true;
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameterMap)) {
-				return sqlNode.getExecuteSqlNode(sqlParameterMap);
+			if(sqlNode.matching(sqlParameter)) {
+				return sqlNode.getExecuteSqlNode(sqlParameter);
 			}
 		}
 		return null;

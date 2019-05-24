@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 
 /**
- * 
+ * 嵌套node
  * @author DougLei
  */
 public abstract class AbstractNestingNode implements SqlNode{

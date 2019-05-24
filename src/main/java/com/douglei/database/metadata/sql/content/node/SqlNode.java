@@ -1,7 +1,5 @@
 package com.douglei.database.metadata.sql.content.node;
 
-import java.util.Map;
-
 /**
  * 
  * @author DougLei
@@ -12,15 +10,15 @@ public interface SqlNode {
 	
 	/**
 	 * 该node是否满足匹配
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	boolean matching(Map<String, Object> sqlParameterMap);
+	boolean matching(Object sqlParameter);
 	
 	/**
 	 * 获取可执行的sql node
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap);
+	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter);
 }

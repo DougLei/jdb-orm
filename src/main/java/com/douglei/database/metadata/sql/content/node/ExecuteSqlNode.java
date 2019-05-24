@@ -2,7 +2,6 @@ package com.douglei.database.metadata.sql.content.node;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
 import com.douglei.database.sql.statement.entity.InputSqlParameter;
@@ -16,18 +15,18 @@ public class ExecuteSqlNode {
 	private String content;
 	private List<Object> parameters;
 	
-	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Map<String, Object> sqlParameterMap) {
+	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter) {
 		if(sqlParameterByDefinedOrders != null) {
 			Object parameterValue = null;
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
-				parameterValue = parameter.getValue(sqlParameterMap);
+				parameterValue = parameter.getValue(sqlParameter);
 				if(parameter.isUsePlaceholder()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();
 					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataTypeHandler()));
 				}else {
-					content = content.replaceFirst("\\$\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
+					content = content.replaceFirst("#\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
 				}
 			}
 		}

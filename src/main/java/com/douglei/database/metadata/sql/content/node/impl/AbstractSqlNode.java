@@ -2,7 +2,6 @@ package com.douglei.database.metadata.sql.content.node.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +21,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 	
 	// sql参数, 按照配置中定义的顺序记录
 	private List<SqlParameterMetadata> sqlParameterByDefinedOrders;
-	private static final Pattern prefixPattern = Pattern.compile("(\\$\\{)", Pattern.MULTILINE);// 匹配${
+	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配${
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public AbstractSqlNode(String content) {
@@ -68,14 +67,14 @@ public abstract class AbstractSqlNode implements SqlNode{
 	// 替换Sql语句内容中的参数
 	private void replaceSqlParameterInSqlContent(SqlParameterMetadata sqlParameter) {
 		if(sqlParameter.isUsePlaceholder()) {
-			content = content.replaceAll("\\$\\{"+sqlParameter.getConfigurationText()+"\\}", "?");
+			content = content.replaceAll("#\\{"+sqlParameter.getConfigurationText()+"\\}", "?");
 		}else{
 			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
 		}
 	}
 
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Map<String, Object> sqlParameterMap) {
-		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameterMap);
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
+		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameter);
 	}
 }

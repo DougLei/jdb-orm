@@ -11,6 +11,7 @@ import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.instances.ognl.OgnlHandler;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -165,11 +166,19 @@ public class SqlParameterMetadata implements Metadata{
 	
 	/**
 	 * 获取值
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	public Object getValue(Map<String, Object> sqlParameterMap) {
+	public Object getValue(Object sqlParameter) {
 		// TODO 后续可以加入默认值
-		return sqlParameterMap.get(name);
+		Object value = null;
+		if(sqlParameter instanceof Map<?, ?>) {
+			value = ((Map<?, ?>)sqlParameter).get(name); 
+		}else if(ValidationUtil.isBasicDataType(sqlParameter)){
+			value = sqlParameter;
+		}else {
+			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
+		}
+		return value;
 	}
 }

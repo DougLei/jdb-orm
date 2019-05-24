@@ -2,13 +2,11 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.sql.valid
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
-import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.impl.ForeachSqlNode;
-import com.douglei.database.metadata.sql.content.node.impl.TrimSqlNode;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -18,26 +16,28 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 
 	@Override
 	public SqlNode doHandler(Node node) {
-		NodeList childrens = node.getChildNodes();
-		int cl = childrens.getLength();
-		if(cl == 0) {
-			throw new NullPointerException("<trim>元素中不存在任何sql语句");
+		String content = node.getTextContent();
+		if(StringUtil.isEmpty(content)) {
+			throw new NullPointerException("<foreach>元素中不存在任何sql语句");
 		}
 		
 		NamedNodeMap attributeMap = node.getAttributes();
-		ForeachSqlNode foreachSqlNode = new ForeachSqlNode();
+		Node collectionAttributeNode = attributeMap.getNamedItem("collection");
+		if(collectionAttributeNode == null) {
+			throw new NullPointerException("<foreach>元素中的collection属性值不能为空");
+		}
 		
-		for(int i=0;i<cl;i++) {
-			trimSqlNode.addSqlNode(SqlNodeHandlerMapping.doHandler(childrens.item(i)));
-		}
-		if(trimSqlNode.existsSqlNode()) {
-			return trimSqlNode;
-		}
-		throw new NullPointerException("<trim>元素中不存在任何sql语句");
+		return new ForeachSqlNode(
+				content,
+				collectionAttributeNode.getNodeValue(),
+				attributeMap.getNamedItem("alias"),
+				attributeMap.getNamedItem("open"),
+				attributeMap.getNamedItem("separator"),
+				attributeMap.getNamedItem("close"));
 	}
 	
 	@Override
 	public String getNodeName() {
-		return "trim";
+		return "foreach";
 	}
 }
