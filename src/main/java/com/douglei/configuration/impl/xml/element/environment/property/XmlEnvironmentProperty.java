@@ -122,7 +122,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setMappingStore(String value) {
-		if(StringUtil.isEmpty(value) || !MappingStoreContext.containsType(value)) {
+		if(StringUtil.isEmpty(value)) {
 			value = "application";// 使用默认的 ApplicationMappingStore
 		}
 		if(logger.isDebugEnabled()) {

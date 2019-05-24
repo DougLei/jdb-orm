@@ -4,33 +4,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.configuration.environment.property.mapping.store.target.impl.ApplicationMappingStore;
-import com.douglei.utils.StringUtil;
+import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class MappingStoreContext {
-	private static final Map<String, MappingStore> cache = new HashMap<String, MappingStore>(1);
+	private static final int count = MappingStoreType.values().length;
+	
+	private static final Map<String, Class<? extends MappingStore>> CLASS_MAP = new HashMap<String, Class<? extends MappingStore>>(count);
 	static {
-		register(new ApplicationMappingStore());
-		
-		// 后续可以集成其他缓存, 存储映射信息, 如果这里新加了其他缓存实现, 请修改cache map集合的初始化size值
-		
-	}
-	private static void register(MappingStore mappingStore) {
-		cache.put(mappingStore.getType(), mappingStore);
+		CLASS_MAP.put(ApplicationMappingStore.TYPE.getCode(), ApplicationMappingStore.class);
+		// TODO 后续可以集成其他缓存, 存储映射信息, 如果这里新加了其他缓存实现, 请修改cache map集合的初始化size值
 	}
 	
-	
-	public static boolean containsType(String type) {
-		if(StringUtil.isEmpty(type)) {
-			return false;
-		}
-		return cache.containsKey(type);
-	}
+	private static final Map<String, MappingStore> INSTANCE_MAP = new HashMap<String, MappingStore>(count);
 	
 	public static MappingStore getMappingStore(String type) {
-		return cache.get(type);
+		type = type.toUpperCase();
+		MappingStore mappingStore = INSTANCE_MAP.get(type);
+		if(mappingStore == null) {
+			Class<? extends MappingStore> mappingStoreClass = CLASS_MAP.get(type);
+			if(mappingStoreClass == null) {
+				throw new NullPointerException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+CLASS_MAP.keySet());
+			}
+			mappingStore = (MappingStore) ConstructorUtil.newInstance(mappingStoreClass);
+			INSTANCE_MAP.put(type, mappingStore);
+		}
+		return mappingStore;
 	}
 }

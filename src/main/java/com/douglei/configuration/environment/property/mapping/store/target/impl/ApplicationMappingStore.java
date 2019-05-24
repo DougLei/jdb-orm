@@ -11,6 +11,7 @@ import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.RepeatMappingCodeException;
 import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStoreType;
 
 /**
  * 使用当前系统的内存空间存储映射信息
@@ -18,13 +19,15 @@ import com.douglei.configuration.environment.property.mapping.store.target.Mappi
  */
 public class ApplicationMappingStore implements MappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingStore.class);
+	public static final MappingStoreType TYPE = MappingStoreType.APPLICATION;
 	
 	private static final int DEFAULT_MAPPINGS_SIZE = 32;
+
 	private Map<String, Mapping> mappings;
 	
 	@Override
-	public String getType() {
-		return "application";
+	public MappingStoreType getType() {
+		return TYPE;
 	}
 	
 	@Override

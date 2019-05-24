@@ -9,7 +9,7 @@ import com.douglei.configuration.environment.mapping.Mapping;
  */
 public interface MappingStore extends SelfProcessing{
 	
-	String getType();
+	MappingStoreType getType();
 
 	/**
 	 * 初始化存储空间大小

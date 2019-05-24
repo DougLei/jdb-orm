@@ -49,7 +49,7 @@ public class DialectMapping {
 		if(dialect == null) {
 			Class<? extends Dialect> dialectClass = DIALECT_CLASS_MAP.get(databaseCode);
 			if(dialectClass == null) {
-				throw new NullPointerException("系统目前不支持["+databaseCode+"], 目前支持的databaseCode值包括:"+DIALECT_CLASS_MAP.keySet());
+				throw new NullPointerException("系统目前不支持["+databaseCode+"], 目前支持的dialect值包括:"+DIALECT_CLASS_MAP.keySet());
 			}
 			dialect = (Dialect) ConstructorUtil.newInstance(dialectClass);
 			DIALECT_MAP.put(databaseCode, dialect);
