@@ -58,14 +58,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void save(Object object) {
-		Mapping mapping = getMapping(object, "save");
+		Mapping mapping = getTableMapping(object, "save");
 		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getMapping(code, "save");
+		Mapping mapping = getTableMapping(code, "save");
 		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
@@ -138,13 +138,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	@Override
 	public void update(Object object) {
-		Mapping mapping = getMapping(object, "update");
+		Mapping mapping = getTableMapping(object, "update");
 		putUpdatePersistentObjectCache(object, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
 	}
 	
 	@Override
 	public void update(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getMapping(code, "update");
+		Mapping mapping = getTableMapping(code, "update");
 		putUpdatePersistentObjectCache(propertyMap, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
 	}
 	
@@ -178,13 +178,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	@Override
 	public void delete(Object object) {
-		Mapping mapping = getMapping(object, "delete");
+		Mapping mapping = getTableMapping(object, "delete");
 		putDeletePersistentObjectCache(object, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
 	}
 
 	@Override
 	public void delete(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getMapping(code, "delete");
+		Mapping mapping = getTableMapping(code, "delete");
 		putDeletePersistentObjectCache(propertyMap, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
 	}
 	
@@ -225,13 +225,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param description 传入调用该方法的方法名
 	 * @return
 	 */
-	private Mapping getMapping(Object object, String description) {
+	private Mapping getTableMapping(Object object, String description) {
 		if(object == null) {
 			throw new NullPointerException("要"+description+"的对象不能为空");
 		}
 		String code = object.getClass().getName();
 		logger.debug("对实体对象{} 进行{}操作", code, description);
-		return getMapping(code);
+		return getTableMapping(code);
 	}
 	
 	/**
@@ -240,15 +240,15 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param description 传入调用该方法的方法名
 	 * @return
 	 */
-	private Mapping getMapping(String code, String description) {
+	private Mapping getTableMapping(String code, String description) {
 		if(StringUtil.isEmpty(code)) {
 			throw new NullPointerException("要"+description+"的对象的code值不能为空");
 		}
 		logger.debug("对code={} 的对象进行{}操作", code, description);
-		return getMapping(code);
+		return getTableMapping(code);
 	}
 	
-	private Mapping getMapping(String code) {
+	private Mapping getTableMapping(String code) {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		if(mapping == null) {
 			throw new NullPointerException("不存在code为["+code+"]的映射");
@@ -299,15 +299,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	private TableMetadata getTableMetadata(String code) {
-		Mapping mapping = mappingWrapper.getMapping(code);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+code+"]的映射");
-		}
-		if(mapping.getMappingType() != MappingType.TABLE) {
-			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
-		}
-		logger.debug("获取code={} tablemetadata", code);
-		return (TableMetadata) mapping.getMetadata();
+		return (TableMetadata) getTableMapping(code).getMetadata();
 	}
 	
 	@Override
