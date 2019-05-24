@@ -27,9 +27,19 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 			throw new NullPointerException("<foreach>元素中的collection属性值不能为空");
 		}
 		
+		String alias = null;
+		Node aliasAttributeNode = attributeMap.getNamedItem("alias");
+		if(aliasAttributeNode != null) {
+			String tmpAlias = aliasAttributeNode.getNodeValue();
+			if(StringUtil.notEmpty(tmpAlias)) {
+				alias = tmpAlias.trim();
+			}
+		}
+		
 		return new ForeachSqlNode(
 				content,
 				collectionAttributeNode.getNodeValue(),
+				alias,
 				attributeMap.getNamedItem("open"),
 				attributeMap.getNamedItem("separator"),
 				attributeMap.getNamedItem("close"));

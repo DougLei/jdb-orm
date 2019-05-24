@@ -15,11 +15,11 @@ public class ExecuteSqlNode {
 	private String content;
 	private List<Object> parameters;
 	
-	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter) {
+	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
 		if(sqlParameterByDefinedOrders != null) {
 			Object parameterValue = null;
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
-				parameterValue = parameter.getValue(sqlParameter);
+				parameterValue = parameter.getValue(sqlParameter, sqlParameterNamePrefix);
 				if(parameter.isUsePlaceholder()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();

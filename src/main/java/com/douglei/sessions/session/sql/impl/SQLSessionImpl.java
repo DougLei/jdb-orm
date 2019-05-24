@@ -52,9 +52,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	// 获取ExecutionHolder
-	private ExecutionHolder getExecutionHolder(String namespace, String name, Map<String, Object> sqlParameterMap) {
+	private ExecutionHolder getExecutionHolder(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
-		return new SqlExecutionHolder(sqlMetadata, sqlParameterMap);
+		return new SqlExecutionHolder(sqlMetadata, sqlParameter);
 	}
 
 	@Override
@@ -63,8 +63,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public List<Map<String, Object>> query(String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public List<Map<String, Object>> query(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -74,8 +74,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public Map<String, Object> uniqueQuery(String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public Map<String, Object> uniqueQuery(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.uniqueQuery(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -85,8 +85,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public List<Object[]> query_(String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public List<Object[]> query_(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query_(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -96,8 +96,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public Object[] uniqueQuery_(String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public Object[] uniqueQuery_(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.uniqueQuery_(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -107,8 +107,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 	
@@ -118,8 +118,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public int executeUpdate(String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public int executeUpdate(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		int updateRowCount = 0;
 		do {
 			updateRowCount += super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
@@ -133,8 +133,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query(targetClass, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -144,8 +144,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.uniqueQuery(targetClass, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 
@@ -155,8 +155,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap) {
-		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameterMap);
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(targetClass, pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 }

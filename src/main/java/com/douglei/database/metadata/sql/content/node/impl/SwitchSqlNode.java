@@ -16,7 +16,7 @@ public class SwitchSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
 				return sqlNode.getExecuteSqlNode(sqlParameter);

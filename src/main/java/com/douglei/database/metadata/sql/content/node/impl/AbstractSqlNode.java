@@ -75,6 +75,11 @@ public abstract class AbstractSqlNode implements SqlNode{
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
-		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameter);
+		return getExecuteSqlNode(sqlParameter, null);
+	}
+	
+	@Override
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameter, sqlParameterNamePrefix);
 	}
 }

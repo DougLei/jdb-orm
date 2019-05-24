@@ -20,14 +20,16 @@ public class ForeachSqlNode implements SqlNode {
 	private TextSqlNode content;
 	
 	private String collection;
+	private String alias;
 	
 	private String open = "";
 	private String separator = ",";
 	private String close = "";
 	
-	public ForeachSqlNode(String content, String collection, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
+	public ForeachSqlNode(String content, String collection, String alias, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
 		this.content = new TextSqlNode(content);
 		this.collection = collection;
+		this.alias = alias;
 		if(openAttributeNode != null) {
 			open = openAttributeNode.getNodeValue();
 		}
@@ -46,6 +48,11 @@ public class ForeachSqlNode implements SqlNode {
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
+		return getExecuteSqlNode(sqlParameter, null);
+	}
+	
+	@Override
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
 		if(collectionObject == null) {
 			return null;
@@ -69,7 +76,7 @@ public class ForeachSqlNode implements SqlNode {
 		ExecuteSqlNode executeSqlNode = null;
 		int length = array.length;
 		for(int i=0;i<length;i++) {
-			executeSqlNode = content.getExecuteSqlNode(array[i]);
+			executeSqlNode = content.getExecuteSqlNode(array[i], alias);
 			if(executeSqlNode.existsParameter()) {
 				if(parameters == null) {
 					parameters = new ArrayList<Object>();

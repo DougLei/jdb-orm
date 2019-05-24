@@ -10,7 +10,8 @@
 					b
 				</if>
 			</where>
-		-->		
+		-->	
+			
 		<!-- 
 			<set>
 				<if test="name == '哈哈'">
@@ -18,6 +19,7 @@
 				</if>
 			</set>
 		-->		
+		
 		<!-- 	
 			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
 				a
@@ -26,10 +28,11 @@
 				</if>
 			</trim> 
 		-->
+		
 		<!-- 
 			<switch>
 				<if test="name != null">
-					and name = #{user.name}
+					and name = #{name}
 				</if>
 				<if test="sex != null">
 					and sex = #{sex}
@@ -40,10 +43,12 @@
 			</switch>
 		-->
 		
-			<foreach collection="users" open="(" separator="," close=")">
-				#{userId, dataType=string}
+		<!-- 
+			<foreach collection="userIds" alias="uid" open="(" separator="," close=")">
+				#{uid, dataType=string}
 			</foreach>
-			
+		-->	
+		
 		</content>
 	</sql>
 </mapping-configuration>

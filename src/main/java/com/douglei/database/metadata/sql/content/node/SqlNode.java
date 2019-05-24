@@ -21,4 +21,11 @@ public interface SqlNode {
 	 * @return
 	 */
 	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter);
+	/**
+	 * 获取可执行的sql node
+	 * @param sqlParameter
+	 * @param sqlParameterNamePrefix sql参数名前缀 
+	 * @return
+	 */
+	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix);
 }

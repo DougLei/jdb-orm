@@ -23,10 +23,10 @@ public interface SQLSession extends BasicSession{
 	 * 执行批量查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
-	List<Map<String, Object>> query(String namespace, String name, Map<String, Object> sqlParameterMap);
+	List<Map<String, Object>> query(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行批量查询
@@ -41,10 +41,10 @@ public interface SQLSession extends BasicSession{
 	 * @param targetClass
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
-	<T> List<T> query(Class<T> targetClass, String namespace, String name, Map<String, Object> sqlParameterMap);
+	<T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行唯一查询
@@ -57,10 +57,10 @@ public interface SQLSession extends BasicSession{
 	 * 执行唯一查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
-	Map<String, Object> uniqueQuery(String namespace, String name, Map<String, Object> sqlParameterMap);
+	Map<String, Object> uniqueQuery(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行唯一查询
@@ -75,10 +75,10 @@ public interface SQLSession extends BasicSession{
 	 * @param targetClass
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Map<String, Object> sqlParameterMap);
+	<T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行批量查询
@@ -91,10 +91,10 @@ public interface SQLSession extends BasicSession{
 	 * 执行批量查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<值>的list-数组集合
 	 */
-	List<Object[]> query_(String namespace, String name, Map<String, Object> sqlParameterMap);
+	List<Object[]> query_(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行唯一查询
@@ -107,10 +107,10 @@ public interface SQLSession extends BasicSession{
 	 * 执行唯一查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
-	Object[] uniqueQuery_(String namespace, String name, Map<String, Object> sqlParameterMap);
+	Object[] uniqueQuery_(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 分页查询
@@ -128,10 +128,10 @@ public interface SQLSession extends BasicSession{
 	 * @param pageSize
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap);
+	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 分页查询
@@ -151,10 +151,10 @@ public interface SQLSession extends BasicSession{
 	 * @param pageSize
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Map<String, Object> sqlParameterMap);
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
 	
 	/**
@@ -168,8 +168,8 @@ public interface SQLSession extends BasicSession{
 	 * 执行增删改查操作
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
 	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameterMap
+	 * @param sqlParameter
 	 * @return
 	 */
-	int executeUpdate(String namespace, String name, Map<String, Object> sqlParameterMap);
+	int executeUpdate(String namespace, String name, Object sqlParameter);
 }

@@ -60,7 +60,7 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		List<String> sqlContents = null;
 		List<Object> parameters = null;
 		
