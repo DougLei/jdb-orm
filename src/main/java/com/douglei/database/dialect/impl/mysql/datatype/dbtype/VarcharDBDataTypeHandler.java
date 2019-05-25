@@ -19,7 +19,7 @@ public class VarcharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 
 	@Override
-	public int getTypeCode() {
+	public int getSqlType() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

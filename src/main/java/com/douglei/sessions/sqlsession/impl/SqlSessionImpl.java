@@ -1,5 +1,6 @@
 package com.douglei.sessions.sqlsession.impl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -249,10 +250,13 @@ public class SqlSessionImpl implements SqlSession{
 
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
-		return procedureExecutor.execute(connection.getConnection());
+		try {
+			return procedureExecutor.execute(connection.getConnection());
+		} catch (SQLException e) {
+			throw new RuntimeException("调用并执行存储过程时出现异常", e);
+		}
 	}
 
-	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql) {
 		return query(targetClass, sql, null);

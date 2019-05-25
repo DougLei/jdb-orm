@@ -19,7 +19,7 @@ public class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeH
 			};
 	
 	@Override
-	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		Reader reader = rs.getCharacterStream(columnIndex);
 		if(reader == null) {
 			return null;

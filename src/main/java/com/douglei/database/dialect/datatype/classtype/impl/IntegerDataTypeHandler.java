@@ -29,7 +29,7 @@ public class IntegerDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {int.class, Integer.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(ValidationUtil.isInteger(value)) {
 			if(value.getClass() == int.class || value instanceof Integer) {
 				preparedStatement.setInt(parameterIndex, (int)value);

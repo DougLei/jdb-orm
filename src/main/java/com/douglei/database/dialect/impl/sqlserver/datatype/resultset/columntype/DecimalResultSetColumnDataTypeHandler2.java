@@ -15,7 +15,7 @@ public class DecimalResultSetColumnDataTypeHandler2 extends ResultSetColumnDataT
 			};
 	
 	@Override
-	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		return rs.getDouble(columnIndex);
 	}
 

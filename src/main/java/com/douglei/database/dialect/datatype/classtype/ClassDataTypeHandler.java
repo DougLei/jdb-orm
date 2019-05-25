@@ -44,7 +44,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler{
 	
 	@Deprecated
 	@Override
-	public Object getValue(int columnIndex, ResultSet resultSet) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet resultSet) throws SQLException {
 		return null;
 	}
 }

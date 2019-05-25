@@ -31,7 +31,7 @@ public class ClobDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {Clob.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(value == null) {
 			setNullClob(preparedStatement, parameterIndex);
 		}else {

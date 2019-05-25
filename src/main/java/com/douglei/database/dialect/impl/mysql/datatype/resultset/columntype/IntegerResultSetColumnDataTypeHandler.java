@@ -15,7 +15,7 @@ public class IntegerResultSetColumnDataTypeHandler extends ResultSetColumnDataTy
 			};
 	
 	@Override
-	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		return rs.getInt(columnIndex);
 	}
 

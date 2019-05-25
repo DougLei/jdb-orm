@@ -60,11 +60,10 @@
 		</content>
 		
 		<content dialect="" type="procedure"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
-			{call test_procedure (
-				#{id, dbType=VARCHAR, mode=in},
-				#{name, dbType=VARCHAR, mode=out},
-				#{queryResult, dbType=CURSOR, mode=out}
-			)}
+			{call test_procedure (<!-- 1 -->
+				#{id, dbType=VARCHAR, mode=in},<!-- 2 -->
+				#{name, dbType=VARCHAR, mode=out}<!-- 3 -->
+			)}<!-- 4 -->
 		</content>
 	</sql>
 </mapping-configuration>

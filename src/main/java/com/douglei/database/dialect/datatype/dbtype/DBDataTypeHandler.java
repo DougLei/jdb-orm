@@ -1,6 +1,6 @@
 package com.douglei.database.dialect.datatype.dbtype;
 
-import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,15 +22,23 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	}
 	
 	/**
-	 * 获取数据库type的code值
+	 * 获取数据库type值
 	 * @see java.sql.Types
 	 * @return
 	 */
-	public abstract int getTypeCode();
+	public abstract int getSqlType();
+	
+	/**
+	 * 从CallableStatement中获取输出参数的指
+	 * @param outParameterIndex
+	 * @param callableStatement
+	 * @return
+	 */
+	public abstract Object getValue(short outParameterIndex, CallableStatement callableStatement);
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " typeName=[" + getTypeName() + "], typeCode=[" + getTypeCode() + "]";
+		return getClass().getName() + " typeName=[" + getTypeName() + "], sqlType=[" + getSqlType() + "]";
 	}
 
 	@Override
@@ -40,12 +48,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	
 	@Deprecated
 	@Override
-	public Object getValue(int columnIndex, ResultSet resultSet) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet resultSet) throws SQLException {
 		return null;
-	}
-
-	@Deprecated
-	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 	}
 }

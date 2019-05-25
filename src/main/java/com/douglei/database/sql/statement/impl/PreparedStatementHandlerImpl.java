@@ -44,7 +44,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private void setParameters(List<Object> parameters) throws SQLException {
 		if(parameters != null && parameters.size() > 0) {
 			List<InputSqlParameter> actualParameters = turnToParameters(parameters);
-			int index = 1;
+			short index = 1;
 			for (InputSqlParameter parameter : actualParameters) {
 				parameter.setValue(index, preparedStatement);
 				index++;

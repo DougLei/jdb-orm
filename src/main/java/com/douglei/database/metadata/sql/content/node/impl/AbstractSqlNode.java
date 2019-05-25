@@ -17,10 +17,10 @@ import com.douglei.utils.StringUtil;
  */
 public abstract class AbstractSqlNode implements SqlNode{
 	
-	private String content;
+	protected String content;
 	
 	// sql参数, 按照配置中定义的顺序记录
-	private List<SqlParameterMetadata> sqlParameterByDefinedOrders;
+	protected List<SqlParameterMetadata> sqlParameterByDefinedOrders;
 	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配${
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	

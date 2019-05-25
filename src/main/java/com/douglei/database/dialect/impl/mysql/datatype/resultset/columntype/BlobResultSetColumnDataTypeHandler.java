@@ -19,7 +19,7 @@ public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeH
 			};
 	
 	@Override
-	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		InputStream input = rs.getBinaryStream(columnIndex);
 		if(input == null) {
 			return null;

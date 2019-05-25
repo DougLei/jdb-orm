@@ -51,7 +51,7 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	public boolean next() {
 		return false;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "\n" + 

@@ -30,7 +30,7 @@ public class BlobDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {Blob.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(value == null) {
 			setNullBlob(preparedStatement, parameterIndex);
 		}else {

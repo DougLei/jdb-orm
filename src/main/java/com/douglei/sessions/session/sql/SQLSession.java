@@ -177,7 +177,7 @@ public interface SQLSession extends BasicSession{
 	 * 执行存储过程
 	 * @param namespace
 	 * @param name
-	 * @return
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name);
 	/**
@@ -185,7 +185,7 @@ public interface SQLSession extends BasicSession{
 	 * @param namespace
 	 * @param name
 	 * @param sqlParameter
-	 * @return
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
 }

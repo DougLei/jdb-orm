@@ -21,7 +21,7 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 	
 	@Deprecated
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 	}
 	
 	@Override

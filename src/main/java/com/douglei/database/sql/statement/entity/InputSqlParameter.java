@@ -31,7 +31,7 @@ public class InputSqlParameter {
 		this.dataTypeHandler = dataTypeHandler;
 	}
 
-	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
+	public void setValue(short index, PreparedStatement preparedStatement) throws SQLException {
 		dataTypeHandler.setValue(preparedStatement, index, value);
 	}
 	

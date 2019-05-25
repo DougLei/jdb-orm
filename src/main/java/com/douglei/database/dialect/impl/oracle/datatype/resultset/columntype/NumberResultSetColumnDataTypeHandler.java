@@ -15,7 +15,7 @@ public class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTyp
 			};
 	
 	@Override
-	public Object getValue(int columnIndex, ResultSet rs) throws SQLException {
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		if(rs.getMetaData().getScale(columnIndex) == 0) {
 			long value = rs.getLong(columnIndex);
 			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {

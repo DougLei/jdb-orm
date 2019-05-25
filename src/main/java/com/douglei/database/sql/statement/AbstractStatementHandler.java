@@ -96,9 +96,9 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 			SqlResultsetMetadata sqlResultsetMetadata = null;
 			do {
 				map = new HashMap<String, Object>(count);
-				for(int i=0;i<count;i++) {
+				for(short i=0;i<count;i++) {
 					sqlResultsetMetadata = resultsetMetadatas.get(i);
-					map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet));
+					map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet));
 				}
 				queryResultList.add(map);
 			}while(resultSet.next());
@@ -128,9 +128,9 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 			initialQueryUniqueResult(count);
 			
 			SqlResultsetMetadata sqlResultsetMetadata = null;
-			for(int i=0;i<count;i++) {
+			for(short i=0;i<count;i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				queryUniqueResult.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet));
+				queryUniqueResult.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet));
 			}
 			
 			if(resultSet.next()) {
@@ -166,9 +166,9 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 			SqlResultsetMetadata sqlResultsetMetadata = null;
 			do {
 				array = new Object[count];
-				for(int i=0;i<count;i++) {
+				for(short i=0;i<count;i++) {
 					sqlResultsetMetadata = resultsetMetadatas.get(i);
-					array[i] = sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet); 
+					array[i] = sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet); 
 				}
 				queryResultList_.add(array);
 			}while(resultSet.next());
@@ -190,9 +190,9 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 			queryUniqueResult_ = new Object[count];
 			
 			SqlResultsetMetadata sqlResultsetMetadata = null;
-			for(int i=0;i<count;i++) {
+			for(short i=0;i<count;i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				queryUniqueResult_[i] = sqlResultsetMetadata.getDataTypeHandler().getValue(i+1, resultSet); 
+				queryUniqueResult_[i] = sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet); 
 			}
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");

@@ -32,7 +32,7 @@ public class StringDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {String.class, NString.class, Char.class, NChar.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(value == null) {
 			setNullString(preparedStatement, parameterIndex);
 		}else {

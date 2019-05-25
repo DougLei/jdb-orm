@@ -36,7 +36,7 @@ public class SqlContentMetadata implements Metadata{
 	public List<SqlNode> getRootSqlNodes() {
 		return rootSqlNodes;
 	}
-
+	
 	/**
 	 * 即dialectType的code, 用来区分不同dialect, 调用不同的sql语句
 	 */

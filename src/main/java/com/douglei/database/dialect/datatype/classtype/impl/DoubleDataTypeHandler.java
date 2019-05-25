@@ -29,7 +29,7 @@ public class DoubleDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {double.class, Double.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(ValidationUtil.isDouble(value)) {
 			if(value.getClass() == double.class || value instanceof Double) {
 				preparedStatement.setDouble(parameterIndex, (double)value);

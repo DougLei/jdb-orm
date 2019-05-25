@@ -50,7 +50,7 @@ public class SqlParameterMetadata implements Metadata{
 	/**
 	 * 输入输出类型
 	 */
-	private SqlParameterMode sqlParameterMode;
+	private SqlParameterMode mode;
 	
 	
 	public SqlParameterMetadata(String configurationText) {
@@ -63,7 +63,7 @@ public class SqlParameterMetadata implements Metadata{
 		setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
 		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
 		setDBDataTypeHandler(propertyMap.get("dbType"));
-		setSqlParameterMode(propertyMap.get("mode"));
+		setMode(propertyMap.get("mode"));
 	}
 	
 	// 解析出属性map集合
@@ -145,13 +145,13 @@ public class SqlParameterMetadata implements Metadata{
 			}
 		}
 	}
-	void setSqlParameterMode(String mode) {
+	void setMode(String mode) {
 		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
 			if(StringUtil.notEmpty(mode)) {
-				this.sqlParameterMode = SqlParameterMode.toValue(mode);
+				this.mode = SqlParameterMode.toValue(mode);
 			}
-			if(this.sqlParameterMode == null) {
-				this.sqlParameterMode = SqlParameterMode.IN;
+			if(this.mode == null) {
+				this.mode = SqlParameterMode.IN;
 			}
 		}
 	}
@@ -177,10 +177,11 @@ public class SqlParameterMetadata implements Metadata{
 	public DBDataTypeHandler getDBDataTypeHandler() {
 		return dbDataTypeHandler;
 	}
-	public SqlParameterMode getSqlParameterMode() {
-		return sqlParameterMode;
+	public SqlParameterMode getMode() {
+		return mode;
 	}
 
+	@Deprecated
 	@Override
 	public String getCode() {
 		return name;
@@ -212,6 +213,15 @@ public class SqlParameterMetadata implements Metadata{
 			}
 			isSingleName = name.indexOf(".") == -1;
 		}
+	}
+	
+	/**
+	 * 获取值
+	 * @param sqlParameter
+	 * @return
+	 */
+	public Object getValue(Object sqlParameter) {
+		return getValue(sqlParameter, null);
 	}
 	
 	/**

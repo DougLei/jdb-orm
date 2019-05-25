@@ -1,5 +1,8 @@
 package com.douglei.database.metadata.sql.content.node.impl;
 
+import java.util.List;
+
+import com.douglei.database.metadata.sql.SqlParameterMetadata;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 
 /**
@@ -15,5 +18,12 @@ public class TextSqlNode extends AbstractSqlNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.TEXT;
+	}
+	
+	public String getContent() {
+		return content;
+	}
+	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders(){
+		return sqlParameterByDefinedOrders;
 	}
 }

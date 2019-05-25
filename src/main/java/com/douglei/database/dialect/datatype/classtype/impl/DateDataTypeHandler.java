@@ -31,7 +31,7 @@ public class DateDataTypeHandler extends ClassDataTypeHandler{
 	private static final Class<?>[] supportClasses = {Date.class};
 
 	@Override
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(ValidationUtil.isDate(value)) {
 			preparedStatement.setTimestamp(parameterIndex, DateTypeUtil.parseSqlTimestamp(value));
 		}else {

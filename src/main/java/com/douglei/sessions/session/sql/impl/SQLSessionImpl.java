@@ -1,6 +1,10 @@
 package com.douglei.sessions.session.sql.impl;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,15 +12,22 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlMetadata;
+import com.douglei.database.metadata.sql.SqlParameterMetadata;
+import com.douglei.database.metadata.sql.SqlParameterMode;
+import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.database.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
+import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.sql.impl.persistent.execution.SqlExecutionHolder;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.utils.CloseUtil;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -169,15 +180,94 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
-		final ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
+		
+		String dialectTypeCode = LocalRunDialectHolder.getDialect().getType().getCode();
+		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialectTypeCode);
+		if(contents == null || contents.size() == 0) {
+			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialectTypeCode+", 不存在可以执行的存储过程sql语句");
+		}
+		
+		int length = contents.size();
+		List<Object> listMap = new ArrayList<Object>(length);
+		
+		StringBuilder sqlContent = new StringBuilder();
+		List<SqlParameterMetadata> sqlParameters = new ArrayList<SqlParameterMetadata>(10);
+		
+		List<SqlNode> sqlNodes = null;
+		TextSqlNode textSqlNode = null;
+		for (SqlContentMetadata content : contents) {
+			re_set(sqlContent, sqlParameters);
+			sqlNodes = content.getRootSqlNodes();
+			
+			for(SqlNode sn: sqlNodes) {
+				textSqlNode = (TextSqlNode) sn;
+				sqlContent.append(textSqlNode.getContent()).append(" ");
+				if(textSqlNode.getSqlParameterByDefinedOrders() != null) {
+					sqlParameters.addAll(textSqlNode.getSqlParameterByDefinedOrders());
+				}
+			}
+			
+			listMap.add(executeProcedure(sqlContent.toString(), sqlParameters, sqlParameter));
+		}
+		if(length == 1) {
+			return listMap.get(0);
+		}
+		return listMap;
+	}
+	
+	private void re_set(StringBuilder sqlContent, List<SqlParameterMetadata> sqlParameters) {
+		if(sqlContent.length() > 0) {
+			sqlContent.setLength(0);
+		}
+		if(sqlParameters.size() >0) {
+			sqlParameters.clear();
+		}
+	}
+
+	// 执行存储过程
+	private Object executeProcedure(final String callableSqlContent, final List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
 		Object executeResult = super.executeProcedure(new ProcedureExecutor() {
 			@Override
-			public Object execute(Connection connection) {
-				
-				
-				
-				
-				return null;
+			public Object execute(Connection connection) throws SQLException {
+				CallableStatement callableStatement = null;
+				try {
+					callableStatement = connection.prepareCall(callableSqlContent);
+					
+					short outParameterCount = 0;
+					short[] outParameterIndex = null;
+					if(callableSqlParameters != null) {
+						outParameterIndex = new short[callableSqlParameters.size()];
+						
+						short index = 1;
+						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
+							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) {
+								sqlParameterMetadata.getDBDataTypeHandler().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
+							}
+							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
+								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataTypeHandler().getSqlType());
+								outParameterIndex[outParameterCount] = index;
+								outParameterCount++;
+							}
+							index++;
+						}
+					}
+					callableStatement.execute();
+					
+					if(outParameterCount > 0) {
+						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount);
+						
+						SqlParameterMetadata sqlParameterMetadata = null;
+						for(short i=0;i<outParameterCount;i++) {
+							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]);
+							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataTypeHandler().getValue(outParameterIndex[i], callableStatement));
+						}
+						return outMap;
+					}
+					return null;
+				} finally {
+					CloseUtil.closeDBConn(callableStatement);
+				}
 			}
 		});
 		return executeResult;

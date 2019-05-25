@@ -23,7 +23,7 @@ public interface DataTypeHandler {
 	 * @param value
 	 * @throws SQLException
 	 */
-	void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
+	void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException;
 	
 	/**
 	 * 从resultset中获取对应的列值
@@ -32,5 +32,5 @@ public interface DataTypeHandler {
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getValue(int columnIndex, ResultSet rs) throws SQLException;
+	Object getValue(short columnIndex, ResultSet rs) throws SQLException;
 }
