@@ -32,7 +32,7 @@ public class DocumentReader {
 		XPathExpression expression = xpath.compile("content");
 		
 		NodeList nl = (NodeList) expression.evaluate(sqlNode, XPathConstants.NODESET);
-		Node contentNode = nl.item(0);
+		Node contentNode = nl.item(1);
 		
 		NodeList children = contentNode.getChildNodes();
 		
@@ -41,7 +41,9 @@ public class DocumentReader {
 		Node node = null;
 		for(int i=0;i<length;i++) {
 			node = children.item(i);
+			System.out.println(node.getNodeType() == Node.COMMENT_NODE);
 			if("#text".equals(node.getNodeName())) {
+				System.out.println("bb"+(node.getNodeType() == Node.TEXT_NODE));
 				System.out.println(node.getNodeName());
 				System.out.println(node.getNodeValue());
 			}

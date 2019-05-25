@@ -29,13 +29,13 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 
 	private SqlContentMetadata doValidate(Node contentNode) {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
-		
-		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
 		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
 		
 		NodeList children = contentNode.getChildNodes();
-		int length = children.getLength();
+		int length = doValidateContent(type, children);
+		
+		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -46,6 +46,42 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		return sqlContentMetadata;
 	}
 
+	private SqlContentType getSqlContentType(Node type) {
+		if(type == null) {
+			throw new MetadataValidateException("<content>元素的type属性值不能为空");
+		}else {
+			SqlContentType sqlContentType = SqlContentType.toValue(type.getNodeValue());
+			if(sqlContentType == null) {
+				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
+			}
+			return sqlContentType;
+		}
+	}
+	
+	private int doValidateContent(SqlContentType type, NodeList children) {
+		int childrenLength = 0;
+		if(children == null || (childrenLength = children.getLength()) == 0) {
+			throw new NullPointerException("<content>元素中不存在任何sql语句");
+		}
+		if(type == SqlContentType.PROCEDURE) {
+			short nodeType, textNodeCount = 0, otherNodeCount = 0;
+			for(int i=0;i<childrenLength;i++) {
+				nodeType = children.item(i).getNodeType();
+				if(nodeType != Node.COMMENT_NODE) {
+					if(nodeType == Node.TEXT_NODE) {
+						textNodeCount++;
+					}else {
+						otherNodeCount++;
+					}
+				}
+			}
+			if(textNodeCount == 0 || textNodeCount > 1 || otherNodeCount > 0) {
+				throw new IllegalArgumentException("<content type='procedure'>时, 其中必须配置, 且只能配置一个sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
+			}
+		}
+		return childrenLength;
+	}
+	
 	private DialectType getDialectType(Node dialect) {
 		DialectType type = null;
 		if(dialect == null) {
@@ -57,17 +93,5 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 			}
 		}
 		return type;
-	}
-	
-	private SqlContentType getSqlContentType(Node type) {
-		if(type == null) {
-			throw new MetadataValidateException("<content>元素的type属性值不能为空");
-		}else {
-			SqlContentType sqlContentType = SqlContentType.toValue(type.getNodeValue());
-			if(sqlContentType == null) {
-				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
-			}
-			return sqlContentType;
-		}
 	}
 }
