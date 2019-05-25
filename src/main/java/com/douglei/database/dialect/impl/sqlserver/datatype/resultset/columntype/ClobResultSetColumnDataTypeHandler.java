@@ -13,7 +13,7 @@ import com.douglei.utils.CloseUtil;
  * 
  * @author DougLei
  */
-public class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
 			-1	// text
 			};

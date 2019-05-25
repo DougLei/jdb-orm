@@ -11,7 +11,7 @@ import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
  * 
  * @author DougLei
  */
-public class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
+class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {

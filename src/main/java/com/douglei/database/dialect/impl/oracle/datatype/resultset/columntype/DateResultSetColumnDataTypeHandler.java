@@ -9,7 +9,7 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
 			93	// date 
 			};

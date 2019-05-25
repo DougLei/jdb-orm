@@ -9,7 +9,7 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class IntegerResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
 			4	// int 
 			};

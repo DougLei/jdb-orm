@@ -13,7 +13,7 @@ import com.douglei.utils.CloseUtil;
  * 
  * @author DougLei
  */
-public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
 			-4	// blob...各种 
 			};

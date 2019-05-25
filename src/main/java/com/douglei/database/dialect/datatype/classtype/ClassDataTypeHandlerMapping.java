@@ -14,6 +14,8 @@ import com.douglei.database.dialect.datatype.classtype.impl.ClobDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.DateDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.IntegerDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.impl.LongDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.impl.ShortDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.utils.reflect.ConstructorUtil;
 
@@ -30,6 +32,8 @@ public class ClassDataTypeHandlerMapping {
 	public ClassDataTypeHandlerMapping() {
 		register(StringDataTypeHandler.singleInstance());
 		register(IntegerDataTypeHandler.singleInstance());
+		register(LongDataTypeHandler.singleInstance());
+		register(ShortDataTypeHandler.singleInstance());
 		register(DoubleDataTypeHandler.singleInstance());
 		register(DateDataTypeHandler.singleInstance());
 		register(ClobDataTypeHandler.singleInstance());
@@ -63,7 +67,12 @@ public class ClassDataTypeHandlerMapping {
 		ClassDataTypeHandler dataTypeHandler = CODE_DATATYPE_HANDLER_MAP.get(code.toLowerCase());
 		if(dataTypeHandler == null) {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义ClassDataTypeHandler实现子类", code);
-			Object obj = ConstructorUtil.newInstance(code);
+			Object obj = null;
+			try {
+				obj = ConstructorUtil.newInstance(code);
+			} catch (Exception e) {
+				throw new UnsupportDataTypeHandlerException("目前无法处理ClassDataTypeHandler code=["+code+"]的数据类型");
+			}
 			if(!(obj instanceof ClassDataTypeHandler)) {
 				throw new ClassCastException("code=["+code+"]的类必须继承["+ClassDataTypeHandler.class.getName()+"]");
 			}

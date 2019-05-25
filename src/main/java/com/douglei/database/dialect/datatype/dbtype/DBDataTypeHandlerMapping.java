@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.dialect.datatype.RepeatedDataTypeHandlerException;
+import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerException;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
@@ -37,7 +38,12 @@ public class DBDataTypeHandlerMapping {
 		DBDataTypeHandler dbDataTypeHandler = DB_DATA_TYPE_HANDLER_MAP.get(typeName.toLowerCase());
 		if(dbDataTypeHandler == null) {
 			logger.debug("没有获取到typeName=[{}]的DBDataTypeHandler实例, 尝试加载该自定义DBDataTypeHandler实现子类", typeName);
-			Object obj = ConstructorUtil.newInstance(typeName);
+			Object obj = null;
+			try {
+				obj = ConstructorUtil.newInstance(typeName);
+			} catch (Exception e) {
+				throw new UnsupportDataTypeHandlerException("目前无法处理DBTypeName=["+typeName+"]的数据类型");
+			}
 			if(!(obj instanceof DBDataTypeHandler)) {
 				throw new ClassCastException("typeName=["+typeName+"]的类必须继承["+DBDataTypeHandler.class.getName()+"]");
 			}

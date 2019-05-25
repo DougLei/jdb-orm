@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.mysql.datatype.resultset.columntype;
+package com.douglei.database.dialect.impl.sqlserver.datatype.resultset.columntype;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class BigIntegerResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
 			-5	// bigint 
 			};

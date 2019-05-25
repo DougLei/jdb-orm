@@ -9,14 +9,14 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  * 
  * @author DougLei
  */
-public class BigIntegerResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
-			-5	// bigint 
+			93	// datetime 
 			};
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		return rs.getLong(columnIndex);
+		return rs.getTimestamp(columnIndex);
 	}
 
 	@Override
