@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.DataTypeHandlerContext;
 import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -39,7 +38,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			if(logger.isDebugEnabled()) {
 				logger.debug("配置的dataType为空, 使用默认的DataTypeHandler={}", StringDataTypeHandler.class.getName());
 			}
-			return DataTypeHandlerContext.getDefaultDataTypeHandler();
+			return LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
 		}
 		try {
 			return LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
@@ -49,7 +48,6 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 	}
 	
 	private boolean validateIsPrimaryKey(String primaryKey) {
-		
-		return false;
+		return Boolean.parseBoolean(primaryKey);
 	}
 }

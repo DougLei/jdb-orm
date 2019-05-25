@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
@@ -47,8 +48,8 @@ public abstract class AbstractDataTypeHandlerMapping{
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
 		return resultsetColumnDataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType, columnName, columnTypeName);
 	}
-	public DBDataTypeHandler getDBDataTypeHandlerByDBTypeName(String typeName) {
-		return dbDataTypeHandlerMapping.getDBDataTypeHandlerByDBTypeName(typeName);
+	public DBDataTypeHandler getDataTypeHandlerByDBTypeName(String typeName) {
+		return dbDataTypeHandlerMapping.getDataTypeHandlerByDBTypeName(typeName);
 	}
 	
 	/**
@@ -67,5 +68,22 @@ public abstract class AbstractDataTypeHandlerMapping{
 				dbDataTypeHandlerMapping.register(extDataTypeHandler.getDBDataTypeHandler());
 				return;
 		}
+	}
+	
+	/**
+	 * <pre>
+	 * 	获取默认的DBDataTypeHandler
+	 * 	因为各个数据库的类型名称不一致, 所以需要各个子类自行实现
+	 * </pre>
+	 * @return
+	 */
+	public abstract DBDataTypeHandler getDefaultDBDataTypeHandler();
+	
+	/**
+	 * 获取默认的DataTypeHandler
+	 * @return
+	 */
+	public DataTypeHandler getDefaultDataTypeHandler() {
+		return StringDataTypeHandler.singleInstance();
 	}
 }

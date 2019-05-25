@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.LocalConfigurationDialectHolder;
+import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
@@ -30,9 +31,10 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	private SqlContentMetadata doValidate(Node contentNode) {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
+		LocalSqlMappingConfigurationSqlContentTypeHolder.setCurrentSqlContentType(type);
 		
 		NodeList children = contentNode.getChildNodes();
-		int length = doValidateContent(type, children);
+		int length = doValidateContent(children);
 		
 		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
 		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
@@ -58,12 +60,12 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		}
 	}
 	
-	private int doValidateContent(SqlContentType type, NodeList children) {
+	private int doValidateContent(NodeList children) {
 		int childrenLength = 0;
 		if(children == null || (childrenLength = children.getLength()) == 0) {
 			throw new NullPointerException("<content>元素中不存在任何sql语句");
 		}
-		if(type == SqlContentType.PROCEDURE) {
+		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
 			short nodeType, textNodeCount = 0, otherNodeCount = 0;
 			for(int i=0;i<childrenLength;i++) {
 				nodeType = children.item(i).getNodeType();
@@ -75,8 +77,8 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 					}
 				}
 			}
-			if(textNodeCount == 0 || textNodeCount > 1 || otherNodeCount > 0) {
-				throw new IllegalArgumentException("<content type='procedure'>时, 其中必须配置, 且只能配置一个sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
+			if(textNodeCount == 0 || otherNodeCount > 0) {
+				throw new IllegalArgumentException("<content type='procedure'>时, 其中必须配置, 且只能配置sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
 			}
 		}
 		return childrenLength;

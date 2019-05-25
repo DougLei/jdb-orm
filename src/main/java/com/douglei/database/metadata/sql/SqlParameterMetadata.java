@@ -3,12 +3,10 @@ package com.douglei.database.metadata.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.configuration.LocalConfigurationDialectHolder;
+import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
+import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.DataTypeHandlerContext;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
@@ -21,7 +19,6 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final Logger logger = LoggerFactory.getLogger(SqlParameterMetadata.class);
 	private String configurationText;
 	
 	/**
@@ -65,7 +62,6 @@ public class SqlParameterMetadata implements Metadata{
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
 		setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
 		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
-		
 		setDBDataTypeHandler(propertyMap.get("dbType"));
 		setSqlParameterMode(propertyMap.get("mode"));
 	}
@@ -109,15 +105,16 @@ public class SqlParameterMetadata implements Metadata{
 		this.name = name;
 	}
 	void setDataTypeHandler(String dataType) {
-		logger.debug("设置dataType配置值");
-		if(StringUtil.isEmpty(dataType)) {
-			this.dataTypeHandler = DataTypeHandlerContext.getDefaultDataTypeHandler();
-		}else {
-			this.dataTypeHandler = LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+		if(!LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+			AbstractDataTypeHandlerMapping mapping = LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping();
+			if(StringUtil.isEmpty(dataType)) {
+				this.dataTypeHandler = mapping.getDefaultDataTypeHandler();
+			}else {
+				this.dataTypeHandler = mapping.getDataTypeHandlerByCode(dataType);
+			}
 		}
 	}
 	void setUsePlaceholder(String usePlaceholder) {
-		logger.debug("设置usePlaceholder配置值");
 		if(ValidationUtil.isBoolean(usePlaceholder)) {
 			this.usePlaceholder = Boolean.parseBoolean(usePlaceholder);
 		}else {
@@ -125,7 +122,6 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	void setPlaceholderPrefix(String placeholderPrefix) {
-		logger.debug("设置placeholderPrefix配置值");
 		if(StringUtil.isEmpty(placeholderPrefix)) {
 			this.placeholderPrefix = "'";
 		}else {
@@ -133,7 +129,6 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	void setPlaceholderSuffix(String placeholderSuffix) {
-		logger.debug("设置placeholderSuffix配置值");
 		if(StringUtil.isEmpty(placeholderSuffix)) {
 			this.placeholderSuffix = "'";
 		}else {
@@ -141,12 +136,17 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	void setDBDataTypeHandler(String typeName) {
-		logger.debug("设置dbType配置值");
-		
+		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+			AbstractDataTypeHandlerMapping mapping = LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping();
+			if(StringUtil.isEmpty(typeName)) {
+				this.dbDataTypeHandler = mapping.getDefaultDBDataTypeHandler();
+			}else {
+				this.dbDataTypeHandler = mapping.getDataTypeHandlerByDBTypeName(typeName);
+			}
+		}
 	}
 	void setSqlParameterMode(String mode) {
-		logger.debug("设置mode配置值");
-		if(dbDataTypeHandler != null) {
+		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
 			if(StringUtil.notEmpty(mode)) {
 				this.sqlParameterMode = SqlParameterMode.toValue(mode);
 			}
@@ -174,7 +174,7 @@ public class SqlParameterMetadata implements Metadata{
 	public String getPlaceholderSuffix() {
 		return placeholderSuffix;
 	}
-	public DBDataTypeHandler getDbDataTypeHandler() {
+	public DBDataTypeHandler getDBDataTypeHandler() {
 		return dbDataTypeHandler;
 	}
 	public SqlParameterMode getSqlParameterMode() {
