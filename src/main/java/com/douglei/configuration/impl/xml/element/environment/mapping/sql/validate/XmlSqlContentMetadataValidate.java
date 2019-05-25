@@ -13,7 +13,7 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.Type;
+import com.douglei.database.metadata.sql.SqlContentType;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		
 		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
-		Type type = getSqlContentType(attributeMap.getNamedItem("type"));
+		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
 		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
 		
 		NodeList children = contentNode.getChildNodes();
@@ -56,13 +56,13 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		return type;
 	}
 	
-	private Type getSqlContentType(Node type) {
+	private SqlContentType getSqlContentType(Node type) {
 		if(type == null) {
 			throw new MetadataValidateException("<content>元素的type属性值不能为空");
 		}else {
-			Type sqlContentType = Type.toValue(type.getNodeValue());
+			SqlContentType sqlContentType = SqlContentType.toValue(type.getNodeValue());
 			if(sqlContentType == null) {
-				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(Type.values()));
+				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
 			}
 			return sqlContentType;
 		}

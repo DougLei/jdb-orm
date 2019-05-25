@@ -11,6 +11,11 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class IntegerDataTypeHandler extends ClassDataTypeHandler{
+	private IntegerDataTypeHandler() {}
+	private static final IntegerDataTypeHandler instance = new IntegerDataTypeHandler();
+	public static final IntegerDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getCode() {

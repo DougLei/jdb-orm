@@ -12,7 +12,12 @@ import com.douglei.database.dialect.datatype.wrapper.Blob;
  * @author DougLei
  */
 public class BlobDataTypeHandler extends ClassDataTypeHandler{
-
+	private BlobDataTypeHandler() {}
+	private static final BlobDataTypeHandler instance = new BlobDataTypeHandler();
+	public static final BlobDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	@Override
 	public String getCode() {
 		return "blob";

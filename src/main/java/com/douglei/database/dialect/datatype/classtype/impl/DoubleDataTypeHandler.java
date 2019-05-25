@@ -11,7 +11,12 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class DoubleDataTypeHandler extends ClassDataTypeHandler{
-
+	private DoubleDataTypeHandler() {}
+	private static final DoubleDataTypeHandler instance = new DoubleDataTypeHandler();
+	public static final DoubleDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	@Override
 	public String getCode() {
 		return "double";

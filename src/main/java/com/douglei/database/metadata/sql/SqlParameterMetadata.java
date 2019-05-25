@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.DataTypeHandlerContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.instances.ognl.OgnlHandler;
@@ -97,7 +97,7 @@ public class SqlParameterMetadata implements Metadata{
 	void setDataTypeHandler(String dataType) {
 		logger.debug("设置dataType配置值");
 		if(StringUtil.isEmpty(dataType)) {
-			this.dataTypeHandler = ClassDataTypeHandlerMapping.getDefaultDataTypeHandler();
+			this.dataTypeHandler = DataTypeHandlerContext.getDefaultDataTypeHandler();
 		}else {
 			this.dataTypeHandler = LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		}

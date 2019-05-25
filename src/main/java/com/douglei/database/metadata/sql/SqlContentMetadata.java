@@ -14,11 +14,11 @@ import com.douglei.database.metadata.sql.content.node.SqlNode;
  */
 public class SqlContentMetadata implements Metadata{
 	private String dialectTypeCode;
-	private Type type;
+	private SqlContentType type;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(DialectType dialectType, Type type) {
+	public SqlContentMetadata(DialectType dialectType, SqlContentType type) {
 		this.dialectTypeCode = dialectType.getCode();
 		this.type = type;
 	}
@@ -33,7 +33,7 @@ public class SqlContentMetadata implements Metadata{
 		rootSqlNodes.add(rootSqlNode);
 	}
 	
-	public Type getType() {
+	public SqlContentType getType() {
 		return type;
 	}
 	public List<SqlNode> getRootSqlNodes() {

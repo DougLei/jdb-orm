@@ -13,6 +13,11 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class DateDataTypeHandler extends ClassDataTypeHandler{
+	private DateDataTypeHandler() {}
+	private static final DateDataTypeHandler instance = new DateDataTypeHandler();
+	public static final DateDataTypeHandler singleInstance() {
+		return instance;
+	}
 
 	@Override
 	public String getCode() {

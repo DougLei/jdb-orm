@@ -58,5 +58,13 @@
 		-->	
 		
 		</content>
+		
+		<content dialect="" type="procedure"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
+			{call test_procedure (
+				#{id, dbType=VARCHAR, mode=in},
+				#{name, dbType=VARCHAR, mode=out},
+				#{queryResult, dbType=CURSOR, mode=out}
+			)}
+		</content>
 	</sql>
 </mapping-configuration>

@@ -4,7 +4,7 @@ package com.douglei.database.metadata.sql;
  * 
  * @author DougLei
  */
-public enum Type {
+public enum SqlContentType {
 	INSERT,
 	DELETE,
 	UPDATE,
@@ -12,10 +12,10 @@ public enum Type {
 	
 	PROCEDURE;
 	
-	public static Type toValue(String type) {
+	public static SqlContentType toValue(String type) {
 		type = type.toUpperCase();
-		Type[] scts = Type.values();
-		for (Type sct : scts) {
+		SqlContentType[] scts = SqlContentType.values();
+		for (SqlContentType sct : scts) {
 			if(sct.name().equals(type)) {
 				return sct;
 			}

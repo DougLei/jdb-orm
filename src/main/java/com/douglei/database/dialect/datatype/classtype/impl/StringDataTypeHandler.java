@@ -14,6 +14,11 @@ import com.douglei.database.dialect.datatype.wrapper.StringWrapper;
  * @author DougLei
  */
 public class StringDataTypeHandler extends ClassDataTypeHandler{
+	private StringDataTypeHandler() {}
+	private static final StringDataTypeHandler instance = new StringDataTypeHandler();
+	public static final StringDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getCode() {

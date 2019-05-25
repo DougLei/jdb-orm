@@ -15,7 +15,7 @@ import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerException;
  */
 public class ResultSetColumnDataTypeHandlerMapping {
 	private static final Logger logger = LoggerFactory.getLogger(ResultSetColumnDataTypeHandlerMapping.class);
-	private final Map<Integer, ResultSetColumnDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDataTypeHandler>();
+	private final Map<Integer, ResultSetColumnDataTypeHandler> DATATYPE_HANDLER_MAP = new HashMap<Integer, ResultSetColumnDataTypeHandler>(16);
 	
 	public void register(ResultSetColumnDataTypeHandler resultSetColumnDatatTypeHandler) {
 		if(logger.isDebugEnabled()) {
@@ -33,12 +33,12 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	
 	/**
 	 * 根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
+	 * @param columnType 主要是通过该参数值获取对应的ResultSetColumnDataTypeHandler实例, 另外两个参数, 是为了在获取失败时, 进行提示信息
 	 * @param columnName
-	 * @param columnType
 	 * @param columnTypeName
 	 * @return
 	 */
-	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(String columnName, int columnType, String columnTypeName) {
+	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
 		ResultSetColumnDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
 		if(dataTypeHandler == null) {
 			throw new UnsupportDataTypeHandlerException("目前无法处理columnName=["+columnName+"], columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");

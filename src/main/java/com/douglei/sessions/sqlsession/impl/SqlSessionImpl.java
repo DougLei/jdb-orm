@@ -23,8 +23,7 @@ import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
-import com.douglei.utils.reflect.ConstructorUtil;
-import com.douglei.utils.reflect.IntrospectorUtil;
+import com.douglei.utils.datatype.ConvertUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -292,7 +291,6 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	// 将map转换为类
-	@SuppressWarnings("unchecked")
 	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
 		if(map.size() == 0) {
 			return null;
@@ -302,7 +300,7 @@ public class SqlSessionImpl implements SqlSession{
 		}else {
 			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
 		}
-		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
+		return ConvertUtil.mapToClass(map, targetClass);
 	}
 	
 	// 将map的key, 由列名转换成属性名

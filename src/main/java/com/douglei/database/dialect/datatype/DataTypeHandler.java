@@ -32,5 +32,5 @@ public interface DataTypeHandler {
 	 * @return
 	 * @throws SQLException
 	 */
-	Object getValue(int columnIndex, ResultSet rs)  throws SQLException;
+	Object getValue(int columnIndex, ResultSet rs) throws SQLException;
 }

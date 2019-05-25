@@ -3,6 +3,7 @@ package com.douglei.configuration.extconfiguration.datatypehandler;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
+import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
@@ -18,4 +19,6 @@ public interface ExtDataTypeHandler {
 	ClassDataTypeHandler getClassDataTypeHandler();
 
 	ResultSetColumnDataTypeHandler getResultsetColumnDataTypeHandler();
+
+	DBDataTypeHandler getDBDataTypeHandler();
 }

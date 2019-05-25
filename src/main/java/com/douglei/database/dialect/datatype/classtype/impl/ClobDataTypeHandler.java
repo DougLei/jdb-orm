@@ -13,7 +13,12 @@ import com.douglei.database.dialect.datatype.wrapper.StringWrapper;
  * @author DougLei
  */
 public class ClobDataTypeHandler extends ClassDataTypeHandler{
-
+	private ClobDataTypeHandler() {}
+	private static final ClobDataTypeHandler instance = new ClobDataTypeHandler();
+	public static final ClobDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	@Override
 	public String getCode() {
 		return "clob";
