@@ -6,8 +6,6 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.IntegerDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.LongDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.ShortDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -33,10 +31,6 @@ class NumberDBDataTypeHandler extends DBDataTypeHandler{
 			DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else if(ValidationUtil.isInteger(value)) {
 			IntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-		}else if(ValidationUtil.isShort(value)) {
-			ShortDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-		}else if(ValidationUtil.isLong(value)) {
-			LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else {
 			preparedStatement.setNull(parameterIndex, 2);
 		}

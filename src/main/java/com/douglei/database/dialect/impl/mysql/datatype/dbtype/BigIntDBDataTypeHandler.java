@@ -11,7 +11,7 @@ import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
  * 
  * @author DougLei
  */
-class BigIntDBDataTypeHandler2 extends DBDataTypeHandler{
+class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {

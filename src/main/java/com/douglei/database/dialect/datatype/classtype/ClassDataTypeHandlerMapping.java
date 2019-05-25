@@ -9,14 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.RepeatedDataTypeHandlerException;
 import com.douglei.database.dialect.datatype.UnsupportDataTypeHandlerException;
-import com.douglei.database.dialect.datatype.classtype.impl.BlobDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.ClobDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.DateDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.IntegerDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.LongDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.ShortDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
@@ -28,17 +20,6 @@ public class ClassDataTypeHandlerMapping {
 	
 	private final Map<String, ClassDataTypeHandler> CODE_DATATYPE_HANDLER_MAP = new HashMap<String, ClassDataTypeHandler>(10);
 	private final Map<Class<?>, ClassDataTypeHandler> SUPPORTCLASS_DATATYPE_HANDLER_MAP = new HashMap<Class<?>, ClassDataTypeHandler>(10);
-	
-	public ClassDataTypeHandlerMapping() {
-		register(StringDataTypeHandler.singleInstance());
-		register(IntegerDataTypeHandler.singleInstance());
-		register(LongDataTypeHandler.singleInstance());
-		register(ShortDataTypeHandler.singleInstance());
-		register(DoubleDataTypeHandler.singleInstance());
-		register(DateDataTypeHandler.singleInstance());
-		register(ClobDataTypeHandler.singleInstance());
-		register(BlobDataTypeHandler.singleInstance());
-	}
 	
 	public void register(ClassDataTypeHandler classDataTypeHandler) {
 		if(logger.isDebugEnabled()) {
