@@ -1,5 +1,6 @@
 package com.douglei.sessions.session.sql.impl;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.sql.impl.persistent.execution.SqlExecutionHolder;
+import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.utils.StringUtil;
 
@@ -167,7 +169,17 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
-		// TODO Auto-generated method stub
-		return null;
+		final ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
+		Object executeResult = super.executeProcedure(new ProcedureExecutor() {
+			@Override
+			public Object execute(Connection connection) {
+				
+				
+				
+				
+				return null;
+			}
+		});
+		return executeResult;
 	}
 }

@@ -40,21 +40,34 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+	public boolean matching(Object sqlParameter, String alias) {
 		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
 		if(collectionObject == null) {
-			return null;
+			return false;
 		}
+		if(collectionObject instanceof Collection<?>) {
+			Collection<?> tc = (Collection<?>) collectionObject;
+			if(tc.isEmpty()) {
+				return false;
+			}
+		}else if(collectionObject.getClass().isArray()) {
+			if(((Object[]) collectionObject).length == 0) {
+				return false;
+			}
+		}else {
+			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持[java.util.Collection<E>类型], [数组类型]");
+		}
+		return true;
+	}
+	
+	@Override
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
 		Object[] array = null;
 		if(collectionObject instanceof Collection<?>) {
 			array = ((Collection<?>) collectionObject).toArray();
 		}else if(collectionObject.getClass().isArray()) {
 			array = (Object[]) collectionObject;
-		}else {
-			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持[java.util.Collection<E>类型], [数组类型]");
-		}
-		if(array.length == 0) {
-			return null;
 		}
 		
 		StringBuilder sqlContent = new StringBuilder();

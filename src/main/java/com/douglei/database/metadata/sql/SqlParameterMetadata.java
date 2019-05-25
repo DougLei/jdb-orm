@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.DataTypeHandlerContext;
+import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.instances.ognl.OgnlHandler;
@@ -45,6 +46,16 @@ public class SqlParameterMetadata implements Metadata{
 	 */
 	private String placeholderSuffix;
 	
+	/**
+	 * 数据库的数据类型
+	 */
+	private DBDataTypeHandler dbDataTypeHandler;
+	/**
+	 * 输入输出类型
+	 */
+	private SqlParameterMode sqlParameterMode;
+	
+	
 	public SqlParameterMetadata(String configurationText) {
 		this.configurationText = configurationText;
 		
@@ -54,6 +65,9 @@ public class SqlParameterMetadata implements Metadata{
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
 		setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
 		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
+		
+		setDBDataTypeHandler(propertyMap.get("dbType"));
+		setSqlParameterMode(propertyMap.get("mode"));
 	}
 	
 	// 解析出属性map集合
@@ -126,8 +140,22 @@ public class SqlParameterMetadata implements Metadata{
 			this.placeholderSuffix = placeholderSuffix;
 		}
 	}
-	
-	
+	void setDBDataTypeHandler(String typeName) {
+		logger.debug("设置dbType配置值");
+		
+	}
+	void setSqlParameterMode(String mode) {
+		logger.debug("设置mode配置值");
+		if(dbDataTypeHandler != null) {
+			if(StringUtil.notEmpty(mode)) {
+				this.sqlParameterMode = SqlParameterMode.toValue(mode);
+			}
+			if(this.sqlParameterMode == null) {
+				this.sqlParameterMode = SqlParameterMode.IN;
+			}
+		}
+	}
+
 	public String getConfigurationText() {
 		return configurationText;
 	}
@@ -145,6 +173,12 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	public String getPlaceholderSuffix() {
 		return placeholderSuffix;
+	}
+	public DBDataTypeHandler getDbDataTypeHandler() {
+		return dbDataTypeHandler;
+	}
+	public SqlParameterMode getSqlParameterMode() {
+		return sqlParameterMode;
 	}
 
 	@Override

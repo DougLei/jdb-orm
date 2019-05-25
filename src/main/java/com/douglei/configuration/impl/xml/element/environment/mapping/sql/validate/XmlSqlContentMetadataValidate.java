@@ -14,6 +14,7 @@ import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlContentType;
+import com.douglei.database.metadata.sql.content.node.SqlNode;
 
 /**
  * 
@@ -35,10 +36,12 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = children.getLength();
-		Node node = null;
+		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
-			node = children.item(i);
-			sqlContentMetadata.addRootSqlNode(SqlNodeHandlerMapping.doHandler(node));
+			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
+			if(sqlNode != null) {
+				sqlContentMetadata.addRootSqlNode(sqlNode);
+			}
 		}
 		return sqlContentMetadata;
 	}

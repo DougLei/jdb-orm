@@ -24,9 +24,6 @@ public class SqlContentMetadata implements Metadata{
 	}
 	
 	public void addRootSqlNode(SqlNode rootSqlNode) {
-		if(rootSqlNode == null) {
-			return;
-		}
 		if(rootSqlNodes == null) {
 			rootSqlNodes = new ArrayList<SqlNode>();
 		}

@@ -37,13 +37,13 @@ public class DocumentReader {
 		NodeList children = contentNode.getChildNodes();
 		
 		int length = children.getLength();
+		System.out.println(length);
 		Node node = null;
 		for(int i=0;i<length;i++) {
 			node = children.item(i);
-			if("trim".equals(node.getNodeName())) {
+			if("#text".equals(node.getNodeName())) {
 				System.out.println(node.getNodeName());
-				System.out.println(node.getTextContent());
-				System.out.println(node.getAttributes().getNamedItem("xxx"));
+				System.out.println(node.getNodeValue());
 			}
 		}
 		
