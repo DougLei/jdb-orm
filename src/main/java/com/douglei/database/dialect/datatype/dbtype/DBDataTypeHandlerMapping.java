@@ -33,7 +33,7 @@ public class DBDataTypeHandlerMapping {
 	 * @param typeName
 	 * @return
 	 */
-	public DBDataTypeHandler getDBTypeHandler(String typeName) {
+	public DBDataTypeHandler getDBDataTypeHandlerByDBTypeName(String typeName) {
 		DBDataTypeHandler dbDataTypeHandler = DB_DATA_TYPE_HANDLER_MAP.get(typeName);
 		if(dbDataTypeHandler == null) {
 			logger.debug("没有获取到typeName=[{}]的DBDataTypeHandler实例, 尝试加载该自定义DBDataTypeHandler实现子类", typeName);
