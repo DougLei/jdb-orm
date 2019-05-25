@@ -11,6 +11,6 @@ public class MySqlDataTypeHandlerMapping extends AbstractDataTypeHandlerMapping 
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
-		return getDataTypeHandlerByDBTypeName("varchar");
+		return getDBDataTypeHandlerByDBTypeName("varchar");
 	}
 }

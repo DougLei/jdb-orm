@@ -141,7 +141,7 @@ public class SqlParameterMetadata implements Metadata{
 			if(StringUtil.isEmpty(typeName)) {
 				this.dbDataTypeHandler = mapping.getDefaultDBDataTypeHandler();
 			}else {
-				this.dbDataTypeHandler = mapping.getDataTypeHandlerByDBTypeName(typeName);
+				this.dbDataTypeHandler = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
 			}
 		}
 	}

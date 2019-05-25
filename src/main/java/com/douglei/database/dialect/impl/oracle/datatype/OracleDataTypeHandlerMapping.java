@@ -11,6 +11,6 @@ public class OracleDataTypeHandlerMapping extends AbstractDataTypeHandlerMapping
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
-		return getDataTypeHandlerByDBTypeName("varchar2");
+		return getDBDataTypeHandlerByDBTypeName("varchar2");
 	}
 }

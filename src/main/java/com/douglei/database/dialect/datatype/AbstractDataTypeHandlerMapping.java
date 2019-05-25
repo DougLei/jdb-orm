@@ -48,7 +48,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
 		return resultsetColumnDataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType, columnName, columnTypeName);
 	}
-	public DBDataTypeHandler getDataTypeHandlerByDBTypeName(String typeName) {
+	public DBDataTypeHandler getDBDataTypeHandlerByDBTypeName(String typeName) {
 		return dbDataTypeHandlerMapping.getDataTypeHandlerByDBTypeName(typeName);
 	}
 	
