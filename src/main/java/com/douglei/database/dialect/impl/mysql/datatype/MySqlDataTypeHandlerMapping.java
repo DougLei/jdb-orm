@@ -2,7 +2,6 @@ package com.douglei.database.dialect.impl.mysql.datatype;
 
 import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.dbtype.VarcharDBDataTypeHandler;
 
 /**
  * mysql datatype handler mapping
@@ -12,6 +11,6 @@ public class MySqlDataTypeHandlerMapping extends AbstractDataTypeHandlerMapping 
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
-		return VarcharDBDataTypeHandler.singleInstance();
+		return getDataTypeHandlerByDBTypeName("varchar");
 	}
 }

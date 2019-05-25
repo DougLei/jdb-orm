@@ -30,11 +30,12 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	
 	/**
 	 * 从CallableStatement中获取输出参数的指
-	 * @param outParameterIndex
+	 * @param parameterIndex
 	 * @param callableStatement
 	 * @return
+	 * @throws SQLException
 	 */
-	public abstract Object getValue(short outParameterIndex, CallableStatement callableStatement);
+	public abstract Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException;
 	
 	@Override
 	public String toString() {
