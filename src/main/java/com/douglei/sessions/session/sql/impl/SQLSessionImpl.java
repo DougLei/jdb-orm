@@ -159,4 +159,15 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(targetClass, pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
+
+	@Override
+	public Object executeProcedure(String namespace, String name) {
+		return executeProcedure(namespace, namespace, null);
+	}
+
+	@Override
+	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

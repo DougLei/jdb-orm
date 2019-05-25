@@ -172,4 +172,20 @@ public interface SQLSession extends BasicSession{
 	 * @return
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 执行存储过程
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	Object executeProcedure(String namespace, String name);
+	/**
+	 * 执行存储过程
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	Object executeProcedure(String namespace, String name, Object sqlParameter);
 }
