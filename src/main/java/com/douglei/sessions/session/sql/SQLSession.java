@@ -11,6 +11,7 @@ import com.douglei.sessions.BasicSession;
  * @author DougLei
  */
 public interface SQLSession extends BasicSession{
+	public static final String PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX = "_procedure_resultset_";
 	
 	/**
 	 * 执行批量查询

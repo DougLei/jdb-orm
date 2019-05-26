@@ -22,4 +22,9 @@ public final class SqlServerDialect extends AbstractDialect{
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new SqlServerDataTypeHandlerMapping();
 	}
+	
+	@Override
+	public boolean procedureSupportDirectlyReturnResultSet() {
+		return true;
+	}
 }

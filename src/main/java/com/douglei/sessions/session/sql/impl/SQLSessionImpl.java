@@ -2,6 +2,7 @@ package com.douglei.sessions.session.sql.impl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
+import com.douglei.database.utils.ResultSetUtil;
 import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
@@ -254,13 +256,18 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					callableStatement.execute();
 					
-					if(outParameterCount > 0) {
-						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount);
+					boolean procedureSupportDirectlyReturnResultSet = LocalRunDialectHolder.getDialect().procedureSupportDirectlyReturnResultSet();
+					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
+						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						
 						SqlParameterMetadata sqlParameterMetadata = null;
 						for(short i=0;i<outParameterCount;i++) {
 							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]);
 							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataTypeHandler().getValue(outParameterIndex[i], callableStatement));
+						}
+						
+						if(procedureSupportDirectlyReturnResultSet) {
+							processDirectlyReturnResultSet(outMap, callableStatement);
 						}
 						return outMap;
 					}
@@ -269,6 +276,16 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					throw new RuntimeException("调用并执行存储过程时出现异常", e);
 				} finally {
 					CloseUtil.closeDBConn(callableStatement);
+				}
+			}
+
+			// 处理直接返回 ResultSet
+			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement) throws SQLException {
+				short sequence = 1;
+				ResultSet rs = null;
+				while((rs = callableStatement.getResultSet()) != null && rs.next()) {
+					outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
+					sequence++;
 				}
 			}
 		});

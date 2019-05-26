@@ -34,7 +34,29 @@ public class ResultSetUtil {
 		}
 		return resultsetMetadatas;
 	}
-
+	
+	/**
+	 * 获取ResultSet Map
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static Map<String, Object> getResultSetMap(ResultSet resultSet) throws SQLException {
+		return getResultSetMap(getSqlResultSetMetadata(resultSet), resultSet);
+	}
+	
+	/**
+	 * 获取ResultSet ListMap
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static List<Map<String, Object>> getResultSetListMap(ResultSet resultSet) throws SQLException {
+		return getResultSetListMap(getSqlResultSetMetadata(resultSet), resultSet);
+	}
+	
 	/**
 	 * 获取ResultSet Map
 	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>

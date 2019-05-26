@@ -22,4 +22,9 @@ public final class OracleDialect extends AbstractDialect{
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new OracleDataTypeHandlerMapping();
 	}
+	
+	@Override
+	public boolean procedureSupportDirectlyReturnResultSet() {
+		return false;
+	}
 }

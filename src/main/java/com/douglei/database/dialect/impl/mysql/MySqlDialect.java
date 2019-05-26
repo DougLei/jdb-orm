@@ -22,4 +22,9 @@ public final class MySqlDialect extends AbstractDialect{
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new MySqlDataTypeHandlerMapping();
 	}
+
+	@Override
+	public boolean procedureSupportDirectlyReturnResultSet() {
+		return true;
+	}
 }
