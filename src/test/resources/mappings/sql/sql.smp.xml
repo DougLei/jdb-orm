@@ -2,23 +2,32 @@
 <mapping-configuration>
 	<sql namespace="com.test" name="queryUser">
 		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
-			select * from sys_user
-		
+			select * from sys_user 
+			
 		<!-- 
 			<where>
-				<if test="name == '哈哈'">
-					b
+				<if test="age != null and age == 23">
+					and name = #{name}
+				</if>
+				<if test="age != null">
+					and name = 'DougLei'
 				</if>
 			</where>
 		-->	
 			
-		<!-- 
+		 <!-- 
 			<set>
-				<if test="name == '哈哈'">
-					b
+				<if test="age != null and age == 23">
+					name = #{name},
+				</if>
+				<if test="age == null">
+					name = 'DougLei',
+				</if>
+				<if test="age == null">
+					name = 'DougLei222',
 				</if>
 			</set>
-		-->		
+		-->	
 		
 		<!-- 	
 			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
@@ -31,39 +40,41 @@
 		
 		<!-- 
 			<switch>
-				<if test="name != null">
-					and name = #{name}
+				<if test="age == null">
+					name = 'age is null',
 				</if>
-				<if test="sex != null">
-					and sex = #{sex}
+				<if test="age == null">
+					name = 'age not null',
 				</if>
 				<else>
-					and age = #{age}
+					and else 
 				</else>
 			</switch>
 		-->
 		
 		<!-- 
-			<foreach collection="users" alias="user" open="(" separator="," close=")">
-				<if test="user.id != null && user.name == null">
-					#{user.id, dataType=string}
-				</if>
-			</foreach>
-			
-			<foreach collection="userIds" alias="userId" open="(" separator="," close=")">
-				<if test="userId != null">
+			<foreach collection="users" alias="user" open="where id in (" separator="," close=")">
+				<if test="user.id != null">
 					#{user.id, dataType=string}
 				</if>
 			</foreach>
 		-->	
 		
-		</content>
+			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
+				<if test="userId != null">
+					#{userId, dataType=string}
+				</if>
+			</foreach>
 		
-		<content dialect="" type="procedure"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
-			{call test_procedure (<!-- 1 -->
-				#{id, dbType=VARCHAR, mode=in},<!-- 2 -->
-				#{name, dbType=VARCHAR, mode=out}<!-- 3 -->
-			)}<!-- 4 -->
+		
 		</content>
+	<!-- 	
+		<content dialect="" type="procedure">
+			{call test_procedure (
+				#{id, dbType=VARCHAR, mode=in},
+				#{name, dbType=VARCHAR, mode=out}
+			)}
+		</content>
+	-->	
 	</sql>
 </mapping-configuration>

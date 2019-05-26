@@ -3,8 +3,6 @@ package com.douglei.database.metadata.sql.content.node.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Node;
-
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
@@ -14,49 +12,37 @@ import com.douglei.database.metadata.sql.content.node.SqlNodeType;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private TextSqlNode prefixAttributeNode;
-	private TextSqlNode suffixAttributeNode;
+	private String prefix;
+	private String suffix;
 	
 	private String[] prefixoverride;
 	private String[] suffixoverride;
 	
-	// 给子类使用的构造函数
-	protected TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
-		if(prefix != null) {
-			this.prefixAttributeNode = new TextSqlNode(prefix);
-			addSqlNode(prefixAttributeNode);
-		}
-		if(suffix != null) {
-			this.suffixAttributeNode = new TextSqlNode(suffix);
-			addSqlNode(suffixAttributeNode);
-		}
+	public TrimSqlNode(String prefix, String suffix, String prefixoverride, String suffixoverride) {
+		this.prefix = prefix==null?" ":prefix+" ";
+		this.suffix = suffix==null?" ":" "+suffix;
+		
 		if(prefixoverride != null) {
-			this.prefixoverride = prefixoverride.split("|");
+			String[] tmp = prefixoverride.split("\\|");
+			int length = tmp.length;
+			this.prefixoverride = new String[length];
+			for (int i = 0; i < length; i++) {
+				this.prefixoverride[i] = tmp[i];
+			}
 		}
 		if(suffixoverride != null) {
-			this.suffixoverride = suffixoverride.split("|");
-		}
-	}
-	public TrimSqlNode(Node prefix, Node suffix, Node prefixoverride, Node suffixoverride) {
-		if(prefix != null) {
-			this.prefixAttributeNode = new TextSqlNode(prefix.getNodeValue());
-			addSqlNode(prefixAttributeNode);
-		}
-		if(suffix != null) {
-			this.suffixAttributeNode = new TextSqlNode(suffix.getNodeValue());
-			addSqlNode(suffixAttributeNode);
-		}
-		if(prefixoverride != null) {
-			this.prefixoverride = prefixoverride.getNodeValue().split("|");
-		}
-		if(suffixoverride != null) {
-			this.suffixoverride = suffixoverride.getNodeValue().split("|");
+			String[] tmp = suffixoverride.split("\\|");
+			int length = tmp.length;
+			this.suffixoverride = new String[length];
+			for (int i = 0; i < length; i++) {
+				this.suffixoverride[i] = tmp[i];
+			}
 		}
 	}
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		List<String> sqlContents = null;
+		StringBuilder sqlContentBuilder = new StringBuilder();
 		List<Object> parameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
@@ -69,46 +55,33 @@ public class TrimSqlNode extends AbstractNestingNode {
 					}
 					parameters.addAll(executeSqlNode.getParameters());
 				}
-				if(sqlContents == null) {
-					sqlContents = new ArrayList<String>();
-				}
-				sqlContents.add(executeSqlNode.getContent());
+				sqlContentBuilder.append(executeSqlNode.getContent()).append(" ");
 			}
 		}
 		
-		StringBuilder sqlContent = new StringBuilder();
-		String tmpSqlContent = null;
-		int index=0, length=sqlContents.size();
-		boolean unProcessPrefixoverride = prefixoverride != null, unProcessSuffixoverride = suffixoverride != null;
-		while(index < length) {
-			tmpSqlContent = sqlContents.get(index);
-			if(unProcessPrefixoverride) {
-				if((prefixAttributeNode == null && index == 0) || (prefixAttributeNode != null && index == 1)) {
-					for (String po : prefixoverride) {
-						if(po.equalsIgnoreCase(tmpSqlContent.substring(0, po.length()))) {
-							tmpSqlContent = tmpSqlContent.substring(0, po.length());
-							break;
-						}
+		String sqlContent = sqlContentBuilder.toString();
+		int sqlContentLength = sqlContent.length();
+		if(sqlContentLength > 0) {
+			if(prefixoverride != null) {
+				for (String po : prefixoverride) {
+					if(po.equalsIgnoreCase(sqlContent.substring(0, po.length()))) {
+						sqlContent = sqlContent.substring(po.length());
+						break;
 					}
-					unProcessPrefixoverride = false;
 				}
 			}
-			
-			if(unProcessSuffixoverride) {
-				if((suffixAttributeNode == null && index == length-1) || (suffixAttributeNode != null && index == length-2)) {
-					for (String so : suffixoverride) {
-						if(so.equalsIgnoreCase(tmpSqlContent.substring(tmpSqlContent.length()-so.length()))) {
-							tmpSqlContent = tmpSqlContent.substring(0, tmpSqlContent.length()-so.length());
-							break;
-						}
+			if(suffixoverride != null) {
+				sqlContentLength--;
+				for (String so : suffixoverride) {
+					if(so.equalsIgnoreCase(sqlContent.substring(sqlContentLength-so.length(), sqlContentLength))) {
+						sqlContent = sqlContent.substring(0, sqlContentLength-so.length());
+						break;
 					}
-					unProcessSuffixoverride = false;
 				}
 			}
-			sqlContent.append(tmpSqlContent).append(" ");
-			index++;
+			sqlContent = prefix + sqlContent + suffix;
 		}
-		return new ExecuteSqlNode(sqlContent.toString(), parameters);
+		return new ExecuteSqlNode(sqlContent, parameters);
 	}
 	
 	@Override

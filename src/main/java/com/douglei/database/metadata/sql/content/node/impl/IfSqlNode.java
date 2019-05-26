@@ -31,11 +31,6 @@ public class IfSqlNode extends AbstractSqlNode {
 			}
 		}
 	}
-	
-	public static void main(String[] args) {
-		String a = "user.id != null && user.name == null";
-		System.out.println(a.replace("user.", ""));
-	}
 
 	@Override
 	public SqlNodeType getType() {

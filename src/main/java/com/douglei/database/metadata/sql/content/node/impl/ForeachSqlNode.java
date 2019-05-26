@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.w3c.dom.Node;
-
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
@@ -21,22 +19,16 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	private String collection;
 	private String alias;
 	
-	private String open = "";
-	private String separator = ",";
-	private String close = "";
+	private String open;
+	private String separator;
+	private String close;
 	
-	public ForeachSqlNode(String collection, String alias, Node openAttributeNode, Node separatorAttributeNode, Node closeAttributeNode) {
+	public ForeachSqlNode(String collection, String alias, String open, String separator, String close) {
 		this.collection = collection;
 		this.alias = alias;
-		if(openAttributeNode != null) {
-			open = openAttributeNode.getNodeValue();
-		}
-		if(separatorAttributeNode != null) {
-			separator = separatorAttributeNode.getNodeValue();
-		}
-		if(closeAttributeNode != null) {
-			close = closeAttributeNode.getNodeValue();
-		}
+		this.open = open==null?" ":open+" ";
+		this.separator = separator==null?" ":separator;
+		this.close = close==null?" ":" "+close;
 	}
 	
 	@Override
@@ -72,13 +64,13 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		
 		StringBuilder sqlContent = new StringBuilder();
 		List<Object> parameters = null;
-		sqlContent.append(open).append(" ");
+		sqlContent.append(open);
 		
 		ExecuteSqlNode executeSqlNode = null;
 		int length = array.length;
 		for(int i=0;i<length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
-				if(sqlNode.matching(sqlParameter, alias)) {
+				if(sqlNode.matching(array[i], alias)) {
 					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
 					if(executeSqlNode.existsParameter()) {
 						if(parameters == null) {
@@ -91,11 +83,11 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			}
 			
 			if(i < length-1) {
-				sqlContent.append(separator).append(" ");
+				sqlContent.append(separator);
 			}
 		}
 		
-		sqlContent.append(close).append(" ");
+		sqlContent.append(close);
 		return new ExecuteSqlNode(sqlContent.toString(), parameters);
 	}
 	

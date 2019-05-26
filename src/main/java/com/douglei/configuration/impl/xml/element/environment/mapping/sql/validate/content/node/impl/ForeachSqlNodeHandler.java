@@ -26,23 +26,20 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 		
 		NamedNodeMap attributeMap = node.getAttributes();
 		
-		Node collectionAttributeNode = attributeMap.getNamedItem("collection");
-		String collection = null;
-		if(collectionAttributeNode == null || StringUtil.isEmpty((collection = collectionAttributeNode.getNodeValue()))) {
+		String collection = getAttributeValue(attributeMap.getNamedItem("collection"));
+		if(StringUtil.isEmpty(collection)) {
 			throw new NullPointerException("<foreach>元素中的collection属性值不能为空");
 		}
 		
-		Node aliasAttributeNode = attributeMap.getNamedItem("alias");
-		String alias = null;
-		if(aliasAttributeNode == null || StringUtil.isEmpty((alias = aliasAttributeNode.getNodeValue()))) {
+		String alias = getAttributeValue(attributeMap.getNamedItem("alias"));
+		if(StringUtil.isEmpty(alias)) {
 			throw new NullPointerException("<foreach>元素中的alias属性值不能为空");
 		}
 		
-		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(
-				collection.trim(), alias.trim(),
-				attributeMap.getNamedItem("open"),
-				attributeMap.getNamedItem("separator"),
-				attributeMap.getNamedItem("close"));
+		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(collection.trim(), alias.trim(),
+				getAttributeValue(attributeMap.getNamedItem("open")),
+				getAttributeValue(attributeMap.getNamedItem("separator")),
+				getAttributeValue(attributeMap.getNamedItem("close")));
 		
 		for(int i=0;i<cl;i++) {
 			foreachSqlNode.addSqlNode(SqlNodeHandlerMapping.doHandler(childrens.item(i)));

@@ -6,7 +6,9 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
+import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeMismatchingException;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 import com.douglei.database.metadata.sql.content.node.impl.TrimSqlNode;
 
 /**
@@ -25,13 +27,21 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 		
 		NamedNodeMap attributeMap = node.getAttributes();
 		TrimSqlNode trimSqlNode = new TrimSqlNode(
-				attributeMap.getNamedItem("prefix"),
-				attributeMap.getNamedItem("suffix"),
-				attributeMap.getNamedItem("prefixoverride"),
-				attributeMap.getNamedItem("suffixoverride"));
+				getAttributeValue(attributeMap.getNamedItem("prefix")), 
+				getAttributeValue(attributeMap.getNamedItem("suffix")), 
+				getAttributeValue(attributeMap.getNamedItem("prefixoverride")), 
+				getAttributeValue(attributeMap.getNamedItem("suffixoverride")));
 		
+		SqlNode c_sn = null;
 		for(int i=0;i<cl;i++) {
-			trimSqlNode.addSqlNode(SqlNodeHandlerMapping.doHandler(childrens.item(i)));
+			c_sn = SqlNodeHandlerMapping.doHandler(childrens.item(i));
+			if(c_sn != null) {
+				if(c_sn.getType() == SqlNodeType.IF) {
+					trimSqlNode.addSqlNode(c_sn);
+				}else {
+					throw new SqlNodeMismatchingException("<trim>元素中, 只能使用<if>元素; 也不支持在<trim>元素中, 直接编写sql语句");
+				}
+			}
 		}
 		if(trimSqlNode.existsSqlNode()) {
 			return trimSqlNode;
