@@ -10,26 +10,26 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public abstract class ShortDataTypeHandler extends ClassDataTypeHandler{
+public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
-		return "short";
+		return "integer";
 	}
 	
 	@Override
 	public Class<?>[] supportClasses(){
 		return supportClasses;
 	}
-	private static final Class<?>[] supportClasses = {short.class, Short.class};
+	private static final Class<?>[] supportClasses = {int.class, Integer.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isShort(value)) {
-			if(value.getClass() == short.class || value instanceof Short) {
-				preparedStatement.setShort(parameterIndex, (short)value);
+		if(ValidationUtil.isInteger(value)) {
+			if(value.getClass() == int.class || value instanceof Integer) {
+				preparedStatement.setInt(parameterIndex, (int)value);
 			}else {
-				preparedStatement.setShort(parameterIndex, Short.parseShort(value.toString()));
+				preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString()));
 			}
 		}else {
 			preparedStatement.setNull(parameterIndex, getSqlType());

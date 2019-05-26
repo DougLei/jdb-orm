@@ -7,7 +7,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.ClobDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.impl.AbstractClobDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
 import com.douglei.utils.CloseUtil;
@@ -30,7 +30,7 @@ class ClobDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		ClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		AbstractClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

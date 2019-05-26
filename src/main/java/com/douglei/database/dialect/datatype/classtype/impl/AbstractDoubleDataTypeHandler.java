@@ -10,26 +10,26 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public abstract class IntegerDataTypeHandler extends ClassDataTypeHandler{
+public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
-		return "integer";
+		return "double";
 	}
 	
 	@Override
 	public Class<?>[] supportClasses(){
 		return supportClasses;
 	}
-	private static final Class<?>[] supportClasses = {int.class, Integer.class};
+	private static final Class<?>[] supportClasses = {double.class, Double.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isInteger(value)) {
-			if(value.getClass() == int.class || value instanceof Integer) {
-				preparedStatement.setInt(parameterIndex, (int)value);
+		if(ValidationUtil.isDouble(value)) {
+			if(value.getClass() == double.class || value instanceof Double) {
+				preparedStatement.setDouble(parameterIndex, (double)value);
 			}else {
-				preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString()));
+				preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString()));
 			}
 		}else {
 			preparedStatement.setNull(parameterIndex, getSqlType());

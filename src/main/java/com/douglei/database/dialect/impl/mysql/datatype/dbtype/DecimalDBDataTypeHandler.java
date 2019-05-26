@@ -4,7 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.impl.AbstractDoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
 
@@ -26,7 +26,7 @@ class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		AbstractDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

@@ -1,0 +1,16 @@
+package com.douglei.database.dialect.impl.oracle.datatype.classtype;
+
+import com.douglei.database.dialect.datatype.classtype.impl.AbstractLongDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+
+/**
+ * 
+ * @author DougLei
+ */
+public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
+
+	@Override
+	protected int getSqlType() {
+		return OracleDBType.NUMBER.getSqlType();
+	}
+}
