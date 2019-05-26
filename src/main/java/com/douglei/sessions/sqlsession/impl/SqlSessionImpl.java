@@ -19,7 +19,7 @@ import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.StatementHandler;
-import com.douglei.database.utils.NamingUtil;
+import com.douglei.database.utils.ResultSetMapConvertUtil;
 import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
@@ -300,21 +300,11 @@ public class SqlSessionImpl implements SqlSession{
 			return null;
 		}
 		if(tableMetadata == null || tableMetadata.classNameIsNull()) { // 没有配置映射, 或没有配置映射的类, 则将列名转换为属性名
-			map = mapKey2PropertyName(map); 
+			return ResultSetMapConvertUtil.toClass(map, targetClass);
 		}else {
 			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
+			return ConvertUtil.mapToClass(map, targetClass);
 		}
-		return ConvertUtil.mapToClass(map, targetClass);
-	}
-	
-	// 将map的key, 由列名转换成属性名
-	protected Map<String, Object> mapKey2PropertyName(Map<String, Object> map) {
-		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
-		Set<String> keys = map.keySet();
-		for (String key : keys) {
-			targetMap.put(NamingUtil.columnName2PropertyName(key), map.get(key));
-		}
-		return targetMap;
 	}
 	
 	// 将map的key, 由列名转换成映射的属性名
