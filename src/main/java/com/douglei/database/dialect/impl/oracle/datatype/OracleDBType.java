@@ -12,7 +12,8 @@ public enum OracleDBType {
 	NUMBER(2),
 	DATE(93),
 	CLOB(2005),
-	BLOB(2004)
+	BLOB(2004),
+	CURSOR(-10)
 	;
 	
 	private String typeName;

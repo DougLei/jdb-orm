@@ -1,7 +1,6 @@
 package com.douglei.database.sql.statement;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.database.sql.statement.entity.SqlResultsetMetadata;
+import com.douglei.database.utils.ResultSetUtil;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -54,13 +54,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 			logger.debug("查询结果集ResultSet实例中存在数据");
 			if(resultsetMetadatas == null) {
 				logger.debug("resultsetMetadatas集合为空, 需要设置结果集元数据");
-				
-				ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-				int columnCount = resultSetMetaData.getColumnCount();
-				resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
-				for(int i=1;i<=columnCount;i++) {
-					resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
-				}
+				resultsetMetadatas = ResultSetUtil.getSqlResultSetMetadata(resultSet);
 			}
 			if(logger.isDebugEnabled()) {
 				logger.debug("查询结果集元数据信息为: {}", resultsetMetadatas.toString());
@@ -74,7 +68,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private void initialQueryResultList() {
 		logger.debug("初始化 queryResultList list-map集合");
 		if(queryResultList == null) {
-			queryResultList = new ArrayList<Map<String,Object>>(20);
+			queryResultList = new ArrayList<Map<String,Object>>(16);
 		}else if(queryResultList.size() > 0){
 			queryResultList.clear();
 		}
@@ -145,7 +139,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private void initialQueryResultList_() {
 		logger.debug("初始化 queryResultList_ list-数组集合");
 		if(queryResultList_ == null) {
-			queryResultList_ = new ArrayList<Object[]>(20);
+			queryResultList_ = new ArrayList<Object[]>(16);
 		}else if(queryResultList_.size() > 0){
 			queryResultList_.clear();
 		}
@@ -204,27 +198,51 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	}
 	
 	protected List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
-		this.resultSet = resultSet;
-		setQueryResultList();
-		return getQueryResultList();
+		try {
+			this.resultSet = resultSet;
+			setQueryResultList();
+			return getQueryResultList();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
 	}
 	
 	protected Map<String, Object> executeUniqueQuery(ResultSet resultSet) throws SQLException {
-		this.resultSet = resultSet;
-		setQueryUniqueResult();
-		return getQueryUniqueResult();
+		try {
+			this.resultSet = resultSet;
+			setQueryUniqueResult();
+			return getQueryUniqueResult();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
 	}
 	
 	protected List<Object[]> executeQuery_(ResultSet resultSet) throws SQLException {
-		this.resultSet = resultSet;
-		setQueryResultList_();
-		return getQueryResultList_();
+		try {
+			this.resultSet = resultSet;
+			setQueryResultList_();
+			return getQueryResultList_();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
 	}
 	
 	protected Object[] executeUniqueQuery_(ResultSet resultSet) throws SQLException {
-		this.resultSet = resultSet;
-		setQueryUniqueResult_();
-		return getQueryUniqueResult_();
+		try {
+			this.resultSet = resultSet;
+			setQueryUniqueResult_();
+			return getQueryUniqueResult_();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
 	}
 	
 	protected List<Map<String, Object>> getQueryResultList() {
@@ -256,6 +274,5 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) {
 			resultsetMetadatas.clear();
 		}
-		CloseUtil.closeDBConn(resultSet);
 	}
 }

@@ -32,7 +32,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeQuery(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new RuntimeException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
 		} finally {
 			close();
 		}
@@ -49,7 +49,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeUniqueQuery(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new RuntimeException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
 		} finally {
 			close();
 		}
@@ -66,7 +66,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeQuery_(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new RuntimeException(getClass()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new RuntimeException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
 		} finally {
 			close();
 		}
@@ -83,7 +83,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeUniqueQuery_(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new RuntimeException(getClass()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new RuntimeException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
 		} finally {
 			close();
 		}
@@ -94,7 +94,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		try {
 			return statement.executeUpdate(sql);
 		} catch (Exception e) {
-			throw new RuntimeException(getClass()+" executeUpdate(List<Object>)时出现异常", e);
+			throw new RuntimeException(getClass().getName()+" executeUpdate(List<Object>)时出现异常", e);
 		}
 	}
 	

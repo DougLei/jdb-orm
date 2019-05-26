@@ -42,14 +42,14 @@ public class ResultSetMapConvertUtil {
 	
 	/**
 	 * 转换为list class对象集合
-	 * @param listResultsetMap
+	 * @param resultsetListMap
 	 * @param targetClass
 	 * @return
 	 */
-	public static <T> List<T> toListClass(List<Map<String, Object>> listResultsetMap, Class<T> targetClass){
-		if(listResultsetMap!= null && listResultsetMap.size()>0) {
-			List<T> listT = new ArrayList<T>(listResultsetMap.size());
-			for (Map<String, Object> resultsetMap : listResultsetMap) {
+	public static <T> List<T> toListClass(List<Map<String, Object>> resultsetListMap, Class<T> targetClass){
+		if(resultsetListMap!= null && resultsetListMap.size()>0) {
+			List<T> listT = new ArrayList<T>(resultsetListMap.size());
+			for (Map<String, Object> resultsetMap : resultsetListMap) {
 				listT.add(toClass(resultsetMap, targetClass));
 			}
 			return listT;
