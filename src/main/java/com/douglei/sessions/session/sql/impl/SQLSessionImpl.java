@@ -285,6 +285,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				ResultSet rs = null;
 				while((rs = callableStatement.getResultSet()) != null && rs.next()) {
 					outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
+					CloseUtil.closeDBConn(rs);
 					sequence++;
 				}
 			}
