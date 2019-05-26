@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.dbtype.NumberDBDataTypeHandler;
 
 /**
  * 
@@ -23,14 +24,7 @@ class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandle
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		if(rs.getMetaData().getScale(columnIndex) == 0) {
-			long value = rs.getLong(columnIndex);
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
-				return (int)value;
-			}
-			return value;
-		}
-		return rs.getDouble(columnIndex);
+		return NumberDBDataTypeHandler.singleInstance().getValue(columnIndex, rs);
 	}
 
 	@Override

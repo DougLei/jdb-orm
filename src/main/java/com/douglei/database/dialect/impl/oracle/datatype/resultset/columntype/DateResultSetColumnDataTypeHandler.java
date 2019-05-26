@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.dbtype.DateDBDataTypeHandler;
 
 /**
  * 
@@ -23,7 +24,7 @@ class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		return rs.getTimestamp(columnIndex);
+		return DateDBDataTypeHandler.singleInstance().getValue(columnIndex, rs);
 	}
 
 	@Override

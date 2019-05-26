@@ -2,6 +2,7 @@ package com.douglei.database.dialect.impl.oracle.datatype.dbtype;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
@@ -15,7 +16,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-class NumberDBDataTypeHandler extends DBDataTypeHandler{
+public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	private NumberDBDataTypeHandler() {}
 	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
 	public static final NumberDBDataTypeHandler singleInstance() {
@@ -55,5 +56,17 @@ class NumberDBDataTypeHandler extends DBDataTypeHandler{
 			return value;
 		}
 		return callableStatement.getDouble(parameterIndex);
+	}
+
+	@Override
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
+		if(rs.getMetaData().getScale(columnIndex) == 0) {
+			long value = rs.getLong(columnIndex);
+			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
+				return (int)value;
+			}
+			return value;
+		}
+		return rs.getDouble(columnIndex);
 	}
 }

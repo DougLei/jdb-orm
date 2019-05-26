@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.dbtype.IntDBDataTypeHandler;
 
 /**
  * 
@@ -23,7 +24,7 @@ class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		return rs.getInt(columnIndex);
+		return IntDBDataTypeHandler.singleInstance().getValue(columnIndex, rs);
 	}
 
 	@Override

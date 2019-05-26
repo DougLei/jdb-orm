@@ -2,6 +2,7 @@ package com.douglei.database.dialect.impl.mysql.datatype.dbtype;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
@@ -12,7 +13,7 @@ import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlDoubleDat
  * 
  * @author DougLei
  */
-class DecimalDBDataTypeHandler extends DBDataTypeHandler{
+public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 	private DecimalDBDataTypeHandler() {}
 	private static final DecimalDBDataTypeHandler instance = new DecimalDBDataTypeHandler();
 	public static final DecimalDBDataTypeHandler singleInstance() {
@@ -37,5 +38,10 @@ class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException {
 		return callableStatement.getDouble(parameterIndex);
+	}
+
+	@Override
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
+		return rs.getDouble(columnIndex);
 	}
 }

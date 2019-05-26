@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.dbtype.BigIntDBDataTypeHandler;
 
 /**
  * 
@@ -23,7 +24,7 @@ class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandle
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		return rs.getLong(columnIndex);
+		return BigIntDBDataTypeHandler.singleInstance().getValue(columnIndex, rs);
 	}
 
 	@Override

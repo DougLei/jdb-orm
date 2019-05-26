@@ -1,11 +1,16 @@
 package com.douglei.database.dialect.datatype.dbtype;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.sql.CallableStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.DataTypeHandlerType;
+import com.douglei.utils.CloseUtil;
 
 /**
  * 
@@ -47,9 +52,45 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 		return DataTypeHandlerType.DB;
 	}
 	
-	@Deprecated
-	@Override
-	public Object getValue(short columnIndex, ResultSet resultSet) throws SQLException {
-		return null;
+	protected Object getClobValue(Reader reader) {
+		if(reader == null) {
+			return null;
+		}
+		
+		StringWriter writer = null;
+		try {
+			writer = new StringWriter();
+			int length;
+			char[] ch = new char[512];
+			while((length = reader.read(ch)) != -1) {
+				writer.write(ch, 0, length);
+			}
+			return writer.toString();
+		} catch (IOException e) {
+			throw new RuntimeException("读取text类型的数据时出现异常", e);
+		} finally {
+			CloseUtil.closeDBConn(reader, writer);
+		}
+	}
+	
+	protected Object getBlobValue(InputStream input) {
+		if(input == null) {
+			return null;
+		}
+		
+		ByteArrayOutputStream output = null;
+		try {
+			output = new ByteArrayOutputStream();
+			int length;
+			byte[] b = new byte[1024];
+			while((length = input.read(b)) != -1) {
+				output.write(b, 0, length);
+			}
+			return output.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException("读取varbinary类型的数据时出现异常", e);
+		} finally {
+			CloseUtil.closeDBConn(input, output);
+		}
 	}
 }

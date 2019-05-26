@@ -2,6 +2,7 @@ package com.douglei.database.dialect.impl.mysql.datatype.dbtype;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
@@ -12,7 +13,7 @@ import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlStringDat
  * 
  * @author DougLei
  */
-class CharDBDataTypeHandler extends DBDataTypeHandler{
+public class CharDBDataTypeHandler extends DBDataTypeHandler{
 	private static final CharDBDataTypeHandler instance = new CharDBDataTypeHandler();
 	public static final CharDBDataTypeHandler singleInstance() {
 		return instance;
@@ -36,5 +37,10 @@ class CharDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException {
 		return callableStatement.getString(parameterIndex);
+	}
+
+	@Override
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
+		return rs.getString(columnIndex);
 	}
 }

@@ -1,23 +1,20 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.dbtype;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
 import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerBlobDataTypeHandler;
-import com.douglei.utils.CloseUtil;
 
 /**
  * 
  * @author DougLei
  */
-class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
+public class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
 	private VarbinaryDBDataTypeHandler() {}
 	private static final VarbinaryDBDataTypeHandler instance = new VarbinaryDBDataTypeHandler();
 	public static final VarbinaryDBDataTypeHandler singleInstance() {
@@ -45,24 +42,11 @@ class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
 		if(blob == null) {
 			return null;
 		}
-		InputStream input = blob.getBinaryStream();
-		if(input == null) {
-			return null;
-		}
-		
-		ByteArrayOutputStream output = null;
-		try {
-			output = new ByteArrayOutputStream();
-			int length;
-			byte[] b = new byte[1024];
-			while((length = input.read(b)) != -1) {
-				output.write(b, 0, length);
-			}
-			return output.toByteArray();
-		} catch (IOException e) {
-			throw new RuntimeException("读取varbinary类型的数据时出现异常", e);
-		} finally {
-			CloseUtil.closeDBConn(input, output);
-		}
+		return getBlobValue(blob.getBinaryStream());
+	}
+
+	@Override
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
+		return getBlobValue(rs.getBinaryStream(columnIndex));
 	}
 }

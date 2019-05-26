@@ -2,6 +2,7 @@ package com.douglei.database.dialect.impl.sqlserver.datatype.dbtype;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
@@ -12,7 +13,7 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerL
  * 
  * @author DougLei
  */
-class BigIntDBDataTypeHandler extends DBDataTypeHandler{
+public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	private BigIntDBDataTypeHandler() {}
 	private static final BigIntDBDataTypeHandler instance = new BigIntDBDataTypeHandler();
 	public static final BigIntDBDataTypeHandler singleInstance() {
@@ -37,5 +38,10 @@ class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException {
 		return callableStatement.getLong(parameterIndex);
+	}
+
+	@Override
+	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
+		return rs.getLong(columnIndex);
 	}
 }
