@@ -1,5 +1,6 @@
 package com.douglei.database.dialect.datatype;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
@@ -10,7 +11,6 @@ import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
 import com.douglei.instances.scanner.ClassScanner;
-import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
  * 
@@ -27,19 +27,28 @@ public abstract class AbstractDataTypeHandlerMapping{
 		List<String> classPaths = cs.multiScan(basePackage + ".classtype", basePackage + ".resultset.columntype", basePackage + ".dbtype");
 		if(classPaths.size() > 0) {
 			Object obj = null;
-			for (String cp : classPaths) {
-				obj = ConstructorUtil.newInstance(cp);
-				if(obj instanceof ClassDataTypeHandler) {
-					classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
-				}else if(obj instanceof ResultSetColumnDataTypeHandler) {
-					resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
-				}else if(obj instanceof DBDataTypeHandler) {
-					dbDataTypeHandlerMapping.register((DBDataTypeHandler) obj);
+			try {
+				for (String cp : classPaths) {
+					obj = getDataTypeHandlerSingleInstance(cp);
+					if(obj instanceof ClassDataTypeHandler) {
+						classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
+					}else if(obj instanceof ResultSetColumnDataTypeHandler) {
+						resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
+					}else if(obj instanceof DBDataTypeHandler) {
+						dbDataTypeHandlerMapping.register((DBDataTypeHandler) obj);
+					}
 				}
+			} catch (Exception e) {
+				throw new RuntimeException("在调用DataTypeHandler子类的 singleInstance()方法时, 出现异常", e);
 			}
 		}
 		cs.destroy();
 	}
+	private Object getDataTypeHandlerSingleInstance(String className) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Class<?> clz = Class.forName(className);
+		return clz.getMethod("singleInstance").invoke(null);
+	}
+	
 	
 	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);

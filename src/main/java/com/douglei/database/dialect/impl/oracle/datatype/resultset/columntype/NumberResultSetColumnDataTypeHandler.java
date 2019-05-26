@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
  * @author DougLei
  */
 class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private NumberResultSetColumnDataTypeHandler() {}
+	private static final NumberResultSetColumnDataTypeHandler instance = new NumberResultSetColumnDataTypeHandler();
+	public static final NumberResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			OracleDBType.NUMBER.getSqlType()	// number 
 			};

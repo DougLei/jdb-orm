@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
  * @author DougLei
  */
 class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private StringResultSetColumnDataTypeHandler() {}
+	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
+	public static final StringResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			MySqlDBType.VARCHAR.getSqlType(), 	// varchar
 			MySqlDBType.CHAR.getSqlType(),		// char

@@ -45,7 +45,7 @@ public class DBDataTypeHandlerMapping {
 				throw new UnsupportDataTypeHandlerException("目前无法处理DBTypeName=["+typeName+"]的数据类型");
 			}
 			if(!(obj instanceof DBDataTypeHandler)) {
-				throw new ClassCastException("typeName=["+typeName+"]的类必须继承["+DBDataTypeHandler.class.getName()+"]");
+				throw new UnsupportDataTypeHandlerException("typeName=["+typeName+"]的类必须继承["+DBDataTypeHandler.class.getName()+"]");
 			}
 			dbDataTypeHandler = (DBDataTypeHandler) obj;
 			register(dbDataTypeHandler);

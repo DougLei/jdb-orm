@@ -55,7 +55,7 @@ public class ClassDataTypeHandlerMapping {
 				throw new UnsupportDataTypeHandlerException("目前无法处理ClassDataTypeHandler code=["+code+"]的数据类型");
 			}
 			if(!(obj instanceof ClassDataTypeHandler)) {
-				throw new ClassCastException("code=["+code+"]的类必须继承["+ClassDataTypeHandler.class.getName()+"]");
+				throw new UnsupportDataTypeHandlerException("code=["+code+"]的类必须继承["+ClassDataTypeHandler.class.getName()+"]");
 			}
 			dataTypeHandler = (ClassDataTypeHandler) obj;
 			register(dataTypeHandler);

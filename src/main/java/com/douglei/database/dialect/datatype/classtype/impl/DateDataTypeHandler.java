@@ -12,7 +12,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
+public abstract class DateDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {

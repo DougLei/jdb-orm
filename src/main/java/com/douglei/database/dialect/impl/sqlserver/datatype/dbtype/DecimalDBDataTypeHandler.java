@@ -4,15 +4,20 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractDoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerDoubleDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class DecimalDBDataTypeHandler extends DBDataTypeHandler{
+	private DecimalDBDataTypeHandler() {}
+	private static final DecimalDBDataTypeHandler instance = new DecimalDBDataTypeHandler();
+	public static final DecimalDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +31,7 @@ class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		SqlServerDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

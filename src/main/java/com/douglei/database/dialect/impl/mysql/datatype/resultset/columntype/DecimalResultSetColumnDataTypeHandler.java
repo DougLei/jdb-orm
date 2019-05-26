@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
  * @author DougLei
  */
 class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private DecimalResultSetColumnDataTypeHandler() {}
+	private static final DecimalResultSetColumnDataTypeHandler instance = new DecimalResultSetColumnDataTypeHandler();
+	public static final DecimalResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			MySqlDBType.DECIMAL.getSqlType()	// decimal 
 			};

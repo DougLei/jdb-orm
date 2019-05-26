@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
  * @author DougLei
  */
 class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private DatetimeResultSetColumnDataTypeHandler() {}
+	private static final DatetimeResultSetColumnDataTypeHandler instance = new DatetimeResultSetColumnDataTypeHandler();
+	public static final DatetimeResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			MySqlDBType.DATETIME.getSqlType()	// datetime 
 			};

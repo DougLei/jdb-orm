@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
  * @author DougLei
  */
 class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private StringResultSetColumnDataTypeHandler() {}
+	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
+	public static final StringResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			SqlServerDBType.NVARCHAR.getSqlType(), 	// varchar
 			SqlServerDBType.NVARCHAR.getSqlType(), 	// nvarchar

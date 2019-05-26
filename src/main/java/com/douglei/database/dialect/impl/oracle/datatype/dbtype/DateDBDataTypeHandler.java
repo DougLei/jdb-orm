@@ -4,15 +4,20 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractDateDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleDateDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class DateDBDataTypeHandler extends DBDataTypeHandler{
+	private DateDBDataTypeHandler() {}
+	private static final DateDBDataTypeHandler instance = new DateDBDataTypeHandler();
+	public static final DateDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +31,7 @@ class DateDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		OracleDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

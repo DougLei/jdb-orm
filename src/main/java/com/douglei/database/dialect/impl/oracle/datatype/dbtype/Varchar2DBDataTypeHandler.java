@@ -4,15 +4,20 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractStringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleStringDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
+	private Varchar2DBDataTypeHandler() {}
+	private static final Varchar2DBDataTypeHandler instance = new Varchar2DBDataTypeHandler();
+	public static final Varchar2DBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +31,7 @@ class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		OracleStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
  * @author DougLei
  */
 class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private DateResultSetColumnDataTypeHandler() {}
+	private static final DateResultSetColumnDataTypeHandler instance = new DateResultSetColumnDataTypeHandler();
+	public static final DateResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			OracleDBType.DATE.getSqlType()	// date 
 			};

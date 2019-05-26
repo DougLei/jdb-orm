@@ -10,7 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandler{
+public abstract class IntegerDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {

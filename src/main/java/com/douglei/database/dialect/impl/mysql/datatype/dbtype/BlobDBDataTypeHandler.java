@@ -8,9 +8,9 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractBlobDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlBlobDataTypeHandler;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -18,6 +18,11 @@ import com.douglei.utils.CloseUtil;
  * @author DougLei
  */
 class BlobDBDataTypeHandler extends DBDataTypeHandler{
+	private BlobDBDataTypeHandler() {}
+	private static final BlobDBDataTypeHandler instance = new BlobDBDataTypeHandler();
+	public static final BlobDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -31,7 +36,7 @@ class BlobDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractBlobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		MySqlBlobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

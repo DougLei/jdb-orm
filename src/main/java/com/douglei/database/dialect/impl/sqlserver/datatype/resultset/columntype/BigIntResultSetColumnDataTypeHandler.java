@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
  * @author DougLei
  */
 class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private BigIntResultSetColumnDataTypeHandler() {}
+	private static final BigIntResultSetColumnDataTypeHandler instance = new BigIntResultSetColumnDataTypeHandler();
+	public static final BigIntResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			SqlServerDBType.BIGINT.getSqlType()	// bigint 
 			};

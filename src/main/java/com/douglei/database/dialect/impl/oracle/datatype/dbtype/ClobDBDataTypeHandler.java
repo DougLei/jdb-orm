@@ -7,9 +7,9 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractClobDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleClobDataTypeHandler;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -17,6 +17,11 @@ import com.douglei.utils.CloseUtil;
  * @author DougLei
  */
 class ClobDBDataTypeHandler extends DBDataTypeHandler{
+	private ClobDBDataTypeHandler() {}
+	private static final ClobDBDataTypeHandler instance = new ClobDBDataTypeHandler();
+	public static final ClobDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -30,7 +35,7 @@ class ClobDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		OracleClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

@@ -15,6 +15,12 @@ import com.douglei.utils.CloseUtil;
  * @author DougLei
  */
 class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private BlobResultSetColumnDataTypeHandler() {}
+	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
+	public static final BlobResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			SqlServerDBType.VARBINARY.getSqlType()	// varbinary 
 			};

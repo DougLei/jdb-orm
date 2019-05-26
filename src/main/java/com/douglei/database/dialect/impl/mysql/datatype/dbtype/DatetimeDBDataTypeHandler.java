@@ -4,15 +4,20 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractDateDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlDateDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
+	private DatetimeDBDataTypeHandler() {}
+	private static final DatetimeDBDataTypeHandler instance = new DatetimeDBDataTypeHandler();
+	public static final DatetimeDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +31,7 @@ class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		MySqlDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

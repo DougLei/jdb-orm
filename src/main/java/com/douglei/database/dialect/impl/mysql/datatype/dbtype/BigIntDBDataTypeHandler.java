@@ -4,15 +4,20 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractLongDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlLongDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class BigIntDBDataTypeHandler extends DBDataTypeHandler{
+	private BigIntDBDataTypeHandler() {}
+	private static final BigIntDBDataTypeHandler instance = new BigIntDBDataTypeHandler();
+	public static final BigIntDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +31,7 @@ class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractLongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		MySqlLongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

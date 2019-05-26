@@ -11,7 +11,7 @@ import com.douglei.database.dialect.datatype.wrapper.Blob;
  * 
  * @author DougLei
  */
-public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
+public abstract class BlobDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {

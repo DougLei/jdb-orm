@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
  * @author DougLei
  */
 class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private DatetimeResultSetColumnDataTypeHandler() {}
+	private static final DatetimeResultSetColumnDataTypeHandler instance = new DatetimeResultSetColumnDataTypeHandler();
+	public static final DatetimeResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			SqlServerDBType.DATETIME.getSqlType()	// datetime 
 			};

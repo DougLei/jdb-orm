@@ -1,12 +1,23 @@
 package com.douglei.database.dialect.impl.oracle.datatype.dbtype;
 
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleStringDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
-class NVarchar2DBDataTypeHandler extends Varchar2DBDataTypeHandler{
+class NVarchar2DBDataTypeHandler extends DBDataTypeHandler{
+	private NVarchar2DBDataTypeHandler() {}
+	private static final NVarchar2DBDataTypeHandler instance = new NVarchar2DBDataTypeHandler();
+	public static final NVarchar2DBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -16,5 +27,15 @@ class NVarchar2DBDataTypeHandler extends Varchar2DBDataTypeHandler{
 	@Override
 	public int getSqlType() {
 		return OracleDBType.NVARCHAR2.getSqlType();
+	}
+
+	@Override
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
+		OracleStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+	}
+
+	@Override
+	public Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException {
+		return callableStatement.getString(parameterIndex);
 	}
 }

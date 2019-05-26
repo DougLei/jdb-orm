@@ -12,7 +12,7 @@ import com.douglei.database.dialect.datatype.wrapper.StringWrapper;
  * 
  * @author DougLei
  */
-public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
+public abstract class ClobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {

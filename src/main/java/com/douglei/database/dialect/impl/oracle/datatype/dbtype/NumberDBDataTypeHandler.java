@@ -4,10 +4,11 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractDoubleDataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractIntegerDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleDoubleDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleIntegerDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleLongDataTypeHandler;
 import com.douglei.utils.datatype.ValidationUtil;
 
 /**
@@ -15,6 +16,11 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 class NumberDBDataTypeHandler extends DBDataTypeHandler{
+	private NumberDBDataTypeHandler() {}
+	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
+	public static final NumberDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -29,11 +35,13 @@ class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(ValidationUtil.isDouble(value)) {
-			AbstractDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			OracleDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else if(ValidationUtil.isInteger(value)) {
-			AbstractIntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			OracleIntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		}else if(ValidationUtil.isLong(value)){
+			OracleLongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else {
-			preparedStatement.setNull(parameterIndex, 2);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 

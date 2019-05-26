@@ -4,15 +4,19 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractStringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlStringDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
 class VarcharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final VarcharDBDataTypeHandler instance = new VarcharDBDataTypeHandler();
+	public static final VarcharDBDataTypeHandler singleInstance() {
+		return instance;
+	}
 	
 	@Override
 	public String getTypeName() {
@@ -26,7 +30,7 @@ class VarcharDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		AbstractStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		MySqlStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

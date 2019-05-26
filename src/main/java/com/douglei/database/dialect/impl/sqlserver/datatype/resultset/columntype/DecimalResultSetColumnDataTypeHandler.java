@@ -11,6 +11,12 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
  * @author DougLei
  */
 class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private DecimalResultSetColumnDataTypeHandler() {}
+	private static final DecimalResultSetColumnDataTypeHandler instance = new DecimalResultSetColumnDataTypeHandler();
+	public static final DecimalResultSetColumnDataTypeHandler singleInstance() {
+		return instance;
+	}
+	
 	private static final int[] supportColumnTypes = {
 			SqlServerDBType.DECIMAL.getSqlType()	// decimal 
 			};
