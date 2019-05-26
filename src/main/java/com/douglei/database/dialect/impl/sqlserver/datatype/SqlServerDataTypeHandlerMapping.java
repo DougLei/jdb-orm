@@ -11,6 +11,6 @@ public class SqlServerDataTypeHandlerMapping extends AbstractDataTypeHandlerMapp
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
-		return getDBDataTypeHandlerByDBTypeName("varchar");
+		return getDBDataTypeHandlerByDBTypeName(SqlServerDBType.VARCHAR.getTypeName());
 	}
 }

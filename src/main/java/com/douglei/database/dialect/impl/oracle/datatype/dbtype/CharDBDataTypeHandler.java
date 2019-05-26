@@ -1,5 +1,7 @@
 package com.douglei.database.dialect.impl.oracle.datatype.dbtype;
 
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
+
 /**
  * 
  * @author DougLei
@@ -8,11 +10,11 @@ class CharDBDataTypeHandler extends Varchar2DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "char";
+		return OracleDBType.CHAR.getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return 1;
+		return OracleDBType.CHAR.getSqlType();
 	}
 }

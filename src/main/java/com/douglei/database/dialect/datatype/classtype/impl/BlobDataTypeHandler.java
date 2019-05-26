@@ -11,13 +11,8 @@ import com.douglei.database.dialect.datatype.wrapper.Blob;
  * 
  * @author DougLei
  */
-public class BlobDataTypeHandler extends ClassDataTypeHandler{
-	private BlobDataTypeHandler() {}
-	private static final BlobDataTypeHandler instance = new BlobDataTypeHandler();
-	public static final BlobDataTypeHandler singleInstance() {
-		return instance;
-	}
-	
+public abstract class BlobDataTypeHandler extends ClassDataTypeHandler{
+
 	@Override
 	public String getCode() {
 		return "blob";
@@ -50,6 +45,6 @@ public class BlobDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	private void setNullBlob(PreparedStatement preparedStatement, int parameterIndex) throws SQLException {
-		preparedStatement.setNull(parameterIndex, 2004);
+		preparedStatement.setNull(parameterIndex, getSqlType());
 	}
 }

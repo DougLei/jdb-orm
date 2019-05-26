@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.BlobDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -20,12 +21,12 @@ class BlobDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "blob";
+		return OracleDBType.BLOB.getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return 2004;
+		return OracleDBType.BLOB.getSqlType();
 	}
 
 	@Override

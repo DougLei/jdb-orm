@@ -12,12 +12,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class DateDataTypeHandler extends ClassDataTypeHandler{
-	private DateDataTypeHandler() {}
-	private static final DateDataTypeHandler instance = new DateDataTypeHandler();
-	public static final DateDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class DateDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {
@@ -35,7 +30,7 @@ public class DateDataTypeHandler extends ClassDataTypeHandler{
 		if(ValidationUtil.isDate(value)) {
 			preparedStatement.setTimestamp(parameterIndex, DateTypeUtil.parseSqlTimestamp(value));
 		}else {
-			preparedStatement.setNull(parameterIndex, 93);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 }

@@ -10,12 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class DoubleDataTypeHandler extends ClassDataTypeHandler{
-	private DoubleDataTypeHandler() {}
-	private static final DoubleDataTypeHandler instance = new DoubleDataTypeHandler();
-	public static final DoubleDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class DoubleDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -37,7 +32,7 @@ public class DoubleDataTypeHandler extends ClassDataTypeHandler{
 				preparedStatement.setDouble(parameterIndex, Double.parseDouble(value.toString()));
 			}
 		}else {
-			preparedStatement.setNull(parameterIndex, 2);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 }

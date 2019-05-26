@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "varchar2";
+		return OracleDBType.VARCHAR2.getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return 12;
+		return OracleDBType.VARCHAR2.getSqlType();
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.DateDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "datetime";
+		return MySqlDBType.DATETIME.getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return 93;
+		return MySqlDBType.DATETIME.getSqlType();
 	}
 
 	@Override

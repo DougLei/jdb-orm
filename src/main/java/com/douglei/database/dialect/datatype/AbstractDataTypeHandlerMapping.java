@@ -3,8 +3,8 @@ package com.douglei.database.dialect.datatype;
 import java.util.List;
 
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandlerMapping;
-import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
@@ -24,12 +24,14 @@ public abstract class AbstractDataTypeHandlerMapping{
 	public AbstractDataTypeHandlerMapping() {
 		ClassScanner cs = new ClassScanner();
 		String basePackage = getClass().getPackage().getName();
-		List<String> classPaths = cs.multiScan(basePackage + ".resultset.columntype", basePackage + ".dbtype");
+		List<String> classPaths = cs.multiScan(basePackage + ".classtype", basePackage + ".resultset.columntype", basePackage + ".dbtype");
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
 				obj = ConstructorUtil.newInstance(cp);
-				if(obj instanceof ResultSetColumnDataTypeHandler) {
+				if(obj instanceof ClassDataTypeHandler) {
+					classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
+				}else if(obj instanceof ResultSetColumnDataTypeHandler) {
 					resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
 				}else if(obj instanceof DBDataTypeHandler) {
 					dbDataTypeHandlerMapping.register((DBDataTypeHandler) obj);
@@ -71,19 +73,16 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	
 	/**
-	 * <pre>
-	 * 	获取默认的DBDataTypeHandler
-	 * 	因为各个数据库的类型名称不一致, 所以需要各个子类自行实现
-	 * </pre>
-	 * @return
-	 */
-	public abstract DBDataTypeHandler getDefaultDBDataTypeHandler();
-	
-	/**
 	 * 获取默认的DataTypeHandler
 	 * @return
 	 */
 	public DataTypeHandler getDefaultDataTypeHandler() {
-		return StringDataTypeHandler.singleInstance();
+		return getDataTypeHandlerByCode("string");
 	}
+	
+	/**
+	 * 获取默认的DBDataTypeHandler
+	 * @return
+	 */
+	public abstract DBDataTypeHandler getDefaultDBDataTypeHandler();
 }

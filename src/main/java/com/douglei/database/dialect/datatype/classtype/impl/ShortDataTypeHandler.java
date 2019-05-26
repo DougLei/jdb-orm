@@ -10,12 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class ShortDataTypeHandler extends ClassDataTypeHandler{
-	private ShortDataTypeHandler() {}
-	private static final ShortDataTypeHandler instance = new ShortDataTypeHandler();
-	public static final ShortDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class ShortDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -37,7 +32,7 @@ public class ShortDataTypeHandler extends ClassDataTypeHandler{
 				preparedStatement.setShort(parameterIndex, Short.parseShort(value.toString()));
 			}
 		}else {
-			preparedStatement.setNull(parameterIndex, 2);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 }

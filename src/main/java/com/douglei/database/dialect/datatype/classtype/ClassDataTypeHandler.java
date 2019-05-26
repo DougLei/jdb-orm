@@ -14,6 +14,12 @@ import com.douglei.database.dialect.datatype.DataTypeHandlerType;
 public abstract class ClassDataTypeHandler implements DataTypeHandler{
 
 	/**
+	 * 
+	 * @return
+	 */
+	protected abstract int getSqlType();
+	
+	/**
 	 * <pre>
 	 * 	获取DataTypeHandler的唯一编码值
 	 * 	默认值为类名

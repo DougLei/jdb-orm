@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.StringDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class VarcharDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "varchar";
+		return MySqlDBType.VARCHAR.getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return 12;
+		return MySqlDBType.VARCHAR.getSqlType();
 	}
 
 	@Override

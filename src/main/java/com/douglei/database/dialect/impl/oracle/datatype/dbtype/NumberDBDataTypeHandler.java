@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.IntegerDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
 import com.douglei.utils.datatype.ValidationUtil;
 
 /**
@@ -17,12 +18,12 @@ class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "number";
+		return OracleDBType.NUMBER.getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return 2;
+		return OracleDBType.NUMBER.getSqlType();
 	}
 
 	@Override

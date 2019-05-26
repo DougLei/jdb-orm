@@ -10,12 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class LongDataTypeHandler extends ClassDataTypeHandler{
-	private LongDataTypeHandler() {}
-	private static final LongDataTypeHandler instance = new LongDataTypeHandler();
-	public static final LongDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class LongDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -37,7 +32,7 @@ public class LongDataTypeHandler extends ClassDataTypeHandler{
 				preparedStatement.setLong(parameterIndex, Long.parseLong(value.toString()));
 			}
 		}else {
-			preparedStatement.setNull(parameterIndex, 2);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 }

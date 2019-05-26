@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.LongDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "bigint";
+		return MySqlDBType.BIGINT.getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return -5;
+		return MySqlDBType.BIGINT.getSqlType();
 	}
 
 	@Override

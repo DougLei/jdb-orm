@@ -12,12 +12,7 @@ import com.douglei.database.dialect.datatype.wrapper.StringWrapper;
  * 
  * @author DougLei
  */
-public class ClobDataTypeHandler extends ClassDataTypeHandler{
-	private ClobDataTypeHandler() {}
-	private static final ClobDataTypeHandler instance = new ClobDataTypeHandler();
-	public static final ClobDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class ClobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -47,6 +42,6 @@ public class ClobDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	private void setNullClob(PreparedStatement preparedStatement, int parameterIndex) throws SQLException {
-		preparedStatement.setNull(parameterIndex, 2005);
+		preparedStatement.setNull(parameterIndex, getSqlType());
 	}
 }

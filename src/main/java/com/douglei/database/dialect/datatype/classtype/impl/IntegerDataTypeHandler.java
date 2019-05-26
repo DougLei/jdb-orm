@@ -10,12 +10,7 @@ import com.douglei.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public class IntegerDataTypeHandler extends ClassDataTypeHandler{
-	private IntegerDataTypeHandler() {}
-	private static final IntegerDataTypeHandler instance = new IntegerDataTypeHandler();
-	public static final IntegerDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class IntegerDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -37,7 +32,7 @@ public class IntegerDataTypeHandler extends ClassDataTypeHandler{
 				preparedStatement.setInt(parameterIndex, Integer.parseInt(value.toString()));
 			}
 		}else {
-			preparedStatement.setNull(parameterIndex, 2);
+			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.DateDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class DateDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "date";
+		return OracleDBType.DATE.getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return 93;
+		return OracleDBType.DATE.getSqlType();
 	}
 
 	@Override

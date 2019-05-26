@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.classtype.impl.DoubleDataTypeHandler;
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
 
 /**
  * 
@@ -15,12 +16,12 @@ class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return "decimal";
+		return SqlServerDBType.DECIMAL.getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return 3;
+		return SqlServerDBType.DECIMAL.getSqlType();
 	}
 
 	@Override

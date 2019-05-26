@@ -13,12 +13,7 @@ import com.douglei.database.dialect.datatype.wrapper.StringWrapper;
  * 
  * @author DougLei
  */
-public class StringDataTypeHandler extends ClassDataTypeHandler{
-	private StringDataTypeHandler() {}
-	private static final StringDataTypeHandler instance = new StringDataTypeHandler();
-	public static final StringDataTypeHandler singleInstance() {
-		return instance;
-	}
+public abstract class StringDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
@@ -48,6 +43,6 @@ public class StringDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	private void setNullString(PreparedStatement preparedStatement, int parameterIndex) throws SQLException {
-		preparedStatement.setNull(parameterIndex, 12);
+		preparedStatement.setNull(parameterIndex, getSqlType());
 	}
 }

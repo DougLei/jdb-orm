@@ -44,10 +44,6 @@ public class SqlParameterMetadata implements Metadata{
 	private String placeholderSuffix;
 	
 	/**
-	 * 数据库的数据类型
-	 */
-	private DBDataTypeHandler dbDataTypeHandler;
-	/**
 	 * 输入输出类型
 	 */
 	private SqlParameterMode mode;
@@ -139,9 +135,9 @@ public class SqlParameterMetadata implements Metadata{
 		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
 			AbstractDataTypeHandlerMapping mapping = LocalConfigurationDialectHolder.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
-				this.dbDataTypeHandler = mapping.getDefaultDBDataTypeHandler();
+				this.dataTypeHandler = mapping.getDefaultDBDataTypeHandler();
 			}else {
-				this.dbDataTypeHandler = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
+				this.dataTypeHandler = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
 			}
 		}
 	}
@@ -165,6 +161,9 @@ public class SqlParameterMetadata implements Metadata{
 	public DataTypeHandler getDataTypeHandler() {
 		return dataTypeHandler;
 	}
+	public DBDataTypeHandler getDBDataTypeHandler() {
+		return (DBDataTypeHandler) dataTypeHandler;
+	}
 	public boolean isUsePlaceholder() {
 		return usePlaceholder;
 	}
@@ -173,9 +172,6 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	public String getPlaceholderSuffix() {
 		return placeholderSuffix;
-	}
-	public DBDataTypeHandler getDBDataTypeHandler() {
-		return dbDataTypeHandler;
 	}
 	public SqlParameterMode getMode() {
 		return mode;

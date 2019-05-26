@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
 import com.douglei.utils.CloseUtil;
 
 /**
@@ -15,7 +16,7 @@ import com.douglei.utils.CloseUtil;
  */
 class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
-			-3	// varbinary 
+			SqlServerDBType.VARBINARY.getSqlType()	// varbinary 
 			};
 	
 	@Override

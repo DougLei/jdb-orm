@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
 
 /**
  * 
@@ -11,8 +12,8 @@ import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColum
  */
 class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private static final int[] supportColumnTypes = {
-			12, 	// varchar
-			1,		// char
+			MySqlDBType.VARCHAR.getSqlType(), 	// varchar
+			MySqlDBType.CHAR.getSqlType(),		// char
 			};
 	
 	@Override
