@@ -162,10 +162,12 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	public void close() {
 		if(!isClosed()) {
 			super.close();
-			for (List<Object> list : lastParametersList) {
-				list.clear();
+			if(lastParametersList != null) {
+				for (List<Object> list : lastParametersList) {
+					list.clear();
+				}
+				lastParametersList.clear();
 			}
-			lastParametersList.clear();
 			CloseUtil.closeDBConn(preparedStatement);
 		}
 	}
