@@ -17,7 +17,7 @@ import com.douglei.utils.CloseUtil;
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	private PreparedStatement preparedStatement;
-	private List<Object> parameters;
+	private List<List<Object>> lastParametersList; // 上一次请求参数
 
 	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement) {
 		this.preparedStatement = preparedStatement;
@@ -25,20 +25,22 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	/**
 	 * 判断参数newParameters集合，是否和属性parameters相同
-	 * @param newParameters
-	 * @return
+	 * @param currentParameters
+	 * @return -1表示没有一样的参数
 	 */
-	private boolean isSameParameters(List<Object> newParameters) {
-		if(parameters == newParameters) {
-			return true;
+	private int isSameParameters(List<Object> currentParameters) {
+		if(isExecuted()) {
+			int length = lastParametersList.size();
+			for(int i=0;i<length;i++) {
+				if(lastParametersList.get(i).equals(currentParameters)) {
+					return i;
+				}
+			}
+		}else {
+			lastParametersList = new ArrayList<List<Object>>(3);
 		}
-		if(parameters != null) {
-			return parameters.equals(newParameters);
-		}
-		if(newParameters != null) {
-			return newParameters.equals(parameters);
-		}
-		return false;
+		lastParametersList.add(currentParameters);
+		return -1;
 	}
 	
 	private void setParameters(List<Object> parameters) throws SQLException {
@@ -75,8 +77,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @return
 	 */
 	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
-		if(isExecuted() && isSameParameters(parameters)) {
-			return getQueryResultList();
+		int index = isSameParameters(parameters);
+		if(index > -1) {
+			return getQueryResultList(index);
 		}
 		try {
 			if(isClosed()) {
@@ -91,8 +94,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	@Override
 	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
-		if(isExecuted() && isSameParameters(parameters)) {
-			return getQueryUniqueResult();
+		int index = isSameParameters(parameters);
+		if(index > -1) {
+			return getQueryUniqueResult(index);
 		}
 		try {
 			if(isClosed()) {
@@ -107,8 +111,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	@Override
 	public List<Object[]> getQueryResultList_(List<Object> parameters) {
-		if(isExecuted() && isSameParameters(parameters)) {
-			return getQueryResultList_();
+		int index = isSameParameters(parameters);
+		if(index > -1) {
+			return getQueryResultList_(index);
 		}
 		try {
 			if(isClosed()) {
@@ -123,8 +128,9 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 
 	@Override
 	public Object[] getQueryUniqueResult_(List<Object> parameters) {
-		if(isExecuted() && isSameParameters(parameters)) {
-			return getQueryUniqueResult_();
+		int index = isSameParameters(parameters);
+		if(index > -1) {
+			return getQueryUniqueResult_(index);
 		}
 		try {
 			if(isClosed()) {
@@ -156,9 +162,10 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	public void close() {
 		if(!isClosed()) {
 			super.close();
-			if(parameters != null && parameters.size() > 0) {
-				parameters.clear();
+			for (List<Object> list : lastParametersList) {
+				list.clear();
 			}
+			lastParametersList.clear();
 			CloseUtil.closeDBConn(preparedStatement);
 		}
 	}

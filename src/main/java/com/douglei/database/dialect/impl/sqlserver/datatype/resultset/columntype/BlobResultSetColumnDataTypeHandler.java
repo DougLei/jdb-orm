@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.dbtype.VarbinaryDBDa
  * 
  * @author DougLei
  */
-class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private BlobResultSetColumnDataTypeHandler() {}
 	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
 	public static final BlobResultSetColumnDataTypeHandler singleInstance() {

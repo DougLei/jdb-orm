@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
-import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerDoubleDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.DoubleDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		SqlServerDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.dbtype.DecimalDBData
  * 
  * @author DougLei
  */
-class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private DecimalResultSetColumnDataTypeHandler() {}
 	private static final DecimalResultSetColumnDataTypeHandler instance = new DecimalResultSetColumnDataTypeHandler();
 	public static final DecimalResultSetColumnDataTypeHandler singleInstance() {

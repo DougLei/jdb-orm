@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.mysql.datatype.dbtype.VarcharDBDataType
  * 
  * @author DougLei
  */
-class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private StringResultSetColumnDataTypeHandler() {}
 	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
 	public static final StringResultSetColumnDataTypeHandler singleInstance() {

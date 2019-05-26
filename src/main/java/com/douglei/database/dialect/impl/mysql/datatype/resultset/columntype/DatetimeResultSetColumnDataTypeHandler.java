@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.mysql.datatype.dbtype.DatetimeDBDataTyp
  * 
  * @author DougLei
  */
-class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private DatetimeResultSetColumnDataTypeHandler() {}
 	private static final DatetimeResultSetColumnDataTypeHandler instance = new DatetimeResultSetColumnDataTypeHandler();
 	public static final DatetimeResultSetColumnDataTypeHandler singleInstance() {

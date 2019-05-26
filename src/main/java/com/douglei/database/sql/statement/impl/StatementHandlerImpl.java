@@ -24,7 +24,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	@Override
 	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
 		if(isExecuted()) {
-			return getQueryResultList();
+			return getQueryResultList(0);
 		}
 		try {
 			if(isClosed()) {
@@ -41,7 +41,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	@Override
 	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
 		if(isExecuted()) {
-			return getQueryUniqueResult();
+			return getQueryUniqueResult(0);
 		}
 		try {
 			if(isClosed()) {
@@ -58,7 +58,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	@Override
 	public List<Object[]> getQueryResultList_(List<Object> parameters) {
 		if(isExecuted()) {
-			return getQueryResultList_();
+			return getQueryResultList_(0);
 		}
 		try {
 			if(isClosed()) {
@@ -75,7 +75,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	@Override
 	public Object[] getQueryUniqueResult_(List<Object> parameters) {
 		if(isExecuted()) {
-			return getQueryUniqueResult_();
+			return getQueryUniqueResult_(0);
 		}
 		try {
 			if(isClosed()) {

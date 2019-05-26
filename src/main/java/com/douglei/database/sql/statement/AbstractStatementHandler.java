@@ -3,7 +3,6 @@ package com.douglei.database.sql.statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,25 +21,30 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStatementHandler.class);
 	
 	private boolean isExecuted;// 是否已经执行过
+	private short currentEecutedIndex;// 当前执行的index, 可以理解为当前共执行了多少次, 从0开始
 	private boolean isClosed;// 是否关闭
 	
 	private ResultSet resultSet;
 	
 	// <列名:值>
-	private Map<String, Object> queryUniqueResult;
-	private List<Map<String, Object>> queryResultList;
+	private List<Map<String, Object>> queryUniqueResult;
+	private List<List<Map<String, Object>>> queryResultList;
 	// 结果集的元数据
 	private List<SqlResultsetMetadata> resultsetMetadatas;
 	
 	// <值> [数组]
-	private Object[] queryUniqueResult_;
-	private List<Object[]> queryResultList_;
+	private List<Object[]> queryUniqueResult_;
+	private List<List<Object[]>> queryResultList_;
 	
 	/**
 	 * 记录[标识]该StatementHandler已经执行过
 	 */
 	private void recordStatementHandlerIsExecuted() {
-		this.isExecuted = true;
+		if(this.isExecuted) {
+			currentEecutedIndex++;
+		}else {
+			this.isExecuted = true;
+		}
 	}
 	
 	/**
@@ -65,14 +69,6 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		return false;
 	}
 	
-	private void initialQueryResultList() {
-		logger.debug("初始化 queryResultList list-map集合");
-		if(queryResultList == null) {
-			queryResultList = new ArrayList<Map<String,Object>>(16);
-		}else if(queryResultList.size() > 0){
-			queryResultList.clear();
-		}
-	}
 	/**
 	 * <pre>
 	 * 	根据resultSet设置查询结果集信息
@@ -82,32 +78,17 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryResultList() throws SQLException {
 		logger.debug("开始设置查询结果集集合");
-		initialQueryResultList();
-		
+		if(queryResultList == null) {
+			queryResultList = new ArrayList<List<Map<String,Object>>>(3);
+		}
 		if(setResutSetColumnNames()) {
-			int count = resultsetMetadatas.size();
-			Map<String,Object> map = null;
-			SqlResultsetMetadata sqlResultsetMetadata = null;
-			do {
-				map = new HashMap<String, Object>(count);
-				for(short i=0;i<count;i++) {
-					sqlResultsetMetadata = resultsetMetadatas.get(i);
-					map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet));
-				}
-				queryResultList.add(map);
-			}while(resultSet.next());
+			queryResultList.add(ResultSetUtil.getResultSetListMap(resultsetMetadatas, resultSet));
+		}else {
+			queryResultList.add(null);
 		}
 		recordStatementHandlerIsExecuted();
 	}
 	
-	private void initialQueryUniqueResult(int initialSize) {
-		logger.debug("初始化 queryUniqueResult map集合");
-		if(queryUniqueResult == null) {
-			queryUniqueResult = new HashMap<String, Object>(initialSize);
-		}else if(queryUniqueResult.size() > 0){
-			queryUniqueResult.clear();
-		}
-	}
 	/**
 	 * <pre>
 	 * 	根据resultSet设置查询唯一结果信息
@@ -117,33 +98,20 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryUniqueResult() throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
+		if(queryUniqueResult == null) {
+			queryUniqueResult = new ArrayList<Map<String,Object>>(3);
+		}
 		if(setResutSetColumnNames()) {
-			int count = resultsetMetadatas.size();
-			initialQueryUniqueResult(count);
-			
-			SqlResultsetMetadata sqlResultsetMetadata = null;
-			for(short i=0;i<count;i++) {
-				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				queryUniqueResult.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet));
-			}
-			
+			queryUniqueResult.add(ResultSetUtil.getResultSetMap(resultsetMetadatas, resultSet));
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			initialQueryUniqueResult(16);
+			queryUniqueResult.add(null);
 		}
 		recordStatementHandlerIsExecuted();
 	}
 	
-	private void initialQueryResultList_() {
-		logger.debug("初始化 queryResultList_ list-数组集合");
-		if(queryResultList_ == null) {
-			queryResultList_ = new ArrayList<Object[]>(16);
-		}else if(queryResultList_.size() > 0){
-			queryResultList_.clear();
-		}
-	}
 	/**
 	 * <pre>
 	 * 	根据resultSet设置查询结果集信息
@@ -153,19 +121,13 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryResultList_() throws SQLException {
 		logger.debug("开始设置查询结果集集合");
-		initialQueryResultList_();
+		if(queryResultList_ == null) {
+			queryResultList_ = new ArrayList<List<Object[]>>(3);
+		}
 		if(setResutSetColumnNames()) {
-			int count = resultsetMetadatas.size();
-			Object[] array = null;
-			SqlResultsetMetadata sqlResultsetMetadata = null;
-			do {
-				array = new Object[count];
-				for(short i=0;i<count;i++) {
-					sqlResultsetMetadata = resultsetMetadatas.get(i);
-					array[i] = sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet); 
-				}
-				queryResultList_.add(array);
-			}while(resultSet.next());
+			queryResultList_.add(ResultSetUtil.getResultSetListArray(resultsetMetadatas, resultSet));
+		}else {
+			queryResultList_.add(null);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -179,20 +141,16 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryUniqueResult_() throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
+		if(queryUniqueResult_ == null) {
+			queryUniqueResult_ = new ArrayList<Object[]>(3);
+		}
 		if(setResutSetColumnNames()) {
-			int count = resultsetMetadatas.size();
-			queryUniqueResult_ = new Object[count];
-			
-			SqlResultsetMetadata sqlResultsetMetadata = null;
-			for(short i=0;i<count;i++) {
-				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				queryUniqueResult_[i] = sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet); 
-			}
+			queryUniqueResult_.add(ResultSetUtil.getResultSetArray(resultsetMetadatas, resultSet));
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult_ = new Object[1];
+			queryUniqueResult_.add(null);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -201,7 +159,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			this.resultSet = resultSet;
 			setQueryResultList();
-			return getQueryResultList();
+			return getQueryResultList(currentEecutedIndex);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -213,7 +171,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			this.resultSet = resultSet;
 			setQueryUniqueResult();
-			return getQueryUniqueResult();
+			return getQueryUniqueResult(currentEecutedIndex);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -225,7 +183,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			this.resultSet = resultSet;
 			setQueryResultList_();
-			return getQueryResultList_();
+			return getQueryResultList_(currentEecutedIndex);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -237,7 +195,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			this.resultSet = resultSet;
 			setQueryUniqueResult_();
-			return getQueryUniqueResult_();
+			return getQueryUniqueResult_(currentEecutedIndex);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -245,17 +203,17 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
-	protected List<Map<String, Object>> getQueryResultList() {
-		return queryResultList;
+	protected List<Map<String, Object>> getQueryResultList(int index) {
+		return queryResultList.get(index);
 	}
-	protected Map<String, Object> getQueryUniqueResult() {
-		return queryUniqueResult;
+	protected Map<String, Object> getQueryUniqueResult(int index) {
+		return queryUniqueResult.get(index);
 	}
-	protected List<Object[]> getQueryResultList_() {
-		return queryResultList_;
+	protected List<Object[]> getQueryResultList_(int index) {
+		return queryResultList_.get(index);
 	}
-	public Object[] getQueryUniqueResult_() {
-		return queryUniqueResult_;
+	protected Object[] getQueryUniqueResult_(int index) {
+		return queryUniqueResult_.get(index);
 	}
 	
 	@Override

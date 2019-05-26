@@ -3,7 +3,6 @@ package com.douglei.test.sqlsession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,10 +17,11 @@ public class PreparedStatementHandlerTest {
 	@Test
 	public void queryTest() {
 		parameters.add("哈哈");
-		List<Map<String, Object>> list = session.query("select * from sys_user where name = ?", parameters);
-		for (Map<String, Object> map : list) {
-			System.out.println(map);
-		}
+//		System.out.println(session.query("select * from sys_user where name = ?", parameters) == session.query("select * from sys_user where name = ?", parameters));
+		
+		List<Object> p2 = new ArrayList<Object>();
+		p2.add("哈哈");
+		System.out.println(session.query("select * from sys_user where name = ?", parameters) == session.query("select * from sys_user where name = ?", p2));
 	}
 	
 	@Test
@@ -30,13 +30,6 @@ public class PreparedStatementHandlerTest {
 		parameters.add("name_" + new Date().getTime());
 		session.executeUpdate("insert into sys_user (id, name) values(?,?)", parameters);
 	}
-	
-	@Test
-	public void procedureTest() {
-		
-	}
-
-	
 	
 	// --------------------------------------------------------------------------------------
 	

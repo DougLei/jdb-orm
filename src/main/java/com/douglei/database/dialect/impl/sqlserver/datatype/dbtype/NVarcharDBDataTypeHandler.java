@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
-import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerStringDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.StringDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class NVarcharDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		SqlServerStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		StringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

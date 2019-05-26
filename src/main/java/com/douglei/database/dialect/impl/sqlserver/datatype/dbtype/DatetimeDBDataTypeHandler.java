@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
-import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerDateDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.DateDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		SqlServerDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		DateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleDoubleDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleIntegerDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleLongDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.DoubleDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.IntegerDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.LongDataTypeHandler;
 import com.douglei.utils.datatype.ValidationUtil;
 
 /**
@@ -36,11 +36,11 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(ValidationUtil.isDouble(value)) {
-			OracleDoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else if(ValidationUtil.isInteger(value)) {
-			OracleIntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			IntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else if(ValidationUtil.isLong(value)){
-			OracleLongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 		}else {
 			preparedStatement.setNull(parameterIndex, getSqlType());
 		}

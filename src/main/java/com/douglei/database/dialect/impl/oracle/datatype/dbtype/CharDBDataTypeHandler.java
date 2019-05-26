@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleStringDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.StringDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		OracleStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		StringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

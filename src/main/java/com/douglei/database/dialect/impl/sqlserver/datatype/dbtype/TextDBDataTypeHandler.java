@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
-import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerClobDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.ClobDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class TextDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		SqlServerClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		ClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

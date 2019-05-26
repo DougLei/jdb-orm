@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.dbtype.TextDBDataTyp
  * 
  * @author DougLei
  */
-class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private ClobResultSetColumnDataTypeHandler() {}
 	private static final ClobResultSetColumnDataTypeHandler instance = new ClobResultSetColumnDataTypeHandler();
 	public static final ClobResultSetColumnDataTypeHandler singleInstance() {

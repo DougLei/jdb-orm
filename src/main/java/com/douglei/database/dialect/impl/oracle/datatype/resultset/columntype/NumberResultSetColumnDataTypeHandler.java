@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.oracle.datatype.dbtype.NumberDBDataType
  * 
  * @author DougLei
  */
-class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private NumberResultSetColumnDataTypeHandler() {}
 	private static final NumberResultSetColumnDataTypeHandler instance = new NumberResultSetColumnDataTypeHandler();
 	public static final NumberResultSetColumnDataTypeHandler singleInstance() {

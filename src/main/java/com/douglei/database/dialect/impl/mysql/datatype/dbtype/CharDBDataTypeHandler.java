@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
-import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlStringDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.StringDataTypeHandler;
 
 /**
  * 
@@ -31,7 +31,7 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		MySqlStringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		StringDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

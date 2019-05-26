@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.sqlserver.datatype.dbtype.BigIntDBDataT
  * 
  * @author DougLei
  */
-class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private BigIntResultSetColumnDataTypeHandler() {}
 	private static final BigIntResultSetColumnDataTypeHandler instance = new BigIntResultSetColumnDataTypeHandler();
 	public static final BigIntResultSetColumnDataTypeHandler singleInstance() {

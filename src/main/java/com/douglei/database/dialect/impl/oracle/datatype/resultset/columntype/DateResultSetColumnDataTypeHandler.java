@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.oracle.datatype.dbtype.DateDBDataTypeHa
  * 
  * @author DougLei
  */
-class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private DateResultSetColumnDataTypeHandler() {}
 	private static final DateResultSetColumnDataTypeHandler instance = new DateResultSetColumnDataTypeHandler();
 	public static final DateResultSetColumnDataTypeHandler singleInstance() {

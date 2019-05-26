@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.oracle.datatype.dbtype.BlobDBDataTypeHa
  * 
  * @author DougLei
  */
-class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private BlobResultSetColumnDataTypeHandler() {}
 	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
 	public static final BlobResultSetColumnDataTypeHandler singleInstance() {

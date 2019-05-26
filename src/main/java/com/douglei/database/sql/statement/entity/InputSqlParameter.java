@@ -39,4 +39,31 @@ public class InputSqlParameter {
 	public String toString() {
 		return "value="+value+", dataTypeHandler="+dataTypeHandler;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dataTypeHandler == null) ? 0 : dataTypeHandler.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		InputSqlParameter other = (InputSqlParameter) obj;
+		if (value == null) {
+			if(other.value == null) {
+				return true;
+			}
+			return false;
+		} 
+		return value.equals(other.value);
+	}
 }

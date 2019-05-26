@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleDateDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.DateDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class DateDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		OracleDateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		DateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

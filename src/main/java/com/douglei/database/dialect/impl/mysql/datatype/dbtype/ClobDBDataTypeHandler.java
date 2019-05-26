@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDBType;
-import com.douglei.database.dialect.impl.mysql.datatype.classtype.MySqlClobDataTypeHandler;
+import com.douglei.database.dialect.impl.mysql.datatype.classtype.ClobDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class ClobDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		MySqlClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		ClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

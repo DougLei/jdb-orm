@@ -11,7 +11,7 @@ import com.douglei.database.dialect.impl.mysql.datatype.dbtype.IntDBDataTypeHand
  * 
  * @author DougLei
  */
-class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+public class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
 	private IntResultSetColumnDataTypeHandler() {}
 	private static final IntResultSetColumnDataTypeHandler instance = new IntResultSetColumnDataTypeHandler();
 	public static final IntResultSetColumnDataTypeHandler singleInstance() {

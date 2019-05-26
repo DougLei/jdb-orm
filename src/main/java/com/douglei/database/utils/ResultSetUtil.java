@@ -115,4 +115,83 @@ public class ResultSetUtil {
 			CloseUtil.closeDBConn(resultSet);
 		}
 	}
+	
+	
+	/**
+	 * 获取ResultSet Object[]
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Object[] getResultSetArray(ResultSet resultSet) throws SQLException {
+		return getResultSetArray(getSqlResultSetMetadata(resultSet), resultSet);
+	}
+	
+	/**
+	 * 获取ResultSet Object[]
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultsetMetadatas
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Object[] getResultSetArray(List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
+		try {
+			int count = resultsetMetadatas.size();
+			Object[] array = new Object[count];
+			
+			for(short i=0;i<count;i++) {
+				array[i] = resultsetMetadatas.get(i).getDataTypeHandler().getValue((short)(i+1), resultSet); 
+			}
+			return array;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
+	}
+	
+	/**
+	 * 获取ResultSet List Object[]
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<Object[]> getResultSetListArray(ResultSet resultSet) throws SQLException {
+		return getResultSetListArray(getSqlResultSetMetadata(resultSet), resultSet);
+	}
+	
+	/**
+	 * 获取ResultSet List Object[]
+	 * <p>参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该方法</p>
+	 * @param resultsetMetadatas
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<Object[]> getResultSetListArray(List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
+		try {
+			List<Object[]> arrayList = new ArrayList<Object[]>(16);
+			
+			int count = resultsetMetadatas.size();
+			Object[] array = null;
+			SqlResultsetMetadata sqlResultsetMetadata = null;
+			do {
+				array = new Object[count];
+				for(short i=0;i<count;i++) {
+					sqlResultsetMetadata = resultsetMetadatas.get(i);
+					array[i] = sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet); 
+				}
+				arrayList.add(array);
+			}while(resultSet.next());
+			
+			return arrayList;
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
+	}
 }

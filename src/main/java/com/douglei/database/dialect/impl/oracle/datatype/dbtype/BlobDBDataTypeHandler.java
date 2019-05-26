@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDBType;
-import com.douglei.database.dialect.impl.oracle.datatype.classtype.OracleBlobDataTypeHandler;
+import com.douglei.database.dialect.impl.oracle.datatype.classtype.BlobDataTypeHandler;
 
 /**
  * 
@@ -33,7 +33,7 @@ public class BlobDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		OracleBlobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		BlobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

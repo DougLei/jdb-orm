@@ -16,6 +16,7 @@ import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlContentType;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -85,11 +86,12 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	}
 	
 	private DialectType getDialectType(Node dialect) {
+		String dialectValue = null; 
 		DialectType type = null;
-		if(dialect == null) {
+		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
 			type = LocalConfigurationDialectHolder.getDialect().getType();
 		}else {
-			type = DialectType.toValue(dialect.getNodeValue());
+			type = DialectType.toValue(dialectValue);
 			if(type == null) {
 				throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
 			}

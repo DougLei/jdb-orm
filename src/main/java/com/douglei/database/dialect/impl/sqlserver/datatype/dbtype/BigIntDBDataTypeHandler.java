@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDBType;
-import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.SqlServerLongDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.classtype.LongDataTypeHandler;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		SqlServerLongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+		LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 	}
 
 	@Override

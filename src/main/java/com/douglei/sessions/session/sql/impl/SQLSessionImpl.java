@@ -199,7 +199,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		List<SqlNode> sqlNodes = null;
 		TextSqlNode textSqlNode = null;
 		for (SqlContentMetadata content : contents) {
-			re_set(sqlContent, sqlParameters);
+			reset(sqlContent, sqlParameters);
 			sqlNodes = content.getRootSqlNodes();
 			
 			for(SqlNode sn: sqlNodes) {
@@ -218,11 +218,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return listMap;
 	}
 	
-	private void re_set(StringBuilder sqlContent, List<SqlParameterMetadata> sqlParameters) {
+	private void reset(StringBuilder sqlContent, List<SqlParameterMetadata> sqlParameters) {
 		if(sqlContent.length() > 0) {
 			sqlContent.setLength(0);
 		}
-		if(sqlParameters.size() >0) {
+		if(sqlParameters.size() > 0) {
 			sqlParameters.clear();
 		}
 	}
