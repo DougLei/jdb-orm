@@ -13,7 +13,7 @@ import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.database.metadata.sql.SqlContentMetadata;
 import com.douglei.database.metadata.sql.SqlMetadata;
 import com.douglei.database.metadata.sql.SqlParameterMetadata;
@@ -184,7 +184,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
 		
-		String dialectTypeCode = DialectContext.getDialect().getType().getCode();
+		String dialectTypeCode = DBContext.getDialect().getType().getCode();
 		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialectTypeCode);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialectTypeCode+", 不存在可以执行的存储过程sql语句");
@@ -256,7 +256,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					callableStatement.execute();
 					
-					boolean procedureSupportDirectlyReturnResultSet = DialectContext.getDialect().procedureSupportDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = DBContext.getDialect().procedureSupportDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						

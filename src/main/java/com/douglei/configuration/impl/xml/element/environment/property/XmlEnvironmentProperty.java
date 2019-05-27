@@ -155,7 +155,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return mappingStore;
 	}
 	@Override
-	public CreateMode getTwableCreateMode() {
+	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
 	}
 }

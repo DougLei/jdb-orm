@@ -4,7 +4,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 import com.douglei.database.dialect.datatype.classtype.impl.AbstractStringDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
@@ -38,10 +38,10 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			if(logger.isDebugEnabled()) {
 				logger.debug("配置的dataType为空, 使用默认的DataTypeHandler={}", AbstractStringDataTypeHandler.class.getName());
 			}
-			return DialectContext.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
+			return DBContext.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
 		}
 		try {
-			return DialectContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+			return DBContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值异常: " + e.getMessage());
 		}

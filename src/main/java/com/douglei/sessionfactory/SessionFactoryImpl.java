@@ -7,7 +7,7 @@ import com.douglei.configuration.Configuration;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
@@ -40,7 +40,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	
 	@Override
 	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
-		DialectContext.setDialect(environmentProperty.getDialect());
+		DBContext.setConfigurationEnvironmentProperty(environmentProperty);
 		mappingWrapper.dynamicAddMapping(mappingType, mappingConfigurationContent);
 	}
 	

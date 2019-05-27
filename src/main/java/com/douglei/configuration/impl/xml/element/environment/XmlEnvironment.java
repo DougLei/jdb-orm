@@ -25,7 +25,7 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;
 import com.douglei.configuration.impl.xml.element.properties.Properties;
 import com.douglei.configuration.impl.xml.util.ElementUtil;
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -145,7 +145,7 @@ public class XmlEnvironment implements Environment{
 			if(elements.size() > 1) {
 				throw new RepeatMappingsElementException("<environment>下的<mappings>元素最多只能配置一个");
 			}
-			DialectContext.setDialect(environmentProperty.getDialect());
+			DBContext.setConfigurationEnvironmentProperty(environmentProperty);
 			Element elem = ((Element) elements.get(0));
 			mappingWrapper = new XmlMappingWrapper(elem.elements("mapping-scan"), elem.elements("mapping"), environmentProperty.getMappingStore());
 		}else {

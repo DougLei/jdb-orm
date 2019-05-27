@@ -1,6 +1,6 @@
 package com.douglei.database.sql.statement.entity;
 
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 
 /**
@@ -15,7 +15,7 @@ public class SqlResultsetMetadata {
 	
 	public SqlResultsetMetadata(String columnName, int columnType, String columnTypeName) {
 		this.columnName = columnName.toUpperCase();
-		this.dataTypeHandler = DialectContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnType, columnName, columnTypeName);
+		this.dataTypeHandler = DBContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByDatabaseColumnType(columnType, columnName, columnTypeName);
 	}
 
 	public String getColumnName() {

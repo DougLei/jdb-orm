@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.context.DialectContext;
+import com.douglei.context.DBContext;
 import com.douglei.database.dialect.datatype.DataTypeHandler;
 
 /**
@@ -21,7 +21,7 @@ public class InputSqlParameter {
 	
 	public InputSqlParameter(Object value) {
 		this.value = value;
-		this.dataTypeHandler = DialectContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
+		this.dataTypeHandler = DBContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
 		if(logger.isDebugEnabled()) {
 			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
 		}

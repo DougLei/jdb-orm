@@ -16,5 +16,5 @@ public interface EnvironmentProperty {
 	
 	public MappingStore getMappingStore();
 	
-	public CreateMode getTwableCreateMode();
+	public CreateMode getTableCreateMode();
 }
