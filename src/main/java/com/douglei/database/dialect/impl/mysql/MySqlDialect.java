@@ -4,6 +4,7 @@ import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.mysql.datatype.MySqlDataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.mysql.sql.SqlHandlerImpl;
+import com.douglei.database.dialect.impl.mysql.table.MySqlTableHandlerImpl;
 
 /**
  * 
@@ -19,6 +20,7 @@ public final class MySqlDialect extends AbstractDialect{
 	
 	@Override
 	protected void initialize() {
+		super.tableHandler = new MySqlTableHandlerImpl();
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new MySqlDataTypeHandlerMapping();
 	}

@@ -4,6 +4,7 @@ import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.oracle.datatype.OracleDataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.oracle.sql.SqlHandlerImpl;
+import com.douglei.database.dialect.impl.oracle.table.OracleTableHandlerImpl;
 
 /**
  * 
@@ -19,6 +20,7 @@ public final class OracleDialect extends AbstractDialect{
 	
 	@Override
 	protected void initialize() {
+		super.tableHandler = new OracleTableHandlerImpl();
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new OracleDataTypeHandlerMapping();
 	}

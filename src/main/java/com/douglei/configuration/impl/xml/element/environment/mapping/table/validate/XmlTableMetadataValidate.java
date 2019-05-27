@@ -2,6 +2,7 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 
 import org.dom4j.Element;
 
+import com.douglei.context.DBContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -30,9 +31,13 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 	}
 
 	private CreateMode getCreateMode(String createMode) {
+		CreateMode cm = null;
 		if(StringUtil.notEmpty(createMode)) {
-			return CreateMode.toValue(createMode);
+			cm = CreateMode.toValue(createMode);
 		}
-		return null;
+		if(cm == null) {
+			cm = DBContext.getTableCreateMode();
+		}
+		return cm;
 	}
 }

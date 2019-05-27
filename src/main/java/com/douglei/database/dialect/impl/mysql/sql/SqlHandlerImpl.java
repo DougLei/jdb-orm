@@ -23,7 +23,7 @@ public class SqlHandlerImpl implements SqlHandler{
 		pageQuerySql.append(",");
 		pageQuerySql.append(pageSize);
 		if(logger.isDebugEnabled()) {
-			logger.debug("{} 进行分页查询的sql语句为: {}", getClass(), pageQuerySql.toString());
+			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());
 		}
 		return pageQuerySql.toString();
 	}

@@ -4,6 +4,7 @@ import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.sqlserver.datatype.SqlServerDataTypeHandlerMapping;
 import com.douglei.database.dialect.impl.sqlserver.sql.SqlHandlerImpl;
+import com.douglei.database.dialect.impl.sqlserver.table.SqlServerTableHandlerImpl;
 
 /**
  * 
@@ -19,6 +20,7 @@ public final class SqlServerDialect extends AbstractDialect{
 	
 	@Override
 	protected void initialize() {
+		super.tableHandler = new SqlServerTableHandlerImpl();
 		super.sqlHandler = new SqlHandlerImpl();
 		super.dataTypeHandlerMapping = new SqlServerDataTypeHandlerMapping();
 	}

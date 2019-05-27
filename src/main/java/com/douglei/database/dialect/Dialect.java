@@ -2,6 +2,7 @@ package com.douglei.database.dialect;
 
 import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.sql.SqlHandler;
+import com.douglei.database.dialect.table.TableHandler;
 
 /**
  * dialect处理器
@@ -10,6 +11,12 @@ import com.douglei.database.dialect.sql.SqlHandler;
 public interface Dialect {
 	
 	DialectType getType();
+
+	/**
+	 * 
+	 * @return
+	 */
+	TableHandler getTableHandler();
 	
 	/**
 	 * 

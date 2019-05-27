@@ -24,6 +24,9 @@ public class TableMetadata implements Metadata{
 	private String className;
 	private boolean classNameIsNull;
 	
+	/**
+	 * 表create的模式
+	 */
 	private CreateMode createMode;
 	
 	/**
@@ -82,7 +85,6 @@ public class TableMetadata implements Metadata{
 		}
 	}
 	
-	
 	public String getName() {
 		return name;
 	}
@@ -99,6 +101,10 @@ public class TableMetadata implements Metadata{
 			this.className = className;
 		}
 	}
+	public CreateMode getCreateMode() {
+		return createMode;
+	}
+
 	public Set<String> getColumnMetadataCodes() {
 		return columns.keySet();
 	}
