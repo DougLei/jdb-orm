@@ -31,7 +31,6 @@
 		
 		<!-- 	
 			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
-				a
 				<if test="name == '哈哈'">
 					b
 				</if>
@@ -59,11 +58,11 @@
 				</if>
 			</foreach>
 		-->	
-		
+		<!-- 
 			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
 				#{userId, dataType=string}
 			</foreach>
-		
+		-->	
 		
 		</content>
 	<!-- 	
