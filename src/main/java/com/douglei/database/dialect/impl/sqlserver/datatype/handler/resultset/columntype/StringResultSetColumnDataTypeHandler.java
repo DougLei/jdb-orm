@@ -4,7 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Char;
+import com.douglei.database.dialect.impl.sqlserver.datatype.NChar;
+import com.douglei.database.dialect.impl.sqlserver.datatype.NVarchar;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Varchar;
 import com.douglei.database.dialect.impl.sqlserver.datatype.handler.dbtype.VarcharDBDataTypeHandler;
 
 /**
@@ -19,10 +22,10 @@ public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTyp
 	}
 	
 	private static final int[] supportColumnTypes = {
-			SqlServerDBType.NVARCHAR.getSqlType(), 	// varchar
-			SqlServerDBType.NVARCHAR.getSqlType(), 	// nvarchar
-			SqlServerDBType.CHAR.getSqlType(),		// char
-			SqlServerDBType.NCHAR.getSqlType()		// nchar
+			Varchar.singleInstance().getSqlType(), 	// varchar
+			NVarchar.singleInstance().getSqlType(), 	// nvarchar
+			Char.singleInstance().getSqlType(),		// char
+			NChar.singleInstance().getSqlType()		// nchar
 			};
 	
 	@Override

@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.oracle.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractDateDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Date;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return OracleDBType.DATE.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Date.singleInstance();
 	}
 }

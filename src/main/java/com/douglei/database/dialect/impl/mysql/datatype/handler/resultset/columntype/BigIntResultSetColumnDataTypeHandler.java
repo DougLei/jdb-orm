@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Bigint;
 import com.douglei.database.dialect.impl.mysql.datatype.handler.dbtype.BigIntDBDataTypeHandler;
 
 /**
@@ -19,7 +19,7 @@ public class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTyp
 	}
 	
 	private static final int[] supportColumnTypes = {
-			MySqlDBType.BIGINT.getSqlType()	// bigint 
+			Bigint.singleInstance().getSqlType()	// bigint 
 			};
 	
 	@Override

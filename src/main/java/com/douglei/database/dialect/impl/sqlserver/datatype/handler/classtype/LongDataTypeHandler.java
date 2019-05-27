@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractLongDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Bigint;
 
 /**
  * 
@@ -13,9 +14,9 @@ public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
 	public static final LongDataTypeHandler singleInstance() {
 		return instance;
 	}
-	
+
 	@Override
-	protected int getSqlType() {
-		return SqlServerDBType.BIGINT.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Bigint.singleInstance();
 	}
 }

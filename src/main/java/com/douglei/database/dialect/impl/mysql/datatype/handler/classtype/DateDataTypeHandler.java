@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.mysql.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractDateDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Datetime;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return MySqlDBType.DATETIME.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Datetime.singleInstance();
 	}
 }

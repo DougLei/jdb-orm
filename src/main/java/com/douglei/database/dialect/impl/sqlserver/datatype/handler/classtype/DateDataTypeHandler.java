@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractDateDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Datetime;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return SqlServerDBType.DATETIME.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Datetime.singleInstance();
 	}
 }

@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.mysql.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Text;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return MySqlDBType.TEXT.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Text.singleInstance();
 	}
 }

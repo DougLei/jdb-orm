@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Varbinary;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class BlobDataTypeHandler extends AbstractBlobDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return SqlServerDBType.VARBINARY.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Varbinary.singleInstance();
 	}
 }

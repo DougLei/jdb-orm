@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractIntegerDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Int;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class IntegerDataTypeHandler extends AbstractIntegerDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return SqlServerDBType.INT.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Int.singleInstance();
 	}
 }

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.NVarchar2;
 import com.douglei.database.dialect.impl.oracle.datatype.handler.classtype.StringDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class NVarchar2DBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return OracleDBType.NVARCHAR2.getTypeName();
+		return NVarchar2.singleInstance().getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return OracleDBType.NVARCHAR2.getSqlType();
+		return NVarchar2.singleInstance().getSqlType();
 	}
 
 	@Override

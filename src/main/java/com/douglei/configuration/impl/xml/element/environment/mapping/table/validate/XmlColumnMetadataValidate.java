@@ -10,7 +10,7 @@ import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDat
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.column.ColumnMetadata;
 import com.douglei.utils.StringUtil;
 
 /**

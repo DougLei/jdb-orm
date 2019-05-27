@@ -2,6 +2,7 @@ package com.douglei.database.dialect.impl.sqlserver.datatype.handler;
 
 import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Varchar;
 
 /**
  * sqlserver datatype handler mapping
@@ -11,6 +12,6 @@ public class SqlServerDataTypeHandlerMapping extends AbstractDataTypeHandlerMapp
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
-		return getDBDataTypeHandlerByDBTypeName(SqlServerDBType.VARCHAR.getTypeName());
+		return getDBDataTypeHandlerByDBTypeName(Varchar.singleInstance().getTypeName());
 	}
 }

@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Blob;
 import com.douglei.database.dialect.impl.mysql.datatype.handler.dbtype.BlobDBDataTypeHandler;
 
 /**
@@ -19,7 +19,7 @@ public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeH
 	}
 	
 	private static final int[] supportColumnTypes = {
-			MySqlDBType.BLOB.getSqlType()	// blob...各种 
+			Blob.singleInstance().getSqlType()	// blob...各种 
 			};
 	
 	@Override

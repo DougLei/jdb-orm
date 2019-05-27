@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.oracle.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractIntegerDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Number;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class IntegerDataTypeHandler extends AbstractIntegerDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return OracleDBType.NUMBER.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Number.singleInstance();
 	}
 }

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Varbinary;
 import com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype.BlobDataTypeHandler;
 
 /**
@@ -23,12 +23,12 @@ public class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return SqlServerDBType.VARBINARY.getTypeName();
+		return Varbinary.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return SqlServerDBType.VARBINARY.getSqlType();
+		return Varbinary.singleInstance().getSqlType();
 	}
 
 	@Override

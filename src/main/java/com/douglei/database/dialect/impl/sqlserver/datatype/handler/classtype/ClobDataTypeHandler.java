@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Text;
 
 /**
  * 
@@ -13,9 +14,9 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	public static final ClobDataTypeHandler singleInstance() {
 		return instance;
 	}
-	
+
 	@Override
-	protected int getSqlType() {
-		return SqlServerDBType.TEXT.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Text.singleInstance();
 	}
 }

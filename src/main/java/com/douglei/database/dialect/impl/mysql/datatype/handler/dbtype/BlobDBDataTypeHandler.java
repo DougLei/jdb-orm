@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
 import com.douglei.database.dialect.impl.mysql.datatype.handler.classtype.BlobDataTypeHandler;
 
 /**
@@ -23,12 +22,12 @@ public class BlobDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return MySqlDBType.BLOB.getTypeName();
+		return com.douglei.database.dialect.impl.mysql.datatype.Blob.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return MySqlDBType.BLOB.getSqlType();
+		return com.douglei.database.dialect.impl.mysql.datatype.Blob.singleInstance().getSqlType();
 	}
 
 	@Override

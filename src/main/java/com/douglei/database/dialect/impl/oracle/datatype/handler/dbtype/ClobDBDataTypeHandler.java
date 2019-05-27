@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Clob;
 import com.douglei.database.dialect.impl.oracle.datatype.handler.classtype.ClobDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class ClobDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return OracleDBType.CLOB.getTypeName();
+		return Clob.singleInstance().getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return OracleDBType.BLOB.getSqlType();
+		return Clob.singleInstance().getSqlType();
 	}
 
 	@Override

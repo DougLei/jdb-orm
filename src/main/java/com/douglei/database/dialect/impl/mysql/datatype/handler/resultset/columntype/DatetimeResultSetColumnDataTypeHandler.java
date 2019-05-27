@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Datetime;
 import com.douglei.database.dialect.impl.mysql.datatype.handler.dbtype.DatetimeDBDataTypeHandler;
 
 /**
@@ -19,7 +19,7 @@ public class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataT
 	}
 	
 	private static final int[] supportColumnTypes = {
-			MySqlDBType.DATETIME.getSqlType()	// datetime 
+			Datetime.singleInstance().getSqlType()	// datetime 
 			};
 	
 	@Override

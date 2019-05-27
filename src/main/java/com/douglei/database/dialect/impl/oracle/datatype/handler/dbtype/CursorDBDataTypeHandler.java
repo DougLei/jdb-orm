@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Cursor;
 import com.douglei.database.utils.ResultSetUtil;
 import com.douglei.utils.CloseUtil;
 
@@ -23,12 +23,12 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return OracleDBType.CURSOR.getTypeName();
+		return Cursor.singleInstance().getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return OracleDBType.CURSOR.getSqlType();
+		return Cursor.singleInstance().getSqlType();
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 			}
 			return ResultSetUtil.getResultSetListMap(rs);
 		} catch(Exception e){
-			throw new RuntimeException("获取oracle存储过程, ["+OracleDBType.CURSOR.toString()+"]类型的输出参数数据时, 出现异常", e);
+			throw new RuntimeException("获取oracle存储过程, ["+Cursor.singleInstance().toString()+"]类型的输出参数数据时, 出现异常", e);
 		} finally {
 			CloseUtil.closeDBConn(rs);
 		}

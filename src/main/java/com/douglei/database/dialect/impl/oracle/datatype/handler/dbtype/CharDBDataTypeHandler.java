@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Char;
 import com.douglei.database.dialect.impl.oracle.datatype.handler.classtype.StringDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return OracleDBType.CHAR.getTypeName();
+		return Char.singleInstance().getTypeName();
 	}
 	
 	@Override
 	public int getSqlType() {
-		return OracleDBType.CHAR.getSqlType();
+		return Char.singleInstance().getSqlType();
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.oracle.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Blob;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class BlobDataTypeHandler extends AbstractBlobDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return OracleDBType.BLOB.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Blob.singleInstance();
 	}
 }

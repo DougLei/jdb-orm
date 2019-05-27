@@ -16,8 +16,9 @@ import com.douglei.context.DBContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.database.metadata.table.column.ColumnMetadata;
 
 /**
  * table 映射
@@ -39,7 +40,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			Element tableElement = ElementUtil.getNecessaryAndSingleElement("<table>", rootElement.elements("table"));
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
-			DBContext.getDialect().getTableHandler().executeCreate(tableMetadata);
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}
@@ -58,12 +58,17 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
 		}
 		
+		boolean executeCreate = tableMetadata.getCreateMode() != CreateMode.NONE;// 是否执行create
 		boolean classNameIsNull = tableMetadata.classNameIsNull();
 		ColumnMetadata columnMetadata = null;
 		for (Object object : elems) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			columnMetadata.fixPropertyNameValue(classNameIsNull);
 			tableMetadata.addColumnMetadata(columnMetadata);
+		}
+		
+		if(executeCreate) {
+			DBContext.getDialect().getTableHandler().executeCreate(tableMetadata);
 		}
 	}
 	

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Decimal;
 import com.douglei.database.dialect.impl.mysql.datatype.handler.classtype.DoubleDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return MySqlDBType.DECIMAL.getTypeName();
+		return Decimal.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return MySqlDBType.DECIMAL.getSqlType();
+		return Decimal.singleInstance().getSqlType();
 	}
 
 	@Override

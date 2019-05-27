@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.oracle.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Varchar2;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class StringDataTypeHandler extends AbstractStringDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return OracleDBType.VARCHAR2.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Varchar2.singleInstance();
 	}
 }

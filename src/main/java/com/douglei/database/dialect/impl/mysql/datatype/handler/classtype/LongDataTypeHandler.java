@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.mysql.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractLongDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Bigint;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return MySqlDBType.BIGINT.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Bigint.singleInstance();
 	}
 }

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Datetime;
 import com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype.DateDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return SqlServerDBType.DATETIME.getTypeName();
+		return Datetime.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return SqlServerDBType.DATETIME.getSqlType();
+		return Datetime.singleInstance().getSqlType();
 	}
 
 	@Override

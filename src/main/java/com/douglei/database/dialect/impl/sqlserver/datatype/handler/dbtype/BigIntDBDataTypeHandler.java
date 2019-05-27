@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.sqlserver.datatype.handler.SqlServerDBType;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Bigint;
 import com.douglei.database.dialect.impl.sqlserver.datatype.handler.classtype.LongDataTypeHandler;
 
 /**
@@ -22,12 +22,12 @@ public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return SqlServerDBType.BIGINT.getTypeName();
+		return Bigint.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return SqlServerDBType.BIGINT.getSqlType();
+		return Bigint.singleInstance().getSqlType();
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.oracle.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Clob;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return OracleDBType.CLOB.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Clob.singleInstance();
 	}
 }

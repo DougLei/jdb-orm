@@ -1,7 +1,8 @@
 package com.douglei.database.dialect.impl.mysql.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractDoubleDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.handler.MySqlDBType;
+import com.douglei.database.dialect.impl.mysql.datatype.Decimal;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class DoubleDataTypeHandler extends AbstractDoubleDataTypeHandler{
 	}
 	
 	@Override
-	protected int getSqlType() {
-		return MySqlDBType.DECIMAL.getSqlType();
+	protected DBDataType defaultDBDataType() {
+		return Decimal.singleInstance();
 	}
 }

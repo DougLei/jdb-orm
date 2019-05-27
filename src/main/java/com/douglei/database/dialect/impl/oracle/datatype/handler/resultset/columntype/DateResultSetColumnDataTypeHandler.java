@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDBType;
+import com.douglei.database.dialect.impl.oracle.datatype.Date;
 import com.douglei.database.dialect.impl.oracle.datatype.handler.dbtype.DateDBDataTypeHandler;
 
 /**
@@ -19,7 +19,7 @@ public class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeH
 	}
 	
 	private static final int[] supportColumnTypes = {
-			OracleDBType.DATE.getSqlType()	// date 
+			Date.singleInstance().getSqlType()	// date 
 			};
 	
 	@Override
