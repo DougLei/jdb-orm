@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
 import com.douglei.context.DBContext;
-import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
-import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.instances.ognl.OgnlHandler;

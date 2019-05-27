@@ -9,8 +9,6 @@ import com.douglei.configuration.environment.mapping.Mapping;
  */
 public interface MappingStore extends SelfProcessing{
 	
-	MappingStoreType getType();
-
 	/**
 	 * 初始化存储空间大小
 	 * @param size 如果size<1, 则使用默认的大小

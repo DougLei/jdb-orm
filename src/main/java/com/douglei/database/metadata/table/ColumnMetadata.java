@@ -1,6 +1,6 @@
 package com.douglei.database.metadata.table;
 
-import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.database.utils.NamingUtil;

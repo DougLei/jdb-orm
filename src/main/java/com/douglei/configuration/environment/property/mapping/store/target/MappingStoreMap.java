@@ -11,20 +11,33 @@ import com.douglei.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public class MappingStoreMap {
-	private static final int count = MappingStoreType.values().length;
-	
-	private static final Map<String, Class<? extends MappingStore>> CLASS_MAP = new HashMap<String, Class<? extends MappingStore>>(count);
+	private static final Map<String, Class<? extends MappingStore>> MAPPING_STORE_CLASS_MAP = new HashMap<String, Class<? extends MappingStore>>(4);
 	static {
-		CLASS_MAP.put(ApplicationMappingStore.TYPE.getCode(), ApplicationMappingStore.class);
-		// TODO 后续可以集成其他缓存, 存储映射信息, 如果这里新加了其他缓存实现, 请修改cache map集合的初始化size值
+		MAPPING_STORE_CLASS_MAP.put("application", ApplicationMappingStore.class);
+		// TODO 后续可以集成其他缓存, 存储映射信息
 	}
 	
 	public static MappingStore getMappingStore(String type) {
-		type = type.toUpperCase();
-		Class<? extends MappingStore> mappingStoreClass = CLASS_MAP.get(type);
+		type = type.toLowerCase();
+		Class<? extends MappingStore> mappingStoreClass = MAPPING_STORE_CLASS_MAP.get(type);
 		if(mappingStoreClass == null) {
-			throw new NullPointerException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+CLASS_MAP.keySet());
+			Object obj = null;
+			try {
+				obj = ConstructorUtil.newInstance(type);
+			} catch (Exception e) {
+				throw new UnsupportMappingStoreException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+MAPPING_STORE_CLASS_MAP.keySet());
+			}
+			if(!(obj instanceof MappingStore)) {
+				throw new UnsupportMappingStoreException("["+type+"]的类必须继承["+MappingStore.class.getName()+"]");
+			}
+			
+			@SuppressWarnings("unchecked")
+			Class<? extends MappingStore> dynamicMappingStore = (Class<? extends MappingStore>) obj.getClass();
+			MAPPING_STORE_CLASS_MAP.put(dynamicMappingStore.getName().toLowerCase(), dynamicMappingStore);
+			return (MappingStore) obj;
 		}
 		return (MappingStore) ConstructorUtil.newInstance(mappingStoreClass);
 	}
+	
+	
 }

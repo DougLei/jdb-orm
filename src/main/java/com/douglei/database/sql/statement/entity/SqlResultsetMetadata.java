@@ -1,7 +1,7 @@
 package com.douglei.database.sql.statement.entity;
 
 import com.douglei.context.DBContext;
-import com.douglei.database.dialect.datatype.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 
 /**
  * sql结果集元数据对象

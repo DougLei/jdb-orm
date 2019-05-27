@@ -1,7 +1,7 @@
 package com.douglei.database.dialect.impl;
 
 import com.douglei.database.dialect.Dialect;
-import com.douglei.database.dialect.datatype.AbstractDataTypeHandlerMapping;
+import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.sql.SqlHandler;
 import com.douglei.database.dialect.table.TableHandler;
 

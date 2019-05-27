@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.context.DBContext;
-import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.classtype.impl.AbstractStringDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;

@@ -4,11 +4,11 @@ import com.douglei.configuration.extconfiguration.datatypehandler.DataTypeHandle
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
-import com.douglei.database.dialect.datatype.DataTypeHandler;
-import com.douglei.database.dialect.datatype.DataTypeHandlerType;
-import com.douglei.database.dialect.datatype.classtype.ClassDataTypeHandler;
-import com.douglei.database.dialect.datatype.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.datatype.resultset.columntype.ResultSetColumnDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandlerType;
+import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
 
