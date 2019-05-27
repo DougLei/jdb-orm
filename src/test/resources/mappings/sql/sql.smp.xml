@@ -54,16 +54,14 @@
 		
 		<!-- 
 			<foreach collection="users" alias="user" open="where id in (" separator="," close=")">
-				<if test="user.id != null">
+				<if test="user.id == 1">
 					#{user.id, dataType=string}
 				</if>
 			</foreach>
 		-->	
 		
 			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
-				<if test="userId != null">
-					#{userId, dataType=string}
-				</if>
+				#{userId, dataType=string}
 			</foreach>
 		
 		

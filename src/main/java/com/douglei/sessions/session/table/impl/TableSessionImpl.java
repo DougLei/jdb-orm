@@ -312,7 +312,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
-		if(map.size() > 0) {
+		if(map != null && map.size() > 0) {
 			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 			return map2Class(targetClass, map, tableMetadata);
 		}

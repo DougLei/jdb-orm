@@ -2,13 +2,17 @@ package com.douglei.database.metadata.sql.content.node.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNode;
 import com.douglei.database.metadata.sql.content.node.SqlNodeType;
 import com.douglei.database.metadata.sql.content.node.UnsupportCollectionTypeException;
 import com.douglei.instances.ognl.OgnlHandler;
+import com.douglei.utils.datatype.ValidationUtil;
 
 /**
  * 
@@ -57,20 +61,38 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
 		Object[] array = null;
 		if(collectionObject instanceof Collection<?>) {
-			array = ((Collection<?>) collectionObject).toArray();
+			Collection<?> tc = (Collection<?>) collectionObject;
+			if(ValidationUtil.isBasicDataType(tc.iterator().next())) {
+				Map<String, Object> map = null;
+				array = new Object[tc.size()];
+				
+				int index = 0;
+				Iterator<?> it = tc.iterator();
+				while(it.hasNext()) {
+					map = new HashMap<String, Object>(1);
+					map.put(alias, it.next());
+					array[index] = map;
+					index++;
+				}
+			}else {
+				array = tc.toArray();
+			}
 		}else if(collectionObject.getClass().isArray()) {
 			array = (Object[]) collectionObject;
 		}
 		
-		StringBuilder sqlContent = new StringBuilder();
+		List<String> sqlContentList = null;
 		List<Object> parameters = null;
-		sqlContent.append(open);
 		
 		ExecuteSqlNode executeSqlNode = null;
 		int length = array.length;
 		for(int i=0;i<length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], alias)) {
+					if(sqlContentList == null) {
+						sqlContentList = new ArrayList<String>(length*sqlNodes.size()/2);
+					}
+					
 					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
 					if(executeSqlNode.existsParameter()) {
 						if(parameters == null) {
@@ -78,13 +100,25 @@ public class ForeachSqlNode extends AbstractNestingNode {
 						}
 						parameters.addAll(executeSqlNode.getParameters());
 					}
-					sqlContent.append(executeSqlNode.getContent()).append(" ");
+					sqlContentList.add(executeSqlNode.getContent());
 				}
 			}
-			
-			if(i < length-1) {
-				sqlContent.append(separator);
+		}
+		
+		if(sqlContentList == null) {
+			return new ExecuteSqlNode("", parameters);
+		}
+		StringBuilder sqlContent = new StringBuilder();
+		sqlContent.append(open);
+		
+		short index = 0, lastIndex = (short) (sqlContentList.size()-1);
+		for (String sc : sqlContentList) {
+			sqlContent.append(sc);
+			if(index == lastIndex) {
+				break;
 			}
+			sqlContent.append(separator);
+			index++;
 		}
 		
 		sqlContent.append(close);
