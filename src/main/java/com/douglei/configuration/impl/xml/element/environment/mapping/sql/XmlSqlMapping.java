@@ -8,12 +8,12 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.sql.SqlMapping;
-import com.douglei.configuration.impl.xml.LocalXmlConfigurationXMLReaderHolder;
 import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.configuration.impl.xml.util.RepeatElementException;
+import com.douglei.context.XmlReaderContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -72,7 +72,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	 * @return
 	 */
 	private NodeList getContents(Node sqlNode) {
-		NodeList contentNodeList = LocalXmlConfigurationXMLReaderHolder.getContentNodeList(sqlNode);
+		NodeList contentNodeList = XmlReaderContext.getContentNodeList(sqlNode);
 		if(contentNodeList == null || contentNodeList.getLength() == 0) {
 			throw new MetadataValidateException("至少有一个<content>元素");
 		}

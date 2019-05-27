@@ -24,6 +24,8 @@ public class TableMetadata implements Metadata{
 	private String className;
 	private boolean classNameIsNull;
 	
+	private CreateMode createMode;
+	
 	/**
 	 * 包含的列元数据集合
 	 * <pre>
@@ -37,8 +39,9 @@ public class TableMetadata implements Metadata{
 	 */
 	private Map<String, ColumnMetadata> primaryKeyColumns;
 	
-	public TableMetadata(String name, String className) {
+	public TableMetadata(String name, String className, CreateMode createMode) {
 		this.name = name.toUpperCase();
+		this.createMode = createMode;
 		setClassName(className);
 		setCode();
 	}

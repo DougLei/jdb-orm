@@ -1,14 +1,13 @@
-package com.douglei.sessions;
+package com.douglei.context;
 
 import com.douglei.database.dialect.Dialect;
 
 /**
- * 当前系统运行时Dialect对象持有者
+ * dialect 上下文
  * @author DougLei
  */
-public class LocalRunDialectHolder {
+public class DialectContext {
 	private static final ThreadLocal<Dialect> DIALECT = new ThreadLocal<Dialect>();
-	
 	public static void setDialect(Dialect dialect) {
 		if(DIALECT.get() == null) {
 			DIALECT.set(dialect);

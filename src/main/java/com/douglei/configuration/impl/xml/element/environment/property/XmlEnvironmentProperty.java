@@ -5,17 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
 import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStoreContext;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingStoreMap;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
+import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -24,7 +22,6 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class XmlEnvironmentProperty implements EnvironmentProperty{
-	private static final Logger logger = LoggerFactory.getLogger(XmlEnvironmentProperty.class);
 	
 	private Map<String, String> propertyMap;
 	private boolean propertyMapIsEmpty;
@@ -38,6 +35,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	@FieldMetaData
 	private MappingStore mappingStore;
+	
+	@FieldMetaData
+	private CreateMode tableCreateMode;
 	
 	public XmlEnvironmentProperty(Map<String, String> propertyMap) {
 		this.propertyMap = propertyMap;
@@ -64,8 +64,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			fieldMetadata = field.getAnnotation(FieldMetaData.class);
 			if(fieldMetadata != null) {
 				fieldNames.add(field.getName());
-				logger.debug("SelfChecking EnvironmentProperty.{} Field", fieldNames.get(fieldNameIndex));
-				
 				if(fieldMetadata.isRequired() && (propertyMapIsEmpty || StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex))))) {
 					throw new NullPointerException(fieldMetadata.isnullOfErrorMessage());
 				}
@@ -85,7 +83,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		String fieldName_ = null;
 		try {
 			for (String fieldName : fieldNames) {
-				logger.debug("invoke EnvironmentProperty.{} Field's setXXX method", fieldName);
 				fieldName_ = fieldName;
 				
 				value = propertyMapIsEmpty?null:propertyMap.get(fieldName);
@@ -103,19 +100,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		if(StringUtil.isEmpty(value)) {
 			return;
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setDialect(), parameter value is {}", getClass().getName(), value);
-		}
 		this.dialect = DialectMapping.getDialect(value);
-		
 	}
 	void setEnableSessionCache(String value) {
 		if(StringUtil.isEmpty(value)) {
 			this.enableSessionCache = true;
 			return;
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setEnableSessionCache(), parameter value is {}", getClass().getName(), value);
 		}
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
@@ -125,12 +115,16 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		if(StringUtil.isEmpty(value)) {
 			value = "application";// 使用默认的 ApplicationMappingStore
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("{}.setMappingStore(), parameter value is {}", getClass().getName(), value);
-		}
-		this.mappingStore = MappingStoreContext.getMappingStore(value);
+		this.mappingStore = MappingStoreMap.getMappingStore(value);
 	}
-	
+	void setTableCreateMode(String value) {
+		if(StringUtil.notEmpty(value)) {
+			this.tableCreateMode = CreateMode.toValue(value);
+		}
+		if(this.tableCreateMode == null) {
+			this.tableCreateMode = CreateMode.NONE;
+		}
+	}
 
 	public void setDialectByJDBCUrl(String JDBCUrl) {
 		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
@@ -159,5 +153,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public MappingStore getMappingStore() {
 		return mappingStore;
+	}
+	@Override
+	public CreateMode getTwableCreateMode() {
+		return tableCreateMode;
 	}
 }

@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.Configuration;
-import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.context.DialectContext;
 import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.database.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
@@ -40,7 +40,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	
 	@Override
 	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
-		LocalConfigurationDialectHolder.setDialect(environmentProperty.getDialect());
+		DialectContext.setDialect(environmentProperty.getDialect());
 		mappingWrapper.dynamicAddMapping(mappingType, mappingConfigurationContent);
 	}
 	

@@ -6,9 +6,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.configuration.LocalConfigurationDialectHolder;
 import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
+import com.douglei.context.DialectContext;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -89,7 +89,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		String dialectValue = null; 
 		DialectType type = null;
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			type = LocalConfigurationDialectHolder.getDialect().getType();
+			type = DialectContext.getDialect().getType();
 		}else {
 			type = DialectType.toValue(dialectValue);
 			if(type == null) {

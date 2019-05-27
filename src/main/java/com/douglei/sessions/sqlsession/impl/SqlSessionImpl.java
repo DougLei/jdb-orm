@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.context.DialectContext;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.sql.ConnectionWrapper;
@@ -20,7 +21,6 @@ import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.database.sql.pagequery.PageSqlStatement;
 import com.douglei.database.sql.statement.StatementHandler;
 import com.douglei.database.utils.ResultSetMapConvertUtil;
-import com.douglei.sessions.LocalRunDialectHolder;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
@@ -45,7 +45,7 @@ public class SqlSessionImpl implements SqlSession{
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
-		LocalRunDialectHolder.setDialect(environmentProperty.getDialect());
+		DialectContext.setDialect(environmentProperty.getDialect());
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class SqlSessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", totalCount);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
 		if(totalCount > 0) {
-			sql = LocalRunDialectHolder.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
+			sql = DialectContext.getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}

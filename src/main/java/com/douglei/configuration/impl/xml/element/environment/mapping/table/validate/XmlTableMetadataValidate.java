@@ -5,6 +5,7 @@ import org.dom4j.Element;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
+import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.utils.StringUtil;
 
@@ -23,6 +24,15 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<table>元素的name属性值不能为空");
 		}
-		return new TableMetadata(name, element.attributeValue("class"));
+		
+		CreateMode createMode = getCreateMode(element.attributeValue("createMode"));
+		return new TableMetadata(name, element.attributeValue("class"), createMode);
+	}
+
+	private CreateMode getCreateMode(String createMode) {
+		if(StringUtil.notEmpty(createMode)) {
+			return CreateMode.toValue(createMode);
+		}
+		return null;
 	}
 }

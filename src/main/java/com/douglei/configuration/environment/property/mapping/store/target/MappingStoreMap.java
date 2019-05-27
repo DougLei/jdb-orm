@@ -10,7 +10,7 @@ import com.douglei.utils.reflect.ConstructorUtil;
  * 
  * @author DougLei
  */
-public class MappingStoreContext {
+public class MappingStoreMap {
 	private static final int count = MappingStoreType.values().length;
 	
 	private static final Map<String, Class<? extends MappingStore>> CLASS_MAP = new HashMap<String, Class<? extends MappingStore>>(count);

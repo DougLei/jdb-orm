@@ -19,6 +19,7 @@ import com.douglei.configuration.extconfiguration.ExtConfiguration;
 import com.douglei.configuration.impl.xml.element.environment.XmlEnvironment;
 import com.douglei.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
 import com.douglei.configuration.impl.xml.element.properties.Properties;
+import com.douglei.context.XmlReaderContext;
 import com.douglei.sessionfactory.SessionFactory;
 import com.douglei.sessionfactory.SessionFactoryImpl;
 import com.douglei.utils.CloseUtil;
@@ -61,7 +62,7 @@ public class XmlConfiguration implements Configuration {
 	public XmlConfiguration(InputStream in) {
 		logger.info("根据xml配置文件，初始化configuration实例");
 		try {
-			xmlDocument = LocalXmlConfigurationXMLReaderHolder.getConfigurationSAXReader().read(in);
+			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
 			initXmlConfiguration();
 		} catch (DocumentException e) {
 			e.printStackTrace();

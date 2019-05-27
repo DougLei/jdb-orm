@@ -62,18 +62,26 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		Object[] array = null;
 		if(collectionObject instanceof Collection<?>) {
 			Collection<?> tc = (Collection<?>) collectionObject;
-			if(ValidationUtil.isBasicDataType(tc.iterator().next())) {
-				Map<String, Object> map = null;
+			
+			Iterator<?> it = tc.iterator();
+			Object obj = it.next();
+			if(ValidationUtil.isBasicDataType(obj)) {
 				array = new Object[tc.size()];
 				
+				Map<String, Object> map = null;
 				int index = 0;
-				Iterator<?> it = tc.iterator();
-				while(it.hasNext()) {
+				do{
 					map = new HashMap<String, Object>(1);
-					map.put(alias, it.next());
+					map.put(alias, obj);
 					array[index] = map;
 					index++;
-				}
+					
+					if(it.hasNext()) {
+						obj = it.next();
+						continue;
+					}
+					break;
+				}while(true);
 			}else {
 				array = tc.toArray();
 			}

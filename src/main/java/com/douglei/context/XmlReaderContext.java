@@ -1,10 +1,9 @@
-package com.douglei.configuration.impl.xml;
+package com.douglei.context;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
@@ -12,13 +11,15 @@ import org.dom4j.io.SAXReader;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.configuration.impl.xml.BuildDocumentBuilderInstanceException;
+import com.douglei.configuration.impl.xml.GetSqlContentNodeListException;
+
 /**
- * 当前系统进行xml配置解析时XMLReader对象持有者
+ * xml reader上下文
  * @author DougLei
  */
-public class LocalXmlConfigurationXMLReaderHolder {
+public class XmlReaderContext {
 	private static final ThreadLocal<XmlReader> XML_READER = new ThreadLocal<XmlReader>();
-	
 	private static XmlReader getXmlReader() {
 		XmlReader xmlReader = XML_READER.get();
 		if(xmlReader == null) {
@@ -28,6 +29,10 @@ public class LocalXmlConfigurationXMLReaderHolder {
 		return xmlReader;
 	}
 	
+	/**
+	 * 获取 读取xml configuration文件的SAXReader实例 
+	 * @return
+	 */
 	public static SAXReader getConfigurationSAXReader() {
 		XmlReader xmlReader = getXmlReader();
 		if(xmlReader.configurationSAXReader == null) {
@@ -35,6 +40,11 @@ public class LocalXmlConfigurationXMLReaderHolder {
 		}
 		return xmlReader.configurationSAXReader;
 	}
+	
+	/**
+	 * 获取 读取table-xml映射文件的SAXReader实例
+	 * @return
+	 */
 	public static SAXReader getTableMappingReader() {
 		XmlReader xmlReader = getXmlReader();
 		if(xmlReader.tableMappingSAXReader == null) {
@@ -42,6 +52,11 @@ public class LocalXmlConfigurationXMLReaderHolder {
 		}
 		return xmlReader.tableMappingSAXReader;
 	}
+	
+	/**
+	 * 获取 读取sql-xml映射文件的DocumentBuilder实例
+	 * @return
+	 */
 	public static DocumentBuilder getSqlMappingReader() {
 		XmlReader xmlReader = getXmlReader();
 		if(xmlReader.sqlMappingDocumentBuilder == null) {
@@ -55,6 +70,11 @@ public class LocalXmlConfigurationXMLReaderHolder {
 		return xmlReader.sqlMappingDocumentBuilder;
 	}
 	
+	/**
+	 * 获取 读取sql-xml时, 获取<content>节点的表达式
+	 * @param sqlNode
+	 * @return
+	 */
 	public static NodeList getContentNodeList(Node sqlNode) {
 		XmlReader xmlReader = getXmlReader();
 		try {
@@ -66,12 +86,4 @@ public class LocalXmlConfigurationXMLReaderHolder {
 			throw new GetSqlContentNodeListException(e);
 		}
 	}
-}
-
-class XmlReader{
-	SAXReader configurationSAXReader;// 读取xml configuration文件的SAXReader实例
-	SAXReader tableMappingSAXReader;// 读取table-xml映射文件的SAXReader实例
-	
-	DocumentBuilder sqlMappingDocumentBuilder;// 读取sql-xml映射文件的DocumentBuilder实例
-	XPathExpression contentNodeXPathExpression;// 读取sql-xml时, 获取<content>节点的表达式
 }
