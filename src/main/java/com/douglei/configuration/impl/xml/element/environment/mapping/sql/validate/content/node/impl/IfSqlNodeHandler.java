@@ -20,11 +20,11 @@ public class IfSqlNodeHandler implements SqlNodeHandler {
 			throw new NullPointerException("<if>元素中的内容不能为空");
 		}
 		
-		Node expression = node.getAttributes().getNamedItem("test");
-		if(expression == null) {
-			throw new NullPointerException("<if>元素中的<test>属性值不能为空");
+		String expression = getAttributeValue(node.getAttributes().getNamedItem("test"));
+		if(StringUtil.isEmpty(expression)) {
+			throw new NullPointerException("<if>元素中的test属性值不能为空");
 		}
-		return new IfSqlNode(expression.getNodeValue(), content);
+		return new IfSqlNode(expression, content);
 	}
 	
 	@Override
