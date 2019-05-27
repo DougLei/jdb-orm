@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
-import com.douglei.context.DBContext;
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
@@ -102,7 +102,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	void setDataTypeHandler(String dataType) {
 		if(!LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
-			AbstractDataTypeHandlerMapping mapping = DBContext.getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
 				this.dataTypeHandler = mapping.getDefaultDataTypeHandler();
 			}else {
@@ -133,7 +133,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	void setDBDataTypeHandler(String typeName) {
 		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
-			AbstractDataTypeHandlerMapping mapping = DBContext.getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
 				this.dataTypeHandler = mapping.getDefaultDBDataTypeHandler();
 			}else {

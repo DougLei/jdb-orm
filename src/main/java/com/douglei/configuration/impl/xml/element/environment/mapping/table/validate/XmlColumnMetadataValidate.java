@@ -4,7 +4,8 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.context.DBContext;
+import com.douglei.configuration.impl.xml.element.environment.mapping.table.CurrentTableIsCreate;
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
@@ -32,10 +33,9 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		DataTypeHandler dataTypeHandler = validateDataType(element.attributeValue("dataType"));
 		ColumnMetadata column = new ColumnMetadata(name, dataTypeHandler, element.attributeValue("property"), validateIsPrimaryKey(element.attributeValue("primaryKey")));
 		
-		
-		
-		
-		
+		if(CurrentTableIsCreate.isCreate()) {
+			setExtDBProperty(column, element);
+		}
 		return column;
 	}
 
@@ -44,10 +44,10 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 			if(logger.isDebugEnabled()) {
 				logger.debug("配置的dataType为空, 使用默认的DataTypeHandler={}", AbstractStringDataTypeHandler.class.getName());
 			}
-			return DBContext.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
+			return DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
 		}
 		try {
-			return DBContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
+			return DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值异常: " + e.getMessage());
 		}
@@ -55,5 +55,13 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 	
 	private boolean validateIsPrimaryKey(String primaryKey) {
 		return Boolean.parseBoolean(primaryKey);
+	}
+	
+	// 给column, setExtDBProperty
+	private void setExtDBProperty(ColumnMetadata column, Element element) {
+		// TODO Auto-generated method stub
+		
+		
+		column.setExtDBProperty(null);
 	}
 }

@@ -12,11 +12,10 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.configuration.impl.xml.util.ElementUtil;
-import com.douglei.context.DBContext;
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.ColumnMetadata;
 
@@ -41,8 +40,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
 			
-			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
-				DBContext.getDialect().getTableHandler().executeCreate(tableMetadata);
+			if(CurrentTableIsCreate.isCreate()) {
+				DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(tableMetadata);
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
