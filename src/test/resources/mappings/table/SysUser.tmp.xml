@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER">
+	<table name="SYS_USER" schema="">
 		<columns>
 			<column name="id" propertyName="id" dataType="string" primaryKey="true" />
 			<column name="name" propertyName="name" dataType="string" />
