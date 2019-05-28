@@ -17,6 +17,7 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.table.vali
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -50,7 +51,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			// TODO 处理索引
 			
 			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
-				DBRunEnvironmentContext.getDialect().getTableHandler().installCreateSqlStatement(tableMetadata);
+				RunMappingConfigurationContext.addTableCreator(DBRunEnvironmentContext.getDialect().getTableHandler().getTableCreator(tableMetadata));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());

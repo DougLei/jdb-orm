@@ -1,5 +1,8 @@
 package com.douglei.database.dialect.table;
 
+import java.util.List;
+
+import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.database.metadata.table.TableMetadata;
 
 /**
@@ -9,17 +12,27 @@ import com.douglei.database.metadata.table.TableMetadata;
 public abstract class TableHandler {
 	
 	/**
-	 * 组装create table的sql语句
+	 * 
 	 * @param tableMetadata
 	 */
-	public String installCreateSqlStatement(TableMetadata tableMetadata) {
+	public TableCreator getTableCreator(TableMetadata tableMetadata) {
 		switch(tableMetadata.getCreateMode()) {
 			case CREATE:
-				
-				
-				return null;
+				return new TableCreator();// TODO
 			default:
 				return null;
 		}
+	}
+	
+	/**
+	 * 执行create表操作
+	 * @param dataSourceWrapper
+	 * @param tableCreators
+	 */
+	public void executeCreate(DataSourceWrapper dataSourceWrapper, List<TableCreator> tableCreators) {
+		if(tableCreators == null) {
+			return;
+		}
+		
 	}
 }
