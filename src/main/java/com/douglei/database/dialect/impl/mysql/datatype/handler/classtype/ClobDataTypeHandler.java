@@ -2,7 +2,7 @@ package com.douglei.database.dialect.impl.mysql.datatype.handler.classtype;
 
 import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.Text;
+import com.douglei.database.dialect.impl.mysql.datatype.Mediumtext;
 
 /**
  * 
@@ -17,6 +17,6 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	
 	@Override
 	public DBDataType defaultDBDataType() {
-		return Text.singleInstance();
+		return Mediumtext.singleInstance();
 	}
 }

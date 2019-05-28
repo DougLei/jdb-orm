@@ -6,13 +6,13 @@ import com.douglei.database.dialect.datatype.DBDataType;
  * 
  * @author DougLei
  */
-public class Text extends DBDataType{
-	private static final Text instance = new Text();
-	public static final Text singleInstance() {
+public class Mediumtext extends DBDataType{
+	private static final Mediumtext instance = new Mediumtext();
+	public static final Mediumtext singleInstance() {
 		return instance;
 	}
 	
-	private Text() {
+	private Mediumtext() {
 		super((short)-1);
 	}
 }

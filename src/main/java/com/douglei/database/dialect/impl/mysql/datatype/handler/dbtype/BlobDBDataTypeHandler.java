@@ -22,12 +22,12 @@ public class BlobDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String getTypeName() {
-		return com.douglei.database.dialect.impl.mysql.datatype.Blob.singleInstance().getTypeName();
+		return com.douglei.database.dialect.impl.mysql.datatype.Mediumblob.singleInstance().getTypeName();
 	}
 
 	@Override
 	public int getSqlType() {
-		return com.douglei.database.dialect.impl.mysql.datatype.Blob.singleInstance().getSqlType();
+		return com.douglei.database.dialect.impl.mysql.datatype.Mediumblob.singleInstance().getSqlType();
 	}
 
 	@Override
