@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.database.dialect.datatype.DBDataType;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
@@ -13,6 +14,7 @@ import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 import com.douglei.utils.StringUtil;
+import com.douglei.utils.datatype.ValidationUtil;
 
 /**
  * 列元数据验证
@@ -30,8 +32,24 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
-		ColumnMetadata column = new ColumnMetadata(element.attributeValue("property"), getDataType(element.attributeValue("dataType")), getColumnProperty(element));
+		
+		ClassDataTypeHandler dataType = getDataType(element.attributeValue("dataType"));
+		ColumnMetadata column = new ColumnMetadata(element.attributeValue("property"), dataType, getColumnProperty(name, dataType, element));
 		return column;
+	}
+	
+	private ColumnProperty getColumnProperty(String columnName, ClassDataTypeHandler dataType, Element element) {
+		DBDataType dbDataType = dataType.defaultDBDataType();
+		
+		String value = element.attributeValue("length");
+		short length = ValidationUtil.isShort(value)?Short.parseShort(value):0;
+		value = element.attributeValue("precision");
+		short precision = ValidationUtil.isShort(value)?Short.parseShort(value):0;
+		
+		return new ColumnProperty(columnName, Boolean.parseBoolean(element.attributeValue("primaryKey")),
+				dbDataType.fixInputLength(length), dbDataType.fixInputPrecision(length, precision),
+				element.attributeValue("defaultValue"), Boolean.parseBoolean(element.attributeValue("unique")), 
+				Boolean.parseBoolean(element.attributeValue("nullabled")), Boolean.parseBoolean(element.attributeValue("validateData")));
 	}
 
 	private ClassDataTypeHandler getDataType(String dataType) throws MetadataValidateException {
@@ -46,18 +64,5 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		} catch (Exception e) {
 			throw new MetadataValidateException("<column>元素的dataType属性值异常: " + e.getMessage());
 		}
-	}
-	
-	private ColumnProperty getColumnProperty(Element element) {
-		element.attributeValue("name");
-		element.attributeValue("primaryKey");
-		element.attributeValue("dbType");
-		element.attributeValue("length");
-		element.attributeValue("precision");
-		element.attributeValue("defaultValue");
-		element.attributeValue("unique");
-		element.attributeValue("nullabled");
-		element.attributeValue("validateData");
-		return null;
 	}
 }
