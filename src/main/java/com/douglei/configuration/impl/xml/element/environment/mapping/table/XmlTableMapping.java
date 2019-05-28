@@ -1,17 +1,21 @@
 package com.douglei.configuration.impl.xml.element.environment.mapping.table;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.table.TableMapping;
+import com.douglei.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
 import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
-import com.douglei.configuration.impl.xml.util.ElementUtil;
+import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -19,6 +23,8 @@ import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
+import com.douglei.database.metadata.table.column.extend.ConstraintType;
 
 /**
  * table 映射
@@ -37,12 +43,11 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		logger.debug("开始解析table类型的映射文件: {}", configFileName);
 		
 		try {
-			Element tableElement = ElementUtil.getNecessaryAndSingleElement("<table>", rootElement.elements("table"));
+			Element tableElement = Dom4jElementUtil.validateElementExists("table", rootElement);
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
-			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
-			// TODO 处理约束、索引
-			
-			
+			addColumnMetadata(Dom4jElementUtil.validateElementExists("columns", tableElement));
+			addConstraint(tableElement.element("constraints"));
+			// TODO 处理索引
 			
 			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
 				DBRunEnvironmentContext.getDialect().getTableHandler().installCreateSqlStatement(tableMetadata);
@@ -71,6 +76,45 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			columnMetadata.fixPropertyNameValue(classNameIsNull);
 			tableMetadata.addColumnMetadata(columnMetadata);
+		}
+	}
+	
+	/**
+	 * 添加约束
+	 * @param elements
+	 */
+	private void addConstraint(Element constraintsElement) {
+		List<?> elements = constraintsElement.elements("constraint");
+		if(elements != null && elements.size() > 0) {
+			Element constraintElement = null;
+			ConstraintType constraintType = null;
+			List<?> values = null;
+			List<ColumnMetadata> columns = null;
+			for (Object object : elements) {
+				constraintElement = (Element) object;
+				values = constraintElement.selectNodes("column-name/@value");
+				if(values == null || values.size() == 0) {
+					continue;
+				}
+				
+				constraintType = ConstraintType.toValue(constraintElement.attributeValue("type"));
+				if(constraintType == null) {
+					throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
+				}
+				if(constraintType == ConstraintType.DEFAULT_VALUE) {
+					throw new UnsupportConstraintConfigurationException("不支持通过<constraint>元素给列配置默认值约束, 如需配置, 请在对应的<column>元素中配置defaultValue属性值");
+				}
+				
+				if(columns == null) {
+					columns = new ArrayList<ColumnMetadata>(3);
+				}else if(columns.size() > 0){
+					columns.clear();
+				}
+				for(Object value: values) {
+					columns.add(tableMetadata.getColumnMetadataByColumnName(((Attribute)value).getValue().toUpperCase()));
+				}
+				tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata.getName(), columns));
+			}
 		}
 	}
 	

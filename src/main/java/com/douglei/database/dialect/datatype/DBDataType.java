@@ -5,7 +5,7 @@ package com.douglei.database.dialect.datatype;
  * @author DougLei
  */
 public abstract class DBDataType {
-	protected static final short _N = -1;
+	protected static final short NO_LIMIT = -1;
 	
 	protected short sqlType;// @see java.sql.Types
 	protected String typeName;// 类型的名称, 大写
@@ -15,10 +15,10 @@ public abstract class DBDataType {
 	
 	
 	public DBDataType(short sqlType) {
-		this(sqlType, _N, _N);
+		this(sqlType, NO_LIMIT, NO_LIMIT);
 	}
 	public DBDataType(short sqlType, short length) {
-		this(sqlType, length, _N);
+		this(sqlType, length, NO_LIMIT);
 	}
 	public DBDataType(short sqlType, short length, short precision) {
 		this.typeName = getClass().getSimpleName().toUpperCase();
@@ -41,8 +41,8 @@ public abstract class DBDataType {
 
 	// 修正输入的长度值
 	public short fixInputLength(short inputLength) {
-		if(this.length == _N) {
-			return _N;
+		if(this.length == NO_LIMIT) {
+			return NO_LIMIT;
 		}
 		if(inputLength < 1 || inputLength > this.length) {
 			return this.length;
@@ -61,6 +61,6 @@ public abstract class DBDataType {
 			}
 			return inputPrecision;
 		}
-		return _N;
+		return NO_LIMIT;
 	}
 }

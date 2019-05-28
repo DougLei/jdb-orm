@@ -2,7 +2,7 @@ package com.douglei.configuration.impl.xml.element.environment.mapping;
 
 import java.util.List;
 
-import org.dom4j.Element;
+import org.dom4j.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,6 @@ import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
 import com.douglei.instances.scanner.FileScanner;
-import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -23,12 +22,11 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public XmlMappingWrapper(MappingStore mappingStore) {
 		super(mappingStore);
 	}
-	public XmlMappingWrapper(List<?> scanElements, List<?> pathElements, MappingStore mappingStore) throws Exception {
+	public XmlMappingWrapper(List<?> paths, MappingStore mappingStore) throws Exception {
 		super(mappingStore);
 		
 		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
-		scanMappingFiles(fileScanner, scanElements, "base-path");
-		scanMappingFiles(fileScanner, pathElements, "path");
+		scanMappingFiles(fileScanner, paths);
 		
 		List<String> list = fileScanner.getResult();
 		if(list.size() > 0) {
@@ -46,14 +44,10 @@ public class XmlMappingWrapper extends MappingWrapper{
 			initialMappingStoreSize(0);
 		}
 	}
-	private void scanMappingFiles(FileScanner fileScanner, List<?> elements, String attributeName) {
+	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {
 		if(elements != null && elements.size() > 0) {
-			String basePath = null;
 			for (Object elem : elements) {
-				basePath = ((Element)elem).attributeValue(attributeName);
-				if(StringUtil.notEmpty(basePath)) {
-					fileScanner.scan(basePath);
-				}
+				fileScanner.scan(((Attribute)elem).getValue());
 			}
 		}
 	}

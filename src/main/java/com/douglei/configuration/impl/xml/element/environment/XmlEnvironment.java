@@ -20,11 +20,10 @@ import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.extconfiguration.ExtConfiguration;
 import com.douglei.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
-import com.douglei.configuration.impl.xml.element.environment.mapping.RepeatMappingsElementException;
 import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
 import com.douglei.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;
 import com.douglei.configuration.impl.xml.element.properties.Properties;
-import com.douglei.configuration.impl.xml.util.ElementUtil;
+import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.utils.StringUtil;
 
@@ -45,17 +44,16 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(List<?> environmentElements, Properties properties, ExtConfiguration extConfiguration) throws Exception {
+	public XmlEnvironment(Element environmentElement, Properties properties, ExtConfiguration extConfiguration) throws Exception {
 		logger.debug("开始处理<environment>元素");
-		Element element = ElementUtil.getNecessaryAndSingleElement("<environment>", environmentElements);
 		this.properties = properties;
 		this.extConfiguration = extConfiguration;
 		
-		setDataSourceWrapper(element.elements("datasource"));// 处理配置的数据源
+		setDataSourceWrapper(Dom4jElementUtil.validateElementExists("datasource", environmentElement));// 处理配置的数据源
 		
-		setEnvironmentProperties(element.elements("property"));// 处理environment下的所有property元素
+		setEnvironmentProperties(environmentElement.elements("property"));// 处理environment下的所有property元素
 		
-		setMappingWrapper(element.elements("mappings"));// 处理配置的映射文件
+		setMappingWrapper(environmentElement.element("mappings"));// 处理配置的映射文件
 		
 		logger.debug("处理<environment>元素结束");
 	}
@@ -82,15 +80,13 @@ public class XmlEnvironment implements Environment{
 	
 	/**
 	 * 处理environment下的datasource元素
-	 * @param elements
+	 * @param element
 	 * @throws ClassNotFoundException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	private void setDataSourceWrapper(List<?> elements) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private void setDataSourceWrapper(Element datasourceElement) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		logger.debug("开始处理<environment>下的<datasource>元素");
-		Element datasourceElement = ElementUtil.getNecessaryAndSingleElement("<environment>下的<datasource>", elements);
-		
 		String dataSourceClassStr = datasourceElement.attributeValue("class");
 		if(StringUtil.isEmpty(dataSourceClassStr)) {
 			throw new NullPointerException("<datasource>元素的class属性不能为空");
@@ -136,18 +132,14 @@ public class XmlEnvironment implements Environment{
 	
 	/**
 	 * 处理environment下的mappings元素
-	 * @param elements
+	 * @param element
 	 * @throws Exception 
 	 */
-	private void setMappingWrapper(List<?> elements) throws Exception {
+	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
-		if(elements != null && elements.size() > 0) {
-			if(elements.size() > 1) {
-				throw new RepeatMappingsElementException("<environment>下的<mappings>元素最多只能配置一个");
-			}
+		if(element != null) {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-			Element elem = ((Element) elements.get(0));
-			mappingWrapper = new XmlMappingWrapper(elem.elements("mapping-scan"), elem.elements("mapping"), environmentProperty.getMappingStore());
+			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), environmentProperty.getMappingStore());
 		}else {
 			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingStore());
 		}

@@ -103,13 +103,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		this.dialect = DialectMapping.getDialect(value);
 	}
 	void setEnableSessionCache(String value) {
-		if(StringUtil.isEmpty(value)) {
-			this.enableSessionCache = true;
+		if(StringUtil.notEmpty(value) && ValidationUtil.isBoolean(value)) {
+			this.enableSessionCache = Boolean.parseBoolean(value);
 			return;
 		}
-		if(ValidationUtil.isBoolean(value)) {
-			this.enableSessionCache = Boolean.parseBoolean(value);
-		}
+		this.enableSessionCache = true;
 	}
 	void setMappingStore(String value) {
 		if(StringUtil.isEmpty(value)) {

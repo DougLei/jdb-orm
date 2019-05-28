@@ -5,11 +5,7 @@ package com.douglei.configuration.impl.xml.util;
  * @author DougLei
  */
 public class NotExistsElementException extends RuntimeException{
-	private static final long serialVersionUID = -2130087542793043911L;
-
-	public NotExistsElementException() {
-		super();
-	}
+	private static final long serialVersionUID = -5588944328207612195L;
 
 	public NotExistsElementException(String message) {
 		super(message);

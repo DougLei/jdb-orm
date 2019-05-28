@@ -9,8 +9,9 @@
 		</columns>
 		
 		<constraints>
-			<constraint type=""><!-- primaryKey, defaultValue, unique, nullabled -->
-				<column-name value="" />
+			<constraint type="unique"><!-- primaryKey, defaultValue, unique -->
+				<column-name value="age" />
+				<column-name value="sex" />
 			</constraint>		
 		</constraints>
 		

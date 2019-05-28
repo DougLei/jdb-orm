@@ -9,5 +9,5 @@ import com.douglei.database.metadata.table.CreateMode;
  */
 class DBRunEnvironment {
 	Dialect dialect;// 方言
-	CreateMode tableCreateMode;// 全局的表创建模式
+	CreateMode tableCreateMode;// (全局配置)表创建模式
 }

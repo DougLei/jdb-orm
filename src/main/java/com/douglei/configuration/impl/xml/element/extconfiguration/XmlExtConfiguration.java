@@ -23,14 +23,9 @@ public class XmlExtConfiguration implements ExtConfiguration {
 	
 	private List<ExtDataTypeHandler> extDataTypeHandlerList;
 	
-	public XmlExtConfiguration(List<?> extConfigurationElements) {
+	public XmlExtConfiguration(Element extConfigurationElement) {
 		logger.debug("开始处理<ext-configuration>元素");
-		if(extConfigurationElements != null && extConfigurationElements.size() > 0) {
-			if(extConfigurationElements.size() > 1) {
-				throw new RepeatExtConfigurationElementException("<ext-configuration>元素最多只能配置一个");
-			}
-			
-			Element extConfigurationElement = (Element) extConfigurationElements.get(0);
+		if(extConfigurationElement != null) {
 			setDataTypeHandlers(extConfigurationElement.elements("datatype-handlers"));
 			
 			// 如果有其他的ext, 再继续添加

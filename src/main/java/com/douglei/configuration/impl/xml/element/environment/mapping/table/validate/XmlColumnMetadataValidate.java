@@ -46,10 +46,9 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		value = element.attributeValue("precision");
 		short precision = ValidationUtil.isShort(value)?Short.parseShort(value):0;
 		
-		return new ColumnProperty(columnName, Boolean.parseBoolean(element.attributeValue("primaryKey")),
-				dbDataType.fixInputLength(length), dbDataType.fixInputPrecision(length, precision),
-				element.attributeValue("defaultValue"), Boolean.parseBoolean(element.attributeValue("unique")), 
-				Boolean.parseBoolean(element.attributeValue("nullabled")), Boolean.parseBoolean(element.attributeValue("validateData")));
+		return new ColumnProperty(columnName, dbDataType.fixInputLength(length), dbDataType.fixInputPrecision(length, precision), Boolean.parseBoolean(element.attributeValue("nullabled")),
+				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
+				Boolean.parseBoolean(element.attributeValue("validateData")));
 	}
 
 	private ClassDataTypeHandler getDataType(String dataType) throws MetadataValidateException {

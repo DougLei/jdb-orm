@@ -37,17 +37,10 @@ public class Properties implements SelfProcessing{
 		return loader;
 	}
 	
-	public Properties(List<?> propertiesElements) {
+	public Properties(Element propertiesElement) {
 		logger.debug("开始处理<properties>元素");
-		if(propertiesElements != null && propertiesElements.size() > 0) {
-			if(propertiesElements.size() > 1) {
-				throw new RepeatPropertiesElementException("<properties>元素最多只能配置一个");
-			}
-			
-			Element propertiesElement = (Element) propertiesElements.get(0);
-			
+		if(propertiesElement != null) {
 			processPlaceholderCharacter(propertiesElement);// 处理占位符前后缀字符
-			
 			readAndSetProperties(propertiesElement.elements("resource"));// 读取并set
 		}
 		logger.debug("处理<properties>元素结束");

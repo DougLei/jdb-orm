@@ -3,24 +3,23 @@ package com.douglei.test.xmlreader;
 import java.io.File;
 import java.util.List;
 
+import org.dom4j.Attribute;
 import org.dom4j.Document;
-import org.dom4j.Node;
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 
 public class Dom4jReader {
-	private String xmlFilePath = "D:\\softwares\\developments\\workspaces\\jdb-orm\\src\\test\\resources\\mappings\\sql\\sql.smp.xml";
+	private String xmlFilePath = "D:\\workspace4\\jdb-orm\\src\\test\\resources\\mappings\\table\\SysUser_class.tmp.xml";
 	
 	@Test
 	public void read() throws Exception {
 		Document doc = new SAXReader().read(new File(xmlFilePath));
-		List<?> nodes = doc.getRootElement().selectNodes("//sql/content");
-		Node node = (Node) nodes.get(0);
+		Element elem = doc.getRootElement().element("table").element("constraints").element("constraint");
 		
-		nodes = node.selectNodes("*");
-		for (Object object : nodes) {
-			System.out.println(((Node)object).asXML());
+		List<?> list = elem.selectNodes("column-name/@value");
+		for (Object object : list) {
+			System.out.println(((Attribute)object).getValue());
 		}
-		
 	} 
 }
