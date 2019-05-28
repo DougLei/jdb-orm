@@ -33,7 +33,7 @@ public class TableMetadata implements Metadata{
 	
 	public void addColumnMetadata(ColumnMetadata columnMetadata) {
 		if(columns == null) {
-			columns = new HashMap<String, ColumnMetadata>();
+			columns = new HashMap<String, ColumnMetadata>(20);
 		}
 		columns.put(columnMetadata.getCode(), columnMetadata);
 		addPrimaryKeyColumnMetadata(columnMetadata);
