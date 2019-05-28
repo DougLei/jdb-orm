@@ -40,7 +40,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			Element tableElement = ElementUtil.getNecessaryAndSingleElement("<table>", rootElement.elements("table"));
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
-			
+			// TODO 处理约束、索引
 			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
 				DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(tableMetadata);
 			}

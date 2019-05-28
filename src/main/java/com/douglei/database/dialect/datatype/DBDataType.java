@@ -26,7 +26,7 @@ public abstract class DBDataType {
 	}
 	
 	// 是否支持精度, 默认是不支持的
-	protected boolean supportPrecision() {
+	public boolean supportPrecision() {
 		return false;
 	}
 
@@ -37,6 +37,7 @@ public abstract class DBDataType {
 		}
 		return inputLength;
 	}
+	
 	// 修正输入的精度值
 	public short fixInputPrecision(short inputLength, short inputPrecision) {
 		if(supportPrecision()) {
