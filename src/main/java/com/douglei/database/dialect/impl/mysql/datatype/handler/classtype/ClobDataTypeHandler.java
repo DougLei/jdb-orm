@@ -16,7 +16,7 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	}
 	
 	@Override
-	protected DBDataType defaultDBDataType() {
+	public DBDataType defaultDBDataType() {
 		return Text.singleInstance();
 	}
 }

@@ -38,7 +38,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 			if(value != null) {// 只保存不为空的值
 				columnMetadata = tableMetadata.getColumnMetadata(code);
 				
-				insertSql.append(columnMetadata.getName());
+				insertSql.append(columnMetadata.getColumnProperty().getName());
 				values.append("?");
 				parameters.add(new InputSqlParameter(value, columnMetadata.getDataType()));
 				

@@ -37,7 +37,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 				if(value != null) {// 只修改不为空的值
 					columnMetadata = tableMetadata.getColumnMetadata(code);
 					
-					updateSql.append(columnMetadata.getName()).append("=?");
+					updateSql.append(columnMetadata.getColumnProperty().getName()).append("=?");
 					parameters.add(new InputSqlParameter(value, columnMetadata.getDataType()));
 					
 					if(index < size) {
@@ -56,7 +56,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
 			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
-			updateSql.append(columnMetadata.getName()).append("=?");
+			updateSql.append(columnMetadata.getColumnProperty().getName()).append("=?");
 			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), columnMetadata.getDataType()));
 			
 			if(index < size) {

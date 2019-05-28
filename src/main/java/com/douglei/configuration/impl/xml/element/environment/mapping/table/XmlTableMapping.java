@@ -17,6 +17,7 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
 
 /**
@@ -40,7 +41,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
 			
-			if(CurrentTableIsCreate.isCreate()) {
+			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
 				DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(tableMetadata);
 			}
 		} catch (Exception e) {

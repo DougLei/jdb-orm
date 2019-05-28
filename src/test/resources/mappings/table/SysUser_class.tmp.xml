@@ -2,22 +2,22 @@
 <mapping-configuration>
 	<table name="SYS_USER" class="com.douglei.test.session.SysUser">
 		<columns>
-			<column name="id" property="id" dataType="string" primaryKey="true" dbType="" />
+			<column name="id" property="id" dataType="string" primaryKey="true" dbType="" length="" precision="" defaultValue="" unique="" nullabled="" validateData="" />
 			<column name="name" property="name" dataType="string" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
 		</columns>
+		
+		<constraints>
+			<constraint type=""><!-- primaryKey, defaultValue, unique, nullabled -->
+				<column-name value="" />
+			</constraint>		
+		</constraints>
 		
 		<indexes>
 			<index type="">
 				<column-name value="" />
 			</index>
 		</indexes>
-		
-		<constraints>
-			<constraint type="">
-				<column-name value="" />
-			</constraint>		
-		</constraints>
 	</table>
 </mapping-configuration>

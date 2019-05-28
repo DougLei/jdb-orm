@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.RepeatedDataTypeHandlerException;
 import com.douglei.database.dialect.datatype.handler.UnsupportDataTypeHandlerException;
 import com.douglei.utils.reflect.ConstructorUtil;
@@ -44,7 +43,7 @@ public class ClassDataTypeHandlerMapping {
 	 * @param code
 	 * @return
 	 */
-	public DataTypeHandler getDataTypeHandlerByClassType(String code) {
+	public ClassDataTypeHandler getDataTypeHandlerByClassType(String code) {
 		ClassDataTypeHandler dataTypeHandler = CODE_DATATYPE_HANDLER_MAP.get(code.toLowerCase());
 		if(dataTypeHandler == null) {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义ClassDataTypeHandler实现子类", code);
@@ -68,7 +67,7 @@ public class ClassDataTypeHandlerMapping {
 	 * @param value
 	 * @return
 	 */
-	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
+	public ClassDataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		ClassDataTypeHandler dataTypeHandler = SUPPORTCLASS_DATATYPE_HANDLER_MAP.get(value.getClass());
 		if(dataTypeHandler == null) {
 			throw new UnsupportDataTypeHandlerException("目前无法处理class=["+value.getClass().getName()+"]的数据类型");

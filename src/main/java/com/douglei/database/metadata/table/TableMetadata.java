@@ -57,7 +57,7 @@ public class TableMetadata implements Metadata{
 		addPrimaryKeyColumnMetadata(columnMetadata);
 	}
 	private void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
-		if(columnMetadata.isPrimaryKey()) {
+		if(columnMetadata.getColumnProperty().isPrimaryKey()) {
 			if(primaryKeyColumns == null) {
 				primaryKeyColumns = new HashMap<String, ColumnMetadata>(3);
 			}

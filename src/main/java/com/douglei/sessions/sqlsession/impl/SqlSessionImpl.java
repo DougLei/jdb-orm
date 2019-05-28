@@ -303,7 +303,7 @@ public class SqlSessionImpl implements SqlSession{
 			return ConvertUtil.mapToClass(map, targetClass);
 		}
 	}
-	
+
 	// 将map的key, 由列名转换成映射的属性名
 	protected Map<String, Object> mapKey2MappingPropertyName(Map<String, Object> map, TableMetadata tableMetadata) {
 		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
@@ -312,7 +312,7 @@ public class SqlSessionImpl implements SqlSession{
 		Set<String> codes = tableMetadata.getColumnMetadataCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnMetadata(code);
-			targetMap.put(column.getProperty(), map.get(column.getName()));
+			targetMap.put(column.getProperty(), map.get(column.getColumnProperty().getName()));
 		}
 		return targetMap;
 	}

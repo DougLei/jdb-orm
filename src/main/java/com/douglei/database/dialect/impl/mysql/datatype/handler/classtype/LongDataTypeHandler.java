@@ -16,7 +16,7 @@ public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
 	}
 	
 	@Override
-	protected DBDataType defaultDBDataType() {
+	public DBDataType defaultDBDataType() {
 		return Bigint.singleInstance();
 	}
 }

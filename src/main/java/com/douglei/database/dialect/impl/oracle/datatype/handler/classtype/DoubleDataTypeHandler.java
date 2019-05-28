@@ -16,7 +16,7 @@ public class DoubleDataTypeHandler extends AbstractDoubleDataTypeHandler{
 	}
 
 	@Override
-	protected DBDataType defaultDBDataType() {
+	public DBDataType defaultDBDataType() {
 		return Number.singleInstance();
 	}
 }

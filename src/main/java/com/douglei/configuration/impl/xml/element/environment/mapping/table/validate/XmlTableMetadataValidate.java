@@ -2,7 +2,6 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 
 import org.dom4j.Element;
 
-import com.douglei.configuration.impl.xml.element.environment.mapping.table.CurrentTableIsCreate;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -39,7 +38,6 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		if(cm == null) {
 			cm = DBRunEnvironmentContext.getTableCreateMode();
 		}
-		CurrentTableIsCreate.setIsCreate(cm != CreateMode.NONE);
 		return cm;
 	}
 }

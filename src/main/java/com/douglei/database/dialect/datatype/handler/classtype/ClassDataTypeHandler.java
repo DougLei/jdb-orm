@@ -18,7 +18,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler{
 	 * 默认对应的数据库数据类型
 	 * @return
 	 */
-	protected abstract DBDataType defaultDBDataType();
+	public abstract DBDataType defaultDBDataType();
 	
 	/**
 	 * 

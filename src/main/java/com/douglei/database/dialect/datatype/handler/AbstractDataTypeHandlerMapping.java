@@ -50,13 +50,13 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	
 	
-	public DataTypeHandler getDataTypeHandlerByClassType(Object value) {
+	public ClassDataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);
 	}
-	public DataTypeHandler getDataTypeHandlerByCode(String code) {
+	public ClassDataTypeHandler getDataTypeHandlerByCode(String code) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(code);
 	}
-	public DataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
+	public ResultSetColumnDataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
 		return resultsetColumnDataTypeHandlerMapping.getDataTypeHandlerByDatabaseColumnType(columnType, columnName, columnTypeName);
 	}
 	public DBDataTypeHandler getDBDataTypeHandlerByDBTypeName(String typeName) {
@@ -85,7 +85,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	 * 获取默认的DataTypeHandler
 	 * @return
 	 */
-	public DataTypeHandler getDefaultDataTypeHandler() {
+	public ClassDataTypeHandler getDefaultClassDataTypeHandler() {
 		return getDataTypeHandlerByCode("string");
 	}
 	

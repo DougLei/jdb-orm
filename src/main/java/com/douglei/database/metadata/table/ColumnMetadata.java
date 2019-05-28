@@ -1,6 +1,6 @@
 package com.douglei.database.metadata.table;
 
-import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.database.metadata.table.column.extend.ColumnProperty;
@@ -13,36 +13,17 @@ import com.douglei.utils.StringUtil;
  */
 public class ColumnMetadata implements Metadata{
 	
-	/**
-	 * 列名
-	 */
-	private String name;
-	/**
-	 * 映射的代码类中的属性名
-	 */
-	private String property;
+	private String property;// 映射的代码类中的属性名
+	private ClassDataTypeHandler dataType;// 数据类型
+	private ColumnProperty columnProperty;
 	
-	/**
-	 * 数据类型
-	 */
-	private DataTypeHandler dataTypeHandler;
-	
-	/**
-	 * 是否是主键
-	 */
-	private boolean primaryKey;
-	
-	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String property, boolean primaryKey) {
-		this.name = name.toUpperCase();
-		this.dataTypeHandler = dataTypeHandler;
-		this.primaryKey = primaryKey;
-		setProperty(property);
-		setCode();
-	}
-	private void setProperty(String property) {
+	public ColumnMetadata(String property, ClassDataTypeHandler dataType, ColumnProperty columnProperty) {
 		if(StringUtil.notEmpty(property)) {
 			this.property = property;
 		}
+		this.dataType = dataType;
+		this.columnProperty = columnProperty;
+		setCode();
 	}
 	
 	/**
@@ -59,7 +40,7 @@ public class ColumnMetadata implements Metadata{
 	private String code;
 	private void setCode() {
 		if(property == null) {
-			code = name;
+			code = columnProperty.getName();
 		}else {
 			code = property;
 		}
@@ -81,36 +62,24 @@ public class ColumnMetadata implements Metadata{
 			}
 		}else {
 			if(property == null) {
-				property = NamingUtil.columnName2PropertyName(name);
+				property = NamingUtil.columnName2PropertyName(columnProperty.getName());
 				setCode();
 			}
 		}
 	}
 	
-	public String getName() {
-		return name;
-	}
 	public String getProperty() {
 		return property;
 	}
-	public DataTypeHandler getDataType() {
-		return dataTypeHandler;
-	}
-	public boolean isPrimaryKey() {
-		return primaryKey;
-	}
-	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.COLUMN;
-	}
-	
-	
-	private ColumnProperty columnProperty;
-	public void setColumnProperty(ColumnProperty columnProperty) {
-		this.columnProperty = columnProperty;
+	public ClassDataTypeHandler getDataType() {
+		return dataType;
 	}
 	public ColumnProperty getColumnProperty() {
 		return columnProperty;
+	}
+
+	@Override
+	public MetadataType getMetadataType() {
+		return MetadataType.COLUMN;
 	}
 }

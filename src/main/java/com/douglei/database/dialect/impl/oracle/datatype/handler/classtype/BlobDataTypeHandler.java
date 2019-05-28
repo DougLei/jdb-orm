@@ -16,7 +16,7 @@ public class BlobDataTypeHandler extends AbstractBlobDataTypeHandler{
 	}
 	
 	@Override
-	protected DBDataType defaultDBDataType() {
+	public DBDataType defaultDBDataType() {
 		return Blob.singleInstance();
 	}
 }

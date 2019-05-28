@@ -4,14 +4,14 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.configuration.impl.xml.element.environment.mapping.table.CurrentTableIsCreate;
 import com.douglei.context.DBRunEnvironmentContext;
-import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -30,21 +30,16 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
-		DataTypeHandler dataTypeHandler = validateDataType(element.attributeValue("dataType"));
-		ColumnMetadata column = new ColumnMetadata(name, dataTypeHandler, element.attributeValue("property"), validateIsPrimaryKey(element.attributeValue("primaryKey")));
-		
-		if(CurrentTableIsCreate.isCreate()) {
-			setExtendColumnProperty(column, element);
-		}
+		ColumnMetadata column = new ColumnMetadata(element.attributeValue("property"), getDataType(element.attributeValue("dataType")), getColumnProperty(element));
 		return column;
 	}
 
-	private DataTypeHandler validateDataType(String dataType) throws MetadataValidateException {
+	private ClassDataTypeHandler getDataType(String dataType) throws MetadataValidateException {
 		if(StringUtil.isEmpty(dataType)) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("配置的dataType为空, 使用默认的DataTypeHandler={}", AbstractStringDataTypeHandler.class.getName());
 			}
-			return DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDefaultDataTypeHandler();
+			return DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDefaultClassDataTypeHandler();
 		}
 		try {
 			return DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType);
@@ -53,15 +48,16 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		}
 	}
 	
-	private boolean validateIsPrimaryKey(String primaryKey) {
-		return Boolean.parseBoolean(primaryKey);
-	}
-	
-	
-	private void setExtendColumnProperty(ColumnMetadata column, Element element) {
-		// TODO Auto-generated method stub
-		
-		
-		column.setColumnProperty(null);
+	private ColumnProperty getColumnProperty(Element element) {
+		element.attributeValue("name");
+		element.attributeValue("primaryKey");
+		element.attributeValue("dbType");
+		element.attributeValue("length");
+		element.attributeValue("precision");
+		element.attributeValue("defaultValue");
+		element.attributeValue("unique");
+		element.attributeValue("nullabled");
+		element.attributeValue("validateData");
+		return null;
 	}
 }

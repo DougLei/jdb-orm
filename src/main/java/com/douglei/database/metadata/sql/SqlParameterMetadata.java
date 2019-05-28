@@ -104,7 +104,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(!LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
 			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
-				this.dataTypeHandler = mapping.getDefaultDataTypeHandler();
+				this.dataTypeHandler = mapping.getDefaultClassDataTypeHandler();
 			}else {
 				this.dataTypeHandler = mapping.getDataTypeHandlerByCode(dataType);
 			}
