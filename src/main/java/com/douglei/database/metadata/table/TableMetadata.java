@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.database.metadata.table.column.ColumnMetadata;
 import com.douglei.utils.StringUtil;
 
 /**

@@ -11,7 +11,7 @@ import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDat
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.column.ColumnMetadata;
+import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -34,7 +34,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		ColumnMetadata column = new ColumnMetadata(name, dataTypeHandler, element.attributeValue("property"), validateIsPrimaryKey(element.attributeValue("primaryKey")));
 		
 		if(CurrentTableIsCreate.isCreate()) {
-			setExtDBProperty(column, element);
+			setExtendColumnProperty(column, element);
 		}
 		return column;
 	}
@@ -57,11 +57,11 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		return Boolean.parseBoolean(primaryKey);
 	}
 	
-	// 给column, setExtDBProperty
-	private void setExtDBProperty(ColumnMetadata column, Element element) {
+	
+	private void setExtendColumnProperty(ColumnMetadata column, Element element) {
 		// TODO Auto-generated method stub
 		
 		
-		column.setExtDBProperty(null);
+		column.setColumnProperty(null);
 	}
 }

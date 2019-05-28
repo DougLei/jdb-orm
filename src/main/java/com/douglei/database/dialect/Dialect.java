@@ -10,6 +10,10 @@ import com.douglei.database.dialect.table.TableHandler;
  */
 public interface Dialect {
 	
+	/**
+	 * 
+	 * @return
+	 */
 	DialectType getType();
 
 	/**

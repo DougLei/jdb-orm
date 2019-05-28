@@ -1,8 +1,9 @@
-package com.douglei.database.metadata.table.column;
+package com.douglei.database.metadata.table;
 
 import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
+import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 import com.douglei.database.utils.NamingUtil;
 import com.douglei.utils.StringUtil;
 
@@ -30,8 +31,6 @@ public class ColumnMetadata implements Metadata{
 	 * 是否是主键
 	 */
 	private boolean primaryKey;
-	
-	private ColumnExtDBProperty extDBProperty;
 	
 	public ColumnMetadata(String name, DataTypeHandler dataTypeHandler, String property, boolean primaryKey) {
 		this.name = name.toUpperCase();
@@ -100,15 +99,18 @@ public class ColumnMetadata implements Metadata{
 	public boolean isPrimaryKey() {
 		return primaryKey;
 	}
-	public void setExtDBProperty(ColumnExtDBProperty extDBProperty) {
-		this.extDBProperty = extDBProperty;
-	}
-	public ColumnExtDBProperty getExtDBProperty() {
-		return extDBProperty;
-	}
 	
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.COLUMN;
+	}
+	
+	
+	private ColumnProperty columnProperty;
+	public void setColumnProperty(ColumnProperty columnProperty) {
+		this.columnProperty = columnProperty;
+	}
+	public ColumnProperty getColumnProperty() {
+		return columnProperty;
 	}
 }

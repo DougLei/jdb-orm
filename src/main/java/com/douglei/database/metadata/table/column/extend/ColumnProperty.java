@@ -1,12 +1,12 @@
-package com.douglei.database.metadata.table.column;
+package com.douglei.database.metadata.table.column.extend;
 
 import com.douglei.database.dialect.datatype.DBDataType;
 
 /**
- * 列扩展的数据库属性
+ * 列属性
  * @author DougLei
  */
-public class ColumnExtDBProperty {
+public class ColumnProperty {
 	private DBDataType dbDataType;
 
 
