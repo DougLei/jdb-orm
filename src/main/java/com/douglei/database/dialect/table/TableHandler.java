@@ -9,19 +9,17 @@ import com.douglei.database.metadata.table.TableMetadata;
 public abstract class TableHandler {
 	
 	/**
-	 * 执行create
+	 * 组装create table的sql语句
 	 * @param tableMetadata
 	 */
-	public void executeCreate(TableMetadata tableMetadata) {
+	public String installCreateSqlStatement(TableMetadata tableMetadata) {
 		switch(tableMetadata.getCreateMode()) {
-			case NONE:
-				return;
 			case CREATE:
 				
 				
-				
-				
-				return;
+				return null;
+			default:
+				return null;
 		}
 	}
 }

@@ -14,33 +14,15 @@ import com.douglei.utils.StringUtil;
  */
 public class TableMetadata implements Metadata{
 	
-	/**
-	 * 表名
-	 */
-	private String name;
-	/**
-	 * 映射的代码类名
-	 */
-	private String className;
+	private String name;// 表名
+	private String className;// 映射的代码类名
 	private boolean classNameIsNull;
 	
-	/**
-	 * 表create的模式
-	 */
-	private CreateMode createMode;
+	private CreateMode createMode;// 表create的模式
 	
-	/**
-	 * 包含的列元数据集合
-	 * <pre>
-	 * 	key=列元数据的code
-	 * 	value=列元数据对象
-	 * </pre>
-	 */
-	private Map<String, ColumnMetadata> columns;
-	/**
-	 * 主键列元数据集合
-	 */
-	private Map<String, ColumnMetadata> primaryKeyColumns;
+	private Map<String, ColumnMetadata> columns;// 包含的列元数据集合, key=列元数据的code, value=列元数据对象
+	private Map<String, ColumnMetadata> primaryKeyColumns;// 主键列元数据集合
+	
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
 		this.name = name.toUpperCase();

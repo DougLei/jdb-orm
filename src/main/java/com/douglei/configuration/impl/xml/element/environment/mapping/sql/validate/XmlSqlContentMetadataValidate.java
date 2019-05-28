@@ -6,9 +6,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -32,7 +32,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	private SqlContentMetadata doValidate(Node contentNode) {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
-		LocalSqlMappingConfigurationSqlContentTypeHolder.setCurrentSqlContentType(type);
+		RunMappingConfigurationContext.setCurrentSqlContentType(type);
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
@@ -66,7 +66,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		if(children == null || (childrenLength = children.getLength()) == 0) {
 			throw new NullPointerException("<content>元素中不存在任何sql语句");
 		}
-		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			short nodeType, textNodeCount = 0, otherNodeCount = 0;
 			for(int i=0;i<childrenLength;i++) {
 				nodeType = children.item(i).getNodeType();

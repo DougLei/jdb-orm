@@ -244,10 +244,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						short index = 1;
 						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) {
-								sqlParameterMetadata.getDBDataTypeHandler().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
+								sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
 							}
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
-								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataTypeHandler().getSqlType());
+								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataType().getSqlType());
 								outParameterIndex[outParameterCount] = index;
 								outParameterCount++;
 							}
@@ -263,7 +263,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						SqlParameterMetadata sqlParameterMetadata = null;
 						for(short i=0;i<outParameterCount;i++) {
 							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]);
-							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataTypeHandler().getValue(outParameterIndex[i], callableStatement));
+							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
 						}
 						
 						if(procedureSupportDirectlyReturnResultSet) {

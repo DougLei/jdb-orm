@@ -3,10 +3,11 @@ package com.douglei.database.metadata.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.configuration.environment.mapping.sql.LocalSqlMappingConfigurationSqlContentTypeHolder;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
@@ -21,44 +22,25 @@ import com.douglei.utils.datatype.ValidationUtil;
 public class SqlParameterMetadata implements Metadata{
 	private String configurationText;
 	
-	/**
-	 * 参数名
-	 */
-	private String name;
-	/**
-	 * 数据类型
-	 */
-	private DataTypeHandler dataTypeHandler;
+	private String name;// 参数名
+	private DataTypeHandler dataType;// 数据类型
 	
-	/**
-	 * 是否使用占位符?
-	 */
-	private boolean usePlaceholder;
-	/**
-	 * 如果不使用占位符, 参数值的前缀
-	 */
-	private String placeholderPrefix;
-	/**
-	 * 如果不使用占位符, 参数值的后缀
-	 */
-	private String placeholderSuffix;
+	private boolean usePlaceholder;// 是否使用占位符?
+	private String placeholderPrefix;// 如果不使用占位符, 参数值的前缀
+	private String placeholderSuffix;// 如果不使用占位符, 参数值的后缀
 	
-	/**
-	 * 输入输出类型
-	 */
-	private SqlParameterMode mode;
-	
+	private SqlParameterMode mode;// 输入输出类型
 	
 	public SqlParameterMetadata(String configurationText) {
 		this.configurationText = configurationText;
 		
 		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
-		setDataTypeHandler(propertyMap.get("datatypehandler"));
+		setDataType(propertyMap.get("datatype"));
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
 		setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
 		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
-		setDBDataTypeHandler(propertyMap.get("dbType"));
+		setDBDataType(propertyMap.get("dbType"));
 		setMode(propertyMap.get("mode"));
 	}
 	
@@ -100,13 +82,13 @@ public class SqlParameterMetadata implements Metadata{
 	void setName(String name) {
 		this.name = name;
 	}
-	void setDataTypeHandler(String dataType) {
-		if(!LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+	void setDataType(String dataType) {
+		if(RunMappingConfigurationContext.getCurrentSqlContentType() != SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
-				this.dataTypeHandler = mapping.getDefaultClassDataTypeHandler();
+				this.dataType = mapping.getDefaultClassDataTypeHandler();
 			}else {
-				this.dataTypeHandler = mapping.getDataTypeHandlerByCode(dataType);
+				this.dataType = mapping.getDataTypeHandlerByCode(dataType);
 			}
 		}
 	}
@@ -131,18 +113,18 @@ public class SqlParameterMetadata implements Metadata{
 			this.placeholderSuffix = placeholderSuffix;
 		}
 	}
-	void setDBDataTypeHandler(String typeName) {
-		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+	void setDBDataType(String typeName) {
+		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
-				this.dataTypeHandler = mapping.getDefaultDBDataTypeHandler();
+				this.dataType = mapping.getDefaultDBDataTypeHandler();
 			}else {
-				this.dataTypeHandler = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
+				this.dataType = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
 			}
 		}
 	}
 	void setMode(String mode) {
-		if(LocalSqlMappingConfigurationSqlContentTypeHolder.isProcedure()) {
+		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			if(StringUtil.notEmpty(mode)) {
 				this.mode = SqlParameterMode.toValue(mode);
 			}
@@ -158,11 +140,11 @@ public class SqlParameterMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public DataTypeHandler getDataTypeHandler() {
-		return dataTypeHandler;
+	public ClassDataTypeHandler getDataType() {
+		return (ClassDataTypeHandler) dataType;
 	}
-	public DBDataTypeHandler getDBDataTypeHandler() {
-		return (DBDataTypeHandler) dataTypeHandler;
+	public DBDataTypeHandler getDBDataType() {
+		return (DBDataTypeHandler) dataType;
 	}
 	public boolean isUsePlaceholder() {
 		return usePlaceholder;
@@ -190,7 +172,7 @@ public class SqlParameterMetadata implements Metadata{
 
 	@Override
 	public String toString() {
-		return "SqlParameterMetadata [name=" + name + ", dataTypeHandler=" + dataTypeHandler + ", usePlaceholder="
+		return "SqlParameterMetadata [name=" + name + ", dataType=" + dataType.toString() + ", usePlaceholder="
 				+ usePlaceholder + ", placeholderPrefix=" + placeholderPrefix + ", placeholderSuffix="
 				+ placeholderSuffix + "]";
 	}

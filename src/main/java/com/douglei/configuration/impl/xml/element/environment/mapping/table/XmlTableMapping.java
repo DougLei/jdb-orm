@@ -41,8 +41,11 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(ElementUtil.getNecessaryAndSingleElement(" <columns>", tableElement.elements("columns")));
 			// TODO 处理约束、索引
+			
+			
+			
 			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
-				DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(tableMetadata);
+				DBRunEnvironmentContext.getDialect().getTableHandler().installCreateSqlStatement(tableMetadata);
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());

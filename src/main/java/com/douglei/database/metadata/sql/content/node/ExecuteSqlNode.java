@@ -24,7 +24,7 @@ public class ExecuteSqlNode {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();
 					}
-					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataTypeHandler()));
+					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataType()));
 				}else {
 					content = content.replaceFirst("#\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
 				}
