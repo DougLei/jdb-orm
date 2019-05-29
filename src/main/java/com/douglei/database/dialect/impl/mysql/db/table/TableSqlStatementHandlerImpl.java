@@ -25,6 +25,20 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	}
 
 	@Override
+	protected String primaryKeyConstraintDropSqlStatement(ColumnConstraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop primary key ");
+		return tmpSql.toString();
+	}
+
+	@Override
+	protected String uniqueConstraintDropSqlStatement(ColumnConstraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop index ").append(constraint.getName());
+		return tmpSql.toString();
+	}
+
+	@Override
 	protected String defaultValueConstraintDropSqlStatement(ColumnConstraint constraint) {
 		if(StringUtil.isEmpty(constraint.getColumnName())) {
 			throw new NullPointerException("在mysql数据库中删除列的默认值时, 必须传入相应的列名");
