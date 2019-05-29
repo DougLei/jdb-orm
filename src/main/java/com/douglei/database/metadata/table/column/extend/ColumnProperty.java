@@ -20,7 +20,7 @@ public class ColumnProperty {
 	public ColumnProperty(String name, short length, short precision, boolean nullabled, 
 			boolean primaryKey, boolean unique, String defaultValue, 
 			boolean validateData) {
-		this.name = name;
+		this.name = name.toUpperCase();
 		this.length = length;
 		this.precision = precision;
 		setNullabled(nullabled, primaryKey);

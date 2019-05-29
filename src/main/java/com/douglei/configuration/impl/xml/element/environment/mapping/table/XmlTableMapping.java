@@ -82,36 +82,38 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @param elements
 	 */
 	private void addConstraint(Element constraintsElement) {
-		List<?> elements = constraintsElement.elements("constraint");
-		if(elements != null && elements.size() > 0) {
-			Element constraintElement = null;
-			ConstraintType constraintType = null;
-			List<?> values = null;
-			List<ColumnMetadata> columns = null;
-			for (Object object : elements) {
-				constraintElement = (Element) object;
-				values = constraintElement.selectNodes("column-name/@value");
-				if(values == null || values.size() == 0) {
-					continue;
+		if(constraintsElement != null) {
+			List<?> elements = constraintsElement.elements("constraint");
+			if(elements != null && elements.size() > 0) {
+				Element constraintElement = null;
+				ConstraintType constraintType = null;
+				List<?> values = null;
+				List<ColumnMetadata> columns = null;
+				for (Object object : elements) {
+					constraintElement = (Element) object;
+					values = constraintElement.selectNodes("column-name/@value");
+					if(values == null || values.size() == 0) {
+						continue;
+					}
+					
+					constraintType = ConstraintType.toValue(constraintElement.attributeValue("type"));
+					if(constraintType == null) {
+						throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
+					}
+					if(constraintType == ConstraintType.DEFAULT_VALUE) {
+						throw new UnsupportConstraintConfigurationException("不支持通过<constraint>元素给列配置默认值约束, 如需配置, 请在对应的<column>元素中配置defaultValue属性值");
+					}
+					
+					if(columns == null) {
+						columns = new ArrayList<ColumnMetadata>(3);
+					}else if(columns.size() > 0){
+						columns.clear();
+					}
+					for(Object value: values) {
+						columns.add(tableMetadata.getColumnMetadataByColumnName(((Attribute)value).getValue().toUpperCase()));
+					}
+					tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata.getName(), columns));
 				}
-				
-				constraintType = ConstraintType.toValue(constraintElement.attributeValue("type"));
-				if(constraintType == null) {
-					throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
-				}
-				if(constraintType == ConstraintType.DEFAULT_VALUE) {
-					throw new UnsupportConstraintConfigurationException("不支持通过<constraint>元素给列配置默认值约束, 如需配置, 请在对应的<column>元素中配置defaultValue属性值");
-				}
-				
-				if(columns == null) {
-					columns = new ArrayList<ColumnMetadata>(3);
-				}else if(columns.size() > 0){
-					columns.clear();
-				}
-				for(Object value: values) {
-					columns.add(tableMetadata.getColumnMetadataByColumnName(((Attribute)value).getValue().toUpperCase()));
-				}
-				tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata.getName(), columns));
 			}
 		}
 	}
