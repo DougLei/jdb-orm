@@ -5,6 +5,7 @@ import java.util.List;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ColumnIndex;
+import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 
 /**
  * 表sql语句处理器
@@ -25,7 +26,30 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	protected abstract String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns);
+	protected String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
+		StringBuilder sql = new StringBuilder(1000);
+		sql.append("create table ").append(tableName);
+		sql.append("(");
+		
+		int lastIndex = columns.size()-1;
+		ColumnMetadata column = null;
+		ColumnProperty cp = null;
+		for (int i=0;i<columns.size();i++) {
+			column = columns.get(i);
+			cp = column.getColumnProperty();
+			
+			sql.append(cp.getName()).append(" ");
+			sql.append(column.getDataType().defaultDBDataType().getType4SqlStatement(cp.getLength(), cp.getPrecision())).append(" ");
+			if(!cp.isNullabled()) {
+				sql.append("not null");
+			}
+			if(i<lastIndex) {
+				sql.append(",");
+			}
+		}
+		sql.append(")");
+		return sql.toString();
+	}
 	
 	/**
 	 * 获取drop table的sql语句

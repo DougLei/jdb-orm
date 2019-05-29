@@ -63,4 +63,20 @@ public abstract class DBDataType {
 		}
 		return NO_LIMIT;
 	}
+	
+	/**
+	 * 获取数据库类型对应的sql语句
+	 * @param length
+	 * @param precision
+	 * @return
+	 */
+	public String getType4SqlStatement(short length, short precision) {
+		if(length == NO_LIMIT) {
+			return getTypeName();
+		}
+		if(supportPrecision()) {
+			return getTypeName() + "("+length+", "+precision+")";
+		}
+		return getTypeName() + "("+length+")";
+	}
 }

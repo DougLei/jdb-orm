@@ -20,12 +20,6 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	}
 
 	@Override
-	protected String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
 		// TODO Auto-generated method stub
 		return null;

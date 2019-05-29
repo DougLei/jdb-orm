@@ -23,4 +23,12 @@ public class Varchar extends DBDataType{
 		}
 		return super.fixInputLength(inputLength);
 	}
+	
+	@Override
+	public String getType4SqlStatement(short length, short precision) {
+		if(length == Short.MAX_VALUE) {
+			return getTypeName() + "(max)";
+		}
+		return super.getType4SqlStatement(length, precision);
+	}
 }

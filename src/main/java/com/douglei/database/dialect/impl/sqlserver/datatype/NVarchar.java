@@ -15,4 +15,20 @@ public class NVarchar extends DBDataType{
 	private NVarchar() {
 		super((short)-9, (short)4000);
 	}
+	
+	@Override
+	public short fixInputLength(short inputLength) {
+		if(inputLength > super.length) {
+			return Short.MAX_VALUE;// Short.MAX_VALUE时, 使用nvarchar(max)
+		}
+		return super.fixInputLength(inputLength);
+	}
+	
+	@Override
+	public String getType4SqlStatement(short length, short precision) {
+		if(length == Short.MAX_VALUE) {
+			return getTypeName() + "(max)";
+		}
+		return super.getType4SqlStatement(length, precision);
+	}
 }
