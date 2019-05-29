@@ -3,6 +3,9 @@ package com.douglei.database.metadata.table.column.extend;
 import java.util.List;
 
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.table.ColumnMetadata;
 
@@ -24,6 +27,7 @@ public class ColumnConstraint {
 		this(dataType, constraintType, tableName, columnName, null);
 	}
 	public ColumnConstraint(ClassDataTypeHandler dataType, ConstraintType constraintType, String tableName, String columnName, String defaultValue) {
+		validateDataType(dataType);
 		this.constraintType = constraintType;
 		
 		this.tableName = tableName;
@@ -34,6 +38,9 @@ public class ColumnConstraint {
 	}
 
 	public ColumnConstraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
+		for (ColumnMetadata column : columns) {
+			validateDataType(column.getDataType());
+		}
 		this.constraintType = constraintType;
 		this.tableName = tableName;
 		
@@ -60,6 +67,11 @@ public class ColumnConstraint {
 	}
 	private void setConstraintName(String constraintName) {
 		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(constraintName);
+	}
+	private void validateDataType(DataTypeHandler dataType) {
+		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
+			throw new UnsupportConstraintDataTypeException("不支持给clob类型或blob类型的字段配置任何约束");
+		}
 	}
 	
 	public ConstraintType getConstraintType() {
