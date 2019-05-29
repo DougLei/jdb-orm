@@ -13,11 +13,11 @@ import com.douglei.database.metadata.table.column.extend.ColumnIndex;
 public abstract class TableSqlStatementHandler {
 	
 	/**
-	 * 表是否存在
+	 * 获取查询表是否存在的sql语句
 	 * @param tableName
-	 * @return 返回1表示存在, 0表示不存在
+	 * @return 
 	 */
-	protected abstract short tableExists(String tableName);
+	protected abstract String tableExistsQuerySqlStatement(String tableName);
 	
 	/**
 	 * 获取create table的sql语句

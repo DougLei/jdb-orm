@@ -14,9 +14,9 @@ import com.douglei.database.metadata.table.column.extend.ColumnIndex;
 public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 
 	@Override
-	protected short tableExists(String tableName) {
+	protected String tableExistsQuerySqlStatement(String tableName) {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	@Override
