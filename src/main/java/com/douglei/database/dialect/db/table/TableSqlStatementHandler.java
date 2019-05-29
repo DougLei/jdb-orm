@@ -7,7 +7,6 @@ import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ColumnIndex;
-import com.douglei.database.metadata.table.column.extend.ConstraintType;
 
 /**
  * 表sql语句处理器
@@ -87,7 +86,7 @@ public abstract class TableSqlStatementHandler {
 	 * @return
 	 */
 	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
-		StringBuilder tmpSql = new StringBuilder(80);
+		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullabled()) {
@@ -124,7 +123,7 @@ public abstract class TableSqlStatementHandler {
 	 * @return
 	 */
 	public String columnDropSqlStatement(String tableName, String columnName) {
-		StringBuilder tmpSql = new StringBuilder(80);
+		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columnName);
 		return tmpSql.toString();
 	}
@@ -160,11 +159,11 @@ public abstract class TableSqlStatementHandler {
 				return pk_uq_constraintCreateSqlStatement(constraint);
 		}
 	}
-	/**默认值约束*/
+	/**获取创建默认值约束的sql语句*/
 	protected abstract String defaultValueConstraintCreateSqlStatement(ColumnConstraint constraint);
-	/**主键约束、唯一约束*/
+	/**获取创建主键约束、唯一约束的sql语句*/
 	protected String pk_uq_constraintCreateSqlStatement(ColumnConstraint constraint) {
-		StringBuilder tmpSql = new StringBuilder(80);
+		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
 		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getColumnName()).append(")");
 		return tmpSql.toString();
@@ -181,14 +180,8 @@ public abstract class TableSqlStatementHandler {
 			int size = constraints.size();
 			String[] dropSqlStatement = new String[size];
 			
-			StringBuilder tmpSql = new StringBuilder(100);
-			ColumnConstraint cc = null;
 			for(int i=0;i<size;i++) {
-				cc = constraints.get(i);
-				
-				tmpSql.append("alter table ").append(cc.getTableName()).append(" drop constraint ").append(cc.getName());
-				dropSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
+				dropSqlStatement[i] = constraintDropSqlStatement(constraints.get(i));
 			}
 			return dropSqlStatement;
 		}
@@ -197,27 +190,38 @@ public abstract class TableSqlStatementHandler {
 	
 	/**
 	 * 获取drop constraint的sql语句
-	 * @param constraintType
-	 * @param constraintName
+	 * @param constraint
 	 * @return
 	 */
-	public String constraintDropSqlStatement(ConstraintType constraintType, String constraintName) {
-		switch(constraintType) {
+	public String constraintDropSqlStatement(ColumnConstraint constraint) {
+		switch(constraint.getConstraintType()) {
 			case PRIMARY_KEY:
-				return primaryKeyConstraintDropSqlStatement(constraintName);
+				return primaryKeyConstraintDropSqlStatement(constraint);
 			case UNIQUE:
-				return uniqueConstraintDropSqlStatement(constraintName);
+				return uniqueConstraintDropSqlStatement(constraint);
 			case DEFAULT_VALUE:
-				return defaultValueConstraintDropSqlStatement(constraintName);
+				return defaultValueConstraintDropSqlStatement(constraint);
 		}
-		throw new IllegalArgumentException("没有处理:" + constraintType);
+		throw new IllegalArgumentException("没有处理:" + constraint.getConstraintType());
 	}
-	/**主键约束*/
-	protected abstract String primaryKeyConstraintDropSqlStatement(String constraintName);
-	/**唯一约束*/
-	protected abstract String uniqueConstraintDropSqlStatement(String constraintName);
-	/**默认值约束*/
-	protected abstract String defaultValueConstraintDropSqlStatement(String constraintName);
+	/**通用的 获取drop constraint的sql语句*/
+	private String commonConstraintDropSqlStatement(ColumnConstraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop constraint ").append(constraint.getName());
+		return tmpSql.toString();
+	}
+	/**获取删除主键约束的sql语句*/
+	protected String primaryKeyConstraintDropSqlStatement(ColumnConstraint constraint) {
+		return commonConstraintDropSqlStatement(constraint);
+	}
+	/**获取删除唯一约束的sql语句*/
+	protected String uniqueConstraintDropSqlStatement(ColumnConstraint constraint) {
+		return commonConstraintDropSqlStatement(constraint);
+	}
+	/**获取删除默认值约束的sql语句*/
+	protected String defaultValueConstraintDropSqlStatement(ColumnConstraint constraint) {
+		return commonConstraintDropSqlStatement(constraint);
+	}
 	
 	
 	
