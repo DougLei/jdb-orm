@@ -18,7 +18,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param tableName
 	 * @return 
 	 */
-	protected abstract String tableExistsQuerySqlStatement(String tableName);
+	public abstract String tableExistsQuerySqlStatement(String tableName);
 	
 	/**
 	 * 获取create table的sql语句
@@ -26,7 +26,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	protected String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
+	public String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
 		StringBuilder sql = new StringBuilder(1000);
 		sql.append("create table ").append(tableName);
 		sql.append("(");
@@ -56,7 +56,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param tableName
 	 * @return
 	 */
-	protected String tableDropSqlStatement(String tableName) {
+	public String tableDropSqlStatement(String tableName) {
 		return "drop table " + tableName;
 	}
 	
@@ -66,7 +66,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	protected abstract String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns);
+	public String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns);
 	
 	/**
 	 * 获取drop column的sql语句
@@ -74,7 +74,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	protected abstract String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns);
+	public abstract String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns);
 	
 	/**
 	 * 获取rename column的sql语句
@@ -82,7 +82,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	protected abstract String[] columnRenameSqlStatement(String tableName, List<ColumnMetadata> columns);
+	public abstract String[] columnRenameSqlStatement(String tableName, List<ColumnMetadata> columns);
 	
 	/**
 	 * 获取create constraint的sql语句
@@ -90,7 +90,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param constraints
 	 * @return
 	 */
-	protected abstract String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints);
+	public abstract String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints);
 	
 	/**
 	 * 获取drop constraint的sql语句
@@ -98,7 +98,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param constraints
 	 * @return
 	 */
-	protected String[] constraintDropSqlStatement(String tableName, List<ColumnConstraint> constraints) {
+	public String[] constraintDropSqlStatement(String tableName, List<ColumnConstraint> constraints) {
 		if(constraints != null && constraints.size() > 0) {
 			int size = constraints.size();
 			String[] dropSqlStatement = new String[size];
@@ -120,7 +120,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param indexes
 	 * @return
 	 */
-	protected abstract String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes);
+	public abstract String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes);
 	
 	/**
 	 * 获取drop index的sql语句
@@ -128,5 +128,5 @@ public abstract class TableSqlStatementHandler {
 	 * @param indexes
 	 * @return
 	 */
-	protected abstract String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes);
+	public abstract String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes);
 }
