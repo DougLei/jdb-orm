@@ -14,11 +14,13 @@ import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 public abstract class TableSqlStatementHandler {
 	
 	/**
-	 * 获取查询表是否存在的sql语句
-	 * @param tableName
+	 * <pre>
+	 * 	获取查询表是否存在的sql语句
+	 * 	返回的sql语句需要使用PreparedStatement查询, 下标为1的传入表名, 且表名必须全大写
+	 * </pre>
 	 * @return 
 	 */
-	public abstract String tableExistsQuerySqlStatement(String tableName);
+	public abstract String tableExistsQueryPreparedSqlStatement();
 	
 	/**
 	 * 获取create table的sql语句
@@ -68,7 +70,26 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
 		if(columns != null && columns.size() > 0) {
+			int size = columns.size();
+			String[] createSqlStatement = new String[size];
 			
+			ColumnMetadata column = null;
+			ColumnProperty cp = null;
+			StringBuilder tmpSql = new StringBuilder(100);
+			for(int i=0;i<size;i++) {
+				column = columns.get(i);
+				cp = column.getColumnProperty();
+				
+				tmpSql.append("alter table ").append(tableName).append(" add column ").append(column.getColumnProperty().getName()).append(" ");
+				tmpSql.append(column.getDataType().defaultDBDataType().getType4SqlStatement(cp.getLength(), cp.getPrecision())).append(" ");
+				if(!cp.isNullabled()) {
+					tmpSql.append("not null");
+				}
+				
+				createSqlStatement[i] = tmpSql.toString();
+				tmpSql.setLength(0);
+			}
+			return createSqlStatement;
 		}
 		return null;
 	}
@@ -81,18 +102,19 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns) {
 		if(columns != null && columns.size() > 0) {
+			int size = columns.size();
+			String[] dropSqlStatement = new String[size];
 			
+			StringBuilder tmpSql = new StringBuilder(100);
+			for(int i=0;i<size;i++) {
+				tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columns.get(i).getColumnProperty().getName());
+				dropSqlStatement[i] = tmpSql.toString();
+				tmpSql.setLength(0);
+			}
+			return dropSqlStatement;
 		}
 		return null;
 	}
-	
-	/**
-	 * 获取rename column的sql语句
-	 * @param tableName
-	 * @param columns
-	 * @return
-	 */
-	public abstract String[] columnRenameSqlStatement(String tableName, List<ColumnMetadata> columns);
 	
 	/**
 	 * 获取create constraint的sql语句
@@ -102,7 +124,16 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints) {
 		if(constraints != null && constraints.size() > 0) {
+			int size = constraints.size();
+			String[] createSqlStatement = new String[size];
 			
+			StringBuilder tmpSql = new StringBuilder(100);
+			for(int i=0;i<size;i++) {
+				// TODO
+				createSqlStatement[i] = tmpSql.toString();
+				tmpSql.setLength(0);
+			}
+			return createSqlStatement;
 		}
 		return null;
 	}
@@ -118,7 +149,7 @@ public abstract class TableSqlStatementHandler {
 			int size = constraints.size();
 			String[] dropSqlStatement = new String[size];
 			
-			StringBuilder tmpSql = new StringBuilder(70);
+			StringBuilder tmpSql = new StringBuilder(100);
 			for(int i=0;i<size;i++) {
 				tmpSql.append("alter table ").append(tableName).append(" drop constraint ").append(constraints.get(i).getName());
 				dropSqlStatement[i] = tmpSql.toString();
@@ -137,7 +168,16 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes) {
 		if(indexes != null && indexes.size() > 0) {
+			int size = indexes.size();
+			String[] createSqlStatement = new String[size];
 			
+			StringBuilder tmpSql = new StringBuilder(100);
+			for(int i=0;i<size;i++) {
+				// TODO
+				createSqlStatement[i] = tmpSql.toString();
+				tmpSql.setLength(0);
+			}
+			return createSqlStatement;
 		}
 		return null;
 	}
@@ -150,7 +190,16 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes) {
 		if(indexes != null && indexes.size() > 0) {
+			int size = indexes.size();
+			String[] dropSqlStatement = new String[size];
 			
+			StringBuilder tmpSql = new StringBuilder(100);
+			for(int i=0;i<size;i++) {
+				// TODO
+				dropSqlStatement[i] = tmpSql.toString();
+				tmpSql.setLength(0);
+			}
+			return dropSqlStatement;
 		}
 		return null;
 	}

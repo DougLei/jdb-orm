@@ -1,9 +1,6 @@
 package com.douglei.database.dialect.impl.mysql.db.table;
 
-import java.util.List;
-
 import com.douglei.database.dialect.db.table.TableSqlStatementHandler;
-import com.douglei.database.metadata.table.ColumnMetadata;
 
 /**
  * 
@@ -12,14 +9,8 @@ import com.douglei.database.metadata.table.ColumnMetadata;
 public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 
 	@Override
-	public String tableExistsQuerySqlStatement(String tableName) {
-		// TODO Auto-generated method stub
-		return null;
+	public String tableExistsQueryPreparedSqlStatement() {
+		return tableExistsQuerySql;
 	}
-
-	@Override
-	public String[] columnRenameSqlStatement(String tableName, List<ColumnMetadata> columns) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private static final String tableExistsQuerySql = "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ?";
 }
