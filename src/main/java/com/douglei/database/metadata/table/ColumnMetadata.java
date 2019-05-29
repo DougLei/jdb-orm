@@ -77,7 +77,7 @@ public class ColumnMetadata implements Metadata{
 	public ColumnProperty getColumnProperty() {
 		return columnProperty;
 	}
-
+	
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.COLUMN;

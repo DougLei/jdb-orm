@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.SelfProcessing;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
 
 /**
  * 
@@ -15,17 +15,17 @@ import com.douglei.configuration.environment.property.mapping.store.target.Mappi
 public abstract class MappingWrapper implements SelfProcessing{
 	private static final Logger logger = LoggerFactory.getLogger(MappingWrapper.class);
 	
-	private MappingStore mappingStore;
-	public MappingWrapper(MappingStore mappingStore) {
-		this.mappingStore = mappingStore;
+	private MappingCacheStore mappingCacheStore;
+	public MappingWrapper(MappingCacheStore mappingCacheStore) {
+		this.mappingCacheStore = mappingCacheStore;
 	}
 	
 	/**
 	 * 初始化存储空间大小
 	 * @param size
 	 */
-	protected void initialMappingStoreSize(int size) {
-		mappingStore.initialStoreSize(size);
+	protected void initialMappingCacheStoreSize(int size) {
+		mappingCacheStore.initialStoreSize(size);
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 */
 	protected void addMapping(Mapping mapping){
-		mappingStore.addMapping(mapping);
+		mappingCacheStore.addMapping(mapping);
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 */
 	protected void coverMapping(Mapping mapping) {
-		mappingStore.coverMapping(mapping);
+		mappingCacheStore.coverMapping(mapping);
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingCode
 	 */
 	public void dynamicRemoveMapping(String mappingCode) {
-		mappingStore.dynamicRemoveMapping(mappingCode);
+		mappingCacheStore.dynamicRemoveMapping(mappingCode);
 	}
 	
 	/**
@@ -68,13 +68,13 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return
 	 */
 	public Mapping getMapping(String mappingCode) {
-		return mappingStore.getMapping(mappingCode);
+		return mappingCacheStore.getMapping(mappingCode);
 	}
 
 	@Override
 	public void doDestroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());
-		mappingStore.doDestroy();
+		mappingCacheStore.doDestroy();
 		logger.debug("{} 结束 destroy", getClass());
 	}
 

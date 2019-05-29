@@ -53,7 +53,7 @@ public class TableMetadata implements Metadata{
 		}
 		columns.put(columnMetadata.getCode(), columnMetadata);
 		addPrimaryKeyColumnMetadata(columnMetadata);
-		addConstraint(columnMetadata.getColumnProperty());
+		addConstraint(columnMetadata);
 	}
 	private void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
 		if(columnMetadata.getColumnProperty().isPrimaryKey()) {
@@ -63,18 +63,16 @@ public class TableMetadata implements Metadata{
 			primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
 		}
 	}
-	private void addConstraint(ColumnProperty columnProperty) {
-		if(constraints == null) {
-			constraints = new ArrayList<ColumnConstraint>(10);
-		}
+	private void addConstraint(ColumnMetadata columnMetadata) {
+		ColumnProperty columnProperty = columnMetadata.getColumnProperty();
 		if(columnProperty.isPrimaryKey()) {
-			constraints.add(new ColumnConstraint(ConstraintType.PRIMARY_KEY, name, columnProperty.getName()));
+			addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.PRIMARY_KEY, name, columnProperty.getName()));
 		}else {
 			if(columnProperty.isUnique()) {
-				constraints.add(new ColumnConstraint(ConstraintType.UNIQUE, name, columnProperty.getName()));
+				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.UNIQUE, name, columnProperty.getName()));
 			}
 			if(columnProperty.getDefaultValue() != null) {
-				constraints.add(new ColumnConstraint(ConstraintType.DEFAULT_VALUE, name, columnProperty.getName(), columnProperty.getDefaultValue()));
+				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.DEFAULT_VALUE, name, columnProperty.getName(), columnProperty.getDefaultValue()));
 			}
 		}
 	}

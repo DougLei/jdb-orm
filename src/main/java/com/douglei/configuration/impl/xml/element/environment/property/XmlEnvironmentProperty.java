@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStoreMap;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStoreMap;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
@@ -34,7 +34,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableSessionCache;
 	
 	@FieldMetaData
-	private MappingStore mappingStore;
+	private MappingCacheStore mappingCacheStore;
 	
 	@FieldMetaData
 	private CreateMode tableCreateMode;
@@ -109,11 +109,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 		this.enableSessionCache = true;
 	}
-	void setMappingStore(String value) {
+	void setMappingCacheStore(String value) {
 		if(StringUtil.isEmpty(value)) {
-			value = "application";// 使用默认的 ApplicationMappingStore
+			value = "application";// 使用默认的 ApplicationMappingCacheStore
 		}
-		this.mappingStore = MappingStoreMap.getMappingStore(value);
+		this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) {
@@ -149,8 +149,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return enableSessionCache;
 	}
 	@Override
-	public MappingStore getMappingStore() {
-		return mappingStore;
+	public MappingCacheStore getMappingCacheStore() {
+		return mappingCacheStore;
 	}
 	@Override
 	public CreateMode getTableCreateMode() {

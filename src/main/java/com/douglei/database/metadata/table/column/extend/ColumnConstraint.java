@@ -2,6 +2,7 @@ package com.douglei.database.metadata.table.column.extend;
 
 import java.util.List;
 
+import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.table.ColumnMetadata;
 
 /**
@@ -18,10 +19,10 @@ public class ColumnConstraint {
 	
 	private String name;// 约束名(约束前缀+表名+列名)
 	
-	public ColumnConstraint(ConstraintType constraintType, String tableName, String columnName) {
-		this(constraintType, tableName, columnName, null);
+	public ColumnConstraint(ClassDataTypeHandler dataType, ConstraintType constraintType, String tableName, String columnName) {
+		this(dataType, constraintType, tableName, columnName, null);
 	}
-	public ColumnConstraint(ConstraintType constraintType, String tableName, String columnName, String defaultValue) {
+	public ColumnConstraint(ClassDataTypeHandler dataType, ConstraintType constraintType, String tableName, String columnName, String defaultValue) {
 		this.constraintType = constraintType;
 		
 		this.tableName = tableName;

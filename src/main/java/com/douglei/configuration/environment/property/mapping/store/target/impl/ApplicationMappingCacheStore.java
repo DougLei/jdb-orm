@@ -10,14 +10,14 @@ import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.RepeatMappingCodeException;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
 
 /**
  * 使用当前系统的内存空间存储映射信息
  * @author DougLei
  */
-public class ApplicationMappingStore implements MappingStore {
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingStore.class);
+public class ApplicationMappingCacheStore implements MappingCacheStore {
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingCacheStore.class);
 	
 	private static final int DEFAULT_MAPPINGS_SIZE = 32;
 	private Map<String, Mapping> mappings;

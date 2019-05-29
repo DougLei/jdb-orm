@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingStore;
+import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
 import com.douglei.instances.scanner.FileScanner;
 
 /**
@@ -19,11 +19,11 @@ import com.douglei.instances.scanner.FileScanner;
 public class XmlMappingWrapper extends MappingWrapper{
 	private static final Logger logger = LoggerFactory.getLogger(XmlMappingWrapper.class);
 	
-	public XmlMappingWrapper(MappingStore mappingStore) {
-		super(mappingStore);
+	public XmlMappingWrapper(MappingCacheStore mappingCacheStore) {
+		super(mappingCacheStore);
 	}
-	public XmlMappingWrapper(List<?> paths, MappingStore mappingStore) throws Exception {
-		super(mappingStore);
+	public XmlMappingWrapper(List<?> paths, MappingCacheStore mappingCacheStore) throws Exception {
+		super(mappingCacheStore);
 		
 		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
 		scanMappingFiles(fileScanner, paths);
@@ -31,7 +31,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 		List<String> list = fileScanner.getResult();
 		if(list.size() > 0) {
 			try {
-				initialMappingStoreSize(list.size());
+				initialMappingCacheStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newInstance_initial(mappingConfigFilePath));
 				}
@@ -41,7 +41,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 				fileScanner.destroy();
 			}
 		}else {
-			initialMappingStoreSize(0);
+			initialMappingCacheStoreSize(0);
 		}
 	}
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {

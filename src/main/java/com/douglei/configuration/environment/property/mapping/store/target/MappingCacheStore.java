@@ -4,10 +4,10 @@ import com.douglei.configuration.SelfProcessing;
 import com.douglei.configuration.environment.mapping.Mapping;
 
 /**
- * 映射信息存储的目标位置
+ * 映射信息缓存存储的目标位置
  * @author DougLei
  */
-public interface MappingStore extends SelfProcessing{
+public interface MappingCacheStore extends SelfProcessing{
 	
 	/**
 	 * 初始化存储空间大小

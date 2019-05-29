@@ -140,10 +140,10 @@ public class XmlEnvironment implements Environment{
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), environmentProperty.getMappingStore());
+			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), environmentProperty.getMappingCacheStore());
 			DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(dataSourceWrapper, RunMappingConfigurationContext.getTableCreators());
 		}else {
-			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingStore());
+			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingCacheStore());
 		}
 		logger.debug("处理<environment>下的<mappings>元素结束");
 	}

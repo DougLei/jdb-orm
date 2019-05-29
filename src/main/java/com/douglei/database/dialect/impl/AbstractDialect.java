@@ -10,7 +10,7 @@ import com.douglei.database.dialect.table.TableHandler;
  * @author DougLei
  */
 public abstract class AbstractDialect implements Dialect{
-	protected TableHandler tableHandler;
+	protected static final TableHandler tableHandler = new TableHandler();
 	protected SqlHandler sqlHandler;
 	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
 	
