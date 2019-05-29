@@ -66,7 +66,12 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	public String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns);
+	public String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
+		if(columns != null && columns.size() > 0) {
+			
+		}
+		return null;
+	}
 	
 	/**
 	 * 获取drop column的sql语句
@@ -74,7 +79,12 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	public abstract String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns);
+	public String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns) {
+		if(columns != null && columns.size() > 0) {
+			
+		}
+		return null;
+	}
 	
 	/**
 	 * 获取rename column的sql语句
@@ -90,7 +100,12 @@ public abstract class TableSqlStatementHandler {
 	 * @param constraints
 	 * @return
 	 */
-	public abstract String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints);
+	public String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints) {
+		if(constraints != null && constraints.size() > 0) {
+			
+		}
+		return null;
+	}
 	
 	/**
 	 * 获取drop constraint的sql语句
@@ -120,7 +135,12 @@ public abstract class TableSqlStatementHandler {
 	 * @param indexes
 	 * @return
 	 */
-	public abstract String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes);
+	public String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes) {
+		if(indexes != null && indexes.size() > 0) {
+			
+		}
+		return null;
+	}
 	
 	/**
 	 * 获取drop index的sql语句
@@ -128,5 +148,10 @@ public abstract class TableSqlStatementHandler {
 	 * @param indexes
 	 * @return
 	 */
-	public abstract String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes);
+	public String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes) {
+		if(indexes != null && indexes.size() > 0) {
+			
+		}
+		return null;
+	}
 }
