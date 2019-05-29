@@ -1,8 +1,10 @@
 package com.douglei.database.dialect.db.table;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ColumnIndex;
 import com.douglei.database.metadata.table.column.extend.ConstraintType;
@@ -24,28 +26,26 @@ public abstract class TableSqlStatementHandler {
 	
 	/**
 	 * 获取create table的sql语句
-	 * @param tableName
-	 * @param columns
+	 * @param table
 	 * @return
 	 */
-	public String tableCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
+	public String tableCreateSqlStatement(TableMetadata table) {
 		StringBuilder sql = new StringBuilder(1000);
-		sql.append("create table ").append(tableName);
+		sql.append("create table ").append(table.getName());
 		sql.append("(");
 		
-		int lastIndex = columns.size()-1;
-		ColumnMetadata column = null;
-		for (int i=0;i<columns.size();i++) {
-			column = columns.get(i);
-			
+		Collection<ColumnMetadata> columns = table.getColumnMetadatas();
+		int index=0, lastIndex = columns.size()-1;
+		for (ColumnMetadata column : columns) {
 			sql.append(column.getName()).append(" ");
 			sql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 			if(!column.isNullabled()) {
 				sql.append("not null");
 			}
-			if(i<lastIndex) {
+			if(index<lastIndex) {
 				sql.append(",");
 			}
+			index++;
 		}
 		sql.append(")");
 		return sql.toString();
@@ -66,28 +66,34 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	public String[] columnCreateSqlStatement(String tableName, List<ColumnMetadata> columns) {
+	public String[] columnCreateSqlStatement(String tableName, Collection<ColumnMetadata> columns) {
 		if(columns != null && columns.size() > 0) {
-			int size = columns.size();
+			int index =0, size = columns.size();
 			String[] createSqlStatement = new String[size];
 			
-			ColumnMetadata column = null;
-			StringBuilder tmpSql = new StringBuilder(100);
-			for(int i=0;i<size;i++) {
-				column = columns.get(i);
-				
-				tmpSql.append("alter table ").append(tableName).append(" add column ").append(column.getName()).append(" ");
-				tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
-				if(!column.isNullabled()) {
-					tmpSql.append("not null");
-				}
-				
-				createSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
+			for (ColumnMetadata column : columns) {
+				createSqlStatement[index] = columnCreateSqlStatement(tableName, column);
+				index++;
 			}
 			return createSqlStatement;
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取create column的sql语句
+	 * @param tableName
+	 * @param column
+	 * @return
+	 */
+	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
+		tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		if(!column.isNullabled()) {
+			tmpSql.append("not null");
+		}
+		return tmpSql.toString();
 	}
 	
 	/**
@@ -96,20 +102,31 @@ public abstract class TableSqlStatementHandler {
 	 * @param columns
 	 * @return
 	 */
-	public String[] columnDropSqlStatement(String tableName, List<ColumnMetadata> columns) {
+	public String[] columnDropSqlStatement(String tableName, Collection<ColumnMetadata> columns) {
 		if(columns != null && columns.size() > 0) {
-			int size = columns.size();
+			int index=0, size = columns.size();
 			String[] dropSqlStatement = new String[size];
 			
-			StringBuilder tmpSql = new StringBuilder(100);
-			for(int i=0;i<size;i++) {
-				tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columns.get(i).getName());
-				dropSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
+			
+			for (ColumnMetadata column : columns) {
+				dropSqlStatement[index] = columnDropSqlStatement(tableName, column.getName());
+				index++;
 			}
 			return dropSqlStatement;
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取drop column的sql语句
+	 * @param tableName
+	 * @param columnName
+	 * @return
+	 */
+	public String columnDropSqlStatement(String tableName, String columnName) {
+		StringBuilder tmpSql = new StringBuilder(50);
+		tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columnName);
+		return tmpSql.toString();
 	}
 	
 	/**
