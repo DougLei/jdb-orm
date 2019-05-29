@@ -1,9 +1,11 @@
 package com.douglei.database.dialect.table;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
-
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.utils.CloseUtil;
 
 /**
  * 
@@ -17,10 +19,10 @@ public abstract class TableHandler {
 	 */
 	public TableCreator getTableCreator(TableMetadata tableMetadata) {
 		switch(tableMetadata.getCreateMode()) {
-			case CREATE:
-				return new TableCreator();// TODO
-			default:
+			case NONE:
 				return null;
+			default:
+				return new TableCreator(tableMetadata);
 		}
 	}
 	
@@ -33,6 +35,21 @@ public abstract class TableHandler {
 		if(tableCreators == null) {
 			return;
 		}
-		
+		Connection connection = null;
+		Statement statement = null;
+		try {
+			connection = dataSourceWrapper.getConnection(false).getConnection();
+			
+			
+			
+			
+		}catch (TableCreateException e) {
+			// TODO 回滚
+			
+			
+			
+		} finally {
+			CloseUtil.closeDBConn(statement, connection);
+		}
 	}
 }

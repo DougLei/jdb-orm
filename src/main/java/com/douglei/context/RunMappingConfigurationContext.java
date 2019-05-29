@@ -43,6 +43,9 @@ public class RunMappingConfigurationContext {
 	 * @param tableCreator
 	 */
 	public static void addTableCreator(TableCreator tableCreator) {
+		if(tableCreator == null) {
+			return;
+		}
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
 		if(runMappingConfiguration.tableCreators == null) {
 			runMappingConfiguration.tableCreators = new ArrayList<TableCreator>(10);

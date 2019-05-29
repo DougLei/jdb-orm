@@ -36,7 +36,7 @@ public class ConnectionWrapper {
 			processIsBeginTransaction();
 			processTransactionIsolationLevel();
 		} catch (SQLException e) {
-			throw new RuntimeException("从数据源["+dataSource.getClass()+"]获取Connection时出现异常", e);
+			throw new RuntimeException("从数据源["+dataSource.getClass().getName()+"]获取Connection时出现异常", e);
 		}
 	}
 	

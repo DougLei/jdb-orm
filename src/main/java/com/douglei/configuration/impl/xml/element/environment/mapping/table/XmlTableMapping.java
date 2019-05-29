@@ -22,7 +22,6 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ConstraintType;
@@ -50,9 +49,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			addConstraint(tableElement.element("constraints"));
 			// TODO 处理索引
 			
-			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
-				RunMappingConfigurationContext.addTableCreator(DBRunEnvironmentContext.getDialect().getTableHandler().getTableCreator(tableMetadata));
-			}
+			RunMappingConfigurationContext.addTableCreator(DBRunEnvironmentContext.getDialect().getTableHandler().getTableCreator(tableMetadata));
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}

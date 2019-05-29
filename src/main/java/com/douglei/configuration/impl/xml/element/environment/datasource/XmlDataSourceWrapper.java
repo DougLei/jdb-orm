@@ -66,6 +66,11 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	}
 	
 	@Override
+	public ConnectionWrapper getConnection(boolean beginTransaction) {
+		return getConnection(beginTransaction, null);
+	}
+	
+	@Override
 	public ConnectionWrapper getConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		return new ConnectionWrapper(dataSource, beginTransaction, transactionIsolationLevel);
 	}

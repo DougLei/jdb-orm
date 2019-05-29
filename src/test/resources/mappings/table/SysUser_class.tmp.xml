@@ -9,10 +9,10 @@
 		</columns>
 		
 		<constraints>
-			<constraint type="unique"><!-- primaryKey, defaultValue, unique -->
+			<constraint type="unique"><!-- primary_key, unique -->
 				<column-name value="age" />
 				<column-name value="sex" />
-			</constraint>		
+			</constraint>
 		</constraints>
 		
 		<indexes>

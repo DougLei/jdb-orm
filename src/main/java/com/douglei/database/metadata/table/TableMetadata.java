@@ -131,6 +131,9 @@ public class TableMetadata implements Metadata{
 	public List<ColumnIndex> getIndexes() {
 		return indexes;
 	}
+	public Collection<ColumnMetadata> getColumnMetadatas(){
+		return columns.values();
+	}
 	public Set<String> getColumnMetadataCodes() {
 		return columns.keySet();
 	}
