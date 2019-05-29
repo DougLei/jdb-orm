@@ -69,7 +69,6 @@ public abstract class TableSqlStatementHandler {
 		if(columns != null && columns.size() > 0) {
 			int index =0, size = columns.size();
 			String[] createSqlStatement = new String[size];
-			
 			for (ColumnMetadata column : columns) {
 				createSqlStatement[index] = columnCreateSqlStatement(tableName, column);
 				index++;
@@ -105,8 +104,6 @@ public abstract class TableSqlStatementHandler {
 		if(columns != null && columns.size() > 0) {
 			int index=0, size = columns.size();
 			String[] dropSqlStatement = new String[size];
-			
-			
 			for (ColumnMetadata column : columns) {
 				dropSqlStatement[index] = columnDropSqlStatement(tableName, column.getName());
 				index++;
@@ -137,7 +134,6 @@ public abstract class TableSqlStatementHandler {
 		if(constraints != null && constraints.size() > 0) {
 			int size = constraints.size();
 			String[] createSqlStatement = new String[size];
-			
 			for(int i=0;i<size;i++) {
 				createSqlStatement[i] = constraintCreateSqlStatement(constraints.get(i));
 			}
@@ -179,7 +175,6 @@ public abstract class TableSqlStatementHandler {
 		if(constraints != null && constraints.size() > 0) {
 			int size = constraints.size();
 			String[] dropSqlStatement = new String[size];
-			
 			for(int i=0;i<size;i++) {
 				dropSqlStatement[i] = constraintDropSqlStatement(constraints.get(i));
 			}
