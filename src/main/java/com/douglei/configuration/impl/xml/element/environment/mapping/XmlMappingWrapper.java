@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
+import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
 import com.douglei.instances.scanner.FileScanner;
 
 /**

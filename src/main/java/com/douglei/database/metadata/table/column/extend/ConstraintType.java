@@ -10,23 +10,28 @@ public enum ConstraintType {
 	/**
 	 * 主键约束
 	 */
-	PRIMARY_KEY("PK"),
+	PRIMARY_KEY("PK", "PRIMARY KEY"),
 	/**
 	 * 唯一值约束
 	 */
-	UNIQUE("UQ"),
+	UNIQUE("UQ", "UNIQUE"),
 	/**
 	 * 默认值约束
 	 */
-	DEFAULT_VALUE("DF");
+	DEFAULT_VALUE("DF", "DEFAULT");
 	
 	private String constraintPrefix;
-	private ConstraintType(String constraintPrefix) {
+	private String sqlStatement;
+	private ConstraintType(String constraintPrefix, String sqlStatement) {
 		this.constraintPrefix = constraintPrefix;
+		this.sqlStatement = sqlStatement;
 	}
 	
 	public String getConstraintPrefix() {
 		return constraintPrefix;
+	}
+	public String getSqlStatement() {
+		return sqlStatement;
 	}
 
 	public static ConstraintType toValue(String type) {

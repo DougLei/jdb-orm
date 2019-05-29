@@ -5,7 +5,7 @@ import java.util.List;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ColumnIndex;
-import com.douglei.database.metadata.table.column.extend.ColumnProperty;
+import com.douglei.database.metadata.table.column.extend.ConstraintType;
 
 /**
  * 表sql语句处理器
@@ -35,14 +35,12 @@ public abstract class TableSqlStatementHandler {
 		
 		int lastIndex = columns.size()-1;
 		ColumnMetadata column = null;
-		ColumnProperty cp = null;
 		for (int i=0;i<columns.size();i++) {
 			column = columns.get(i);
-			cp = column.getColumnProperty();
 			
-			sql.append(cp.getName()).append(" ");
-			sql.append(column.getDataType().defaultDBDataType().getType4SqlStatement(cp.getLength(), cp.getPrecision())).append(" ");
-			if(!cp.isNullabled()) {
+			sql.append(column.getName()).append(" ");
+			sql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+			if(!column.isNullabled()) {
 				sql.append("not null");
 			}
 			if(i<lastIndex) {
@@ -74,15 +72,13 @@ public abstract class TableSqlStatementHandler {
 			String[] createSqlStatement = new String[size];
 			
 			ColumnMetadata column = null;
-			ColumnProperty cp = null;
 			StringBuilder tmpSql = new StringBuilder(100);
 			for(int i=0;i<size;i++) {
 				column = columns.get(i);
-				cp = column.getColumnProperty();
 				
-				tmpSql.append("alter table ").append(tableName).append(" add column ").append(column.getColumnProperty().getName()).append(" ");
-				tmpSql.append(column.getDataType().defaultDBDataType().getType4SqlStatement(cp.getLength(), cp.getPrecision())).append(" ");
-				if(!cp.isNullabled()) {
+				tmpSql.append("alter table ").append(tableName).append(" add column ").append(column.getName()).append(" ");
+				tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+				if(!column.isNullabled()) {
 					tmpSql.append("not null");
 				}
 				
@@ -107,7 +103,7 @@ public abstract class TableSqlStatementHandler {
 			
 			StringBuilder tmpSql = new StringBuilder(100);
 			for(int i=0;i<size;i++) {
-				tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columns.get(i).getColumnProperty().getName());
+				tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columns.get(i).getName());
 				dropSqlStatement[i] = tmpSql.toString();
 				tmpSql.setLength(0);
 			}
@@ -118,18 +114,24 @@ public abstract class TableSqlStatementHandler {
 	
 	/**
 	 * 获取create constraint的sql语句
-	 * @param tableName
 	 * @param constraints
 	 * @return
 	 */
-	public String[] constraintCreateSqlStatement(String tableName, List<ColumnConstraint> constraints) {
+	public String[] constraintCreateSqlStatement(List<ColumnConstraint> constraints) {
 		if(constraints != null && constraints.size() > 0) {
 			int size = constraints.size();
 			String[] createSqlStatement = new String[size];
 			
 			StringBuilder tmpSql = new StringBuilder(100);
+			ColumnConstraint cc = null;
 			for(int i=0;i<size;i++) {
-				// TODO
+				cc = constraints.get(i);
+				if(cc.getConstraintType() == ConstraintType.DEFAULT_VALUE) {
+					setDefaultValueConstraintCreateSqlStatement2StringBuilderParameter(cc, tmpSql);
+				}else {
+					tmpSql.append("alter table ").append(cc.getTableName()).append(" add constraint ").append(cc.getName()).append(" ");
+					tmpSql.append(cc.getConstraintType().getSqlStatement()).append("(").append(cc.getColumnName()).append(")");
+				}
 				createSqlStatement[i] = tmpSql.toString();
 				tmpSql.setLength(0);
 			}
@@ -137,21 +139,32 @@ public abstract class TableSqlStatementHandler {
 		}
 		return null;
 	}
-	
+	/**
+	 * <pre>
+	 * 	设置create 默认值constraint的sql语句到StringBuilder参数中(即将结果append到参数sql中)
+	 * 	各个数据库不一致, 需要各自实现
+	 * </pre>
+	 * @param constraint
+	 * @param sql
+	 */
+	protected abstract void setDefaultValueConstraintCreateSqlStatement2StringBuilderParameter(ColumnConstraint constraint, StringBuilder sql);
+
 	/**
 	 * 获取drop constraint的sql语句
-	 * @param tableName
 	 * @param constraints
 	 * @return
 	 */
-	public String[] constraintDropSqlStatement(String tableName, List<ColumnConstraint> constraints) {
+	public String[] constraintDropSqlStatement(List<ColumnConstraint> constraints) {
 		if(constraints != null && constraints.size() > 0) {
 			int size = constraints.size();
 			String[] dropSqlStatement = new String[size];
 			
 			StringBuilder tmpSql = new StringBuilder(100);
+			ColumnConstraint cc = null;
 			for(int i=0;i<size;i++) {
-				tmpSql.append("alter table ").append(tableName).append(" drop constraint ").append(constraints.get(i).getName());
+				cc = constraints.get(i);
+				
+				tmpSql.append("alter table ").append(cc.getTableName()).append(" drop constraint ").append(cc.getName());
 				dropSqlStatement[i] = tmpSql.toString();
 				tmpSql.setLength(0);
 			}
@@ -162,11 +175,10 @@ public abstract class TableSqlStatementHandler {
 	
 	/**
 	 * 获取create index的sql语句
-	 * @param tableName
 	 * @param indexes
 	 * @return
 	 */
-	public String[] indexCreateSqlStatement(String tableName, List<ColumnIndex> indexes) {
+	public String[] indexCreateSqlStatement(List<ColumnIndex> indexes) {
 		if(indexes != null && indexes.size() > 0) {
 			int size = indexes.size();
 			String[] createSqlStatement = new String[size];
@@ -184,11 +196,10 @@ public abstract class TableSqlStatementHandler {
 	
 	/**
 	 * 获取drop index的sql语句
-	 * @param tableName
 	 * @param indexes
 	 * @return
 	 */
-	public String[] indexDropSqlStatement(String tableName, List<ColumnIndex> indexes) {
+	public String[] indexDropSqlStatement(List<ColumnIndex> indexes) {
 		if(indexes != null && indexes.size() > 0) {
 			int size = indexes.size();
 			String[] dropSqlStatement = new String[size];

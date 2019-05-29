@@ -10,6 +10,8 @@ import com.douglei.database.metadata.sql.SqlContentType;
  * @author DougLei
  */
 class RunMappingConfiguration {
+	boolean existsPrimaryKey;// 记录当前表是否已经配置主键
 	List<TableCreator> tableCreators;// 记录create table对象集合
+	
 	SqlContentType sqlContentType;// 记录每个sql content的type
 }

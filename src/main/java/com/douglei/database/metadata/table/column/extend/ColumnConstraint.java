@@ -6,8 +6,10 @@ import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.TableMetadata;
 
 /**
  * 列约束
@@ -32,31 +34,45 @@ public class ColumnConstraint {
 		
 		this.tableName = tableName;
 		this.columnName = columnName;
-		this.defaultValue = defaultValue;
 		
+		setDefaultValue(dataType, defaultValue);
 		setConstraintName(constraintType.getConstraintPrefix() + "_" + tableName + "_" + columnName);
 	}
-
-	public ColumnConstraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
+	private void setDefaultValue(ClassDataTypeHandler dataType, String defaultValue) {
+		if(defaultValue != null) {
+			if(dataType instanceof AbstractStringDataTypeHandler) {
+				defaultValue = "'"+defaultValue+"'";
+			}
+			this.defaultValue = defaultValue;
+		}
+	}
+	
+	// 联合约束
+	public ColumnConstraint(ConstraintType constraintType, TableMetadata tableMetadata, List<ColumnMetadata> columns) {
 		for (ColumnMetadata column : columns) {
 			validateDataType(column.getDataType());
 		}
 		this.constraintType = constraintType;
-		this.tableName = tableName;
+		this.tableName = tableMetadata.getName();
 		
-		int length = columns.size();
-		
-		StringBuilder columnName = new StringBuilder(length*20);
-		StringBuilder name = new StringBuilder(length*30);
+		StringBuilder columnName = new StringBuilder(columns.size()*20);
+		StringBuilder name = new StringBuilder(columns.size()*30);
 		name.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
 		
+		ColumnMetadata column = null;
 		String cname = null;
-		for(int i=0; i<length; i++) {
-			cname = columns.get(i).getColumnProperty().getName();
+		for(int i=0; i<columns.size(); i++) {
+			column = columns.get(i);
+			if(constraintType == ConstraintType.PRIMARY_KEY) {
+				column.setPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空
+				tableMetadata.addPrimaryKeyColumnMetadata(column, columns.size());
+			}
+			
+			cname = column.getName();
 			columnName.append(cname);
 			name.append(cname);
 			
-			if(i < length-1) {
+			if(i < columns.size()-1) {
 				columnName.append(",");
 				name.append("_");
 			}

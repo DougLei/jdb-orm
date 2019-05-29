@@ -70,7 +70,7 @@ public abstract class DBDataType {
 	 * @param precision
 	 * @return
 	 */
-	public String getType4SqlStatement(short length, short precision) {
+	public String getDBType4SqlStatement(short length, short precision) {
 		if(length == NO_LIMIT) {
 			return getTypeName();
 		}

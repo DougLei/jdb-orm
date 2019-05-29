@@ -1,4 +1,4 @@
-package com.douglei.configuration.environment.property.mapping.store.target;
+package com.douglei.configuration.environment.property.mapping.cache.store;
 
 import com.douglei.configuration.SelfProcessing;
 import com.douglei.configuration.environment.mapping.Mapping;

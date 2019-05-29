@@ -25,10 +25,10 @@ public class Varchar extends DBDataType{
 	}
 	
 	@Override
-	public String getType4SqlStatement(short length, short precision) {
+	public String getDBType4SqlStatement(short length, short precision) {
 		if(length == Short.MAX_VALUE) {
 			return getTypeName() + "(max)";
 		}
-		return super.getType4SqlStatement(length, precision);
+		return super.getDBType4SqlStatement(length, precision);
 	}
 }

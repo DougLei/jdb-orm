@@ -22,20 +22,20 @@ public class RunMappingConfigurationContext {
 	}
 	
 	/**
-	 * 记录当前解析的sql content的type
-	 * @param sqlContentType
+	 * 记录当前操作的表, 是否已经配置主键
+	 * @param existsPrimaryKey
 	 */
-	public static void setCurrentSqlContentType(SqlContentType sqlContentType) {
+	public static void setCurrentTableExistsPrimaryKey(boolean existsPrimaryKey) {
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		runMappingConfiguration.sqlContentType = sqlContentType;
+		runMappingConfiguration.existsPrimaryKey = existsPrimaryKey;
 	}
 	
 	/**
-	 * 获取当前解析的sql content的type
-	 * @return
+	 * 获取当前操作的表, 是否已经配置主键
+	 * @param existsPrimaryKey
 	 */
-	public static SqlContentType getCurrentSqlContentType() {
-		return getRunMappingConfiguration().sqlContentType;
+	public static boolean currentTableExistsPrimaryKey() {
+		return getRunMappingConfiguration().existsPrimaryKey;
 	}
 	
 	/**
@@ -59,5 +59,22 @@ public class RunMappingConfigurationContext {
 	 */
 	public static List<TableCreator> getTableCreators() {
 		return getRunMappingConfiguration().tableCreators;
+	}
+	
+	/**
+	 * 记录当前解析的sql content的type
+	 * @param sqlContentType
+	 */
+	public static void setCurrentSqlContentType(SqlContentType sqlContentType) {
+		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+		runMappingConfiguration.sqlContentType = sqlContentType;
+	}
+	
+	/**
+	 * 获取当前解析的sql content的type
+	 * @return
+	 */
+	public static SqlContentType getCurrentSqlContentType() {
+		return getRunMappingConfiguration().sqlContentType;
 	}
 }

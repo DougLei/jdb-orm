@@ -11,7 +11,6 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
 import com.douglei.database.metadata.table.column.extend.ColumnIndex;
-import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 import com.douglei.database.metadata.table.column.extend.ConstraintType;
 import com.douglei.utils.StringUtil;
 
@@ -52,32 +51,32 @@ public class TableMetadata implements Metadata{
 			columns = new HashMap<String, ColumnMetadata>(16);
 		}else {
 			if(columns.containsKey(columnMetadata.getCode())) {
-				throw new RepeatColumnException(columnMetadata.getColumnProperty().getName()+" 列重复");
+				throw new RepeatColumnException(columnMetadata.getName()+" 列重复");
 			}
 		}
 		columns.put(columnMetadata.getCode(), columnMetadata);
-		addPrimaryKeyColumnMetadata(columnMetadata);
+		addPrimaryKeyColumnMetadata(columnMetadata, 1);
 		addConstraint(columnMetadata);
 	}
-	private void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata) {
-		if(columnMetadata.getColumnProperty().isPrimaryKey()) {
-			if(primaryKeyColumns == null) {
-				primaryKeyColumns = new HashMap<String, ColumnMetadata>(3);
+	private void addConstraint(ColumnMetadata columnMetadata) {
+		if(columnMetadata.isPrimaryKey()) {
+			addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.PRIMARY_KEY, name, columnMetadata.getName()));
+		}else {
+			if(columnMetadata.isUnique()) {
+				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.UNIQUE, name, columnMetadata.getName()));
 			}
-			primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
+			if(columnMetadata.getDefaultValue() != null) {
+				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.DEFAULT_VALUE, name, columnMetadata.getName(), columnMetadata.getDefaultValue()));
+			}
 		}
 	}
-	private void addConstraint(ColumnMetadata columnMetadata) {
-		ColumnProperty columnProperty = columnMetadata.getColumnProperty();
-		if(columnProperty.isPrimaryKey()) {
-			addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.PRIMARY_KEY, name, columnProperty.getName()));
-		}else {
-			if(columnProperty.isUnique()) {
-				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.UNIQUE, name, columnProperty.getName()));
+	
+	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata, int initialPrimaryKeyColumnsSize) {
+		if(columnMetadata.isPrimaryKey()) {
+			if(primaryKeyColumns == null) {
+				primaryKeyColumns = new HashMap<String, ColumnMetadata>(initialPrimaryKeyColumnsSize);
 			}
-			if(columnProperty.getDefaultValue() != null) {
-				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.DEFAULT_VALUE, name, columnProperty.getName(), columnProperty.getDefaultValue()));
-			}
+			primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
 		}
 	}
 	
@@ -160,7 +159,7 @@ public class TableMetadata implements Metadata{
 	public ColumnMetadata getColumnMetadataByColumnName(String columnName) {
 		Collection<ColumnMetadata> cs = columns.values();
 		for (ColumnMetadata column : cs) {
-			if(column.getColumnProperty().getName().equals(columnName)) {
+			if(column.getName().equals(columnName)) {
 				return column;
 			}
 		}

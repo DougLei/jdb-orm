@@ -7,10 +7,9 @@ import java.util.Map;
 
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStoreMap;
+import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
+import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStoreMap;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
-import com.douglei.configuration.impl.xml.element.environment.ReflectInvokeMethodException;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
 import com.douglei.database.metadata.table.CreateMode;

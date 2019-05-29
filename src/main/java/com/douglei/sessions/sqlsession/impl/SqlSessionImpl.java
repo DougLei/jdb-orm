@@ -312,7 +312,7 @@ public class SqlSessionImpl implements SqlSession{
 		Set<String> codes = tableMetadata.getColumnMetadataCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnMetadata(code);
-			targetMap.put(column.getProperty(), map.get(column.getColumnProperty().getName()));
+			targetMap.put(column.getProperty(), map.get(column.getName()));
 		}
 		return targetMap;
 	}

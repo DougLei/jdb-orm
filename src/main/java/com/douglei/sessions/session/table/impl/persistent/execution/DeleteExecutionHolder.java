@@ -34,7 +34,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
 			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
-			deleteSql.append(primaryKeyColumnMetadata.getColumnProperty().getName()).append("=?");
+			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), primaryKeyColumnMetadata.getDataType()));
 			
 			if(index < size) {

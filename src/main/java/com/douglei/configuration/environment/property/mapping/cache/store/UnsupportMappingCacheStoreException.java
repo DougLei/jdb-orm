@@ -1,4 +1,4 @@
-package com.douglei.configuration.environment.property.mapping.store.target;
+package com.douglei.configuration.environment.property.mapping.cache.store;
 
 /**
  * 不支持的MappingCacheStore异常

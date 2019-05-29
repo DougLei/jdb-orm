@@ -12,7 +12,6 @@ import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.column.extend.ColumnProperty;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -35,23 +34,22 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		
 		ClassDataTypeHandler dataType = getDataType(element.attributeValue("dataType"));
-		ColumnMetadata column = new ColumnMetadata(element.attributeValue("property"), dataType, getColumnProperty(name, dataType, element));
-		return column;
-	}
-	
-	private ColumnProperty getColumnProperty(String columnName, ClassDataTypeHandler dataType, Element element) {
 		DBDataType dbDataType = dataType.defaultDBDataType();
 		
 		String value = element.attributeValue("length");
 		short length = ValidationUtil.isShort(value)?Short.parseShort(value):0;
 		value = element.attributeValue("precision");
 		short precision = ValidationUtil.isShort(value)?Short.parseShort(value):0;
+		value = element.attributeValue("nullabled");
+		boolean nullabled = ValidationUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
 		
-		return new ColumnProperty(columnName, dbDataType.fixInputLength(length), dbDataType.fixInputPrecision(length, precision), Boolean.parseBoolean(element.attributeValue("nullabled")),
-				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
-				Boolean.parseBoolean(element.attributeValue("validateData")));
+		return new ColumnMetadata(element.attributeValue("property"), dataType, 
+				name, dbDataType.fixInputLength(length), dbDataType.fixInputPrecision(length, precision), nullabled,
+				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"),
+				Boolean.parseBoolean(element.attributeValue("validateData"))
+				);
 	}
-
+	
 	private ClassDataTypeHandler getDataType(String dataType) throws MetadataValidateException {
 		if(StringUtil.isEmpty(dataType)) {
 			if(logger.isDebugEnabled()) {

@@ -1,4 +1,4 @@
-package com.douglei.configuration.environment.property.mapping.store.target.impl;
+package com.douglei.configuration.environment.property.mapping.cache.store.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.Mapping;
 import com.douglei.configuration.environment.mapping.RepeatMappingCodeException;
-import com.douglei.configuration.environment.property.mapping.store.target.MappingCacheStore;
+import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
 
 /**
  * 使用当前系统的内存空间存储映射信息
