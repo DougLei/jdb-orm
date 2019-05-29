@@ -87,7 +87,7 @@ public abstract class TableSqlStatementHandler {
 	 * @return
 	 */
 	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
-		StringBuilder tmpSql = new StringBuilder(100);
+		StringBuilder tmpSql = new StringBuilder(80);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullabled()) {
@@ -124,7 +124,7 @@ public abstract class TableSqlStatementHandler {
 	 * @return
 	 */
 	public String columnDropSqlStatement(String tableName, String columnName) {
-		StringBuilder tmpSql = new StringBuilder(50);
+		StringBuilder tmpSql = new StringBuilder(80);
 		tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columnName);
 		return tmpSql.toString();
 	}
@@ -139,33 +139,38 @@ public abstract class TableSqlStatementHandler {
 			int size = constraints.size();
 			String[] createSqlStatement = new String[size];
 			
-			StringBuilder tmpSql = new StringBuilder(100);
-			ColumnConstraint cc = null;
 			for(int i=0;i<size;i++) {
-				cc = constraints.get(i);
-				if(cc.getConstraintType() == ConstraintType.DEFAULT_VALUE) {
-					setDefaultValueConstraintCreateSqlStatement2StringBuilderParameter(cc, tmpSql);
-				}else {
-					tmpSql.append("alter table ").append(cc.getTableName()).append(" add constraint ").append(cc.getName()).append(" ");
-					tmpSql.append(cc.getConstraintType().getSqlStatement()).append("(").append(cc.getColumnName()).append(")");
-				}
-				createSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
+				createSqlStatement[i] = constraintCreateSqlStatement(constraints.get(i));
 			}
 			return createSqlStatement;
 		}
 		return null;
 	}
+	
 	/**
-	 * <pre>
-	 * 	设置create 默认值constraint的sql语句到StringBuilder参数中(即将结果append到参数sql中)
-	 * 	各个数据库不一致, 需要各自实现
-	 * </pre>
+	 * 获取create constraint的sql语句
 	 * @param constraint
-	 * @param sql
+	 * @return
 	 */
-	protected abstract void setDefaultValueConstraintCreateSqlStatement2StringBuilderParameter(ColumnConstraint constraint, StringBuilder sql);
+	public String constraintCreateSqlStatement(ColumnConstraint constraint) {
+		switch(constraint.getConstraintType()) {
+			case DEFAULT_VALUE:
+				return defaultValueConstraintCreateSqlStatement(constraint);
+			default:
+				return pk_uq_constraintCreateSqlStatement(constraint);
+		}
+	}
+	/**默认值约束*/
+	protected abstract String defaultValueConstraintCreateSqlStatement(ColumnConstraint constraint);
+	/**主键约束、唯一约束*/
+	protected String pk_uq_constraintCreateSqlStatement(ColumnConstraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(80);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
+		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getColumnName()).append(")");
+		return tmpSql.toString();
+	}
 
+	
 	/**
 	 * 获取drop constraint的sql语句
 	 * @param constraints
@@ -190,6 +195,44 @@ public abstract class TableSqlStatementHandler {
 		return null;
 	}
 	
+	/**
+	 * 获取drop constraint的sql语句
+	 * @param constraintType
+	 * @param constraintName
+	 * @return
+	 */
+	public String constraintDropSqlStatement(ConstraintType constraintType, String constraintName) {
+		switch(constraintType) {
+			case PRIMARY_KEY:
+				return primaryKeyConstraintDropSqlStatement(constraintName);
+			case UNIQUE:
+				return uniqueConstraintDropSqlStatement(constraintName);
+			case DEFAULT_VALUE:
+				return defaultValueConstraintDropSqlStatement(constraintName);
+		}
+		throw new IllegalArgumentException("没有处理:" + constraintType);
+	}
+	/**主键约束*/
+	protected abstract String primaryKeyConstraintDropSqlStatement(String constraintName);
+	/**唯一约束*/
+	protected abstract String uniqueConstraintDropSqlStatement(String constraintName);
+	/**默认值约束*/
+	protected abstract String defaultValueConstraintDropSqlStatement(String constraintName);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
 	/**
 	 * 获取create index的sql语句
 	 * @param indexes

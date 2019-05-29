@@ -16,9 +16,11 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	private static final String tableExistsQuerySql = "select count(1) from sysobjects where id = object_id(?) and type = 'U'";
 	
 	@Override
-	protected void setDefaultValueConstraintCreateSqlStatement2StringBuilderParameter(ColumnConstraint constraint, StringBuilder sql) {
-		sql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName());
-		sql.append(" default ").append(constraint.getDefaultValue());
-		sql.append(" for ").append(constraint.getColumnName());
+	protected String defaultValueConstraintCreateSqlStatement(ColumnConstraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName());
+		tmpSql.append(" default ").append(constraint.getDefaultValue());
+		tmpSql.append(" for ").append(constraint.getColumnName());
+		return tmpSql.toString();
 	}
 }
