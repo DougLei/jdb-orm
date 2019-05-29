@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.mysql.table;
+package com.douglei.database.dialect.impl.mysql.db.table;
 
 /**
  * 

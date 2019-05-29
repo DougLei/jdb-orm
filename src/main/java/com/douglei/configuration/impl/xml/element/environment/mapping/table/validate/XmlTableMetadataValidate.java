@@ -25,6 +25,7 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<table>元素的name属性值不能为空");
 		}
+		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		
 		CreateMode createMode = getCreateMode(element.attributeValue("createMode"));
 		return new TableMetadata(name, element.attributeValue("class"), createMode);

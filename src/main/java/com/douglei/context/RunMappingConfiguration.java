@@ -2,7 +2,7 @@ package com.douglei.context;
 
 import java.util.List;
 
-import com.douglei.database.dialect.table.TableCreator;
+import com.douglei.database.dialect.db.table.TableCreator;
 import com.douglei.database.metadata.sql.SqlContentType;
 
 /**

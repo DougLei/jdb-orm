@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.table;
+package com.douglei.database.dialect.db.table;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -49,12 +49,9 @@ public class TableHandler {
 			connection = dataSourceWrapper.getConnection(false).getConnection();
 			statement = connection.createStatement();
 			
-			for (TableCreator tableCreator : tableCreators) {
-				
-				
-				
-				
-			}
+//			for (TableCreator tableCreator : tableCreators) {
+//				
+//			}
 		} catch (Exception e) {
 			logger.error("create table时出现的异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			// TODO 准备回滚

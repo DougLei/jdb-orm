@@ -2,6 +2,7 @@ package com.douglei.database.metadata.table.column.extend;
 
 import java.util.List;
 
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.metadata.table.ColumnMetadata;
 
@@ -29,7 +30,7 @@ public class ColumnConstraint {
 		this.columnName = columnName;
 		this.defaultValue = defaultValue;
 		
-		this.name = constraintType.getConstraintPrefix() + "_" + tableName + "_" + columnName;
+		setConstraintName(constraintType.getConstraintPrefix() + "_" + tableName + "_" + columnName);
 	}
 
 	public ColumnConstraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
@@ -55,7 +56,10 @@ public class ColumnConstraint {
 		}
 		
 		this.columnName = columnName.toString();
-		this.name = name.toString();
+		setConstraintName(name.toString());
+	}
+	private void setConstraintName(String constraintName) {
+		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(constraintName);
 	}
 	
 	public ConstraintType getConstraintType() {

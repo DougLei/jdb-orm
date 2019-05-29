@@ -32,6 +32,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
+		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		
 		ClassDataTypeHandler dataType = getDataType(element.attributeValue("dataType"));
 		ColumnMetadata column = new ColumnMetadata(element.attributeValue("property"), dataType, getColumnProperty(name, dataType, element));

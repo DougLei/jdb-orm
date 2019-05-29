@@ -3,7 +3,9 @@ package com.douglei.database.dialect.impl.oracle;
 import com.douglei.database.dialect.DialectType;
 import com.douglei.database.dialect.impl.AbstractDialect;
 import com.douglei.database.dialect.impl.oracle.datatype.handler.OracleDataTypeHandlerMapping;
-import com.douglei.database.dialect.impl.oracle.sql.SqlHandlerImpl;
+import com.douglei.database.dialect.impl.oracle.db.objectname.DBObjectNameHandlerImpl;
+import com.douglei.database.dialect.impl.oracle.db.procedure.ProcedureHandlerImpl;
+import com.douglei.database.dialect.impl.oracle.db.sql.SqlHandlerImpl;
 
 /**
  * 
@@ -20,11 +22,8 @@ public final class OracleDialect extends AbstractDialect{
 	@Override
 	protected void initialize() {
 		super.sqlHandler = new SqlHandlerImpl();
+		super.dbObjectNameHandler = new DBObjectNameHandlerImpl();
+		super.procedureHandler = new ProcedureHandlerImpl();
 		super.dataTypeHandlerMapping = new OracleDataTypeHandlerMapping();
-	}
-	
-	@Override
-	public boolean procedureSupportDirectlyReturnResultSet() {
-		return false;
 	}
 }

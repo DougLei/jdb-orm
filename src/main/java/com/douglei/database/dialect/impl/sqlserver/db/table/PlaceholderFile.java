@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.impl.oracle.table;
+package com.douglei.database.dialect.impl.sqlserver.db.table;
 
 /**
  * 

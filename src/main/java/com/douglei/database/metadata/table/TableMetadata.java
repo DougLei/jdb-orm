@@ -50,6 +50,10 @@ public class TableMetadata implements Metadata{
 	public void addColumnMetadata(ColumnMetadata columnMetadata) {
 		if(columns == null) {
 			columns = new HashMap<String, ColumnMetadata>(16);
+		}else {
+			if(columns.containsKey(columnMetadata.getCode())) {
+				throw new RepeatColumnException(columnMetadata.getColumnProperty().getName()+" 列重复");
+			}
 		}
 		columns.put(columnMetadata.getCode(), columnMetadata);
 		addPrimaryKeyColumnMetadata(columnMetadata);

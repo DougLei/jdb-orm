@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.sql;
+package com.douglei.database.dialect.db.sql;
 
 /**
  * sql处理器

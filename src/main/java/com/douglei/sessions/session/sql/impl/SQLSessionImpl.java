@@ -256,7 +256,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					callableStatement.execute();
 					
-					boolean procedureSupportDirectlyReturnResultSet = DBRunEnvironmentContext.getDialect().procedureSupportDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = DBRunEnvironmentContext.getDialect().getProcedureHandler().supportDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						

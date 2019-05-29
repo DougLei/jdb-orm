@@ -1,4 +1,4 @@
-package com.douglei.database.dialect.table;
+package com.douglei.database.dialect.db.table;
 
 /**
  * 表创建异常

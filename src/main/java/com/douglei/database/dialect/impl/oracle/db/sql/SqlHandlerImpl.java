@@ -1,9 +1,9 @@
-package com.douglei.database.dialect.impl.sqlserver.sql;
+package com.douglei.database.dialect.impl.oracle.db.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.dialect.sql.SqlHandler;
+import com.douglei.database.dialect.db.sql.SqlHandler;
 
 /**
  * 
@@ -16,13 +16,13 @@ public class SqlHandlerImpl implements SqlHandler{
 	public String installPageQuerySql(int pageNum, int pageSize, String withClause, String sql) {
 		int maxIndex = pageNum*pageSize;
 		
-		StringBuilder pageQuerySql = new StringBuilder(240 + withClause.length() + sql.length());
+		StringBuilder pageQuerySql = new StringBuilder(200 + withClause.length() + sql.length());
 		pageQuerySql.append(withClause);
-		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select top ");
-		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(" row_number() over(order by current_timestamp) as rn, jdb_orm_second_query_.* from (");
+		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select jdb_orm_second_query_.*, rownum rn from (");
 		pageQuerySql.append(sql);
-		pageQuerySql.append(") jdb_orm_second_query_) jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn >");
+		pageQuerySql.append(") jdb_orm_second_query_ where rownum <= ");
+		pageQuerySql.append(maxIndex);
+		pageQuerySql.append(") jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn > ");
 		pageQuerySql.append(maxIndex-pageSize);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());
