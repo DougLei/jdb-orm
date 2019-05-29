@@ -1,10 +1,10 @@
-package com.douglei.database.dialect.db.procedure;
+package com.douglei.database.dialect.db.features;
 
 /**
- * 
+ * 数据库特性持有者
  * @author DougLei
  */
-public interface ProcedureHandler {
+public interface FeaturesHolder {
 	
 	/**
 	 * <pre>
@@ -14,5 +14,7 @@ public interface ProcedureHandler {
 	 * </pre>
 	 * @return
 	 */
-	boolean supportDirectlyReturnResultSet();
+	boolean procedureSupportDirectlyReturnResultSet();
+	
+	// TODO 各个数据库再删除列的时候，会不会对相应的约束进行处理
 }

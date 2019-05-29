@@ -2,8 +2,8 @@ package com.douglei.database.dialect.impl;
 
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
+import com.douglei.database.dialect.db.features.FeaturesHolder;
 import com.douglei.database.dialect.db.objectname.DBObjectNameHandler;
-import com.douglei.database.dialect.db.procedure.ProcedureHandler;
 import com.douglei.database.dialect.db.sql.SqlHandler;
 import com.douglei.database.dialect.db.table.TableHandler;
 
@@ -15,7 +15,7 @@ public abstract class AbstractDialect implements Dialect{
 	protected static final TableHandler tableHandler = new TableHandler();
 	protected SqlHandler sqlHandler;
 	protected DBObjectNameHandler dbObjectNameHandler;
-	protected ProcedureHandler procedureHandler;
+	protected FeaturesHolder procedureHandler;
 	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
 	
 	private boolean isInitialized;
@@ -47,7 +47,7 @@ public abstract class AbstractDialect implements Dialect{
 	}
 
 	@Override
-	public ProcedureHandler getProcedureHandler() {
+	public FeaturesHolder getProcedureHandler() {
 		return procedureHandler;
 	}
 
