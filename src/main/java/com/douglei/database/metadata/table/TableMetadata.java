@@ -60,13 +60,13 @@ public class TableMetadata implements Metadata{
 	}
 	private void addConstraint(ColumnMetadata columnMetadata) {
 		if(columnMetadata.isPrimaryKey()) {
-			addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.PRIMARY_KEY, name, columnMetadata.getName()));
+			addConstraint(new ColumnConstraint(ConstraintType.PRIMARY_KEY, name, columnMetadata));
 		}else {
 			if(columnMetadata.isUnique()) {
-				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.UNIQUE, name, columnMetadata.getName()));
+				addConstraint(new ColumnConstraint(ConstraintType.UNIQUE, name, columnMetadata));
 			}
 			if(columnMetadata.getDefaultValue() != null) {
-				addConstraint(new ColumnConstraint(columnMetadata.getDataType(), ConstraintType.DEFAULT_VALUE, name, columnMetadata.getName(), columnMetadata.getDefaultValue()));
+				addConstraint(new ColumnConstraint(ConstraintType.DEFAULT_VALUE, name, columnMetadata));
 			}
 		}
 	}
@@ -164,6 +164,14 @@ public class TableMetadata implements Metadata{
 			}
 		}
 		throw new NullPointerException("不存在column name=["+columnName+"]的列");
+	}
+	
+	/**
+	 * 是否存在主键配置
+	 * @return
+	 */
+	public boolean existsPrimaryKey() {
+		return primaryKeyColumns != null;
 	}
 	
 	@Override

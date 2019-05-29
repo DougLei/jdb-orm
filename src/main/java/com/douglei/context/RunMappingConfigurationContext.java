@@ -22,23 +22,6 @@ public class RunMappingConfigurationContext {
 	}
 	
 	/**
-	 * 记录当前操作的表, 是否已经配置主键
-	 * @param existsPrimaryKey
-	 */
-	public static void setCurrentTableExistsPrimaryKey(boolean existsPrimaryKey) {
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		runMappingConfiguration.existsPrimaryKey = existsPrimaryKey;
-	}
-	
-	/**
-	 * 获取当前操作的表, 是否已经配置主键
-	 * @param existsPrimaryKey
-	 */
-	public static boolean currentTableExistsPrimaryKey() {
-		return getRunMappingConfiguration().existsPrimaryKey;
-	}
-	
-	/**
 	 * 添加新的TableCreator
 	 * @param tableCreator
 	 */

@@ -49,7 +49,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(Dom4jElementUtil.validateElementExists("columns", tableElement));
 			addConstraint(tableElement.element("constraints"));
-			if(!RunMappingConfigurationContext.currentTableExistsPrimaryKey()) {
+			if(!tableMetadata.existsPrimaryKey()) {
 				throw new NotExistsPrimaryKeyException("必须配置主键");
 			}
 			// TODO 处理索引
@@ -72,17 +72,13 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		if(elems == null || elems.size() == 0) {
 			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
 		}
-		RunMappingConfigurationContext.setCurrentTableExistsPrimaryKey(false);// 起始配置, 没有主键
 		
 		boolean classNameIsNull = tableMetadata.classNameIsNull();
 		ColumnMetadata columnMetadata = null;
 		for (Object object : elems) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
-			if(columnMetadata.isPrimaryKey()) {
-				if(RunMappingConfigurationContext.currentTableExistsPrimaryKey()) {
-					throw new RepeatPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
-				}
-				RunMappingConfigurationContext.setCurrentTableExistsPrimaryKey(true);
+			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
+				throw new RepeatPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			}
 			
 			columnMetadata.fixPropertyNameValue(classNameIsNull);
@@ -116,12 +112,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					if(constraintType == ConstraintType.DEFAULT_VALUE) {
 						throw new UnsupportConstraintConfigurationException("不支持通过<constraint>元素给列配置默认值约束, 如需配置, 请在对应的<column>元素中配置defaultValue属性值");
 					}
-					if(constraintType == ConstraintType.PRIMARY_KEY) {
-						if(RunMappingConfigurationContext.currentTableExistsPrimaryKey()) {
-							throw new RepeatPrimaryKeyException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
-						}
-						RunMappingConfigurationContext.setCurrentTableExistsPrimaryKey(true);
-					}
 					
 					if(columns == null) {
 						columns = new ArrayList<ColumnMetadata>(3);
@@ -131,7 +121,17 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					for(Object value: values) {
 						columns.add(tableMetadata.getColumnMetadataByColumnName(((Attribute)value).getValue().toUpperCase()));
 					}
-					tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata, columns));
+					if(constraintType == ConstraintType.PRIMARY_KEY) {
+						if(tableMetadata.existsPrimaryKey()) {
+							throw new RepeatPrimaryKeyException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
+						}
+						for (ColumnMetadata column : columns) {
+							column.setPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空
+							tableMetadata.addPrimaryKeyColumnMetadata(column, columns.size());
+						}
+						
+					}
+					tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata.getName(), columns));
 				}
 			}
 		}
