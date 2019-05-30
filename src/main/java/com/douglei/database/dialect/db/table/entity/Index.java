@@ -7,13 +7,8 @@ package com.douglei.database.dialect.db.table.entity;
 public class Index extends DBObject{
 	private IndexType indexType;
 
-	
 	public Index(IndexType indexType, String tableName) {
 		super(tableName);
-		this.indexType = indexType;
-	}
-	public Index(IndexType indexType, String tableName, Column column) {
-		super(tableName, column);
 		this.indexType = indexType;
 	}
 	
@@ -22,7 +17,6 @@ public class Index extends DBObject{
 		// TODO Auto-generated method stub
 		
 	}
-	
 	
 	@Override
 	protected String getObjectName() {

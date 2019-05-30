@@ -1,6 +1,5 @@
 package com.douglei.database.metadata.table;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,14 +41,6 @@ public class TableMetadata extends Table implements Metadata{
 		}else {
 			code = className;
 		}
-	}
-	
-	public void addColumn(ColumnMetadata columnMetadata) {
-		super.addColumn(columnMetadata);
-		if(columnMetadatas == null) {
-			columnMetadatas = new HashMap<String, ColumnMetadata>(16);
-		}
-		columnMetadatas.put(columnMetadata.getCode(), columnMetadata);
 	}
 	
 	/**

@@ -16,33 +16,29 @@ public class Constraint extends DBObject{
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
 	private String defaultValue;// 默认值
 	
-	public Constraint(ConstraintType constraintType, String tableName, String defaultValue) {
+	public Constraint(ConstraintType constraintType, String tableName) {
 		super(tableName);
 		this.constraintType = constraintType;
-		this.defaultValue = defaultValue;
-	}
-	public Constraint(ConstraintType constraintType, String tableName, Column column) {
-		super(tableName, column);
-		this.constraintType = constraintType;
-		this.defaultValue = column.getDefaultValue();
 	}
 	
 	@Override
 	protected void processDBObject() {
 		Collection<Column> cs = columns.values();
 		
-		StringBuilder nameBuilder = new StringBuilder(cs.size()*30);
+		StringBuilder nameBuilder = new StringBuilder(cs.size()*40);
 		nameBuilder.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
 		
 		if(constraintType == ConstraintType.DEFAULT_VALUE) {
-			if(defaultValue == null) {
-				throw new ConstraintException("添加默认值约束时, 默认值不能为空");
-			}
 			if(cs.size() > 1) {
 				throw new ConstraintException("不支持给多个列添加联合默认值约束 [设置默认值约束时列的数量多于1个]");
 			}
 			Column column = cs.iterator().next();
 			validateDataType(column.getDataTypeHandler());
+
+			setDefaultValue(column.getDefaultValue());
+			if(this.defaultValue == null) {
+				throw new ConstraintException("添加默认值约束时, 默认值不能为空");
+			}
 			
 			this.constraintColumnNames = column.getName();
 			setName(nameBuilder.append(column.getName()).toString());
@@ -83,6 +79,11 @@ public class Constraint extends DBObject{
 	@Override
 	protected String getObjectName() {
 		return "约束";
+	}
+	public void setDefaultValue(String defaultValue) {
+		if(this.defaultValue == null && defaultValue != null) {
+			this.defaultValue = defaultValue;
+		}
 	}
 	public ConstraintType getConstraintType() {
 		return constraintType;

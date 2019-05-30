@@ -16,27 +16,23 @@ public abstract class DBObject {
 	protected String tableName;// 表名
 	
 	public DBObject(String tableName) {
-		this(tableName, null);
-	}
-	public DBObject(String tableName, Column column) {
 		this.tableName = tableName;
-		addColumn(column);
 	}
 	
 	/**
 	 * 添加约束列
 	 * @param column
 	 */
-	public void addColumn(Column column) {
-		if(column == null) {
-			return;
+	public DBObject addColumn(Column column) {
+		if(column != null) {
+			if(columns == null) {
+				columns = new HashMap<String, Column>(4);
+			}else if(columns.containsKey(column.getName())) {
+				throw new ConstraintException("在同一个"+getObjectName()+"中, 出现重复的列["+column.getName()+"]");
+			}
+			columns.put(column.getName(), column);
 		}
-		if(columns == null) {
-			columns = new HashMap<String, Column>(4);
-		}else if(columns.containsKey(column.getName())) {
-			throw new ConstraintException("在同一个"+getObjectName()+"中, 出现重复的列["+column.getName()+"]");
-		}
-		columns.put(column.getName(), column);
+		return this;
 	}
 	
 	private boolean dbObjectUnProcessed=true;// 是否未被处理

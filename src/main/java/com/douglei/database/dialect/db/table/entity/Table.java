@@ -47,13 +47,13 @@ public class Table {
 	// 通过列, 添加单列约束
 	private void addConstraint(Column column) {
 		if(column.isPrimaryKey()) {
-			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name, column));
+			addConstraint((Constraint)new Constraint(ConstraintType.PRIMARY_KEY, name).addColumn(column));
 		}else {
 			if(column.isUnique()) {
-				addConstraint(new Constraint(ConstraintType.UNIQUE, name, column));
+				addConstraint((Constraint)new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
 			}
 			if(column.getDefaultValue() != null) {
-				addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name, column));
+				addConstraint((Constraint)new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
 			}
 		}
 	}
@@ -111,6 +111,15 @@ public class Table {
 	public Collection<Index> getIndexes() {
 		return indexes.values();
 	}
+	public Column getColumnByName(String columnName) {
+		Column column = columns.get(columnName);
+		if(column == null) {
+			throw new NullPointerException("不存在column name=["+columnName+"]的列");
+		}
+		return column;
+	}
+	
+	
 	/**
 	 * 是否存在主键
 	 * @return
