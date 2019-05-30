@@ -1,81 +1,83 @@
 package com.douglei.database.dialect.db.table.entity;
 
+import java.util.Collection;
+
+import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
+import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
+
 /**
  * 列约束
  * @author DougLei
  */
 public class Constraint extends DBObject{
 	private ConstraintType constraintType;
-	private String ConstraintColumnNames;// 约束的列名集合, 多个用,分割
+	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
 	private String defaultValue;// 默认值
 	
-	public Constraint(ConstraintType constraintType, String tableName) {
+	public Constraint(ConstraintType constraintType, String tableName, String defaultValue) {
 		super(tableName);
 		this.constraintType = constraintType;
+		this.defaultValue = defaultValue;
 	}
-	public Constraint(ConstraintType constraintType, String tableName, Column column) {
+	public Constraint(ConstraintType constraintType, String tableName, Column column, String defaultValue) {
 		super(tableName, column);
 		this.constraintType = constraintType;
+		this.defaultValue = defaultValue;
 	}
 	
 	@Override
 	protected void processDBObject() {
-//		private void setDefaultValue(ConstraintType constraintType, String tableName, String defaultValue) {
-//		
-//		
-//		if(defaultValue != null) {
-//			if(dataType instanceof AbstractStringDataTypeHandler) {
-//				defaultValue = "'"+defaultValue+"'";
-//			}
-//			this.defaultValue = defaultValue;
-//		}
-//	}
+		Collection<Column> cs = columns.values();
+		
+		StringBuilder nameBuilder = new StringBuilder(cs.size()*30);
+		nameBuilder.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
+		
+		if(constraintType == ConstraintType.DEFAULT_VALUE) {
+			if(defaultValue == null) {
+				throw new ConstraintException("添加默认值约束时, 默认值不能为空");
+			}
+			if(cs.size() > 1) {
+				throw new ConstraintException("不支持给多个列添加联合默认值约束 [设置默认值约束时列的数量多于1个]");
+			}
+			Column column = cs.iterator().next();
+			validateDataType(column.getDataTypeHandler());
+			
+			this.constraintColumnNames = column.getName();
+			setName(nameBuilder.append(column.getName()).toString());
+			
+			if(column.getDataTypeHandler() instanceof AbstractStringDataTypeHandler) {
+				this.defaultValue = "'"+this.defaultValue+"'";
+			}
+		}else {
+			int index = 0, lastIndex = cs.size()-1;
+			
+			StringBuilder constraintColumnNamesBuilder = new StringBuilder(cs.size()*20);
+			
+			String cname = null;
+			for (Column column : cs) {
+				validateDataType(column.getDataTypeHandler());
+				
+				cname = column.getName();
+				constraintColumnNamesBuilder.append(cname);
+				nameBuilder.append(cname);
+				
+				if(index < lastIndex) {
+					constraintColumnNamesBuilder.append(",");
+					nameBuilder.append("_");
+					index++;
+				}
+			}
+			this.constraintColumnNames = constraintColumnNamesBuilder.toString();
+			setName(nameBuilder.toString());
+		}
+	}
 	
-	// 联合约束
-//	public Constraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
-//		for (ColumnMetadata column : columns) {
-//			validateDataType(column.getDataTypeHandler());
-//		}
-//		this.constraintType = constraintType;
-//		this.tableName = tableName;
-//		
-//		StringBuilder columnName = new StringBuilder(columns.size()*20);
-//		StringBuilder name = new StringBuilder(columns.size()*30);
-//		name.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
-//		
-//		String cname = null;
-//		for(int i=0; i<columns.size(); i++) {
-//			cname = columns.get(i).getName();
-//			columnName.append(cname);
-//			name.append(cname);
-//			
-//			if(i < columns.size()-1) {
-//				columnName.append(",");
-//				name.append("_");
-//			}
-//		}
-//		
-//		this.columnName = columnName.toString();
-//		setConstraintName(name.toString());
-//	}
-//	private void setConstraintName(String constraintName) {
-//		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(constraintName);
-//	}
-//	private void validateDataType(DataTypeHandler dataType) {
-//		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
-//			throw new UnsupportConstraintDataTypeException("不支持给clob类型或blob类型的字段配置任何约束");
-//		}
-//	}
-
-	
-//	validateDataType(column.getDataTypeHandler());
-//	this.constraintType = constraintType;
-//	
-//	this.tableName = tableName;
-//	this.columnName = column.getName();
-//	
-//	setDefaultValue(column.getDataTypeHandler(), column.getDefaultValue());
-//	setConstraintName(constraintType.getConstraintPrefix() + "_" + tableName + "_" + columnName);
+	private void validateDataType(DataTypeHandler dataType) {
+		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
+			throw new ConstraintException("不支持给clob类型或blob类型的字段配置约束");
+		}
 	}
 	
 	@Override
@@ -87,7 +89,7 @@ public class Constraint extends DBObject{
 	}
 	public String getConstraintColumnNames() {
 		process();
-		return ConstraintColumnNames;
+		return constraintColumnNames;
 	}
 	public String getDefaultValue() {
 		process();

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.douglei.context.DBRunEnvironmentContext;
+
 /**
  * 数据库对象
  * @author DougLei
@@ -59,6 +61,9 @@ public abstract class DBObject {
 	 */
 	protected abstract void processDBObject();
 	
+	protected void setName(String name) {
+		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(name);
+	}
 	public String getName() {
 		process();
 		return name;
