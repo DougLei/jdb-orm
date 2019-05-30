@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
@@ -86,7 +87,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	 * @return
 	 */
 	public ClassDataTypeHandler getDefaultClassDataTypeHandler() {
-		return getDataTypeHandlerByCode("string");
+		return getDataTypeHandlerByCode(DataType.STRING.getName());
 	}
 	
 	/**

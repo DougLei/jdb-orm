@@ -3,6 +3,7 @@ package com.douglei.database.dialect.datatype.handler.classtype;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.utils.datatype.ValidationUtil;
 
 /**
@@ -13,7 +14,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
-		return "long";
+		return DataType.LONG.getName();
 	}
 	
 	@Override

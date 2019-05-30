@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.utils.datatype.DateTypeUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -15,7 +16,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {
-		return "date";
+		return DataType.DATE.getName();
 	}
 	
 	@Override

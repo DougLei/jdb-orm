@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.dialect.datatype.handler.wrapper.Clob;
 import com.douglei.database.dialect.datatype.handler.wrapper.StringWrapper;
 
@@ -15,7 +16,7 @@ public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String getCode() {
-		return "clob";
+		return DataType.CLOB.getName();
 	}
 	
 	@Override

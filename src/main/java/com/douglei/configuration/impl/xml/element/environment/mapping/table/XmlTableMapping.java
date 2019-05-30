@@ -19,6 +19,7 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.table.vali
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
+import com.douglei.database.dialect.db.table.entity.ConstraintType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -26,7 +27,6 @@ import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.RepeatPrimaryKeyException;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.extend.Constraint;
-import com.douglei.database.metadata.table.column.extend.ConstraintType;
 
 /**
  * table 映射
@@ -52,8 +52,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			if(!tableMetadata.existsPrimaryKey()) {
 				throw new NotExistsPrimaryKeyException("必须配置主键");
 			}
-			// TODO 处理索引
-			
 			RunMappingConfigurationContext.addTableCreator(DBRunEnvironmentContext.getDialect().getTableHandler().getTableCreator(tableMetadata));
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
@@ -126,7 +124,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 							throw new RepeatPrimaryKeyException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
 						}
 						for (ColumnMetadata column : columns) {
-							column.setPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空
+							column.processPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空
 							tableMetadata.addPrimaryKeyColumnMetadata(column, columns.size());
 						}
 						

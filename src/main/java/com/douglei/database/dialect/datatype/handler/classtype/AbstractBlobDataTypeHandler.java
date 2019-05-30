@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.dialect.datatype.handler.wrapper.Blob;
 
 /**
@@ -14,7 +15,7 @@ public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public String getCode() {
-		return "blob";
+		return DataType.BLOB.getName();
 	}
 	
 	@Override

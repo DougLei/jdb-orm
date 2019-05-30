@@ -3,10 +3,10 @@ package com.douglei.database.dialect.db.table;
 import java.util.Collection;
 import java.util.List;
 
+import com.douglei.database.dialect.db.table.entity.Index;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.database.metadata.table.column.extend.Constraint;
-import com.douglei.database.metadata.table.column.extend.Index;
 
 /**
  * 表sql语句处理器
@@ -40,7 +40,7 @@ public abstract class TableSqlStatementHandler {
 		int index=0, lastIndex = columns.size()-1;
 		for (ColumnMetadata column : columns) {
 			sql.append(column.getName()).append(" ");
-			sql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+			sql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 			if(!column.isNullabled()) {
 				sql.append("not null");
 			}
@@ -86,7 +86,7 @@ public abstract class TableSqlStatementHandler {
 	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullabled()) {
 			tmpSql.append("not null");
 		}
@@ -127,7 +127,7 @@ public abstract class TableSqlStatementHandler {
 	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDataType().defaultDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullabled()) {
 			tmpSql.append("not null");
 		}

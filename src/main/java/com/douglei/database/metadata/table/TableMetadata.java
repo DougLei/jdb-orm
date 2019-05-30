@@ -7,20 +7,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.douglei.database.dialect.db.table.entity.ConstraintType;
+import com.douglei.database.dialect.db.table.entity.Table;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
 import com.douglei.database.metadata.table.column.extend.Constraint;
-import com.douglei.database.metadata.table.column.extend.Index;
-import com.douglei.database.metadata.table.column.extend.ConstraintType;
 import com.douglei.utils.StringUtil;
 
 /**
  * 表元数据
  * @author DougLei
  */
-public class TableMetadata implements Metadata{
+public class TableMetadata extends Table implements Metadata{
 	
-	private String name;// 表名
 	private String className;// 映射的代码类名
 	private boolean classNameIsNull;
 	
@@ -30,10 +29,9 @@ public class TableMetadata implements Metadata{
 	private Map<String, ColumnMetadata> primaryKeyColumns;// 主键列元数据集合
 	
 	private List<Constraint> constraints;// 约束集合
-	private List<Index> indexes;// 索引集合
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
-		this.name = name.toUpperCase();
+		super(name);
 		this.createMode = createMode;
 		setClassName(className);
 		setCode();
@@ -87,13 +85,6 @@ public class TableMetadata implements Metadata{
 		constraints.add(constraint);
 	}
 	
-	public void addIndex(Index index) {
-		if(indexes == null) {
-			indexes = new ArrayList<Index>(6);
-		}
-		indexes.add(index);
-	}
-	
 	/**
 	 * <pre>
 	 * 	如果指定了className, 则返回className
@@ -114,9 +105,7 @@ public class TableMetadata implements Metadata{
 		}
 	}
 	
-	public String getName() {
-		return name;
-	}
+	
 	public String getClassName() {
 		return className;
 	}
@@ -128,9 +117,6 @@ public class TableMetadata implements Metadata{
 	}
 	public List<Constraint> getConstraints() {
 		return constraints;
-	}
-	public List<Index> getIndexes() {
-		return indexes;
 	}
 	public Collection<ColumnMetadata> getColumnMetadatas(){
 		return columns.values();

@@ -8,6 +8,7 @@ import com.douglei.database.dialect.datatype.handler.classtype.AbstractBlobDataT
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.database.dialect.db.table.entity.ConstraintType;
 import com.douglei.database.metadata.table.ColumnMetadata;
 
 /**
@@ -25,13 +26,13 @@ public class Constraint {
 	private String name;// 约束名(约束前缀+表名+列名)
 	
 	public Constraint(ConstraintType constraintType, String tableName, ColumnMetadata column) {
-		validateDataType(column.getDataType());
+		validateDataType(column.getDataTypeHandler());
 		this.constraintType = constraintType;
 		
 		this.tableName = tableName;
 		this.columnName = column.getName();
 		
-		setDefaultValue(column.getDataType(), column.getDefaultValue());
+		setDefaultValue(column.getDataTypeHandler(), column.getDefaultValue());
 		setConstraintName(constraintType.getConstraintPrefix() + "_" + tableName + "_" + columnName);
 	}
 	private void setDefaultValue(ClassDataTypeHandler dataType, String defaultValue) {
@@ -46,7 +47,7 @@ public class Constraint {
 	// 联合约束
 	public Constraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
 		for (ColumnMetadata column : columns) {
-			validateDataType(column.getDataType());
+			validateDataType(column.getDataTypeHandler());
 		}
 		this.constraintType = constraintType;
 		this.tableName = tableName;

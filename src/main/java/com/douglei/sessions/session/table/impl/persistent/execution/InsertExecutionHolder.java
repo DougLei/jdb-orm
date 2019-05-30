@@ -40,7 +40,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 				
 				insertSql.append(columnMetadata.getName());
 				values.append("?");
-				parameters.add(new InputSqlParameter(value, columnMetadata.getDataType()));
+				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
 				
 				if(index < size) {
 					insertSql.append(",");

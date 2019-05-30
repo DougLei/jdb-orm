@@ -1,4 +1,4 @@
-package com.douglei.database.metadata.table.column.extend;
+package com.douglei.database.dialect.db.table.entity;
 
 /**
  * 

@@ -1,5 +1,7 @@
 package com.douglei.database.dialect.datatype.handler.classtype;
 
+import com.douglei.database.dialect.datatype.DataType;
+
 /**
  * 
  * @author DougLei
@@ -8,6 +10,6 @@ public abstract class AbstractNCharDataTypeHandler extends AbstractStringDataTyp
 	
 	@Override
 	public String getCode() {
-		return "nchar";
+		return DataType.NCHAR.getName();
 	}
 }

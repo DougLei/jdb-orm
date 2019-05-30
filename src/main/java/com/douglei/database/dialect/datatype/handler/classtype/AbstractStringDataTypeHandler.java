@@ -3,6 +3,7 @@ package com.douglei.database.dialect.datatype.handler.classtype;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.dialect.datatype.handler.wrapper.Char;
 import com.douglei.database.dialect.datatype.handler.wrapper.NChar;
 import com.douglei.database.dialect.datatype.handler.wrapper.NString;
@@ -16,7 +17,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public String getCode() {
-		return "string";
+		return DataType.STRING.getName();
 	}
 	
 	@Override
