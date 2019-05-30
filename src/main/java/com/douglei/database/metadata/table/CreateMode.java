@@ -12,8 +12,11 @@ public enum CreateMode {
 	/**
 	 * 进行create, 如果表已经存在, 则跳过
 	 */
-	CREATE;
-	
+	CREATE,
+	/**
+	 * 先进行drop, 如果表不存在, 则跳过, 再进行create
+	 */
+	DROP_CREATE;
 	
 	public static CreateMode toValue(String mode) {
 		mode = mode.toUpperCase();
