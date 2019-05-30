@@ -33,16 +33,7 @@ public class Table {
 			throw new ColumnException("列名"+column.getName()+"重复");
 		}
 		columns.put(column.getName(), column);
-		addPrimaryKeyColumn(column);
 		addConstraint(column);
-	}
-	// 通过列, 添加单列主键
-	private void addPrimaryKeyColumn(Column column) {
-		if(column.isPrimaryKey()) {
-			validatePrimaryKeyColumnExists();
-			primaryKeyColumns = new HashMap<String, Column>(1);
-			primaryKeyColumns.put(column.getName(), column);
-		}
 	}
 	// 通过列, 添加单列约束
 	private void addConstraint(Column column) {
