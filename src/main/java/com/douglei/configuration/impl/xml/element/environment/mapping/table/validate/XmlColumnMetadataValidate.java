@@ -2,7 +2,6 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 
 import org.dom4j.Element;
 
-import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -25,7 +24,6 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		if(StringUtil.isEmpty(name)) {
 			throw new MetadataValidateException("<column>元素的name属性值不能为空");
 		}
-		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		
 		String value = element.attributeValue("length");
 		short length = ValidationUtil.isShort(value)?Short.parseShort(value):0;

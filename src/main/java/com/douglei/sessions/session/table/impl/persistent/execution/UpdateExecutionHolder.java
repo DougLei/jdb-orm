@@ -32,7 +32,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : codes) {
-			if(!tableMetadata.isPrimaryKeyColumn(code)) {
+			if(!tableMetadata.isPrimaryKeyColumnMetadata(code)) {
 				value = propertyMap.get(code);
 				if(value != null) {// 只修改不为空的值
 					columnMetadata = tableMetadata.getColumnMetadata(code);

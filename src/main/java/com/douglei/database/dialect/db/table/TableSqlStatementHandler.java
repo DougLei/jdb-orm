@@ -3,10 +3,10 @@ package com.douglei.database.dialect.db.table;
 import java.util.Collection;
 import java.util.List;
 
+import com.douglei.database.dialect.db.table.entity.Column;
+import com.douglei.database.dialect.db.table.entity.Constraint;
 import com.douglei.database.dialect.db.table.entity.Index;
-import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.metadata.table.column.extend.Constraint;
+import com.douglei.database.dialect.db.table.entity.Table;
 
 /**
  * 表sql语句处理器
@@ -31,14 +31,14 @@ public abstract class TableSqlStatementHandler {
 	 * @param table
 	 * @return
 	 */
-	public String tableCreateSqlStatement(TableMetadata table) {
+	public String tableCreateSqlStatement(Table table) {
 		StringBuilder sql = new StringBuilder(1000);
 		sql.append("create table ").append(table.getName());
 		sql.append("(");
 		
-		Collection<ColumnMetadata> columns = table.getColumnMetadatas();
+		Collection<Column> columns = table.getColumns();
 		int index=0, lastIndex = columns.size()-1;
-		for (ColumnMetadata column : columns) {
+		for (Column column : columns) {
 			sql.append(column.getName()).append(" ");
 			sql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 			if(!column.isNullabled()) {
@@ -83,7 +83,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
+	public String columnCreateSqlStatement(String tableName, Column column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -124,7 +124,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
+	public String columnModifySqlStatement(String tableName, Column column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -156,7 +156,7 @@ public abstract class TableSqlStatementHandler {
 	protected String pk_uq_constraintCreateSqlStatement(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
-		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getColumnName()).append(")");
+		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(")");
 		return tmpSql.toString();
 	}
 

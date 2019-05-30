@@ -1,7 +1,7 @@
 package com.douglei.database.dialect.impl.mysql.db.table;
 
 import com.douglei.database.dialect.db.table.TableSqlStatementHandler;
-import com.douglei.database.metadata.table.column.extend.Constraint;
+import com.douglei.database.dialect.db.table.entity.Constraint;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -25,7 +25,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	@Override
 	protected String defaultValueConstraintCreateSqlStatement(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getColumnName());
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
 		tmpSql.append(" set default ").append(constraint.getDefaultValue());
 		return tmpSql.toString();
 	}
@@ -46,11 +46,11 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 
 	@Override
 	protected String defaultValueConstraintDropSqlStatement(Constraint constraint) {
-		if(StringUtil.isEmpty(constraint.getColumnName())) {
+		if(StringUtil.isEmpty(constraint.getConstraintColumnNames())) {
 			throw new NullPointerException("在mysql数据库中删除列的默认值时, 必须传入相应的列名");
 		}
 		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getColumnName());
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
 		tmpSql.append(" set default null");
 		return tmpSql.toString();
 	}

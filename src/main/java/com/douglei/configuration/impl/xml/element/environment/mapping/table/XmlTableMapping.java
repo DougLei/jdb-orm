@@ -19,14 +19,14 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.table.vali
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
+import com.douglei.database.dialect.db.table.entity.Constraint;
 import com.douglei.database.dialect.db.table.entity.ConstraintType;
+import com.douglei.database.dialect.db.table.entity.exception.RepeatPrimaryKeyColumnException;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.RepeatPrimaryKeyException;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.metadata.table.column.extend.Constraint;
 
 /**
  * table 映射
@@ -76,7 +76,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		for (Object object : elems) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
-				throw new RepeatPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
+				throw new RepeatPrimaryKeyColumnException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			}
 			
 			columnMetadata.fixPropertyNameValue(classNameIsNull);
@@ -121,7 +121,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					}
 					if(constraintType == ConstraintType.PRIMARY_KEY) {
 						if(tableMetadata.existsPrimaryKey()) {
-							throw new RepeatPrimaryKeyException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
+							throw new RepeatPrimaryKeyColumnException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
 						}
 						for (ColumnMetadata column : columns) {
 							column.processPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空

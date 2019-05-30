@@ -1,8 +1,8 @@
 package com.douglei.database.dialect.impl.sqlserver.db.table;
 
 import com.douglei.database.dialect.db.table.TableSqlStatementHandler;
-import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.column.extend.Constraint;
+import com.douglei.database.dialect.db.table.entity.Column;
+import com.douglei.database.dialect.db.table.entity.Constraint;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	}
 	
 	@Override
-	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
+	public String columnModifySqlStatement(String tableName, Column column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" alter column ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -55,7 +55,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName());
 		tmpSql.append(" default ").append(constraint.getDefaultValue());
-		tmpSql.append(" for ").append(constraint.getColumnName());
+		tmpSql.append(" for ").append(constraint.getConstraintColumnNames());
 		return tmpSql.toString();
 	}
 	

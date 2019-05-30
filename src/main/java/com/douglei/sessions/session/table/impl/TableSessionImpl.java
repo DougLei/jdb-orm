@@ -125,7 +125,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		int index = 1;
 		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
 		for (String originPMkey : originPropertyMapKeys) {
-			if(tableMetadata.isPrimaryKeyColumn(originPMkey)) {
+			if(tableMetadata.isPrimaryKeyColumnMetadata(originPMkey)) {
 				resultPropertyMap.put(originPMkey, originPropertyMap.get(originPMkey));
 				if(index == primaryKeyColumnSize) {
 					break;

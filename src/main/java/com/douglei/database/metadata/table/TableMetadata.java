@@ -1,17 +1,12 @@
 package com.douglei.database.metadata.table;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.database.dialect.db.table.entity.ConstraintType;
 import com.douglei.database.dialect.db.table.entity.Table;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.database.metadata.table.column.extend.Constraint;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -20,15 +15,13 @@ import com.douglei.utils.StringUtil;
  */
 public class TableMetadata extends Table implements Metadata{
 	
+	private String code;
 	private String className;// 映射的代码类名
 	private boolean classNameIsNull;
-	
 	private CreateMode createMode;// 表create的模式
 	
-	private Map<String, ColumnMetadata> columns;// 包含的列元数据集合, key=列元数据的code, value=列元数据对象
-	private Map<String, ColumnMetadata> primaryKeyColumns;// 主键列元数据集合
-	
-	private List<Constraint> constraints;// 约束集合
+	private Map<String, ColumnMetadata> columnMetadatas;// 列
+	private Map<String, ColumnMetadata> primaryKeyColumnMetadatas;// 主键列
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
 		super(name);
@@ -43,46 +36,20 @@ public class TableMetadata extends Table implements Metadata{
 			this.className = className;
 		}
 	}
-	
-	public void addColumnMetadata(ColumnMetadata columnMetadata) {
-		if(columns == null) {
-			columns = new HashMap<String, ColumnMetadata>(16);
+	private void setCode() {
+		if(className == null) {
+			code = name;
 		}else {
-			if(columns.containsKey(columnMetadata.getCode())) {
-				throw new RepeatColumnException(columnMetadata.getName()+" 列重复");
-			}
-		}
-		columns.put(columnMetadata.getCode(), columnMetadata);
-		addPrimaryKeyColumnMetadata(columnMetadata, 1);
-		addConstraint(columnMetadata);
-	}
-	private void addConstraint(ColumnMetadata columnMetadata) {
-		if(columnMetadata.isPrimaryKey()) {
-			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name, columnMetadata));
-		}else {
-			if(columnMetadata.isUnique()) {
-				addConstraint(new Constraint(ConstraintType.UNIQUE, name, columnMetadata));
-			}
-			if(columnMetadata.getDefaultValue() != null) {
-				addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name, columnMetadata));
-			}
+			code = className;
 		}
 	}
 	
-	public void addPrimaryKeyColumnMetadata(ColumnMetadata columnMetadata, int initialPrimaryKeyColumnsSize) {
-		if(columnMetadata.isPrimaryKey()) {
-			if(primaryKeyColumns == null) {
-				primaryKeyColumns = new HashMap<String, ColumnMetadata>(initialPrimaryKeyColumnsSize);
-			}
-			primaryKeyColumns.put(columnMetadata.getCode(), columnMetadata);
+	public void addColumn(ColumnMetadata columnMetadata) {
+		super.addColumn(columnMetadata);
+		if(columnMetadatas == null) {
+			columnMetadatas = new HashMap<String, ColumnMetadata>(16);
 		}
-	}
-	
-	public void addConstraint(Constraint constraint) {
-		if(constraints == null) {
-			constraints = new ArrayList<Constraint>(10);
-		}
-		constraints.add(constraint);
+		columnMetadatas.put(columnMetadata.getCode(), columnMetadata);
 	}
 	
 	/**
@@ -96,16 +63,6 @@ public class TableMetadata extends Table implements Metadata{
 	public String getCode() {
 		return code;
 	}
-	private String code;
-	private void setCode() {
-		if(className == null) {
-			code = name;
-		}else {
-			code = className;
-		}
-	}
-	
-	
 	public String getClassName() {
 		return className;
 	}
@@ -115,49 +72,23 @@ public class TableMetadata extends Table implements Metadata{
 	public boolean classNameIsNull() {
 		return classNameIsNull;
 	}
-	public List<Constraint> getConstraints() {
-		return constraints;
-	}
-	public Collection<ColumnMetadata> getColumnMetadatas(){
-		return columns.values();
-	}
 	public Set<String> getColumnMetadataCodes() {
-		return columns.keySet();
+		return columnMetadatas.keySet();
 	}
 	public ColumnMetadata getColumnMetadata(String code) {
-		return columns.get(code);
+		return columnMetadatas.get(code);
 	}
-	public boolean isColumn(String code) {
-		return columns.containsKey(code);
+	public boolean isColumnMetadata(String code) {
+		return columnMetadatas.containsKey(code);
 	}
-	
 	public Set<String> getPrimaryKeyColumnMetadataCodes(){
-		return primaryKeyColumns.keySet();
+		return primaryKeyColumnMetadatas.keySet();
 	}
 	public ColumnMetadata getPrimaryKeyColumnMetadata(String code) {
-		return primaryKeyColumns.get(code);
+		return primaryKeyColumnMetadatas.get(code);
 	}
-	public boolean isPrimaryKeyColumn(String code) {
-		return primaryKeyColumns.containsKey(code);
-	}
-	
-	// 根据列名获取对应的ColumnMetadata
-	public ColumnMetadata getColumnMetadataByColumnName(String columnName) {
-		Collection<ColumnMetadata> cs = columns.values();
-		for (ColumnMetadata column : cs) {
-			if(column.getName().equals(columnName)) {
-				return column;
-			}
-		}
-		throw new NullPointerException("不存在column name=["+columnName+"]的列");
-	}
-	
-	/**
-	 * 是否存在主键配置
-	 * @return
-	 */
-	public boolean existsPrimaryKey() {
-		return primaryKeyColumns != null;
+	public boolean isPrimaryKeyColumnMetadata(String code) {
+		return primaryKeyColumnMetadatas.containsKey(code);
 	}
 	
 	@Override

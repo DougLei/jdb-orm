@@ -29,7 +29,8 @@ public class TableHandler {
 			case NONE:
 				return null;
 			default:
-				return new TableCreator(tableMetadata);
+//				return new TableCreator(tableMetadata);
+				return null;
 		}
 	}
 	
