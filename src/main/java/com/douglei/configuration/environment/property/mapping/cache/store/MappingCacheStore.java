@@ -16,8 +16,8 @@ public interface MappingCacheStore extends SelfProcessing{
 	void initialStoreSize(int size);
 	
 	/**
-	 * 添加映射
 	 * <pre>
+	 * 	添加映射
 	 * 	如果已经存在相同code的mapping，则抛出异常
 	 * </pre>
 	 * @param mapping
@@ -42,4 +42,11 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * @return
 	 */
 	Mapping getMapping(String mappingCode);
+	
+	/**
+	 * mapping是否存在
+	 * @param mappingCode
+	 * @return
+	 */
+	boolean mappingExists(String mappingCode);
 }

@@ -53,7 +53,9 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				throw new NotExistsPrimaryKeyException("必须配置主键");
 			}
 			tableMetadata.columnDataMigration();
-			if(tableMetadata.getCreateMode() == CreateMode.AUTO_CREATE) {
+			
+			if(tableMetadata.getCreateMode() != CreateMode.NONE) {
+				// TODO 添加映射的时候就建表, 建完表后修改映射的createMode类型
 				RunMappingConfigurationContext.addTableCreator(new TableCreator(tableMetadata));
 			}
 		} catch (Exception e) {

@@ -60,6 +60,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	public void dynamicRemoveMapping(String mappingCode) {
 		mappingCacheStore.dynamicRemoveMapping(mappingCode);
+		// TODO 如果表存在, 一起删除
 	}
 	
 	/**

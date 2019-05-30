@@ -12,7 +12,6 @@ import com.douglei.configuration.environment.property.mapping.cache.store.Mappin
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.database.dialect.Dialect;
 import com.douglei.database.dialect.DialectMapping;
-import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -34,9 +33,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	@FieldMetaData
 	private MappingCacheStore mappingCacheStore;
-	
-	@FieldMetaData
-	private CreateMode tableCreateMode;
 	
 	public XmlEnvironmentProperty(Map<String, String> propertyMap) {
 		this.propertyMap = propertyMap;
@@ -114,14 +110,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 		this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 	}
-	void setTableCreateMode(String value) {
-		if(StringUtil.notEmpty(value)) {
-			this.tableCreateMode = CreateMode.toValue(value);
-		}
-		if(this.tableCreateMode == null) {
-			this.tableCreateMode = CreateMode.NONE;
-		}
-	}
 
 	public void setDialectByJDBCUrl(String JDBCUrl) {
 		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
@@ -150,9 +138,5 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public MappingCacheStore getMappingCacheStore() {
 		return mappingCacheStore;
-	}
-	@Override
-	public CreateMode getTableCreateMode() {
-		return tableCreateMode;
 	}
 }

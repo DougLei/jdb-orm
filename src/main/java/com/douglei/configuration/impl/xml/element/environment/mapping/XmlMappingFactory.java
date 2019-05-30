@@ -85,7 +85,7 @@ public class XmlMappingFactory {
 					org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
 					return new XmlSqlMapping(mappingConfigurationXmlName, sqlRootElement);
 			}
-			return null;
+			throw new IllegalArgumentException("mappingType 没有匹配");
 		} finally {
 			CloseUtil.closeIO(input);
 		}

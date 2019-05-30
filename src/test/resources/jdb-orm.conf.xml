@@ -4,7 +4,6 @@
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver -->
 		<!-- <property name="enableSessionCache" value="true" /> --><!-- 默认值为true  -->
 		<!-- <property name="mappingCacheStore" value="application" /> --><!-- value的值包括: application, 默认值为application -->
-		<!-- <property name="tableCreateMode" value="" /> --><!-- value的值包括: none, auto_create, 默认值为none -->
 	
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>

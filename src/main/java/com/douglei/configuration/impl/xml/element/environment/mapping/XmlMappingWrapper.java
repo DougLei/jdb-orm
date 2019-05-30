@@ -56,7 +56,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add mapping: {}", mappingConfigurationContent);
-			coverMapping(XmlMappingFactory.newInstance_dynamicAdd(mappingType, mappingConfigurationContent));
+			addMapping(XmlMappingFactory.newInstance_dynamicAdd(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}

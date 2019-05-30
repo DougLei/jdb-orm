@@ -1,7 +1,6 @@
 package com.douglei.context;
 
 import com.douglei.database.dialect.Dialect;
-import com.douglei.database.metadata.table.CreateMode;
 
 /**
  * 
@@ -9,5 +8,4 @@ import com.douglei.database.metadata.table.CreateMode;
  */
 class DBRunEnvironment {
 	Dialect dialect;// 方言
-	CreateMode tableCreateMode;// (全局配置)表创建模式
 }

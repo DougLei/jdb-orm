@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.Mapping;
-import com.douglei.configuration.environment.mapping.RepeatMappingCodeException;
+import com.douglei.configuration.environment.mapping.RepeatMappingException;
 import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
 
 /**
@@ -37,8 +37,8 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 			throw new NullPointerException("要添加的"+Mapping.class+"实例不能为空");
 		}
 		String code = mapping.getCode();
-		if(mappings.containsKey(code)) {
-			throw new RepeatMappingCodeException("已经存在code为["+code+"]的映射对象: " + mappings.get(code).getClass());
+		if(mappingExists(code)) {
+			throw new RepeatMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code).getClass());
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("添加新的映射信息: {}", mapping.toString());
@@ -53,7 +53,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 		}
 		String code = mapping.getCode();
 		if(logger.isDebugEnabled()) {
-			if(mappings.containsKey(code)) {
+			if(mappingExists(code)) {
 				logger.debug("覆盖映射信息时, 存在同code的旧信息: {}", mappings.get(code).toString());
 			}
 			logger.debug("进行覆盖的映射信息: {}", mapping.toString());
@@ -73,6 +73,11 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 			throw new NullPointerException("不存在code为["+mappingCode+"]的映射对象");
 		}
 		return mp;
+	}
+	
+	@Override
+	public boolean mappingExists(String mappingCode) {
+		return mappings.containsKey(mappingCode);
 	}
 	
 	@Override
