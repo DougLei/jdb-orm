@@ -25,7 +25,7 @@ import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.RepeatPrimaryKeyException;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
+import com.douglei.database.metadata.table.column.extend.Constraint;
 import com.douglei.database.metadata.table.column.extend.ConstraintType;
 
 /**
@@ -131,7 +131,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 						}
 						
 					}
-					tableMetadata.addConstraint(new ColumnConstraint(constraintType, tableMetadata.getName(), columns));
+					tableMetadata.addConstraint(new Constraint(constraintType, tableMetadata.getName(), columns));
 				}
 			}
 		}

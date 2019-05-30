@@ -9,8 +9,8 @@ import java.util.Set;
 
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
-import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
-import com.douglei.database.metadata.table.column.extend.ColumnIndex;
+import com.douglei.database.metadata.table.column.extend.Constraint;
+import com.douglei.database.metadata.table.column.extend.Index;
 import com.douglei.database.metadata.table.column.extend.ConstraintType;
 import com.douglei.utils.StringUtil;
 
@@ -29,8 +29,8 @@ public class TableMetadata implements Metadata{
 	private Map<String, ColumnMetadata> columns;// 包含的列元数据集合, key=列元数据的code, value=列元数据对象
 	private Map<String, ColumnMetadata> primaryKeyColumns;// 主键列元数据集合
 	
-	private List<ColumnConstraint> constraints;// 约束集合
-	private List<ColumnIndex> indexes;// 索引集合
+	private List<Constraint> constraints;// 约束集合
+	private List<Index> indexes;// 索引集合
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
 		this.name = name.toUpperCase();
@@ -60,13 +60,13 @@ public class TableMetadata implements Metadata{
 	}
 	private void addConstraint(ColumnMetadata columnMetadata) {
 		if(columnMetadata.isPrimaryKey()) {
-			addConstraint(new ColumnConstraint(ConstraintType.PRIMARY_KEY, name, columnMetadata));
+			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name, columnMetadata));
 		}else {
 			if(columnMetadata.isUnique()) {
-				addConstraint(new ColumnConstraint(ConstraintType.UNIQUE, name, columnMetadata));
+				addConstraint(new Constraint(ConstraintType.UNIQUE, name, columnMetadata));
 			}
 			if(columnMetadata.getDefaultValue() != null) {
-				addConstraint(new ColumnConstraint(ConstraintType.DEFAULT_VALUE, name, columnMetadata));
+				addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name, columnMetadata));
 			}
 		}
 	}
@@ -80,18 +80,18 @@ public class TableMetadata implements Metadata{
 		}
 	}
 	
-	public void addConstraint(ColumnConstraint columnConstraint) {
+	public void addConstraint(Constraint constraint) {
 		if(constraints == null) {
-			constraints = new ArrayList<ColumnConstraint>(10);
+			constraints = new ArrayList<Constraint>(10);
 		}
-		constraints.add(columnConstraint);
+		constraints.add(constraint);
 	}
 	
-	public void addIndex(ColumnIndex columnIndex) {
+	public void addIndex(Index index) {
 		if(indexes == null) {
-			indexes = new ArrayList<ColumnIndex>(6);
+			indexes = new ArrayList<Index>(6);
 		}
-		indexes.add(columnIndex);
+		indexes.add(index);
 	}
 	
 	/**
@@ -126,10 +126,10 @@ public class TableMetadata implements Metadata{
 	public boolean classNameIsNull() {
 		return classNameIsNull;
 	}
-	public List<ColumnConstraint> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return constraints;
 	}
-	public List<ColumnIndex> getIndexes() {
+	public List<Index> getIndexes() {
 		return indexes;
 	}
 	public Collection<ColumnMetadata> getColumnMetadatas(){

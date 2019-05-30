@@ -14,7 +14,7 @@ import com.douglei.database.metadata.table.ColumnMetadata;
  * 列约束
  * @author DougLei
  */
-public class ColumnConstraint {
+public class Constraint {
 	
 	private ConstraintType constraintType;
 	
@@ -24,7 +24,7 @@ public class ColumnConstraint {
 	
 	private String name;// 约束名(约束前缀+表名+列名)
 	
-	public ColumnConstraint(ConstraintType constraintType, String tableName, ColumnMetadata column) {
+	public Constraint(ConstraintType constraintType, String tableName, ColumnMetadata column) {
 		validateDataType(column.getDataType());
 		this.constraintType = constraintType;
 		
@@ -44,7 +44,7 @@ public class ColumnConstraint {
 	}
 	
 	// 联合约束
-	public ColumnConstraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
+	public Constraint(ConstraintType constraintType, String tableName, List<ColumnMetadata> columns) {
 		for (ColumnMetadata column : columns) {
 			validateDataType(column.getDataType());
 		}

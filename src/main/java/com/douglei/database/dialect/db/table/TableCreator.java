@@ -6,8 +6,8 @@ import java.util.List;
 import com.douglei.database.metadata.table.ColumnMetadata;
 import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.metadata.table.column.extend.ColumnConstraint;
-import com.douglei.database.metadata.table.column.extend.ColumnIndex;
+import com.douglei.database.metadata.table.column.extend.Constraint;
+import com.douglei.database.metadata.table.column.extend.Index;
 
 /**
  * 
@@ -18,8 +18,8 @@ public class TableCreator {
 	
 	private String tableName;
 	private Collection<ColumnMetadata> columns;
-	private List<ColumnConstraint> constraints;
-	private List<ColumnIndex> indexes;
+	private List<Constraint> constraints;
+	private List<Index> indexes;
 	
 	public TableCreator(TableMetadata tableMetadata) {
 		this.createMode = tableMetadata.getCreateMode();
@@ -39,10 +39,10 @@ public class TableCreator {
 	public Collection<ColumnMetadata> getColumns() {
 		return columns;
 	}
-	public List<ColumnConstraint> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return constraints;
 	}
-	public List<ColumnIndex> getIndexes() {
+	public List<Index> getIndexes() {
 		return indexes;
 	}
 }
