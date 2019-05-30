@@ -17,14 +17,15 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
-import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
+import com.douglei.database.dialect.db.table.TableCreator;
 import com.douglei.database.dialect.db.table.entity.Constraint;
 import com.douglei.database.dialect.db.table.entity.ConstraintType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
 import com.douglei.database.metadata.table.ColumnMetadata;
+import com.douglei.database.metadata.table.CreateMode;
 import com.douglei.database.metadata.table.TableMetadata;
 
 /**
@@ -51,8 +52,10 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			if(!tableMetadata.existsPrimaryKey()) {
 				throw new NotExistsPrimaryKeyException("必须配置主键");
 			}
-			
-			RunMappingConfigurationContext.addTableCreator(DBRunEnvironmentContext.getDialect().getTableHandler().getTableCreator(tableMetadata));
+			tableMetadata.columnDataMigration();
+			if(tableMetadata.getCreateMode() == CreateMode.AUTO_CREATE) {
+				RunMappingConfigurationContext.addTableCreator(new TableCreator(tableMetadata));
+			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}

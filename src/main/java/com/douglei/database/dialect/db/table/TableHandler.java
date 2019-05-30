@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.utils.CloseUtil;
 import com.douglei.utils.ExceptionUtil;
 
@@ -19,20 +18,6 @@ import com.douglei.utils.ExceptionUtil;
  */
 public class TableHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableHandler.class);
-	
-	/**
-	 * 
-	 * @param tableMetadata
-	 */
-	public TableCreator getTableCreator(TableMetadata tableMetadata) {
-		switch(tableMetadata.getCreateMode()) {
-			case NONE:
-				return null;
-			default:
-//				return new TableCreator(tableMetadata);
-				return null;
-		}
-	}
 	
 	/**
 	 * 执行create表操作

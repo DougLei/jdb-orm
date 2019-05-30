@@ -110,12 +110,33 @@ public class Table {
 		return column;
 	}
 	
-	
 	/**
 	 * 是否存在主键
 	 * @return
 	 */
 	public boolean existsPrimaryKey() {
 		return primaryKeyColumns != null;
+	}
+	
+	/**
+	 * 清空数据
+	 */
+	public void clear() {
+		if(columns != null) {
+			columns.clear();
+			columns = null;
+		}
+		if(primaryKeyColumns != null) {
+			primaryKeyColumns.clear();
+			primaryKeyColumns = null;
+		}
+		if(constraints != null) {
+			constraints.clear();
+			constraints = null;
+		}
+		if(indexes != null) {
+			indexes.clear();
+			indexes = null;
+		}
 	}
 }

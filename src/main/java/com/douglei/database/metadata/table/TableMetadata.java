@@ -1,8 +1,11 @@
 package com.douglei.database.metadata.table;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.douglei.database.dialect.db.table.entity.Column;
 import com.douglei.database.dialect.db.table.entity.Table;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataType;
@@ -41,6 +44,44 @@ public class TableMetadata extends Table implements Metadata{
 		}else {
 			code = className;
 		}
+	}
+	
+	/**
+	 * <pre>
+	 * 	列数据迁移
+	 * 	将table中的columns和primaryKeyColumns迁移到columnMetadatas和primaryKeyColumnMetadatas中
+	 * </pre>
+	 */
+	public void columnDataMigration() {
+		ColumnMetadata cm = null;
+		
+		// 迁移columns数据
+		Collection<Column> cls = columns.values();
+		columnMetadatas = new HashMap<String, ColumnMetadata>(cls.size());
+		for (Column column : cls) {
+			cm = (ColumnMetadata) column;
+			columnMetadatas.put(cm.getCode(), cm);
+		}
+		
+		// 迁移primaryKeyColumns数据
+		cls = primaryKeyColumns.values();
+		primaryKeyColumnMetadatas = new HashMap<String, ColumnMetadata>(cls.size());
+		for (Column column : cls) {
+			cm = (ColumnMetadata) column;
+			primaryKeyColumnMetadatas.put(cm.getCode(), cm);
+		}
+		
+		// 如果不需要建表, 则将将table中的columns, primaryKeyColumns, constraints集合清空
+		if(createMode == CreateMode.NONE) {
+			clearTableCollections();
+		}
+	}
+	
+	/**
+	 * 清空table的集合数据
+	 */
+	public void clearTableCollections() {
+		super.clear();
 	}
 	
 	/**
