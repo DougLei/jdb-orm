@@ -1,7 +1,6 @@
 package com.douglei.database.dialect.db.table;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.douglei.database.dialect.db.table.entity.Column;
 import com.douglei.database.dialect.db.table.entity.Constraint;
@@ -201,43 +200,23 @@ public abstract class TableSqlStatementHandler {
 	// --------------------------------------------------------------------------------------------
 	/**
 	 * 获取create index的sql语句
-	 * @param indexes
+	 * @param index
 	 * @return
 	 */
-	public String[] indexCreateSqlStatement(List<Index> indexes) {
-		if(indexes != null && indexes.size() > 0) {
-			int size = indexes.size();
-			String[] createSqlStatement = new String[size];
-			
-			StringBuilder tmpSql = new StringBuilder(100);
-			for(int i=0;i<size;i++) {
-				// TODO
-				createSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
-			}
-			return createSqlStatement;
-		}
-		return null;
+	public String indexCreateSqlStatement(Index index) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		
+		return tmpSql.toString();
 	}
 	
 	/**
 	 * 获取drop index的sql语句
-	 * @param indexes
+	 * @param index
 	 * @return
 	 */
-	public String[] indexDropSqlStatement(List<Index> indexes) {
-		if(indexes != null && indexes.size() > 0) {
-			int size = indexes.size();
-			String[] dropSqlStatement = new String[size];
-			
-			StringBuilder tmpSql = new StringBuilder(100);
-			for(int i=0;i<size;i++) {
-				// TODO
-				dropSqlStatement[i] = tmpSql.toString();
-				tmpSql.setLength(0);
-			}
-			return dropSqlStatement;
-		}
-		return null;
+	public String indexDropSqlStatement(Index index) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		
+		return tmpSql.toString();
 	}
 }
