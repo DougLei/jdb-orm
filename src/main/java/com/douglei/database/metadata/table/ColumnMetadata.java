@@ -14,6 +14,7 @@ import com.douglei.utils.StringUtil;
  */
 public class ColumnMetadata extends Column implements Metadata{
 	
+	private String code;
 	private String property;// 映射的代码类中的属性名
 	
 	public ColumnMetadata(String property, String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
@@ -26,19 +27,6 @@ public class ColumnMetadata extends Column implements Metadata{
 			this.property = property;
 		}
 	}
-
-	/**
-	 * <pre>
-	 * 	如果指定了propertyName, 则返回propertyName
-	 * 	否则返回name, 即列名
-	 * </pre>
-	 * @return
-	 */
-	@Override
-	public String getCode() {
-		return code;
-	}
-	private String code;
 	private void setCode() {
 		if(property == null) {
 			code = name;
@@ -46,7 +34,7 @@ public class ColumnMetadata extends Column implements Metadata{
 			code = property;
 		}
 	}
-	
+
 	/**
 	 * <pre>
 	 * 	修正propertyName的值
@@ -84,6 +72,17 @@ public class ColumnMetadata extends Column implements Metadata{
 		return dbDataType;
 	}
 	
+	/**
+	 * <pre>
+	 * 	如果指定了propertyName, 则返回propertyName
+	 * 	否则返回name, 即列名
+	 * </pre>
+	 * @return
+	 */
+	@Override
+	public String getCode() {
+		return code;
+	}
 	
 	@Override
 	public MetadataType getMetadataType() {
