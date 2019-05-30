@@ -21,10 +21,10 @@ public class Constraint extends DBObject{
 		this.constraintType = constraintType;
 		this.defaultValue = defaultValue;
 	}
-	public Constraint(ConstraintType constraintType, String tableName, Column column, String defaultValue) {
+	public Constraint(ConstraintType constraintType, String tableName, Column column) {
 		super(tableName, column);
 		this.constraintType = constraintType;
-		this.defaultValue = defaultValue;
+		this.defaultValue = column.getDefaultValue();
 	}
 	
 	@Override
