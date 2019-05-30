@@ -24,19 +24,35 @@ public class Column {
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
 	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		this.name = name.toUpperCase();
-		processDataType(dataType);
-		processLengthAndPrecision(length, precision);
-		this.unique = unique;
-		this.defaultValue = defaultValue;
-		processPrimaryKeyAndNullabled(primaryKey, nullabled);
+		this.dataType = dataType;
+		processDataType(null);
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
 	}
 	
-	// 处理dataType和dataTypeHandler的值
-	private void processDataType(DataType dataType) {
-		this.dataType = dataType;
-		this.dataTypeHandler = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType.getName());
+	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+		processDataType(dataType.getName());
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
+	}
+	
+	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+		this.dataType = DataType.toValue(dataType);
+		processDataType(dataType);
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
+	}
+	
+	// 处理dataTypeHandler和dbDataType的值
+	private void processDataType(String dataType) {
+		this.dataTypeHandler = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(this.dataType==null?dataType:this.dataType.getName());
 		this.dbDataType = dataTypeHandler.defaultDBDataType();
+	}
+	
+	// 处理其他属性值
+	private void processOtherPropertyValues(String name, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+		this.name = name.toUpperCase();
+		this.unique = unique;
+		this.defaultValue = defaultValue;
+		processLengthAndPrecision(length, precision);
+		processPrimaryKeyAndNullabled(primaryKey, nullabled);
 	}
 	
 	// 处理长度和精度的值

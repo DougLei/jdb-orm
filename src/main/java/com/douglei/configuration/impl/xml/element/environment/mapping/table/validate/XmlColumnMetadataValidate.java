@@ -3,7 +3,6 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 import org.dom4j.Element;
 
 import com.douglei.context.DBRunEnvironmentContext;
-import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
 import com.douglei.database.metadata.MetadataValidateException;
@@ -35,7 +34,7 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		value = element.attributeValue("nullabled");
 		boolean nullabled = ValidationUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
 		
-		return new ColumnMetadata(element.attributeValue("property"), name, DataType.toValue(element.attributeValue("dataType")), length, precision, nullabled,
+		return new ColumnMetadata(element.attributeValue("property"), name, element.attributeValue("dataType"), length, precision, nullabled,
 				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"));
 	}
 }

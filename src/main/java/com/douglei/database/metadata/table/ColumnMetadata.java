@@ -1,7 +1,6 @@
 package com.douglei.database.metadata.table;
 
 import com.douglei.database.dialect.datatype.DBDataType;
-import com.douglei.database.dialect.datatype.DataType;
 import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.database.dialect.db.table.entity.Column;
 import com.douglei.database.metadata.Metadata;
@@ -17,7 +16,7 @@ public class ColumnMetadata extends Column implements Metadata{
 	
 	private String property;// 映射的代码类中的属性名
 	
-	public ColumnMetadata(String property, String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+	public ColumnMetadata(String property, String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
 		super(name, dataType, length, precision, nullabled, primaryKey, unique, defaultValue);
 		setPropery(property);
 		setCode();

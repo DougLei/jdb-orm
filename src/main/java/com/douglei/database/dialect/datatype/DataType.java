@@ -31,11 +31,6 @@ public enum DataType {
 		return name;
 	}
 
-	/**
-	 * 默认会返回string
-	 * @param type
-	 * @return
-	 */
 	public static DataType toValue(String type) {
 		type = type.toUpperCase();
 		DataType[] dts = DataType.values();
@@ -44,6 +39,6 @@ public enum DataType {
 				return dt;
 			}
 		}
-		return STRING;
+		return null;
 	}
 }
