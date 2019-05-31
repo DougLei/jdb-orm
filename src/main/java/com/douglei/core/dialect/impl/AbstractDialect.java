@@ -7,7 +7,6 @@ import com.douglei.core.dialect.db.features.FeaturesHolder;
 import com.douglei.core.dialect.db.objectname.DBObjectNameHandler;
 import com.douglei.core.dialect.db.sql.SqlHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
-import com.douglei.core.dialect.db.table.op.TableHandler;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**
@@ -17,7 +16,6 @@ import com.douglei.utils.reflect.ConstructorUtil;
 public abstract class AbstractDialect implements Dialect{
 	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
 	
-	protected static final TableHandler tableHandler = new TableHandler();
 	protected SqlHandler sqlHandler;
 	protected DBObjectNameHandler dbObjectNameHandler;
 	protected FeaturesHolder featuresHolder;
@@ -44,11 +42,6 @@ public abstract class AbstractDialect implements Dialect{
 	@Override
 	public AbstractDataTypeHandlerMapping getDataTypeHandlerMapping() {
 		return dataTypeHandlerMapping;
-	}
-	
-	@Override
-	public TableHandler getTableHandler() {
-		return tableHandler;
 	}
 	
 	@Override

@@ -10,6 +10,7 @@ import com.douglei.configuration.Configuration;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
@@ -46,7 +47,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	public void dynamicAddMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
-		// TODO 创建表
+		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
 	
 	@Override
@@ -55,7 +56,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		for (DynamicMapping entity : entities) {
 			mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
 		}
-		// TODO 创建表
+		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
 
 	@Override
@@ -73,30 +74,16 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
 		mappingWrapper.removeMapping(mappingCode);
+		RunMappingConfigurationContext.executeDropTable(configuration.getDataSourceWrapper());
 	}
 	
 	@Override
 	public void dynamicBatchRemoveMapping(List<String> mappingCodes) {
 		for (String mappingCode : mappingCodes) {
-			dynamicRemoveMapping(mappingCode);
+			mappingWrapper.removeMapping(mappingCode);
 		}
+		RunMappingConfigurationContext.executeDropTable(configuration.getDataSourceWrapper());
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	@Override
 	public TableSession openTableSession() {

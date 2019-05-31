@@ -137,7 +137,7 @@ public class XmlEnvironment implements Environment{
 	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {
-			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), environmentProperty);
+			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
 		}else {
 			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingCacheStore());
 		}
