@@ -8,7 +8,7 @@ import com.douglei.database.dialect.impl.oracle.datatype.Varchar2;
  * oracle datatype handler mapping
  * @author DougLei
  */
-public class OracleDataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
+public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {

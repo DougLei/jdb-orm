@@ -1,14 +1,14 @@
-package com.douglei.database.dialect.impl.mysql.datatype.handler;
+package com.douglei.database.dialect.impl.sqlserver.datatype.handler;
 
 import com.douglei.database.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.impl.mysql.datatype.Varchar;
+import com.douglei.database.dialect.impl.sqlserver.datatype.Varchar;
 
 /**
- * mysql datatype handler mapping
+ * sqlserver datatype handler mapping
  * @author DougLei
  */
-public class MySqlDataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
+public class DataTypeHandlerMapping extends AbstractDataTypeHandlerMapping {
 
 	@Override
 	public DBDataTypeHandler getDefaultDBDataTypeHandler() {
