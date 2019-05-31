@@ -1,8 +1,8 @@
 package com.douglei.sessionfactory;
 
 import java.sql.Connection;
+import java.util.List;
 
-import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
@@ -21,19 +21,17 @@ public interface SessionFactory {
 	 * 	动态添加映射
 	 * 	如果是表映射, 则顺便create表
 	 * </pre>
-	 * @param mappingType
-	 * @param mappingConfigurationContent
+	 * @param entity
 	 */
-	void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	void dynamicAddMapping(DynamicMapping entity);
 	/**
 	 * <pre>
 	 * 	动态覆盖映射
 	 * 	只对映射操作, 不对实体操作
 	 * </pre>
-	 * @param mappingType
-	 * @param mappingConfigurationContent
+	 * @param entity
 	 */
-	void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	void dynamicCoverMapping(DynamicMapping entity);
 	/**
 	 * <pre>
 	 * 	动态删除映射
@@ -42,6 +40,32 @@ public interface SessionFactory {
 	 * @param mappingCode
 	 */
 	void dynamicRemoveMapping(String mappingCode);
+	
+	/**
+	 * <pre>
+	 * 	动态批量添加映射
+	 * 	如果是表映射, 则顺便create表
+	 * </pre>
+	 * @param entities
+	 */
+	void dynamicBatchAddMapping(List<DynamicMapping> entities);
+	/**
+	 * <pre>
+	 * 	动态批量覆盖映射
+	 * 	只对映射操作, 不对实体操作
+	 * </pre>
+	 * @param entities
+	 */
+	void dynamicBatchCoverMapping(List<DynamicMapping> entities);
+	/**
+	 * <pre>
+	 * 	动态批量删除映射
+	 * 	如果是表映射, 则顺便drop表
+	 * </pre>
+	 * @param mappingCodes
+	 */
+	void dynamicBatchRemoveMapping(List<String> mappingCodes);
+	
 	
 	/**
 	 * <pre>

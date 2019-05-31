@@ -1,12 +1,12 @@
 package com.douglei.sessionfactory;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.Configuration;
-import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.context.DBRunEnvironmentContext;
@@ -43,20 +43,60 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
+	public void dynamicAddMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-		mappingWrapper.dynamicAddMapping(mappingType, mappingConfigurationContent);
+		mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+		// TODO 创建表
 	}
 	
 	@Override
-	public void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
-		mappingWrapper.dynamicCoverMapping(mappingType, mappingConfigurationContent);
+	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		for (DynamicMapping entity : entities) {
+			mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+		}
+		// TODO 创建表
 	}
-	
+
+	@Override
+	public void dynamicCoverMapping(DynamicMapping entity) {
+		mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+	}
+
+	@Override
+	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
+		for (DynamicMapping dynamicMapping : entities) {
+			dynamicCoverMapping(dynamicMapping);
+		}
+	}
+
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
 		mappingWrapper.removeMapping(mappingCode);
 	}
+	
+	@Override
+	public void dynamicBatchRemoveMapping(List<String> mappingCodes) {
+		for (String mappingCode : mappingCodes) {
+			dynamicRemoveMapping(mappingCode);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Override
 	public TableSession openTableSession() {

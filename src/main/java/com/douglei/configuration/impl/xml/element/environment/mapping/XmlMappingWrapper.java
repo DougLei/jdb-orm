@@ -10,6 +10,8 @@ import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.instances.scanner.FileScanner;
 
 /**
@@ -22,8 +24,8 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public XmlMappingWrapper(MappingCacheStore mappingCacheStore) {
 		super(mappingCacheStore);
 	}
-	public XmlMappingWrapper(List<?> paths, MappingCacheStore mappingCacheStore) throws Exception {
-		super(mappingCacheStore);
+	public XmlMappingWrapper(List<?> paths, EnvironmentProperty environmentProperty) throws Exception {
+		super(environmentProperty.getMappingCacheStore());
 		
 		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
 		scanMappingFiles(fileScanner, paths);
@@ -31,10 +33,12 @@ public class XmlMappingWrapper extends MappingWrapper{
 		List<String> list = fileScanner.getResult();
 		if(list.size() > 0) {
 			try {
+				DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 				initialMappingCacheStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
+				// TODO 创建表
 			} catch (Exception e) {
 				throw e;
 			} finally {
