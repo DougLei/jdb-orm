@@ -53,8 +53,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}
-		
-		logger.debug("结束解析table类型的映射文件: {}", configFileName);
+		logger.debug("结束解析table类型的映射文件");
 	}
 
 	/**

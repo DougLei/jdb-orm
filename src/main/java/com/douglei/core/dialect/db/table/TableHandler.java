@@ -170,19 +170,24 @@ public class TableHandler {
 	 */
 	private void rollback(List<DBObjectHolder> list, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
 		if(list.size() > 0) {
+			logger.debug("开始回滚 DDL操作");
 			DBObjectHolder holder = null;
 			for(int i=list.size()-1;i>=0;i--) {
 				holder = list.get(i);
 				if(holder.getDbObjectType() == DBObjectType.TABLE) {
 					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+						logger.debug("逆向: create ==> drop table");
 						dropTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
 					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+						logger.debug("逆向: drop ==> create table");
 						createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
 					}
 				}else if(holder.getDbObjectType() == DBObjectType.CONSTRAINT) {
 					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+						logger.debug("逆向: create ==> drop constraint");
 						dropConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
 					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+						logger.debug("逆向: drop ==> create constraint");
 						createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
 					}
 				}else if(holder.getDbObjectType() == DBObjectType.INDEX) {
@@ -214,18 +219,22 @@ public class TableHandler {
 					if(table.getCreateMode() == CreateMode.CREATE) {
 						continue;
 					}
+					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+					logger.debug("正向: drop table");
 					dropTable(table, connection, statement, tableSqlStatementHandler, list);
 				}
+				logger.debug("正向: create table");
 				createTable(table, connection, statement, tableSqlStatementHandler, list);
+				logger.debug("正向: create constraint");
 				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
 			}
 		} catch (Exception e) {
-			logger.error("create table时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
 				rollback(list, connection, preparedStatement, tableSqlStatementHandler);
 			} catch (SQLException e1) {
-				logger.error("create table时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("create 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {
@@ -254,16 +263,18 @@ public class TableHandler {
 			
 			for (TableMetadata table : tables) {
 				if(tableExists(table.getName(), preparedStatement, rs)) {
+					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+					logger.debug("正向: drop table");
 					dropTable(table, connection, statement, tableSqlStatementHandler, list);
 				}
 			}
 		} catch (Exception e) {
-			logger.error("drop table时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("drop 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
 				rollback(list, connection, preparedStatement, tableSqlStatementHandler);
 			} catch (SQLException e1) {
-				logger.error("drop table时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("drop 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {

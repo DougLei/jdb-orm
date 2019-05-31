@@ -107,7 +107,7 @@ public class Table implements Entity2MappingContentConverter{
 		StringBuilder xml = new StringBuilder(3000);
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<mapping-configuration>");
-		xml.append("<table name=\"").append(name).append("\">");
+		xml.append("<table name=\"").append(name).append("\" createMode=\"CREATE\">");
 		setXmlColumnContent(xml, columns.values());
 		setXmlConstraintContent(xml, constraints.values());
 		xml.append("</table>");
