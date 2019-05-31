@@ -10,7 +10,7 @@ import com.douglei.context.DBRunEnvironmentContext;
  * 
  * @author DougLei
  */
-public class Table implements DBObject{
+public class Table {
 	protected String name;// 表名
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
@@ -157,10 +157,5 @@ public class Table implements DBObject{
 			}
 			xml.append("</constraints>");
 		}
-	}
-
-	@Override
-	public DBObjectType getDBObjectType() {
-		return DBObjectType.TABLE;
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -70,22 +71,46 @@ public class TableHandler {
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
+	 * @param list 
 	 * @throws SQLException 
 	 */
-	private void createTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void createTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.tableCreateSqlStatement(table), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(table, DBObjectType.TABLE, DBObjectOPType.CREATE));
+		}
 	}
 
 	/**
 	 * 删除表
-	 * @param tableName
+	 * @param table
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
+	 * @param list 
 	 * @throws SQLException 
 	 */
-	private void dropTable(String tableName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.tableDropSqlStatement(tableName), connection, statement);
+	private void dropTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableDropSqlStatement(table.getName()), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(table, DBObjectType.TABLE, DBObjectOPType.DROP));
+		}
+	}
+	
+	/**
+	 * 创建约束
+	 * @param constraint
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list 
+	 * @throws SQLException 
+	 */
+	private void createConstraint(Constraint constraint, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.constraintCreateSqlStatement(constraint), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(constraint, DBObjectType.CONSTRAINT, DBObjectOPType.CREATE));
+		}
 	}
 	
 	/**
@@ -94,11 +119,28 @@ public class TableHandler {
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
+	 * @param list 
 	 * @throws SQLException 
 	 */
-	private void createConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void createConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
 		for (Constraint constraint : constraints) {
-			executeDDLSQL(tableSqlStatementHandler.constraintCreateSqlStatement(constraint), connection, statement);
+			createConstraint(constraint, connection, statement, tableSqlStatementHandler, list);
+		}
+	}
+	
+	/**
+	 * 删除约束
+	 * @param constraint
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list 
+	 * @throws SQLException 
+	 */
+	private void dropConstraint(Constraint constraint, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.constraintDropSqlStatement(constraint), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(constraint, DBObjectType.CONSTRAINT, DBObjectOPType.DROP));
 		}
 	}
 	
@@ -108,11 +150,44 @@ public class TableHandler {
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
+	 * @param list 
 	 * @throws SQLException 
 	 */
-	private void dropConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void dropConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
 		for (Constraint constraint : constraints) {
-			executeDDLSQL(tableSqlStatementHandler.constraintDropSqlStatement(constraint), connection, statement);
+			dropConstraint(constraint, connection, statement, tableSqlStatementHandler, list);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param list
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @throws SQLException 
+	 */
+	private void rollback(List<DBObjectHolder> list, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+		if(list.size() > 0) {
+			DBObjectHolder holder = null;
+			for(int i=list.size()-1;i>=0;i--) {
+				holder = list.get(i);
+				if(holder.getDbObjectType() == DBObjectType.TABLE) {
+					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+						dropTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+						createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}
+				}else if(holder.getDbObjectType() == DBObjectType.CONSTRAINT) {
+					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+						dropConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+						createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}
+				}else if(holder.getDbObjectType() == DBObjectType.INDEX) {
+					throw new IllegalAccessError("目前还不支持处理索引");
+				}
+			}
 		}
 	}
 	
@@ -123,6 +198,7 @@ public class TableHandler {
 	 */
 	public void create(DataSourceWrapper dataSourceWrapper, List<TableMetadata> tables) {
 		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getDialect().getTableSqlStatementHandler();
+		List<DBObjectHolder> list = new ArrayList<DBObjectHolder>();
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -133,33 +209,30 @@ public class TableHandler {
 			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
 			
 			for (TableMetadata table : tables) {
-				if(tableExists(table.getName(), preparedStatement, rs) && table.getCreateMode() == CreateMode.DROP_CREATE) {
-					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler);
-					dropTable(table.getName(), connection, statement, tableSqlStatementHandler);
+				if(tableExists(table.getName(), preparedStatement, rs)) {
+					if(table.getCreateMode() == CreateMode.CREATE) {
+						continue;
+					}
+					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+					dropTable(table, connection, statement, tableSqlStatementHandler, list);
 				}
-				createTable(table, connection, statement, tableSqlStatementHandler);
-				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler);
+				createTable(table, connection, statement, tableSqlStatementHandler, list);
+				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
 			}
 		} catch (Exception e) {
 			logger.error("create table时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			
-			
+			try {
+				rollback(list, connection, preparedStatement, tableSqlStatementHandler);
+			} catch (SQLException e1) {
+				logger.error("create table时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				e1.printStackTrace();
+			}
 		} finally {
+			list.clear();
+			list = null;
 			CloseUtil.closeDBConn(preparedStatement, statement, connection, rs);
 		}
 	}
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * drop表
@@ -167,21 +240,35 @@ public class TableHandler {
 	 * @param tables
 	 */
 	public void drop(DataSourceWrapper dataSourceWrapper, List<TableMetadata> tables) {
-//		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getDialect().getTableSqlStatementHandler();
-//		
-//		Connection connection = null;
-//		Statement statement = null;
-//		PreparedStatement preparedStatement = null;
-//		ResultSet rs = null;
-//		try {
-//			connection = dataSourceWrapper.getConnection(false).getConnection();
-//			for (TableDrop tableDrop : tableDrops) {
-//				
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			CloseUtil.closeDBConn(preparedStatement, statement, connection, rs);
-//		}
+		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getDialect().getTableSqlStatementHandler();
+		List<DBObjectHolder> list = new ArrayList<DBObjectHolder>();
+		
+		Connection connection = null;
+		Statement statement = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		try {
+			connection = dataSourceWrapper.getConnection(false).getConnection();
+			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
+			
+			for (TableMetadata table : tables) {
+				if(tableExists(table.getName(), preparedStatement, rs)) {
+					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+					dropTable(table, connection, statement, tableSqlStatementHandler, list);
+				}
+			}
+		} catch (Exception e) {
+			logger.error("drop table时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			try {
+				rollback(list, connection, preparedStatement, tableSqlStatementHandler);
+			} catch (SQLException e1) {
+				logger.error("drop table时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				e1.printStackTrace();
+			}
+		} finally {
+			list.clear();
+			list = null;
+			CloseUtil.closeDBConn(preparedStatement, statement, connection, rs);
+		}
 	}
 }

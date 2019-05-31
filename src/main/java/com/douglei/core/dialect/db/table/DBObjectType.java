@@ -1,4 +1,4 @@
-package com.douglei.core.dialect.db.table.entity;
+package com.douglei.core.dialect.db.table;
 
 /**
  * 
@@ -6,7 +6,6 @@ package com.douglei.core.dialect.db.table.entity;
  */
 public enum DBObjectType {
 	TABLE,
-	COLUMN,
 	CONSTRAINT,
 	INDEX;
 }
