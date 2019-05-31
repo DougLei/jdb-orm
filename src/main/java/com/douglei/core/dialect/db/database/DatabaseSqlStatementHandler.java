@@ -5,5 +5,5 @@ package com.douglei.core.dialect.db.database;
  * @author DougLei
  */
 public interface DatabaseSqlStatementHandler {
-
+	// TODO 实现动态建库
 }

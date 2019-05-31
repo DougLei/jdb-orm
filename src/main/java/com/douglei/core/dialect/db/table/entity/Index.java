@@ -14,7 +14,7 @@ public class Index extends DBObject{
 	
 	@Override
 	protected void processDBObject() {
-		// TODO Auto-generated method stub
+		// TODO 索引还没有实现
 		
 	}
 	
