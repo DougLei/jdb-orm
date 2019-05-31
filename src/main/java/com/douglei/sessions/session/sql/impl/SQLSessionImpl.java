@@ -275,7 +275,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				} catch(SQLException e){
 					throw new RuntimeException("调用并执行存储过程时出现异常", e);
 				} finally {
-					CloseUtil.closeDBConn(callableStatement);
+					callableStatement.close();
+					callableStatement = null;
 				}
 			}
 

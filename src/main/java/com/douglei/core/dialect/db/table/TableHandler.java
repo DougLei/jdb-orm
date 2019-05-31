@@ -231,7 +231,7 @@ public class TableHandler {
 		} finally {
 			list.clear();
 			list = null;
-			CloseUtil.closeDBConn(preparedStatement, statement, connection, rs);
+			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
 		}
 	}
 	
@@ -269,7 +269,7 @@ public class TableHandler {
 		} finally {
 			list.clear();
 			list = null;
-			CloseUtil.closeDBConn(preparedStatement, statement, connection, rs);
+			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
 		}
 	}
 }
