@@ -2,6 +2,7 @@
 <mapping-configuration>
 	<table name="SYS_USER" class="com.douglei.test.session.SysUser" createMode="drop_create">
 		<columns>
+			<!-- dataType的值包括: string, nstring, char, nchar, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<column name="id" property="id" dataType="string" primaryKey="true" length="30" />
 			<column name="name" property="name" dataType="string" length="30" />
 			<column name="age" property="age" dataType="integer" length="2" />
