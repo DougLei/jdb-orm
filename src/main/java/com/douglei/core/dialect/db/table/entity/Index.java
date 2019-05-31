@@ -4,7 +4,7 @@ package com.douglei.core.dialect.db.table.entity;
  * 
  * @author DougLei
  */
-public class Index extends DBObject{
+public class Index extends DB_CI_Object{
 	private IndexType indexType;
 
 	public Index(IndexType indexType, String tableName) {
@@ -24,5 +24,9 @@ public class Index extends DBObject{
 	}
 	public IndexType getIndexType() {
 		return indexType;
+	}
+	@Override
+	public DBObjectType getDBObjectType() {
+		return DBObjectType.INDEX;
 	}
 }

@@ -73,13 +73,6 @@ public class TableMetadata extends Table implements Metadata{
 	}
 	
 	/**
-	 * 清空table的集合数据, 只保留映射的集合数据
-	 */
-	public void clearTableCollections() {
-		super.clear();
-	}
-	
-	/**
 	 * <pre>
 	 * 	如果指定了className, 则返回className
 	 * 	否则返回name, 即表名

@@ -3,9 +3,7 @@ package com.douglei.context;
 import java.util.ArrayList;
 
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.core.dialect.db.table.op.TableOPHandler;
-import com.douglei.core.dialect.db.table.op.create.TableCreator;
-import com.douglei.core.dialect.db.table.op.drop.TableDrop;
+import com.douglei.core.dialect.db.table.TableHandler;
 import com.douglei.core.metadata.sql.SqlContentType;
 import com.douglei.core.metadata.table.CreateMode;
 import com.douglei.core.metadata.table.TableMetadata;
@@ -34,10 +32,10 @@ public class RunMappingConfigurationContext {
 			return;
 		}
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		if(runMappingConfiguration.tableCreators == null) {
-			runMappingConfiguration.tableCreators = new ArrayList<TableCreator>(10);
+		if(runMappingConfiguration.createTables == null) {
+			runMappingConfiguration.createTables = new ArrayList<TableMetadata>(10);
 		}
-		runMappingConfiguration.tableCreators.add(new TableCreator(tableMetadata));
+		runMappingConfiguration.createTables.add(tableMetadata);
 	}
 	
 	/**
@@ -47,8 +45,8 @@ public class RunMappingConfigurationContext {
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
 		if(RUN_MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.tableCreators != null) {
-				TableOPHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.tableCreators);
+			if(runMappingConfiguration.createTables != null) {
+				TableHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.createTables);
 			}
 		}
 	}
@@ -59,10 +57,10 @@ public class RunMappingConfigurationContext {
 	 */
 	public static void registerDropTable(TableMetadata tableMetadata) {
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		if(runMappingConfiguration.tableDrops == null) {
-			runMappingConfiguration.tableDrops = new ArrayList<TableDrop>(5);
+		if(runMappingConfiguration.dropTables == null) {
+			runMappingConfiguration.dropTables = new ArrayList<TableMetadata>(5);
 		}
-		runMappingConfiguration.tableDrops.add(new TableDrop(tableMetadata));
+		runMappingConfiguration.dropTables.add(tableMetadata);
 	}
 	
 	/**
@@ -72,8 +70,8 @@ public class RunMappingConfigurationContext {
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
 		if(RUN_MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.tableDrops != null) {
-				TableOPHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.tableDrops);
+			if(runMappingConfiguration.dropTables != null) {
+				TableHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.dropTables);
 			}
 		}
 	}

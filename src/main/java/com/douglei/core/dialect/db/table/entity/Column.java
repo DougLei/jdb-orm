@@ -9,7 +9,7 @@ import com.douglei.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
  * 
  * @author DougLei
  */
-public class Column {
+public class Column implements DBObject{
 	
 	protected String name;// 列名
 	protected DataType dataType;// 数据类型
@@ -107,5 +107,10 @@ public class Column {
 	}
 	public DBDataType getDBDataType() {
 		return dbDataType;
+	}
+
+	@Override
+	public DBObjectType getDBObjectType() {
+		return DBObjectType.COLUMN;
 	}
 }

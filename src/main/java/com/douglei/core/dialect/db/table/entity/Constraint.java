@@ -11,7 +11,7 @@ import com.douglei.core.dialect.datatype.handler.classtype.AbstractStringDataTyp
  * 列约束
  * @author DougLei
  */
-public class Constraint extends DBObject{
+public class Constraint extends DB_CI_Object{
 	private ConstraintType constraintType;
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
 	private String defaultValue;// 默认值
@@ -95,5 +95,9 @@ public class Constraint extends DBObject{
 	public String getDefaultValue() {
 		process();
 		return defaultValue;
+	}
+	@Override
+	public DBObjectType getDBObjectType() {
+		return DBObjectType.CONSTRAINT;
 	}
 }

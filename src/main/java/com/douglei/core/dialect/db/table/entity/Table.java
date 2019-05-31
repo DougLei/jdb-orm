@@ -10,7 +10,7 @@ import com.douglei.context.DBRunEnvironmentContext;
  * 
  * @author DougLei
  */
-public class Table {
+public class Table implements DBObject{
 	protected String name;// 表名
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
@@ -102,24 +102,6 @@ public class Table {
 	}
 	
 	/**
-	 * 清空数据
-	 */
-	public void clear() {
-		if(columns != null) {
-			columns.clear();
-			columns = null;
-		}
-		if(primaryKeyColumns != null) {
-			primaryKeyColumns.clear();
-			primaryKeyColumns = null;
-		}
-		if(constraints != null) {
-			constraints.clear();
-			constraints = null;
-		}
-	}
-	
-	/**
 	 * 转换为表xml映射配置内容
 	 * @return
 	 */
@@ -175,5 +157,10 @@ public class Table {
 			}
 			xml.append("</constraints>");
 		}
+	}
+
+	@Override
+	public DBObjectType getDBObjectType() {
+		return DBObjectType.TABLE;
 	}
 }
