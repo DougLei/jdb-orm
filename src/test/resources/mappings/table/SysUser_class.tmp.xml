@@ -2,17 +2,10 @@
 <mapping-configuration>
 	<table name="SYS_USER" class="com.douglei.test.session.SysUser">
 		<columns>
-			<column name="id" property="id" dataType="string" primaryKey="true" length="" precision="" defaultValue="" unique="" nullabled="" />
-			<column name="name" property="name" dataType="string" />
-			<column name="age" property="age" dataType="integer" />
-			<column name="sex" property="sex" dataType="string" />
+			<column name="id" property="id" dataType="string" primaryKey="true" length="30" />
+			<column name="name" property="name" dataType="string" length="30" />
+			<column name="age" property="age" dataType="integer" length="2" />
+			<column name="sex" property="sex" dataType="string" length="30" />
 		</columns>
-		
-		<constraints>
-			<constraint type="unique"><!-- primary_key, unique -->
-				<column-name value="age" />
-				<column-name value="sex" />
-			</constraint>
-		</constraints>
 	</table>
 </mapping-configuration>
