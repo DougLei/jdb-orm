@@ -1,5 +1,7 @@
 package com.douglei.sessionfactory;
 
+import java.sql.Connection;
+
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.database.dialect.TransactionIsolationLevel;
 import com.douglei.sessions.session.sql.SQLSession;
@@ -122,4 +124,24 @@ public interface SessionFactory {
 	 * @return
 	 */
 	SqlSession openSqlSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
+	
+	/**
+	 * 开启connection <b>connection以及产生的其他对象, 需要手动关闭</b>
+	 * @return
+	 */
+	Connection openConnection();
+	/**
+	 * 开启connection <b>connection以及产生的其他对象, 需要手动关闭</b>
+	 * @param beginTransaction
+	 * @return
+	 */
+	Connection openConnection(boolean beginTransaction);
+	/**
+	 * 开启connection <b>connection以及产生的其他对象, 需要手动关闭</b>
+	 * @param beginTransaction
+	 * @param transactionIsolationLevel
+	 * @return
+	 */
+	Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
+	
 }

@@ -1,5 +1,7 @@
 package com.douglei.sessionfactory;
 
+import java.sql.Connection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		this.mappingWrapper = configuration.getMappingWrapper();
 	}
 	
-	private ConnectionWrapper openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		return configuration.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}
 	
@@ -71,7 +73,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(logger.isDebugEnabled()) {
 			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", TableSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new TableSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+		return new TableSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
@@ -89,7 +91,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(logger.isDebugEnabled()) {
 			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SQLSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SQLSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+		return new SQLSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 	
 	@Override
@@ -107,6 +109,21 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(logger.isDebugEnabled()) {
 			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SqlSessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SqlSessionImpl(openConnection(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+		return new SqlSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+	}
+
+	@Override
+	public Connection openConnection() {
+		return getConnectionWrapper(false, null).getConnection();
+	}
+
+	@Override
+	public Connection openConnection(boolean beginTransaction) {
+		return getConnectionWrapper(beginTransaction, null).getConnection();
+	}
+
+	@Override
+	public Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return getConnectionWrapper(beginTransaction, transactionIsolationLevel).getConnection();
 	}
 }
