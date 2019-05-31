@@ -124,15 +124,20 @@ public class Table {
 	 * @return
 	 */
 	public String toXmlTableMappingConfigurationContent() {
-		Collection<Column> cls = null;
 		StringBuilder xml = new StringBuilder(3000);
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<mapping-configuration>");
 		xml.append("<table name=\"").append(name).append("\">");
-		xml.append("<columns>");
+		setXmlColumnContent(xml, columns.values());
+		setXmlConstraintContent(xml, constraints.values());
+		xml.append("</table>");
+		xml.append("</mapping-configuration>");
+		return xml.toString();
+	}
+	private void setXmlColumnContent(StringBuilder xml, Collection<Column> columns) {
 		if(columns != null) {
-			cls = columns.values();
-			for (Column column : cls) {
+			xml.append("<columns>");
+			for (Column column : columns) {
 				xml.append("<column ");
 				xml.append("name=\"").append(column.getName()).append("\" ");
 				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
@@ -140,27 +145,35 @@ public class Table {
 					xml.append("primaryKey=\"true\" ");
 				}
 				xml.append("length=\"").append(column.getLength()).append("\" ");
-				
-				xml.append("precision=\"").append(column).append("\" ");
-				
-				xml.append("defaultValue=\"").append(column).append("\" ");
-				
-				xml.append("unique=\"").append(column).append("\" ");
-				
-				xml.append("nullabled=\"").append(column).append("\" ");
+				xml.append("precision=\"").append(column.getPrecision()).append("\" ");
+				if(column.getDefaultValue() != null) {
+					xml.append("defaultValue=\"").append(column.getDefaultValue()).append("\" ");
+				}
+				if(column.isUnique()) {
+					xml.append("unique=\"true\" ");
+				}
+				if(!column.isNullabled()) {
+					xml.append("nullabled=\"false\" ");
+				}
 				xml.append(" />");
 			}
+			xml.append("</columns>");
 		}
-		xml.append("</columns>");
-		
-		
-		
-		xml.append("");
-		xml.append("");
-		xml.append("");
-		xml.append("");
-		xml.append("</table>");
-		xml.append("</mapping-configuration>");
-		return xml.toString();
+	}
+	private void setXmlConstraintContent(StringBuilder xml, Collection<Constraint> constraints) {
+		if(constraints != null) {
+			Collection<Column> columns = null;
+			
+			xml.append("<constraints>");
+			for (Constraint constraint : constraints) {
+				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\">");
+				columns = constraint.getColumns();
+				for (Column column : columns) {
+					xml.append("<column-name value=\"").append(column.getName()).append("\" />");
+				}
+				xml.append("</constraint>");
+			}
+			xml.append("</constraints>");
+		}
 	}
 }

@@ -143,5 +143,4 @@ public interface SessionFactory {
 	 * @return
 	 */
 	Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
-	
 }
