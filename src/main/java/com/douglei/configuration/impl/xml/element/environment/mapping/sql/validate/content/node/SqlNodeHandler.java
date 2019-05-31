@@ -2,7 +2,7 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.sql.valid
 
 import org.w3c.dom.Node;
 
-import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
 
 /**
  * 

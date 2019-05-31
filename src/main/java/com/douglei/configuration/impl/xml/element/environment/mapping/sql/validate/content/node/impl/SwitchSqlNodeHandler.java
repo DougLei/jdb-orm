@@ -6,9 +6,9 @@ import org.w3c.dom.NodeList;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeMismatchingException;
-import com.douglei.database.metadata.sql.content.node.SqlNode;
-import com.douglei.database.metadata.sql.content.node.SqlNodeType;
-import com.douglei.database.metadata.sql.content.node.impl.SwitchSqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNodeType;
+import com.douglei.core.metadata.sql.content.node.impl.SwitchSqlNode;
 
 /**
  * 

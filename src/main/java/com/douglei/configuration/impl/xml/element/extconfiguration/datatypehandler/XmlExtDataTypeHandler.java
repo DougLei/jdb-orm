@@ -2,13 +2,13 @@ package com.douglei.configuration.impl.xml.element.extconfiguration.datatypehand
 
 import com.douglei.configuration.extconfiguration.datatypehandler.DataTypeHandlerClassCastException;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
-import com.douglei.database.dialect.Dialect;
-import com.douglei.database.dialect.DialectMapping;
-import com.douglei.database.dialect.datatype.handler.DataTypeHandler;
-import com.douglei.database.dialect.datatype.handler.DataTypeHandlerType;
-import com.douglei.database.dialect.datatype.handler.classtype.ClassDataTypeHandler;
-import com.douglei.database.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.database.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
+import com.douglei.core.dialect.Dialect;
+import com.douglei.core.dialect.DialectMapping;
+import com.douglei.core.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.core.dialect.datatype.handler.DataTypeHandlerType;
+import com.douglei.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.ConstructorUtil;
 

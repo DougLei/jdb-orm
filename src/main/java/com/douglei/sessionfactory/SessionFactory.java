@@ -3,9 +3,9 @@ package com.douglei.sessionfactory;
 import java.sql.Connection;
 
 import com.douglei.configuration.environment.mapping.MappingType;
-import com.douglei.database.dialect.TransactionIsolationLevel;
-import com.douglei.database.dialect.db.database.DatabaseSqlStatementHandler;
-import com.douglei.database.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.core.dialect.TransactionIsolationLevel;
+import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
+import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.sqlsession.SqlSession;

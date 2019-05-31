@@ -17,13 +17,13 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
-import com.douglei.database.dialect.db.table.entity.Constraint;
-import com.douglei.database.dialect.db.table.entity.ConstraintType;
-import com.douglei.database.metadata.Metadata;
-import com.douglei.database.metadata.MetadataValidate;
-import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.core.dialect.db.table.entity.Constraint;
+import com.douglei.core.dialect.db.table.entity.ConstraintType;
+import com.douglei.core.metadata.Metadata;
+import com.douglei.core.metadata.MetadataValidate;
+import com.douglei.core.metadata.MetadataValidateException;
+import com.douglei.core.metadata.table.ColumnMetadata;
+import com.douglei.core.metadata.table.TableMetadata;
 
 /**
  * table 映射

@@ -11,8 +11,8 @@ import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.configuration.impl.xml.element.environment.XmlEnvironment;
-import com.douglei.database.dialect.TransactionIsolationLevel;
-import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.core.dialect.TransactionIsolationLevel;
+import com.douglei.core.sql.ConnectionWrapper;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.reflect.IntrospectorUtil;
 

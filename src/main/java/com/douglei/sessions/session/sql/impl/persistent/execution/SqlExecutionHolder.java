@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.context.DBRunEnvironmentContext;
-import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.SqlMetadata;
+import com.douglei.core.metadata.sql.SqlContentMetadata;
+import com.douglei.core.metadata.sql.SqlMetadata;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 
 /**

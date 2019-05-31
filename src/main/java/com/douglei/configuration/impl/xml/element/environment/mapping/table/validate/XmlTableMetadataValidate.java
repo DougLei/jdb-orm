@@ -2,11 +2,11 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.table.val
 
 import org.dom4j.Element;
 
-import com.douglei.database.metadata.Metadata;
-import com.douglei.database.metadata.MetadataValidate;
-import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.table.CreateMode;
-import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.core.metadata.Metadata;
+import com.douglei.core.metadata.MetadataValidate;
+import com.douglei.core.metadata.MetadataValidateException;
+import com.douglei.core.metadata.table.CreateMode;
+import com.douglei.core.metadata.table.TableMetadata;
 import com.douglei.utils.StringUtil;
 
 /**

@@ -3,7 +3,7 @@ package com.douglei.sessions.session.table.impl.persistent.execution;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.database.metadata.table.TableMetadata;
+import com.douglei.core.metadata.table.TableMetadata;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.utils.StringUtil;
 

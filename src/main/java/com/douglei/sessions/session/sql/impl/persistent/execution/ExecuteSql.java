@@ -3,9 +3,9 @@ package com.douglei.sessions.session.sql.impl.persistent.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.content.node.ExecuteSqlNode;
-import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.SqlContentMetadata;
+import com.douglei.core.metadata.sql.content.node.ExecuteSqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
 
 /**
  * 要执行的sql实体

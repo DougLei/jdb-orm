@@ -3,7 +3,7 @@ package com.douglei.sessions.session.sql;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.database.sql.pagequery.PageResult;
+import com.douglei.core.sql.pagequery.PageResult;
 import com.douglei.sessions.BasicSession;
 
 /**

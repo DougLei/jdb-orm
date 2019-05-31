@@ -1,6 +1,6 @@
 package com.douglei.context;
 
-import com.douglei.database.dialect.Dialect;
+import com.douglei.core.dialect.Dialect;
 
 /**
  * 

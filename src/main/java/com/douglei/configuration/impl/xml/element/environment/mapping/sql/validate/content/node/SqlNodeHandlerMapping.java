@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.w3c.dom.Node;
 
-import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
 import com.douglei.instances.scanner.ClassScanner;
 import com.douglei.utils.reflect.ConstructorUtil;
 

@@ -1,0 +1,20 @@
+package com.douglei.core.dialect.db.table.entity;
+
+/**
+ * 
+ * @author DougLei
+ */
+public enum IndexType {
+	A;
+	
+	public static IndexType toValue(String type) {
+		type = type.toUpperCase();
+		IndexType[] its = IndexType.values();
+		for (IndexType it : its) {
+			if(it.name().equals(type)) {
+				return it;
+			}
+		}
+		return null;
+	}
+}

@@ -14,11 +14,11 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.sql.valida
 import com.douglei.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.configuration.impl.xml.util.RepeatedElementException;
 import com.douglei.context.XmlReaderContext;
-import com.douglei.database.metadata.Metadata;
-import com.douglei.database.metadata.MetadataValidate;
-import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.SqlMetadata;
+import com.douglei.core.metadata.Metadata;
+import com.douglei.core.metadata.MetadataValidate;
+import com.douglei.core.metadata.MetadataValidateException;
+import com.douglei.core.metadata.sql.SqlContentMetadata;
+import com.douglei.core.metadata.sql.SqlMetadata;
 
 /**
  * 

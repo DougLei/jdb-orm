@@ -6,8 +6,8 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
-import com.douglei.database.metadata.sql.content.node.SqlNode;
-import com.douglei.database.metadata.sql.content.node.impl.ForeachSqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.content.node.impl.ForeachSqlNode;
 import com.douglei.utils.StringUtil;
 
 /**

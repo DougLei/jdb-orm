@@ -1,7 +1,7 @@
 package com.douglei.context;
 
 import com.douglei.configuration.environment.property.EnvironmentProperty;
-import com.douglei.database.dialect.Dialect;
+import com.douglei.core.dialect.Dialect;
 
 /**
  * 数据库运行环境 上下文

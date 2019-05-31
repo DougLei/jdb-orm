@@ -3,8 +3,8 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.sql.valid
 import org.w3c.dom.Node;
 
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
-import com.douglei.database.metadata.sql.content.node.SqlNode;
-import com.douglei.database.metadata.sql.content.node.impl.ElseSqlNode;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
+import com.douglei.core.metadata.sql.content.node.impl.ElseSqlNode;
 import com.douglei.utils.StringUtil;
 
 /**

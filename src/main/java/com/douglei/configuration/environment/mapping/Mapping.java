@@ -1,6 +1,6 @@
 package com.douglei.configuration.environment.mapping;
 
-import com.douglei.database.metadata.Metadata;
+import com.douglei.core.metadata.Metadata;
 
 /**
  * 

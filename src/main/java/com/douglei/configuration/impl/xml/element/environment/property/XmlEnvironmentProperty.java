@@ -10,8 +10,8 @@ import com.douglei.configuration.environment.mapping.cache.store.MappingCacheSto
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.configuration.environment.property.FieldMetaData;
 import com.douglei.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
-import com.douglei.database.dialect.Dialect;
-import com.douglei.database.dialect.DialectMapping;
+import com.douglei.core.dialect.Dialect;
+import com.douglei.core.dialect.DialectMapping;
 import com.douglei.utils.StringUtil;
 import com.douglei.utils.datatype.ValidationUtil;
 

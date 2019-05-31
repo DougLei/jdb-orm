@@ -3,8 +3,8 @@ package com.douglei.configuration.environment.datasource;
 import javax.sql.DataSource;
 
 import com.douglei.configuration.SelfProcessing;
-import com.douglei.database.dialect.TransactionIsolationLevel;
-import com.douglei.database.sql.ConnectionWrapper;
+import com.douglei.core.dialect.TransactionIsolationLevel;
+import com.douglei.core.sql.ConnectionWrapper;
 
 /**
  * 

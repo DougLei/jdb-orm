@@ -3,10 +3,10 @@ package com.douglei.configuration.impl.xml.element.environment.mapping.sql.valid
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.douglei.database.metadata.Metadata;
-import com.douglei.database.metadata.MetadataValidate;
-import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.sql.SqlMetadata;
+import com.douglei.core.metadata.Metadata;
+import com.douglei.core.metadata.MetadataValidate;
+import com.douglei.core.metadata.MetadataValidateException;
+import com.douglei.core.metadata.sql.SqlMetadata;
 
 /**
  * 

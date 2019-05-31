@@ -9,13 +9,13 @@ import org.w3c.dom.NodeList;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
-import com.douglei.database.dialect.DialectType;
-import com.douglei.database.metadata.Metadata;
-import com.douglei.database.metadata.MetadataValidate;
-import com.douglei.database.metadata.MetadataValidateException;
-import com.douglei.database.metadata.sql.SqlContentMetadata;
-import com.douglei.database.metadata.sql.SqlContentType;
-import com.douglei.database.metadata.sql.content.node.SqlNode;
+import com.douglei.core.dialect.DialectType;
+import com.douglei.core.metadata.Metadata;
+import com.douglei.core.metadata.MetadataValidate;
+import com.douglei.core.metadata.MetadataValidateException;
+import com.douglei.core.metadata.sql.SqlContentMetadata;
+import com.douglei.core.metadata.sql.SqlContentType;
+import com.douglei.core.metadata.sql.content.node.SqlNode;
 import com.douglei.utils.StringUtil;
 
 /**

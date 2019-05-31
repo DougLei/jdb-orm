@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.database.metadata.table.ColumnMetadata;
-import com.douglei.database.metadata.table.TableMetadata;
-import com.douglei.database.sql.statement.entity.InputSqlParameter;
+import com.douglei.core.metadata.table.ColumnMetadata;
+import com.douglei.core.metadata.table.TableMetadata;
+import com.douglei.core.sql.statement.entity.InputSqlParameter;
 
 /**
  * 

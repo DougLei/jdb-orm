@@ -7,8 +7,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.database.metadata.table.TableMetadata;
 import com.douglei.sessions.session.persistent.PersistentObject;
+import com.douglei.core.metadata.table.TableMetadata;
 import com.douglei.sessions.session.persistent.OperationState;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
