@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.core.dialect.DialectType;
 import com.douglei.core.metadata.sql.SqlContentMetadata;
 import com.douglei.core.metadata.sql.SqlMetadata;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
@@ -19,10 +20,10 @@ public class SqlExecutionHolder implements ExecutionHolder{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
-		String dialectTypeCode = DBRunEnvironmentContext.getDialect().getType().getCode();
-		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialectTypeCode);
+		DialectType dialect = DBRunEnvironmentContext.getDialect().getType();
+		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialectTypeCode+", 不存在可以执行的sql语句");
+			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialect+", 不存在可以执行的sql语句");
 		}
 		
 		executeSqlCount = contents.size();

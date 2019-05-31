@@ -7,6 +7,7 @@ import com.douglei.core.metadata.Metadata;
 import com.douglei.core.metadata.MetadataValidate;
 import com.douglei.core.metadata.MetadataValidateException;
 import com.douglei.core.metadata.sql.SqlMetadata;
+import com.douglei.utils.StringUtil;
 
 /**
  * 
@@ -21,10 +22,30 @@ public class XmlSqlMetadataValidate implements MetadataValidate {
 	
 	private SqlMetadata doValidate(Node sqlNode) {
 		NamedNodeMap attributeMap = sqlNode.getAttributes();
-		Node name = attributeMap.getNamedItem("name");
-		if(name == null) {
+		String name = getName(attributeMap.getNamedItem("name"));
+		String namespace = getNamespace(attributeMap.getNamedItem("namespace"));
+		return new SqlMetadata(namespace, name);
+	}
+
+	private String getName(Node nameItem) {
+		if(nameItem == null) {
 			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
 		}
-		return new SqlMetadata(attributeMap.getNamedItem("namespace").getNodeValue(), name.getNodeValue());
+		String name = nameItem.getNodeValue();
+		if(StringUtil.isEmpty(name)) {
+			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
+		}
+		return name;
+	}
+	
+	private String getNamespace(Node namespaceItem) {
+		if(namespaceItem == null) {
+			return null;
+		}
+		String namespace = namespaceItem.getNodeValue();
+		if(StringUtil.isEmpty(namespace)) {
+			return null;
+		}
+		return namespace;
 	}
 }

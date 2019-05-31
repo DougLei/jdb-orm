@@ -42,7 +42,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			NodeList contentNodeList = getContents(sqlNode);
 			int length = contentNodeList.getLength();
 			for (int i=0;i<length ;i++) {
-				sqlMetadata.addContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
+				sqlMetadata.addSqlContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());

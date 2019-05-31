@@ -14,6 +14,7 @@ import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.core.dialect.DialectType;
 import com.douglei.core.metadata.sql.SqlContentMetadata;
 import com.douglei.core.metadata.sql.SqlMetadata;
 import com.douglei.core.metadata.sql.SqlParameterMetadata;
@@ -184,10 +185,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
 		
-		String dialectTypeCode = DBRunEnvironmentContext.getDialect().getType().getCode();
-		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialectTypeCode);
+		DialectType dialect = DBRunEnvironmentContext.getDialect().getType();
+		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialectTypeCode+", 不存在可以执行的存储过程sql语句");
+			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialect+", 不存在可以执行的存储过程sql语句");
 		}
 		
 		int length = contents.size();

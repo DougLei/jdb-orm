@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.core.dialect.db.Entity2MappingContentConverter;
 
 /**
  * 
  * @author DougLei
  */
-public class Table {
+public class Table implements Entity2MappingContentConverter{
 	protected String name;// 表名
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
@@ -101,11 +102,8 @@ public class Table {
 		return primaryKeyColumns != null;
 	}
 	
-	/**
-	 * 转换为表xml映射配置内容
-	 * @return
-	 */
-	public String toXmlTableMappingConfigurationContent() {
+	@Override
+	public String toXmlMappingContent() {
 		StringBuilder xml = new StringBuilder(3000);
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<mapping-configuration>");
@@ -137,7 +135,7 @@ public class Table {
 				if(!column.isNullabled()) {
 					xml.append("nullabled=\"false\" ");
 				}
-				xml.append(" />");
+				xml.append("/>");
 			}
 			xml.append("</columns>");
 		}
@@ -151,7 +149,7 @@ public class Table {
 				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\">");
 				columns = constraint.getColumns();
 				for (Column column : columns) {
-					xml.append("<column-name value=\"").append(column.getName()).append("\" />");
+					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
 				}
 				xml.append("</constraint>");
 			}

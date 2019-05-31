@@ -11,10 +11,6 @@ public enum DialectType {
 	MYSQL,
 	SQLSERVER;
 	
-	public String getCode() {
-		return this.name();
-	}
-	
 	public static DialectType toValue(String dialect) {
 		dialect = dialect.toUpperCase();
 		DialectType[] dts = DialectType.values();

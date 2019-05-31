@@ -1,14 +1,11 @@
 package com.douglei.core.metadata.sql;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.douglei.core.dialect.DialectType;
 import com.douglei.core.metadata.Metadata;
 import com.douglei.core.metadata.MetadataType;
-import com.douglei.utils.StringUtil;
 
 /**
  * sql元数据
@@ -18,35 +15,20 @@ public class SqlMetadata implements Metadata{
 	
 	private String namespace;
 	private String name;
-	private Map<String, List<SqlContentMetadata>> contentMap;
+	private List<SqlContentMetadata> contents;
 	
 	public SqlMetadata(String namespace, String name) {
-		setNamespace(namespace);
-		this.name = name;
-	}
-	private void setNamespace(String namespace) {
-		if(StringUtil.isEmpty(namespace)) {
-			if(namespace != null) {
-				namespace = null;
-			}
-		}
 		this.namespace = namespace;
+		this.name = name;
 	}
 
 	/**
 	 * 添加 sql content
 	 * @param sqlContentMetadata
 	 */
-	public void addContentMetadata(SqlContentMetadata sqlContentMetadata) {
-		if(contentMap == null) {
-			contentMap = new HashMap<String, List<SqlContentMetadata>>(DialectType.values().length);
-		}
-		
-		String dialectTypeCode = sqlContentMetadata.getCode();
-		List<SqlContentMetadata> contents = contentMap.get(dialectTypeCode);
+	public void addSqlContentMetadata(SqlContentMetadata sqlContentMetadata) {
 		if(contents == null) {
-			contents = new ArrayList<SqlContentMetadata>(5);
-			contentMap.put(dialectTypeCode, contents);
+			contents = new ArrayList<SqlContentMetadata>(10);
 		}
 		contents.add(sqlContentMetadata);
 	}
@@ -76,11 +58,13 @@ public class SqlMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public List<SqlContentMetadata> getContents(String dialectTypeCode) {
-		List<SqlContentMetadata> contents = contentMap.get(dialectTypeCode);
-		if(contents == null || contents.size() == 0) {
-			contents = contentMap.get(DialectType.ALL.getCode());// 如果没有找到, 用ALL再找
+	public List<SqlContentMetadata> getContents(DialectType dialect) {
+		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
+		for (SqlContentMetadata content : contents) {
+			if(content.getDialect() == dialect || content.getDialect() == DialectType.ALL) {
+				list.add(content);
+			}
 		}
-		return contents;
+		return list;
 	}
 }
