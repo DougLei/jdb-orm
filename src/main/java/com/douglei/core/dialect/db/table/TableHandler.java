@@ -61,6 +61,7 @@ public class TableHandler {
 	 */
 	private void executeDDLSQL(String ddlSQL, Connection connection, Statement statement) throws SQLException {
 		statement = connection.createStatement();
+		logger.debug("执行的DDL SQL语句为: {}", ddlSQL);
 		statement.execute(ddlSQL);
 		statement.close();
 	}
