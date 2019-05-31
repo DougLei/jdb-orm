@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.configuration.environment.mapping.MappingType;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
-import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
+import com.douglei.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.instances.scanner.FileScanner;
 
 /**
@@ -33,7 +33,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 			try {
 				initialMappingCacheStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
-					addMapping(XmlMappingFactory.newInstance_initial(mappingConfigFilePath));
+					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
 			} catch (Exception e) {
 				throw e;
@@ -56,9 +56,25 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add mapping: {}", mappingConfigurationContent);
-			addMapping(XmlMappingFactory.newInstance_dynamicAdd(mappingType, mappingConfigurationContent));
+			addMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}
+	}
+	
+	@Override
+	public void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
+		try {
+			logger.debug("dynamic cover mapping: {}", mappingConfigurationContent);
+			coverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
+		} catch (Exception e) {
+			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
+		}
+	}
+	
+	@Override
+	public void dynamicRemoveMapping(String mappingCode) {
+		logger.debug("dynamic remove mapping-mappingCode: {}", mappingCode);
+		removeMapping(mappingCode);
 	}
 }

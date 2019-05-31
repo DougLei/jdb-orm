@@ -32,17 +32,16 @@ public class XmlMappingFactory {
 	 * 	在初始化时, 加载配置文件时, 创建mapping实例的方法
 	 * </pre>
 	 * @param mappingConfigurationXmlFilePath
-	 * @param mappingConfigurationXmlFile
 	 * @return
 	 * @throws IOException 
 	 * @throws SAXException 
 	 * @throws DocumentException 
 	 * @throws FileNotFoundException 
 	 */
-	public static Mapping newInstance_initial(String mappingConfigurationXmlFilePath) throws FileNotFoundException, DocumentException, SAXException, IOException {
+	public static Mapping newMappingInstance(String mappingConfigurationXmlFilePath) throws FileNotFoundException, DocumentException, SAXException, IOException {
 		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationXmlFilePath, mappingType);
-		return newInstance(mappingType, mappingConfigurationXmlFilePath, new FileInputStream(mappingConfigurationXmlFilePath));
+		return newMappingInstance(mappingType, mappingConfigurationXmlFilePath, new FileInputStream(mappingConfigurationXmlFilePath));
 	}
 	
 	/**
@@ -58,9 +57,9 @@ public class XmlMappingFactory {
 	 * @throws SAXException 
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static Mapping newInstance_dynamicAdd(MappingType mappingType, String mappingConfigurationContent) throws DocumentException, SAXException, IOException {
+	public static Mapping newMappingInstance(MappingType mappingType, String mappingConfigurationContent) throws DocumentException, SAXException, IOException {
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationContent, mappingType);
-		return newInstance(mappingType, mappingConfigurationContent, new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")));
+		return newMappingInstance(mappingType, mappingConfigurationContent, new ByteArrayInputStream(mappingConfigurationContent.getBytes("utf-8")));
 	}
 	
 	/**
@@ -73,7 +72,7 @@ public class XmlMappingFactory {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	private static Mapping newInstance(MappingType mappingType, String mappingConfigurationXmlName, InputStream input) throws DocumentException, SAXException, IOException {
+	private static Mapping newMappingInstance(MappingType mappingType, String mappingConfigurationXmlName, InputStream input) throws DocumentException, SAXException, IOException {
 		try {
 			switch(mappingType) {
 				case TABLE:

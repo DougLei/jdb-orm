@@ -13,14 +13,28 @@ import com.douglei.sessions.sqlsession.SqlSession;
 public interface SessionFactory {
 	
 	/**
-	 * 动态添加映射, 如果存在, 则覆盖
+	 * <pre>
+	 * 	动态添加映射
+	 * 	如果是表映射, 则顺便create表
+	 * </pre>
 	 * @param mappingType
 	 * @param mappingConfigurationContent
 	 */
 	void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
-	
 	/**
-	 * 动态移除映射
+	 * <pre>
+	 * 	动态覆盖映射
+	 * 	只对映射操作, 不对实体操作
+	 * </pre>
+	 * @param mappingType
+	 * @param mappingConfigurationContent
+	 */
+	void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	/**
+	 * <pre>
+	 * 	动态删除映射
+	 * 	如果是表映射, 则顺便drop表
+	 * </pre>
 	 * @param mappingCode
 	 */
 	void dynamicRemoveMapping(String mappingCode);

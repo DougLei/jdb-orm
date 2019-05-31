@@ -47,8 +47,13 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
+	public void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
+		mappingWrapper.dynamicCoverMapping(mappingType, mappingConfigurationContent);
+	}
+	
+	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
-		mappingWrapper.dynamicRemoveMapping(mappingCode);
+		mappingWrapper.removeMapping(mappingCode);
 	}
 	
 	@Override

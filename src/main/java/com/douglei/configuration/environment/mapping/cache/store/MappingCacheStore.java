@@ -1,4 +1,4 @@
-package com.douglei.configuration.environment.property.mapping.cache.store;
+package com.douglei.configuration.environment.mapping.cache.store;
 
 import com.douglei.configuration.SelfProcessing;
 import com.douglei.configuration.environment.mapping.Mapping;
@@ -8,6 +8,7 @@ import com.douglei.configuration.environment.mapping.Mapping;
  * @author DougLei
  */
 public interface MappingCacheStore extends SelfProcessing{
+	static final short DEFAULT_STORE_SIZE = 32;
 	
 	/**
 	 * 初始化存储空间大小
@@ -16,13 +17,11 @@ public interface MappingCacheStore extends SelfProcessing{
 	void initialStoreSize(int size);
 	
 	/**
-	 * <pre>
-	 * 	添加映射
-	 * 	如果已经存在相同code的mapping，则抛出异常
-	 * </pre>
+	 * 添加映射
 	 * @param mapping
+	 * @throws RepeatedMappingException
 	 */
-	void addMapping(Mapping mapping);
+	void addMapping(Mapping mapping) throws RepeatedMappingException;
 	
 	/**
 	 * 覆盖映射
@@ -31,17 +30,18 @@ public interface MappingCacheStore extends SelfProcessing{
 	void coverMapping(Mapping mapping);
 
 	/**
-	 * 动态移除映射
+	 * 移除映射
 	 * @param mappingCode
 	 */
-	void dynamicRemoveMapping(String mappingCode);
+	void removeMapping(String mappingCode);
 	
 	/**
 	 * 获取映射
 	 * @param mappingCode
 	 * @return
+	 * @throws NotExistsMappingException
 	 */
-	Mapping getMapping(String mappingCode);
+	Mapping getMapping(String mappingCode) throws NotExistsMappingException;
 	
 	/**
 	 * mapping是否存在

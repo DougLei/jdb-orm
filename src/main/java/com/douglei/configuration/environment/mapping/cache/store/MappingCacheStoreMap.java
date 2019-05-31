@@ -1,9 +1,9 @@
-package com.douglei.configuration.environment.property.mapping.cache.store;
+package com.douglei.configuration.environment.mapping.cache.store;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.configuration.environment.property.mapping.cache.store.impl.ApplicationMappingCacheStore;
+import com.douglei.configuration.environment.mapping.cache.store.impl.ApplicationMappingCacheStore;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**

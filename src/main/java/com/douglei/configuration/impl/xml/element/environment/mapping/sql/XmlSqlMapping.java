@@ -12,7 +12,7 @@ import com.douglei.configuration.impl.xml.element.environment.mapping.XmlMapping
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.configuration.impl.xml.util.NotExistsElementException;
-import com.douglei.configuration.impl.xml.util.RepeatElementException;
+import com.douglei.configuration.impl.xml.util.RepeatedElementException;
 import com.douglei.context.XmlReaderContext;
 import com.douglei.database.metadata.Metadata;
 import com.douglei.database.metadata.MetadataValidate;
@@ -61,7 +61,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			throw new NotExistsElementException("没有配置<sql>元素");
 		}
 		if(sqlNodeList.getLength() > 1) {
-			throw new RepeatElementException("<sql>元素最多只能配置一个");
+			throw new RepeatedElementException("<sql>元素最多只能配置一个");
 		}
 		return sqlNodeList.item(0);
 	}

@@ -15,7 +15,6 @@ public class Table {
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
 	protected Map<String, Constraint> constraints;// 约束
-	protected Map<String, Index> indexes;// 索引
 	
 	public Table(String name) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
@@ -77,19 +76,6 @@ public class Table {
 		}
 	}
 	
-	/**
-	 * 添加索引
-	 * @param index
-	 */
-	public void addIndex(Index index) {
-		if(indexes == null) {
-			indexes = new HashMap<String, Index>(10);
-		}else if(indexes.containsKey(index.getName())) {
-			throw new IndexException("索引名"+index.getName()+"重复");
-		}
-		indexes.put(index.getName(), index);
-	}
-	
 	public String getName() {
 		return name;
 	}
@@ -98,9 +84,6 @@ public class Table {
 	}
 	public Collection<Constraint> getConstraints() {
 		return constraints.values();
-	}
-	public Collection<Index> getIndexes() {
-		return indexes.values();
 	}
 	public Column getColumnByName(String columnName) {
 		Column column = columns.get(columnName);
@@ -133,10 +116,6 @@ public class Table {
 		if(constraints != null) {
 			constraints.clear();
 			constraints = null;
-		}
-		if(indexes != null) {
-			indexes.clear();
-			indexes = null;
 		}
 	}
 	

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.SelfProcessing;
-import com.douglei.configuration.environment.property.mapping.cache.store.MappingCacheStore;
+import com.douglei.configuration.environment.mapping.cache.store.MappingCacheStore;
 
 /**
  * 
@@ -29,25 +29,22 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
-	 * 添加映射
 	 * <pre>
-	 * 	如果已经存在相同code的mapping，则抛出异常
+	 * 	添加映射
+	 * 	如果是表映射, 则顺便create表
 	 * </pre>
 	 * @param mapping
 	 */
 	protected void addMapping(Mapping mapping){
 		mappingCacheStore.addMapping(mapping);
+		// TODO 如果是表映射, 则顺便create表
 	}
 	
 	/**
-	 * 动态添加映射, 如果存在, 则覆盖
-	 * @param mappingType
-	 * @param mappingConfigurationContent
-	 */
-	public abstract void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
-	
-	/**
-	 * 覆盖映射
+	 * <pre>
+	 * 	覆盖映射
+	 * 	只对映射操作, 不对实体操作
+	 * </pre>
 	 * @param mapping
 	 */
 	protected void coverMapping(Mapping mapping) {
@@ -55,12 +52,15 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
-	 * 动态移除映射
+	 * <pre>
+	 * 	删除映射
+	 * 	如果是表映射, 则顺便drop表
+	 * </pre>
 	 * @param mappingCode
 	 */
-	public void dynamicRemoveMapping(String mappingCode) {
-		mappingCacheStore.dynamicRemoveMapping(mappingCode);
-		// TODO 如果表存在, 一起删除
+	public void removeMapping(String mappingCode) {
+		mappingCacheStore.removeMapping(mappingCode);
+		// TODO 如果是表映射, 则顺便drop表
 	}
 	
 	/**
@@ -71,6 +71,33 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public Mapping getMapping(String mappingCode) {
 		return mappingCacheStore.getMapping(mappingCode);
 	}
+	
+	/**
+	 * <pre>
+	 * 	动态添加映射
+	 * 	如果是表映射, 则顺便create表
+	 * </pre>
+	 * @param mappingType
+	 * @param mappingConfigurationContent
+	 */
+	public abstract void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	/**
+	 * <pre>
+	 * 	动态覆盖映射
+	 * 	只对映射操作, 不对实体操作
+	 * </pre>
+	 * @param mapping
+	 */
+	public abstract void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	/**
+	 * <pre>
+	 * 	动态删除映射
+	 * 	如果是表映射, 则顺便drop表
+	 * </pre>
+	 * @param mappingCode
+	 */
+	public abstract void dynamicRemoveMapping(String mappingCode);
+	
 
 	@Override
 	public void doDestroy() throws DestroyException {

@@ -19,7 +19,7 @@ import com.douglei.database.sql.pagequery.PageResult;
 import com.douglei.sessions.session.MappingMismatchingException;
 import com.douglei.sessions.session.persistent.OperationState;
 import com.douglei.sessions.session.persistent.PersistentObject;
-import com.douglei.sessions.session.persistent.RepeatPersistentObjectException;
+import com.douglei.sessions.session.persistent.RepeatedPersistentObjectException;
 import com.douglei.sessions.session.persistent.execution.ExecutionHolder;
 import com.douglei.sessions.session.persistent.id.Identity;
 import com.douglei.sessions.session.table.TableSession;
@@ -80,7 +80,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		
 		Identity id = persistent.getId();
 		if(cache.containsKey(id)) {
-			throw new RepeatPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
+			throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
 		}
 		cache.put(id, persistent);
 	}
