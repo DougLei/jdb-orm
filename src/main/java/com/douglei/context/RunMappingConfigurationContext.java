@@ -1,10 +1,12 @@
 package com.douglei.context;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.douglei.core.dialect.db.table.TableCreator;
+import com.douglei.core.dialect.db.table.op.create.TableCreator;
+import com.douglei.core.dialect.db.table.op.drop.TableDrop;
 import com.douglei.core.metadata.sql.SqlContentType;
+import com.douglei.core.metadata.table.CreateMode;
+import com.douglei.core.metadata.table.TableMetadata;
 
 /**
  * 运行时映射配置 上下文
@@ -22,27 +24,32 @@ public class RunMappingConfigurationContext {
 	}
 	
 	/**
-	 * 添加新的TableCreator
-	 * @param tableCreator
+	 * 注册要create的TableMetadata
+	 * @param tableMetadata
 	 */
-	public static void addTableCreator(TableCreator tableCreator) {
-		if(tableCreator == null) {
+	public static void registerCreateTable(TableMetadata tableMetadata) {
+		if(tableMetadata.getCreateMode() == CreateMode.NONE) {
 			return;
 		}
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
 		if(runMappingConfiguration.tableCreators == null) {
 			runMappingConfiguration.tableCreators = new ArrayList<TableCreator>(10);
 		}
-		runMappingConfiguration.tableCreators.add(tableCreator);
+		runMappingConfiguration.tableCreators.add(new TableCreator(tableMetadata));
 	}
 	
 	/**
-	 * 获取所有的TableCreator
-	 * @return
+	 * 注册要创建的TableMetadata
+	 * @param tableMetadata
 	 */
-	public static List<TableCreator> getTableCreators() {
-		return getRunMappingConfiguration().tableCreators;
+	public static void registerDropTable(TableMetadata tableMetadata) {
+		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+		if(runMappingConfiguration.tableCreators == null) {
+			runMappingConfiguration.tableCreators = new ArrayList<TableCreator>(5);
+		}
+		runMappingConfiguration.tableDrops.add(new TableDrop(tableMetadata));
 	}
+	
 	
 	/**
 	 * 记录当前解析的sql content的type

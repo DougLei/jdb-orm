@@ -6,11 +6,11 @@ package com.douglei.core.metadata.table;
  */
 public enum CreateMode {
 	/**
-	 * 不进行任何create
+	 * 不进行任何处理
 	 */
 	NONE,
 	/**
-	 * 如果表存在, 则跳过; 如果表不存在, 则创建
+	 * 【默认】如果表存在, 则跳过; 如果表不存在, 则创建
 	 */
 	CREATE,
 	/**
@@ -27,5 +27,9 @@ public enum CreateMode {
 			}
 		}
 		return null;
+	}
+	
+	public static CreateMode defaultCreateMode() {
+		return CREATE;
 	}
 }

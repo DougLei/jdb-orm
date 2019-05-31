@@ -3,9 +3,6 @@ package com.douglei.configuration.environment.mapping.cache.store.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.environment.mapping.Mapping;
@@ -18,7 +15,6 @@ import com.douglei.configuration.environment.mapping.cache.store.RepeatedMapping
  * @author DougLei
  */
 public class ApplicationMappingCacheStore implements MappingCacheStore {
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingCacheStore.class);
 	
 	private Map<String, Mapping> mappings;
 	
@@ -37,27 +33,21 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 		if(mappingExists(code)) {
 			throw new RepeatedMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code).getClass());
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("添加新的映射信息: {}", mapping.toString());
-		}
 		mappings.put(code, mapping);
 	}
 	
 	@Override
 	public void coverMapping(Mapping mapping) throws RepeatedMappingException {
-		String code = mapping.getCode();
-		if(logger.isDebugEnabled()) {
-			if(mappingExists(code)) {
-				logger.debug("覆盖映射信息时, 存在同code的旧信息: {}", mappings.get(code).toString());
-			}
-			logger.debug("进行覆盖的映射信息: {}", mapping.toString());
-		}
-		mappings.put(code, mapping);
+		mappings.put(mapping.getCode(), mapping);
 	}
 	
 	@Override
-	public void removeMapping(String mappingCode) {
-		mappings.remove(mappingCode);
+	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
+		Mapping mp = mappings.remove(mappingCode);
+		if(mp == null) {
+			throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象, 无法删除");
+		}
+		return mp;
 	}
 	
 	@Override

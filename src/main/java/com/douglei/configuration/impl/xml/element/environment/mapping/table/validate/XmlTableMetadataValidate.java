@@ -35,7 +35,7 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 			cm = CreateMode.toValue(createMode);
 		}
 		if(cm == null) {
-			cm = CreateMode.NONE;
+			cm = CreateMode.defaultCreateMode();
 		}
 		return cm;
 	}

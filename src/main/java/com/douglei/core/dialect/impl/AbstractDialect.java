@@ -6,8 +6,8 @@ import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
 import com.douglei.core.dialect.db.features.FeaturesHolder;
 import com.douglei.core.dialect.db.objectname.DBObjectNameHandler;
 import com.douglei.core.dialect.db.sql.SqlHandler;
-import com.douglei.core.dialect.db.table.TableHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.core.dialect.db.table.op.TableHandler;
 import com.douglei.utils.reflect.ConstructorUtil;
 
 /**

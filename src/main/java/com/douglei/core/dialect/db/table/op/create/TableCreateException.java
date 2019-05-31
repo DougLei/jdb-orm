@@ -1,4 +1,4 @@
-package com.douglei.core.dialect.db.table;
+package com.douglei.core.dialect.db.table.op.create;
 
 /**
  * 表创建异常

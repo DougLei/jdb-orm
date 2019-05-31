@@ -32,8 +32,10 @@ public interface MappingCacheStore extends SelfProcessing{
 	/**
 	 * 移除映射
 	 * @param mappingCode
+	 * @return
+	 * @throws NotExistsMappingException
 	 */
-	void removeMapping(String mappingCode);
+	Mapping removeMapping(String mappingCode) throws NotExistsMappingException;
 	
 	/**
 	 * 获取映射

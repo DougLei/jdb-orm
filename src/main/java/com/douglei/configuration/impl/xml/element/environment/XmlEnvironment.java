@@ -25,7 +25,6 @@ import com.douglei.configuration.impl.xml.element.environment.property.XmlEnviro
 import com.douglei.configuration.impl.xml.element.properties.Properties;
 import com.douglei.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.context.DBRunEnvironmentContext;
-import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.utils.StringUtil;
 
 /**
@@ -141,7 +140,6 @@ public class XmlEnvironment implements Environment{
 		if(element != null) {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper = new XmlMappingWrapper(element.selectNodes("mapping/@path"), environmentProperty.getMappingCacheStore());
-			DBRunEnvironmentContext.getDialect().getTableHandler().executeCreate(dataSourceWrapper, RunMappingConfigurationContext.getTableCreators());
 		}else {
 			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingCacheStore());
 		}

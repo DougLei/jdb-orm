@@ -70,15 +70,10 @@ public class TableMetadata extends Table implements Metadata{
 			cm = (ColumnMetadata) column;
 			primaryKeyColumnMetadatas.put(cm.getCode(), cm);
 		}
-		
-		// 如果不需要建表, 则将将table中的columns, primaryKeyColumns, constraints集合清空
-		if(createMode == CreateMode.NONE) {
-			clearTableCollections();
-		}
 	}
 	
 	/**
-	 * 清空table的集合数据
+	 * 清空table的集合数据, 只保留映射的集合数据
 	 */
 	public void clearTableCollections() {
 		super.clear();

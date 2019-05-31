@@ -1,4 +1,4 @@
-package com.douglei.core.dialect.db.table;
+package com.douglei.core.dialect.db.table.op;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.core.dialect.db.table.op.create.TableCreator;
+import com.douglei.core.dialect.db.table.op.drop.TableDrop;
 import com.douglei.utils.CloseUtil;
 import com.douglei.utils.ExceptionUtil;
 

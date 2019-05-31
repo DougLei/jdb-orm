@@ -7,6 +7,8 @@ import com.douglei.configuration.DestroyException;
 import com.douglei.configuration.SelfCheckingException;
 import com.douglei.configuration.SelfProcessing;
 import com.douglei.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.context.RunMappingConfigurationContext;
+import com.douglei.core.metadata.table.TableMetadata;
 
 /**
  * 
@@ -18,6 +20,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	private MappingCacheStore mappingCacheStore;
 	public MappingWrapper(MappingCacheStore mappingCacheStore) {
 		this.mappingCacheStore = mappingCacheStore;
+	}
+	
+	// 是否是表映射
+	private boolean isTableMapping(Mapping mapping) {
+		return mapping.getMappingType() == MappingType.TABLE;
 	}
 	
 	/**
@@ -37,9 +44,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected void addMapping(Mapping mapping){
 		mappingCacheStore.addMapping(mapping);
-		// TODO 如果是表映射, 则顺便create表
+		if(isTableMapping(mapping)) {
+			RunMappingConfigurationContext.registerCreateTable((TableMetadata) mapping.getMetadata());
+		}
 	}
-	
+
 	/**
 	 * <pre>
 	 * 	覆盖映射
@@ -59,8 +68,10 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingCode
 	 */
 	public void removeMapping(String mappingCode) {
-		mappingCacheStore.removeMapping(mappingCode);
-		// TODO 如果是表映射, 则顺便drop表
+		Mapping mapping = mappingCacheStore.removeMapping(mappingCode);
+		if(isTableMapping(mapping)) {
+			RunMappingConfigurationContext.registerDropTable((TableMetadata) mapping.getMetadata());
+		}
 	}
 	
 	/**
