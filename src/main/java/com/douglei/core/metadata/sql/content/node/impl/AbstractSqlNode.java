@@ -20,7 +20,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 	protected String content;
 	
 	// sql参数, 按照配置中定义的顺序记录
-	protected List<SqlParameterMetadata> sqlParameterByDefinedOrders;
+	protected List<SqlParameterMetadata> sqlParametersByDefinedOrder;
 	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配${
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
@@ -49,8 +49,8 @@ public abstract class AbstractSqlNode implements SqlNode{
 			}
 		}
 		
-		if(sqlParameterByDefinedOrders != null) {
-			for (SqlParameterMetadata sqlParameter : sqlParameterByDefinedOrders) {
+		if(sqlParametersByDefinedOrder != null) {
+			for (SqlParameterMetadata sqlParameter : sqlParametersByDefinedOrder) {
 				replaceSqlParameterInSqlContent(sqlParameter);
 			}
 		}
@@ -58,10 +58,10 @@ public abstract class AbstractSqlNode implements SqlNode{
 	
 	// 添加 sql parameter
 	private void addSqlParameter(String configurationText) {
-		if(sqlParameterByDefinedOrders == null) {
-			sqlParameterByDefinedOrders = new ArrayList<SqlParameterMetadata>();
+		if(sqlParametersByDefinedOrder == null) {
+			sqlParametersByDefinedOrder = new ArrayList<SqlParameterMetadata>();
 		}
-		sqlParameterByDefinedOrders.add(new SqlParameterMetadata(configurationText));
+		sqlParametersByDefinedOrder.add(new SqlParameterMetadata(configurationText));
 	}
 	
 	// 替换Sql语句内容中的参数
@@ -90,6 +90,6 @@ public abstract class AbstractSqlNode implements SqlNode{
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameter, sqlParameterNamePrefix);
+		return new ExecuteSqlNode(content, sqlParametersByDefinedOrder, sqlParameter, sqlParameterNamePrefix);
 	}
 }

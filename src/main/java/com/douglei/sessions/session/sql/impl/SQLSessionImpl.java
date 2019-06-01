@@ -206,8 +206,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			for(SqlNode sn: sqlNodes) {
 				textSqlNode = (TextSqlNode) sn;
 				sqlContent.append(textSqlNode.getContent()).append(" ");
-				if(textSqlNode.getSqlParameterByDefinedOrders() != null) {
-					sqlParameters.addAll(textSqlNode.getSqlParameterByDefinedOrders());
+				if(textSqlNode.getSqlParametersByDefinedOrder() != null) {
+					sqlParameters.addAll(textSqlNode.getSqlParametersByDefinedOrder());
 				}
 			}
 			

@@ -23,7 +23,7 @@ public class TextSqlNode extends AbstractSqlNode {
 	public String getContent() {
 		return content;
 	}
-	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders(){
-		return sqlParameterByDefinedOrders;
+	public List<SqlParameterMetadata> getSqlParametersByDefinedOrder(){
+		return sqlParametersByDefinedOrder;
 	}
 }

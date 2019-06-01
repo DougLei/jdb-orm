@@ -7,6 +7,7 @@ import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.core.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.core.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.core.metadata.Metadata;
@@ -20,21 +21,25 @@ import com.douglei.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private String configurationText;
+	protected String configurationText;
+	protected Map<String, String> propertyMap; // 根据configurationText解析出来的<属性:值>map集合
 	
-	private String name;// 参数名
-	private DataTypeHandler dataType;// 数据类型
+	protected String name;// 参数名
+	protected DataTypeHandler dataType;// 数据类型
 	
-	private boolean usePlaceholder;// 是否使用占位符?
-	private String placeholderPrefix;// 如果不使用占位符, 参数值的前缀
-	private String placeholderSuffix;// 如果不使用占位符, 参数值的后缀
+	protected boolean usePlaceholder;// 是否使用占位符?
+	protected String placeholderPrefix;// 如果不使用占位符, 参数值的前缀
+	protected String placeholderSuffix;// 如果不使用占位符, 参数值的后缀
 	
-	private SqlParameterMode mode;// 输入输出类型
+	protected SqlParameterMode mode;// 输入输出类型
 	
 	public SqlParameterMetadata(String configurationText) {
+		this(configurationText, true);
+	}
+	protected SqlParameterMetadata(String configurationText, boolean clearPropertyMap) {
 		this.configurationText = configurationText;
 		
-		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
+		propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
 		setDataType(propertyMap.get("datatype"));
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
@@ -42,6 +47,7 @@ public class SqlParameterMetadata implements Metadata{
 		setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
 		setDBDataType(propertyMap.get("dbType"));
 		setMode(propertyMap.get("mode"));
+		clearPropertyMap(clearPropertyMap);
 	}
 	
 	// 解析出属性map集合
@@ -101,14 +107,22 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	void setPlaceholderPrefix(String placeholderPrefix) {
 		if(StringUtil.isEmpty(placeholderPrefix)) {
-			this.placeholderPrefix = "'";
+			if(dataType instanceof AbstractStringDataTypeHandler) {
+				this.placeholderPrefix = "'";
+			}else {
+				this.placeholderPrefix = "";
+			}
 		}else {
 			this.placeholderPrefix = placeholderPrefix;
 		}
 	}
 	void setPlaceholderSuffix(String placeholderSuffix) {
 		if(StringUtil.isEmpty(placeholderSuffix)) {
-			this.placeholderSuffix = "'";
+			if(dataType instanceof AbstractStringDataTypeHandler) {
+				this.placeholderSuffix = "'";
+			}else {
+				this.placeholderSuffix = "";
+			}
 		}else {
 			this.placeholderSuffix = placeholderSuffix;
 		}
@@ -131,6 +145,14 @@ public class SqlParameterMetadata implements Metadata{
 			if(this.mode == null) {
 				this.mode = SqlParameterMode.IN;
 			}
+		}
+	}
+	
+	// 情况
+	protected void clearPropertyMap(boolean clearPropertyMap) {
+		if(clearPropertyMap) {
+			propertyMap.clear();
+			propertyMap = null;
 		}
 	}
 
@@ -178,7 +200,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	private boolean unProcessNamePrefix = true;// 是否【没有】处理过name前缀, 默认都没有处理
-	private boolean isSingleName;// 是否只是一个name, 没有.而需要ognl解析
+	private boolean isSingleName;// 是否只是一个name, 如果不是的话(xxx.xxx), 则需要ognl解析
 	private void processNamePrefix(String sqlParameterNamePrefix) {
 		if(unProcessNamePrefix) {
 			unProcessNamePrefix = false;
@@ -219,8 +241,6 @@ public class SqlParameterMetadata implements Metadata{
 		}else {
 			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
 		}
-		
-		// TODO 后续可以加入默认值
 		return value;
 	}
 }
