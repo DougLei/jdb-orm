@@ -15,9 +15,4 @@ public class Decimal extends DBDataType{
 	private Decimal() {
 		super((short)3, (short)38, (short)38);
 	}
-
-	@Override
-	public boolean supportPrecision() {
-		return true;
-	}
 }

@@ -15,9 +15,4 @@ public class Number extends DBDataType{
 	private Number() {
 		super((short)2, (short)38, (short)38);
 	}
-	
-	@Override
-	public boolean supportPrecision() {
-		return true;
-	}
 }

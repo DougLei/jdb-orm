@@ -10,7 +10,7 @@ public abstract class DBDataType {
 	protected short sqlType;// @see java.sql.Types
 	protected String typeName;// 类型的名称, 大写
 	
-	protected short length;// 长度, -1标识不需要配置长度
+	protected short length;// 长度
 	protected short precision;// 精度
 	
 	
@@ -34,14 +34,6 @@ public abstract class DBDataType {
 		return typeName;
 	}
 	
-	/**
-	 * 是否支持精度, 默认是不支持的
-	 * @return
-	 */
-	public boolean supportPrecision() {
-		return false;
-	}
-
 	/**
 	 * 是否是字符类型
 	 * @return
@@ -72,16 +64,16 @@ public abstract class DBDataType {
 	 * @return
 	 */
 	public short fixInputPrecision(short inputLength, short inputPrecision) {
-		if(supportPrecision()) {
-			if(inputPrecision < 0 || inputPrecision > this.precision) {
-				inputPrecision = this.precision;
-			}
-			if(inputPrecision > inputLength) {
-				inputPrecision = inputLength;
-			}
-			return inputPrecision;
+		if(this.precision == NO_LIMIT) {
+			return NO_LIMIT;
 		}
-		return NO_LIMIT;
+		if(inputPrecision < 0 || inputPrecision > this.precision) {
+			inputPrecision = this.precision;
+		}
+		if(inputPrecision > inputLength) {
+			inputPrecision = inputLength;
+		}
+		return inputPrecision;
 	}
 	
 	/**
@@ -94,9 +86,9 @@ public abstract class DBDataType {
 		if(length == NO_LIMIT) {
 			return getTypeName();
 		}
-		if(supportPrecision()) {
-			return getTypeName() + "("+length+", "+precision+")";
+		if(precision == NO_LIMIT) {
+			return getTypeName() + "("+length+")";
 		}
-		return getTypeName() + "("+length+")";
+		return getTypeName() + "("+length+", "+precision+")";
 	}
 }
