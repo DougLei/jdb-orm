@@ -15,4 +15,9 @@ public class NVarchar2 extends DBDataType{
 	private NVarchar2() {
 		super((short)-9, (short)2000);
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }

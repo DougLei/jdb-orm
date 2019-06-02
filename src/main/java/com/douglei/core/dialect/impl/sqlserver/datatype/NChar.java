@@ -15,4 +15,9 @@ public class NChar extends DBDataType{
 	private NChar() {
 		super((short)-15, (short)4000);
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }

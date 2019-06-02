@@ -34,12 +34,27 @@ public abstract class DBDataType {
 		return typeName;
 	}
 	
-	// 是否支持精度, 默认是不支持的
+	/**
+	 * 是否支持精度, 默认是不支持的
+	 * @return
+	 */
 	public boolean supportPrecision() {
 		return false;
 	}
 
-	// 修正输入的长度值
+	/**
+	 * 是否是字符类型
+	 * @return
+	 */
+	public boolean isCharacterType() {
+		return false;
+	}
+	
+	/**
+	 * 修正输入的长度值
+	 * @param inputLength
+	 * @return
+	 */
 	public short fixInputLength(short inputLength) {
 		if(this.length == NO_LIMIT) {
 			return NO_LIMIT;
@@ -50,7 +65,12 @@ public abstract class DBDataType {
 		return inputLength;
 	}
 	
-	// 修正输入的精度值
+	/**
+	 * 修正输入的精度值
+	 * @param inputLength
+	 * @param inputPrecision
+	 * @return
+	 */
 	public short fixInputPrecision(short inputLength, short inputPrecision) {
 		if(supportPrecision()) {
 			if(inputPrecision < 0 || inputPrecision > this.precision) {

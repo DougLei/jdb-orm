@@ -29,6 +29,11 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 	public int getSqlType() {
 		return Char.singleInstance().getSqlType();
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return Char.singleInstance().isCharacterType();
+	}
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {

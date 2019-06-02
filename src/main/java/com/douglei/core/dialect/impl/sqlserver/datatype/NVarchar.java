@@ -31,4 +31,9 @@ public class NVarchar extends DBDataType{
 		}
 		return super.getDBType4SqlStatement(length, precision);
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }

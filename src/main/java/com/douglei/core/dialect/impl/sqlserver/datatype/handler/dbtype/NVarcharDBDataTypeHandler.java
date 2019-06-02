@@ -29,6 +29,11 @@ public class NVarcharDBDataTypeHandler extends DBDataTypeHandler{
 	public int getSqlType() {
 		return NVarchar.singleInstance().getSqlType();
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return NVarchar.singleInstance().isCharacterType();
+	}
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {

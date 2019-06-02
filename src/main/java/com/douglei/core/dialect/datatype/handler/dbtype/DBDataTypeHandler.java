@@ -34,6 +34,14 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	public abstract int getSqlType();
 	
 	/**
+	 * 是否是字符类型
+	 * @return
+	 */
+	public boolean isCharacterType() {
+		return false;
+	}
+	
+	/**
 	 * 从CallableStatement中获取输出参数的指
 	 * @param parameterIndex
 	 * @param callableStatement

@@ -15,4 +15,9 @@ public class Char extends DBDataType{
 	private Char() {
 		super((short)1, (short)8000);
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }

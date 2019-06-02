@@ -15,4 +15,9 @@ public class Varchar extends DBDataType{
 	private Varchar() {
 		super((short)12, (short)1024);
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }
