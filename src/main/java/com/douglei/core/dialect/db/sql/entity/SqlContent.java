@@ -12,16 +12,16 @@ import com.douglei.core.metadata.sql.SqlContentType;
  */
 public class SqlContent {
 	private DialectType dialectType;
-	private SqlContentType contentType;
+	private SqlContentType type;
 	private String content;
 	private List<SqlParameter> parametersByDefinedOrder; 
 	
 	public SqlContent(SqlContentType contentType, String content) {
 		this(null, contentType, content);
 	}
-	public SqlContent(DialectType dialectType, SqlContentType contentType, String content) {
+	public SqlContent(DialectType dialectType, SqlContentType type, String content) {
 		this.dialectType = dialectType;
-		this.contentType = contentType;
+		this.type = type;
 		this.content = content;
 	}
 	
@@ -35,8 +35,8 @@ public class SqlContent {
 		parametersByDefinedOrder.add(new SqlParameter(parameterConfigurationText));
 	}
 	
-	public SqlContentType getContentType() {
-		return contentType;
+	public SqlContentType getType() {
+		return type;
 	}
 	public DialectType getDialectType() {
 		return dialectType;

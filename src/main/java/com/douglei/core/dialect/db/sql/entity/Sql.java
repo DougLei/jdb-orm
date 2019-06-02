@@ -66,7 +66,7 @@ public class Sql implements Entity2MappingContentConverter {
 	private void setXmlSqlContent(StringBuilder xml) {
 		if(this.contents != null) {
 			for (SqlContent content : this.contents) {
-				xml.append("<content type=\"").append(content.getContentType().name()).append("\"");
+				xml.append("<content type=\"").append(content.getType().name()).append("\"");
 				if(content.getDialectType() != null) {
 					xml.append(" dialect=\"").append(content.getDialectType().name()).append("\"");
 				}
