@@ -61,7 +61,7 @@ public class SqlMetadata implements Metadata{
 	public List<SqlContentMetadata> getContents(DialectType dialect) {
 		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
 		for (SqlContentMetadata content : contents) {
-			if(content.getDialect() == dialect || content.getDialect() == DialectType.ALL) {
+			if(content.getDialectType() == dialect || content.getDialectType() == DialectType.ALL) {
 				list.add(content);
 			}
 		}

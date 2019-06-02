@@ -3,6 +3,7 @@ package com.douglei.core.dialect.db.sql.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.core.dialect.DialectType;
 import com.douglei.core.dialect.db.Entity2MappingContentConverter;
 import com.douglei.utils.StringUtil;
 
@@ -36,6 +37,15 @@ public class Sql implements Entity2MappingContentConverter {
 	}
 	public String getName() {
 		return name;
+	}
+	public List<SqlContent> getContents(DialectType dialect) {
+		List<SqlContent> list = new ArrayList<SqlContent>(contents.size());
+		for (SqlContent content : contents) {
+			if(content.getDialectType() == dialect || content.getDialectType() == DialectType.ALL) {
+				list.add(content);
+			}
+		}
+		return list;
 	}
 
 	@Override

@@ -13,13 +13,13 @@ import com.douglei.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
-	private DialectType dialect;
+	private DialectType dialectType;
 	private SqlContentType type;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(DialectType dialect, SqlContentType type) {
-		this.dialect = dialect;
+	public SqlContentMetadata(DialectType dialectType, SqlContentType type) {
+		this.dialectType = dialectType;
 		this.type = type;
 	}
 	
@@ -31,8 +31,8 @@ public class SqlContentMetadata implements Metadata{
 	}
 	
 	
-	public DialectType getDialect() {
-		return dialect;
+	public DialectType getDialectType() {
+		return dialectType;
 	}
 	public SqlContentType getType() {
 		return type;
@@ -44,7 +44,7 @@ public class SqlContentMetadata implements Metadata{
 	@Deprecated
 	@Override
 	public String getCode() {
-		return dialect.name();
+		return dialectType.name();
 	}
 	
 	@Override
