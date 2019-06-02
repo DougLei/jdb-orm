@@ -30,4 +30,9 @@ public class NVarcharmax extends DBDataType{
 	public String getDBType4SqlStatement(short length, short precision) {
 		return getTypeName() + "(max)";
 	}
+	
+	@Override
+	public boolean isCharacterType() {
+		return true;
+	}
 }
