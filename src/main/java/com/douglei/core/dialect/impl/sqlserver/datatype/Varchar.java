@@ -17,22 +17,6 @@ public class Varchar extends DBDataType{
 	}
 
 	@Override
-	public short fixInputLength(short inputLength) {
-		if(inputLength > super.length) {
-			return Short.MAX_VALUE;// Short.MAX_VALUE时, 使用varchar(max)
-		}
-		return super.fixInputLength(inputLength);
-	}
-	
-	@Override
-	public String getDBType4SqlStatement(short length, short precision) {
-		if(length == Short.MAX_VALUE) {
-			return getTypeName() + "(max)";
-		}
-		return super.getDBType4SqlStatement(length, precision);
-	}
-	
-	@Override
 	public boolean isCharacterType() {
 		return true;
 	}

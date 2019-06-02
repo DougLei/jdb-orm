@@ -2,7 +2,7 @@ package com.douglei.core.dialect.impl.sqlserver.datatype.handler.classtype;
 
 import com.douglei.core.dialect.datatype.DBDataType;
 import com.douglei.core.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.core.dialect.impl.sqlserver.datatype.Text;
+import com.douglei.core.dialect.impl.sqlserver.datatype.Varcharmax;
 
 /**
  * 
@@ -17,6 +17,6 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 
 	@Override
 	public DBDataType defaultDBDataType() {
-		return Text.singleInstance();
+		return Varcharmax.singleInstance();
 	}
 }

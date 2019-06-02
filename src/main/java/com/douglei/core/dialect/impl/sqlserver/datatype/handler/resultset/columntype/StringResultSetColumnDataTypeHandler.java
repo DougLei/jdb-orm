@@ -7,7 +7,9 @@ import com.douglei.core.dialect.datatype.handler.resultset.columntype.ResultSetC
 import com.douglei.core.dialect.impl.sqlserver.datatype.Char;
 import com.douglei.core.dialect.impl.sqlserver.datatype.NChar;
 import com.douglei.core.dialect.impl.sqlserver.datatype.NVarchar;
+import com.douglei.core.dialect.impl.sqlserver.datatype.NVarcharmax;
 import com.douglei.core.dialect.impl.sqlserver.datatype.Varchar;
+import com.douglei.core.dialect.impl.sqlserver.datatype.Varcharmax;
 import com.douglei.core.dialect.impl.sqlserver.datatype.handler.dbtype.VarcharDBDataTypeHandler;
 
 /**
@@ -22,10 +24,12 @@ public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTyp
 	}
 	
 	private static final int[] supportColumnTypes = {
-			Varchar.singleInstance().getSqlType(), 	// varchar
-			NVarchar.singleInstance().getSqlType(), 	// nvarchar
-			Char.singleInstance().getSqlType(),		// char
-			NChar.singleInstance().getSqlType()		// nchar
+			Varchar.singleInstance().getSqlType(), 		// varchar
+			NVarchar.singleInstance().getSqlType(),		// nvarchar
+			Char.singleInstance().getSqlType(),			// char
+			NChar.singleInstance().getSqlType(),		// nchar
+			Varcharmax.singleInstance().getSqlType(),	// varchar(max)
+			NVarcharmax.singleInstance().getSqlType()	// nvarchar(max)
 			};
 	
 	@Override

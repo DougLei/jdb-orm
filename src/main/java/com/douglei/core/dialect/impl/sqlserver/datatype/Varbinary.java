@@ -15,4 +15,9 @@ public class Varbinary extends DBDataType{
 	private Varbinary() {
 		super((short)-3);
 	}
+	
+	@Override
+	public String getDBType4SqlStatement(short length, short precision) {
+		return getTypeName() + "(max)";
+	}
 }
