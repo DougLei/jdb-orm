@@ -12,7 +12,6 @@ import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.core.dialect.TransactionIsolationLevel;
-import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.core.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
@@ -152,11 +151,6 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		return getConnectionWrapper(beginTransaction, transactionIsolationLevel).getConnection();
-	}
-
-	@Override
-	public DatabaseSqlStatementHandler getDatabaseSqlStatementHandler() {
-		return environmentProperty.getDialect().getDatabaseSqlStatementHandler();
 	}
 
 	@Override

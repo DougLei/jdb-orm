@@ -38,13 +38,13 @@ public class Table implements Entity2MappingContentConverter{
 	// 通过列, 添加单列约束
 	private void addConstraint(Column column) {
 		if(column.isPrimaryKey()) {
-			addConstraint((Constraint)new Constraint(ConstraintType.PRIMARY_KEY, name).addColumn(column));
+			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name).addColumn(column));
 		}else {
 			if(column.isUnique()) {
-				addConstraint((Constraint)new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
+				addConstraint(new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
 			}
 			if(column.getDefaultValue() != null) {
-				addConstraint((Constraint)new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
+				addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
 			}
 		}
 	}

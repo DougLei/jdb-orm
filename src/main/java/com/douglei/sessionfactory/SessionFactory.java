@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.util.List;
 
 import com.douglei.core.dialect.TransactionIsolationLevel;
-import com.douglei.core.dialect.db.database.DatabaseSqlStatementHandler;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.table.TableSession;
@@ -169,12 +168,6 @@ public interface SessionFactory {
 	 * @return
 	 */
 	Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
-	
-	/**
-	 * 获取数据库sql语句处理器
-	 * @return
-	 */
-	DatabaseSqlStatementHandler getDatabaseSqlStatementHandler();
 	
 	/**
 	 * 获取表sql语句处理器

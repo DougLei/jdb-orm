@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.douglei.core.dialect.db.table.entity.Column;
 import com.douglei.core.dialect.db.table.entity.Constraint;
-import com.douglei.core.dialect.db.table.entity.Index;
 import com.douglei.core.dialect.db.table.entity.Table;
 
 /**
@@ -193,30 +192,5 @@ public abstract class TableSqlStatementHandler {
 	/**获取删除默认值约束的sql语句*/
 	protected String defaultValueConstraintDropSqlStatement(Constraint constraint) {
 		return commonConstraintDropSqlStatement(constraint);
-	}
-	
-	// --------------------------------------------------------------------------------------------
-	// index
-	// --------------------------------------------------------------------------------------------
-	/**
-	 * 获取create index的sql语句
-	 * @param index
-	 * @return
-	 */
-	public String indexCreateSqlStatement(Index index) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		
-		return tmpSql.toString();
-	}
-	
-	/**
-	 * 获取drop index的sql语句
-	 * @param index
-	 * @return
-	 */
-	public String indexDropSqlStatement(Index index) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		
-		return tmpSql.toString();
 	}
 }
