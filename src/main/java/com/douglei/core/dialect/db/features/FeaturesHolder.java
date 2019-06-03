@@ -15,6 +15,4 @@ public interface FeaturesHolder {
 	 * @return
 	 */
 	boolean procedureSupportDirectlyReturnResultSet();
-	
-	// TODO 各个数据库再删除列的时候，会不会对相应的约束进行处理
 }
