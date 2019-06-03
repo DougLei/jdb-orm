@@ -72,7 +72,7 @@ public class Constraint extends DBObject{
 	
 	private void validateDataType(DataTypeHandler dataType) {
 		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
-			throw new ConstraintException("不支持给clob类型或blob类型的字段配置约束");
+			throw new ConstraintException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
 		}
 	}
 	
