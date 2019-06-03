@@ -25,11 +25,11 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isDouble(value)) {
+		if(value != null && ValidationUtil.isDouble(value.toString())) {
 			if(value.getClass() == float.class || value instanceof Float) {
-				preparedStatement.setDouble(parameterIndex, (float)value);
+				preparedStatement.setFloat(parameterIndex, (float)value);
 			}else {
-				preparedStatement.setDouble(parameterIndex, Float.parseFloat(value.toString()));
+				preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString()));
 			}
 		}else {
 			preparedStatement.setNull(parameterIndex, getSqlType());

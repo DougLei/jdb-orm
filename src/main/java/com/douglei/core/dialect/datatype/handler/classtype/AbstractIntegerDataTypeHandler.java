@@ -25,7 +25,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isInteger(value)) {
+		if(value != null && ValidationUtil.isLimitInteger(value.toString())) {
 			if(value.getClass() == int.class || value instanceof Integer) {
 				preparedStatement.setInt(parameterIndex, (int)value);
 			}else {

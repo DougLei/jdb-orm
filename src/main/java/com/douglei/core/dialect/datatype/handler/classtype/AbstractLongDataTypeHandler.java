@@ -25,7 +25,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isLong(value)) {
+		if(value != null && ValidationUtil.isLimitLong(value.toString())) {
 			if(value.getClass() == long.class || value instanceof Long) {
 				preparedStatement.setLong(parameterIndex, (long)value);
 			}else {

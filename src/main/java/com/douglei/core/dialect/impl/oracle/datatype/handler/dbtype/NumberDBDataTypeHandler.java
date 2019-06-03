@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import com.douglei.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.core.dialect.impl.oracle.datatype.handler.classtype.DoubleDataTypeHandler;
-import com.douglei.core.dialect.impl.oracle.datatype.handler.classtype.IntegerDataTypeHandler;
 import com.douglei.core.dialect.impl.oracle.datatype.handler.classtype.LongDataTypeHandler;
 import com.douglei.utils.datatype.ValidationUtil;
 
@@ -35,38 +34,46 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isDouble(value)) {
-			DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-		}else if(ValidationUtil.isInteger(value)) {
-			IntegerDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-		}else if(ValidationUtil.isLong(value)){
-			LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-		}else {
-			preparedStatement.setNull(parameterIndex, getSqlType());
+		if(value != null) {
+			String valueString = value.toString();
+			if(ValidationUtil.isInteger(valueString)) {
+				LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			}else if(ValidationUtil.isDouble(valueString)) {
+				DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
+			}
 		}
+		preparedStatement.setNull(parameterIndex, getSqlType());
 	}
 
 	@Override
 	public Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException {
 		if(callableStatement.getMetaData().getScale(parameterIndex) == 0) {
-			long value = callableStatement.getLong(parameterIndex);
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
-				return (int)value;
-			}
-			return value;
+			return getIntValue(callableStatement.getLong(parameterIndex));
 		}
-		return callableStatement.getDouble(parameterIndex);
+		return getDoubleValue(callableStatement.getDouble(parameterIndex));
 	}
 
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		if(rs.getMetaData().getScale(columnIndex) == 0) {
-			long value = rs.getLong(columnIndex);
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
-				return (int)value;
-			}
-			return value;
+			return getIntValue(rs.getLong(columnIndex));
 		}
-		return rs.getDouble(columnIndex);
+		return getDoubleValue(rs.getDouble(columnIndex));
+	}
+	
+	// 获取整型值
+	private Object getIntValue(long value) {
+		if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+			return (short)value;
+		}
+		if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
+			return (int)value;
+		}
+		return value;
+	}
+	
+	// 获取浮点值
+	private Object getDoubleValue(double value) {
+		return value;
 	}
 }

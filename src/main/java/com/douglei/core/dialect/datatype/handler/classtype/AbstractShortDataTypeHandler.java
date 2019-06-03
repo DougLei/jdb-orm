@@ -25,11 +25,11 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isShort(value)) {
+		if(value != null && ValidationUtil.isLimitShort(value.toString())) {
 			if(value.getClass() == short.class || value instanceof Short) {
-				preparedStatement.setInt(parameterIndex, (short)value);
+				preparedStatement.setShort(parameterIndex, (short)value);
 			}else {
-				preparedStatement.setInt(parameterIndex, Short.parseShort(value.toString()));
+				preparedStatement.setShort(parameterIndex, Short.parseShort(value.toString()));
 			}
 		}else {
 			preparedStatement.setNull(parameterIndex, getSqlType());

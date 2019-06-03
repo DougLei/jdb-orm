@@ -23,12 +23,12 @@ public class SqlParameter extends AbstractSqlParameter{
 	}
 
 	void setLength(String length) {
-		if(ValidationUtil.isShort(length)) {
+		if(ValidationUtil.isLimitShort(length)) {
 			this.length = Short.parseShort(length);
 		}
 	}
 	void setPrecision(String precision) {
-		if(ValidationUtil.isShort(precision)) {
+		if(ValidationUtil.isLimitShort(precision)) {
 			this.precision = Short.parseShort(precision);
 		}
 	}

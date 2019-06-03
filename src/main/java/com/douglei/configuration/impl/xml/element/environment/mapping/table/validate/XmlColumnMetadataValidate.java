@@ -26,9 +26,9 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		}
 		
 		String value = element.attributeValue("length");
-		short length = ValidationUtil.isShort(value)?Short.parseShort(value):0;
+		short length = ValidationUtil.isLimitShort(value)?Short.parseShort(value):0;
 		value = element.attributeValue("precision");
-		short precision = ValidationUtil.isShort(value)?Short.parseShort(value):0;
+		short precision = ValidationUtil.isLimitShort(value)?Short.parseShort(value):0;
 		value = element.attributeValue("nullabled");
 		boolean nullabled = ValidationUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
 		

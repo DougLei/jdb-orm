@@ -15,6 +15,12 @@
  
 	<dependencies>
 		<dependency>
+			<groupId>com.douglei</groupId>
+			<artifactId>jtools</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	
+		<dependency>
 		    <groupId>dom4j</groupId>
 		    <artifactId>dom4j</artifactId>
 		    <version>1.6.1</version>
@@ -23,12 +29,6 @@
 		    <groupId>jaxen</groupId>
 		    <artifactId>jaxen</artifactId>
 		    <version>1.2.0</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.douglei</groupId>
-			<artifactId>jtools</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		
 		<dependency>

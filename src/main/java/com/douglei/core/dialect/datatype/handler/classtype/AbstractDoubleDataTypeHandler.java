@@ -25,7 +25,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isDouble(value)) {
+		if(value != null && ValidationUtil.isDouble(value.toString())) {
 			if(value.getClass() == double.class || value instanceof Double) {
 				preparedStatement.setDouble(parameterIndex, (double)value);
 			}else {

@@ -2,7 +2,7 @@ package com.douglei.core.dialect.impl.mysql.datatype.handler.classtype;
 
 import com.douglei.core.dialect.datatype.DBDataType;
 import com.douglei.core.dialect.datatype.handler.classtype.AbstractShortDataTypeHandler;
-import com.douglei.core.dialect.impl.mysql.datatype.Int;
+import com.douglei.core.dialect.impl.mysql.datatype.Smallint;
 
 /**
  * 
@@ -17,6 +17,6 @@ public class ShortDataTypeHandler extends AbstractShortDataTypeHandler{
 	
 	@Override
 	public DBDataType defaultDBDataType() {
-		return Int.singleInstance();
+		return Smallint.singleInstance();
 	}
 }

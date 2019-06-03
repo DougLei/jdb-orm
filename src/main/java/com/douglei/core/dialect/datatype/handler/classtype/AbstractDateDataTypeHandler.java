@@ -27,9 +27,9 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(ValidationUtil.isDate(value)) {
+		if(value != null && ValidationUtil.isDate(value.toString())) {
 			preparedStatement.setTimestamp(parameterIndex, DateTypeUtil.parseSqlTimestamp(value));
-		}else {
+		} else {
 			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}

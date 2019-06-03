@@ -36,6 +36,16 @@ public class OracleTest {
 	}
 	
 	@Test
+	public void selectTest() throws Exception {
+		selectPst = conn.prepareStatement("select age from sys_user");
+		rs = selectPst.executeQuery();
+		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
+		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
+		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
+		System.err.println("读取的列类型精度为2 = " + rs.getMetaData().getPrecision(1));
+	}
+	
+	@Test
 	public void stringTest() throws Exception {// varchar2, nvarchar2, char, nchar
 		insertPst.setString(1, "哈哈123-(varchar2, nvarchar2, char, nchar)");
 	}
