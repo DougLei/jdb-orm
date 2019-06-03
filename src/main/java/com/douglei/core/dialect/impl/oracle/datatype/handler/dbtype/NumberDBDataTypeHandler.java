@@ -50,7 +50,7 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		if(callableStatement.getMetaData().getScale(parameterIndex) == 0) {
 			return getIntValue(callableStatement.getLong(parameterIndex));
 		}
-		return getDoubleValue(callableStatement.getDouble(parameterIndex));
+		return callableStatement.getDouble(parameterIndex);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		if(rs.getMetaData().getScale(columnIndex) == 0) {
 			return getIntValue(rs.getLong(columnIndex));
 		}
-		return getDoubleValue(rs.getDouble(columnIndex));
+		return rs.getDouble(columnIndex);
 	}
 	
 	// 获取整型值
@@ -69,11 +69,6 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
 			return (int)value;
 		}
-		return value;
-	}
-	
-	// 获取浮点值
-	private Object getDoubleValue(double value) {
 		return value;
 	}
 }
