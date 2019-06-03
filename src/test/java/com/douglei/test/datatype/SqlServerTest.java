@@ -34,6 +34,19 @@ public class SqlServerTest {
 		System.err.println(value);
 		System.err.println(value.getClass());
 	}
+
+	@Test
+	public void selectTest() throws Exception {
+		rs = selectPst.executeQuery();
+		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
+		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
+		System.err.println("读取的列类型精度为 = " + rs.getMetaData().getScale(1));
+		
+		rs.next();
+		String value = rs.getString(1);
+		System.err.println("text is string: ====> " + value);
+		System.err.println(value.getClass());
+	}
 	
 	@Test
 	public void stringTest() throws Exception {// varchar2, nvarchar2, char, nchar
@@ -77,7 +90,7 @@ public class SqlServerTest {
 		Class.forName(className);
 		conn = DriverManager.getConnection(url, username, pwd);
 //		insertPst = conn.prepareStatement("insert into test(T) values(?)");
-//		selectPst = conn.prepareStatement("select T from test");
+		selectPst = conn.prepareStatement("select _te from test2");
 //		rs = selectPst.executeQuery();
 //		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
 //		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
