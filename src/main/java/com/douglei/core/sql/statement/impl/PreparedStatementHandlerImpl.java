@@ -167,6 +167,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 					list.clear();
 				}
 				lastParametersList.clear();
+				lastParametersList = null;
 			}
 			CloseUtil.closeDBConn(preparedStatement);
 		}

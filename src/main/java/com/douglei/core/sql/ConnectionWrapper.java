@@ -24,7 +24,7 @@ public class ConnectionWrapper {
 	private boolean beginTransaction;
 	private TransactionIsolationLevel transactionIsolationLevel;
 	private boolean finishTransaction;// 事物是否结束
-	private boolean connectionIsClosed;// 连接是否关闭
+	private boolean isClosed;// 连接是否关闭
 	private Connection connection;
 	
 	public ConnectionWrapper(DataSource dataSource, boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
@@ -145,12 +145,12 @@ public class ConnectionWrapper {
 	}
 	
 	public void close() {
-		if(!connectionIsClosed) {
-			connectionIsClosed = true;
+		if(!isClosed) {
+			isClosed = true;
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				connectionIsClosed = false;
+				isClosed = false;
 				throw new RuntimeException("close connection 时出现异常", e);
 			}
 		}
@@ -168,7 +168,7 @@ public class ConnectionWrapper {
 	 * 连接是否关闭
 	 * @return
 	 */
-	public boolean connectionIsClosed() {
-		return connectionIsClosed;
+	public boolean isClosed() {
+		return isClosed;
 	}
 }
