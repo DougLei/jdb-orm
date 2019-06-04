@@ -19,7 +19,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 	}
 
 	@Override
-	protected void initialInstance() {
+	protected void initializeInstance() {
 		StringBuilder updateSql = new StringBuilder();
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		

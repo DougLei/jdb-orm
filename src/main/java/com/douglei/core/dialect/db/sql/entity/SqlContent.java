@@ -25,13 +25,13 @@ public class SqlContent {
 		this.content = content;
 	}
 	
-	private void initialParameters() {
+	private void initializeParameters() {
 		if(parametersByDefinedOrder == null) {
 			parametersByDefinedOrder = new ArrayList<SqlParameter>(10);
 		}
 	}
 	public void addParameter(String parameterConfigurationText) {
-		initialParameters();
+		initializeParameters();
 		parametersByDefinedOrder.add(new SqlParameter(parameterConfigurationText));
 	}
 	

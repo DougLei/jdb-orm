@@ -14,7 +14,7 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * 初始化存储空间大小
 	 * @param size 如果size<1, 则使用默认的大小
 	 */
-	void initialStoreSize(int size);
+	void initializeStoreSize(int size);
 	
 	/**
 	 * 添加映射

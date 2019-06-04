@@ -36,7 +36,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 		if(list.size() > 0) {
 			try {
 				DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-				initialMappingCacheStoreSize(list.size());
+				initializeMappingCacheStoreSize(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
@@ -47,7 +47,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 				fileScanner.destroy();
 			}
 		}else {
-			initialMappingCacheStoreSize(0);
+			initializeMappingCacheStoreSize(0);
 		}
 	}
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {

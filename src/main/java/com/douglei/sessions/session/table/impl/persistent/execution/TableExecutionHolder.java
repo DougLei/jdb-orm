@@ -18,13 +18,13 @@ public abstract class TableExecutionHolder implements ExecutionHolder{
 	public TableExecutionHolder(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
 		this.tableMetadata = tableMetadata;
 		this.propertyMap = propertyMap;
-		initialInstance();
+		initializeInstance();
 	}
 
 	/**
 	 * 初始化实例
 	 */
-	protected abstract void initialInstance();
+	protected abstract void initializeInstance();
 	
 	
 	protected String sql;
