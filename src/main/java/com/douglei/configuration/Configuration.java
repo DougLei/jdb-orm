@@ -29,15 +29,6 @@ public interface Configuration extends SelfProcessing{
 	SessionFactory buildSessionFactory();
 	
 	/**
-	 * <pre>
-	 * 	获取sessionFactory实例
-	 * 	如果不存在，则build后再获取
-	 * </pre>
-	 * @return
-	 */
-	SessionFactory getSessionFactory();
-	
-	/**
 	 * 获取environment实例
 	 * @return
 	 */

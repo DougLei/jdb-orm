@@ -102,11 +102,6 @@ public class XmlConfiguration implements Configuration {
 	}
 	
 	@Override
-	public SessionFactory getSessionFactory() {
-		return buildSessionFactory();
-	}
-	
-	@Override
 	public void destroy() {
 		logger.debug("{} 开始 destroy", getClass());
 		if(properties != null) {
