@@ -11,7 +11,6 @@ import com.douglei.sessionfactory.SessionFactory;
  * @author DougLei
  */
 public interface Configuration extends SelfProcessing{
-	String DEFAULT_CONF_FILE_PATH = "jdb-orm.conf.xml";
 	
 	/**
 	 * 返回该配置对象的id
