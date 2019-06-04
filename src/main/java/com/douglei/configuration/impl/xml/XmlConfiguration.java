@@ -58,8 +58,8 @@ public class XmlConfiguration implements Configuration {
 	public XmlConfiguration() {
 		this(DEFAULT_CONF_FILE_PATH);
 	}
-	public XmlConfiguration(String confFilePath) {
-		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(confFilePath));
+	public XmlConfiguration(String configurationFilePath) {
+		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFilePath));
 	}
 	public XmlConfiguration(InputStream in) {
 		logger.info("根据xml配置文件，初始化configuration实例");
