@@ -14,12 +14,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.douglei.utils.CloseUtil;
+import com.douglei.utils.IdentityUtil;
 
 public class MySqlTest {
 	private Connection conn;
 	private PreparedStatement insertPst;
 	private PreparedStatement selectPst;
 	private ResultSet rs;
+	
+	@Test
+	public void closeThenCommitTest() throws Exception {
+		conn.setAutoCommit(false);
+		insertPst = conn.prepareStatement("insert into sys_user(id) values(?)");
+		insertPst.setString(1, IdentityUtil.get32UUID());
+		insertPst.executeUpdate();
+		System.out.println(insertPst.isClosed());
+		insertPst.close();
+		System.out.println(insertPst.isClosed());
+		
+		conn.rollback();
+	}
 	
 	@Test
 	public void selectCountTest() throws Exception {

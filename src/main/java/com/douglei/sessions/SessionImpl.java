@@ -67,16 +67,32 @@ public class SessionImpl implements Session {
 
 	@Override
 	public void commit() {
+		closeSessions();
 		connection.commit();
 	}
 
 	@Override
 	public void rollback() {
+		closeSessions();
 		connection.rollback();
 	}
 
 	@Override
 	public void close() {
+		closeSessions();
+		if(!connection.isFinishTransaction()) {
+			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
+			connection.commit();
+		}
+		connection.close();
+	}
+	
+	private boolean isCloseSessions;// 是否关闭所有session
+	private void closeSessions() {// 关闭所有session
+		if(isCloseSessions) {
+			return;
+		}
+		isCloseSessions = true;
 		if(tableSession != null) {
 			tableSession.close();
 		}
@@ -86,10 +102,5 @@ public class SessionImpl implements Session {
 		if(sqlSession != null) {
 			sqlSession.close();
 		}
-		if(!connection.isFinishTransaction()) {
-			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
-			connection.commit();
-		}
-		connection.close();
 	}
 }
