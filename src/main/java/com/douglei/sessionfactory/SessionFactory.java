@@ -174,4 +174,9 @@ public interface SessionFactory {
 	 * @return
 	 */
 	TableSqlStatementHandler getTableSqlStatementHandler();
+	
+	/**
+	 * 销毁
+	 */
+	void destroy();
 }

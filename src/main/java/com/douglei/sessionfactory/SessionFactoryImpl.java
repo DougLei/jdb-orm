@@ -157,4 +157,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	public TableSqlStatementHandler getTableSqlStatementHandler() {
 		return environmentProperty.getDialect().getTableSqlStatementHandler();
 	}
+
+	@Override
+	public void destroy() {
+		configuration.destroy();
+	}
 }

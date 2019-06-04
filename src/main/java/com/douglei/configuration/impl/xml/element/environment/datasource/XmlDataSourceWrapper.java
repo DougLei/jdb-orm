@@ -48,16 +48,16 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	
 	@Override
 	public void destroy() throws DestroyException {
-		logger.debug("{} 开始 destroy", getClass());
+		logger.debug("{} 开始 destroy", getClass().getName());
 		if(dataSource != null && StringUtil.notEmpty(closeMethodName)) {
-			logger.debug("{} {}", closeMethodName, dataSource.getClass());
 			try {
+				logger.debug("{} {}", closeMethodName, dataSource.getClass().getName());
 				dataSource.getClass().getMethod(closeMethodName).invoke(dataSource);
 			} catch (Exception e) {
-				throw new DestroyException(closeMethodName+" "+dataSource.getClass()+" 时出现异常", e);
+				throw new DestroyException(closeMethodName+" "+dataSource.getClass().getName()+" 时出现异常", e);
 			}
 		}
-		logger.debug("{} 结束 destroy", getClass());
+		logger.debug("{} 结束 destroy", getClass().getName());
 	}	
 	
 	@Override
