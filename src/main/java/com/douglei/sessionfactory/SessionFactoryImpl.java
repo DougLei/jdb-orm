@@ -161,5 +161,11 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public void destroy() {
 		configuration.destroy();
+		configuration = null;
+	}
+
+	@Override
+	public String getId() {
+		return configuration.getId();
 	}
 }

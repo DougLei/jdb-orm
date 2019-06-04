@@ -175,8 +175,6 @@ public interface SessionFactory {
 	 */
 	TableSqlStatementHandler getTableSqlStatementHandler();
 	
-	/**
-	 * 销毁
-	 */
 	void destroy();
+	String getId();
 }
