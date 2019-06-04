@@ -117,7 +117,7 @@ public class Properties implements SelfProcessing{
 	}
 	
 	@Override
-	public void doDestroy() throws DestroyException{
+	public void destroy() throws DestroyException{
 		logger.debug("{} 开始 destroy", getClass());
 		if(properties.size() > 0) {
 			properties.clear();

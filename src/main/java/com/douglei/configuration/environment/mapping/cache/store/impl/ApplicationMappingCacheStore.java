@@ -65,7 +65,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	}
 	
 	@Override
-	public void doDestroy() throws DestroyException {
+	public void destroy() throws DestroyException {
 		if(mappings != null && mappings.size() > 0) {
 			mappings.clear();
 		}

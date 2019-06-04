@@ -88,7 +88,7 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm系统的配置信息");
 		} catch (Exception e) {
-			doDestroy();
+			destroy();
 			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
 		}
 	}
@@ -107,16 +107,16 @@ public class XmlConfiguration implements Configuration {
 	}
 	
 	@Override
-	public void doDestroy() {
+	public void destroy() {
 		logger.debug("{} 开始 destroy", getClass());
 		if(properties != null) {
-			properties.doDestroy();
+			properties.destroy();
 		}
 		if(extConfiguration != null) {
-			extConfiguration.doDestroy();
+			extConfiguration.destroy();
 		}
 		if(environment != null) {
-			environment.doDestroy();
+			environment.destroy();
 		}
 		logger.debug("{} 结束 destroy", getClass());
 	}

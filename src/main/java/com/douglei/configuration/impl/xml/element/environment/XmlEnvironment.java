@@ -145,13 +145,13 @@ public class XmlEnvironment implements Environment{
 	}
 	
 	@Override
-	public void doDestroy() throws DestroyException{
+	public void destroy() throws DestroyException{
 		logger.debug("{} 开始 destroy", getClass());
 		if(dataSourceWrapper != null) {
-			dataSourceWrapper.doDestroy();
+			dataSourceWrapper.destroy();
 		}
 		if(mappingWrapper != null) {
-			mappingWrapper.doDestroy();
+			mappingWrapper.destroy();
 		}
 		logger.debug("{} 结束 destroy", getClass());
 	}

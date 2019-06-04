@@ -10,7 +10,7 @@ public interface SelfProcessing {
 	 * 进行销毁操作
 	 * @throws DestroyException
 	 */
-	void doDestroy() throws DestroyException;
+	void destroy() throws DestroyException;
 	
 	/**
 	 * 自检

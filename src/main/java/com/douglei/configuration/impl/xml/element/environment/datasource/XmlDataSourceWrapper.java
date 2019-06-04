@@ -47,7 +47,7 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	}
 	
 	@Override
-	public void doDestroy() throws DestroyException {
+	public void destroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());
 		if(dataSource != null && StringUtil.notEmpty(closeMethodName)) {
 			logger.debug("{} {}", closeMethodName, dataSource.getClass());

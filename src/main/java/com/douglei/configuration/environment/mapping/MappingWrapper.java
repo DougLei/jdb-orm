@@ -111,9 +111,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 
 	@Override
-	public void doDestroy() throws DestroyException {
+	public void destroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());
-		mappingCacheStore.doDestroy();
+		mappingCacheStore.destroy();
 		logger.debug("{} 结束 destroy", getClass());
 	}
 

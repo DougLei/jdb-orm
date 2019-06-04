@@ -65,7 +65,7 @@ public class XmlExtConfiguration implements ExtConfiguration {
 	}
 
 	@Override
-	public void doDestroy() throws DestroyException {
+	public void destroy() throws DestroyException {
 		if(extDataTypeHandlerList != null && extDataTypeHandlerList.size() > 0) {
 			extDataTypeHandlerList.clear();
 		}
