@@ -23,8 +23,6 @@ public abstract class Column {
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public Column() {
-	}
 	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
 		setNameByValidate(name);
 		this.dataType = dataType;
