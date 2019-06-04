@@ -24,20 +24,20 @@ public abstract class Column {
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
 	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		setName(name);
+		setNameByValidate(name);
 		this.dataType = dataType;
 		processDataType(null);
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
 	}
 	
 	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		setName(name);
+		setNameByValidate(name);
 		processDataType(dataType.getName());
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
 	}
 	
 	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		setName(name);
+		setNameByValidate(name);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
@@ -73,10 +73,6 @@ public abstract class Column {
 	}
 	
 	
-	public void setName(String name) {
-		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
-		this.name = name.toUpperCase();
-	}
 	public String getName() {
 		return name;
 	}
@@ -106,5 +102,9 @@ public abstract class Column {
 	}
 	public DBDataType getDBDataType() {
 		return dbDataType;
+	}
+	public void setNameByValidate(String name) {
+		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		this.name = name.toUpperCase();
 	}
 }

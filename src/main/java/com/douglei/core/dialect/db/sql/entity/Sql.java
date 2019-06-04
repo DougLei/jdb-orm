@@ -58,12 +58,12 @@ public class Sql implements Entity2MappingContentConverter {
 			xml.append(" namespace=\"").append(namespace).append("\"");
 		}
 		xml.append(">");
-		setXmlSqlContent(xml);
+		toXmlSqlContent(xml);
 		xml.append("</sql>");
 		xml.append("</mapping-configuration>");
 		return xml.toString();
 	}
-	private void setXmlSqlContent(StringBuilder xml) {
+	private void toXmlSqlContent(StringBuilder xml) {
 		if(this.contents != null) {
 			for (SqlContent content : this.contents) {
 				xml.append("<content type=\"").append(content.getType().name()).append("\"");

@@ -75,7 +75,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
+	public void setNameByValidate(String name) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 	}
@@ -107,13 +107,13 @@ public abstract class Table implements Entity2MappingContentConverter{
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<mapping-configuration>");
 		xml.append("<table name=\"").append(name).append("\" createMode=\"CREATE\">");
-		setXmlColumnContent(xml, columns.values());
-		setXmlConstraintContent(xml, constraints.values());
+		toXmlColumnContent(xml, columns.values());
+		toXmlConstraintContent(xml, constraints.values());
 		xml.append("</table>");
 		xml.append("</mapping-configuration>");
 		return xml.toString();
 	}
-	private void setXmlColumnContent(StringBuilder xml, Collection<Column> columns) {
+	private void toXmlColumnContent(StringBuilder xml, Collection<Column> columns) {
 		if(columns != null) {
 			xml.append("<columns>");
 			for (Column column : columns) {
@@ -139,7 +139,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 			xml.append("</columns>");
 		}
 	}
-	private void setXmlConstraintContent(StringBuilder xml, Collection<Constraint> constraints) {
+	private void toXmlConstraintContent(StringBuilder xml, Collection<Constraint> constraints) {
 		if(constraints != null) {
 			Collection<Column> columns = null;
 			
