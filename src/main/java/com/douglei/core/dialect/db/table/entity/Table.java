@@ -11,16 +11,11 @@ import com.douglei.core.dialect.db.Entity2MappingContentConverter;
  * 
  * @author DougLei
  */
-public class Table implements Entity2MappingContentConverter{
+public abstract class Table implements Entity2MappingContentConverter{
 	protected String name;// 表名
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
 	protected Map<String, Constraint> constraints;// 约束
-	
-	public Table(String name) {
-		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
-		this.name = name.toUpperCase();
-	}
 	
 	/**
 	 * 添加列
@@ -79,6 +74,10 @@ public class Table implements Entity2MappingContentConverter{
 	
 	public String getName() {
 		return name;
+	}
+	public void setName(String name) {
+		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		this.name = name.toUpperCase();
 	}
 	public Collection<Column> getColumns() {
 		return columns.values();

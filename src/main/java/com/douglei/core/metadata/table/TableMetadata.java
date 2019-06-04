@@ -26,7 +26,7 @@ public class TableMetadata extends Table implements Metadata{
 	private Map<String, ColumnMetadata> primaryKeyColumnMetadatas;// 主键列
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
-		super(name);
+		setName(name);
 		this.createMode = createMode;
 		setClassName(className);
 		setCode();

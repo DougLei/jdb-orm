@@ -9,7 +9,7 @@ import com.douglei.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
  * 
  * @author DougLei
  */
-public class Column {
+public abstract class Column {
 	
 	protected String name;// 列名
 	protected DataType dataType;// 数据类型
@@ -23,25 +23,21 @@ public class Column {
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	private Column(String name) {
-		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
-	}
-	
 	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		this(name);
+		setName(name);
 		this.dataType = dataType;
 		processDataType(null);
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
 	}
 	
 	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		this(name);
+		setName(name);
 		processDataType(dataType.getName());
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
 	}
 	
 	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		this(name);
+		setName(name);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
 		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
@@ -55,8 +51,6 @@ public class Column {
 	
 	// 处理其他属性值
 	private void processOtherPropertyValues(String name, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
-		this.name = name.toUpperCase();
-		this.unique = unique;
 		this.defaultValue = defaultValue;
 		processLengthAndPrecision(length, precision);
 		processPrimaryKeyAndNullabled(primaryKey, nullabled);
@@ -78,6 +72,11 @@ public class Column {
 		}
 	}
 	
+	
+	public void setName(String name) {
+		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		this.name = name.toUpperCase();
+	}
 	public String getName() {
 		return name;
 	}
