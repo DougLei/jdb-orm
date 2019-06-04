@@ -29,7 +29,7 @@ public class ConnectionWrapper {
 	
 	public ConnectionWrapper(DataSource dataSource, boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		try {
-			logger.debug("实例化{}", getClass());
+			logger.debug("实例化{}", getClass().getName());
 			
 			this.beginTransaction = beginTransaction;
 			this.transactionIsolationLevel = transactionIsolationLevel;
@@ -44,37 +44,18 @@ public class ConnectionWrapper {
 	
 	// 处理是否开启事物
 	private void processIsBeginTransaction() throws SQLException {
-		boolean isAutoCommit = connection.getAutoCommit();
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始处理是否开启事物");
-			logger.debug("jdbc默认的事物autoCommit值为 {}", isAutoCommit);
-			logger.debug("获取connection实例时，要求是否开启事物的值为 {}", beginTransaction);
+		if(connection.getAutoCommit()) {
+			connection.setAutoCommit(false);// 无论如何都不要自动提交
 		}
-		if(beginTransaction) {
-			if(isAutoCommit) {
-				connection.setAutoCommit(false);
-			}
-		}else {
-			if(!isAutoCommit) {
-				connection.setAutoCommit(true);
-			}
+		if(!beginTransaction) {
 			finishTransaction = true;// 因为不开启事物, 则事物标识为结束
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("最终设置jdbc事物autoCommit值为 {}", connection.getAutoCommit());
 		}
 	}
 	
 	// 处理事物的隔离级别
 	private void processTransactionIsolationLevel() throws SQLException {
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始处理事物的隔离级别");
-		}
 		if(transactionIsolationLevel != null) {
 			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("最终设置jdbc事物隔离级别为 {}", connection.getTransactionIsolation());
 		}
 	}
 
