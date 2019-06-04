@@ -32,17 +32,18 @@ public class SessionTest {
 	}
 	
 	// --------------------------------------------------------------------------------------
-	
+
+	@SuppressWarnings("unused")
 	private Configuration conf;
 	private TableSession session;
 	
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openTableSession();
+//		session = conf.buildSessionFactory().openTableSession();
 	}
 	@After
 	public void end() {
-		session.close();
+//		session.close();
 	}
 }

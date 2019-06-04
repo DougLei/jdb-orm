@@ -33,6 +33,7 @@ public class PreparedStatementHandlerTest {
 	
 	// --------------------------------------------------------------------------------------
 	
+	@SuppressWarnings("unused")
 	private Configuration conf;
 	private SqlSession session;
 	private List<Object> parameters;
@@ -40,7 +41,7 @@ public class PreparedStatementHandlerTest {
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openSqlSession();
+//		session = conf.buildSessionFactory().openSqlSession();
 		parameters = new ArrayList<Object>();
 	}
 	

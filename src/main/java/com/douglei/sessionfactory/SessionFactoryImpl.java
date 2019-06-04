@@ -1,6 +1,5 @@
 package com.douglei.sessionfactory;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,12 +13,8 @@ import com.douglei.context.RunMappingConfigurationContext;
 import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.core.sql.ConnectionWrapper;
-import com.douglei.sessions.session.sql.SQLSession;
-import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
-import com.douglei.sessions.session.table.TableSession;
-import com.douglei.sessions.session.table.impl.TableSessionImpl;
-import com.douglei.sessions.sqlsession.SqlSession;
-import com.douglei.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.sessions.Session;
+import com.douglei.sessions.SessionImpl;
 
 /**
  * 
@@ -85,74 +80,23 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public TableSession openTableSession() {
-		return openTableSession(true);
+	public Session openSession() {
+		return openSession(true);
 	}
 
 	@Override
-	public TableSession openTableSession(boolean beginTransaction) {
-		return openTableSession(beginTransaction, null);
+	public Session openSession(boolean beginTransaction) {
+		return openSession(beginTransaction, null);
 	}
-	
+
 	@Override
-	public TableSession openTableSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+	public Session openSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", TableSessionImpl.class, beginTransaction, transactionIsolationLevel);
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new TableSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
 	}
 	
-	@Override
-	public SQLSession openSQLSession() {
-		return openSQLSession(true);
-	}
-
-	@Override
-	public SQLSession openSQLSession(boolean beginTransaction) {
-		return openSQLSession(beginTransaction, null);
-	}
-	
-	@Override
-	public SQLSession openSQLSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SQLSessionImpl.class, beginTransaction, transactionIsolationLevel);
-		}
-		return new SQLSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
-	}
-	
-	@Override
-	public SqlSession openSqlSession() {
-		return openSqlSession(true);
-	}
-
-	@Override
-	public SqlSession openSqlSession(boolean beginTransaction) {
-		return openSqlSession(beginTransaction, null);
-	}
-
-	@Override
-	public SqlSession openSqlSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SqlSessionImpl.class, beginTransaction, transactionIsolationLevel);
-		}
-		return new SqlSessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
-	}
-
-	@Override
-	public Connection openConnection() {
-		return getConnectionWrapper(false, null).getConnection();
-	}
-
-	@Override
-	public Connection openConnection(boolean beginTransaction) {
-		return getConnectionWrapper(beginTransaction, null).getConnection();
-	}
-
-	@Override
-	public Connection openConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return getConnectionWrapper(beginTransaction, transactionIsolationLevel).getConnection();
-	}
-
 	@Override
 	public TableSqlStatementHandler getTableSqlStatementHandler() {
 		return environmentProperty.getDialect().getTableSqlStatementHandler();

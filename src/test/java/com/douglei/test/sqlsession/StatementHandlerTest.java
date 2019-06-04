@@ -35,14 +35,15 @@ public class StatementHandlerTest {
 	
 	
 	// --------------------------------------------------------------------------------------
-	
+
+	@SuppressWarnings("unused")
 	private Configuration conf;
 	private SqlSession session;
 	
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-		session = conf.buildSessionFactory().openSqlSession();
+//		session = conf.buildSessionFactory().openSqlSession();
 	}
 	@After
 	public void after() {

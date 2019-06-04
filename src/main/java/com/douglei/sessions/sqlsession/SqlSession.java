@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.core.sql.pagequery.PageResult;
-import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的sql session接口
  * @author DougLei
  */
-public interface SqlSession extends BasicSession{
+public interface SqlSession {
 	
 	/**
 	 * 执行批量查询
@@ -160,4 +159,9 @@ public interface SqlSession extends BasicSession{
 	 * @return
 	 */
 	Object executeProcedure(ProcedureExecutor procedureExecutor);
+	
+	/**
+	 * 
+	 */
+	void close();
 }

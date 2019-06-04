@@ -21,6 +21,7 @@ import com.douglei.core.sql.pagequery.PageResult;
 import com.douglei.core.sql.pagequery.PageSqlStatement;
 import com.douglei.core.sql.statement.StatementHandler;
 import com.douglei.core.utils.ResultSetMapConvertUtil;
+import com.douglei.sessions.SessionImpl;
 import com.douglei.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.sessions.sqlsession.SqlSession;
 import com.douglei.utils.CryptographyUtil;
@@ -30,20 +31,14 @@ import com.douglei.utils.datatype.ConvertUtil;
  * 执行sql语句的session实现类
  * @author DougLei
  */
-public class SqlSessionImpl implements SqlSession{
+public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
-	
-	protected ConnectionWrapper connection;
-	protected EnvironmentProperty environmentProperty;
-	protected MappingWrapper mappingWrapper;
 	
 	protected boolean enableSessionCache;// 是否启用session缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
-		this.connection = connection;
-		this.environmentProperty = environmentProperty;
-		this.mappingWrapper = mappingWrapper;
+		super(connection, environmentProperty, mappingWrapper);
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 	}
@@ -179,21 +174,7 @@ public class SqlSessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public void commit() {
-		connection.commit();
-	}
-	
-	@Override
-	public void rollback() {
-		connection.rollback();
-	}
-	
-	@Override
 	public void close() {
-		if(!connection.isFinishTransaction()) {
-			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
-			connection.commit();
-		}
 		if(enableSessionCache) {
 			if(statementHandlerCache != null && statementHandlerCache.size() > 0) {
 				Collection<StatementHandler> statementHandlers = statementHandlerCache.values();
@@ -203,7 +184,6 @@ public class SqlSessionImpl implements SqlSession{
 				statementHandlerCache.clear();
 			}
 		}
-		logger.debug("end");
 	}
 
 	@Override
@@ -251,7 +231,7 @@ public class SqlSessionImpl implements SqlSession{
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
 		try {
-			return procedureExecutor.execute(connection.getConnection());
+			return procedureExecutor.execute(getConnection());
 		} catch (SQLException e) {
 			throw new RuntimeException("调用并执行存储过程时出现异常", e);
 		}

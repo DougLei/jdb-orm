@@ -259,10 +259,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return mapping;
 	}
 
-	private void flush() {
-		flushPersistentObjectCache();
-	}
-
 	// 将持久化缓存中的数据刷新出去
 	private void flushPersistentObjectCache() {
 		if(persistentObjectCache.size() > 0) {
@@ -294,7 +290,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	@Override
 	public void close() {
-		flush();
+		flushPersistentObjectCache();
 		super.close();
 	}
 

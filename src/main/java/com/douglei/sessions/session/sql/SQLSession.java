@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.core.sql.pagequery.PageResult;
-import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的session接口
  * @author DougLei
  */
-public interface SQLSession extends BasicSession{
+public interface SQLSession {
 	public static final String PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX = "_procedure_resultset_";
 	
 	/**
@@ -189,4 +188,9 @@ public interface SQLSession extends BasicSession{
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 
+	 */
+	void close();
 }

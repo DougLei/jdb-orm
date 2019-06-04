@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.core.sql.pagequery.PageResult;
-import com.douglei.sessions.BasicSession;
 
 /**
  * 和数据库交互的session接口
  * @author DougLei
  */
-public interface TableSession extends BasicSession{
+public interface TableSession {
 
 	/**
 	 * 保存对象
@@ -86,4 +85,9 @@ public interface TableSession extends BasicSession{
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 
+	 */
+	void close();
 }

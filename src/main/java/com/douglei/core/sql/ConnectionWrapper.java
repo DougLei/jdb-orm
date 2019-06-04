@@ -13,6 +13,7 @@ import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.core.sql.statement.StatementHandler;
 import com.douglei.core.sql.statement.impl.PreparedStatementHandlerImpl;
 import com.douglei.core.sql.statement.impl.StatementHandlerImpl;
+import com.douglei.utils.ExceptionUtil;
 
 /**
  * java.sql.Connection包装类
@@ -23,6 +24,7 @@ public class ConnectionWrapper {
 	private boolean beginTransaction;
 	private TransactionIsolationLevel transactionIsolationLevel;
 	private boolean finishTransaction;// 事物是否结束
+	private boolean connectionIsClosed;// 连接是否关闭
 	private Connection connection;
 	
 	public ConnectionWrapper(DataSource dataSource, boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
@@ -114,11 +116,15 @@ public class ConnectionWrapper {
 			try {
 				connection.commit();
 			} catch (SQLException e) {
-				throw new RuntimeException("commit 时出现异常", e);
+				finishTransaction = false;
+				logger.error("commit 时出现异常, 进行rollback, 异常信息为: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				rollback();
+			} finally {
+				close();
 			}
-			return;
+		} else {
+			logger.debug("当前连接没有开启事物, commit无效");
 		}
-		logger.debug("当前连接没有开启事物, commit无效");
 	}
 
 	public void rollback() {
@@ -128,11 +134,26 @@ public class ConnectionWrapper {
 			try {
 				connection.rollback();
 			} catch (SQLException e) {
+				finishTransaction = false;
 				throw new RuntimeException("rollback 时出现异常", e);
+			} finally {
+				close();
 			}
-			return;
+		} else {
+			logger.debug("当前连接没有开启事物, rollback无效");
 		}
-		logger.debug("当前连接没有开启事物, rollback无效");
+	}
+	
+	public void close() {
+		if(!connectionIsClosed) {
+			connectionIsClosed = true;
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				connectionIsClosed = false;
+				throw new RuntimeException("close connection 时出现异常", e);
+			}
+		}
 	}
 	
 	/**
@@ -141,5 +162,13 @@ public class ConnectionWrapper {
 	 */
 	public boolean isFinishTransaction() {
 		return finishTransaction;
+	}
+	
+	/**
+	 * 连接是否关闭
+	 * @return
+	 */
+	public boolean connectionIsClosed() {
+		return connectionIsClosed;
 	}
 }
