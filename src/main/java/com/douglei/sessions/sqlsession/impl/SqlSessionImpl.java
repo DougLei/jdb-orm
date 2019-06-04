@@ -191,7 +191,7 @@ public class SqlSessionImpl implements SqlSession{
 	@Override
 	public void close() {
 		if(!connection.isFinishTransaction()) {
-			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass());
+			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
 			connection.commit();
 		}
 		if(enableSessionCache) {
