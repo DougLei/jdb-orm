@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
+import com.douglei.context.DBRunEnvironmentContext;
 import com.douglei.core.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
@@ -25,7 +26,8 @@ public class SessionImpl implements Session {
 	private SqlSession sqlSession;
 	private TableSession tableSession;
 	private SQLSession sqlSession_;
-	
+
+	protected boolean isClosed;
 	protected ConnectionWrapper connection;
 	protected EnvironmentProperty environmentProperty;
 	protected MappingWrapper mappingWrapper;
@@ -34,10 +36,19 @@ public class SessionImpl implements Session {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+	}
+	
+	// 验证session是否被关闭
+	private void validateSessionIsClosed() {
+		if(isClosed) {
+			throw new SessionIsClosedException();
+		}
 	}
 	
 	@Override
 	public SqlSession createSqlSession() {
+		validateSessionIsClosed();
 		if(sqlSession == null) {
 			sqlSession = new SqlSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
@@ -46,6 +57,7 @@ public class SessionImpl implements Session {
 
 	@Override
 	public TableSession createTableSession() {
+		validateSessionIsClosed();
 		if(tableSession == null) {
 			tableSession = new TableSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
@@ -54,6 +66,7 @@ public class SessionImpl implements Session {
 
 	@Override
 	public SQLSession createSQLSession() {
+		validateSessionIsClosed();
 		if(sqlSession_ == null) {
 			sqlSession_ = new SQLSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
@@ -62,45 +75,56 @@ public class SessionImpl implements Session {
 	
 	@Override
 	public Connection getConnection() {
+		validateSessionIsClosed();
 		return connection.getConnection();
 	}
 
 	@Override
 	public void commit() {
-		closeSessions();
-		connection.commit();
+		if(!isClosed) {
+			closeSessions();
+			connection.commit();
+		}
 	}
 
 	@Override
 	public void rollback() {
-		closeSessions();
-		connection.rollback();
+		if(!isClosed) {
+			closeSessions();
+			connection.rollback();
+		}
 	}
 
 	@Override
 	public void close() {
-		closeSessions();
-		if(!connection.isFinishTransaction()) {
-			logger.info("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
-			connection.commit();
+		if(!isClosed) {
+			closeSessions();
+			if(!connection.isFinishTransaction()) {
+				if(logger.isDebugEnabled()) {
+					logger.debug("当前[{}]的事物没有处理结束: commit 或 rollback, 程序默认进行 commit操作", getClass().getName());
+				}
+				connection.commit();
+			}
+			connection.close();
+			isClosed = true;
 		}
-		connection.close();
 	}
 	
-	private boolean isCloseSessions;// 是否关闭所有session
-	private void closeSessions() {// 关闭所有session
-		if(isCloseSessions) {
-			return;
-		}
-		isCloseSessions = true;
+	private void closeSessions() {
 		if(tableSession != null) {
-			tableSession.close();
+			logger.debug("close TableSession, 将该实例 = null");
+			((Session)tableSession).close();
+			tableSession = null;
 		}
 		if(sqlSession_ != null) {
-			sqlSession_.close();
+			logger.debug("close SQLSession, 将该实例 = null");
+			((Session)sqlSession_).close();
+			sqlSession_ = null;
 		}
 		if(sqlSession != null) {
-			sqlSession.close();
+			logger.debug("close SqlSession, 将该实例 = null");
+			((Session)sqlSession).close();
+			sqlSession = null;
 		}
 	}
 }

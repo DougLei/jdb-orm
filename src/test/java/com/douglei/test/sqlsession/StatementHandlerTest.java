@@ -47,6 +47,6 @@ public class StatementHandlerTest {
 	}
 	@After
 	public void after() {
-		session.close();
+//		session.close();
 	}
 }

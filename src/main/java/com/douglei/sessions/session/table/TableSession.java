@@ -85,9 +85,4 @@ public interface TableSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
-	
-	/**
-	 * 
-	 */
-	void close();
 }

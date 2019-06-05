@@ -40,7 +40,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
-		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 	}
 
 	/**
@@ -175,14 +174,18 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public void close() {
-		if(enableSessionCache) {
-			if(statementHandlerCache != null && statementHandlerCache.size() > 0) {
-				Collection<StatementHandler> statementHandlers = statementHandlerCache.values();
-				for (StatementHandler statementHandler : statementHandlers) {
-					statementHandler.close();
+		if(!isClosed) {
+			if(enableSessionCache) {
+				if(statementHandlerCache != null && statementHandlerCache.size() > 0) {
+					Collection<StatementHandler> statementHandlers = statementHandlerCache.values();
+					for (StatementHandler statementHandler : statementHandlers) {
+						statementHandler.close();
+					}
+					statementHandlerCache.clear();
+					statementHandlerCache = null;
 				}
-				statementHandlerCache.clear();
 			}
+			isClosed = true;
 		}
 	}
 

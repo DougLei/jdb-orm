@@ -159,9 +159,4 @@ public interface SqlSession {
 	 * @return
 	 */
 	Object executeProcedure(ProcedureExecutor procedureExecutor);
-	
-	/**
-	 * 
-	 */
-	void close();
 }

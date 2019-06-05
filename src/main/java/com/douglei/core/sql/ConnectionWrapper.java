@@ -91,13 +91,12 @@ public class ConnectionWrapper {
 	}
 
 	public void commit() {
-		if(beginTransaction) {
+		if(beginTransaction && !finishTransaction) {
 			logger.debug("commit");
-			finishTransaction = true;
 			try {
 				connection.commit();
+				finishTransaction = true;
 			} catch (SQLException e) {
-				finishTransaction = false;
 				logger.error("commit 时出现异常, 进行rollback, 异常信息为: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				rollback();
 			} finally {
@@ -109,13 +108,12 @@ public class ConnectionWrapper {
 	}
 
 	public void rollback() {
-		if(beginTransaction) {
+		if(beginTransaction && !finishTransaction) {
 			logger.debug("rollback");
-			finishTransaction = true;
 			try {
 				connection.rollback();
+				finishTransaction = true;
 			} catch (SQLException e) {
-				finishTransaction = false;
 				throw new RuntimeException("rollback 时出现异常", e);
 			} finally {
 				close();
@@ -127,11 +125,10 @@ public class ConnectionWrapper {
 	
 	public void close() {
 		if(!isClosed) {
-			isClosed = true;
 			try {
 				connection.close();
+				isClosed = true;
 			} catch (SQLException e) {
-				isClosed = false;
 				throw new RuntimeException("close connection 时出现异常", e);
 			}
 		}

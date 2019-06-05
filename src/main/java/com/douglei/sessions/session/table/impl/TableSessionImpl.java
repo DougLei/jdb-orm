@@ -285,12 +285,15 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 				}
 			}
 		}
+		persistentObjectCache = null;
 	}
 	
 	@Override
 	public void close() {
-		flushPersistentObjectCache();
-		super.close();
+		if(!isClosed) {
+			flushPersistentObjectCache();
+			super.close();
+		}
 	}
 
 	private TableMetadata getTableMetadata(String code) {

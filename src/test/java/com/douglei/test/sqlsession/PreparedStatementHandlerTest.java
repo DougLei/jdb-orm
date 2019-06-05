@@ -47,6 +47,6 @@ public class PreparedStatementHandlerTest {
 	
 	@After
 	public void end() {
-		session.close();
+//		session.close();
 	}
 }

@@ -188,9 +188,4 @@ public interface SQLSession {
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 
-	 */
-	void close();
 }
