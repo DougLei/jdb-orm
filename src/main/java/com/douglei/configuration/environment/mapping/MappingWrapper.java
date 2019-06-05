@@ -40,13 +40,14 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 	添加映射
 	 * 	如果是表映射, 则顺便create表
 	 * </pre>
-	 * @param mapping
+	 * @return mapping的code
 	 */
-	protected void addMapping(Mapping mapping){
+	protected String addMapping(Mapping mapping){
 		mappingCacheStore.addMapping(mapping);
 		if(isTableMapping(mapping)) {
 			RunMappingConfigurationContext.registerCreateTable((TableMetadata) mapping.getMetadata());
 		}
+		return mapping.getCode();
 	}
 
 	/**
@@ -55,9 +56,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 	只对映射操作, 不对实体操作
 	 * </pre>
 	 * @param mapping
+	 * @return mapping的code
 	 */
-	protected void coverMapping(Mapping mapping) {
+	protected String coverMapping(Mapping mapping) {
 		mappingCacheStore.coverMapping(mapping);
+		return mapping.getCode();
 	}
 	
 	/**
@@ -90,16 +93,18 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @param mappingType
 	 * @param mappingConfigurationContent
+	 * @return mapping的code
 	 */
-	public abstract void dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
 	 * 	动态覆盖映射
 	 * 	只对映射操作, 不对实体操作
 	 * </pre>
 	 * @param mapping
+	 * @return mapping的code
 	 */
-	public abstract void dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
 	 * 	动态删除映射

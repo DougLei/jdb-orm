@@ -40,7 +40,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public void dynamicAddMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-		mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+		entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
 		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
 	
@@ -48,20 +48,20 @@ public class SessionFactoryImpl implements SessionFactory {
 	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
-			mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+			entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
 		}
 		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
 
 	@Override
 	public void dynamicCoverMapping(DynamicMapping entity) {
-		mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent());
+		entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
 	}
 
 	@Override
 	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
-		for (DynamicMapping dynamicMapping : entities) {
-			dynamicCoverMapping(dynamicMapping);
+		for (DynamicMapping entity : entities) {
+			dynamicCoverMapping(entity);
 		}
 	}
 

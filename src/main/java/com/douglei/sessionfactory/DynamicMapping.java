@@ -7,6 +7,7 @@ import com.douglei.configuration.environment.mapping.MappingType;
  * @author DougLei
  */
 public class DynamicMapping {
+	private String mappingCode;
 	private MappingType mappingType;
 	private String mappingConfigurationContent;
 
@@ -20,5 +21,11 @@ public class DynamicMapping {
 	}
 	public String getMappingConfigurationContent() {
 		return mappingConfigurationContent;
+	}
+	public String getMappingCode() {
+		return mappingCode;
+	}
+	public void setMappingCode(String mappingCode) {
+		this.mappingCode = mappingCode;
 	}
 }
