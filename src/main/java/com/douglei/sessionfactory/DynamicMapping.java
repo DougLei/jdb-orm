@@ -26,6 +26,8 @@ public class DynamicMapping {
 		return mappingCode;
 	}
 	public void setMappingCode(String mappingCode) {
-		this.mappingCode = mappingCode;
+		if(this.mappingCode == null) {
+			this.mappingCode = mappingCode;
+		}
 	}
 }
