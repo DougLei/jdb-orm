@@ -38,12 +38,17 @@ public class JDBCTest {
 //		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
 		
 		Connection conn = DriverManager.getConnection(url, username, pwd);
-		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
-				+ "delete sys_user where id = ?");
-		pst.setString(1, "1");
-		pst.setString(2, "2");
+		conn.setAutoCommit(true);
+		PreparedStatement pst = conn.prepareCall("insert into sys_user(id) values(?)");
+		pst.setString(1, "isAutoCommit");
 		System.out.println(pst.executeUpdate());
-		conn.commit();
+		
+		
+		conn.setAutoCommit(false);
+		pst.setString(1, "notAutoCommit");
+		System.out.println(pst.executeUpdate());
+		
+//		conn.commit();
 	}
 	
 	@Test

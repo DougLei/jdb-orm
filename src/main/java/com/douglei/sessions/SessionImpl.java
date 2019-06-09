@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.configuration.environment.mapping.MappingWrapper;
 import com.douglei.configuration.environment.property.EnvironmentProperty;
 import com.douglei.context.DBRunEnvironmentContext;
+import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.core.sql.ConnectionWrapper;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.sql.impl.SQLSessionImpl;
@@ -79,6 +80,21 @@ public class SessionImpl implements Session {
 		return connection.getConnection();
 	}
 
+	@Override
+	public boolean isBeginTransaction() {
+		return connection.isBeginTransaction();
+	}
+
+	@Override
+	public void beginTransaction() {
+		connection.beginTransaction();
+	}
+	
+	@Override
+	public void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
+		connection.setTransactionIsolationLevel(transactionIsolationLevel);
+	}
+	
 	@Override
 	public void commit() {
 		if(!isClosed) {

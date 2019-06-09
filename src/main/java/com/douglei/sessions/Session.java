@@ -2,6 +2,7 @@ package com.douglei.sessions;
 
 import java.sql.Connection;
 
+import com.douglei.core.dialect.TransactionIsolationLevel;
 import com.douglei.sessions.session.sql.SQLSession;
 import com.douglei.sessions.session.table.TableSession;
 import com.douglei.sessions.sqlsession.SqlSession;
@@ -31,4 +32,8 @@ public interface Session {
 	 * @return
 	 */
 	Connection getConnection();
+
+	boolean isBeginTransaction();
+	void beginTransaction();
+	void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel);
 }

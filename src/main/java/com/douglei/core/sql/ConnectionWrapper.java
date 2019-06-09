@@ -38,16 +38,20 @@ public class ConnectionWrapper {
 			processIsBeginTransaction();
 			processTransactionIsolationLevel();
 		} catch (SQLException e) {
-			throw new RuntimeException("从数据源["+dataSource.getClass().getName()+"]获取Connection时出现异常", e);
+			throw new ConnectionWrapperException("从数据源["+dataSource.getClass().getName()+"]获取Connection时出现异常", e);
 		}
 	}
 	
 	// 处理是否开启事物
 	private void processIsBeginTransaction() throws SQLException {
-		if(connection.getAutoCommit()) {
-			connection.setAutoCommit(false);// 无论如何都不要自动提交
-		}
-		if(!beginTransaction) {
+		if(beginTransaction) {
+			if(connection.getAutoCommit()) {
+				connection.setAutoCommit(false);
+			}
+		}else {
+			if(!connection.getAutoCommit()) {
+				connection.setAutoCommit(true);
+			}
 			finishTransaction = true;// 因为不开启事物, 则事物标识为结束
 		}
 	}
@@ -86,7 +90,7 @@ public class ConnectionWrapper {
 				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql));
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException("创建StatementHander实例时出现异常", e);
+			throw new ConnectionWrapperException("创建StatementHander实例时出现异常", e);
 		}
 	}
 
@@ -114,7 +118,7 @@ public class ConnectionWrapper {
 				connection.rollback();
 				finishTransaction = true;
 			} catch (SQLException e) {
-				throw new RuntimeException("rollback 时出现异常", e);
+				throw new ConnectionWrapperException("rollback 时出现异常", e);
 			} finally {
 				close();
 			}
@@ -148,5 +152,50 @@ public class ConnectionWrapper {
 	 */
 	public boolean isClosed() {
 		return isClosed;
+	}
+	
+	/**
+	 * 是否开启事物
+	 * @return
+	 */
+	public boolean isBeginTransaction() {
+		return beginTransaction;
+	}
+	
+	/**
+	 * 开启事物
+	 */
+	public void beginTransaction() {
+		if(isClosed) {
+			throw new ConnectionWrapperException("连接已经关闭, 无法开启事物");
+		}
+		
+		this.beginTransaction = true;
+		try {
+			processIsBeginTransaction();
+			this.finishTransaction= false;
+		} catch (SQLException e) {
+			throw new ConnectionWrapperException("开启事物时出现异常", e);
+		}
+	}
+
+	/**
+	 * 设置事物的隔离级别
+	 * @param transactionIsolationLevel
+	 */
+	public void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
+		if(isClosed) {
+			throw new ConnectionWrapperException("连接已经关闭, 无法设置事物的隔离级别");
+		}
+		if(transactionIsolationLevel == null || this.transactionIsolationLevel == transactionIsolationLevel) {
+			return;
+		}
+		
+		this.transactionIsolationLevel = transactionIsolationLevel;
+		try {
+			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
+		} catch (SQLException e) {
+			throw new ConnectionWrapperException("设置事物的隔离级别时出现异常", e);
+		}
 	}
 }
