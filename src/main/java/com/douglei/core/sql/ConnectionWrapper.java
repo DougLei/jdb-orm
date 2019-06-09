@@ -58,7 +58,7 @@ public class ConnectionWrapper {
 	
 	// 处理事物的隔离级别
 	private void processTransactionIsolationLevel() throws SQLException {
-		if(transactionIsolationLevel != null) {
+		if(transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) {
 			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
 		}
 	}
@@ -187,7 +187,7 @@ public class ConnectionWrapper {
 		if(isClosed) {
 			throw new ConnectionWrapperException("连接已经关闭, 无法设置事物的隔离级别");
 		}
-		if(transactionIsolationLevel == null || this.transactionIsolationLevel == transactionIsolationLevel) {
+		if(transactionIsolationLevel == null || transactionIsolationLevel == TransactionIsolationLevel.DEFAULT || this.transactionIsolationLevel == transactionIsolationLevel) {
 			return;
 		}
 		

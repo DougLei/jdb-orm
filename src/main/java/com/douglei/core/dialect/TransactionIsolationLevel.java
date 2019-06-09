@@ -24,7 +24,11 @@ public enum TransactionIsolationLevel {
 	/**
 	 * 串行: 不会出现幻象读
 	 */
-	SERIALIZABLE(8);
+	SERIALIZABLE(8),
+	/**
+	 * 使用jdbc驱动中的默认隔离级别, 传入该常量等于传入null
+	 */
+	DEFAULT(-1);
 	
 	/**
 	 * 隔离的级别，越高则隔离的效果越强
