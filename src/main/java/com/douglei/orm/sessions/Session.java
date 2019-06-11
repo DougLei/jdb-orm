@@ -13,11 +13,11 @@ import com.douglei.orm.sessions.sqlsession.SqlSession;
  */
 public interface Session {
 	
-	SqlSession createSqlSession();
+	SqlSession getSqlSession();
 	
-	TableSession createTableSession();
+	TableSession getTableSession();
 	
-	SQLSession createSQLSession();
+	SQLSession getSQLSession();
 	
 	void commit();
 	

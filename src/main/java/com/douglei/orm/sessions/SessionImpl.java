@@ -48,7 +48,7 @@ public class SessionImpl implements Session {
 	}
 	
 	@Override
-	public SqlSession createSqlSession() {
+	public SqlSession getSqlSession() {
 		validateSessionIsClosed();
 		if(SqlSession == null) {
 			SqlSession = new SqlSessionImpl(connection, environmentProperty, mappingWrapper);
@@ -57,7 +57,7 @@ public class SessionImpl implements Session {
 	}
 
 	@Override
-	public TableSession createTableSession() {
+	public TableSession getTableSession() {
 		validateSessionIsClosed();
 		if(TableSession == null) {
 			TableSession = new TableSessionImpl(connection, environmentProperty, mappingWrapper);
@@ -66,7 +66,7 @@ public class SessionImpl implements Session {
 	}
 
 	@Override
-	public SQLSession createSQLSession() {
+	public SQLSession getSQLSession() {
 		validateSessionIsClosed();
 		if(SQLSession == null) {
 			SQLSession = new SQLSessionImpl(connection, environmentProperty, mappingWrapper);

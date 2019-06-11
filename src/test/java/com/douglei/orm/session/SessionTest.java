@@ -12,7 +12,7 @@ public class SessionTest {
 		
 		Session session = sf.openSession(true);
 		
-		session.createTableSession().save(SysUser.getList().get(1));
+		session.getTableSession().save(SysUser.getList().get(1));
 		
 		session.close();
 		
