@@ -24,9 +24,9 @@ import com.douglei.orm.sessions.sqlsession.impl.SqlSessionImpl;
 public class SessionImpl implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
 	
-	private SqlSession sqlSession;
-	private TableSession tableSession;
-	private SQLSession sqlSession_;
+	private SqlSession SqlSession;
+	private TableSession TableSession;
+	private SQLSession SQLSession;
 
 	protected boolean isClosed;
 	protected ConnectionWrapper connection;
@@ -50,28 +50,28 @@ public class SessionImpl implements Session {
 	@Override
 	public SqlSession createSqlSession() {
 		validateSessionIsClosed();
-		if(sqlSession == null) {
-			sqlSession = new SqlSessionImpl(connection, environmentProperty, mappingWrapper);
+		if(SqlSession == null) {
+			SqlSession = new SqlSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
-		return sqlSession;
+		return SqlSession;
 	}
 
 	@Override
 	public TableSession createTableSession() {
 		validateSessionIsClosed();
-		if(tableSession == null) {
-			tableSession = new TableSessionImpl(connection, environmentProperty, mappingWrapper);
+		if(TableSession == null) {
+			TableSession = new TableSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
-		return tableSession;
+		return TableSession;
 	}
 
 	@Override
 	public SQLSession createSQLSession() {
 		validateSessionIsClosed();
-		if(sqlSession_ == null) {
-			sqlSession_ = new SQLSessionImpl(connection, environmentProperty, mappingWrapper);
+		if(SQLSession == null) {
+			SQLSession = new SQLSessionImpl(connection, environmentProperty, mappingWrapper);
 		}
-		return sqlSession_;
+		return SQLSession;
 	}
 	
 	@Override
@@ -127,20 +127,20 @@ public class SessionImpl implements Session {
 	}
 	
 	private void closeSessions() {
-		if(tableSession != null) {
+		if(TableSession != null) {
 			logger.debug("close TableSession, 将该实例 = null");
-			((Session)tableSession).close();
-			tableSession = null;
+			((Session)TableSession).close();
+			TableSession = null;
 		}
-		if(sqlSession_ != null) {
+		if(SQLSession != null) {
 			logger.debug("close SQLSession, 将该实例 = null");
-			((Session)sqlSession_).close();
-			sqlSession_ = null;
+			((Session)SQLSession).close();
+			SQLSession = null;
 		}
-		if(sqlSession != null) {
+		if(SqlSession != null) {
 			logger.debug("close SqlSession, 将该实例 = null");
-			((Session)sqlSession).close();
-			sqlSession = null;
+			((Session)SqlSession).close();
+			SqlSession = null;
 		}
 	}
 }
