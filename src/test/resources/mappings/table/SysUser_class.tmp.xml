@@ -8,5 +8,11 @@
 			<column name="age" property="age" dataType="integer" length="2" />
 			<column name="sex" property="sex" dataType="string" length="30" />
 		</columns>
+		
+		<constraints>
+			<constraint type="unique">
+				<column-name value="name" />
+			</constraint>
+		</constraints>
 	</table>
 </mapping-configuration>
