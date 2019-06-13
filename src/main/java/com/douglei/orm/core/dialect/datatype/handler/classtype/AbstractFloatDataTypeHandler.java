@@ -1,6 +1,5 @@
 package com.douglei.orm.core.dialect.datatype.handler.classtype;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -29,8 +28,6 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 		if(value != null && ValidationUtil.isDouble(value.toString())) {
 			if(value.getClass() == float.class || value instanceof Float) {
 				preparedStatement.setFloat(parameterIndex, (float)value);
-			}else if(value instanceof BigDecimal){
-				preparedStatement.setBigDecimal(parameterIndex, (BigDecimal)value);
 			}else {
 				preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString()));
 			}
@@ -41,25 +38,25 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		Float f = null;
+		Object o = null;
 		if(value.getClass() == float.class || value instanceof Float) {
-			f = (Float) value;
-		}else if(ValidationUtil.isDouble(value.toString())) {
-			f = Float.parseFloat(value.toString());
+			o = value;
+		} else if(ValidationUtil.isDouble(value.toString())) {
+			o = Float.parseFloat(value.toString());
 		}else {
 			return "数据值类型错误, 应为浮点型(float)";
 		}
 		
-		String floatString = f.toString();
-		if(floatString.length() - 1 > length) {
-			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (floatString.length() - 1);
+		String string = o.toString();
+		if(string.length() - 1 > length) {
+			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
 		}
 		
-		short dotIndex = (short)floatString.indexOf(".");
+		short dotIndex = (short)string.indexOf(".");
 		if(dotIndex != -1) {
 			dotIndex++;
 			short pl = 0;
-			while(dotIndex < floatString.length()) {
+			while(dotIndex < string.length()) {
 				dotIndex++;
 				pl++;
 			}

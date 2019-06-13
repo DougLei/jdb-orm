@@ -41,25 +41,25 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		Double d = null;
-		if(value.getClass() == double.class || value instanceof Double) {
-			d = (Double) value;
+		Object o = null;
+		if(value.getClass() == double.class || value instanceof Double || value instanceof BigDecimal) {
+			o = value;
 		}else if(ValidationUtil.isDouble(value.toString())) {
-			d = Double.parseDouble(value.toString());
+			o = Double.parseDouble(value.toString());
 		}else {
 			return "数据值类型错误, 应为浮点型(double)";
 		}
 		
-		String doubleString = d.toString();
-		if(doubleString.length() - 1 > length) {
-			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (doubleString.length() - 1);
+		String string = o.toString();
+		if(string.length() - 1 > length) {
+			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
 		}
 		
-		short dotIndex = (short)doubleString.indexOf(".");
+		short dotIndex = (short)string.indexOf(".");
 		if(dotIndex != -1) {
 			dotIndex++;
 			short pl = 0;
-			while(dotIndex < doubleString.length()) {
+			while(dotIndex < string.length()) {
 				dotIndex++;
 				pl++;
 			}
