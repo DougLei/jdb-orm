@@ -52,7 +52,7 @@ public class RunMappingConfigurationContext {
 	}
 	
 	/**
-	 * 注册要创建的TableMetadata
+	 * 注册要drop的TableMetadata
 	 * @param tableMetadata
 	 */
 	public static void registerDropTable(TableMetadata tableMetadata) {
@@ -91,5 +91,21 @@ public class RunMappingConfigurationContext {
 	 */
 	public static SqlContentType getCurrentSqlContentType() {
 		return getRunMappingConfiguration().sqlContentType;
+	}
+	
+	/**
+	 * 记录当前执行的映射描述
+	 * @param executeMappingDescription
+	 */
+	public static void setCurrentExecuteMappingDescription(String executeMappingDescription) {
+		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+		runMappingConfiguration.executeMappingDescription = executeMappingDescription;
+	}
+	
+	/**
+	 * 记录当前执行的映射描述
+	 */
+	public static String getCurrentExecuteMappingDescription() {
+		return getRunMappingConfiguration().executeMappingDescription;
 	}
 }

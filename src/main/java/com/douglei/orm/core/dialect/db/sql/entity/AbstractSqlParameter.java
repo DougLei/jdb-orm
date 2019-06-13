@@ -25,6 +25,7 @@ public abstract class AbstractSqlParameter {
 	protected Map<String, String> propertyMap; // 根据configurationText解析出来的<属性:值>map集合
 	
 	protected String name;// 参数名
+	protected String descriptionName;// 描述名
 	protected DataTypeHandler dataType;// 数据类型
 	
 	protected SqlParameterMode mode;// 输入输出类型
@@ -42,6 +43,7 @@ public abstract class AbstractSqlParameter {
 		
 		propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
+		setDescriptionName(propertyMap.get("descriptionName"));
 		setDataType(propertyMap.get("datatype"));
 		setDBDataType(propertyMap.get("dbType"));
 		setMode(propertyMap.get("mode"));
@@ -95,6 +97,12 @@ public abstract class AbstractSqlParameter {
 	
 	private void setName(String name) {
 		this.name = name;
+	}
+	private void setDescriptionName(String descriptionName) {
+		if(StringUtil.isEmpty(descriptionName)) {
+			descriptionName = name;
+		}
+		this.descriptionName = descriptionName;
 	}
 	private void setDataType(String dataType) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() != SqlContentType.PROCEDURE) {
@@ -182,6 +190,9 @@ public abstract class AbstractSqlParameter {
 	}
 	public String getName() {
 		return name;
+	}
+	public String getDescriptionName() {
+		return descriptionName;
 	}
 	public ClassDataTypeHandler getDataType() {
 		return (ClassDataTypeHandler) dataType;

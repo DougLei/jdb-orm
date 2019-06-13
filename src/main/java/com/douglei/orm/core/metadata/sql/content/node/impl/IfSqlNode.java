@@ -21,7 +21,7 @@ public class IfSqlNode extends AbstractSqlNode {
 		return OgnlHandler.singleInstance().getBooleanValue(expression, sqlParameter);
 	}
 	
-	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认都没有处理
+	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认没有处理
 	private void processExpression(String alias) {
 		if(unProcessExpression) {
 			unProcessExpression = false;

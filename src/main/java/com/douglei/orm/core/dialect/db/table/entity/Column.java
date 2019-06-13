@@ -4,6 +4,7 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -12,6 +13,7 @@ import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHand
 public abstract class Column {
 	
 	protected String name;// 列名
+	protected String descriptionName;// 描述名
 	protected DataType dataType;// 数据类型
 	protected short length;// 长度
 	protected short precision;// 精度
@@ -24,22 +26,22 @@ public abstract class Column {
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = dataType;
 		processDataType(null);
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
-	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		processDataType(dataType.getName());
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
-	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
 	
 	// 处理dataTypeHandler和dbDataType的值
@@ -49,7 +51,11 @@ public abstract class Column {
 	}
 	
 	// 处理其他属性值
-	private void processOtherPropertyValues(String name, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	private void processOtherPropertyValues(String descriptionName, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+		if(StringUtil.isEmpty(descriptionName)) {
+			descriptionName = name;
+		}
+		this.descriptionName = descriptionName;
 		this.defaultValue = defaultValue;
 		processLengthAndPrecision(length, precision);
 		processPrimaryKeyAndNullabled(primaryKey, nullabled);

@@ -14,4 +14,6 @@ class RunMappingConfiguration {
 	List<TableMetadata> dropTables;// 记录drop table对象集合
 	
 	SqlContentType sqlContentType;// 记录每个sql content的type
+	
+	String executeMappingDescription;// 记录执行的每个映射描述
 }

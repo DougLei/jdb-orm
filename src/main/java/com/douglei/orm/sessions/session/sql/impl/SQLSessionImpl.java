@@ -14,6 +14,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
@@ -64,7 +65,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		if(mapping.getMappingType() != MappingType.SQL) {
 			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 		}
-		return (SqlMetadata) mapping.getMetadata();
+		SqlMetadata sm= (SqlMetadata) mapping.getMetadata();
+		RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+code+"], dialect=["+DBRunEnvironmentContext.getDialect().getType()+"]的SQL映射");
+		return sm;
 	}
 	
 	// 获取ExecutionHolder
@@ -188,7 +191,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		DialectType dialect = DBRunEnvironmentContext.getDialect().getType();
 		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException("sql code="+sqlMetadata.getCode()+", dialect="+dialect+", 不存在可以执行的存储过程sql语句");
+			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的存储过程sql语句");
 		}
 		
 		int length = contents.size();

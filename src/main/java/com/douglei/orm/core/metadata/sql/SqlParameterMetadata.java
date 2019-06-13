@@ -2,6 +2,8 @@ package com.douglei.orm.core.metadata.sql;
 
 import java.util.Map;
 
+import com.douglei.orm.core.dialect.datatype.handler.DataTypeValidateResult;
+import com.douglei.orm.core.dialect.db.ValidateException;
 import com.douglei.orm.core.dialect.db.sql.entity.AbstractSqlParameter;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -31,7 +33,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 
 	@Override
 	public String toString() {
-		return "AbstractSqlParameter [configurationText=" + configurationText + ", propertyMap=" + propertyMap
+		return "SqlParameterMetadata [configurationText=" + configurationText + ", propertyMap=" + propertyMap
 				+ ", name=" + name + ", dataType=" + dataType + ", mode=" + mode + ", usePlaceholder=" + usePlaceholder
 				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullabled=" + nullabled
 				+ ", defaultValue=" + defaultValue + ", validate=" + validate + "]";
@@ -79,6 +81,24 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 		}else {
 			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
 		}
+		
+		if(value == null && defaultValue != null) {
+			value = defaultValue;
+		}
+		doValidate(value);
 		return value;
+	}
+	
+	// 验证数据
+	private void doValidate(Object value) {
+		if(validate) {
+			if(value == null && !nullabled) {
+				throw new ValidateException(descriptionName, name, "不能为空");
+			}
+			DataTypeValidateResult result = dataType.validateValueDataType(value);
+			if(result != null) {
+				throw new ValidateException(descriptionName, name, result);
+			}
+		}
 	}
 }

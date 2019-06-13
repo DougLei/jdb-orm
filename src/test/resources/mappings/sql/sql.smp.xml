@@ -7,7 +7,7 @@
 		<!-- 
 			<where>
 				<if test="age != null and age == 23">
-					and name = #{name, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullabled=true, defaultValue=dv, validate=fales}
+					and name = #{name, descriptionName=姓名, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullabled=true, defaultValue=dv, validate=fales}
 				</if>
 				<if test="age != null">
 					and name = 'DougLei'
