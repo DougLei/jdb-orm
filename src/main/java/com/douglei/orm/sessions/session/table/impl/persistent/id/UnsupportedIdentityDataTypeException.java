@@ -1,4 +1,4 @@
-package com.douglei.orm.sessions.session.persistent.id;
+package com.douglei.orm.sessions.session.table.impl.persistent.id;
 
 /**
  * Identity不支持的数据类型异常

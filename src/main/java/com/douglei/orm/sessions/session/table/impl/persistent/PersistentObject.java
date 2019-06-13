@@ -8,21 +8,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.sessions.session.persistent.OperationState;
-import com.douglei.orm.sessions.session.persistent.PersistentObject;
-import com.douglei.orm.sessions.session.persistent.execution.ExecutionHolder;
-import com.douglei.orm.sessions.session.persistent.id.Identity;
+import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.UpdateExecutionHolder;
+import com.douglei.orm.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class TablePersistentObject implements PersistentObject{
-	private static final Logger logger = LoggerFactory.getLogger(TablePersistentObject.class);
+public class PersistentObject {
+	private static final Logger logger = LoggerFactory.getLogger(PersistentObject.class);
 	
 	private Object originObject;
 	private OperationState operationState;
@@ -30,19 +28,17 @@ public class TablePersistentObject implements PersistentObject{
 	private TableMetadata tableMetadata;
 	private Map<String, Object> propertyMap;
 	
-	public TablePersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
+	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
 		this.tableMetadata = tableMetadata;
 		setOriginObject(originObject);
 		setOperationState(operationState);
 	}
 	
-	@Override
 	public String getCode() {
 		return tableMetadata.getCode();
 	}
 	
 	private Identity id;
-	@Override
 	public Identity getId() {
 		if(id == null) {
 			Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
@@ -61,8 +57,7 @@ public class TablePersistentObject implements PersistentObject{
 		return id;
 	}
 	
-	@Override
-	public void setIdentity(Identity identity) {
+	public void setId(Identity identity) {
 		this.id = identity;
 	}
 	
@@ -74,7 +69,6 @@ public class TablePersistentObject implements PersistentObject{
 				+ originObject.toString();
 	}
 	
-	@Override
 	public ExecutionHolder getExecutionHolder() {
 		switch(operationState) {
 			case CREATE:
@@ -88,22 +82,18 @@ public class TablePersistentObject implements PersistentObject{
 		}
 	}
 	
-	@Override
 	public OperationState getOperationState() {
 		return operationState;
 	}
-	@Override
 	public void setOperationState(OperationState operationState) {
 		this.operationState = operationState;
 	}
 	
-	@Override
 	public Object getOriginObject() {
 		return originObject;
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Override
 	public void setOriginObject(Object originObject) {
 		if(originObject instanceof Map) {
 			logger.debug("originObject is Map type, 从该map中, 筛选出相关列的数据信息");

@@ -1,4 +1,4 @@
-package com.douglei.orm.sessions.session.persistent;
+package com.douglei.orm.sessions.session.table.impl.persistent;
 
 /**
  * 重复的持久化对象异常

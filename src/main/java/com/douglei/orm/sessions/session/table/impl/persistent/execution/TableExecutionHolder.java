@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.sessions.session.persistent.execution.ExecutionHolder;
+import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.tools.utils.StringUtil;
 
 /**

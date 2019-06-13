@@ -13,17 +13,17 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.sessions.session.MappingMismatchingException;
-import com.douglei.orm.sessions.session.persistent.OperationState;
-import com.douglei.orm.sessions.session.persistent.PersistentObject;
-import com.douglei.orm.sessions.session.persistent.RepeatedPersistentObjectException;
-import com.douglei.orm.sessions.session.persistent.execution.ExecutionHolder;
-import com.douglei.orm.sessions.session.persistent.id.Identity;
+import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.TableSession;
-import com.douglei.orm.sessions.session.table.impl.persistent.TablePersistentObject;
+import com.douglei.orm.sessions.session.table.impl.persistent.OperationState;
+import com.douglei.orm.sessions.session.table.impl.persistent.PersistentObject;
+import com.douglei.orm.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
+import com.douglei.orm.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
@@ -59,14 +59,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public void save(Object object) {
 		Mapping mapping = getTableMapping(object, "save");
-		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), object, OperationState.CREATE);
+		PersistentObject persistent = new PersistentObject((TableMetadata)mapping.getMetadata(), object, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
 		Mapping mapping = getTableMapping(code, "save");
-		PersistentObject persistent = new TablePersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, OperationState.CREATE);
+		PersistentObject persistent = new PersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
@@ -170,8 +170,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			}
 		}else {
 			logger.debug("缓存中不存在要修改的数据持久化对象");
-			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, OperationState.UPDATE);
-			persistentObject.setIdentity(id);
+			PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
+			persistentObject.setId(id);
 			cache.put(id, persistentObject);
 		}
 	}
@@ -213,8 +213,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			}
 		}else {
 			logger.debug("缓存中不存在要删除的数据持久化对象");
-			PersistentObject persistentObject = new TablePersistentObject(tableMetadata, object, OperationState.DELETE);
-			persistentObject.setIdentity(id);
+			PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE);
+			persistentObject.setId(id);
 			cache.put(id, persistentObject);
 		}
 	}
@@ -256,6 +256,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(mapping.getMappingType() != MappingType.TABLE) {
 			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
 		}
+		RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+code+"]的TABLE映射");
 		return mapping;
 	}
 

@@ -1,4 +1,4 @@
-package com.douglei.orm.sessions.session.sql.impl.persistent.execution;
+package com.douglei.orm.sessions.session.sql.impl.execution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.sessions.session.persistent.execution.ExecutionHolder;
+import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 
 /**
  * 

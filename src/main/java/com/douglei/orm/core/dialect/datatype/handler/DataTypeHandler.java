@@ -35,9 +35,11 @@ public interface DataTypeHandler {
 	Object getValue(short columnIndex, ResultSet rs) throws SQLException;
 
 	/**
-	 * 对value的类型进行验证
+	 * 对value进行验证
 	 * @param value
+	 * @param length
+	 * @param precision
 	 * @return
 	 */
-	DataTypeValidateResult validateValueDataType(Object value);
+	String validateValue(Object value, short length, short precision);
 }

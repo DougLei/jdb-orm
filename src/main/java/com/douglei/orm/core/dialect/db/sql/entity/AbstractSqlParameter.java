@@ -34,11 +34,13 @@ public abstract class AbstractSqlParameter {
 	protected String valuePrefix;// 如果不使用占位符, 参数值的前缀
 	protected String valueSuffix;// 如果不使用占位符, 参数值的后缀
 	
+	protected short length;// 长度
+	protected short precision;// 精度
 	protected boolean nullabled;// 是否可为空
 	protected String defaultValue;// 默认值
 	protected boolean validate;// 是否验证
 	
-	protected AbstractSqlParameter(String configurationText, boolean clearPropertyMap) {
+	protected AbstractSqlParameter(String configurationText) {
 		this.configurationText = configurationText;
 		
 		propertyMap = resolvingPropertyMap(configurationText);
@@ -53,11 +55,14 @@ public abstract class AbstractSqlParameter {
 			setValuePrefix(propertyMap.get("valuePrefix"));
 			setValueSuffix(propertyMap.get("valueSuffix"));
 		}
+		setLength(propertyMap.get("length"));
+		setPrecision(propertyMap.get("precision"));
 		setNullabled(propertyMap.get("nullabled"));
 		setDefaultValue(propertyMap.get("defaultValue"));
 		setValidate(propertyMap.get("validate"));
 		
-		clearPropertyMap(clearPropertyMap);
+		propertyMap.clear();
+		propertyMap = null;
 	}
 	
 	// 解析出属性map集合
@@ -163,6 +168,20 @@ public abstract class AbstractSqlParameter {
 			this.valueSuffix = valueSuffix;
 		}
 	}
+	private void setLength(String length) {
+		if(ValidationUtil.isLimitShort(length)) {
+			this.length = Short.parseShort(length);
+		}else {
+			this.length = -1;
+		}
+	}
+	private void setPrecision(String precision) {
+		if(ValidationUtil.isLimitShort(precision)) {
+			this.precision = Short.parseShort(precision);
+		}else {
+			this.precision = -1;
+		}
+	}
 	private void setNullabled(String nullabled) {
 		if(ValidationUtil.isBoolean(nullabled)) {
 			this.nullabled = Boolean.parseBoolean(nullabled);
@@ -177,14 +196,6 @@ public abstract class AbstractSqlParameter {
 		}
 	}
 
-	// 清空属性map
-	protected void clearPropertyMap(boolean clearPropertyMap) {
-		if(clearPropertyMap) {
-			propertyMap.clear();
-			propertyMap = null;
-		}
-	}
-	
 	public String getConfigurationText() {
 		return configurationText;
 	}
@@ -211,6 +222,12 @@ public abstract class AbstractSqlParameter {
 	}
 	public SqlParameterMode getMode() {
 		return mode;
+	}
+	public short getLength() {
+		return length;
+	}
+	public short getPrecision() {
+		return precision;
 	}
 	public boolean isNullabled() {
 		return nullabled;

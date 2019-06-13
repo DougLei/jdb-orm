@@ -2,7 +2,6 @@ package com.douglei.orm.core.metadata.sql;
 
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.datatype.handler.DataTypeValidateResult;
 import com.douglei.orm.core.dialect.db.ValidateException;
 import com.douglei.orm.core.dialect.db.sql.entity.AbstractSqlParameter;
 import com.douglei.orm.core.metadata.Metadata;
@@ -17,7 +16,7 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
 public class SqlParameterMetadata extends AbstractSqlParameter implements Metadata{
 	
 	public SqlParameterMetadata(String configurationText) {
-		super(configurationText, true);
+		super(configurationText);
 	}
 
 	@Deprecated
@@ -95,7 +94,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 			if(value == null && !nullabled) {
 				throw new ValidateException(descriptionName, name, "不能为空");
 			}
-			DataTypeValidateResult result = dataType.validateValueDataType(value);
+			String result = dataType.validateValue(value, length, precision);
 			if(result != null) {
 				throw new ValidateException(descriptionName, name, result);
 			}

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.table.NotExistsPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.TableMapping;
 import com.douglei.orm.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
@@ -46,9 +45,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(Dom4jElementUtil.validateElementExists("columns", tableElement));
 			addConstraint(tableElement.element("constraints"));
-			if(!tableMetadata.existsPrimaryKey()) {
-				throw new NotExistsPrimaryKeyException("必须配置主键");
-			}
 			tableMetadata.columnDataMigration();
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
