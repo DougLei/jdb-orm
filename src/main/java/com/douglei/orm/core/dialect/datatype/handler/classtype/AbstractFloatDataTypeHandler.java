@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.datatype.handler.classtype;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -28,6 +29,8 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 		if(value != null && ValidationUtil.isDouble(value.toString())) {
 			if(value.getClass() == float.class || value instanceof Float) {
 				preparedStatement.setFloat(parameterIndex, (float)value);
+			}else if(value instanceof BigDecimal){
+				preparedStatement.setBigDecimal(parameterIndex, (BigDecimal)value);
 			}else {
 				preparedStatement.setFloat(parameterIndex, Float.parseFloat(value.toString()));
 			}
