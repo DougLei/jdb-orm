@@ -24,6 +24,7 @@ public class TableMetadata extends Table implements Metadata{
 	
 	private Map<String, ColumnMetadata> columnMetadatas;// 列
 	private Map<String, ColumnMetadata> primaryKeyColumnMetadatas;// 主键列
+	private Map<String, ColumnMetadata> validateColumns;// 需要验证列集合
 	
 	public TableMetadata(String name, String className, CreateMode createMode) {
 		setNameByValidate(name);
@@ -57,19 +58,44 @@ public class TableMetadata extends Table implements Metadata{
 		
 		// 迁移columns数据
 		Collection<Column> cls = columns.values();
-		columnMetadatas = new HashMap<String, ColumnMetadata>(cls.size());
+		columnMetadatas = new HashMap<String, ColumnMetadata>(columns.size());
 		for (Column column : cls) {
 			cm = (ColumnMetadata) column;
 			columnMetadatas.put(cm.getCode(), cm);
+			addValidateColumn(cm);
 		}
+		columns.clear();
+		columns = null;
 		
 		// 迁移primaryKeyColumns数据
-		cls = primaryKeyColumns.values();
-		primaryKeyColumnMetadatas = new HashMap<String, ColumnMetadata>(cls.size());
-		for (Column column : cls) {
-			cm = (ColumnMetadata) column;
-			primaryKeyColumnMetadatas.put(cm.getCode(), cm);
+		if(existsPrimaryKey()) {
+			cls = primaryKeyColumns.values();
+			primaryKeyColumnMetadatas = new HashMap<String, ColumnMetadata>(primaryKeyColumns.size());
+			for (Column column : cls) {
+				cm = (ColumnMetadata) column;
+				primaryKeyColumnMetadatas.put(cm.getCode(), cm);
+			}
+			primaryKeyColumns.clear();
+			primaryKeyColumns = null;
 		}
+	}
+	
+	// 添加需要验证的列
+	private void addValidateColumn(ColumnMetadata column) {
+		if(column.isValidate()) {
+			if(validateColumns == null) {
+				validateColumns = new HashMap<String, ColumnMetadata>(columns.size());
+			}
+			validateColumns.put(column.getCode(), column);
+		}
+	}
+	
+	/**
+	 * 是否需要验证字段
+	 * @return
+	 */
+	public boolean isValidateColumn() {
+		return validateColumns != null;
 	}
 	
 	/**
@@ -109,6 +135,9 @@ public class TableMetadata extends Table implements Metadata{
 	}
 	public boolean isPrimaryKeyColumnMetadata(String code) {
 		return primaryKeyColumnMetadatas.containsKey(code);
+	}
+	public ColumnMetadata getValidateColumn(String code) {
+		return validateColumns.get(code);
 	}
 	
 	@Override

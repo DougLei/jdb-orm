@@ -82,6 +82,9 @@ public abstract class Column {
 	public String getName() {
 		return name;
 	}
+	public String getDescriptionName() {
+		return descriptionName;
+	}
 	public DataType getDataType() {
 		return dataType;
 	}

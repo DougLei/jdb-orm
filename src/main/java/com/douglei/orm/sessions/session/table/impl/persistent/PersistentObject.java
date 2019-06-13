@@ -7,6 +7,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.core.dialect.db.ValidateException;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
@@ -103,9 +106,9 @@ public class PersistentObject {
 			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnMetadataCodes());
 		}
 		if(propertyMap == null || propertyMap.size() == 0) {
-			logger.debug("最终propertyMap为空");
 			throw new NullPointerException("要操作的数据不能为空");
 		}
+		doValidate();
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取的最终propertyMap为: {}", propertyMap.toString());
 		}
@@ -135,5 +138,30 @@ public class PersistentObject {
 			}
 		}
 		return resultPropertyMap;
+	}
+	
+	// 进行验证
+	private void doValidate() {
+		if(tableMetadata.isValidateColumn()) {
+			RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+tableMetadata.getCode()+"]的TABLE映射");
+			
+			Object value = null;
+			ColumnMetadata validateColumn = null;
+			String result = null;
+			Set<String> keys = propertyMap.keySet();
+			for (String key : keys) {
+				if((validateColumn = tableMetadata.getValidateColumn(key))!= null) {
+					value = propertyMap.get(key);
+					
+					if(value == null && !validateColumn.isNullabled()) {
+						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
+					}
+					result = validateColumn.getDataTypeHandler().validateValue(value, validateColumn.getLength(), validateColumn.getPrecision());
+					if(result != null) {
+						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), result);
+					}
+				}
+			}
+		}
 	}
 }

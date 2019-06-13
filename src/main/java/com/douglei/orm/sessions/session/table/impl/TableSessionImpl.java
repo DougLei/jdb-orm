@@ -13,7 +13,6 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
@@ -256,7 +255,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(mapping.getMappingType() != MappingType.TABLE) {
 			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
 		}
-		RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+code+"]的TABLE映射");
 		return mapping;
 	}
 

@@ -50,7 +50,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 	 */
 	public void addConstraint(Constraint constraint) {
 		if(constraints == null) {
-			constraints = new HashMap<String, Constraint>(10);
+			constraints = new HashMap<String, Constraint>(8);
 		}else if(constraints.containsKey(constraint.getName())) {
 			throw new ConstraintException("约束名"+constraint.getName()+"重复");
 		}
@@ -133,6 +133,9 @@ public abstract class Table implements Entity2MappingContentConverter{
 				}
 				if(!column.isNullabled()) {
 					xml.append("nullabled=\"false\" ");
+				}
+				if(column.isValidate()) {
+					xml.append("validate=\"true\" ");
 				}
 				xml.append("/>");
 			}
