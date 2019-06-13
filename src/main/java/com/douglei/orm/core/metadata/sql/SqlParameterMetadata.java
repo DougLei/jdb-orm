@@ -6,6 +6,7 @@ import com.douglei.orm.core.dialect.db.sql.entity.AbstractSqlParameter;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.validate.ValidateException;
+import com.douglei.orm.core.validate.ValidateProcessor;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.ValidationUtil;
 
@@ -81,7 +82,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
 		}
 		
-		if(value == null && defaultValue != null) {
+		if(value == null) {
 			value = defaultValue;
 		}
 		doValidate(value);
@@ -91,10 +92,10 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 	// 验证数据
 	private void doValidate(Object value) {
 		if(validate) {
-			if(value == null && !nullabled) {
+			if(!nullabled && value == null) {
 				throw new ValidateException(descriptionName, name, "不能为空");
 			}
-			String result = dataType.validateValue(value, length, precision);
+			String result = ValidateProcessor.validateValueDataType(value, length, precision, dataType);
 			if(result != null) {
 				throw new ValidateException(descriptionName, name, result);
 			}

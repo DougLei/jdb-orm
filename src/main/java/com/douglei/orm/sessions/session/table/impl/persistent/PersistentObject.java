@@ -11,6 +11,7 @@ import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.validate.ValidateException;
+import com.douglei.orm.core.validate.ValidateProcessor;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
@@ -153,13 +154,13 @@ public class PersistentObject {
 			String result = null;
 			Set<String> keys = propertyMap.keySet();
 			for (String key : keys) {
-				if((validateColumn = tableMetadata.getValidateColumn(key))!= null) {
+				if((validateColumn = tableMetadata.getValidateColumn(key)) != null) {
 					value = propertyMap.get(key);
 					
-					if(value == null && !validateColumn.isNullabled()) {
+					if(!validateColumn.isNullabled() && value == null && validateColumn.getDefaultValue() == null) {
 						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
 					}
-					result = validateColumn.getDataTypeHandler().validateValue(value, validateColumn.getLength(), validateColumn.getPrecision());
+					result = ValidateProcessor.validateValueDataType(value, validateColumn.getLength(), validateColumn.getPrecision(),validateColumn.getDataTypeHandler());
 					if(result != null) {
 						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), result);
 					}
