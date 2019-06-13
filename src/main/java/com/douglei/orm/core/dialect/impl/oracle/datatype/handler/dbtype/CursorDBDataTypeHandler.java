@@ -54,13 +54,7 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		// TODO ORACLE get Cursor value by ResultSet
-		return null;
-	}
-	
-	@Override
-	public String doValidate(Object value, short length, short precision) {
-		// TODO 
+		// 不实现从ResultSet中获取CURSOR
 		return null;
 	}
 }

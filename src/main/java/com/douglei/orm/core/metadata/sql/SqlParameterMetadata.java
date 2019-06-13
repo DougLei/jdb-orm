@@ -94,9 +94,11 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 			if(!nullabled && value == null) {
 				throw new ValidateException(descriptionName, name, "不能为空");
 			}
-			String result = dataType.doValidate(value, length, precision);
-			if(result != null) {
-				throw new ValidateException(descriptionName, name, result);
+			if(value != null) {
+				String result = dataType.doValidate(value, length, precision);
+				if(result != null) {
+					throw new ValidateException(descriptionName, name, result);
+				}
 			}
 		}
 	}

@@ -48,10 +48,4 @@ public class BlobDBDataTypeHandler extends DBDataTypeHandler{
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		return rs.getBinaryStream(columnIndex);
 	}
-	
-	@Override
-	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
-	}
 }

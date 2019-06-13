@@ -159,9 +159,11 @@ public class PersistentObject {
 					if(!validateColumn.isNullabled() && value == null && validateColumn.getDefaultValue() == null) {
 						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
 					}
-					result = validateColumn.getDataTypeHandler().doValidate(value, validateColumn.getLength(), validateColumn.getPrecision());
-					if(result != null) {
-						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), result);
+					if(value != null) {
+						result = validateColumn.getDataTypeHandler().doValidate(value, validateColumn.getLength(), validateColumn.getPrecision());
+						if(result != null) {
+							throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), value, result);
+						}
 					}
 				}
 			}

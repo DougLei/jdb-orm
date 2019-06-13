@@ -47,7 +47,6 @@ public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		return LongDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

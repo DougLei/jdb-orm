@@ -44,10 +44,4 @@ public class ClobDBDataTypeHandler extends DBDataTypeHandler{
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		return getClobValue(rs.getCharacterStream(columnIndex));
 	}
-	
-	@Override
-	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
-	}
 }

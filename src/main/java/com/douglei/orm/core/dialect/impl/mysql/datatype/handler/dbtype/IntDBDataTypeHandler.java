@@ -47,7 +47,6 @@ public class IntDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		return IntegerDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

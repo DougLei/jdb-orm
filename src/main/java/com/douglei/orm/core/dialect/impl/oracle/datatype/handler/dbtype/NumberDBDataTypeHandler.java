@@ -74,7 +74,12 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		String valueString = value.toString();
+		if(ValidationUtil.isInteger(valueString)) {
+			return LongDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
+		}else if(ValidationUtil.isDouble(valueString)) {
+			return DoubleDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
+		}
+		return "数据类型错误, 应为数字类型";
 	}
 }
