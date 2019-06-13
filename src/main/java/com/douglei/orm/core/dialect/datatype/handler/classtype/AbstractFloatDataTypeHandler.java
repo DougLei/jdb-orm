@@ -38,12 +38,32 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value.getClass() == float.class || value instanceof Float || ValidationUtil.isDouble(value.toString())) {
-			
-			// TODO
-			
-			return null;
+		Float f = null;
+		if(value.getClass() == float.class || value instanceof Float) {
+			f = (Float) value;
+		}else if(ValidationUtil.isDouble(value.toString())) {
+			f = Float.parseFloat(value.toString());
+		}else {
+			return "数据值类型错误, 应为浮点型(float)";
 		}
-		return "数据值类型错误, 应为浮点型(float)";
+		
+		String floatString = f.toString();
+		if(floatString.length() - 1 > length) {
+			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (floatString.length() - 1);
+		}
+		
+		short dotIndex = (short)floatString.indexOf(".");
+		if(dotIndex != -1) {
+			dotIndex++;
+			short pl = 0;
+			while(dotIndex < floatString.length()) {
+				dotIndex++;
+				pl++;
+			}
+			if(pl > precision) {
+				return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + pl;
+			}
+		}
+		return null;
 	}
 }

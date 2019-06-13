@@ -38,12 +38,32 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value.getClass() == double.class || value instanceof Double || ValidationUtil.isDouble(value.toString())) {
-
-			// TODO
-			
-			return null;
+		Double d = null;
+		if(value.getClass() == double.class || value instanceof Double) {
+			d = (Double) value;
+		}else if(ValidationUtil.isDouble(value.toString())) {
+			d = Double.parseDouble(value.toString());
+		}else {
+			return "数据值类型错误, 应为浮点型(double)";
 		}
-		return "数据值类型错误, 应为浮点型(double)";
+		
+		String doubleString = d.toString();
+		if(doubleString.length() - 1 > length) {
+			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (doubleString.length() - 1);
+		}
+		
+		short dotIndex = (short)doubleString.indexOf(".");
+		if(dotIndex != -1) {
+			dotIndex++;
+			short pl = 0;
+			while(dotIndex < doubleString.length()) {
+				dotIndex++;
+				pl++;
+			}
+			if(pl > precision) {
+				return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + pl;
+			}
+		}
+		return null;
 	}
 }
