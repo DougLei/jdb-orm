@@ -19,11 +19,6 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 	 */
 	public abstract int[] supportColumnTypes();
 	
-	@Deprecated
-	@Override
-	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-	}
-	
 	@Override
 	public String toString() {
 		return getClass().getName() + " supportColumnTypes=["+Arrays.toString(supportColumnTypes())+"]";
@@ -33,5 +28,16 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 	@Override
 	public DataTypeHandlerType getType() {
 		return DataTypeHandlerType.RESULTSET_COLUMN;
+	}
+	
+	@Deprecated
+	@Override
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
+	}
+
+	@Deprecated
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		return null;
 	}
 }

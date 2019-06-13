@@ -33,4 +33,10 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }

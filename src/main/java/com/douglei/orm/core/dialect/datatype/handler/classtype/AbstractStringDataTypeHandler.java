@@ -45,4 +45,10 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	private void setNullString(PreparedStatement preparedStatement, int parameterIndex) throws SQLException {
 		preparedStatement.setNull(parameterIndex, getSqlType());
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }

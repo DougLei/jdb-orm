@@ -35,4 +35,10 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }

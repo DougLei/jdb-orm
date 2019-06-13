@@ -57,4 +57,10 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 		// TODO ORACLE get Cursor value by ResultSet
 		return null;
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }

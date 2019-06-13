@@ -51,6 +51,11 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	public abstract Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException;
 	
 	@Override
+	public String doValidate(Object value, short length, short precision) {
+		return null;// 默认验证通过
+	}
+	
+	@Override
 	public String toString() {
 		return getClass().getName() + " typeName=[" + getTypeName() + "], sqlType=[" + getSqlType() + "]";
 	}

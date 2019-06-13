@@ -71,4 +71,10 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		}
 		return value;
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }

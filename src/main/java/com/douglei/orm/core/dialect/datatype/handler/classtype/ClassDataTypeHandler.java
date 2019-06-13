@@ -16,12 +16,13 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler{
 
 	/**
 	 * 默认对应的数据库数据类型
+	 * 在对column进行create的时候用到
 	 * @return
 	 */
 	public abstract DBDataType defaultDBDataType();
 	
 	/**
-	 * 
+	 * 在setNullValue时用到
 	 * @return
 	 */
 	protected int getSqlType() {
@@ -48,6 +49,11 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler{
 	}
 	
 	@Override
+	public String doValidate(Object value, short length, short precision) {
+		return null;// 默认验证通过
+	}
+	
+	@Override
 	public String toString() {
 		return getClass().getName() + " code=["+getCode()+"], supportClasses=["+Arrays.toString(supportClasses())+"]";
 	}
@@ -56,7 +62,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler{
 	public DataTypeHandlerType getType() {
 		return DataTypeHandlerType.CLASS;
 	}
-	
+
 	@Deprecated
 	@Override
 	public Object getValue(short columnIndex, ResultSet resultSet) throws SQLException {

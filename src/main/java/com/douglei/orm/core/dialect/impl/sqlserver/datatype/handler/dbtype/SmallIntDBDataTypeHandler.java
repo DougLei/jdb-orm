@@ -44,4 +44,10 @@ public class SmallIntDBDataTypeHandler extends DBDataTypeHandler{
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
 		return rs.getShort(columnIndex);
 	}
+	
+	@Override
+	public String doValidate(Object value, short length, short precision) {
+		// TODO 
+		return null;
+	}
 }
