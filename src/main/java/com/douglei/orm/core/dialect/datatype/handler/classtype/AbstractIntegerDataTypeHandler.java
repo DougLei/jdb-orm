@@ -38,7 +38,13 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		if(value.getClass() == int.class || value instanceof Integer || ValidationUtil.isInteger(value.toString())) {
+			long l = Long.parseLong(value.toString());
+			if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE) {
+				return "数据值大小异常, 应在["+Integer.MIN_VALUE+"]至["+Integer.MAX_VALUE+"]范围内";
+			}
+			return null;
+		}
+		return "数据值类型错误, 应为整型(int)";
 	}
 }

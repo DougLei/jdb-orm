@@ -38,7 +38,12 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		if(value.getClass() == float.class || value instanceof Float || ValidationUtil.isDouble(value.toString())) {
+			
+			// TODO
+			
+			return null;
+		}
+		return "数据值类型错误, 应为浮点型(float)";
 	}
 }

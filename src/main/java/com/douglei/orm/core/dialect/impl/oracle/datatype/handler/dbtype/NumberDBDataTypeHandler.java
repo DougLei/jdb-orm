@@ -80,6 +80,6 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		}else if(ValidationUtil.isDouble(valueString)) {
 			return DoubleDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
 		}
-		return "数据类型错误, 应为数字类型";
+		return "数据值类型错误, 应为数字类型";
 	}
 }

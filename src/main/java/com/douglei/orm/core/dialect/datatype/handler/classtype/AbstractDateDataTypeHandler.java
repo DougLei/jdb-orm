@@ -36,7 +36,9 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		if(value instanceof Date || ValidationUtil.isDate(value.toString())) {
+			return null;
+		}
+		return "数据值类型错误, 应为日期类型";
 	}
 }

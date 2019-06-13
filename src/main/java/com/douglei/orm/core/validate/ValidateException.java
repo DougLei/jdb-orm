@@ -13,6 +13,6 @@ public class ValidateException extends RuntimeException{
 		super(RunMappingConfigurationContext.getCurrentExecuteMappingDescription() + ", " + descriptionName + "["+name+"]" + message);
 	}
 	public ValidateException(String descriptionName, String name, Object value, String message) {
-		super(RunMappingConfigurationContext.getCurrentExecuteMappingDescription() + ", " + descriptionName + "["+name+"], 传入的值为 " + value + ", " + message);
+		super(RunMappingConfigurationContext.getCurrentExecuteMappingDescription() + ", " + descriptionName + "["+name+"], 传入的值为[" + value + "], " + message);
 	}
 }

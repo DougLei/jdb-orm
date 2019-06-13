@@ -38,7 +38,12 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		// TODO 
-		return null;
+		if(value.getClass() == double.class || value instanceof Double || ValidationUtil.isDouble(value.toString())) {
+			
+			// TODO
+			
+			return null;
+		}
+		return "数据值类型错误, 应为浮点型(double)";
 	}
 }

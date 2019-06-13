@@ -5,8 +5,7 @@ package com.douglei.orm.core.dialect.db.table.entity;
  * @author DougLei
  */
 public enum ConstraintType {
-	// TODO 目前没有提供外键约束、检查约束
-	
+
 	/**
 	 * 主键约束
 	 */

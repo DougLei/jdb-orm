@@ -33,7 +33,7 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		// TODO ORACLE set Cursor value
+		// 不实现set CURSOR value
 	}
 
 	@Override
