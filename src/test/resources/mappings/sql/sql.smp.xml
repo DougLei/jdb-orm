@@ -58,11 +58,15 @@
 				</if>
 			</foreach>
 		-->	
+		
 		<!-- 
 			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
-				#{userId, dataType=string}
+				<if test="userId == 1">
+					#{userId, dataType=string}
+				</if>
 			</foreach>
-		-->	
+		-->
+			
 		
 		</content>
 	<!-- 	

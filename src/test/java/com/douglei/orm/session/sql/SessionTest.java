@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
-import com.douglei.orm.sessions.session.sql.SQLSession;
+import com.douglei.orm.sessions.Session;
 
 public class SessionTest {
 	
@@ -27,7 +27,7 @@ public class SessionTest {
 //		userIds.add("3");
 		p.put("userIds", userIds);
 		
-		List<Map<String, Object>> list = session.query("com.test", "queryUser", p);
+		List<Map<String, Object>> list = session.getSQLSession().query("com.test", "queryUser", p);
 		System.out.println(list);
 	}
 	
@@ -35,15 +35,15 @@ public class SessionTest {
 	
 	@SuppressWarnings("unused")
 	private Configuration conf;
-	private SQLSession session;
+	private Session session;
 	
 	@Before
 	public void before() {
 		conf = new XmlConfiguration();
-//		session = conf.buildSessionFactory().openSQLSession();
+		session = conf.buildSessionFactory().openSession();
 	}
 	@After
 	public void end() {
-//		session.close();
+		session.close();
 	}
 }
