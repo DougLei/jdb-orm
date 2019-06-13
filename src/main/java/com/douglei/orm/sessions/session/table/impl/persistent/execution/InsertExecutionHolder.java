@@ -20,7 +20,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 	
 	@Override
 	protected void initializeInstance() {
-		StringBuilder insertSql = new StringBuilder();
+		StringBuilder insertSql = new StringBuilder(256);
 		insertSql.append("insert into ").append(tableMetadata.getName()).append("(");
 		
 		StringBuilder values = new StringBuilder();

@@ -20,10 +20,19 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 
 	@Override
 	protected void initializeInstance() {
-		StringBuilder deleteSql = new StringBuilder();
+		StringBuilder deleteSql = new StringBuilder(256);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
-		// 处理where值
+		if(tableMetadata.existsPrimaryKey()) {
+			setSqlWhenExistsPrimaryKey(deleteSql);
+		}else {
+			setSqlWhenUnExistsPrimaryKey(deleteSql);
+		}
+		this.sql = deleteSql.toString();
+	}
+	
+	// 当存在primaryKey时, set对应的sql语句
+	private void setSqlWhenExistsPrimaryKey(StringBuilder deleteSql) {
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
 		int size = primaryKeyColumnMetadataCodes.size();
 		
@@ -42,7 +51,32 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 			}
 			index++;
 		}
+	}
+	
+	// 当不存在primaryKey时, set对应的sql语句
+	private void setSqlWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
+		Set<String> codes = propertyMap.keySet();
+		int size = propertyMap.size();
+		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
 		
-		this.sql = deleteSql.toString();
+		int index = 1;
+		Object value = null;
+		ColumnMetadata columnMetadata = null;
+		for (String code : codes) {
+			columnMetadata = tableMetadata.getColumnMetadata(code);
+			value = propertyMap.get(code);
+			
+			if(value == null) {
+				deleteSql.append(columnMetadata.getName()).append(" is null");
+			}else {
+				deleteSql.append(columnMetadata.getName()).append("=?");
+				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+			}
+			
+			if(index < size) {
+				deleteSql.append(" and ");
+			}
+			index++;
+		}
 	}
 }

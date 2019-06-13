@@ -22,8 +22,8 @@ public class Identity {
 		if(isNull()) {
 			throw new NullPointerException("id不能为空");
 		}
-		if(!(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map)) {
-			throw new UnsupportedIdentityDataTypeException("目前id只支持[java.lang.Integer类型]、[java.lang.String类型]或[java.util.Map<String, Object>类型]");
+		if(!isSupportType()) {
+			throw new UnsupportedIdentityDataTypeException("目前id只支持[int][java.lang.Integer类型][java.lang.String类型]或[java.util.Map<String, Object>类型]");
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取持久化对象id为: {} -- {}", id.getClass(), id.toString());
@@ -77,8 +77,7 @@ public class Identity {
 		if(id == null) {
 			logger.debug("id is null");
 			return true;
-		}
-		if(id instanceof Map<?, ?>) {
+		}else if(id instanceof Map<?, ?>) {
 			logger.debug("id is map");
 			Map<?, ?> tmap = (Map<?, ?>) id;
  			if(tmap.size() == 0) {
@@ -97,16 +96,13 @@ public class Identity {
 	}
 	
 	/**
-	 * 获取主键值
-	 * @param pkCode
+	 * 是否是支持的类型
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public Object getPKValue(String pkCode) {
-		if(id instanceof Map) {
-			return ((Map<String, Object>)id).get(pkCode);
-		}else {
-			return id;
+	public boolean isSupportType() {
+		if(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map) {
+			return true;
 		}
+		return false;
 	}
 }

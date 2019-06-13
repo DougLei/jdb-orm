@@ -25,7 +25,6 @@ import com.douglei.orm.sessions.session.table.impl.persistent.RepeatedPersistent
 import com.douglei.orm.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -49,7 +48,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		logger.debug("获取code={}的持久化缓存集合", code);
 		Map<Identity, PersistentObject> cache = persistentObjectCache.get(code);
 		if(cache == null) {
-			cache = new HashMap<Identity, PersistentObject>();
+			cache = new HashMap<Identity, PersistentObject>(8);
 			persistentObjectCache.put(code, cache);
 		}
 		return cache;
@@ -77,64 +76,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		String code = persistent.getCode();
 		Map<Identity, PersistentObject> cache = getCache(code);
 		
-		Identity id = persistent.getId();
-		if(cache.containsKey(id)) {
-			throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + id.toString());
+		if(cache.containsKey(persistent.getId())) {
+			throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + persistent.getId().toString());
 		}
-		cache.put(id, persistent);
+		cache.put(persistent.getId(), persistent);
 	}
 	
-	/**
-	 * 从object中解析出Identity实例
-	 * @param object
-	 * @param tableMetadata
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private Identity getIdentity(Object object, TableMetadata tableMetadata) {
-		Map<String, Object> idMap = null;
-		if(object instanceof Map) {
-			logger.debug("object is Map type, 从该map中, 筛选出[ID列]的数据信息");
-			idMap = filterPrimaryKeyColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)object);
-		}else {
-			logger.debug("object is Object type [{}], 从该object中, 通过java内省机制, 获取[ID列]的数据信息", object.getClass());
-			idMap = IntrospectorUtil.getProperyValues(object, tableMetadata.getPrimaryKeyColumnMetadataCodes());
-		}
-		
-		Object id;
-		if(tableMetadata.getPrimaryKeyColumnMetadataCodes().size() == 1) {
-			id = idMap.entrySet().iterator().next().getValue();
-		}else {
-			id = idMap;
-		}
-		return new Identity(id);
-	}
-	
-	/**
-	 * 从originPropertyMap集合中, 筛选出<b>ID</b>列的数据信息
-	 * @param tableMetadata
-	 * @param originPropertyMap 
-	 * @return
-	 */
-	private Map<String, Object> filterPrimaryKeyColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
-		int primaryKeyColumnSize = primaryKeyColumnMetadataCodes.size();
-		Map<String, Object> resultPropertyMap = new HashMap<String, Object>(primaryKeyColumnSize);
-		
-		int index = 1;
-		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
-		for (String originPMkey : originPropertyMapKeys) {
-			if(tableMetadata.isPrimaryKeyColumnMetadata(originPMkey)) {
-				resultPropertyMap.put(originPMkey, originPropertyMap.get(originPMkey));
-				if(index == primaryKeyColumnSize) {
-					break;
-				}
-				index++;
-			}
-		}
-		return resultPropertyMap;
-	}
-
 	@Override
 	public void update(Object object) {
 		Mapping mapping = getTableMapping(object, "update");
@@ -154,24 +101,24 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param cache
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
-		Identity id = getIdentity(object, tableMetadata);
-		if(cache.containsKey(id)) {
+		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
+		if(cache.containsKey(persistentObject.getId())) {
 			logger.debug("缓存中存在要修改的数据持久化对象");
-			PersistentObject persistentObject = cache.get(id);
+			persistentObject = cache.get(persistentObject.getId());
 			switch(persistentObject.getOperationState()) {
 				case CREATE:
 				case UPDATE:
-					logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());
+					if(logger.isDebugEnabled()) {
+						logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());
+					}
 					persistentObject.setOriginObject(object);
 					return;
-				default:
-					throw new AlreadyDeletedException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
+				case DELETE:
+					throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
 			}
 		}else {
 			logger.debug("缓存中不存在要修改的数据持久化对象");
-			PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
-			persistentObject.setId(id);
-			cache.put(id, persistentObject);
+			cache.put(persistentObject.getId(), persistentObject);
 		}
 	}
 
@@ -194,27 +141,25 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param cache
 	 */
 	private void putDeletePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
-		Identity id = getIdentity(object, tableMetadata);
-		if(cache.containsKey(id)) {
+		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE);
+		if(cache.containsKey(persistentObject.getId())) {
 			logger.debug("缓存中存在要删除的数据持久化对象");
-			PersistentObject persistentObject = cache.get(id);
+			persistentObject = cache.get(persistentObject.getId());
 			switch(persistentObject.getOperationState()) {
 				case CREATE:
-					logger.debug("将create状态的数据, 改成create_delete状态, 完成delete");
-					persistentObject.setOperationState(OperationState.CREATE_DELETE);
+					logger.debug("将create状态的数据直接从cache中移除, 完成delete");
+					cache.remove(persistentObject.getId());
 					return;
 				case UPDATE:
 					logger.debug("将update状态的数据, 改成delete状态, 完成delete");
 					persistentObject.setOperationState(OperationState.DELETE);
 					return;
-				default:
-					throw new AlreadyDeletedException("缓存中的持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
+				case DELETE:
+					throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
 			}
 		}else {
 			logger.debug("缓存中不存在要删除的数据持久化对象");
-			PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE);
-			persistentObject.setId(id);
-			cache.put(id, persistentObject);
+			cache.put(persistentObject.getId(), persistentObject);
 		}
 	}
 		
@@ -283,6 +228,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 					}
 				}
 			}
+			persistentObjectCache.clear();
 		}
 		persistentObjectCache = null;
 	}

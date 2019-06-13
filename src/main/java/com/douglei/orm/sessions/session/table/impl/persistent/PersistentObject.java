@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.context.RunMappingConfigurationContext;
-import com.douglei.orm.core.dialect.db.ValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
@@ -44,18 +44,22 @@ public class PersistentObject {
 	private Identity id;
 	public Identity getId() {
 		if(id == null) {
-			Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
-			Object id;
-			if(primaryKeyColumnMetadataCodes.size() == 1) {
-				id = propertyMap.get(primaryKeyColumnMetadataCodes.iterator().next());
-			}else {
-				Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumnMetadataCodes.size());
-				for (String pkCode : primaryKeyColumnMetadataCodes) {
-					idMap.put(pkCode, propertyMap.get(pkCode));
+			if(tableMetadata.existsPrimaryKey()) {
+				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+				Object id;
+				if(primaryKeyColumnMetadataCodes.size() == 1) {
+					id = propertyMap.get(primaryKeyColumnMetadataCodes.iterator().next());
+				}else {
+					Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumnMetadataCodes.size());
+					for (String pkCode : primaryKeyColumnMetadataCodes) {
+						idMap.put(pkCode, propertyMap.get(pkCode));
+					}
+					id = idMap;
 				}
-				id = idMap;
+				this.id = new Identity(id);
+			}else {
+				this.id = new Identity(propertyMap);// 不存在主键配置时, 就将整个对象做为id
 			}
-			this.id = new Identity(id);
 		}
 		return id;
 	}
@@ -80,9 +84,8 @@ public class PersistentObject {
 				return new DeleteExecutionHolder(tableMetadata, propertyMap);
 			case UPDATE:
 				return new UpdateExecutionHolder(tableMetadata, propertyMap);
-			default:
-				return null;
 		}
+		return null;
 	}
 	
 	public OperationState getOperationState() {

@@ -3,8 +3,8 @@ package com.douglei.orm.core.dialect.db.sql.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.core.converter.Entity2MappingContentConverter;
 import com.douglei.orm.core.dialect.DialectType;
-import com.douglei.orm.core.dialect.db.Entity2MappingContentConverter;
 import com.douglei.tools.utils.StringUtil;
 
 /**

@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db;
+package com.douglei.orm.core.converter;
 
 /**
  * 实体到映射内容的转换器

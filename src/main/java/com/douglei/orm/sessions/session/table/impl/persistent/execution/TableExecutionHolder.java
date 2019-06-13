@@ -11,7 +11,7 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class TableExecutionHolder implements ExecutionHolder{
+public abstract class TableExecutionHolder implements ExecutionHolder {
 	protected TableMetadata tableMetadata;
 	protected Map<String, Object> propertyMap;
 	

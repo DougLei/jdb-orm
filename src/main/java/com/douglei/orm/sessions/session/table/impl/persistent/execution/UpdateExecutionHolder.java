@@ -23,12 +23,12 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		StringBuilder updateSql = new StringBuilder();
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
+		Set<String> codes = propertyMap.keySet();
 		int size = propertyMap.size();
 		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
 		
-		// 处理update set值
+		// 处理update set
 		int index = 1;
-		Set<String> codes = propertyMap.keySet();
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : codes) {
@@ -41,18 +41,27 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
 					
 					if(index < size) {
-						updateSql.append(",");
+						updateSql.append(", ");
 					}
 				}
 			}
 			index++;
 		}
-		updateSql.append(" where ");
 		
-		// 处理where值
+		if(tableMetadata.existsPrimaryKey()) {
+			setWhereSqlWhenExistsPrimaryKey(updateSql, size, columnMetadata);
+		}else {
+			setWhereSqlWhenUnExistsPrimaryKey(updateSql, size, codes, columnMetadata, value);
+		}
+		this.sql = updateSql.toString();
+	}
+	
+	// 当存在primaryKey时, set对应的where sql语句
+	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, int size, ColumnMetadata columnMetadata) {
+		updateSql.append(" where ");
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
 		size = primaryKeyColumnMetadataCodes.size();
-		index = 1;
+		int index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
 			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
@@ -64,7 +73,27 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 			}
 			index++;
 		}
-		
-		this.sql = updateSql.toString();
+	}
+	
+	// 当不存在primaryKey时, set对应的where sql语句
+	private void setWhereSqlWhenUnExistsPrimaryKey(StringBuilder updateSql, int size, Set<String> codes, ColumnMetadata columnMetadata, Object value) {
+		updateSql.append(" where ");
+		int index = 1;
+		for (String code : codes) {
+			columnMetadata = tableMetadata.getColumnMetadata(code);
+			value = propertyMap.get(code);
+			
+			if(value == null) {
+				updateSql.append(columnMetadata.getName()).append(" is null");
+			}else {
+				updateSql.append(columnMetadata.getName()).append("=?");
+				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+			}
+			
+			if(index < size) {
+				updateSql.append(" and ");
+			}
+			index++;
+		}
 	}
 }

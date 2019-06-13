@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.db.Entity2MappingContentConverter;
+import com.douglei.orm.core.converter.Entity2MappingContentConverter;
 
 /**
  * 

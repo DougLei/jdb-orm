@@ -5,11 +5,7 @@ package com.douglei.orm.sessions.session.table.impl.persistent.id;
  * @author DougLei
  */
 public class UnsupportedIdentityDataTypeException extends RuntimeException{
-	private static final long serialVersionUID = -2394565482453349475L;
-
-	public UnsupportedIdentityDataTypeException() {
-		super();
-	}
+	private static final long serialVersionUID = 1368833498163289205L;
 
 	public UnsupportedIdentityDataTypeException(String message) {
 		super(message);
