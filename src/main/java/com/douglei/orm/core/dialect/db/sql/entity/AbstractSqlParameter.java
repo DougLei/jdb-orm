@@ -30,8 +30,12 @@ public abstract class AbstractSqlParameter {
 	protected SqlParameterMode mode;// 输入输出类型
 	
 	protected boolean usePlaceholder;// 是否使用占位符?
-	protected String placeholderPrefix;// 如果不使用占位符, 参数值的前缀
-	protected String placeholderSuffix;// 如果不使用占位符, 参数值的后缀
+	protected String valuePrefix;// 如果不使用占位符, 参数值的前缀
+	protected String valueSuffix;// 如果不使用占位符, 参数值的后缀
+	
+	protected boolean nullabled;// 是否可为空
+	protected String defaultValue;// 默认值
+	protected boolean validate;// 是否验证
 	
 	protected AbstractSqlParameter(String configurationText, boolean clearPropertyMap) {
 		this.configurationText = configurationText;
@@ -44,9 +48,13 @@ public abstract class AbstractSqlParameter {
 		
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
 		if(!this.usePlaceholder) {
-			setPlaceholderPrefix(propertyMap.get("placeholderprefix"));
-			setPlaceholderSuffix(propertyMap.get("placeholdersuffix"));
+			setValuePrefix(propertyMap.get("valuePrefix"));
+			setValueSuffix(propertyMap.get("valueSuffix"));
 		}
+		setNullabled(propertyMap.get("nullabled"));
+		setDefaultValue(propertyMap.get("defaultValue"));
+		setValidate(propertyMap.get("validate"));
+		
 		clearPropertyMap(clearPropertyMap);
 	}
 	
@@ -85,10 +93,10 @@ public abstract class AbstractSqlParameter {
 		return null;
 	}
 	
-	void setName(String name) {
+	private void setName(String name) {
 		this.name = name;
 	}
-	void setDataType(String dataType) {
+	private void setDataType(String dataType) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() != SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
@@ -98,7 +106,7 @@ public abstract class AbstractSqlParameter {
 			}
 		}
 	}
-	void setDBDataType(String typeName) {
+	private void setDBDataType(String typeName) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
@@ -108,7 +116,7 @@ public abstract class AbstractSqlParameter {
 			}
 		}
 	}
-	void setMode(String mode) {
+	private void setMode(String mode) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			if(StringUtil.notEmpty(mode)) {
 				this.mode = SqlParameterMode.toValue(mode);
@@ -118,35 +126,49 @@ public abstract class AbstractSqlParameter {
 			}
 		}
 	}
-	void setUsePlaceholder(String usePlaceholder) {
+	private void setUsePlaceholder(String usePlaceholder) {
 		if(ValidationUtil.isBoolean(usePlaceholder)) {
 			this.usePlaceholder = Boolean.parseBoolean(usePlaceholder);
 		}else {
 			this.usePlaceholder = true;
 		}
 	}
-	void setPlaceholderPrefix(String placeholderPrefix) {
-		if(StringUtil.isEmpty(placeholderPrefix)) {
+	private void setValuePrefix(String valuePrefix) {
+		if(StringUtil.isEmpty(valuePrefix)) {
 			if(dataType instanceof AbstractStringDataTypeHandler || (dataType instanceof DBDataTypeHandler && ((DBDataTypeHandler)dataType).isCharacterType())) {
-				this.placeholderPrefix = "'";
+				this.valuePrefix = "'";
 			}else {
-				this.placeholderPrefix = "";
+				this.valuePrefix = "";
 			}
 		}else {
-			this.placeholderPrefix = placeholderPrefix;
+			this.valuePrefix = valuePrefix;
 		}
 	}
-	void setPlaceholderSuffix(String placeholderSuffix) {
-		if(StringUtil.isEmpty(placeholderSuffix)) {
+	private void setValueSuffix(String valueSuffix) {
+		if(StringUtil.isEmpty(valueSuffix)) {
 			if(dataType instanceof AbstractStringDataTypeHandler || (dataType instanceof DBDataTypeHandler && ((DBDataTypeHandler)dataType).isCharacterType())) {
-				this.placeholderSuffix = "'";
+				this.valueSuffix = "'";
 			}else {
-				this.placeholderSuffix = "";
+				this.valueSuffix = "";
 			}
 		}else {
-			this.placeholderSuffix = placeholderSuffix;
+			this.valueSuffix = valueSuffix;
 		}
 	}
+	private void setNullabled(String nullabled) {
+		if(ValidationUtil.isBoolean(nullabled)) {
+			this.nullabled = Boolean.parseBoolean(nullabled);
+		}
+	}
+	private void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+	private void setValidate(String validate) {
+		if(ValidationUtil.isBoolean(validate)) {
+			this.validate = Boolean.parseBoolean(validate);
+		}
+	}
+
 	// 清空属性map
 	protected void clearPropertyMap(boolean clearPropertyMap) {
 		if(clearPropertyMap) {
@@ -170,13 +192,22 @@ public abstract class AbstractSqlParameter {
 	public boolean isUsePlaceholder() {
 		return usePlaceholder;
 	}
-	public String getPlaceholderPrefix() {
-		return placeholderPrefix;
+	public String getValuePrefix() {
+		return valuePrefix;
 	}
-	public String getPlaceholderSuffix() {
-		return placeholderSuffix;
+	public String getValueSuffix() {
+		return valueSuffix;
 	}
 	public SqlParameterMode getMode() {
 		return mode;
+	}
+	public boolean isNullabled() {
+		return nullabled;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public boolean isValidate() {
+		return validate;
 	}
 }

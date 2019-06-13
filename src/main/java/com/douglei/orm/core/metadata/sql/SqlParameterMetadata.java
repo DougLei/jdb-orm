@@ -31,9 +31,10 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 
 	@Override
 	public String toString() {
-		return "SqlParameterMetadata [name=" + name + ", dataType=" + dataType.toString() + ", usePlaceholder="
-				+ usePlaceholder + ", placeholderPrefix=" + placeholderPrefix + ", placeholderSuffix="
-				+ placeholderSuffix + "]";
+		return "AbstractSqlParameter [configurationText=" + configurationText + ", propertyMap=" + propertyMap
+				+ ", name=" + name + ", dataType=" + dataType + ", mode=" + mode + ", usePlaceholder=" + usePlaceholder
+				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullabled=" + nullabled
+				+ ", defaultValue=" + defaultValue + ", validate=" + validate + "]";
 	}
 	
 	private boolean unProcessNamePrefix = true;// 是否【没有】处理过name前缀, 默认都没有处理

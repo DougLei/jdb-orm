@@ -19,26 +19,27 @@ public abstract class Column {
 	protected boolean primaryKey;// 是否是主键
 	protected boolean unique;// 是否唯一
 	protected String defaultValue;// 默认值
+	protected boolean validate;// 是否验证
 	
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+	public Column(String name, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = dataType;
 		processDataType(null);
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
-	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+	public Column(String name, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		processDataType(dataType.getName());
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
-	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+	public Column(String name, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
-		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue);
+		processOtherPropertyValues(name, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
 	}
 	
 	// 处理dataTypeHandler和dbDataType的值
@@ -48,10 +49,11 @@ public abstract class Column {
 	}
 	
 	// 处理其他属性值
-	private void processOtherPropertyValues(String name, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue) {
+	private void processOtherPropertyValues(String name, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
 		this.defaultValue = defaultValue;
 		processLengthAndPrecision(length, precision);
 		processPrimaryKeyAndNullabled(primaryKey, nullabled);
+		this.validate = validate;
 	}
 	
 	// 处理长度和精度的值
@@ -104,5 +106,8 @@ public abstract class Column {
 	public void setNameByValidate(String name) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
+	}
+	public boolean isValidate() {
+		return validate;
 	}
 }

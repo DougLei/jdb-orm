@@ -26,7 +26,7 @@ public class ExecuteSqlNode {
 					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataType()));
 				}else {
-					content = content.replaceFirst("#\\{"+parameter.getName()+"\\}", parameter.getPlaceholderPrefix() + parameterValue + parameter.getPlaceholderSuffix());
+					content = content.replaceFirst("#\\{"+parameter.getName()+"\\}", parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
 				}
 			}
 		}
