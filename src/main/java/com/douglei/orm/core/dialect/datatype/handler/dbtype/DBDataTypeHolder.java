@@ -3,7 +3,7 @@ package com.douglei.orm.core.dialect.datatype.handler.dbtype;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 
 /**
- * 
+ * DB DataType的持有对象
  * @author DougLei
  */
 public interface DBDataTypeHolder {
