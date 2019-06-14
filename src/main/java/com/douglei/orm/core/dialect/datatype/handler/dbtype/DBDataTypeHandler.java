@@ -16,7 +16,7 @@ import com.douglei.tools.utils.CloseUtil;
  * 
  * @author DougLei
  */
-public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeHolder{
+public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
 	
 	/**
 	 * 从CallableStatement中获取输出参数的指

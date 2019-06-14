@@ -1,10 +1,10 @@
 package com.douglei.orm.core.dialect.db.features;
 
 /**
- * 数据库特性持有者
+ * 数据库特性
  * @author DougLei
  */
-public interface FeaturesHolder {
+public interface DBFeatures {
 	
 	/**
 	 * <pre>

@@ -3,10 +3,10 @@ package com.douglei.orm.core.dialect.datatype.handler.dbtype;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 
 /**
- * DB DataType的持有对象
+ * 数据库的DataType特性
  * @author DougLei
  */
-public interface DBDataTypeHolder {
+public interface DBDataTypeFeatures {
 	
 	/**
 	 * 获取默认对应的数据库数据类型

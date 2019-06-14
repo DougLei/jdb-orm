@@ -6,13 +6,13 @@ import java.util.Arrays;
 
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
-import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHolder;
+import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 
 /**
  * 用于处理映射文件中dataType属性
  * @author DougLei
  */
-public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeHolder{
+public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
 
 	/**
 	 * <pre>

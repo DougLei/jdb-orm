@@ -10,7 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapp
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHolder;
+import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.sql.SqlParameterMode;
@@ -119,7 +119,7 @@ public abstract class AbstractSqlParameter {
 			}else {
 				this.dataType = mapping.getDataTypeHandlerByCode(dataType);
 			}
-			this.dbDataType = ((DBDataTypeHolder)this.dataType).getDBDataType();
+			this.dbDataType = ((DBDataTypeFeatures)this.dataType).getDBDataType();
 		}
 	}
 	private void setDBDataType(String typeName) {
@@ -130,7 +130,7 @@ public abstract class AbstractSqlParameter {
 			}else {
 				this.dataType = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
 			}
-			this.dbDataType = ((DBDataTypeHolder)this.dataType).getDBDataType();
+			this.dbDataType = ((DBDataTypeFeatures)this.dataType).getDBDataType();
 		}
 	}
 	private void setMode(String mode) {
@@ -152,7 +152,7 @@ public abstract class AbstractSqlParameter {
 	}
 	private void setValuePrefix(String valuePrefix) {
 		if(StringUtil.isEmpty(valuePrefix)) {
-			if(((DBDataTypeHolder)dataType).isCharacterType()) {
+			if(((DBDataTypeFeatures)dataType).isCharacterType()) {
 				this.valuePrefix = "'";
 			}else {
 				this.valuePrefix = "";
@@ -163,7 +163,7 @@ public abstract class AbstractSqlParameter {
 	}
 	private void setValueSuffix(String valueSuffix) {
 		if(StringUtil.isEmpty(valueSuffix)) {
-			if(((DBDataTypeHolder)dataType).isCharacterType()) {
+			if(((DBDataTypeFeatures)dataType).isCharacterType()) {
 				this.valueSuffix = "'";
 			}else {
 				this.valueSuffix = "";

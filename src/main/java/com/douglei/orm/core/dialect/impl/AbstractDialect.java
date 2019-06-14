@@ -2,7 +2,7 @@ package com.douglei.orm.core.dialect.impl;
 
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.core.dialect.db.features.FeaturesHolder;
+import com.douglei.orm.core.dialect.db.features.DBFeatures;
 import com.douglei.orm.core.dialect.db.objectname.DBObjectNameHandler;
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
@@ -17,7 +17,7 @@ public abstract class AbstractDialect implements Dialect{
 	
 	protected SqlHandler sqlHandler;
 	protected DBObjectNameHandler dbObjectNameHandler;
-	protected FeaturesHolder featuresHolder;
+	protected DBFeatures dbFeatures;
 	protected TableSqlStatementHandler tableSqlStatementHandler;
 	
 	private boolean isInitialized;
@@ -32,7 +32,7 @@ public abstract class AbstractDialect implements Dialect{
 		
 		sqlHandler = (SqlHandler) ConstructorUtil.newInstance(basePackageName + ".db.sql.SqlHandlerImpl");
 		dbObjectNameHandler = (DBObjectNameHandler) ConstructorUtil.newInstance(basePackageName + ".db.objectname.DBObjectNameHandlerImpl");
-		featuresHolder = (FeaturesHolder) ConstructorUtil.newInstance(basePackageName + ".db.features.FeaturesHolderImpl");
+		dbFeatures = (DBFeatures) ConstructorUtil.newInstance(basePackageName + ".db.features.DBFeaturesImpl");
 		tableSqlStatementHandler = (TableSqlStatementHandler) ConstructorUtil.newInstance(basePackageName + ".db.table.TableSqlStatementHandlerImpl");
 	}
 
@@ -52,8 +52,8 @@ public abstract class AbstractDialect implements Dialect{
 	}
 
 	@Override
-	public FeaturesHolder getFeaturesHolder() {
-		return featuresHolder;
+	public DBFeatures getDBFeatures() {
+		return dbFeatures;
 	}
 
 	@Override
