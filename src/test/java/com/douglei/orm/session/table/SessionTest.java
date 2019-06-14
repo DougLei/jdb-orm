@@ -34,7 +34,6 @@ public class SessionTest {
 	
 	// --------------------------------------------------------------------------------------
 
-	@SuppressWarnings("unused")
 	private Configuration conf;
 	private Session session;
 	

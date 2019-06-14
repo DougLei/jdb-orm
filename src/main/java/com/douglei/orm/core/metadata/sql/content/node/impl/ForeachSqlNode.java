@@ -35,9 +35,19 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		this.close = close==null?" ":" "+close;
 	}
 	
+	private Object getCollectionObject(Object sqlParameter) {
+		if(sqlParameter != null) {
+			if(sqlParameter instanceof Collection<?> || sqlParameter.getClass().isArray()) {
+				return sqlParameter;
+			}
+			return OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean matching(Object sqlParameter, String alias) {
-		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
+		Object collectionObject = getCollectionObject(sqlParameter);
 		if(collectionObject == null) {
 			return false;
 		}
@@ -58,7 +68,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		Object collectionObject = OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
+		Object collectionObject = getCollectionObject(sqlParameter);
 		Object[] array = null;
 		if(collectionObject instanceof Collection<?>) {
 			Collection<?> tc = (Collection<?>) collectionObject;

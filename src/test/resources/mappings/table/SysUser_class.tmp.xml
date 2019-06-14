@@ -5,8 +5,6 @@
 			<!-- dataType的值包括: string, nstring, char, nchar, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<column name="id" property="id" dataType="string" primaryKey="true" length="30" />
 			<column name="name" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" />
-			<column name="age" property="age" dataType="integer" length="2" />
-			<column name="sex" property="sex" dataType="string" length="30" />
 		</columns>
 		
 		<constraints>

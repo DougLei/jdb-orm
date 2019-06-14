@@ -23,17 +23,17 @@ public class SessionTest {
 //		p.put("users", SysUser.getList());
 		
 		List<String> userIds = new ArrayList<String>();
-//		userIds.add("1");
+		userIds.add("1");
 //		userIds.add("3");
 		p.put("userIds", userIds);
 		
+//		List<Map<String, Object>> list = session.getSQLSession().query("com.test", "queryUser", userIds);
 		List<Map<String, Object>> list = session.getSQLSession().query("com.test", "queryUser", p);
 		System.out.println(list);
 	}
 	
 	// --------------------------------------------------------------------------------------
 	
-	@SuppressWarnings("unused")
 	private Configuration conf;
 	private Session session;
 	
