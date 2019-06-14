@@ -33,6 +33,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableSessionCache;
 	
 	@FieldMetaData
+	private boolean enableTableSessionCache;
+	
+	@FieldMetaData
 	private MappingCacheStore mappingCacheStore;
 	
 	@FieldMetaData
@@ -96,17 +99,23 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 
 	void setDialect(String value) {
-		if(StringUtil.isEmpty(value)) {
-			return;
+		if(StringUtil.notEmpty(value)) {
+			this.dialect = DialectMapping.getDialect(value);
 		}
-		this.dialect = DialectMapping.getDialect(value);
 	}
 	void setEnableSessionCache(String value) {
-		if(StringUtil.notEmpty(value) && ValidationUtil.isBoolean(value)) {
+		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
 			return;
 		}
 		this.enableSessionCache = true;
+	}
+	void setEnableTableSessionCache(String value) {
+		if(ValidationUtil.isBoolean(value)) {
+			this.enableTableSessionCache = Boolean.parseBoolean(value);
+			return;
+		}
+		this.enableTableSessionCache = true;
 	}
 	void setMappingCacheStore(String value) {
 		if(StringUtil.isEmpty(value)) {
@@ -144,6 +153,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean getEnableSessionCache() {
 		return enableSessionCache;
+	}
+	@Override
+	public boolean getEnableTableSessionCache() {
+		return enableTableSessionCache;
 	}
 	@Override
 	public MappingCacheStore getMappingCacheStore() {

@@ -34,7 +34,7 @@ import com.douglei.tools.utils.datatype.ConvertUtil;
 public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	
-	protected boolean enableSessionCache;// 是否启用session缓存
+	private boolean enableSessionCache;// 是否启用session缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {

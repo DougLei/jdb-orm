@@ -13,6 +13,7 @@ public interface EnvironmentProperty {
 	public Dialect getDialect();
 	
 	public boolean getEnableSessionCache();
+	public boolean getEnableTableSessionCache();
 	
 	public MappingCacheStore getMappingCacheStore();
 	

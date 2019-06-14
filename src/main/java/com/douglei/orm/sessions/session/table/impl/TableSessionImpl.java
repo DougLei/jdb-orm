@@ -32,10 +32,16 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private static final Logger logger = LoggerFactory.getLogger(TableSessionImpl.class);
-	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>(16);
+	
+	private boolean enableTalbeSessionCache;// 是否启用TableSession缓存
+	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
 	
 	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
+		this.enableTalbeSessionCache = environmentProperty.getEnableTableSessionCache();
+		if(enableTalbeSessionCache) {
+			persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>(8);
+		}
 	}
 	
 	/**
@@ -45,13 +51,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @return
 	 */
 	private Map<Identity, PersistentObject> getCache(String code){
-		logger.debug("获取code={}的持久化缓存集合", code);
-		Map<Identity, PersistentObject> cache = persistentObjectCache.get(code);
-		if(cache == null) {
-			cache = new HashMap<Identity, PersistentObject>(8);
-			persistentObjectCache.put(code, cache);
+		if(enableTalbeSessionCache) {
+			logger.debug("获取code={}的持久化缓存集合", code);
+			Map<Identity, PersistentObject> cache = persistentObjectCache.get(code);
+			if(cache == null) {
+				cache = new HashMap<Identity, PersistentObject>(8);
+				persistentObjectCache.put(code, cache);
+			}
+			return cache;
 		}
-		return cache;
+		return null;
 	}
 	
 	@Override
@@ -73,13 +82,17 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param persistent
 	 */
 	private void putInsertPersistentObjectCache(PersistentObject persistent) {
-		String code = persistent.getCode();
-		Map<Identity, PersistentObject> cache = getCache(code);
-		
-		if(cache.containsKey(persistent.getId())) {
-			throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + persistent.getId().toString());
+		if(enableTalbeSessionCache) {
+			String code = persistent.getCode();
+			Map<Identity, PersistentObject> cache = getCache(code);
+			
+			if(cache.containsKey(persistent.getId())) {
+				throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + persistent.getId().toString());
+			}
+			cache.put(persistent.getId(), persistent);
+		}else {
+			executePersistentObject(persistent);
 		}
-		cache.put(persistent.getId(), persistent);
 	}
 	
 	@Override
@@ -102,10 +115,11 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
-		if(cache.containsKey(persistentObject.getId())) {
-			logger.debug("缓存中存在要修改的数据持久化对象");
-			persistentObject = cache.get(persistentObject.getId());
-			switch(persistentObject.getOperationState()) {
+		if(enableTalbeSessionCache) {
+			if(cache.containsKey(persistentObject.getId())) {
+				logger.debug("缓存中存在要修改的数据持久化对象");
+				persistentObject = cache.get(persistentObject.getId());
+				switch(persistentObject.getOperationState()) {
 				case CREATE:
 				case UPDATE:
 					if(logger.isDebugEnabled()) {
@@ -115,10 +129,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 					return;
 				case DELETE:
 					throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
+				}
+			}else {
+				logger.debug("缓存中不存在要修改的数据持久化对象");
+				cache.put(persistentObject.getId(), persistentObject);
 			}
 		}else {
-			logger.debug("缓存中不存在要修改的数据持久化对象");
-			cache.put(persistentObject.getId(), persistentObject);
+			executePersistentObject(persistentObject);
 		}
 	}
 
@@ -142,24 +159,28 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putDeletePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE);
-		if(cache.containsKey(persistentObject.getId())) {
-			logger.debug("缓存中存在要删除的数据持久化对象");
-			persistentObject = cache.get(persistentObject.getId());
-			switch(persistentObject.getOperationState()) {
-				case CREATE:
-					logger.debug("将create状态的数据直接从cache中移除, 完成delete");
-					cache.remove(persistentObject.getId());
-					return;
-				case UPDATE:
-					logger.debug("将update状态的数据, 改成delete状态, 完成delete");
-					persistentObject.setOperationState(OperationState.DELETE);
-					return;
-				case DELETE:
-					throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
+		if(enableTalbeSessionCache) {
+			if(cache.containsKey(persistentObject.getId())) {
+				logger.debug("缓存中存在要删除的数据持久化对象");
+				persistentObject = cache.get(persistentObject.getId());
+				switch(persistentObject.getOperationState()) {
+					case CREATE:
+						logger.debug("将create状态的数据直接从cache中移除, 完成delete");
+						cache.remove(persistentObject.getId());
+						return;
+					case UPDATE:
+						logger.debug("将update状态的数据, 改成delete状态, 完成delete");
+						persistentObject.setOperationState(OperationState.DELETE);
+						return;
+					case DELETE:
+						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
+				}
+			}else {
+				logger.debug("缓存中不存在要删除的数据持久化对象");
+				cache.put(persistentObject.getId(), persistentObject);
 			}
 		}else {
-			logger.debug("缓存中不存在要删除的数据持久化对象");
-			cache.put(persistentObject.getId(), persistentObject);
+			executePersistentObject(persistentObject);
 		}
 	}
 		
@@ -204,33 +225,35 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 
 	private void flushPersistentObjectCache() {
-		if(persistentObjectCache.size() > 0) {
+		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
 			Map<Identity, PersistentObject> map = null;
 			Collection<PersistentObject> persistentObjects = null;
-			ExecutionHolder executionHolder = null;
 			Set<String> codes = persistentObjectCache.keySet();
 			for (String code : codes) {
 				map = persistentObjectCache.get(code);
 				if(map.size() > 0) {
 					persistentObjects = map.values();
 					for(PersistentObject persistentObject: persistentObjects) {
-						executionHolder = persistentObject.getExecutionHolder();
-						if(executionHolder == null) {
-							if(logger.isDebugEnabled()) {
-								logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder实例为null", persistentObject.getOperationState(), persistentObject.toString());
-							}
-							continue;
-						}
-						if(logger.isDebugEnabled()) {
-							logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
-						}
-						super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
+						executePersistentObject(persistentObject);
 					}
 				}
 			}
 			persistentObjectCache.clear();
 		}
-		persistentObjectCache = null;
+	}
+	
+	private void executePersistentObject(PersistentObject persistentObject) {
+		ExecutionHolder executionHolder = persistentObject.getExecutionHolder();
+		if(executionHolder == null) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder实例为null", persistentObject.getOperationState(), persistentObject.toString());
+			}
+			return;
+		}
+		if(logger.isDebugEnabled()) {
+			logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
+		}
+		super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 	
 	@Override
