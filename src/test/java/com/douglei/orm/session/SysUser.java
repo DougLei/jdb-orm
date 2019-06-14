@@ -45,7 +45,7 @@ public class SysUser {
 	
 	private static List<SysUser> list = new ArrayList<SysUser>();
 	static {
-		list.add(new SysUser("1", "石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊石磊", 28, "男"));
+		list.add(new SysUser("1", "石磊石磊石磊石磊石磊石磊石磊", 28, "男"));
 		list.add(new SysUser("2", "DougLei", 27, "女"));
 	}
 	
