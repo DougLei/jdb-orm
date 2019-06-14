@@ -16,7 +16,7 @@ public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
 	}
 
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Number.singleInstance();
 	}
 }

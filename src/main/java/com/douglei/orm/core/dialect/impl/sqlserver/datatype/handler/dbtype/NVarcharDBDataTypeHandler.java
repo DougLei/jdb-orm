@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.NVarchar;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.StringDataTypeHandler;
@@ -21,13 +22,8 @@ public class NVarcharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return NVarchar.singleInstance().getTypeName();
-	}
-
-	@Override
-	public int getSqlType() {
-		return NVarchar.singleInstance().getSqlType();
+	public DBDataType getDBDataType() {
+		return NVarchar.singleInstance();
 	}
 	
 	@Override

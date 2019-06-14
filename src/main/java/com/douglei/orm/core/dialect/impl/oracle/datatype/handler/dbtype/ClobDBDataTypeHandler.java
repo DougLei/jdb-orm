@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Clob;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.ClobDataTypeHandler;
@@ -21,15 +22,10 @@ public class ClobDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Clob.singleInstance().getTypeName();
+	public DBDataType getDBDataType() {
+		return Clob.singleInstance();
 	}
 	
-	@Override
-	public int getSqlType() {
-		return Clob.singleInstance().getSqlType();
-	}
-
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		ClobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);

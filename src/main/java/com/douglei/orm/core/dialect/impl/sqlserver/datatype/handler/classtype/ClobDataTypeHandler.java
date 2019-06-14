@@ -24,7 +24,7 @@ public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Varcharmax.singleInstance();
 	}
 }

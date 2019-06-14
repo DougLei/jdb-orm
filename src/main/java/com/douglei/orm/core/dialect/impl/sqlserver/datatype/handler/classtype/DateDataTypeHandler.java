@@ -16,7 +16,7 @@ public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Datetime.singleInstance();
 	}
 }

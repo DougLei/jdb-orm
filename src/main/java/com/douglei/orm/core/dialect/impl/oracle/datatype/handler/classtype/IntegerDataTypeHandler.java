@@ -16,7 +16,7 @@ public class IntegerDataTypeHandler extends AbstractIntegerDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Number.singleInstance();
 	}
 }

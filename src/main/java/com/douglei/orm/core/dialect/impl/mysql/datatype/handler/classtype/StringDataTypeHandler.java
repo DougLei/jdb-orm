@@ -16,7 +16,7 @@ public class StringDataTypeHandler extends AbstractStringDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Varchar.singleInstance();
 	}
 }

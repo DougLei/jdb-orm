@@ -5,11 +5,12 @@ import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
-import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractStringDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHolder;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.sql.SqlParameterMode;
@@ -27,6 +28,7 @@ public abstract class AbstractSqlParameter {
 	protected String name;// 参数名
 	protected String descriptionName;// 描述名
 	protected DataTypeHandler dataType;// 数据类型
+	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
 	protected SqlParameterMode mode;// 输入输出类型
 	
@@ -117,6 +119,7 @@ public abstract class AbstractSqlParameter {
 			}else {
 				this.dataType = mapping.getDataTypeHandlerByCode(dataType);
 			}
+			this.dbDataType = ((DBDataTypeHolder)this.dataType).getDBDataType();
 		}
 	}
 	private void setDBDataType(String typeName) {
@@ -127,6 +130,7 @@ public abstract class AbstractSqlParameter {
 			}else {
 				this.dataType = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
 			}
+			this.dbDataType = ((DBDataTypeHolder)this.dataType).getDBDataType();
 		}
 	}
 	private void setMode(String mode) {
@@ -148,7 +152,7 @@ public abstract class AbstractSqlParameter {
 	}
 	private void setValuePrefix(String valuePrefix) {
 		if(StringUtil.isEmpty(valuePrefix)) {
-			if(dataType instanceof AbstractStringDataTypeHandler || (dataType instanceof DBDataTypeHandler && ((DBDataTypeHandler)dataType).isCharacterType())) {
+			if(((DBDataTypeHolder)dataType).isCharacterType()) {
 				this.valuePrefix = "'";
 			}else {
 				this.valuePrefix = "";
@@ -159,7 +163,7 @@ public abstract class AbstractSqlParameter {
 	}
 	private void setValueSuffix(String valueSuffix) {
 		if(StringUtil.isEmpty(valueSuffix)) {
-			if(dataType instanceof AbstractStringDataTypeHandler || (dataType instanceof DBDataTypeHandler && ((DBDataTypeHandler)dataType).isCharacterType())) {
+			if(((DBDataTypeHolder)dataType).isCharacterType()) {
 				this.valueSuffix = "'";
 			}else {
 				this.valueSuffix = "";
@@ -171,16 +175,14 @@ public abstract class AbstractSqlParameter {
 	private void setLength(String length) {
 		if(ValidationUtil.isLimitShort(length)) {
 			this.length = Short.parseShort(length);
-		}else {
-			this.length = -1;
 		}
+		this.length = this.dbDataType.fixInputLength(this.length);
 	}
 	private void setPrecision(String precision) {
 		if(ValidationUtil.isLimitShort(precision)) {
 			this.precision = Short.parseShort(precision);
-		}else {
-			this.precision = -1;
 		}
+		this.precision = this.dbDataType.fixInputPrecision(this.length, this.precision);
 	}
 	private void setNullabled(String nullabled) {
 		if(ValidationUtil.isBoolean(nullabled)) {

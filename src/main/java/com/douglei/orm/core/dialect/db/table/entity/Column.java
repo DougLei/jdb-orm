@@ -47,7 +47,7 @@ public abstract class Column {
 	// 处理dataTypeHandler和dbDataType的值
 	private void processDataType(String dataType) {
 		this.dataTypeHandler = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(this.dataType==null?dataType:this.dataType.getName());
-		this.dbDataType = dataTypeHandler.defaultDBDataType();
+		this.dbDataType = dataTypeHandler.getDBDataType();
 	}
 	
 	// 处理其他属性值

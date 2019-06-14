@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Varbinary;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.BlobDataTypeHandler;
@@ -22,15 +23,10 @@ public class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Varbinary.singleInstance().getTypeName();
+	public DBDataType getDBDataType() {
+		return Varbinary.singleInstance();
 	}
-
-	@Override
-	public int getSqlType() {
-		return Varbinary.singleInstance().getSqlType();
-	}
-
+	
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		BlobDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);

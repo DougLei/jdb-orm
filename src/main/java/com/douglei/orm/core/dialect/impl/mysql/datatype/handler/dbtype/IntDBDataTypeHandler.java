@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Int;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.IntegerDataTypeHandler;
@@ -21,13 +22,8 @@ public class IntDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Int.singleInstance().getTypeName();
-	}
-
-	@Override
-	public int getSqlType() {
-		return Int.singleInstance().getSqlType();
+	public DBDataType getDBDataType() {
+		return Int.singleInstance();
 	}
 
 	@Override

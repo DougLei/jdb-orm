@@ -16,7 +16,7 @@ public class NStringDataTypeHandler extends AbstractNStringDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Varchar.singleInstance();
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.DoubleDataTypeHandler;
@@ -23,15 +24,10 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Number.singleInstance().getTypeName();
+	public DBDataType getDBDataType() {
+		return Number.singleInstance();
 	}
 	
-	@Override
-	public int getSqlType() {
-		return Number.singleInstance().getSqlType();
-	}
-
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(value != null) {

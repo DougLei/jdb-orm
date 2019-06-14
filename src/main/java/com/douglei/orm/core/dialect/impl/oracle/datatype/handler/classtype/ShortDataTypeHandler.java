@@ -16,7 +16,7 @@ public class ShortDataTypeHandler extends AbstractShortDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Number.singleInstance();
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Cursor;
 import com.douglei.orm.core.utils.ResultSetUtil;
@@ -22,15 +23,10 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Cursor.singleInstance().getTypeName();
+	public DBDataType getDBDataType() {
+		return Cursor.singleInstance();
 	}
 	
-	@Override
-	public int getSqlType() {
-		return Cursor.singleInstance().getSqlType();
-	}
-
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		// 不实现set CURSOR value

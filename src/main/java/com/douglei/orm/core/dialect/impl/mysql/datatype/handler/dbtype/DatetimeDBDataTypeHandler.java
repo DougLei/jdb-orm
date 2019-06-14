@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Datetime;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.DateDataTypeHandler;
@@ -21,15 +22,10 @@ public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String getTypeName() {
-		return Datetime.singleInstance().getTypeName();
+	public DBDataType getDBDataType() {
+		return Datetime.singleInstance();
 	}
-
-	@Override
-	public int getSqlType() {
-		return Datetime.singleInstance().getSqlType();
-	}
-
+	
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		DateDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);

@@ -16,7 +16,7 @@ public class DoubleDataTypeHandler extends AbstractDoubleDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Decimal.singleInstance();
 	}
 }

@@ -16,30 +16,7 @@ import com.douglei.tools.utils.CloseUtil;
  * 
  * @author DougLei
  */
-public abstract class DBDataTypeHandler implements DataTypeHandler{
-	
-	/**
-	 * 获取数据库type名称
-	 * @return
-	 */
-	public String getTypeName() {
-		return getClass().getName();
-	}
-	
-	/**
-	 * 获取数据库type值
-	 * @see java.sql.Types
-	 * @return
-	 */
-	public abstract int getSqlType();
-	
-	/**
-	 * 是否是字符类型
-	 * @return
-	 */
-	public boolean isCharacterType() {
-		return false;
-	}
+public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeHolder{
 	
 	/**
 	 * 从CallableStatement中获取输出参数的指
@@ -57,7 +34,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " typeName=[" + getTypeName() + "], sqlType=[" + getSqlType() + "]";
+		return getClass().getName() + " getDBDataType=[" + getDBDataType() + "]";
 	}
 
 	@Override
@@ -85,7 +62,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 			}
 			return writer.toString();
 		} catch (IOException e) {
-			throw new RuntimeException("读取text类型的数据时出现异常", e);
+			throw new RuntimeException("读取大字符(clob)类型的数据时出现异常", e);
 		} finally {
 			CloseUtil.closeDBConn(reader, writer);
 		}
@@ -111,7 +88,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler{
 			}
 			return output.toByteArray();
 		} catch (IOException e) {
-			throw new RuntimeException("读取varbinary类型的数据时出现异常", e);
+			throw new RuntimeException("读取二进制流(blob)类型的数据时出现异常", e);
 		} finally {
 			CloseUtil.closeDBConn(input, output);
 		}

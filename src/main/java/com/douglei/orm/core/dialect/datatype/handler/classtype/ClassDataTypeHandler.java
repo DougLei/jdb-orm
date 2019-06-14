@@ -4,31 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
+import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHolder;
 
 /**
  * 用于处理映射文件中dataType属性
  * @author DougLei
  */
-public abstract class ClassDataTypeHandler implements DataTypeHandler{
+public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeHolder{
 
-	/**
-	 * 默认对应的数据库数据类型
-	 * 在对column进行create的时候用到
-	 * @return
-	 */
-	public abstract DBDataType defaultDBDataType();
-	
-	/**
-	 * 在setNullValue时用到
-	 * @return
-	 */
-	protected int getSqlType() {
-		return defaultDBDataType().getSqlType();
-	}
-	
 	/**
 	 * <pre>
 	 * 	获取DataTypeHandler的唯一编码值

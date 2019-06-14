@@ -16,7 +16,7 @@ public class CharDataTypeHandler extends AbstractCharDataTypeHandler{
 	}
 	
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Char.singleInstance();
 	}
 }

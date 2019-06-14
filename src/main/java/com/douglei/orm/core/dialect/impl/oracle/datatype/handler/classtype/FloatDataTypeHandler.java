@@ -16,7 +16,7 @@ public class FloatDataTypeHandler extends AbstractFloatDataTypeHandler {
 	}
 
 	@Override
-	public DBDataType defaultDBDataType() {
+	public DBDataType getDBDataType() {
 		return Number.singleInstance();
 	}
 }

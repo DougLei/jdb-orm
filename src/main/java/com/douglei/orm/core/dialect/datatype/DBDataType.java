@@ -13,7 +13,6 @@ public abstract class DBDataType {
 	protected short length;// 长度
 	protected short precision;// 精度
 	
-	
 	public DBDataType(short sqlType) {
 		this(sqlType, NO_LIMIT, NO_LIMIT);
 	}
@@ -90,5 +89,11 @@ public abstract class DBDataType {
 			return getTypeName() + "("+length+")";
 		}
 		return getTypeName() + "("+length+", "+precision+")";
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getName() + " [sqlType=" + sqlType + ", typeName=" + typeName + ", length=" + length + ", precision="
+				+ precision + "]";
 	}
 }
