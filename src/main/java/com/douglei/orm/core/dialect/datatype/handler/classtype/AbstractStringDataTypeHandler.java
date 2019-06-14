@@ -23,7 +23,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public boolean isCharacterType() {
-		return true;
+		return true; 
 	}
 	
 	@Override
