@@ -1,4 +1,4 @@
-package com.douglei.orm.context.exception;
+package com.douglei.orm.context;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilder;
  * @author DougLei
  */
 public class BuildDocumentBuilderInstanceException extends RuntimeException{
-	private static final long serialVersionUID = -1002054446033749332L;
+	private static final long serialVersionUID = -4121435923849724268L;
 
 	public BuildDocumentBuilderInstanceException(Throwable cause) {
 		super("创建"+DocumentBuilder.class.getName()+"实例时出现异常", cause);

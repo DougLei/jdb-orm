@@ -11,9 +11,6 @@ import org.dom4j.io.SAXReader;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.context.exception.BuildDocumentBuilderInstanceException;
-import com.douglei.orm.context.exception.GetSqlContentNodeListException;
-
 /**
  * xml reader上下文
  * @author DougLei
