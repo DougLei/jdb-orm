@@ -33,7 +33,7 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class XmlConfiguration implements Configuration {
 	private static final Logger logger = LoggerFactory.getLogger(XmlConfiguration.class);
-	private static final String DEFAULT_CONF_FILE_PATH = "jdb-orm.conf.xml";
+	private static final String DEFAULT_CONF_FILE = "jdb-orm.conf.xml";
 	private Document xmlDocument;
 	private SessionFactory sessionFactory;
 	
@@ -56,10 +56,10 @@ public class XmlConfiguration implements Configuration {
 	
 	
 	public XmlConfiguration() {
-		this(DEFAULT_CONF_FILE_PATH);
+		this(DEFAULT_CONF_FILE);
 	}
-	public XmlConfiguration(String configurationFilePath) {
-		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFilePath));
+	public XmlConfiguration(String configurationFile) {
+		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) {
 		logger.info("根据xml配置文件，初始化configuration实例");
