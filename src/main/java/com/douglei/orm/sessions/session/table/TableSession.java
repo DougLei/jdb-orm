@@ -48,6 +48,13 @@ public interface TableSession {
 	void delete(String code, Map<String, Object> propertyMap);
 	
 	/**
+	 * 执行批量查询
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> List<T> query(Class<T> targetClass, String sql);
+	/**
 	 * 查询结果集
 	 * @param targetClass
 	 * @param sql
@@ -56,6 +63,13 @@ public interface TableSession {
 	 */
 	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
 	
+	/**
+	 * 执行唯一查询
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> T uniqueQuery(Class<T> targetClass, String sql);
 	/**
 	 * 查询唯一结果
 	 * @param targetClass

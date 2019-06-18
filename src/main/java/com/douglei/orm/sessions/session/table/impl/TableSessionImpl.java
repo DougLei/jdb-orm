@@ -270,10 +270,20 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql) {
+		return query(targetClass, sql, null);
+	}
+	
+	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 		return listMap2listClass(targetClass, listMap, tableMetadata);
+	}
+	
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
+		return uniqueQuery(targetClass, sql, null);
 	}
 	
 	@Override
