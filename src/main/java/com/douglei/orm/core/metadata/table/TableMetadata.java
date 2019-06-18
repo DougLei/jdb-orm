@@ -64,8 +64,6 @@ public class TableMetadata extends Table implements Metadata{
 			columnMetadatas.put(cm.getCode(), cm);
 			addValidateColumn(cm);
 		}
-		columns.clear();
-		columns = null;
 		
 		// 迁移primaryKeyColumns数据
 		if(existsPrimaryKey()) {
@@ -75,8 +73,6 @@ public class TableMetadata extends Table implements Metadata{
 				cm = (ColumnMetadata) column;
 				primaryKeyColumnMetadatas.put(cm.getCode(), cm);
 			}
-			primaryKeyColumns.clear();
-			primaryKeyColumns = null;
 		}
 	}
 	
