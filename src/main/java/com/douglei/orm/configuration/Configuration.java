@@ -11,6 +11,7 @@ import com.douglei.orm.sessionfactory.SessionFactory;
  * @author DougLei
  */
 public interface Configuration extends SelfProcessing{
+	public static final String DEFAULT_CONF_FILE = "jdb-orm.conf.xml";
 	
 	/**
 	 * 返回该配置对象的id

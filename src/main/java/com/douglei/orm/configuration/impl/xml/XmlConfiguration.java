@@ -33,7 +33,6 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class XmlConfiguration implements Configuration {
 	private static final Logger logger = LoggerFactory.getLogger(XmlConfiguration.class);
-	private static final String DEFAULT_CONF_FILE = "jdb-orm.conf.xml";
 	private Document xmlDocument;
 	private SessionFactory sessionFactory;
 	
