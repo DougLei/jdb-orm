@@ -24,8 +24,8 @@ public class Constraint {
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
 	
 	public Constraint(ConstraintType constraintType, String tableName) {
-		this.tableName = tableName;
 		this.constraintType = constraintType;
+		this.tableName = tableName;
 	}
 	
 	/**

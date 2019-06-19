@@ -78,20 +78,12 @@ public abstract class Column {
 		if(primaryKey) {
 			this.nullabled = false;
 			this.unique = false;// 如果是主键, 则不需要设置唯一
-			clearDefaultValue();// 如果是主键, 则不能有默认值
+			if(this.defaultValue != null) {// 如果是主键, 则不能有默认值
+				this.defaultValue = null;
+			}
 		}else {
 			this.nullabled = nullabled;
 			this.unique = unique;
-			if(this.unique) {
-				clearDefaultValue();// 如果有唯一约束, 则不能有默认值
-			}
-		}
-	}
-	
-	// 清空默认值
-	private void clearDefaultValue() {
-		if(this.defaultValue != null) {
-			this.defaultValue = null;
 		}
 	}
 	
