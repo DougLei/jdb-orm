@@ -82,9 +82,6 @@ public abstract class Column {
 		}else {
 			this.nullabled = nullabled;
 			this.unique = unique;
-			if(this.unique) {
-				clearDefaultValue();// 如果是唯一约束, 则不能有默认值
-			}
 		}
 	}
 	

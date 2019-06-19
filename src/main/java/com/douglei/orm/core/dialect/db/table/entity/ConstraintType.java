@@ -9,29 +9,31 @@ public enum ConstraintType {
 	/**
 	 * 主键约束
 	 */
-	PRIMARY_KEY("PK", "PRIMARY KEY"),
+	PRIMARY_KEY("PK", "PRIMARY KEY", true),
 	/**
 	 * 唯一值约束
 	 */
-	UNIQUE("UQ", "UNIQUE"),
+	UNIQUE("UQ", "UNIQUE", true),
 	/**
 	 * 默认值约束
 	 */
-	DEFAULT_VALUE("DF", "DEFAULT"),
+	DEFAULT_VALUE("DF", "DEFAULT", false),
 	/**
 	 * 检查约束
 	 */
-	CHECK("CK", "CHECK"),
+	CHECK("CK", "CHECK", false),
 	/**
 	 * 外键约束
 	 */
-	FOREIGN_KEY("FK", "FOREIGN KEY");
+	FOREIGN_KEY("FK", "FOREIGN KEY", false);
 	
 	private String constraintPrefix;
 	private String sqlStatement;
-	private ConstraintType(String constraintPrefix, String sqlStatement) {
+	private boolean supportMultipleColumn;// 是否支持多列, 即复合约束
+	private ConstraintType(String constraintPrefix, String sqlStatement, boolean supportMultipleColumn) {
 		this.constraintPrefix = constraintPrefix;
 		this.sqlStatement = sqlStatement;
+		this.supportMultipleColumn = supportMultipleColumn;
 	}
 	
 	public String getConstraintPrefix() {
@@ -39,6 +41,9 @@ public enum ConstraintType {
 	}
 	public String getSqlStatement() {
 		return sqlStatement;
+	}
+	public boolean supportMultipleColumn() {
+		return supportMultipleColumn;
 	}
 
 	public static ConstraintType toValue(String type) {

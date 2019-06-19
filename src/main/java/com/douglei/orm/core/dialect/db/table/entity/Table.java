@@ -61,11 +61,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 		}
 		if(constraint.getConstraintType() == ConstraintType.PRIMARY_KEY) {
 			validatePrimaryKeyColumnExists();
-			Collection<Column> pkColumn = constraint.getColumns();
-			primaryKeyColumns = new HashMap<String, Column>(pkColumn.size());
-			for (Column column : pkColumn) {
-				primaryKeyColumns.put(column.getName(), column);
-			}
+			addPrimaryKeyColumns(constraint.getColumns());
 		}
 		constraints.put(constraint.getName(), constraint);
 	}
@@ -74,6 +70,14 @@ public abstract class Table implements Entity2MappingContentConverter{
 	private void validatePrimaryKeyColumnExists() {
 		if(existsPrimaryKey()) {
 			throw new ColumnException("已配置主键["+primaryKeyColumns.keySet()+"], 不能重复配置");
+		}
+	}
+	
+	// 添加主键列
+	private void addPrimaryKeyColumns(Collection<Column> primaryKeyColumns) {
+		this.primaryKeyColumns = new HashMap<String, Column>(primaryKeyColumns.size());
+		for (Column primaryKeyColumn : primaryKeyColumns) {
+			this.primaryKeyColumns.put(primaryKeyColumn.getName(), primaryKeyColumn);
 		}
 	}
 	
@@ -160,29 +164,14 @@ public abstract class Table implements Entity2MappingContentConverter{
 			
 			xml.append("<constraints>");
 			for (Constraint constraint : constraints) {
-				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"");
-				
-				switch(constraint.getConstraintType()) {
-					case DEFAULT_VALUE:
-						xml.append(" value=\"").append(constraint.getDefaultValue()).append("\"");
-						break;
-					case CHECK:
-						xml.append(" expression=\"").append(constraint.getCheck()).append("\"");
-						break;
-					case FOREIGN_KEY:
-						xml.append(" fkTableName=\"").append(constraint.getFkTableName()).append("\"");
-						xml.append(" fkColumnName=\"").append(constraint.getFkColumnName()).append("\"");
-						break;
-					default:
-						break;
+				if(constraint.getConstraintType().supportMultipleColumn()) {// 只对 primary key, unique约束处理, 其他约束都是单列约束, 将约束的数据都同步到了对应的Column元数据中, 在上面的toXmlColumnContent()已经配置, 这里不需要再次配置
+					xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"").append(">");
+					columns = constraint.getColumns();
+					for (Column column : columns) {
+						xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
+					}
+					xml.append("</constraint>");
 				}
-				
-				xml.append(">");
-				columns = constraint.getColumns();
-				for (Column column : columns) {
-					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
-				}
-				xml.append("</constraint>");
 			}
 			xml.append("</constraints>");
 		}

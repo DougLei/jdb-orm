@@ -142,16 +142,18 @@ public abstract class TableSqlStatementHandler {
 	 */
 	public String constraintCreateSqlStatement(Constraint constraint) {
 		switch(constraint.getConstraintType()) {
-			case DEFAULT_VALUE:
-				return defaultValueConstraintCreateSqlStatement(constraint);
 			case PRIMARY_KEY:
 			case UNIQUE:
 				return pk_uq_constraintCreateSqlStatement(constraint);
+			case DEFAULT_VALUE:
+				return defaultValueConstraintCreateSqlStatement(constraint);
+			case CHECK:
+				return checkConstraintCreateSqlStatement(constraint);
+			case FOREIGN_KEY:
+				return foreignKeyConstraintCreateSqlStatement(constraint);
 		}
 		throw new IllegalArgumentException("没有处理:" + constraint.getConstraintType());
 	}
-	/**获取创建默认值约束的sql语句*/
-	protected abstract String defaultValueConstraintCreateSqlStatement(Constraint constraint);
 	/**获取创建主键约束、唯一约束的sql语句*/
 	protected String pk_uq_constraintCreateSqlStatement(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
@@ -159,6 +161,12 @@ public abstract class TableSqlStatementHandler {
 		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(")");
 		return tmpSql.toString();
 	}
+	/**获取创建默认值约束的sql语句*/
+	protected abstract String defaultValueConstraintCreateSqlStatement(Constraint constraint);
+	/**获取创建检查约束的sql语句*/
+	protected abstract String checkConstraintCreateSqlStatement(Constraint constraint);
+	/**获取创建外键约束的sql语句*/
+	protected abstract String foreignKeyConstraintCreateSqlStatement(Constraint constraint);
 
 	
 	/**
@@ -174,6 +182,10 @@ public abstract class TableSqlStatementHandler {
 				return uniqueConstraintDropSqlStatement(constraint);
 			case DEFAULT_VALUE:
 				return defaultValueConstraintDropSqlStatement(constraint);
+			case CHECK:
+				return checkConstraintDropSqlStatement(constraint);
+			case FOREIGN_KEY:
+				return foreignKeyConstraintDropSqlStatement(constraint);
 		}
 		throw new IllegalArgumentException("没有处理:" + constraint.getConstraintType());
 	}
@@ -193,6 +205,14 @@ public abstract class TableSqlStatementHandler {
 	}
 	/**获取删除默认值约束的sql语句*/
 	protected String defaultValueConstraintDropSqlStatement(Constraint constraint) {
+		return commonConstraintDropSqlStatement(constraint);
+	}
+	/**获取删除检查约束的sql语句*/
+	protected String checkConstraintDropSqlStatement(Constraint constraint) {
+		return commonConstraintDropSqlStatement(constraint);
+	}
+	/**获取删除外键约束的sql语句*/
+	protected String foreignKeyConstraintDropSqlStatement(Constraint constraint) {
 		return commonConstraintDropSqlStatement(constraint);
 	}
 }
