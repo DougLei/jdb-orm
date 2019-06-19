@@ -86,7 +86,7 @@ public abstract class Column {
 	}
 	
 	// 清空默认值
-	private void clearDefaultValue() {
+	void clearDefaultValue() {
 		if(this.defaultValue != null) {
 			this.defaultValue = null;
 		}

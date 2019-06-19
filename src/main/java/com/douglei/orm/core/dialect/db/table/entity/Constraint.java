@@ -54,35 +54,49 @@ public class Constraint {
 	// 处理列对象的元数据
 	private void processColumnMetadata(Column column) {
 		switch(constraintType) {
+			// 修改主键=false, unique=false, 或置空其他约束属性值的目的, 是在根据对象生成xml配置文件时, 在<constraints>中生成主键和唯一约束配置, 而不在<column>中生成对应的primaryKey=true和unique=true的配置
+			// @see com.douglei.orm.core.dialect.db.table.entity.Table.toXmlColumnContent()/toXmlConstraintContent()
 			case PRIMARY_KEY:
-				// 将列改为主键列
-				column.processPrimaryKeyAndNullabledAndUnique(true, false, false);
+				column.primaryKey = false;
+				column.nullabled = false;
+				column.unique = false;// 如果是主键, 则不需要设置唯一
+				column.clearDefaultValue();// 如果是主键, 则不能有默认值
 				break;
 			case UNIQUE:
 				// 判断列是否是主键, 如果不是, 则给列加上唯一约束
 				if(column.isPrimaryKey()) {
 					throw new UnsupportConstraintConfigurationException("列["+column.getName()+"]已经为主键列, 不能配置唯一约束");
 				}
-				column.unique = true;
+				column.unique = false;
 				break;
 			case DEFAULT_VALUE:
 				if(columns.size() > 1) {
 					throw new ConstraintException("不支持给多个列添加联合默认值约束 , 即设置默认值约束时列的数量只能有一个");
 				}
-				this.defaultValue = column.getDefaultValue();// 将列中的默认值(不论是否为空)给this.defaultValue属性, 后续也可以再通过setDefaultValue方法设置默认值
+				if(column.defaultValue != null) {
+					this.defaultValue = column.defaultValue;// 将列中的默认值(不论是否为空)给this.defaultValue属性, 后续也可以再通过setDefaultValue方法设置默认值
+					column.defaultValue = null;// 再将column的defaultValue值置空, 看最上面的解释
+				}
 				break;
 			case CHECK:
 				if(columns.size() > 1) {
 					throw new ConstraintException("不支持给多个列添加联合检查约束 , 即设置检查约束时列的数量只能有一个");
 				}
-				this.check = column.getCheck();// 同默认值
+				if(column.check != null) {
+					this.check = column.check;// 同默认值
+					column.check = null;
+				}
 				break;
 			case FOREIGN_KEY:
 				if(columns.size() > 1) {
 					throw new ConstraintException("不支持给多个列添加联合外键约束 , 即设置外键约束时列的数量只能有一个");
 				}
-				this.fkTableName = column.getFkTableName();// 同默认值
-				this.fkColumnName = column.getFkColumnName();
+				if(column.fkTableName != null) {
+					this.fkTableName = column.fkTableName;// 同默认值
+					this.fkColumnName = column.fkColumnName;
+					column.fkTableName = null;
+					column.fkColumnName = null;
+				}
 				break;
 		}
 	}
@@ -190,18 +204,21 @@ public class Constraint {
 	}
 	public String getCheck() {
 		if(constraintType == ConstraintType.CHECK) {
+			processConstraint();
 			return check;
 		}
 		throw new UnsupportConstraintConfigurationException("非检查约束, 而是["+constraintType.name()+"]约束, 无法获取检查约束表达式");
 	}
 	public String getFkTableName() {
 		if(constraintType == ConstraintType.FOREIGN_KEY) {
+			processConstraint();
 			return fkTableName;
 		}
 		throw new UnsupportConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键表名");
 	}
 	public String getFkColumnName() {
 		if(constraintType == ConstraintType.FOREIGN_KEY) {
+			processConstraint();
 			return fkColumnName;
 		}
 		throw new UnsupportConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键列名");
@@ -219,7 +236,6 @@ public class Constraint {
 				throw new UnsupportConstraintConfigurationException("列["+this.column.getName()+"]已经为主键列, 不能配置默认值");
 			}
 			this.defaultValue = defaultValue;
-			this.column.defaultValue = defaultValue;
 		}
 		throw new UnsupportConstraintConfigurationException("非默认值约束, 而是["+constraintType.name()+"]约束, 无法设置默认值");
 	}
@@ -233,7 +249,6 @@ public class Constraint {
 				throw new NullPointerException("配置的检查约束, 检查约束表达式不能为空");
 			}
 			this.check = check;
-			this.column.check = check;
 		}
 		throw new UnsupportConstraintConfigurationException("非检查约束, 而是["+constraintType.name()+"]约束, 无法设置检查约束表达式");
 	}
@@ -251,8 +266,6 @@ public class Constraint {
 			}
 			this.fkTableName = fkTableName;
 			this.fkColumnName = fkColumnName;
-			this.column.fkTableName = fkTableName;
-			this.column.fkColumnName = fkColumnName;
 		}
 		throw new UnsupportConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法设置关联的外键表名和列名");
 	}

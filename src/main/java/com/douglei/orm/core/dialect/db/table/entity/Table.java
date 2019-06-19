@@ -131,24 +131,8 @@ public abstract class Table implements Entity2MappingContentConverter{
 				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
 				xml.append("length=\"").append(column.getLength()).append("\" ");
 				xml.append("precision=\"").append(column.getPrecision()).append("\"");
-				if(column.isPrimaryKey()) {
-					xml.append(" primaryKey=\"true\"");
-				}
-				if(column.isUnique()) {
-					xml.append(" unique=\"true\"");
-				}
 				if(!column.isNullabled()) {
 					xml.append(" nullabled=\"false\"");
-				}
-				if(column.getDefaultValue() != null) {
-					xml.append(" defaultValue=\"").append(column.getDefaultValue()).append("\"");
-				}
-				if(column.getCheck() != null) {
-					xml.append(" check=\"").append(column.getCheck()).append("\"");
-				}
-				if(column.getFkTableName() != null) {
-					xml.append(" fkTableName=\"").append(column.getFkTableName()).append("\"");
-					xml.append(" fkColumnName=\"").append(column.getFkColumnName()).append("\"");
 				}
 				if(column.isValidate()) {
 					xml.append(" validate=\"true\"");
@@ -164,16 +148,33 @@ public abstract class Table implements Entity2MappingContentConverter{
 			
 			xml.append("<constraints>");
 			for (Constraint constraint : constraints) {
-				if(constraint.getConstraintType().supportMultipleColumn()) {// 只对 primary key, unique约束处理, 其他约束都是单列约束, 将约束的数据都同步到了对应的Column元数据中, 在上面的toXmlColumnContent()已经配置, 这里不需要再次配置
-					xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"").append(">");
-					columns = constraint.getColumns();
-					for (Column column : columns) {
-						xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
-					}
-					xml.append("</constraint>");
+				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"");
+				toXmlConstraintTypeExtendProperties(xml, constraint);
+				xml.append(">");
+				columns = constraint.getColumns();
+				for (Column column : columns) {
+					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
 				}
+				xml.append("</constraint>");
 			}
 			xml.append("</constraints>");
+		}
+	}
+	private void toXmlConstraintTypeExtendProperties(StringBuilder xml, Constraint constraint) {// 约束类型扩展属性的xml内容
+		switch(constraint.getConstraintType()) {
+			case DEFAULT_VALUE:
+				xml.append(" value=\"").append(constraint.getDefaultValue()).append("\"");
+				break;
+			case CHECK:
+				xml.append(" expression=\"").append(constraint.getCheck()).append("\"");
+				break;
+			case FOREIGN_KEY:
+				xml.append(" fkTableName=\"").append(constraint.getFkTableName()).append("\"");
+				xml.append(" fkColumnName=\"").append(constraint.getFkColumnName()).append("\"");
+				break;
+			default:
+				// 不用处理 primaryKey unique, 他们没有扩展属性
+				break;	
 		}
 	}
 }
