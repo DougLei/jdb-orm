@@ -34,13 +34,18 @@ public abstract class Table implements Entity2MappingContentConverter{
 	private void addConstraint(Column column) {
 		if(column.isPrimaryKey()) {
 			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name).addColumn(column));
-		}else {
-			if(column.isUnique()) {
-				addConstraint(new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
-			}
-			if(column.getDefaultValue() != null) {
-				addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
-			}
+		}
+		if(column.isUnique()) {
+			addConstraint(new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
+		}
+		if(column.getDefaultValue() != null) {
+			addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
+		}
+		if(column.getCheck() != null) {
+			addConstraint(new Constraint(ConstraintType.CHECK, name).addColumn(column));
+		}
+		if(column.getFkTableName() != null) {
+			addConstraint(new Constraint(ConstraintType.FOREIGN_KEY, name).addColumn(column));
 		}
 	}
 	
@@ -67,8 +72,8 @@ public abstract class Table implements Entity2MappingContentConverter{
 	
 	// 验证主键列是否存在
 	private void validatePrimaryKeyColumnExists() {
-		if(primaryKeyColumns != null) {
-			throw new ColumnException("已存在主键["+primaryKeyColumns.keySet()+"], 不能重复配置");
+		if(existsPrimaryKey()) {
+			throw new ColumnException("已配置主键["+primaryKeyColumns.keySet()+"], 不能重复配置");
 		}
 	}
 	
@@ -120,22 +125,29 @@ public abstract class Table implements Entity2MappingContentConverter{
 				xml.append("<column ");
 				xml.append("name=\"").append(column.getName()).append("\" ");
 				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
-				if(column.isPrimaryKey()) {
-					xml.append("primaryKey=\"true\" ");
-				}
 				xml.append("length=\"").append(column.getLength()).append("\" ");
-				xml.append("precision=\"").append(column.getPrecision()).append("\" ");
-				if(column.getDefaultValue() != null) {
-					xml.append("defaultValue=\"").append(column.getDefaultValue()).append("\" ");
+				xml.append("precision=\"").append(column.getPrecision()).append("\"");
+				if(column.isPrimaryKey()) {
+					xml.append(" primaryKey=\"true\"");
 				}
 				if(column.isUnique()) {
-					xml.append("unique=\"true\" ");
+					xml.append(" unique=\"true\"");
 				}
 				if(!column.isNullabled()) {
-					xml.append("nullabled=\"false\" ");
+					xml.append(" nullabled=\"false\"");
+				}
+				if(column.getDefaultValue() != null) {
+					xml.append(" defaultValue=\"").append(column.getDefaultValue()).append("\"");
+				}
+				if(column.getCheck() != null) {
+					xml.append(" check=\"").append(column.getCheck()).append("\"");
+				}
+				if(column.getFkTableName() != null) {
+					xml.append(" fkTableName=\"").append(column.getFkTableName()).append("\"");
+					xml.append(" fkColumnName=\"").append(column.getFkColumnName()).append("\"");
 				}
 				if(column.isValidate()) {
-					xml.append("validate=\"true\" ");
+					xml.append(" validate=\"true\"");
 				}
 				xml.append("/>");
 			}
@@ -148,7 +160,24 @@ public abstract class Table implements Entity2MappingContentConverter{
 			
 			xml.append("<constraints>");
 			for (Constraint constraint : constraints) {
-				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\">");
+				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"");
+				
+				switch(constraint.getConstraintType()) {
+					case DEFAULT_VALUE:
+						xml.append(" value=\"").append(constraint.getDefaultValue()).append("\"");
+						break;
+					case CHECK:
+						xml.append(" expression=\"").append(constraint.getCheck()).append("\"");
+						break;
+					case FOREIGN_KEY:
+						xml.append(" fkTableName=\"").append(constraint.getFkTableName()).append("\"");
+						xml.append(" fkColumnName=\"").append(constraint.getFkColumnName()).append("\"");
+						break;
+					default:
+						break;
+				}
+				
+				xml.append(">");
 				columns = constraint.getColumns();
 				for (Column column : columns) {
 					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");

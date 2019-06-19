@@ -144,9 +144,11 @@ public abstract class TableSqlStatementHandler {
 		switch(constraint.getConstraintType()) {
 			case DEFAULT_VALUE:
 				return defaultValueConstraintCreateSqlStatement(constraint);
-			default:
+			case PRIMARY_KEY:
+			case UNIQUE:
 				return pk_uq_constraintCreateSqlStatement(constraint);
 		}
+		throw new IllegalArgumentException("没有处理:" + constraint.getConstraintType());
 	}
 	/**获取创建默认值约束的sql语句*/
 	protected abstract String defaultValueConstraintCreateSqlStatement(Constraint constraint);

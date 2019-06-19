@@ -17,8 +17,8 @@ public class ColumnMetadata extends Column implements Metadata{
 	private String code;
 	private String property;// 映射的代码类中的属性名
 	
-	public ColumnMetadata(String property, String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
-		super(name, descriptionName, dataType, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+	public ColumnMetadata(String property, String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+		super(name, descriptionName, dataType, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 		setPropery(property);
 		setCode();
 	}
@@ -57,9 +57,34 @@ public class ColumnMetadata extends Column implements Metadata{
 		}
 	}
 	
-	@Override
-	public void processPrimaryKeyAndNullabled(boolean primaryKey, boolean nullabled) {
-		super.processPrimaryKeyAndNullabled(primaryKey, nullabled);
+	/**
+	 * 将该列转换为主键列
+	 */
+	public void turn2PrimaryKeyColumn() {
+		super.processPrimaryKeyAndNullabledAndUnique(true, false, false);
+	}
+	/**
+	 * 给该列追加默认值
+	 * @param defaultValue
+	 */
+	public void appendDefaultValue(String defaultValue) {
+		super.defaultValue = defaultValue;
+	}
+	/**
+	 * 给该列追加检查约束表达式
+	 * @param checkExpression
+	 */
+	public void appendCheck(String checkExpression) {
+		super.check = checkExpression;
+	}
+	/**
+	 * 给该列追加外键约束内容
+	 * @param fkTableName
+	 * @param fkColumnName
+	 */
+	public void appendForeignKey(String fkTableName, String fkColumnName) {
+		super.fkTableName = fkTableName;
+		super.fkColumnName = fkColumnName;
 	}
 	
 	public String getProperty() {

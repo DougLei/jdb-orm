@@ -21,27 +21,30 @@ public abstract class Column {
 	protected boolean primaryKey;// 是否是主键
 	protected boolean unique;// 是否唯一
 	protected String defaultValue;// 默认值
+	protected String check;// 检查约束表达式
+	protected String fkTableName;// 外键约束关联的表名
+	protected String fkColumnName;// 外键约束关联的列名
 	protected boolean validate;// 是否验证
 	
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public Column(String name, String descriptionName, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = dataType;
 		processDataType(null);
-		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 	}
-	public Column(String name, String descriptionName, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name);
 		processDataType(dataType.getName());
-		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 	}
-	public Column(String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	public Column(String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
-		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, validate);
+		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 	}
 	
 	// 处理dataTypeHandler和dbDataType的值
@@ -51,14 +54,15 @@ public abstract class Column {
 	}
 	
 	// 处理其他属性值
-	private void processOtherPropertyValues(String descriptionName, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, boolean validate) {
+	private void processOtherPropertyValues(String descriptionName, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		if(StringUtil.isEmpty(descriptionName)) {
 			descriptionName = name;
 		}
 		this.descriptionName = descriptionName;
 		this.defaultValue = defaultValue;
 		processLengthAndPrecision(length, precision);
-		processPrimaryKeyAndNullabled(primaryKey, nullabled);
+		processPrimaryKeyAndNullabledAndUnique(primaryKey, nullabled, unique);
+		processCheckAndForeignKey(check, fkTableName, fkColumnName);
 		this.validate = validate;
 	}
 	
@@ -68,16 +72,39 @@ public abstract class Column {
 		this.precision = dbDataType.fixInputPrecision(this.length, precision);
 	}
 
-	// 处理主键和是否为空的值
-	protected void processPrimaryKeyAndNullabled(boolean primaryKey, boolean nullabled) {
+	// 处理主键和是否为空和是否唯一的值
+	protected void processPrimaryKeyAndNullabledAndUnique(boolean primaryKey, boolean nullabled, boolean unique) {
 		this.primaryKey = primaryKey;
 		if(primaryKey) {
 			this.nullabled = false;
+			this.unique = false;// 如果是主键, 则不需要设置唯一
+			clearDefaultValue();// 如果是主键, 则不能有默认值
 		}else {
 			this.nullabled = nullabled;
+			this.unique = unique;
+			if(this.unique) {
+				clearDefaultValue();// 如果有唯一约束, 则不能有默认值
+			}
 		}
 	}
 	
+	// 清空默认值
+	private void clearDefaultValue() {
+		if(this.defaultValue != null) {
+			this.defaultValue = null;
+		}
+	}
+	
+	// 处理检查约束值和外键约束值
+	private void processCheckAndForeignKey(String check, String fkTableName, String fkColumnName) {
+		if(StringUtil.notEmpty(check)) {
+			this.check = check;
+		}
+		if(StringUtil.notEmpty(fkTableName) && StringUtil.notEmpty(fkColumnName)) {
+			this.fkTableName = fkTableName;
+			this.fkColumnName = fkColumnName;
+		}
+	}
 	
 	public String getName() {
 		return name;
@@ -97,14 +124,23 @@ public abstract class Column {
 	public short getPrecision() {
 		return precision;
 	}
-	public String getDefaultValue() {
-		return defaultValue;
-	}
 	public boolean isUnique() {
 		return unique;
 	}
 	public boolean isNullabled() {
 		return nullabled;
+	}
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+	public String getCheck() {
+		return check;
+	}
+	public String getFkTableName() {
+		return fkTableName;
+	}
+	public String getFkColumnName() {
+		return fkColumnName;
 	}
 	public ClassDataTypeHandler getDataTypeHandler() {
 		return dataTypeHandler;

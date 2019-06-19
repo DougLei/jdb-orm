@@ -33,6 +33,8 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		boolean nullabled = ValidationUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
 		
 		return new ColumnMetadata(element.attributeValue("property"), name, element.attributeValue("descriptionName"), element.attributeValue("dataType"), length, precision, nullabled,
-				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), Boolean.parseBoolean(element.attributeValue("validate")));
+				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
+				element.attributeValue("check"), element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"), 
+				Boolean.parseBoolean(element.attributeValue("validate")));
 	}
 }

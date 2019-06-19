@@ -17,7 +17,15 @@ public enum ConstraintType {
 	/**
 	 * 默认值约束
 	 */
-	DEFAULT_VALUE("DF", "DEFAULT");
+	DEFAULT_VALUE("DF", "DEFAULT"),
+	/**
+	 * 检查约束
+	 */
+	CHECK("CK", "CHECK"),
+	/**
+	 * 外键约束
+	 */
+	FOREIGN_KEY("FK", "FOREIGN KEY");
 	
 	private String constraintPrefix;
 	private String sqlStatement;

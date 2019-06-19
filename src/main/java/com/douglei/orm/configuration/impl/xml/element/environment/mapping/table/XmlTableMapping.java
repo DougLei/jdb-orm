@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.TableMapping;
-import com.douglei.orm.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
@@ -23,6 +22,7 @@ import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * table 映射
@@ -84,13 +84,17 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		if(constraintsElement != null) {
 			List<?> elements = constraintsElement.elements("constraint");
 			if(elements != null && elements.size() > 0) {
+				Element constraintElement = null;
 				ConstraintType constraintType = null;
-				List<?> values = null;
+				List<?> columnNames = null;
 				Constraint constraint = null;
 				ColumnMetadata columnMetadata = null;
+				
+				String v1, v2;
 				for (Object object : elements) {
-					values = ((Element)object).selectNodes("column-name/@value");
-					if(values == null || values.size() == 0) {
+					constraintElement = ((Element)object);
+					columnNames = constraintElement.selectNodes("column-name/@value");
+					if(columnNames == null || columnNames.size() == 0) {
 						continue;
 					}
 					
@@ -98,20 +102,50 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					if(constraintType == null) {
 						throw new NullPointerException("<constraint>元素中的type属性值错误:["+((Element) object).attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
 					}
-					if(constraintType == ConstraintType.DEFAULT_VALUE) {
-						throw new UnsupportConstraintConfigurationException("不支持通过<constraint>元素给列配置默认值约束, 如需配置, 请在对应的<column>元素中配置defaultValue属性值");
-					}
-					if(constraintType == ConstraintType.PRIMARY_KEY && tableMetadata.existsPrimaryKey()) {
-						throw new RepeatedPrimaryKeyException("主键配置重复, 只能使用<constraint>元素配置(一次)主键, 或通过<column>元素配置单个列为主键");
-					}
 					
 					constraint = new Constraint(constraintType, tableMetadata.getName());
-					for(Object value: values) {
-						columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)value).getValue().toUpperCase());
-						if(constraintType == ConstraintType.PRIMARY_KEY) {
-							columnMetadata.processPrimaryKeyAndNullabled(true, false);// 如果是主键约束, 则该列必须不能为空
-						}
-						constraint.addColumn(columnMetadata);
+					switch(constraintType) {
+						case PRIMARY_KEY:
+						case UNIQUE:
+							for(Object columnName: columnNames) {
+								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase());
+								if(constraintType == ConstraintType.PRIMARY_KEY) {
+									columnMetadata.turn2PrimaryKeyColumn();
+								}
+								constraint.addColumn(columnMetadata);
+							}
+							break;
+						case DEFAULT_VALUE:
+							v1 = constraintElement.attributeValue("value");
+							if(v1 == null) {
+								continue;
+							}
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata.appendDefaultValue(v1);
+							constraint.addColumn(columnMetadata);
+							break;
+						case CHECK:
+							v1 = constraintElement.attributeValue("expression");
+							if(StringUtil.isEmpty(v1)) {
+								continue;
+							}
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata.appendCheck(v1);
+							constraint.addColumn(columnMetadata);
+							break;
+						case FOREIGN_KEY:
+							v1 = constraintElement.attributeValue("fkTableName");
+							if(StringUtil.isEmpty(v1)) {
+								continue;
+							}
+							v2 = constraintElement.attributeValue("fkColumnName");
+							if(StringUtil.isEmpty(v2)) {
+								continue;
+							}
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata.appendForeignKey(v1, v2);
+							constraint.addColumn(columnMetadata);
+							break;
 					}
 					tableMetadata.addConstraint(constraint);
 				}

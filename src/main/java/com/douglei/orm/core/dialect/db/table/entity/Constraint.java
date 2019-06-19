@@ -16,12 +16,12 @@ import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractStringDat
  */
 public class Constraint {
 	private String name;// (前缀+表名+列名)
+	private Column column;// 记录第一个add的列对象
 	private Map<String, Column> columns;// 相关的列集合
 	private String tableName;// 表名
 	
 	private ConstraintType constraintType;
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
-	private String defaultValue;// 默认值
 	
 	public Constraint(ConstraintType constraintType, String tableName) {
 		this.tableName = tableName;
@@ -36,6 +36,7 @@ public class Constraint {
 		if(column != null) {
 			if(columns == null) {
 				columns = new HashMap<String, Column>(4);
+				this.column = column;
 			}else if(columns.containsKey(column.getName())) {
 				throw new ConstraintException("在同一个约束中, 出现重复的列["+column.getName()+"]");
 			}
@@ -61,14 +62,8 @@ public class Constraint {
 				if(cs.size() > 1) {
 					throw new ConstraintException("不支持给多个列添加联合默认值约束 [设置默认值约束时列的数量多于1个]");
 				}
-				Column column = cs.iterator().next();
 				validateDataType(column.getDataTypeHandler());
 
-				setDefaultValue(column.getDefaultValue());
-				if(this.defaultValue == null) {
-					throw new ConstraintException("添加默认值约束时, 默认值不能为空");
-				}
-				
 				this.constraintColumnNames = column.getName();
 				setName(nameBuilder.append(column.getName()).toString());
 				
@@ -111,15 +106,6 @@ public class Constraint {
 		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(name);
 	}
 	
-	/**
-	 * 设置默认值约束的默认值
-	 * @param defaultValue
-	 */
-	public void setDefaultValue(String defaultValue) {
-		if(this.defaultValue == null && defaultValue != null) {
-			this.defaultValue = defaultValue;
-		}
-	}
 	public ConstraintType getConstraintType() {
 		return constraintType;
 	}
@@ -139,8 +125,17 @@ public class Constraint {
 		processConstraint();
 		return constraintColumnNames;
 	}
+	
 	public String getDefaultValue() {
-		processConstraint();
-		return defaultValue;
+		return column.getDefaultValue();
+	}
+	public Object getCheck() {
+		return column.getCheck();
+	}
+	public Object getFkTableName() {
+		return column.getFkTableName();
+	}
+	public Object getFkColumnName() {
+		return column.getFkColumnName();
 	}
 }
