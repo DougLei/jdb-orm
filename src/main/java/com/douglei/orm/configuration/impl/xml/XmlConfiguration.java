@@ -61,7 +61,7 @@ public class XmlConfiguration implements Configuration {
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) {
-		logger.info("根据xml配置文件，初始化configuration实例");
+		logger.debug("根据xml配置文件，初始化configuration实例");
 		try {
 			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
 			initXmlConfiguration();
