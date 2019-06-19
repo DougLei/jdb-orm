@@ -8,9 +8,24 @@
 		</columns>
 		
 		<constraints>
-			<constraint type="unique"><!-- type的值只包括primary_key, unique, 另外三种约束直接通过<column>元素中的属性配置 -->
+			<!-- type的值包括primary_key, unique, default_value, check, foreign_key -->
+			
+			<constraint type="unique"><!-- primary_key, unique -->
 				<column-name value="name" />
 			</constraint>
+			
+			<constraint type="default_value" value="哈哈"><!-- default_value -->
+				<column-name value="name" />
+			</constraint>
+			
+			<constraint type="check" expression="name != '哈哈'"><!-- check -->
+				<column-name value="name" />
+			</constraint>
+			
+			<constraint type="foreign_key" fkTableName="" fkColumnName=""><!-- foreign_key -->
+				<column-name value="name" />
+			</constraint>
+			
 		</constraints>
 	</table>
 </mapping-configuration>
