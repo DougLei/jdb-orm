@@ -132,6 +132,9 @@ public class Constraint {
 				this.constraintColumnNames = constraintColumnNamesBuilder.toString();
 			}else {
 				validateDataType(this.column.getDataTypeHandler());
+				this.constraintColumnNames = this.column.getName();
+				nameBuilder.append(this.column.getName());
+				
 				switch(constraintType) {
 					case DEFAULT_VALUE:
 						if(this.defaultValue == null) {
@@ -153,13 +156,12 @@ public class Constraint {
 						if(StringUtil.isEmpty(fkColumnName)) {
 							throw new NullPointerException("配置的外键约束, 关联的列名不能为空");
 						}
+						nameBuilder.append("_").append(fkTableName).append("_").append(fkColumnName);
 						break;
 					default:
 						// 不处理其他约束类型
 						break;
 				}
-				this.constraintColumnNames = this.column.getName();
-				nameBuilder.append(this.column.getName());
 			}
 			setName(nameBuilder.toString());
 		}

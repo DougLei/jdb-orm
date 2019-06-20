@@ -20,4 +20,5 @@ public interface Dialect {
 	TableSqlStatementHandler getTableSqlStatementHandler();
 	
 	DialectType getType();
+	String[] supportVersions();// 支持的版本
 }

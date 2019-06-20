@@ -164,9 +164,20 @@ public abstract class TableSqlStatementHandler {
 	/**获取创建默认值约束的sql语句*/
 	protected abstract String defaultValueConstraintCreateSqlStatement(Constraint constraint);
 	/**获取创建检查约束的sql语句*/
-	protected abstract String checkConstraintCreateSqlStatement(Constraint constraint);
+	protected String checkConstraintCreateSqlStatement(Constraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
+		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getCheck()).append(")");
+		return tmpSql.toString();
+	}
 	/**获取创建外键约束的sql语句*/
-	protected abstract String foreignKeyConstraintCreateSqlStatement(Constraint constraint);
+	protected String foreignKeyConstraintCreateSqlStatement(Constraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(120);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
+		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(") ");
+		tmpSql.append("references ").append(constraint.getFkTableName()).append("(").append(constraint.getFkColumnName()).append(")");
+		return tmpSql.toString();
+	}
 
 	
 	/**

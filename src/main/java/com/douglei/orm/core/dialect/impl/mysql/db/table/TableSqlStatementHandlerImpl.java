@@ -55,6 +55,23 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		return tmpSql.toString();
 	}
 	
+	@Override
+	protected String checkConstraintDropSqlStatement(Constraint constraint) {
+		return ck_fk_constraintDropSqlStatement(constraint);
+	}
+	
+	@Override
+	protected String foreignKeyConstraintDropSqlStatement(Constraint constraint) {
+		return ck_fk_constraintDropSqlStatement(constraint);
+	}
+	
+	/**获取删除检查约束、外键约束的sql语句*/
+	private String ck_fk_constraintDropSqlStatement(Constraint constraint) {
+		StringBuilder tmpSql = new StringBuilder(100);
+		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
+		return tmpSql.toString();
+	}
+	
 	// --------------------------------------------------------------------------------------------
 	// index
 	// --------------------------------------------------------------------------------------------
