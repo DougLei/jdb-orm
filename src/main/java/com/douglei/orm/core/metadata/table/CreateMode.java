@@ -16,7 +16,11 @@ public enum CreateMode {
 	/**
 	 * 如果表存在, 则先删除, 再创建; 如果表不存在, 则直接创建
 	 */
-	DROP_CREATE;
+	DROP_CREATE,
+	/**
+	 * 动态更新, 系统会将当前的表配置和数据库中对应的表比对, 将最新的配置信息同步到数据库的表上
+	 */
+	DYNAMIC_UPDATE;
 	
 	public static CreateMode toValue(String mode) {
 		mode = mode.toUpperCase();
