@@ -19,6 +19,7 @@ public enum CreateMode {
 	DROP_CREATE,
 	/**
 	 * 动态更新, 系统会将当前的表配置和数据库中对应的表比对, 将最新的配置信息同步到数据库的表上
+	 * <b>不建议在生产环境中使用</b>
 	 */
 	DYNAMIC_UPDATE;
 	
