@@ -16,7 +16,6 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
-import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -285,15 +284,24 @@ public class TableHandler {
 			
 			for (TableMetadata table : tables) {
 				if(tableExists(table.getName(), preparedStatement, rs)) {
-					if(table.getCreateMode() == CreateMode.CREATE) {
-						continue;
+					switch(table.getCreateMode()) {
+						case DROP_CREATE:
+							logger.debug("正向: drop index");
+							dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
+							logger.debug("正向: drop constraint");
+							dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+							logger.debug("正向: drop table");
+							dropTable(table, connection, statement, tableSqlStatementHandler, list);
+							break;
+						case DYNAMIC_UPDATE:
+							// TODO
+							
+							
+							break;
+						default:
+							logger.debug("createTable, 而table存在时, 不处理table.createMode={}的表数据", table.getCreateMode());
+							continue;
 					}
-					logger.debug("正向: drop index");
-					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
-					logger.debug("正向: drop constraint");
-					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
-					logger.debug("正向: drop table");
-					dropTable(table, connection, statement, tableSqlStatementHandler, list);
 				}
 				logger.debug("正向: create table");
 				createTable(table, connection, statement, tableSqlStatementHandler, list);
