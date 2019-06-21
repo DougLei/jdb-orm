@@ -4,18 +4,23 @@ import com.douglei.tools.utils.StringUtil;
 
 /**
  * 索引
+ * TODO 索引目前只是实现了配置索引名(name), 以及索引的[create/drop]sql语句(createSqlStatement/dropSqlStatement), 后续可能完善, 会去实现索引的配置
  * @author DougLei
  */
 public class Index {
+	private IndexType indexType;
+	private String tableName;// 表名
+	
+//	private Map<String, Column> columns;// 相关的列集合 // TODO 现在还未实现根据配置生成索引, 所以暂时不需要添加相关的列
+	
 	private String name;// 索引名
 	private String createSqlStatement;// create sql语句
 	private String dropSqlStatement;// drop sql语句
 	
-	public Index(String name, String createSqlStatement, String dropSqlStatement) {
+	public Index(IndexType indexType, String tableName, String name, String createSqlStatement, String dropSqlStatement) {
 		validate(name, createSqlStatement, dropSqlStatement);
-		this.name = name;
-		this.createSqlStatement = createSqlStatement;
-		this.dropSqlStatement = dropSqlStatement;
+		this.indexType = indexType;
+		this.tableName = tableName;
 	}
 	
 	private void validate(String name, String createSqlStatement, String dropSqlStatement) {
@@ -30,6 +35,13 @@ public class Index {
 		}
 	}
 
+	public String getTableName() {
+		return tableName;
+	}
+	public IndexType getIndexType() {
+		return indexType;
+	}
+	
 	public String getName() {
 		return name;
 	}

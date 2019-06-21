@@ -21,10 +21,18 @@ public class Dom4jReader {
 //		for (Object object : list) {
 //			System.out.println(((Attribute)object).getValue());
 //		}
-		elem = Dom4jElementUtil.validateElementExists("create", elem);
+		
+		
+		System.out.println(elem.attributeValue("type") == null);
+		
+		elem = Dom4jElementUtil.validateElementExists("createSql", elem);
 		System.out.println("text trim----------------------------");
 		System.out.println(elem.getTextTrim());
 		System.out.println("string value----------------------------");
 		System.out.println(elem.getStringValue());
+		
+		
+		
+		
 	} 
 }

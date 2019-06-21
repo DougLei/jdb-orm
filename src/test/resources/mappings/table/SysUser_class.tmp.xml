@@ -29,12 +29,12 @@
 		
 		<indexes>
 			<index name=""><!-- 索引名称 -->
-				<create>
+				<createSql>
 					<!-- 创建索引的sql语句 -->
-				</create>
-				<drop>
+				</createSql>
+				<dropSql>
 					<!-- 删除索引的sql语句 -->
-				</drop>
+				</dropSql>
 			</index>
 		</indexes>
 	</table>

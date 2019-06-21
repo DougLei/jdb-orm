@@ -18,6 +18,7 @@ import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.ConstraintType;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
+import com.douglei.orm.core.dialect.db.table.entity.IndexType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -140,11 +141,17 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			List<?> elements = indexesElement.elements("index");
 			if(elements != null && elements.size() > 0) {
 				Element indexElement = null;
+				IndexType indexType = null;
 				for (Object object : elements) {
 					indexElement = ((Element)object);
-					tableMetadata.addIndex(new Index(indexElement.attributeValue("name"), 
-							Dom4jElementUtil.validateElementExists("create", indexElement).getTextTrim(),
-							Dom4jElementUtil.validateElementExists("drop", indexElement).getTextTrim()));
+					indexType = IndexType.toValue(indexElement.attributeValue("type"));
+//					if(indexType == null) { // TODO 目前索引这个类型为null, 因为还未实现索引的配置功能
+//						throw new NullPointerException("<index>元素中的type属性值错误:["+indexElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(IndexType.values()));
+//					}
+					tableMetadata.addIndex(new Index(indexType, tableMetadata.getName(), 
+							indexElement.attributeValue("name"), 
+							Dom4jElementUtil.validateElementExists("createSql", indexElement).getTextTrim(), 
+							Dom4jElementUtil.validateElementExists("dropSql", indexElement).getTextTrim()));
 				}
 			}
 		}

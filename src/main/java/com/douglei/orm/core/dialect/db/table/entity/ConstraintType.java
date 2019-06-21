@@ -1,5 +1,7 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
+import com.douglei.tools.utils.StringUtil;
+
 /**
  * 
  * @author DougLei
@@ -47,11 +49,13 @@ public enum ConstraintType {
 	}
 
 	public static ConstraintType toValue(String type) {
-		type = type.toUpperCase();
-		ConstraintType[] cts = ConstraintType.values();
-		for (ConstraintType ct : cts) {
-			if(ct.name().equals(type)) {
-				return ct;
+		if(StringUtil.notEmpty(type)) {
+			type = type.toUpperCase();
+			ConstraintType[] cts = ConstraintType.values();
+			for (ConstraintType ct : cts) {
+				if(ct.name().equals(type)) {
+					return ct;
+				}
 			}
 		}
 		return null;
