@@ -25,7 +25,17 @@
 			<constraint type="foreign_key" fkTableName="" fkColumnName=""><!-- foreign_key -->
 				<column-name value="name" />
 			</constraint>
-			
 		</constraints>
+		
+		<indexes>
+			<index name="">
+				<create>
+					<!-- 创建索引的sql语句 -->
+				</create>
+				<drop>
+					<!-- 删除索引的sql语句 -->
+				</drop>
+			</index>
+		</indexes>
 	</table>
 </mapping-configuration>

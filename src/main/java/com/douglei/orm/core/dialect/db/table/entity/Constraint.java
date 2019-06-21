@@ -105,7 +105,7 @@ public class Constraint {
 	private void processConstraint() {
 		if(unProcessConstraint) {
 			if(columns == null) {
-				throw new NullPointerException("在表["+tableName+"]的["+constraintType.name()+"]约束中, 关联的列不能为空");
+				throw new NullPointerException("在表["+tableName+"], 名为["+constraintType.name()+"]约束中, 关联的列不能为空");
 			}
 			unProcessConstraint = false;
 			

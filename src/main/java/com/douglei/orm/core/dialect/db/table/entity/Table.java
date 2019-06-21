@@ -15,7 +15,9 @@ public abstract class Table implements Entity2MappingContentConverter{
 	protected String name;// 表名
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
+	
 	protected Map<String, Constraint> constraints;// 约束
+	protected Map<String, Index> indexes;// 索引
 	
 	/**
 	 * 添加列
@@ -66,6 +68,19 @@ public abstract class Table implements Entity2MappingContentConverter{
 		constraints.put(constraint.getName(), constraint);
 	}
 	
+	/**
+	 * 添加索引
+	 * @param index
+	 */
+	public void addIndex(Index index) {
+		if(indexes == null) {
+			indexes = new HashMap<String, Index>(8);
+		}else if(indexes.containsKey(index.getName())) {
+			throw new IndexException("索引名"+index.getName()+"重复");
+		}
+		indexes.put(index.getName(), index);
+	}
+	
 	// 验证主键列是否存在
 	private void validatePrimaryKeyColumnExists() {
 		if(existsPrimaryKey()) {
@@ -92,7 +107,16 @@ public abstract class Table implements Entity2MappingContentConverter{
 		return columns.values();
 	}
 	public Collection<Constraint> getConstraints() {
+		if(constraints == null) {
+			return null;
+		}
 		return constraints.values();
+	}
+	public Collection<Index> getIndexes(){
+		if(indexes == null) {
+			return null;
+		}
+		return indexes.values();
 	}
 	public Column getColumnByName(String columnName) {
 		Column column = columns.get(columnName);
@@ -117,7 +141,8 @@ public abstract class Table implements Entity2MappingContentConverter{
 		xml.append("<mapping-configuration>");
 		xml.append("<table name=\"").append(name).append("\" createMode=\"CREATE\">");
 		toXmlColumnContent(xml, columns.values());
-		toXmlConstraintContent(xml, constraints.values());
+		toXmlConstraintContent(xml, getConstraints());
+		toXmlIndexContent(xml, getIndexes());
 		xml.append("</table>");
 		xml.append("</mapping-configuration>");
 		return xml.toString();
@@ -175,6 +200,18 @@ public abstract class Table implements Entity2MappingContentConverter{
 			default:
 				// 不用处理 primaryKey unique, 他们没有扩展属性
 				break;	
+		}
+	}
+	private void toXmlIndexContent(StringBuilder xml, Collection<Index> indexes) {
+		if(indexes != null) {
+			xml.append("<indexes>");
+			for (Index index : indexes) {
+				xml.append("<index name=\"").append(index.getName()).append("\">");
+				xml.append("<create>").append(index.getCreateSqlStatement()).append("</create>");
+				xml.append("<drop>").append(index.getDropSqlStatement()).append("</drop>");
+				xml.append("</index>");
+			}
+			xml.append("</indexes>");
 		}
 	}
 }

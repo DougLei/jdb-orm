@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
+import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.CloseUtil;
@@ -161,7 +162,69 @@ public class TableHandler {
 	}
 	
 	/**
-	 * 
+	 * 创建索引
+	 * @param index
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list
+	 * @throws SQLException
+	 */
+	private void createIndex(Index index, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		executeDDLSQL(index.getCreateSqlStatement(), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.CREATE));
+		}
+	}
+	
+	/**
+	 * 创建索引
+	 * @param indexes
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list
+	 * @throws SQLException
+	 */
+	private void createIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		for (Index index : indexes) {
+			createIndex(index, connection, statement, tableSqlStatementHandler, list);
+		}
+	}
+	
+	/**
+	 * 删除索引
+	 * @param index
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list
+	 * @throws SQLException
+	 */
+	private void dropIndex(Index index, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		executeDDLSQL(index.getDropSqlStatement(), connection, statement);
+		if(list != null) {
+			list.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.DROP));
+		}
+	}
+	
+	/**
+	 * 删除索引
+	 * @param indexes
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list
+	 * @throws SQLException
+	 */
+	private void dropIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) throws SQLException {
+		for (Index index : indexes) {
+			dropIndex(index, connection, statement, tableSqlStatementHandler, list);
+		}
+	}
+	
+	/**
+	 * 回滚
 	 * @param list
 	 * @param connection
 	 * @param statement
@@ -191,7 +254,13 @@ public class TableHandler {
 						createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
 					}
 				}else if(holder.getDbObjectType() == DBObjectType.INDEX) {
-					throw new IllegalAccessError("目前还不支持处理索引");
+					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+						logger.debug("逆向: create ==> drop index");
+						dropIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+						logger.debug("逆向: drop ==> create index");
+						createIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+					}
 				}
 			}
 		}
@@ -204,7 +273,7 @@ public class TableHandler {
 	 */
 	public void create(DataSourceWrapper dataSourceWrapper, List<TableMetadata> tables) {
 		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getDialect().getTableSqlStatementHandler();
-		List<DBObjectHolder> list = new ArrayList<DBObjectHolder>();
+		List<DBObjectHolder> list = new ArrayList<DBObjectHolder>(tables.size());
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -219,6 +288,8 @@ public class TableHandler {
 					if(table.getCreateMode() == CreateMode.CREATE) {
 						continue;
 					}
+					logger.debug("正向: drop index");
+					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
 					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
 					logger.debug("正向: drop table");
@@ -228,6 +299,8 @@ public class TableHandler {
 				createTable(table, connection, statement, tableSqlStatementHandler, list);
 				logger.debug("正向: create constraint");
 				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
+				logger.debug("正向: create index");
+				createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
 			}
 		} catch (Exception e) {
 			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -263,6 +336,8 @@ public class TableHandler {
 			
 			for (TableMetadata table : tables) {
 				if(tableExists(table.getName(), preparedStatement, rs)) {
+					logger.debug("正向: drop index");
+					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
 					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
 					logger.debug("正向: drop table");

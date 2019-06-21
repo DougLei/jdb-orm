@@ -17,6 +17,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.ConstraintType;
+import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -44,6 +45,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(Dom4jElementUtil.validateElementExists("columns", tableElement));
 			addConstraint(tableElement.element("constraints"));
+			addIndex(tableElement.element("indexes"));
 			tableMetadata.columnDataMigration();
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
@@ -77,7 +79,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	
 	/**
 	 * 添加约束
-	 * @param elements
+	 * @param constraintsElement
 	 */
 	private void addConstraint(Element constraintsElement) {
 		if(constraintsElement != null) {
@@ -124,6 +126,25 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 							break;
 					}
 					tableMetadata.addConstraint(constraint);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 添加索引
+	 * @param indexesElement
+	 */
+	private void addIndex(Element indexesElement) {
+		if(indexesElement != null) {
+			List<?> elements = indexesElement.elements("index");
+			if(elements != null && elements.size() > 0) {
+				Element indexElement = null;
+				for (Object object : elements) {
+					indexElement = ((Element)object);
+					tableMetadata.addIndex(new Index(indexElement.attributeValue("name"), 
+							Dom4jElementUtil.validateElementExists("create", indexElement).getTextTrim(),
+							Dom4jElementUtil.validateElementExists("drop", indexElement).getTextTrim()));
 				}
 			}
 		}
