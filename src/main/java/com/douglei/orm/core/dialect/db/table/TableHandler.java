@@ -293,7 +293,7 @@ public class TableHandler {
 							logger.debug("正向: drop table");
 							dropTable(table, connection, statement, tableSqlStatementHandler, list);
 							break;
-						case DYNAMIC_SYNC:
+						case DYNAMIC_UPDATE:
 							syncTable(table, connection, statement, tableSqlStatementHandler, list);
 							continue;
 						default:
