@@ -293,11 +293,9 @@ public class TableHandler {
 							logger.debug("正向: drop table");
 							dropTable(table, connection, statement, tableSqlStatementHandler, list);
 							break;
-						case DYNAMIC_UPDATE:
-							// TODO
-							
-							
-							break;
+						case DYNAMIC_SYNC:
+							syncTable(table, connection, statement, tableSqlStatementHandler, list);
+							continue;
 						default:
 							logger.debug("createTable, 而table存在时, 不处理table.createMode={}的表数据", table.getCreateMode());
 							continue;
@@ -325,6 +323,19 @@ public class TableHandler {
 		}
 	}
 	
+	/**
+	 * 同步表
+	 * @param table
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param list
+	 */
+	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) {
+		// TODO 获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
+		
+	}
+
 	/**
 	 * drop表
 	 * @param dataSourceWrapper
