@@ -334,6 +334,10 @@ public class TableHandler {
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) {
 		// TODO 获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
 		
+		
+		
+		
+		throw new IllegalArgumentException("table.createMode=DYNAMIC_UPDATE 同步表的方法还没做呢");
 	}
 
 	/**
