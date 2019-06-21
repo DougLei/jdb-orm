@@ -99,6 +99,7 @@ public class Constraint {
 				}
 				break;
 		}
+		column.addRelevantConstraint(this);
 	}
 	
 	private boolean unProcessConstraint=true;// 是否未处理约束
@@ -109,11 +110,11 @@ public class Constraint {
 			}
 			unProcessConstraint = false;
 			
-			Collection<Column> cs = columns.values();
-			StringBuilder nameBuilder = new StringBuilder(cs.size()*40);
+			StringBuilder nameBuilder = new StringBuilder(columns.size()*40);
 			nameBuilder.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
 			
 			if(constraintType.supportMultipleColumn()) {
+				Collection<Column> cs = columns.values();
 				int index = 0, lastIndex = cs.size()-1;
 				
 				StringBuilder constraintColumnNamesBuilder = new StringBuilder(cs.size()*20);
