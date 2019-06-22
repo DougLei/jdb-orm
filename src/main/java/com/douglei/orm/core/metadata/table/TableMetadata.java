@@ -20,14 +20,13 @@ public class TableMetadata extends Table implements Metadata{
 	private String code;
 	private String className;// 映射的代码类名
 	private boolean classNameIsNull;
-	private CreateMode createMode;// 表create的模式
 	
 	private Map<String, ColumnMetadata> columnMetadatas;// 列
 	private Map<String, ColumnMetadata> primaryKeyColumnMetadatas;// 主键列
 	private Map<String, ColumnMetadata> validateColumns;// 需要验证列集合
 	
-	public TableMetadata(String name, String className, CreateMode createMode) {
-		setNameByValidate(name);
+	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
+		setNameByValidate(name, oldName);
 		this.createMode = createMode;
 		setClassName(className);
 		setCode();
@@ -107,9 +106,6 @@ public class TableMetadata extends Table implements Metadata{
 	}
 	public String getClassName() {
 		return className;
-	}
-	public CreateMode getCreateMode() {
-		return createMode;
 	}
 	public boolean classNameIsNull() {
 		return classNameIsNull;

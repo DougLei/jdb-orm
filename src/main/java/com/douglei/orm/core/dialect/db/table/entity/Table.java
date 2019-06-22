@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.converter.Entity2MappingContentConverter;
+import com.douglei.orm.core.metadata.table.CreateMode;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -13,6 +15,9 @@ import com.douglei.orm.core.converter.Entity2MappingContentConverter;
  */
 public abstract class Table implements Entity2MappingContentConverter{
 	protected String name;// 表名
+	protected String oldName;// 旧表名
+	protected CreateMode createMode;// 表create的模式
+	
 	protected Map<String, Column> columns;// 列
 	protected Map<String, Column> primaryKeyColumns;// 主键列
 	
@@ -99,9 +104,20 @@ public abstract class Table implements Entity2MappingContentConverter{
 	public String getName() {
 		return name;
 	}
-	public void setNameByValidate(String name) {
+	public String getOldName() {
+		return oldName;
+	}
+	public CreateMode getCreateMode() {
+		return createMode;
+	}
+	public void setNameByValidate(String name, String oldName) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
+		if(StringUtil.isEmpty(oldName)) {
+			this.oldName = this.name;
+		}else {
+			this.oldName = oldName.toUpperCase();
+		}
 	}
 	public Collection<Column> getColumns() {
 		return columns.values();
@@ -139,7 +155,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 		StringBuilder xml = new StringBuilder(3000);
 		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xml.append("<mapping-configuration>");
-		xml.append("<table name=\"").append(name).append("\" createMode=\"CREATE\">");
+		xml.append("<table name=\"").append(name).append("\" ").append("oldName=\"").append(getOldName()).append("\" ").append("createMode=\"").append(getCreateMode().name()).append("\">");
 		toXmlColumnContent(xml, columns.values());
 		toXmlConstraintContent(xml, getConstraints());
 		toXmlIndexContent(xml, getIndexes());
@@ -152,7 +168,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 			xml.append("<columns>");
 			for (Column column : columns) {
 				xml.append("<column ");
-				xml.append("name=\"").append(column.getName()).append("\" ");
+				xml.append("name=\"").append(column.getName()).append("\" ").append("oldName=\"").append(column.getOldName()).append("\" ");
 				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
 				xml.append("length=\"").append(column.getLength()).append("\" ");
 				xml.append("precision=\"").append(column.getPrecision()).append("\"");
@@ -205,7 +221,7 @@ public abstract class Table implements Entity2MappingContentConverter{
 	private void toXmlIndexContent(StringBuilder xml, Collection<Index> indexes) {
 		if(indexes != null) {
 			xml.append("<indexes>");
-			for (Index index : indexes) {
+			for (Index index : indexes) {// TODO 索引的临时处理
 				xml.append("<index name=\"").append(index.getName()).append("\">");
 				xml.append("<create>").append(index.getCreateSqlStatement()).append("</create>");
 				xml.append("<drop>").append(index.getDropSqlStatement()).append("</drop>");

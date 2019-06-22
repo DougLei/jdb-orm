@@ -27,7 +27,7 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		}
 		
 		CreateMode createMode = getCreateMode(element.attributeValue("createMode"));
-		return new TableMetadata(name, element.attributeValue("class"), createMode);
+		return new TableMetadata(name, element.attributeValue("oldName"), element.attributeValue("class"), createMode);
 	}
 
 	private CreateMode getCreateMode(String createMode) {

@@ -15,8 +15,8 @@ public class ColumnMetadata extends Column implements Metadata{
 	private String code;
 	private String property;// 映射的代码类中的属性名
 	
-	public ColumnMetadata(String property, String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		super(name, descriptionName, dataType, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
+	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+		super(name, oldName, descriptionName, dataType, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 		setPropery(property);
 		setCode();
 	}

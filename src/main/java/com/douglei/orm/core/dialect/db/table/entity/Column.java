@@ -16,6 +16,7 @@ import com.douglei.tools.utils.StringUtil;
 public abstract class Column {
 	
 	protected String name;// 列名
+	protected String oldName;// 旧列名
 	protected String descriptionName;// 描述名
 	protected DataType dataType;// 数据类型
 	protected short length;// 长度
@@ -34,19 +35,19 @@ public abstract class Column {
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public Column(String name, String descriptionName, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		setNameByValidate(name);
+	public Column(String name, String oldName, String descriptionName, DataType dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+		setNameByValidate(name, oldName);
 		this.dataType = dataType;
 		processDataType(null);
 		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 	}
-	public Column(String name, String descriptionName, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		setNameByValidate(name);
+	public Column(String name, String oldName, String descriptionName, Class<? extends ClassDataTypeHandler> dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+		setNameByValidate(name, oldName);
 		processDataType(dataType.getName());
 		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 	}
-	public Column(String name, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		setNameByValidate(name);
+	public Column(String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+		setNameByValidate(name, oldName);
 		this.dataType = DataType.toValue(dataType);
 		processDataType(dataType);
 		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
@@ -119,6 +120,9 @@ public abstract class Column {
 	public String getName() {
 		return name;
 	}
+	public String getOldName() {
+		return oldName;
+	}
 	public String getDescriptionName() {
 		return descriptionName;
 	}
@@ -158,9 +162,14 @@ public abstract class Column {
 	public DBDataType getDBDataType() {
 		return dbDataType;
 	}
-	public void setNameByValidate(String name) {
+	public void setNameByValidate(String name, String oldName) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
+		if(StringUtil.isEmpty(oldName)) {
+			this.oldName = this.name;
+		}else {
+			this.oldName = oldName.toUpperCase();
+		}
 	}
 	public boolean isValidate() {
 		return validate;
