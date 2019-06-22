@@ -165,6 +165,7 @@ public abstract class Column {
 	public void setNameByValidate(String name, String oldName) {
 		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
+		
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;
 		}else {
