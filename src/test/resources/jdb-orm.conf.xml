@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration id="">
+<configuration id="default">
 	<environment>
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver -->
 		<!-- <property name="enableSessionCache" value="true" /> --><!-- 是否开启Session缓存, 即对Statement缓存, 默认值为true  -->

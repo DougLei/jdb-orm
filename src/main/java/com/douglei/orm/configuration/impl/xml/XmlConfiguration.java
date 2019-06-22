@@ -140,7 +140,7 @@ public class XmlConfiguration implements Configuration {
 	
 	private void setId(String id) {
 		if(StringUtil.isEmpty(id)) {
-			id = IdentityUtil.get32UUID();
+			id = IdentityUtil.getUUID();
 		}
 		this.id = id;
 	}
