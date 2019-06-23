@@ -3,6 +3,9 @@ package com.douglei.orm.configuration.environment.mapping.cache.store.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
@@ -15,6 +18,7 @@ import com.douglei.orm.configuration.environment.mapping.cache.store.RepeatedMap
  * @author DougLei
  */
 public class ApplicationMappingCacheStore implements MappingCacheStore {
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingCacheStore.class);
 	
 	private Map<String, Mapping> mappings;
 	
@@ -31,14 +35,18 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	public void addMapping(Mapping mapping){
 		String code = mapping.getCode();
 		if(mappingExists(code)) {
-			throw new RepeatedMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code).getClass());
+			throw new RepeatedMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code));
 		}
 		mappings.put(code, mapping);
 	}
 	
 	@Override
-	public void coverMapping(Mapping mapping) throws RepeatedMappingException {
-		mappings.put(mapping.getCode(), mapping);
+	public void addOrCoverMapping(Mapping mapping) throws RepeatedMappingException {
+		String code = mapping.getCode();
+		if(logger.isDebugEnabled() && mappingExists(code)) {
+			logger.debug("覆盖已经存在code为[]的映射对象: {}", code, mappings.get(code));
+		}
+		mappings.put(code, mapping);
 	}
 	
 	@Override

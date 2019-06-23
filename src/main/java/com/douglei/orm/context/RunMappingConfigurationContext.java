@@ -28,7 +28,7 @@ public class RunMappingConfigurationContext {
 	 * @param tableMetadata
 	 */
 	public static void registerCreateTable(TableMetadata tableMetadata) {
-		if(tableMetadata.getCreateMode() == CreateMode.NONE) {
+		if(tableMetadata.getCreateMode() == CreateMode.NONE) {// 如果是NONE, 则不对表进行任何处理
 			return;
 		}
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
@@ -58,7 +58,7 @@ public class RunMappingConfigurationContext {
 	public static void registerDropTable(TableMetadata tableMetadata) {
 		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
 		if(runMappingConfiguration.dropTables == null) {
-			runMappingConfiguration.dropTables = new ArrayList<TableMetadata>(5);
+			runMappingConfiguration.dropTables = new ArrayList<TableMetadata>(4);
 		}
 		runMappingConfiguration.dropTables.add(tableMetadata);
 	}

@@ -39,6 +39,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * <pre>
 	 * 	添加映射
 	 * 	如果是表映射, 则顺便create表
+	 * 	这个方法目前给框架启动时使用, 用来加载已经配置的xml映射
 	 * </pre>
 	 * @return mapping的code
 	 */
@@ -52,14 +53,18 @@ public abstract class MappingWrapper implements SelfProcessing{
 
 	/**
 	 * <pre>
-	 * 	覆盖映射
-	 * 	只对映射操作, 不对实体操作
+	 * 	添加/覆盖映射
+	 * 	如果是表映射, 则顺便create或dynamic_update
+	 * 	这个方法用在系统启动后, 动态的添加新的映射或修改映射时使用
 	 * </pre>
 	 * @param mapping
 	 * @return mapping的code
 	 */
-	protected String coverMapping(Mapping mapping) {
-		mappingCacheStore.coverMapping(mapping);
+	protected String addOrCoverMapping(Mapping mapping) {
+		mappingCacheStore.addOrCoverMapping(mapping);
+		if(isTableMapping(mapping)) {
+			RunMappingConfigurationContext.registerCreateTable((TableMetadata) mapping.getMetadata());
+		}
 		return mapping.getCode();
 	}
 	
@@ -67,10 +72,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * <pre>
 	 * 	删除映射
 	 * 	如果是表映射, 则顺便drop表
+	 * 	这个方法用在系统启动后, 动态的删除映射时使用
 	 * </pre>
 	 * @param mappingCode
 	 */
-	public void removeMapping(String mappingCode) {
+	protected void removeMapping(String mappingCode) {
 		Mapping mapping = mappingCacheStore.removeMapping(mappingCode);
 		if(isTableMapping(mapping)) {
 			RunMappingConfigurationContext.registerDropTable((TableMetadata) mapping.getMetadata());
@@ -88,23 +94,14 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * <pre>
-	 * 	动态添加映射
-	 * 	如果是表映射, 则顺便create表
+	 * 	动态添加/覆盖映射
+	 * 	如果是表映射, 则顺便create或dynamic_update
 	 * </pre>
 	 * @param mappingType
-	 * @param mappingConfigurationContent
+	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
 	 */
-	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
-	/**
-	 * <pre>
-	 * 	动态覆盖映射
-	 * 	只对映射操作, 不对实体操作
-	 * </pre>
-	 * @param mapping
-	 * @return mapping的code
-	 */
-	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicAddOrCoverMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
 	 * 	动态删除映射
@@ -114,7 +111,6 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	public abstract void dynamicRemoveMapping(String mappingCode);
 	
-
 	@Override
 	public void destroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());

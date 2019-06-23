@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -33,10 +32,10 @@ public class XmlMappingFactory {
 	 * </pre>
 	 * @param mappingConfigurationXmlFilePath
 	 * @return
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws DocumentException 
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
+	 * @throws DocumentException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public static Mapping newMappingInstance(String mappingConfigurationXmlFilePath) throws FileNotFoundException, DocumentException, SAXException, IOException {
 		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
@@ -52,10 +51,9 @@ public class XmlMappingFactory {
 	 * @param mappingType
 	 * @param mappingConfigurationContent
 	 * @return
-	 * @throws DocumentException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws UnsupportedEncodingException 
+	 * @throws DocumentException
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public static Mapping newMappingInstance(MappingType mappingType, String mappingConfigurationContent) throws DocumentException, SAXException, IOException {
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationContent, mappingType);

@@ -32,6 +32,7 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class XmlEnvironment implements Environment{
 	private static final Logger logger = LoggerFactory.getLogger(XmlEnvironment.class);
+	private String id;
 	private Properties properties;
 	private ExtConfiguration extConfiguration;
 	
@@ -43,8 +44,9 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(Element environmentElement, Properties properties, ExtConfiguration extConfiguration) throws Exception {
+	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExtConfiguration extConfiguration) throws Exception {
 		logger.debug("开始处理<environment>元素");
+		this.id = id;
 		this.properties = properties;
 		this.extConfiguration = extConfiguration;
 		
@@ -112,7 +114,7 @@ public class XmlEnvironment implements Environment{
 	private void setEnvironmentProperties(List<?> elements) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
-		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(propertyMap);
+		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(id, propertyMap);
 		
 		if(xmlEnvironmentProperty.getDialect() == null) {
 			Connection connection = dataSourceWrapper.getConnection(false, null).getConnection();
@@ -157,6 +159,10 @@ public class XmlEnvironment implements Environment{
 	}
 	
 	// -------------------------------------------------------------
+	@Override
+	public String getId() {
+		return id;
+	}
 	@Override
 	public EnvironmentProperty getEnvironmentProperty() {
 		return environmentProperty;

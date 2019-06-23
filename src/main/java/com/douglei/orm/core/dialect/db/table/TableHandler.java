@@ -307,6 +307,9 @@ public class TableHandler {
 				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, list);
 				logger.debug("正向: create index");
 				createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
+				
+				// TODO 先做！！！将当前TableMetadata序列化到磁盘中: 当前系统所在的目录中: orm-table-serialize/sessionFactoryId/表名.tm
+//				DBRunEnvironmentContext.getConfigurationId();
 			}
 		} catch (Exception e) {
 			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -332,9 +335,8 @@ public class TableHandler {
 	 * @param list
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) {
-		// TODO 获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
-		
-		
+		// TODO 先做！！！获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
+//		DBRunEnvironmentContext.getConfigurationId();
 		
 		
 		throw new IllegalArgumentException("table.createMode=DYNAMIC_UPDATE 同步表的方法还没做呢");
@@ -366,6 +368,10 @@ public class TableHandler {
 					logger.debug("正向: drop table");
 					dropTable(table, connection, statement, tableSqlStatementHandler, list);
 				}
+				
+				// TODO 先做！！！尝试删除对应的序列化文件
+//				DBRunEnvironmentContext.getConfigurationId();
+				// TODO 先做！！！ 可能还有对这些序列化文件的正向/逆向操作，思考一下
 			}
 		} catch (Exception e) {
 			logger.error("drop 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));

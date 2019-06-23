@@ -24,7 +24,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	private Map<String, String> propertyMap;
 	private boolean propertyMapIsEmpty;
-	
+	private String id;
 	
 	@FieldMetaData
 	private Dialect dialect;
@@ -41,7 +41,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private CreateMode tableCreateMode;
 	
-	public XmlEnvironmentProperty(Map<String, String> propertyMap) {
+	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
+		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
 		
@@ -117,9 +118,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 		this.enableTableSessionCache = true;
 	}
+	private static final String DEFAULT_MAPPING_CACHE_STORE = "application";// 默认为 ApplicationMappingCacheStore
 	void setMappingCacheStore(String value) {
 		if(StringUtil.isEmpty(value)) {
-			value = "application";// 使用默认的 ApplicationMappingCacheStore
+			value = DEFAULT_MAPPING_CACHE_STORE;
 		}
 		this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 	}
@@ -146,6 +148,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	
+	@Override
+	public String getId() {
+		return id;
+	}
 	@Override
 	public Dialect getDialect() {
 		return dialect;

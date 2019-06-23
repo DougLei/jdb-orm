@@ -25,8 +25,18 @@ public class DBRunEnvironmentContext {
 	 */
 	public static void setConfigurationEnvironmentProperty(EnvironmentProperty environmentProperty) {
 		DBRunEnvironment dbRunEnvironment = getDBRunEnvironment();
+		dbRunEnvironment.configurationId = environmentProperty.getId();
 		dbRunEnvironment.dialect = environmentProperty.getDialect();
 		dbRunEnvironment.tableCreateMode = environmentProperty.getTableCreateMode();
+	}
+	
+	/**
+	 * 设置Configuration的Id
+	 * @param configurationId
+	 */
+	public static void setConfigurationId(String configurationId) {
+		DBRunEnvironment dbRunEnvironment = getDBRunEnvironment();
+		dbRunEnvironment.configurationId = configurationId;
 	}
 	
 	/**
@@ -43,5 +53,13 @@ public class DBRunEnvironmentContext {
 	 */
 	public static CreateMode getTableCreateMode() {
 		return getDBRunEnvironment().tableCreateMode;
+	}
+	
+	/**
+	 * 获取Configuration的id
+	 * @return
+	 */
+	public static String getConfigurationId() {
+		return getDBRunEnvironment().configurationId;
 	}
 }

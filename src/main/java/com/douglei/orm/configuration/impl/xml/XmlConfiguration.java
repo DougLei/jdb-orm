@@ -22,7 +22,7 @@ import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactory;
-import com.douglei.orm.sessionfactory.SessionFactoryImpl;
+import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -85,7 +85,7 @@ public class XmlConfiguration implements Configuration {
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.element("properties")));
 			setExtConfiguration(new XmlExtConfiguration(root.element("ext-configuration")));
-			setEnvironment(new XmlEnvironment(Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
+			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm系统的配置信息");
 		} catch (Exception e) {
 			destroy();

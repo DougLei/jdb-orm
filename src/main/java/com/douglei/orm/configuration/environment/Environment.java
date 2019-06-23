@@ -11,6 +11,8 @@ import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
  */
 public interface Environment extends SelfProcessing{
 	
+	public String getId();
+	
 	public EnvironmentProperty getEnvironmentProperty();
 	
 	public DataSourceWrapper getDataSourceWrapper();

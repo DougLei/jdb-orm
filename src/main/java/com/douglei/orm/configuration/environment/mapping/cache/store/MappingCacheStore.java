@@ -8,7 +8,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
  * @author DougLei
  */
 public interface MappingCacheStore extends SelfProcessing{
-	static final short DEFAULT_STORE_SIZE = 32;
+	static final short DEFAULT_STORE_SIZE = 64;
 	
 	/**
 	 * 初始化存储空间大小
@@ -17,17 +17,24 @@ public interface MappingCacheStore extends SelfProcessing{
 	void initializeStoreSize(int size);
 	
 	/**
-	 * 添加映射
+	 * <pre>
+	 * 	添加映射
+	 * 	如果存在相同code的映射, 会抛出异常
+	 * </pre>
 	 * @param mapping
 	 * @throws RepeatedMappingException
 	 */
 	void addMapping(Mapping mapping) throws RepeatedMappingException;
 	
 	/**
-	 * 覆盖映射
+	 * <pre>
+	 * 	添加/覆盖映射
+	 * 	如果存在相同code的映射, 将其cover
+	 * 	如果不存在相同code的映射, 将其add
+	 * </pre>
 	 * @param mapping
 	 */
-	void coverMapping(Mapping mapping);
+	void addOrCoverMapping(Mapping mapping);
 
 	/**
 	 * 移除映射
