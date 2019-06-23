@@ -14,20 +14,20 @@ public interface SessionFactory {
 	
 	/**
 	 * <pre>
-	 * 	动态添加/覆盖映射
+	 * 	动态添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便create或dynamic_update
 	 * </pre>
 	 * @param entity
 	 */
-	void dynamicAddOrCoverMapping(DynamicMapping entity);
+	void dynamicAddMapping(DynamicMapping entity);
 	/**
 	 * <pre>
-	 * 	动态批量添加/覆盖映射
+	 * 	动态批量添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便create或dynamic_update
 	 * </pre>
 	 * @param entities
 	 */
-	void dynamicBatchAddOrCoverMapping(List<DynamicMapping> entities);
+	void dynamicBatchAddMapping(List<DynamicMapping> entities);
 	/**
 	 * <pre>
 	 * 	动态删除映射

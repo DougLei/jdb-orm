@@ -94,14 +94,14 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * <pre>
-	 * 	动态添加/覆盖映射
+	 * 	动态添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便create或dynamic_update
 	 * </pre>
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
 	 */
-	public abstract String dynamicAddOrCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
 	 * 	动态删除映射

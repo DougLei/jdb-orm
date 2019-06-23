@@ -59,7 +59,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public String dynamicAddOrCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
+	public String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationContent);
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
