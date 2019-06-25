@@ -13,6 +13,8 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
+	private static final long serialVersionUID = -3887183011478334184L;
+	
 	private DialectType dialectType;
 	private SqlContentType type;
 	

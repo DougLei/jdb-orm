@@ -16,6 +16,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata extends Table implements Metadata{
+	private static final long serialVersionUID = -8594231465747178891L;
 	
 	private String code;
 	private String className;// 映射的代码类名

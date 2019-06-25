@@ -14,6 +14,7 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata extends AbstractSqlParameter implements Metadata{
+	private static final long serialVersionUID = -2141160768098739859L;
 	
 	public SqlParameterMetadata(String configurationText) {
 		super(configurationText);

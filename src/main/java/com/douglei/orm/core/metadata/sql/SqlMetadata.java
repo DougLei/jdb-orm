@@ -12,6 +12,7 @@ import com.douglei.orm.core.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
+	private static final long serialVersionUID = 3313091168856720946L;
 	
 	private String namespace;
 	private String name;

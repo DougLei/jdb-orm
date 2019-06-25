@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,8 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class Column {
+public abstract class Column implements Serializable{
+	private static final long serialVersionUID = -5921863830755560622L;
 	
 	protected String name;// 列名
 	protected String oldName;// 旧列名

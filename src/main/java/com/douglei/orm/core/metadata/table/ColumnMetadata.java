@@ -11,6 +11,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata extends Column implements Metadata{
+	private static final long serialVersionUID = 709804535157825936L;
 	
 	private String code;
 	private String property;// 映射的代码类中的属性名

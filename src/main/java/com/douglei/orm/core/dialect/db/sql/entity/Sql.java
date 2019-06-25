@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.sql.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class Sql implements Entity2MappingContentConverter {
+public class Sql implements Entity2MappingContentConverter, Serializable {
+	private static final long serialVersionUID = -1384705272068010225L;
+	
 	private String namespace;
 	private String name;
 	private List<SqlContent> contents;

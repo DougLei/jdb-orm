@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,9 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class Table implements Entity2MappingContentConverter{
+public abstract class Table implements Entity2MappingContentConverter, Serializable{
+	private static final long serialVersionUID = -824613028695129467L;
+	
 	protected String name;// 表名
 	protected String oldName;// 旧表名
 	protected CreateMode createMode;// 表create的模式

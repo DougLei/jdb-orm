@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,9 @@ import com.douglei.tools.utils.StringUtil;
  * 列约束
  * @author DougLei
  */
-public class Constraint {
+public class Constraint implements Serializable{
+	private static final long serialVersionUID = 1567281866700788439L;
+	
 	private String name;// (前缀+表名+列名)
 	private Column column;// 记录第一个add的列对象
 	private Map<String, Column> columns;// 相关的列集合

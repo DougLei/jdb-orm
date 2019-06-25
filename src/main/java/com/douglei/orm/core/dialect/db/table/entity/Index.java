@@ -1,5 +1,7 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
+import java.io.Serializable;
+
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -7,7 +9,9 @@ import com.douglei.tools.utils.StringUtil;
  * TODO 索引目前只是实现了配置索引名(name), 以及索引的[create/drop]sql语句(createSqlStatement/dropSqlStatement), 后续可能完善, 会去实现索引的配置
  * @author DougLei
  */
-public class Index {
+public class Index implements Serializable{
+	private static final long serialVersionUID = 6729441929256756138L;
+	
 	private IndexType indexType;
 	private String tableName;// 表名
 	

@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.sql.entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,9 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * 
  * @author DougLei
  */
-public abstract class AbstractSqlParameter {
+public abstract class AbstractSqlParameter implements Serializable{
+	private static final long serialVersionUID = 7832943566086284261L;
+	
 	protected String configurationText;
 	protected Map<String, String> propertyMap; // 根据configurationText解析出来的<属性:值>map集合
 	

@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.sql.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import com.douglei.orm.core.metadata.sql.SqlContentType;
  * 
  * @author DougLei
  */
-public class SqlContent {
+public class SqlContent implements Serializable{
+	private static final long serialVersionUID = 2396429684767397184L;
+	
 	private DialectType dialectType;
 	private SqlContentType type;
 	private String content;
