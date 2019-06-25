@@ -22,5 +22,5 @@ public interface EnvironmentProperty {
 	
 	public CreateMode getTableCreateMode();
 	
-	public String getSerializeFileRootPath();
+	public String getSerializationFileRootPath();
 }

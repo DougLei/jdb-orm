@@ -43,7 +43,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private CreateMode tableCreateMode;
 	
 	@FieldMetaData
-	private String serializeFileRootPath;
+	private String serializationFileRootPath;
 	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
 		this.id = id;
@@ -134,9 +134,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.tableCreateMode = CreateMode.toValue(value);
 		}
 	}
-	void setSerializeFileRootPath(String value) {
+	void setSerializationFileRootPath(String value) {
 		if(StringUtil.notEmpty(value)) {
-			this.serializeFileRootPath = value;
+			this.serializationFileRootPath = value;
 		}
 	}
 
@@ -185,7 +185,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 
 	@Override
-	public String getSerializeFileRootPath() {
-		return serializeFileRootPath;
+	public String getSerializationFileRootPath() {
+		return serializationFileRootPath;
 	}
 }

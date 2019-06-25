@@ -3,7 +3,7 @@ package com.douglei.orm.context;
 import java.util.ArrayList;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.core.dialect.db.table.TableHandler;
+import com.douglei.orm.core.dialect.db.table.handler.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;

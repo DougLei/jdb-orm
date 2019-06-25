@@ -5,7 +5,7 @@ import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapp
 import com.douglei.orm.core.dialect.db.features.DBFeatures;
 import com.douglei.orm.core.dialect.db.objectname.DBObjectNameHandler;
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**

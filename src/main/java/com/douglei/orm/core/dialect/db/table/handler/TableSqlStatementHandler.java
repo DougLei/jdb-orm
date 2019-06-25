@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table;
+package com.douglei.orm.core.dialect.db.table.handler;
 
 import java.util.Collection;
 

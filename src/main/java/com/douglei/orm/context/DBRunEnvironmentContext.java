@@ -26,7 +26,7 @@ public class DBRunEnvironmentContext {
 	public static void setConfigurationEnvironmentProperty(EnvironmentProperty environmentProperty) {
 		DBRunEnvironment dbRunEnvironment = getDBRunEnvironment();
 		dbRunEnvironment.configurationId = environmentProperty.getId();
-		dbRunEnvironment.serializeFileRootPath = environmentProperty.getSerializeFileRootPath();
+		dbRunEnvironment.serializationFileRootPath = environmentProperty.getSerializationFileRootPath();
 		dbRunEnvironment.dialect = environmentProperty.getDialect();
 		dbRunEnvironment.tableCreateMode = environmentProperty.getTableCreateMode();
 	}
@@ -59,7 +59,7 @@ public class DBRunEnvironmentContext {
 	 * 获取序列化文件根路径
 	 * @return
 	 */
-	public static String getSerializeFileRootPath() {
-		return getDBRunEnvironment().serializeFileRootPath;
+	public static String getSerializationFileRootPath() {
+		return getDBRunEnvironment().serializationFileRootPath;
 	}
 }

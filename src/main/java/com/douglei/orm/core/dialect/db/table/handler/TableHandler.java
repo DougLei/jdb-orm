@@ -1,6 +1,5 @@
-package com.douglei.orm.core.dialect.db.table;
+package com.douglei.orm.core.dialect.db.table.handler;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,15 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.core.dialect.db.table.DBObjectHolder;
+import com.douglei.orm.core.dialect.db.table.DBObjectOPType;
+import com.douglei.orm.core.dialect.db.table.DBObjectType;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -30,29 +30,12 @@ import com.douglei.tools.utils.ExceptionUtil;
  */
 public class TableHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableHandler.class);
+	private static final TableSerializationFileHandler tableSerializationFileHandler = new TableSerializationFileHandler();
 	
 	private TableHandler() {}
 	private static final TableHandler instance = new TableHandler();
 	public static final TableHandler singleInstance() {
 		return instance;
-	}
-	
-	// orm序列化文件的根路径map, key是configuration id, value是对应的路径
-	private static final Map<String, String> ORM_SERIALIZE_FILE_ROOT_PATH_MAP = new HashMap<String, String>(8);
-	// 根据配置id, 获取对应的orm序列化文件的根路径
-	private String getOrmSerializeFileRootPath() {
-		String configurationId = DBRunEnvironmentContext.getConfigurationId();
-		
-		String ormSerializeFileRootPath = ORM_SERIALIZE_FILE_ROOT_PATH_MAP.get(configurationId);
-		if(ormSerializeFileRootPath == null) {
-			ormSerializeFileRootPath = DBRunEnvironmentContext.getSerializeFileRootPath() + File.separator + configurationId + File.separator;
-			File rootFile = new File(ormSerializeFileRootPath);
-			if(!rootFile.exists()) {
-				rootFile.mkdirs();
-			}
-			ORM_SERIALIZE_FILE_ROOT_PATH_MAP.put(configurationId, ormSerializeFileRootPath);
-		}
-		return ormSerializeFileRootPath;
 	}
 	
 	/**

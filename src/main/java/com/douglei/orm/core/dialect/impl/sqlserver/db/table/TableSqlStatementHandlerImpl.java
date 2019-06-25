@@ -1,8 +1,8 @@
 package com.douglei.orm.core.dialect.impl.sqlserver.db.table;
 
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.dialect.db.table.entity.Column;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
+import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
 
 /**
  * 

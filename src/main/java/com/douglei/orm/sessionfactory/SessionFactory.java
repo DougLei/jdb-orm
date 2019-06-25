@@ -3,7 +3,7 @@ package com.douglei.orm.sessionfactory;
 import java.util.List;
 
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
 import com.douglei.orm.sessions.Session;
 
 /**
