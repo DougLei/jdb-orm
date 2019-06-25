@@ -57,14 +57,14 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
-		DBRunEnvironmentContext.setConfigurationId(getId());
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		mappingWrapper.dynamicRemoveMapping(mappingCode);
 		RunMappingConfigurationContext.executeDropTable(configuration.getDataSourceWrapper());
 	}
 	
 	@Override
 	public void dynamicBatchRemoveMapping(List<String> mappingCodes) {
-		DBRunEnvironmentContext.setConfigurationId(getId());
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (String mappingCode : mappingCodes) {
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
 		}

@@ -42,6 +42,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private CreateMode tableCreateMode;
 	
+	@FieldMetaData
+	private String serializeFileRootPath;
+	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
 		this.id = id;
 		this.propertyMap = propertyMap;
@@ -131,7 +134,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.tableCreateMode = CreateMode.toValue(value);
 		}
 	}
-	
+	void setSerializeFileRootPath(String value) {
+		if(StringUtil.notEmpty(value)) {
+			this.serializeFileRootPath = value;
+		}
+	}
+
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
 		this.dialect = DialectMapping.getDialectByDatabaseMetadata(databaseMetadata);
@@ -174,5 +182,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
+	}
+
+	@Override
+	public String getSerializeFileRootPath() {
+		return serializeFileRootPath;
 	}
 }

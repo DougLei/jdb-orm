@@ -11,12 +11,16 @@ import com.douglei.orm.core.metadata.table.CreateMode;
 public interface EnvironmentProperty {
 	
 	public String getId();
+	
 	public Dialect getDialect();
 	
 	public boolean getEnableSessionCache();
+	
 	public boolean getEnableTableSessionCache();
 	
 	public MappingCacheStore getMappingCacheStore();
 	
 	public CreateMode getTableCreateMode();
+	
+	public String getSerializeFileRootPath();
 }

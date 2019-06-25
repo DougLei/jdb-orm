@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.table;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +30,29 @@ import com.douglei.tools.utils.ExceptionUtil;
  */
 public class TableHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableHandler.class);
+	
 	private TableHandler() {}
 	private static final TableHandler instance = new TableHandler();
 	public static final TableHandler singleInstance() {
 		return instance;
+	}
+	
+	// orm序列化文件的根路径map, key是configuration id, value是对应的路径
+	private static final Map<String, String> ORM_SERIALIZE_FILE_ROOT_PATH_MAP = new HashMap<String, String>(8);
+	// 根据配置id, 获取对应的orm序列化文件的根路径
+	private String getOrmSerializeFileRootPath() {
+		String configurationId = DBRunEnvironmentContext.getConfigurationId();
+		
+		String ormSerializeFileRootPath = ORM_SERIALIZE_FILE_ROOT_PATH_MAP.get(configurationId);
+		if(ormSerializeFileRootPath == null) {
+			ormSerializeFileRootPath = DBRunEnvironmentContext.getSerializeFileRootPath() + File.separator + configurationId + File.separator;
+			File rootFile = new File(ormSerializeFileRootPath);
+			if(!rootFile.exists()) {
+				rootFile.mkdirs();
+			}
+			ORM_SERIALIZE_FILE_ROOT_PATH_MAP.put(configurationId, ormSerializeFileRootPath);
+		}
+		return ormSerializeFileRootPath;
 	}
 	
 	/**
@@ -223,6 +245,30 @@ public class TableHandler {
 	}
 	
 	/**
+	 * 创建[table映射的]序列化文件
+	 * @param table
+	 * @param list
+	 */
+	private void createSerializationFile(TableMetadata table, List<DBObjectHolder> list) {
+		if(list != null) {
+			list.add(new DBObjectHolder(table, DBObjectType.SERIALIZATION_FILE, DBObjectOPType.CREATE));
+		}
+	}
+
+	/**
+	 * 删除[table映射的]序列化文件
+	 * @param table
+	 * @param list
+	 */
+	private void dropSerializationFile(TableMetadata originTable, TableMetadata table, List<DBObjectHolder> list) {
+		if(list != null) {
+			list.add(new DBObjectHolder(table, DBObjectType.SERIALIZATION_FILE, DBObjectOPType.DROP));
+		}
+	}
+	
+	
+	
+	/**
 	 * 回滚
 	 * @param list
 	 * @param connection
@@ -236,30 +282,40 @@ public class TableHandler {
 			DBObjectHolder holder = null;
 			for(int i=list.size()-1;i>=0;i--) {
 				holder = list.get(i);
-				if(holder.getDbObjectType() == DBObjectType.TABLE) {
-					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
-						logger.debug("逆向: create ==> drop table");
-						dropTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
-						logger.debug("逆向: drop ==> create table");
-						createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}
-				}else if(holder.getDbObjectType() == DBObjectType.CONSTRAINT) {
-					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
-						logger.debug("逆向: create ==> drop constraint");
-						dropConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
-						logger.debug("逆向: drop ==> create constraint");
-						createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}
-				}else if(holder.getDbObjectType() == DBObjectType.INDEX) {
-					if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
-						logger.debug("逆向: create ==> drop index");
-						dropIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
-						logger.debug("逆向: drop ==> create index");
-						createIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
-					}
+				switch(holder.getDbObjectType()) {
+					case TABLE:
+						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+							logger.debug("逆向: create ==> drop table");
+							dropTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+							logger.debug("逆向: drop ==> create table");
+							createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}
+						break;
+					case CONSTRAINT:
+						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+							logger.debug("逆向: create ==> drop constraint");
+							dropConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+							logger.debug("逆向: drop ==> create constraint");
+							createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}
+						break;
+					case INDEX:
+						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+							logger.debug("逆向: create ==> drop index");
+							dropIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+							logger.debug("逆向: drop ==> create index");
+							createIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}
+						break;
+					case SERIALIZATION_FILE:
+						logger.debug("逆向: create ==> drop serialization file[删除刚刚创建的新序列化文件]");
+						
+						logger.debug("逆向: drop ==> create serialization file[恢复刚刚被删除的旧序列化文件]");
+						
+						break;
 				}
 			}
 		}
@@ -309,7 +365,6 @@ public class TableHandler {
 				createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, list);
 				
 				// TODO 先做！！！将当前TableMetadata序列化到磁盘中: 当前系统所在的目录中: orm-table-serialize/sessionFactoryId/表名.tm
-//				DBRunEnvironmentContext.getConfigurationId();
 			}
 		} catch (Exception e) {
 			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -326,10 +381,6 @@ public class TableHandler {
 		}
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(TableHandler.class.getClassLoader().getResource(""));
-	}
-	
 	/**
 	 * 同步表
 	 * @param table
@@ -340,7 +391,6 @@ public class TableHandler {
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> list) {
 		// TODO 先做！！！获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
-//		DBRunEnvironmentContext.getConfigurationId();
 		
 		
 		throw new IllegalArgumentException("table.createMode=DYNAMIC_UPDATE 同步表的方法还没做呢");
@@ -374,7 +424,6 @@ public class TableHandler {
 				}
 				
 				// TODO 先做！！！尝试删除对应的序列化文件
-//				DBRunEnvironmentContext.getConfigurationId();
 				// TODO 先做！！！ 可能还有对这些序列化文件的正向/逆向操作，思考一下
 			}
 		} catch (Exception e) {
