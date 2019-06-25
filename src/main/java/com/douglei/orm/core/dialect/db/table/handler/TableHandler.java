@@ -105,6 +105,22 @@ public class TableHandler {
 	}
 	
 	/**
+	 * 修改表名
+	 * @param table
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param dbObjectHolders 
+	 * @throws SQLException 
+	 */
+	private void tableRename(String originTableName, String targetTableName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName), connection, statement);
+		if(dbObjectHolders != null) {
+			dbObjectHolders.add(new DBObjectHolder(originTableName, targetTableName, DBObjectType.TABLE, DBObjectOPType.RENAME));
+		}
+	}
+	
+	/**
 	 * 创建约束
 	 * @param constraint
 	 * @param connection
@@ -256,6 +272,9 @@ public class TableHandler {
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create table");
 							createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
+							logger.debug("逆向: table rename");
+							tableRename(holder.getDbObject2().toString(), holder.getDbObject().toString(), connection, statement, tableSqlStatementHandler, null);
 						}
 						break;
 					case CONSTRAINT:
@@ -352,8 +371,9 @@ public class TableHandler {
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @param serializationObjectHolders
+	 * @throws SQLException 
 	 */
-	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) {
+	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
 		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
@@ -363,8 +383,11 @@ public class TableHandler {
 	}
 	
 	// 同步表
-	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		// TODO Auto-generated method stub
+	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		if(!table.getName().equals(oldTable.getName())) {
+			logger.debug("正向: table rename");
+			tableRename(oldTable.getName(), table.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		}
 	}
 	// 同步列
 	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {

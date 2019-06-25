@@ -6,5 +6,6 @@ package com.douglei.orm.core.dialect.db.table.handler.dbobject;
  */
 public enum DBObjectOPType {
 	CREATE,
-	DROP;
+	DROP,
+	RENAME;
 }
