@@ -326,6 +326,10 @@ public class TableHandler {
 		}
 	}
 	
+	public static void main(String[] args) {
+		System.out.println(TableHandler.class.getClassLoader().getResource(""));
+	}
+	
 	/**
 	 * 同步表
 	 * @param table

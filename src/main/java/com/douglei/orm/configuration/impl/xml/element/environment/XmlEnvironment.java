@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
+import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
@@ -118,12 +119,11 @@ public class XmlEnvironment implements Environment{
 		
 		if(xmlEnvironmentProperty.getDialect() == null) {
 			Connection connection = dataSourceWrapper.getConnection(false, null).getConnection();
-			String JDBCUrl = connection.getMetaData().getURL();
-			connection.close();
+			DatabaseMetadata databaseMetadata = new DatabaseMetadata(connection);
 			if(logger.isDebugEnabled()) {
-				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的JDBCUrl={}", JDBCUrl);
+				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);
 			}
-			xmlEnvironmentProperty.setDialectByJDBCUrl(JDBCUrl);
+			xmlEnvironmentProperty.setDialectByDatabaseMetadata(databaseMetadata);
 		}
 		xmlEnvironmentProperty.setExtDataTypeHandlers(extConfiguration.getExtDataTypeHandlerList());
 		

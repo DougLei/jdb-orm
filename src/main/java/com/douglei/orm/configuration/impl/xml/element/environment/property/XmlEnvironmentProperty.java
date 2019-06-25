@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStoreMap;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
@@ -131,10 +132,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	
-
-	public void setDialectByJDBCUrl(String JDBCUrl) {
-		this.dialect = DialectMapping.getDialectByJDBCUrl(JDBCUrl);
+	// 根据数据库元数据, 获取对应的dialect
+	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
+		this.dialect = DialectMapping.getDialectByDatabaseMetadata(databaseMetadata);
 	}
+	
+	// 设置扩展的数据类型Handler
 	public void setExtDataTypeHandlers(List<ExtDataTypeHandler> extDataTypeHandlerList) {
 		if(extDataTypeHandlerList != null  && extDataTypeHandlerList.size() > 0) {
 			Dialect dialect = null;

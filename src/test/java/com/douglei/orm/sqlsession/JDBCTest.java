@@ -2,7 +2,6 @@ package com.douglei.orm.sqlsession;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 
 import org.junit.Test;
 
@@ -20,11 +19,15 @@ public class JDBCTest {
 		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
 		
 		Connection conn = DriverManager.getConnection(url, username, pwd);
-		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
-				+ "delete sys_user where id = ?");
-		pst.setString(1, "1");
-		pst.setString(2, "2");
-		pst.executeUpdate();
+		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
+		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
+		System.out.println(conn.getMetaData().getDatabaseProductVersion());
+		
+//		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
+//				+ "delete sys_user where id = ?");
+//		pst.setString(1, "1");
+//		pst.setString(2, "2");
+//		pst.executeUpdate();
 	}
 	
 	@Test
@@ -38,15 +41,19 @@ public class JDBCTest {
 //		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
 		
 		Connection conn = DriverManager.getConnection(url, username, pwd);
-		conn.setAutoCommit(true);
-		PreparedStatement pst = conn.prepareCall("insert into sys_user(id) values(?)");
-		pst.setString(1, "isAutoCommit");
-		System.out.println(pst.executeUpdate());
+		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
+		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
+		System.out.println(conn.getMetaData().getDatabaseProductVersion());
 		
-		
-		conn.setAutoCommit(false);
-		pst.setString(1, "notAutoCommit");
-		System.out.println(pst.executeUpdate());
+//		conn.setAutoCommit(true);
+//		PreparedStatement pst = conn.prepareCall("insert into sys_user(id) values(?)");
+//		pst.setString(1, "isAutoCommit");
+//		System.out.println(pst.executeUpdate());
+//		
+//		
+//		conn.setAutoCommit(false);
+//		pst.setString(1, "notAutoCommit");
+//		System.out.println(pst.executeUpdate());
 		
 //		conn.commit();
 	}
@@ -60,6 +67,12 @@ public class JDBCTest {
 		
 		Class.forName(className);
 		Connection conn = DriverManager.getConnection(url, username, pwd);
+		
+		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
+		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
+		System.out.println(conn.getMetaData().getDatabaseProductVersion());
+		
+		
 //		Statement st = conn.createStatement();
 //		ResultSet rs = st.executeQuery("select * from sys_user");
 //		
@@ -73,10 +86,10 @@ public class JDBCTest {
 //		}
 		
 		
-		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
-				+ "delete sys_user where id = ?");
-		pst.setString(1, "1");
-		pst.setString(2, "2");
-		pst.executeUpdate();
+//		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
+//				+ "delete sys_user where id = ?");
+//		pst.setString(1, "1");
+//		pst.setString(2, "2");
+//		pst.executeUpdate();
 	}
 }

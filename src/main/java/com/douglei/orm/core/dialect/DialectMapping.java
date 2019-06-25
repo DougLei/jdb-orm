@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.core.dialect.impl.mysql.MySqlDialect;
 import com.douglei.orm.core.dialect.impl.oracle.OracleDialect;
 import com.douglei.orm.core.dialect.impl.sqlserver.SqlServerDialect;
@@ -37,19 +38,13 @@ public class DialectMapping {
 		DIALECT_CLASS_MAP.put(databaseCode, dialectClass);
 	}
 	
-	
-	/**
-	 * 获取dialect实例
-	 * @param databaseCode
-	 * @return
-	 */
-	public static Dialect getDialect(String databaseCode) {
-		databaseCode = databaseCode.toUpperCase();
+	// 内置的获取dialect实例, 不对参数进行大写转换
+	private static Dialect getDialect_(String databaseCode) {
 		Dialect dialect = DIALECT_MAP.get(databaseCode);
 		if(dialect == null) {
 			Class<? extends Dialect> dialectClass = DIALECT_CLASS_MAP.get(databaseCode);
 			if(dialectClass == null) {
-				throw new NullPointerException("系统目前不支持["+databaseCode+"], 目前支持的dialect值包括:"+DIALECT_CLASS_MAP.keySet());
+				throw new UnsupportDialectException("系统目前不支持["+databaseCode+"], 目前支持的数据库dialect包括:"+DialectType.supportDatabase());
 			}
 			dialect = (Dialect) ConstructorUtil.newInstance(dialectClass);
 			DIALECT_MAP.put(databaseCode, dialect);
@@ -60,14 +55,49 @@ public class DialectMapping {
 	}
 	
 	/**
-	 * 根据jdbc的连接url获取对应的Dialect
-	 * @param JDBCUrl
+	 * 获取dialect实例
+	 * @param databaseCode
 	 * @return
 	 */
-	public static Dialect getDialectByJDBCUrl(String JDBCUrl) {
+	public static Dialect getDialect(String databaseCode) {
+		return getDialect_(databaseCode.toUpperCase());
+	}
+	
+	/**
+	 * 根据数据库元数据, 获取对应的Dialect
+	 * @param databaseMetadata
+	 * @return
+	 */
+	public static Dialect getDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("根据jdbc的连接url={}, 获取对应的Dialect", JDBCUrl);
+			logger.debug("根据数据库元数据, 获取对应的Dialect", databaseMetadata);
 		}
+		DialectType dialectType = getDialectTypeByDatabaseMetadata(databaseMetadata);
+		return getDialect_(dialectType.name());
+	}
+	
+	/**
+	 * 根据数据库元数据, 获取对应的DialectType
+	 * @param databaseMetadata
+	 * @return
+	 */
+	private static DialectType getDialectTypeByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
+		String databaseProductName = extractDatabaseProductName(databaseMetadata.getJDBCUrl());
+		DialectType dt = DialectType.toValue(databaseProductName);
+		if(dt == null || dt.supportMajorVersions() == null) {
+			throw new UnsupportDialectException("系统目前不支持["+databaseProductName+"], 目前支持的数据库dialect包括:"+DialectType.supportDatabase());
+		}
+		
+		for(int supportMajorVersion : dt.supportMajorVersions()) {
+			if(supportMajorVersion == databaseMetadata.getDatabaseMajorVersion()) {
+				return dt;
+			}
+		}
+		throw new UnsupportDialectException("系统目前不支持["+databaseProductName+"], 主版本为["+databaseMetadata.getDatabaseMajorVersion()+"], 目前支持的数据库dialect包括:"+DialectType.supportDatabase());
+	}
+	
+	// 从jdbc url中提取出数据库产品名
+	private static String extractDatabaseProductName(String JDBCUrl) {
 		int i=0, a=0, b=0;
 		while(a==0) {
 			if(JDBCUrl.charAt(i++) == ':') {
@@ -82,6 +112,9 @@ public class DialectMapping {
 		if(b-1 <= a) {
 			throw new ArithmeticException("JDBCUrl=" + JDBCUrl + ", 无法从中截取到对应的数据库类型信息, 第一个冒号的下标="+a+", 第二个冒号的下标="+b);
 		}
-		return getDialect(JDBCUrl.substring(a, b-1));
+		if(logger.isDebugEnabled()) {
+			logger.debug("从 JDBCUrl= {}中, 提取的数据库产品名称为 {}", JDBCUrl, JDBCUrl.substring(a, b-1));
+		}
+		return JDBCUrl.substring(a, b-1);
 	}
 }
