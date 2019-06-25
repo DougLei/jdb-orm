@@ -70,6 +70,20 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * <pre>
+	 * 	覆盖映射, 如果不存在则抛出异常
+	 * 	<b>只对映射操作</b>
+	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
+	 * </pre>
+	 * @param mapping
+	 * @return mapping的code
+	 */
+	protected String coverMapping(Mapping mapping) {
+		mappingCacheStore.coverMapping(mapping);
+		return mapping.getCode();
+	}
+	
+	/**
+	 * <pre>
 	 * 	删除映射
 	 * 	如果是表映射, 则顺便drop表
 	 * 	这个方法用在系统启动后, 动态的删除映射时使用
@@ -102,6 +116,17 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return mapping的code
 	 */
 	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	/**
+	 * <pre>
+	 * 	动态覆盖映射, 如果不存在则抛出异常
+	 * 	<b>只对映射操作</b>
+	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
+	 * </pre>
+	 * @param mappingType
+	 * @param mappingConfigurationContent 配置内容
+	 * @return mapping的code
+	 */
+	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
 	 * 	动态删除映射

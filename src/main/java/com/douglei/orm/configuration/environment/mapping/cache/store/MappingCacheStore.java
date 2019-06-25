@@ -35,7 +35,17 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * @param mapping
 	 */
 	void addOrCoverMapping(Mapping mapping);
-
+	
+	/**
+	 * <pre>
+	 * 	覆盖映射, 如果不存在则抛出异常
+	 * 	如果存在相同code的映射, 将其cover
+	 * </pre>
+	 * @param mapping
+	 * @throws NotExistsMappingException
+	 */
+	void coverMapping(Mapping mapping) throws NotExistsMappingException;
+	
 	/**
 	 * 移除映射
 	 * @param mappingCode

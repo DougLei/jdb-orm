@@ -32,7 +32,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	}
 	
 	@Override
-	public void addMapping(Mapping mapping){
+	public void addMapping(Mapping mapping) throws RepeatedMappingException{
 		String code = mapping.getCode();
 		if(mappingExists(code)) {
 			throw new RepeatedMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code));
@@ -41,12 +41,22 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	}
 	
 	@Override
-	public void addOrCoverMapping(Mapping mapping) throws RepeatedMappingException {
+	public void addOrCoverMapping(Mapping mapping) {
 		String code = mapping.getCode();
 		if(logger.isDebugEnabled() && mappingExists(code)) {
 			logger.debug("覆盖已经存在code为[]的映射对象: {}", code, mappings.get(code));
 		}
 		mappings.put(code, mapping);
+	}
+	
+	@Override
+	public void coverMapping(Mapping mapping) throws NotExistsMappingException {
+		String code = mapping.getCode();
+		if(!mappingExists(code)) {
+			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法覆盖");
+		}
+		mappings.put(code, mapping);
+		
 	}
 	
 	@Override

@@ -30,6 +30,24 @@ public interface SessionFactory {
 	void dynamicBatchAddMapping(List<DynamicMapping> entities);
 	/**
 	 * <pre>
+	 * 	动态覆盖映射, 如果不存在则抛出异常
+	 * 	<b>只对映射操作</b>
+	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
+	 * </pre>
+	 * @param entity
+	 */
+	void dynamicCoverMapping(DynamicMapping entity);
+	/**
+	 * <pre>
+	 * 	动态批量覆盖映射, 如果不存在则抛出异常
+	 * 	<b>只对映射操作</b>
+	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
+	 * </pre>
+	 * @param entities
+	 */
+	void dynamicBatchCoverMapping(List<DynamicMapping> entities);
+	/**
+	 * <pre>
 	 * 	动态删除映射
 	 * 	如果是表映射, 则顺便drop表
 	 * </pre>

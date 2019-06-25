@@ -54,6 +54,20 @@ public class SessionFactoryImpl implements SessionFactory {
 		}
 		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
+	
+	@Override
+	public void dynamicCoverMapping(DynamicMapping entity) {
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+	}
+
+	@Override
+	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
+		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		for (DynamicMapping entity : entities) {
+			entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+		}
+	}
 
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
