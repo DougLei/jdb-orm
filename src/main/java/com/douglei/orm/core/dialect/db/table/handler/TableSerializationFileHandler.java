@@ -12,6 +12,12 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
  */
 class TableSerializationFileHandler {
 	
+	// 根文件夹名称
+	private static final String ROOT_FOLDER_NAME = "orm-serialization-files";
+	
+	// 序列化文件的后缀
+	private static final String SERIALIZATION_FILE_SUFFIX = ".orm";
+	
 	// orm序列化文件的根路径map, key是configuration id, value是对应的路径
 	private static final Map<String, String> ORM_SERIALIZATION_FILE_ROOT_PATH_MAP = new HashMap<String, String>(8);
 	
@@ -21,7 +27,7 @@ class TableSerializationFileHandler {
 		
 		String ormSerializationFileRootPath = ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.get(configurationId);
 		if(ormSerializationFileRootPath == null) {
-			ormSerializationFileRootPath = DBRunEnvironmentContext.getSerializationFileRootPath() + File.separator + configurationId + File.separator;
+			ormSerializationFileRootPath = DBRunEnvironmentContext.getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
 			File rootFile = new File(ormSerializationFileRootPath);
 			if(!rootFile.exists()) {
 				rootFile.mkdirs();
@@ -30,5 +36,4 @@ class TableSerializationFileHandler {
 		}
 		return ormSerializationFileRootPath;
 	}
-	
 }

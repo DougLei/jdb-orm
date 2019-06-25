@@ -1,12 +1,10 @@
-package com.douglei.orm.core.dialect.db.table;
+package com.douglei.orm.core.dialect.db.table.handler.dbobject;
 
 /**
  * 
  * @author DougLei
  */
 public enum DBObjectType {
-	SERIALIZATION_FILE,
-	
 	TABLE,
 	CONSTRAINT,
 	INDEX;

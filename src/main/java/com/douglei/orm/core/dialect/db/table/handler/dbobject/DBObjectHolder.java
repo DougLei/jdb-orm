@@ -1,4 +1,6 @@
-package com.douglei.orm.core.dialect.db.table;
+package com.douglei.orm.core.dialect.db.table.handler.dbobject;
+
+import com.douglei.orm.core.dialect.db.table.handler.OPType;
 
 /**
  * 数据库对象持有者
@@ -7,9 +9,9 @@ package com.douglei.orm.core.dialect.db.table;
 public class DBObjectHolder {
 	private Object dbObject;
 	private DBObjectType dbObjectType;
-	private DBObjectOPType dbObjectOPType;
+	private OPType dbObjectOPType;
 	
-	public DBObjectHolder(Object dbObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+	public DBObjectHolder(Object dbObject, DBObjectType dbObjectType, OPType dbObjectOPType) {
 		this.dbObject = dbObject;
 		this.dbObjectType = dbObjectType;
 		this.dbObjectOPType = dbObjectOPType;
@@ -21,7 +23,7 @@ public class DBObjectHolder {
 	public DBObjectType getDbObjectType() {
 		return dbObjectType;
 	}
-	public DBObjectOPType getDbObjectOPType() {
+	public OPType getDbObjectOPType() {
 		return dbObjectOPType;
 	}
 }
