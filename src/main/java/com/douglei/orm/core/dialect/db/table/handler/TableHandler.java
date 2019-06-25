@@ -355,11 +355,31 @@ public class TableHandler {
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
-		
-		// TODO 先做！！！获取之前保存的映射对象信息, 并和现在的比对, 进行表同步
-		
-		
-		
+		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncSerializationFile(table, oldTable, serializationObjectHolders);
+	}
+	
+	// 同步表
+	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
+		// TODO Auto-generated method stub
+	}
+	// 同步列
+	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
+		// TODO Auto-generated method stub
+	}
+	// 同步约束
+	private void syncConstraints(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
+		// TODO Auto-generated method stub
+	}
+	// 同步索引
+	private void syncIndexes(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
+		// TODO Auto-generated method stub
+	}
+	// 同步序列化文件
+	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {
 		tableSerializationFileHandler.updateSerializationFile(table, oldTable, serializationObjectHolders);
 	}
 
