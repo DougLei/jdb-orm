@@ -6,26 +6,26 @@ package com.douglei.orm.core.dialect.db.table.handler.dbobject;
  * @author DougLei
  */
 public class DBObjectHolder {
-	private Object dbObject;
-	private Object dbObject2;
+	private Object originObject;// 原数据对象
+	private Object targetObject;// 目标数据对象
 	private DBObjectType dbObjectType;
 	private DBObjectOPType dbObjectOPType;
 	
-	public DBObjectHolder(Object dbObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
-		this(dbObjectOPType, null, dbObjectType, dbObjectOPType);
+	public DBObjectHolder(Object originObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+		this(originObject, null, dbObjectType, dbObjectOPType);
 	}
-	public DBObjectHolder(Object dbObject, Object dbObject2, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
-		this.dbObject = dbObject;
-		this.dbObject2 = dbObject2;
+	public DBObjectHolder(Object originObject, Object targetObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+		this.originObject = originObject;
+		this.targetObject = targetObject;
 		this.dbObjectType = dbObjectType;
 		this.dbObjectOPType = dbObjectOPType;
 	}
 	
-	public Object getDbObject() {
-		return dbObject;
+	public Object getOriginObject() {
+		return originObject;
 	}
-	public Object getDbObject2() {
-		return dbObject2;
+	public Object getTargetObject() {
+		return targetObject;
 	}
 	public DBObjectType getDbObjectType() {
 		return dbObjectType;

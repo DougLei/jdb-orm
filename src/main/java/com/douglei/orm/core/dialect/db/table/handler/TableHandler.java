@@ -268,31 +268,31 @@ public class TableHandler {
 					case TABLE:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop table");
-							dropTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							dropTable((TableMetadata)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create table");
-							createTable((TableMetadata)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							createTable((TableMetadata)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
 							logger.debug("逆向: table rename");
-							tableRename(holder.getDbObject2().toString(), holder.getDbObject().toString(), connection, statement, tableSqlStatementHandler, null);
+							tableRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
 						}
 						break;
 					case CONSTRAINT:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop constraint");
-							dropConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							dropConstraint((Constraint)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create constraint");
-							createConstraint((Constraint)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							createConstraint((Constraint)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}
 						break;
 					case INDEX:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop index");
-							dropIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							dropIndex((Index)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create index");
-							createIndex((Index)holder.getDbObject(), connection, statement, tableSqlStatementHandler, null);
+							createIndex((Index)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
 						}
 						break;
 				}
