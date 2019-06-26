@@ -165,4 +165,15 @@ public abstract class Column implements Serializable{
 	public boolean isValidate() {
 		return validate;
 	}
+	
+	/**
+	 * <b>【慎用】</b>
+	 * 更新列名
+	 * 该方法直接修改了name属性的值
+	 * @param name
+	 */
+	
+	public void _danger2UpdateColumnName(String name) {
+		this.name = name;
+	}
 }

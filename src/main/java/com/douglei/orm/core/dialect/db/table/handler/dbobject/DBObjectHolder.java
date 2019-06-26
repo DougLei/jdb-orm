@@ -11,21 +11,32 @@ public class DBObjectHolder {
 	 * targetObject和originObject搭配使用, 当修改表名、列名、列数据类型等时, 用来记录目标数据对象和原数据对象
 	 */
 	
+	private String tableName;
 	private Object originObject;// 原数据对象
 	private Object targetObject;// 目标数据对象
 	private DBObjectType dbObjectType;
 	private DBObjectOPType dbObjectOPType;
 	
 	public DBObjectHolder(Object originObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
-		this(originObject, null, dbObjectType, dbObjectOPType);
+		this(null, originObject, null, dbObjectType, dbObjectOPType);
 	}
 	public DBObjectHolder(Object originObject, Object targetObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+		this(null, originObject, targetObject, dbObjectType, dbObjectOPType);
+	}
+	public DBObjectHolder(String tableName, Object originObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+		this(tableName, originObject, null, dbObjectType, dbObjectOPType);
+	}
+	public DBObjectHolder(String tableName, Object originObject, Object targetObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
+		this.tableName = tableName;
 		this.originObject = originObject;
 		this.targetObject = targetObject;
 		this.dbObjectType = dbObjectType;
 		this.dbObjectOPType = dbObjectOPType;
 	}
 	
+	public String getTableName() {
+		return tableName;
+	}
 	public Object getOriginObject() {
 		return originObject;
 	}

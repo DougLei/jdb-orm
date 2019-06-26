@@ -28,7 +28,7 @@
 		</constraints>
 		
 		<indexes>
-			<index name=""><!-- 索引名称 -->
+			<index name=""><!-- 索引名称, 名称的命名规范为 [索引前缀+_+表名+_+列名] 的格式 -->
 				<createSql>
 					<!-- 创建索引的sql语句 -->
 				</createSql>

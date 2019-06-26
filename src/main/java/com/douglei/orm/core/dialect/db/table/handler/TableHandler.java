@@ -123,7 +123,42 @@ public class TableHandler {
 	}
 	
 	/**
+	 * 创建列
+	 * @param tableName
+	 * @param column
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param dbObjectHolders
+	 * @throws SQLException 
+	 */
+	private void createColumn(String tableName, Column column, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnCreateSqlStatement(tableName, column), connection, statement);
+		if(dbObjectHolders != null) {
+			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.CREATE));
+		}
+	}
+	
+	/**
+	 * 删除列
+	 * @param tableName
+	 * @param column
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param dbObjectHolders
+	 * @throws SQLException 
+	 */
+	private void dropColumn(String tableName, Column column, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()), connection, statement);
+		if(dbObjectHolders != null) {
+			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.DROP));
+		}
+	}
+	
+	/**
 	 * 修改列名
+	 * @param tableName
 	 * @param originColumnName
 	 * @param targetColumnName
 	 * @param connection
@@ -132,10 +167,28 @@ public class TableHandler {
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void columnRename(String originColumnName, String targetColumnName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originColumnName, targetColumnName), connection, statement);
+	private void columnRename(String tableName, String originColumnName, String targetColumnName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnRenameSqlStatement(tableName, originColumnName, targetColumnName), connection, statement);
 		if(dbObjectHolders != null) {
-			dbObjectHolders.add(new DBObjectHolder(originColumnName, targetColumnName, DBObjectType.COLUMN, DBObjectOPType.RENAME));
+			dbObjectHolders.add(new DBObjectHolder(tableName, originColumnName, targetColumnName, DBObjectType.COLUMN, DBObjectOPType.RENAME));
+		}
+	}
+	
+	/**
+	 * 修改列
+	 * @param tableName
+	 * @param originColumn
+	 * @param targetColumn
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param dbObjectHolders
+	 * @throws SQLException 
+	 */
+	private void columnModify(String tableName, Column originColumn, Column targetColumn, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnModifySqlStatement(tableName, targetColumn), connection, statement);
+		if(dbObjectHolders != null) {
+			dbObjectHolders.add(new DBObjectHolder(tableName, originColumn, targetColumn, DBObjectType.COLUMN, DBObjectOPType.MODIFY));
 		}
 	}
 	
@@ -297,9 +350,31 @@ public class TableHandler {
 						}
 						break;
 					case COLUMN:
-						if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
+						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+							logger.debug("逆向: create ==> drop column");
+							dropColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+							logger.debug("逆向: drop ==> create column");
+							createColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
 							logger.debug("逆向: column rename");
-							columnRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
+							columnRename(holder.getTableName(), holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.MODIFY) {
+							logger.debug("逆向: column modify");
+							
+							// 如果修改了列名, 则要将originColumn的列名暂时给targetColumn, 等修改完成后, 再替换回来, 因为在修改列的sql语句中, 会用到column.getName()
+							String tmpColumnName = null;
+							Column originColumn = (Column)holder.getTargetObject();
+							Column targetColumn = (Column)holder.getOriginObject();
+							boolean updateColumnName = !originColumn.getName().equals(targetColumn.getName());
+							if(updateColumnName) {
+								tmpColumnName = targetColumn.getName();
+								targetColumn._danger2UpdateColumnName(originColumn.getName());
+							}
+							columnModify(holder.getTableName(), null, targetColumn, connection, statement, tableSqlStatementHandler, null);
+							if(updateColumnName) {
+								targetColumn._danger2UpdateColumnName(tmpColumnName);
+							}
 						}
 						break;
 					case CONSTRAINT:
@@ -402,6 +477,8 @@ public class TableHandler {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
 		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncSerializationFile(table, oldTable, serializationObjectHolders);
 	}
 	
@@ -418,23 +495,29 @@ public class TableHandler {
 		Column oldColumn = null;
 		for (Column column : columns) {
 			oldColumn = oldTable.getColumnByName(column.getOldName());
-			if(!column.getName().equals(oldColumn.getName())) {
-				logger.debug("正向: column rename");
-				columnRename(oldColumn.getName(), column.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			if(oldColumn == null) {// 为空标识为新加的列
+				logger.debug("正向: create column");
+				createColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}else {// 不为空, 标识可能为修改列
+				if(!column.getName().equals(oldColumn.getName())) {
+					logger.debug("正向: column rename");
+					columnRename(table.getName(), oldColumn.getName(), column.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				}
+				if(column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled()) {
+					logger.debug("正向: column modify");
+					columnModify(table.getName(), oldColumn, column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				}
 			}
-			
-			
-			
-			
-			
-			
 		}
 		
-		
-		
-		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		columns = oldTable.getColumns();
+		for (Column column : columns) {
+			if(table.getColumnByName(column.getName()) == null) {
+				dropColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
+		}
 	}
+
 	// 同步约束
 	private void syncConstraints(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
 		// TODO Auto-generated method stub
