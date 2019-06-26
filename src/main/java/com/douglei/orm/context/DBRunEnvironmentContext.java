@@ -58,4 +58,12 @@ public class DBRunEnvironmentContext {
 	public static boolean getEnableDataValidation() {
 		return ENVIRONMENT_PROPERTY.get().getEnableDataValidation();
 	}
+	
+	/**
+	 * 获取是否开启表的动态更新
+	 * @return
+	 */
+	public static boolean getEnableTableDynamicUpdate() {
+		return ENVIRONMENT_PROPERTY.get().getEnableTableDynamicUpdate();
+	}
 }

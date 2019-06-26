@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.core.dialect.db.table.entity.Column;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectHolder;
@@ -106,17 +107,35 @@ public class TableHandler {
 	
 	/**
 	 * 修改表名
-	 * @param table
+	 * @param originTableName
+	 * @param targetTableName
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
-	 * @param dbObjectHolders 
-	 * @throws SQLException 
+	 * @param dbObjectHolders
+	 * @throws SQLException
 	 */
 	private void tableRename(String originTableName, String targetTableName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName), connection, statement);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(originTableName, targetTableName, DBObjectType.TABLE, DBObjectOPType.RENAME));
+		}
+	}
+	
+	/**
+	 * 修改列名
+	 * @param originColumnName
+	 * @param targetColumnName
+	 * @param connection
+	 * @param statement
+	 * @param tableSqlStatementHandler
+	 * @param dbObjectHolders
+	 * @throws SQLException
+	 */
+	private void columnRename(String originColumnName, String targetColumnName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originColumnName, targetColumnName), connection, statement);
+		if(dbObjectHolders != null) {
+			dbObjectHolders.add(new DBObjectHolder(originColumnName, targetColumnName, DBObjectType.COLUMN, DBObjectOPType.RENAME));
 		}
 	}
 	
@@ -277,6 +296,12 @@ public class TableHandler {
 							tableRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
 						}
 						break;
+					case COLUMN:
+						if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
+							logger.debug("逆向: column rename");
+							columnRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
+						}
+						break;
 					case CONSTRAINT:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop constraint");
@@ -388,8 +413,23 @@ public class TableHandler {
 		}
 	}
 	// 同步列
-	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		// TODO Auto-generated method stub
+	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		Collection<Column> columns = table.getColumns();
+		Column oldColumn = null;
+		for (Column column : columns) {
+			oldColumn = oldTable.getColumnByName(column.getOldName());
+			if(!column.getName().equals(oldColumn.getName())) {
+				logger.debug("正向: column rename");
+				columnRename(oldColumn.getName(), column.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
+			
+			
+			
+			
+			
+			
+		}
+		
 		
 		
 		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);

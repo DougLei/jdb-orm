@@ -1,8 +1,6 @@
 package com.douglei.orm.core.dialect.db.table.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
@@ -31,8 +29,6 @@ public abstract class Column implements Serializable{
 	protected String fkTableName;// 外键约束关联的表名
 	protected String fkColumnName;// 外键约束关联的列名
 	protected boolean validate;// 是否验证
-	
-	List<Constraint> relevantConstraints;// 关联的约束, 即这个列和哪些约束有关
 	
 	protected ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	protected DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
@@ -98,14 +94,6 @@ public abstract class Column implements Serializable{
 		if(this.defaultValue != null) {
 			this.defaultValue = null;
 		}
-	}
-	
-	// 添加关联的约束
-	void addRelevantConstraint(Constraint constraint) {
-		if(relevantConstraints == null) {
-			relevantConstraints = new ArrayList<Constraint>(6);
-		}
-		relevantConstraints.add(constraint);
 	}
 	
 	// 处理检查约束值和外键约束值
@@ -176,11 +164,5 @@ public abstract class Column implements Serializable{
 	}
 	public boolean isValidate() {
 		return validate;
-	}
-	public List<Constraint> getRelevantConstraints() {
-		return relevantConstraints;
-	}
-	public boolean existsConstraint() {
-		return relevantConstraints != null;
 	}
 }

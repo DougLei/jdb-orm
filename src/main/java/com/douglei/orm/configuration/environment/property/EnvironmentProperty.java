@@ -25,4 +25,6 @@ public interface EnvironmentProperty {
 	public String getSerializationFileRootPath();
 	
 	public boolean getEnableDataValidation();
+	
+	public boolean getEnableTableDynamicUpdate();
 }

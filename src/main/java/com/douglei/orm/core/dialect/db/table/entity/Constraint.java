@@ -102,7 +102,6 @@ public class Constraint implements Serializable{
 				}
 				break;
 		}
-		column.addRelevantConstraint(this);
 	}
 	
 	private boolean unProcessConstraint=true;// 是否未处理约束

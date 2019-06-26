@@ -6,6 +6,7 @@ package com.douglei.orm.core.dialect.db.table.handler.dbobject;
  */
 public enum DBObjectType {
 	TABLE,
+	COLUMN,
 	CONSTRAINT,
 	INDEX;
 }
