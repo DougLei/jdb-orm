@@ -13,8 +13,8 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public abstract class AbstractDialect implements Dialect{
-	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
 	
+	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
 	protected SqlHandler sqlHandler;
 	protected DBObjectNameHandler dbObjectNameHandler;
 	protected DBFeatures dbFeatures;
@@ -29,7 +29,6 @@ public abstract class AbstractDialect implements Dialect{
 	}
 	protected void initialPropertyInstance(String basePackageName) {
 		dataTypeHandlerMapping = (AbstractDataTypeHandlerMapping) ConstructorUtil.newInstance(basePackageName + ".datatype.handler.DataTypeHandlerMapping");
-		
 		sqlHandler = (SqlHandler) ConstructorUtil.newInstance(basePackageName + ".db.sql.SqlHandlerImpl");
 		dbObjectNameHandler = (DBObjectNameHandler) ConstructorUtil.newInstance(basePackageName + ".db.objectname.DBObjectNameHandlerImpl");
 		dbFeatures = (DBFeatures) ConstructorUtil.newInstance(basePackageName + ".db.features.DBFeaturesImpl");

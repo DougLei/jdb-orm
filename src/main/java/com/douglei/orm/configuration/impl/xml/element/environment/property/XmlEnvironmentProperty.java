@@ -51,6 +51,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableTableDynamicUpdate;
 	
+	@FieldMetaData
+	private boolean enableColumnDynamicUpdateValidation;
+	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
 		this.id = id;
 		this.propertyMap = propertyMap;
@@ -148,16 +151,17 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	void setEnableDataValidation(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableDataValidation = Boolean.parseBoolean(value);
-			return;
 		}
-		this.enableDataValidation = false;
 	}
 	void setEnableTableDynamicUpdate(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableTableDynamicUpdate = Boolean.parseBoolean(value);
-			return;
 		}
-		this.enableTableDynamicUpdate = false;
+	}
+	void setEnableColumnDynamicUpdateValidation(String value) {
+		if(ValidationUtil.isBoolean(value)) {
+			this.enableColumnDynamicUpdateValidation = Boolean.parseBoolean(value);
+		}
 	}
 
 	// 根据数据库元数据, 获取对应的dialect
@@ -214,5 +218,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean getEnableTableDynamicUpdate() {
 		return enableTableDynamicUpdate;
+	}
+	@Override
+	public boolean getEnableColumnDynamicUpdateValidation() {
+		return enableColumnDynamicUpdateValidation;
 	}
 }

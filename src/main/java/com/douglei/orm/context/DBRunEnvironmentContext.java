@@ -66,4 +66,12 @@ public class DBRunEnvironmentContext {
 	public static boolean getEnableTableDynamicUpdate() {
 		return ENVIRONMENT_PROPERTY.get().getEnableTableDynamicUpdate();
 	}
+	
+	/**
+	 * 获取是否开启列的动态更新验证
+	 * @return
+	 */
+	public static boolean getEnableColumnDynamicUpdateValidation() {
+		return ENVIRONMENT_PROPERTY.get().getEnableColumnDynamicUpdateValidation();
+	}
 }

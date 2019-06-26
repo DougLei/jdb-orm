@@ -27,4 +27,6 @@ public interface EnvironmentProperty {
 	public boolean getEnableDataValidation();
 	
 	public boolean getEnableTableDynamicUpdate();
+	
+	public boolean getEnableColumnDynamicUpdateValidation();
 }

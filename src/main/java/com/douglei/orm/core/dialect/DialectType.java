@@ -44,7 +44,7 @@ public enum DialectType {
 	
 	@Override
 	public String toString() {
-		return "数据库dialect=["+name()+"], 支持的主版本包括="+Arrays.toString(supportMajorVersions);
+		return "Database dialect=["+name()+"], 支持的主版本包括="+Arrays.toString(supportMajorVersions);
 	}
 	
 	public static String supportDatabase() {

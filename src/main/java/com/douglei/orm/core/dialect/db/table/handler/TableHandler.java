@@ -483,12 +483,16 @@ public class TableHandler {
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
+		// 删除旧表的约束和索引
 		dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		dropIndex(oldTable.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		// 对表和列进行同步
 		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		// 创建新表的约束和索引
 		createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		// 对序列化文件进行同步
 		syncSerializationFile(table, oldTable, serializationObjectHolders);
 	}
 	
@@ -513,7 +517,7 @@ public class TableHandler {
 					logger.debug("正向: column rename");
 					columnRename(table.getName(), oldColumn.getName(), column.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 				}
-				if(column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled()) {
+				if(isModifyColumn(table, column, oldColumn)) {
 					logger.debug("正向: column modify");
 					columnModify(table.getName(), oldColumn, column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 				}
@@ -526,6 +530,35 @@ public class TableHandler {
 				dropColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
+	}
+	// 是否修改列
+	private boolean isModifyColumn(TableMetadata table, Column column, Column oldColumn) {
+		if(DBRunEnvironmentContext.getEnableColumnDynamicUpdateValidation()) {
+			boolean isModifyColumn = false;
+			if(column.getDataType() != oldColumn.getDataType()) {
+				if(!DBRunEnvironmentContext.getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDataType(), column.getDataType())) {
+					throw new ColumnModifyException("在数据库["+DBRunEnvironmentContext.getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDataType()+"]类型, 改为["+column.getDataType()+"]类型");
+				}
+				isModifyColumn = true;
+			}
+			if(column.getLength() != oldColumn.getLength()) {
+				if(column.getLength() < oldColumn.getLength()) {
+					throw new ColumnModifyException("修改["+table.getName()+"]表的["+column.getName()+"]列的数据长度值时, 新的长度值["+column.getLength()+"]不能小于原长度值["+oldColumn.getLength()+"]");
+				}
+				isModifyColumn = true;
+			}
+			if(column.getPrecision() != oldColumn.getPrecision()) {
+				if(column.getPrecision() < oldColumn.getPrecision()) {
+					throw new ColumnModifyException("修改["+table.getName()+"]表的["+column.getName()+"]列的数据精度值时, 新的精度值["+column.getPrecision()+"]不能小于原精度值["+oldColumn.getPrecision()+"]");
+				}
+				isModifyColumn = true;
+			}
+			if(column.isNullabled() != oldColumn.isNullabled()) {
+				isModifyColumn = true;
+			}
+			return isModifyColumn;
+		}
+		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
 	// 同步序列化文件
 	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {
