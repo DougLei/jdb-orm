@@ -179,7 +179,6 @@ public abstract class TableSqlStatementHandler {
 		return tmpSql.toString();
 	}
 
-	
 	/**
 	 * 获取drop constraint的sql语句
 	 * @param constraint

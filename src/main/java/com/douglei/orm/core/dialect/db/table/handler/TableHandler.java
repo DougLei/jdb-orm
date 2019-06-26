@@ -218,8 +218,10 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void createConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		for (Constraint constraint : constraints) {
-			createConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		if(constraints != null) {
+			for (Constraint constraint : constraints) {
+				createConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
 		}
 	}
 	
@@ -249,8 +251,10 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void dropConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		for (Constraint constraint : constraints) {
-			dropConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		if(constraints != null) {
+			for (Constraint constraint : constraints) {
+				dropConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
 		}
 	}
 	
@@ -280,8 +284,10 @@ public class TableHandler {
 	 * @throws SQLException
 	 */
 	private void createIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		for (Index index : indexes) {
-			createIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		if(indexes != null) {
+			for (Index index : indexes) {
+				createIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
 		}
 	}
 	
@@ -311,8 +317,10 @@ public class TableHandler {
 	 * @throws SQLException
 	 */
 	private void dropIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		for (Index index : indexes) {
-			dropIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		if(indexes != null) {
+			for (Index index : indexes) {
+				dropIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			}
 		}
 	}
 	
@@ -475,10 +483,12 @@ public class TableHandler {
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
+		dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		dropIndex(oldTable.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncSerializationFile(table, oldTable, serializationObjectHolders);
 	}
 	
@@ -516,14 +526,6 @@ public class TableHandler {
 				dropColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
-	}
-	// 同步约束
-	private void syncConstraints(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		// TODO Auto-generated method stub
-	}
-	// 同步索引
-	private void syncIndexes(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		// TODO Auto-generated method stub
 	}
 	// 同步序列化文件
 	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {
