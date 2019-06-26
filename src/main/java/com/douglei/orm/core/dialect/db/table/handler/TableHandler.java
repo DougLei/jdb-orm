@@ -399,7 +399,11 @@ public class TableHandler {
 	}
 	// 同步索引
 	private void syncIndexes(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		// TODO Auto-generated method stub
+		Collection<Index> indexes = table.getIndexes();
+		Collection<Index> oldIndexes = oldTable.getIndexes();
+		
+		
+		
 	}
 	// 同步序列化文件
 	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {

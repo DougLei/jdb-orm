@@ -126,11 +126,24 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 	public Collection<Column> getColumns() {
 		return columns.values();
 	}
+	public Column getColumnByName(String columnName) {
+		Column column = columns.get(columnName);
+		if(column == null) {
+			throw new NullPointerException("不存在column name=["+columnName+"]的列");
+		}
+		return column;
+	}
 	public Collection<Constraint> getConstraints() {
 		if(constraints == null) {
 			return null;
 		}
 		return constraints.values();
+	}
+	public Constraint getConstraint(String constraintName) {
+		if(constraints == null) {
+			return null;
+		}
+		return constraints.get(constraintName);
 	}
 	public Collection<Index> getIndexes(){
 		if(indexes == null) {
@@ -138,12 +151,11 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 		}
 		return indexes.values();
 	}
-	public Column getColumnByName(String columnName) {
-		Column column = columns.get(columnName);
-		if(column == null) {
-			throw new NullPointerException("不存在column name=["+columnName+"]的列");
+	public Index getIndex(String indexName) {
+		if(indexes == null) {
+			return null;
 		}
-		return column;
+		return indexes.get(indexName);
 	}
 	
 	/**
