@@ -9,26 +9,14 @@ import com.douglei.orm.core.metadata.table.CreateMode;
  * @author DougLei
  */
 public class DBRunEnvironmentContext {
-	private static final ThreadLocal<DBRunEnvironment> DB_RUN_ENVIRONMENT = new ThreadLocal<DBRunEnvironment>();
-	private static DBRunEnvironment getDBRunEnvironment() {
-		DBRunEnvironment dbRunEnvironment = DB_RUN_ENVIRONMENT.get();
-		if(dbRunEnvironment == null) {
-			dbRunEnvironment = new DBRunEnvironment();
-			DB_RUN_ENVIRONMENT.set(dbRunEnvironment);
-		}
-		return dbRunEnvironment;
-	}
+	private static final ThreadLocal<EnvironmentProperty> ENVIRONMENT_PROPERTY = new ThreadLocal<EnvironmentProperty>();
 	
 	/**
 	 * 设置配置的环境全局属性
 	 * @param environmentProperty
 	 */
 	public static void setConfigurationEnvironmentProperty(EnvironmentProperty environmentProperty) {
-		DBRunEnvironment dbRunEnvironment = getDBRunEnvironment();
-		dbRunEnvironment.configurationId = environmentProperty.getId();
-		dbRunEnvironment.serializationFileRootPath = environmentProperty.getSerializationFileRootPath();
-		dbRunEnvironment.dialect = environmentProperty.getDialect();
-		dbRunEnvironment.tableCreateMode = environmentProperty.getTableCreateMode();
+		ENVIRONMENT_PROPERTY.set(environmentProperty);
 	}
 	
 	/**
@@ -36,7 +24,7 @@ public class DBRunEnvironmentContext {
 	 * @return
 	 */
 	public static Dialect getDialect() {
-		return getDBRunEnvironment().dialect;
+		return ENVIRONMENT_PROPERTY.get().getDialect();
 	}
 	
 	/**
@@ -44,7 +32,7 @@ public class DBRunEnvironmentContext {
 	 * @return
 	 */
 	public static CreateMode getTableCreateMode() {
-		return getDBRunEnvironment().tableCreateMode;
+		return ENVIRONMENT_PROPERTY.get().getTableCreateMode();
 	}
 	
 	/**
@@ -52,7 +40,7 @@ public class DBRunEnvironmentContext {
 	 * @return
 	 */
 	public static String getConfigurationId() {
-		return getDBRunEnvironment().configurationId;
+		return ENVIRONMENT_PROPERTY.get().getId();
 	}
 	
 	/**
@@ -60,6 +48,14 @@ public class DBRunEnvironmentContext {
 	 * @return
 	 */
 	public static String getSerializationFileRootPath() {
-		return getDBRunEnvironment().serializationFileRootPath;
+		return ENVIRONMENT_PROPERTY.get().getSerializationFileRootPath();
+	}
+	
+	/**
+	 * 获取是否开启数据验证
+	 * @return
+	 */
+	public static boolean getEnableDataValidation() {
+		return ENVIRONMENT_PROPERTY.get().getEnableDataValidation();
 	}
 }

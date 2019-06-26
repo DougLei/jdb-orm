@@ -23,4 +23,6 @@ public interface EnvironmentProperty {
 	public CreateMode getTableCreateMode();
 	
 	public String getSerializationFileRootPath();
+	
+	public boolean getEnableDataValidation();
 }

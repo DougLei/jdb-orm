@@ -377,8 +377,6 @@ public class TableHandler {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
 		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		syncSerializationFile(table, oldTable, serializationObjectHolders);
 	}
 	
@@ -392,6 +390,10 @@ public class TableHandler {
 	// 同步列
 	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
 		// TODO Auto-generated method stub
+		
+		
+		syncConstraints(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		syncIndexes(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 	}
 	// 同步约束
 	private void syncConstraints(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
@@ -399,11 +401,7 @@ public class TableHandler {
 	}
 	// 同步索引
 	private void syncIndexes(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
-		Collection<Index> indexes = table.getIndexes();
-		Collection<Index> oldIndexes = oldTable.getIndexes();
-		
-		
-		
+		// TODO Auto-generated method stub
 	}
 	// 同步序列化文件
 	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {

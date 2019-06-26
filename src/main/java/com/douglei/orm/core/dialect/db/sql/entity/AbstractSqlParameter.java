@@ -196,7 +196,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		this.defaultValue = defaultValue;
 	}
 	private void setValidate(String validate) {
-		if(ValidationUtil.isBoolean(validate)) {
+		if(DBRunEnvironmentContext.getEnableDataValidation() && ValidationUtil.isBoolean(validate)) {
 			this.validate = Boolean.parseBoolean(validate);
 		}
 	}

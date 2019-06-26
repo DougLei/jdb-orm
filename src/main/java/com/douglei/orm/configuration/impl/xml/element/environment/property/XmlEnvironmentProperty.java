@@ -45,6 +45,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private String serializationFileRootPath;
 	
+	@FieldMetaData
+	private boolean enableDataValidation;
+	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
 		this.id = id;
 		this.propertyMap = propertyMap;
@@ -139,6 +142,13 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.serializationFileRootPath = value;
 		}
 	}
+	void setEnableDataValidation(String value) {
+		if(ValidationUtil.isBoolean(value)) {
+			this.enableDataValidation = Boolean.parseBoolean(value);
+			return;
+		}
+		this.enableDataValidation = false;
+	}
 
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
@@ -183,9 +193,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
 	}
-
 	@Override
 	public String getSerializationFileRootPath() {
 		return serializationFileRootPath;
+	}
+	@Override
+	public boolean getEnableDataValidation() {
+		return enableDataValidation;
 	}
 }
