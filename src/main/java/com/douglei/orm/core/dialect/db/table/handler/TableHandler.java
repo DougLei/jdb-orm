@@ -517,7 +517,6 @@ public class TableHandler {
 			}
 		}
 	}
-
 	// 同步约束
 	private void syncConstraints(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) {
 		// TODO Auto-generated method stub
