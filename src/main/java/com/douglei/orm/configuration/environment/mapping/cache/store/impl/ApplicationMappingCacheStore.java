@@ -23,7 +23,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	private Map<String, Mapping> mappings;
 	
 	@Override
-	public void initializeStoreSize(int size) {
+	public void initializeStore(int size) {
 		if(size < 1) {
 			mappings = new HashMap<String, Mapping>(DEFAULT_STORE_SIZE);
 		}else {

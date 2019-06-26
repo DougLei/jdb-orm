@@ -28,11 +28,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
-	 * 初始化存储空间大小
+	 * 初始化存储空间
 	 * @param size
 	 */
-	protected void initializeMappingCacheStoreSize(int size) {
-		mappingCacheStore.initializeStoreSize(size);
+	protected void initializeMappingCacheStore(int size) {
+		mappingCacheStore.initializeStore(size);
 	}
 	
 	/**
