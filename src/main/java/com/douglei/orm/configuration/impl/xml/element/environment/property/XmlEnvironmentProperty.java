@@ -97,16 +97,16 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private void invokeSetMethodByFieldName(List<String> fieldNames) {
 		Class<?> clz = getClass();
 		String value = null;
-		String fieldName_ = null;
+		String _fieldName = null;
 		try {
 			for (String fieldName : fieldNames) {
-				fieldName_ = fieldName;
+				_fieldName = fieldName;
 				
 				value = propertyMapIsEmpty?null:propertyMap.get(fieldName);
 				clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
 			}
 		} catch (Exception e) {
-			throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(fieldName_)+"] 时出现异常", e);
+			throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(_fieldName)+"] 时出现异常", e);
 		}
 	}
 	private String fieldNameToSetMethodName(String fieldName) {
