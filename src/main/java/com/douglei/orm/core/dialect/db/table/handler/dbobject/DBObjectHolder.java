@@ -20,9 +20,6 @@ public class DBObjectHolder {
 	public DBObjectHolder(Object originObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
 		this(null, originObject, null, dbObjectType, dbObjectOPType);
 	}
-	public DBObjectHolder(Object originObject, Object targetObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
-		this(null, originObject, targetObject, dbObjectType, dbObjectOPType);
-	}
 	public DBObjectHolder(String tableName, Object originObject, DBObjectType dbObjectType, DBObjectOPType dbObjectOPType) {
 		this(tableName, originObject, null, dbObjectType, dbObjectOPType);
 	}

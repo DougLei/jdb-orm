@@ -121,7 +121,7 @@ public class TableHandler {
 	private void tableRename(String originTableName, String targetTableName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName), connection, statement);
 		if(dbObjectHolders != null) {
-			dbObjectHolders.add(new DBObjectHolder(originTableName, targetTableName, DBObjectType.TABLE, DBObjectOPType.RENAME));
+			dbObjectHolders.add(new DBObjectHolder(null, originTableName, targetTableName, DBObjectType.TABLE, DBObjectOPType.RENAME));
 		}
 	}
 	
@@ -448,7 +448,7 @@ public class TableHandler {
 			for (Mapping tableMapping : tableMappings) {
 				tableMappingCodes.add(tableMapping.getCode());
 				table = (TableMetadata) tableMapping.getMetadata();
-				if(tableExists(table.getName(), preparedStatement, rs)) {
+				if(tableExists(table.getOldName(), preparedStatement, rs)) {
 					switch(table.getCreateMode()) {
 						case DROP_CREATE:
 							logger.debug("正向: drop index");
@@ -526,7 +526,7 @@ public class TableHandler {
 		Collection<Column> columns = table.getColumns();
 		Column oldColumn = null;
 		for (Column column : columns) {
-			oldColumn = oldTable.getColumnByName(column.getOldName());
+			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
 			if(oldColumn == null) {// 为空标识为新加的列
 				logger.debug("正向: create column");
 				createColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
@@ -542,10 +542,10 @@ public class TableHandler {
 			}
 		}
 		
-		columns = oldTable.getColumns();
-		for (Column column : columns) {
-			if(table.getColumnByName(column.getName()) == null) {
-				dropColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+		Collection<Column> oldColumns = oldTable.getColumns();
+		for (Column oldColumn_ : oldColumns) {
+			if(table.getColumnByName(oldColumn_.getName(), false) == null && getColumnByOldName(oldColumn_.getName(), columns) == null) {
+				dropColumn(table.getName(), oldColumn_, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -578,6 +578,15 @@ public class TableHandler {
 		}
 		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
+	// 根据列的oldName, 查询列对象
+	private Column getColumnByOldName(String oldColumnName, Collection<Column> columns) {
+		for (Column column : columns) {
+			if(column.getOldName().equals(oldColumnName)) {
+				return column;
+			}
+		}
+		return null;
+	}
 	// 同步序列化文件
 	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializeObjectHolder> serializeObjectHolders) {
 		tableSerializationFileHandler.updateSerializationFile(table, oldTable, serializeObjectHolders);
@@ -604,7 +613,7 @@ public class TableHandler {
 			TableMetadata table = null;
 			for (Mapping tableMapping : tableMappings) {
 				table = (TableMetadata) tableMapping.getMetadata();
-				if(tableExists(table.getName(), preparedStatement, rs)) {
+				if(tableExists(table.getOldName(), preparedStatement, rs)) {
 					logger.debug("正向: drop index");
 					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 					logger.debug("正向: drop constraint");

@@ -109,20 +109,20 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 						case PRIMARY_KEY:
 						case UNIQUE:
 							for(Object columnName: columnNames) {
-								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase());
+								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase(), true);
 								constraint.addColumn(columnMetadata);
 							}
 							break;
 						case DEFAULT_VALUE:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
 							constraint.addColumn(columnMetadata).setDefaultValue(constraintElement.attributeValue("value"));
 							break;
 						case CHECK:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
 							constraint.addColumn(columnMetadata).setCheck(constraintElement.attributeValue("expression"));
 							break;
 						case FOREIGN_KEY:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase());
+							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
 							constraint.addColumn(columnMetadata).setForeignKey(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
 							break;
 					}

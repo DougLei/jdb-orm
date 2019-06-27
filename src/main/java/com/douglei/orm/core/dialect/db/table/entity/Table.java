@@ -126,9 +126,9 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 	public Collection<Column> getColumns() {
 		return columns.values();
 	}
-	public Column getColumnByName(String columnName) {
+	public Column getColumnByName(String columnName, boolean validateColumnExists) { // validateColumnExists: 验证列是否存在
 		Column column = columns.get(columnName);
-		if(column == null) {
+		if(validateColumnExists && column == null) {
 			throw new NullPointerException("不存在column name=["+columnName+"]的列");
 		}
 		return column;
