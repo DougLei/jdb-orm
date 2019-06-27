@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Varchar;
  * @author DougLei
  */
 public class NStringDataTypeHandler extends AbstractNStringDataTypeHandler{
+	private static final long serialVersionUID = -178515493848868654L;
 	private NStringDataTypeHandler() {}
 	private static final NStringDataTypeHandler instance = new NStringDataTypeHandler();
 	public static final NStringDataTypeHandler singleInstance() {

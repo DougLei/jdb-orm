@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Varcharmax extends DBDataType{
+	private static final long serialVersionUID = -2339956545286966018L;
 	private static final Varcharmax instance = new Varcharmax();
 	public static final Varcharmax singleInstance() {
 		return instance;

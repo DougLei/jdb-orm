@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.Varchar2;
  * @author DougLei
  */
 public class StringDataTypeHandler extends AbstractStringDataTypeHandler{
+	private static final long serialVersionUID = 4402408158587003433L;
 	private StringDataTypeHandler() {}
 	private static final StringDataTypeHandler instance = new StringDataTypeHandler();
 	public static final StringDataTypeHandler singleInstance() {

@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.Strin
  * @author DougLei
  */
 public class CharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -4805930537933242827L;
 	private CharDBDataTypeHandler() {}
 	private static final CharDBDataTypeHandler instance = new CharDBDataTypeHandler();
 	public static final CharDBDataTypeHandler singleInstance() {

@@ -16,6 +16,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.Bl
  * @author DougLei
  */
 public class VarbinaryDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 7871352001306662321L;
 	private VarbinaryDBDataTypeHandler() {}
 	private static final VarbinaryDBDataTypeHandler instance = new VarbinaryDBDataTypeHandler();
 	public static final VarbinaryDBDataTypeHandler singleInstance() {

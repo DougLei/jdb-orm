@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Varbinary;
  * @author DougLei
  */
 public class BlobDataTypeHandler extends AbstractBlobDataTypeHandler{
+	private static final long serialVersionUID = -7889963192544844583L;
 	private BlobDataTypeHandler() {}
 	private static final BlobDataTypeHandler instance = new BlobDataTypeHandler();
 	public static final BlobDataTypeHandler singleInstance() {

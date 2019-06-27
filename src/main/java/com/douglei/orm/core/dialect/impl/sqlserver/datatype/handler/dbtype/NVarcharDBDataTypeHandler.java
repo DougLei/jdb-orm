@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.St
  * @author DougLei
  */
 public class NVarcharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -2027716619896193684L;
 	private NVarcharDBDataTypeHandler() {}
 	private static final NVarcharDBDataTypeHandler instance = new NVarcharDBDataTypeHandler();
 	public static final NVarcharDBDataTypeHandler singleInstance() {

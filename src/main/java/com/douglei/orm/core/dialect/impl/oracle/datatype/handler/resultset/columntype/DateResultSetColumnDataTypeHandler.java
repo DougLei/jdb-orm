@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.DateDBDa
  * @author DougLei
  */
 public class DateResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 5577738969865541219L;
 	private DateResultSetColumnDataTypeHandler() {}
 	private static final DateResultSetColumnDataTypeHandler instance = new DateResultSetColumnDataTypeHandler();
 	public static final DateResultSetColumnDataTypeHandler singleInstance() {

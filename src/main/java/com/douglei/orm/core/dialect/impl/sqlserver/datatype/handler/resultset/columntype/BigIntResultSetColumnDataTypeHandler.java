@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.BigIn
  * @author DougLei
  */
 public class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -5973654815014755843L;
 	private BigIntResultSetColumnDataTypeHandler() {}
 	private static final BigIntResultSetColumnDataTypeHandler instance = new BigIntResultSetColumnDataTypeHandler();
 	public static final BigIntResultSetColumnDataTypeHandler singleInstance() {

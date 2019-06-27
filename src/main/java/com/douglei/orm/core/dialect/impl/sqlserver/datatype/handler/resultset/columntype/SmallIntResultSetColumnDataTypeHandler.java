@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.Small
  * @author DougLei
  */
 public class SmallIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 2221192060639453497L;
 	private SmallIntResultSetColumnDataTypeHandler() {}
 	private static final SmallIntResultSetColumnDataTypeHandler instance = new SmallIntResultSetColumnDataTypeHandler();
 	public static final SmallIntResultSetColumnDataTypeHandler singleInstance() {

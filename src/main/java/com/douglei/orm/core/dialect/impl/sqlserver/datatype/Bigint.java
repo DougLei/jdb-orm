@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Bigint extends DBDataType{
+	private static final long serialVersionUID = 2528649375429984099L;
 	private static final Bigint instance = new Bigint();
 	public static final Bigint singleInstance() {
 		return instance;

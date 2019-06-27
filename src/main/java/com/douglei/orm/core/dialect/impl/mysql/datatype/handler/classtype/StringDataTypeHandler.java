@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Varchar;
  * @author DougLei
  */
 public class StringDataTypeHandler extends AbstractStringDataTypeHandler{
+	private static final long serialVersionUID = -8267937039471102286L;
 	private StringDataTypeHandler() {}
 	private static final StringDataTypeHandler instance = new StringDataTypeHandler();
 	public static final StringDataTypeHandler singleInstance() {

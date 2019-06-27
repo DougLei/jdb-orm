@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.DatetimeD
  * @author DougLei
  */
 public class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -5080678214561580584L;
 	private DatetimeResultSetColumnDataTypeHandler() {}
 	private static final DatetimeResultSetColumnDataTypeHandler instance = new DatetimeResultSetColumnDataTypeHandler();
 	public static final DatetimeResultSetColumnDataTypeHandler singleInstance() {

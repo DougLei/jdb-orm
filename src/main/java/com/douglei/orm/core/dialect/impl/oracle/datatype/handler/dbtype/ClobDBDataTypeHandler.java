@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.ClobD
  * @author DougLei
  */
 public class ClobDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 6452189201654668877L;
 	private ClobDBDataTypeHandler() {}
 	private static final ClobDBDataTypeHandler instance = new ClobDBDataTypeHandler();
 	public static final ClobDBDataTypeHandler singleInstance() {

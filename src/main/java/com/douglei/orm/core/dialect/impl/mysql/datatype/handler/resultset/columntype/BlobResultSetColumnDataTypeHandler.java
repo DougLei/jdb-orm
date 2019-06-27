@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.BlobDBDat
  * @author DougLei
  */
 public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -8083404185431335018L;
 	private BlobResultSetColumnDataTypeHandler() {}
 	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
 	public static final BlobResultSetColumnDataTypeHandler singleInstance() {

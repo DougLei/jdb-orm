@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Bigint;
  * @author DougLei
  */
 public class LongDataTypeHandler extends AbstractLongDataTypeHandler{
+	private static final long serialVersionUID = 846812513577519890L;
 	private LongDataTypeHandler() {}
 	private static final LongDataTypeHandler instance = new LongDataTypeHandler();
 	public static final LongDataTypeHandler singleInstance() {

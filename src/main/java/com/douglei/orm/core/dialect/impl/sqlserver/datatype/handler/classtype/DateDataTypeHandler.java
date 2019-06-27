@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Datetime;
  * @author DougLei
  */
 public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
+	private static final long serialVersionUID = -954488092603551095L;
 	private DateDataTypeHandler() {}
 	private static final DateDataTypeHandler instance = new DateDataTypeHandler();
 	public static final DateDataTypeHandler singleInstance() {

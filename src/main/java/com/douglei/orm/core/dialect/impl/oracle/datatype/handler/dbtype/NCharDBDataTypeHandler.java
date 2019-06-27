@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.Strin
  * @author DougLei
  */
 public class NCharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 7274795694770231097L;
 	private NCharDBDataTypeHandler() {}
 	private static final NCharDBDataTypeHandler instance = new NCharDBDataTypeHandler();
 	public static final NCharDBDataTypeHandler singleInstance() {

@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.Date;
  * @author DougLei
  */
 public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
+	private static final long serialVersionUID = -6332418967007466799L;
 	private DateDataTypeHandler() {}
 	private static final DateDataTypeHandler instance = new DateDataTypeHandler();
 	public static final DateDataTypeHandler singleInstance() {

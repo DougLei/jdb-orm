@@ -13,7 +13,8 @@ import com.douglei.orm.core.dialect.datatype.handler.wrapper.StringWrapper;
  * @author DougLei
  */
 public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
-	
+	private static final long serialVersionUID = 8388373350531988363L;
+
 	@Override
 	public String getCode() {
 		return DataType.CLOB.getName();

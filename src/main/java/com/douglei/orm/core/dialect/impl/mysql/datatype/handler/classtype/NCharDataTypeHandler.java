@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Char;
  * @author DougLei
  */
 public class NCharDataTypeHandler extends AbstractNCharDataTypeHandler{
+	private static final long serialVersionUID = -4048271262213932561L;
 	private NCharDataTypeHandler() {}
 	private static final NCharDataTypeHandler instance = new NCharDataTypeHandler();
 	public static final NCharDataTypeHandler singleInstance() {

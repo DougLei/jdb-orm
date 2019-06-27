@@ -11,7 +11,8 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
-	
+	private static final long serialVersionUID = -6449916095443394131L;
+
 	@Override
 	public String getCode() {
 		return DataType.FLOAT.getName();

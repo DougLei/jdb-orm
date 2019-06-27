@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.Do
  * @author DougLei
  */
 public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 5078445599485987195L;
 	private DecimalDBDataTypeHandler() {}
 	private static final DecimalDBDataTypeHandler instance = new DecimalDBDataTypeHandler();
 	public static final DecimalDBDataTypeHandler singleInstance() {

@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.DateD
  * @author DougLei
  */
 public class DateDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 6813741357688425995L;
 	private DateDBDataTypeHandler() {}
 	private static final DateDBDataTypeHandler instance = new DateDBDataTypeHandler();
 	public static final DateDBDataTypeHandler singleInstance() {

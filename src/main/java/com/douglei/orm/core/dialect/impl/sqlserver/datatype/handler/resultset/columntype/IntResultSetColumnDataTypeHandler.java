@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.IntDB
  * @author DougLei
  */
 public class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 6682415289743961069L;
 	private IntResultSetColumnDataTypeHandler() {}
 	private static final IntResultSetColumnDataTypeHandler instance = new IntResultSetColumnDataTypeHandler();
 	public static final IntResultSetColumnDataTypeHandler singleInstance() {

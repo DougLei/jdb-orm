@@ -13,6 +13,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
  * @author DougLei
  */
 public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
+	private static final long serialVersionUID = 6844324481758038907L;
 
 	/**
 	 * <pre>

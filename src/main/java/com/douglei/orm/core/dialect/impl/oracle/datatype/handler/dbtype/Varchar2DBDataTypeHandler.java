@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.Strin
  * @author DougLei
  */
 public class Varchar2DBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 6167007236380601658L;
 	private Varchar2DBDataTypeHandler() {}
 	private static final Varchar2DBDataTypeHandler instance = new Varchar2DBDataTypeHandler();
 	public static final Varchar2DBDataTypeHandler singleInstance() {

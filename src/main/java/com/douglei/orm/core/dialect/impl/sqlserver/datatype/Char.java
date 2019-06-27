@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Char extends DBDataType{
+	private static final long serialVersionUID = 4266376154116670545L;
 	private static final Char instance = new Char();
 	public static final Char singleInstance() {
 		return instance;

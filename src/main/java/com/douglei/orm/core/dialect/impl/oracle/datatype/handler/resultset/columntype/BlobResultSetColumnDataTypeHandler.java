@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.BlobDBDa
  * @author DougLei
  */
 public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -6184324136870019823L;
 	private BlobResultSetColumnDataTypeHandler() {}
 	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
 	public static final BlobResultSetColumnDataTypeHandler singleInstance() {

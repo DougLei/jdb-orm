@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.IntDBData
  * @author DougLei
  */
 public class IntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -7537728277251613220L;
 	private IntResultSetColumnDataTypeHandler() {}
 	private static final IntResultSetColumnDataTypeHandler instance = new IntResultSetColumnDataTypeHandler();
 	public static final IntResultSetColumnDataTypeHandler singleInstance() {

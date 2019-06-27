@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.Sh
  * @author DougLei
  */
 public class SmallIntDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -2215030666383669175L;
 	private SmallIntDBDataTypeHandler() {}
 	private static final SmallIntDBDataTypeHandler instance = new SmallIntDBDataTypeHandler();
 	public static final SmallIntDBDataTypeHandler singleInstance() {

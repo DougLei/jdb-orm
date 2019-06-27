@@ -15,7 +15,8 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler{
-	
+	private static final long serialVersionUID = -7221275201845462627L;
+
 	@Override
 	public String getCode() {
 		return DataType.STRING.getName();

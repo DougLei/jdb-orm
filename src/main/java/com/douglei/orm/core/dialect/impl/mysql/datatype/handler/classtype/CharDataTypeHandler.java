@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Char;
  * @author DougLei
  */
 public class CharDataTypeHandler extends AbstractCharDataTypeHandler{
+	private static final long serialVersionUID = -9203218172502329379L;
 	private CharDataTypeHandler() {}
 	private static final CharDataTypeHandler instance = new CharDataTypeHandler();
 	public static final CharDataTypeHandler singleInstance() {

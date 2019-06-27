@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.Varbi
  * @author DougLei
  */
 public class BlobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 78188935857684331L;
 	private BlobResultSetColumnDataTypeHandler() {}
 	private static final BlobResultSetColumnDataTypeHandler instance = new BlobResultSetColumnDataTypeHandler();
 	public static final BlobResultSetColumnDataTypeHandler singleInstance() {

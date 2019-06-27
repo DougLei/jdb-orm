@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Mediumtext;
  * @author DougLei
  */
 public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
+	private static final long serialVersionUID = -5710009285569075328L;
 	private ClobDataTypeHandler() {}
 	private static final ClobDataTypeHandler instance = new ClobDataTypeHandler();
 	public static final ClobDataTypeHandler singleInstance() {

@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Cursor extends DBDataType{
+	private static final long serialVersionUID = -9100288308403902420L;
 	private static final Cursor instance = new Cursor();
 	public static final Cursor singleInstance() {
 		return instance;

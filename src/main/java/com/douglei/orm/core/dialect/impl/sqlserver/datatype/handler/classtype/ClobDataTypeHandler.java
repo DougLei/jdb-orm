@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Varcharmax;
  * @author DougLei
  */
 public class ClobDataTypeHandler extends AbstractClobDataTypeHandler{
+	private static final long serialVersionUID = 3118062435982769394L;
 	private ClobDataTypeHandler() {}
 	private static final ClobDataTypeHandler instance = new ClobDataTypeHandler();
 	public static final ClobDataTypeHandler singleInstance() {

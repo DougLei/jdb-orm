@@ -7,6 +7,8 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Datetime extends DBDataType{
+	private static final long serialVersionUID = -8359028283259409425L;
+	
 	private static final Datetime instance = new Datetime();
 	public static final Datetime singleInstance() {
 		return instance;

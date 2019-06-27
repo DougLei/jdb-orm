@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
  * @author DougLei
  */
 public class ShortDataTypeHandler extends AbstractShortDataTypeHandler{
+	private static final long serialVersionUID = -8824293606005383495L;
 	private ShortDataTypeHandler() {}
 	private static final ShortDataTypeHandler instance = new ShortDataTypeHandler();
 	public static final ShortDataTypeHandler singleInstance() {

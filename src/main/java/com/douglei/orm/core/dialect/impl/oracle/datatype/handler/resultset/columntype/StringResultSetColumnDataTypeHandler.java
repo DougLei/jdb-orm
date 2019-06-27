@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.Varchar2
  * @author DougLei
  */
 public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 5734543607495918146L;
 	private StringResultSetColumnDataTypeHandler() {}
 	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
 	public static final StringResultSetColumnDataTypeHandler singleInstance() {

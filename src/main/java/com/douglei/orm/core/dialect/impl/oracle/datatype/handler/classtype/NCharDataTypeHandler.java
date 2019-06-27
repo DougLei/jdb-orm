@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.NChar;
  * @author DougLei
  */
 public class NCharDataTypeHandler extends AbstractNCharDataTypeHandler{
+	private static final long serialVersionUID = 8012209480837226246L;
 	private NCharDataTypeHandler() {}
 	private static final NCharDataTypeHandler instance = new NCharDataTypeHandler();
 	public static final NCharDataTypeHandler singleInstance() {

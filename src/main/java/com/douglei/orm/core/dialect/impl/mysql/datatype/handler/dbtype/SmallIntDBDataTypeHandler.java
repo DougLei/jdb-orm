@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.ShortD
  * @author DougLei
  */
 public class SmallIntDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 6472761720725738355L;
 	private SmallIntDBDataTypeHandler() {}
 	private static final SmallIntDBDataTypeHandler instance = new SmallIntDBDataTypeHandler();
 	public static final SmallIntDBDataTypeHandler singleInstance() {

@@ -17,7 +17,8 @@ import com.douglei.tools.utils.CloseUtil;
  * @author DougLei
  */
 public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
-	
+	private static final long serialVersionUID = 5282175460553670393L;
+
 	/**
 	 * 从CallableStatement中获取输出参数的指
 	 * @param parameterIndex

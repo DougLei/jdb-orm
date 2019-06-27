@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.ClobDa
  * @author DougLei
  */
 public class ClobDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -4633598756480325453L;
 	private ClobDBDataTypeHandler() {}
 	private static final ClobDBDataTypeHandler instance = new ClobDBDataTypeHandler();
 	public static final ClobDBDataTypeHandler singleInstance() {

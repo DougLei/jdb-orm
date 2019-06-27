@@ -12,7 +12,8 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler{
-	
+	private static final long serialVersionUID = 5024739902381433048L;
+
 	@Override
 	public String getCode() {
 		return DataType.DOUBLE.getName();

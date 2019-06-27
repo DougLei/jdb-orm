@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.ClobDBDa
  * @author DougLei
  */
 public class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -8185911214757984597L;
 	private ClobResultSetColumnDataTypeHandler() {}
 	private static final ClobResultSetColumnDataTypeHandler instance = new ClobResultSetColumnDataTypeHandler();
 	public static final ClobResultSetColumnDataTypeHandler singleInstance() {

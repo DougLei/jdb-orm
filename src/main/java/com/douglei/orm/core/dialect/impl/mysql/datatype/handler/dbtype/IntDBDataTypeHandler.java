@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.Intege
  * @author DougLei
  */
 public class IntDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 2130544972221863872L;
 	private IntDBDataTypeHandler() {}
 	private static final IntDBDataTypeHandler instance = new IntDBDataTypeHandler();
 	public static final IntDBDataTypeHandler singleInstance() {

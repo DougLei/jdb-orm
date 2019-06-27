@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.Datet
  * @author DougLei
  */
 public class DatetimeResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 7311496047520564742L;
 	private DatetimeResultSetColumnDataTypeHandler() {}
 	private static final DatetimeResultSetColumnDataTypeHandler instance = new DatetimeResultSetColumnDataTypeHandler();
 	public static final DatetimeResultSetColumnDataTypeHandler singleInstance() {

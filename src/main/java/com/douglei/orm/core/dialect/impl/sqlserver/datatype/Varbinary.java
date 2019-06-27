@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Varbinary extends DBDataType{
+	private static final long serialVersionUID = -4524757570832109238L;
 	private static final Varbinary instance = new Varbinary();
 	public static final Varbinary singleInstance() {
 		return instance;

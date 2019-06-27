@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.LongDa
  * @author DougLei
  */
 public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -3660044508144051219L;
 	private BigIntDBDataTypeHandler() {}
 	private static final BigIntDBDataTypeHandler instance = new BigIntDBDataTypeHandler();
 	public static final BigIntDBDataTypeHandler singleInstance() {

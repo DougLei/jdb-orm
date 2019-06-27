@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.SmallIntD
  * @author DougLei
  */
 public class SmallIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -6124965490022622515L;
 	private SmallIntResultSetColumnDataTypeHandler() {}
 	private static final SmallIntResultSetColumnDataTypeHandler instance = new SmallIntResultSetColumnDataTypeHandler();
 	public static final SmallIntResultSetColumnDataTypeHandler singleInstance() {

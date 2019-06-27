@@ -17,6 +17,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.Varch
  * @author DougLei
  */
 public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 2603202502718512220L;
 	private StringResultSetColumnDataTypeHandler() {}
 	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
 	public static final StringResultSetColumnDataTypeHandler singleInstance() {

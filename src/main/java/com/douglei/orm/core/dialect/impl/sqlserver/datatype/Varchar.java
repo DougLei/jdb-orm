@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Varchar extends DBDataType{
+	private static final long serialVersionUID = -2793391591239636604L;
 	private static final Varchar instance = new Varchar();
 	public static final Varchar singleInstance() {
 		return instance;

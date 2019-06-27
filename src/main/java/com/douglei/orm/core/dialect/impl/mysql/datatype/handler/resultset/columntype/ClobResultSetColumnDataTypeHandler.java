@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.ClobDBDat
  * @author DougLei
  */
 public class ClobResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 5828404728344240517L;
 	private ClobResultSetColumnDataTypeHandler() {}
 	private static final ClobResultSetColumnDataTypeHandler instance = new ClobResultSetColumnDataTypeHandler();
 	public static final ClobResultSetColumnDataTypeHandler singleInstance() {

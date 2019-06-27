@@ -11,7 +11,8 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
-	
+	private static final long serialVersionUID = 6484637321538308380L;
+
 	@Override
 	public String getCode() {
 		return DataType.SHORT.getName();

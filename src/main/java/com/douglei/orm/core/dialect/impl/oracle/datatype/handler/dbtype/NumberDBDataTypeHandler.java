@@ -17,6 +17,7 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public class NumberDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -3267167014030904581L;
 	private NumberDBDataTypeHandler() {}
 	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
 	public static final NumberDBDataTypeHandler singleInstance() {

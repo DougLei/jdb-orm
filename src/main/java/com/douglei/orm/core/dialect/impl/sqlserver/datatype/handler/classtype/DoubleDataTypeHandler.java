@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Decimal;
  * @author DougLei
  */
 public class DoubleDataTypeHandler extends AbstractDoubleDataTypeHandler{
+	private static final long serialVersionUID = 332590785034941494L;
 	private DoubleDataTypeHandler() {}
 	private static final DoubleDataTypeHandler instance = new DoubleDataTypeHandler();
 	public static final DoubleDataTypeHandler singleInstance() {

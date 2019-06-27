@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.Datetime;
  * @author DougLei
  */
 public class DateDataTypeHandler extends AbstractDateDataTypeHandler{
+	private static final long serialVersionUID = 1828231953718101694L;
 	private DateDataTypeHandler() {}
 	private static final DateDataTypeHandler instance = new DateDataTypeHandler();
 	public static final DateDataTypeHandler singleInstance() {

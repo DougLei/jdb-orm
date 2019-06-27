@@ -16,6 +16,7 @@ import com.douglei.tools.utils.CloseUtil;
  * @author DougLei
  */
 public class CursorDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 5936999043267163096L;
 	private CursorDBDataTypeHandler() {}
 	private static final CursorDBDataTypeHandler instance = new CursorDBDataTypeHandler();
 	public static final CursorDBDataTypeHandler singleInstance() {

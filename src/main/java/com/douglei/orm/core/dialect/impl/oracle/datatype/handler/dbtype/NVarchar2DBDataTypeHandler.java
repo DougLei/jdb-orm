@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.Strin
  * @author DougLei
  */
 public class NVarchar2DBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 1615593839103799576L;
 	private NVarchar2DBDataTypeHandler() {}
 	private static final NVarchar2DBDataTypeHandler instance = new NVarchar2DBDataTypeHandler();
 	public static final NVarchar2DBDataTypeHandler singleInstance() {

@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.Double
  * @author DougLei
  */
 public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 6383706575751998631L;
 	private DecimalDBDataTypeHandler() {}
 	private static final DecimalDBDataTypeHandler instance = new DecimalDBDataTypeHandler();
 	public static final DecimalDBDataTypeHandler singleInstance() {

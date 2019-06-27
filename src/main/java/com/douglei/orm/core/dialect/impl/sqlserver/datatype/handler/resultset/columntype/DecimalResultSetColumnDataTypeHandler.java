@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.Decim
  * @author DougLei
  */
 public class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 4914961778265924615L;
 	private DecimalResultSetColumnDataTypeHandler() {}
 	private static final DecimalResultSetColumnDataTypeHandler instance = new DecimalResultSetColumnDataTypeHandler();
 	public static final DecimalResultSetColumnDataTypeHandler singleInstance() {

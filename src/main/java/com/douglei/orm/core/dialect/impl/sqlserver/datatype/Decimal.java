@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Decimal extends DBDataType{
+	private static final long serialVersionUID = -8400466948422638618L;
 	private static final Decimal instance = new Decimal();
 	public static final Decimal singleInstance() {
 		return instance;

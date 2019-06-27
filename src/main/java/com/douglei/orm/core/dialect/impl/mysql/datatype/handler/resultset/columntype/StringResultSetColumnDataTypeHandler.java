@@ -13,6 +13,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.VarcharDB
  * @author DougLei
  */
 public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 2428811741725853963L;
 	private StringResultSetColumnDataTypeHandler() {}
 	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
 	public static final StringResultSetColumnDataTypeHandler singleInstance() {

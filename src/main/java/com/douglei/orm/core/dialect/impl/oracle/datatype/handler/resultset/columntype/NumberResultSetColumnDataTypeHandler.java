@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.NumberDB
  * @author DougLei
  */
 public class NumberResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -8353064359719387554L;
 	private NumberResultSetColumnDataTypeHandler() {}
 	private static final NumberResultSetColumnDataTypeHandler instance = new NumberResultSetColumnDataTypeHandler();
 	public static final NumberResultSetColumnDataTypeHandler singleInstance() {

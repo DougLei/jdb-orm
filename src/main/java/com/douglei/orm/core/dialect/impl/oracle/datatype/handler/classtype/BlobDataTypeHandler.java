@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.Blob;
  * @author DougLei
  */
 public class BlobDataTypeHandler extends AbstractBlobDataTypeHandler{
+	private static final long serialVersionUID = -1077470503707245341L;
 	private BlobDataTypeHandler() {}
 	private static final BlobDataTypeHandler instance = new BlobDataTypeHandler();
 	public static final BlobDataTypeHandler singleInstance() {

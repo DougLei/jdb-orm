@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.String
  * @author DougLei
  */
 public class VarcharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -6293880893165604960L;
 	private static final VarcharDBDataTypeHandler instance = new VarcharDBDataTypeHandler();
 	public static final VarcharDBDataTypeHandler singleInstance() {
 		return instance;

@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.DecimalDB
  * @author DougLei
  */
 public class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -4029127713795899907L;
 	private DecimalResultSetColumnDataTypeHandler() {}
 	private static final DecimalResultSetColumnDataTypeHandler instance = new DecimalResultSetColumnDataTypeHandler();
 	public static final DecimalResultSetColumnDataTypeHandler singleInstance() {

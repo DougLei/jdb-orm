@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.String
  * @author DougLei
  */
 public class CharDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -8209210258056741052L;
 	private static final CharDBDataTypeHandler instance = new CharDBDataTypeHandler();
 	public static final CharDBDataTypeHandler singleInstance() {
 		return instance;

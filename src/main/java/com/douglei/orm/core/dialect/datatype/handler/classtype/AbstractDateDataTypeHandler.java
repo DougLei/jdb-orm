@@ -13,6 +13,7 @@ import com.douglei.tools.utils.datatype.ValidationUtil;
  * @author DougLei
  */
 public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
+	private static final long serialVersionUID = 2173313902868843968L;
 
 	@Override
 	public String getCode() {

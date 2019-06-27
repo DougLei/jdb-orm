@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.Da
  * @author DougLei
  */
 public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -1421382931766017836L;
 	private DatetimeDBDataTypeHandler() {}
 	private static final DatetimeDBDataTypeHandler instance = new DatetimeDBDataTypeHandler();
 	public static final DatetimeDBDataTypeHandler singleInstance() {

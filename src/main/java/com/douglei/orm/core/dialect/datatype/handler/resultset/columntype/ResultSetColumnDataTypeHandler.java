@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
  * @author DougLei
  */
 public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
+	private static final long serialVersionUID = -315210642935379249L;
 
 	/**
 	 * 支持处理的ColumnType类型

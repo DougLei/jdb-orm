@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.BlobD
  * @author DougLei
  */
 public class BlobDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 9150474452281691060L;
 	private BlobDBDataTypeHandler() {}
 	private static final BlobDBDataTypeHandler instance = new BlobDBDataTypeHandler();
 	public static final BlobDBDataTypeHandler singleInstance() {

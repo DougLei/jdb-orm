@@ -16,6 +16,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.BlobDa
  * @author DougLei
  */
 public class BlobDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = -63804198279791715L;
 	private BlobDBDataTypeHandler() {}
 	private static final BlobDBDataTypeHandler instance = new BlobDBDataTypeHandler();
 	public static final BlobDBDataTypeHandler singleInstance() {

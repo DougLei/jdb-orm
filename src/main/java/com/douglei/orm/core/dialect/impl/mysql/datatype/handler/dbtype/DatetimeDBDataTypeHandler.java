@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.DateDa
  * @author DougLei
  */
 public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 4264209690307684653L;
 	private DatetimeDBDataTypeHandler() {}
 	private static final DatetimeDBDataTypeHandler instance = new DatetimeDBDataTypeHandler();
 	public static final DatetimeDBDataTypeHandler singleInstance() {

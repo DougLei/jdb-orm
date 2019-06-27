@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.Lo
  * @author DougLei
  */
 public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
+	private static final long serialVersionUID = 9201409597925717512L;
 	private BigIntDBDataTypeHandler() {}
 	private static final BigIntDBDataTypeHandler instance = new BigIntDBDataTypeHandler();
 	public static final BigIntDBDataTypeHandler singleInstance() {

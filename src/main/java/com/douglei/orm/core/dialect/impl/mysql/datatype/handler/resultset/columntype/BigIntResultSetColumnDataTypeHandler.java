@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.dbtype.BigIntDBD
  * @author DougLei
  */
 public class BigIntResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = 2371314408044486356L;
 	private BigIntResultSetColumnDataTypeHandler() {}
 	private static final BigIntResultSetColumnDataTypeHandler instance = new BigIntResultSetColumnDataTypeHandler();
 	public static final BigIntResultSetColumnDataTypeHandler singleInstance() {
