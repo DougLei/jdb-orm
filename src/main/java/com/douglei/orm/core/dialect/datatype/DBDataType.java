@@ -1,10 +1,14 @@
 package com.douglei.orm.core.dialect.datatype;
 
+import java.io.Serializable;
+
 /**
  * 数据库数据类型
  * @author DougLei
  */
-public abstract class DBDataType {
+public abstract class DBDataType implements Serializable{
+	private static final long serialVersionUID = -7322756485117419574L;
+
 	protected static final short NO_LIMIT = -1;
 	
 	protected short sqlType;// @see java.sql.Types

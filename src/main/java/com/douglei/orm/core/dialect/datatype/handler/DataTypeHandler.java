@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.datatype.handler;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import com.douglei.orm.core.validate.ValueDataTypeValidator;
  * 
  * @author DougLei
  */
-public interface DataTypeHandler extends ValueDataTypeValidator{
+public interface DataTypeHandler extends ValueDataTypeValidator, Serializable{
 	
 	/**
 	 * 获取类型
