@@ -17,6 +17,10 @@ public class DBRunEnvironmentContext {
 		ENVIRONMENT_PROPERTY.set(environmentProperty);
 	}
 	
+	/**
+	 * 获取配置的环境全局属性
+	 * @return
+	 */
 	public static EnvironmentProperty getEnvironmentProperty() {
 		return ENVIRONMENT_PROPERTY.get();
 	}
