@@ -10,7 +10,7 @@ import com.douglei.orm.core.metadata.table.CreateMode;
  */
 public interface EnvironmentProperty {
 	
-	public String getId();
+	public String getConfigurationId();
 	
 	public Dialect getDialect();
 	

@@ -31,7 +31,7 @@ class TableSerializationFileHandler {
 	
 	// 获取对应的orm序列化文件路径, 包括文件名
 	private String getOrmSerializationFilePath(String serializationFileName) {
-		String configurationId = DBRunEnvironmentContext.getEnvironmentProperty().getId();
+		String configurationId = DBRunEnvironmentContext.getEnvironmentProperty().getConfigurationId();
 		
 		String ormSerializationFileRootPath = ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.get(configurationId);
 		if(ormSerializationFileRootPath == null) {
