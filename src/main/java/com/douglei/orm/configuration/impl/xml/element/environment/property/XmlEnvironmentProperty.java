@@ -25,7 +25,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	private Map<String, String> propertyMap;
 	private boolean propertyMapIsEmpty;
-	private String configurationId;
+	private String id;
 	
 	@FieldMetaData
 	private Dialect dialect;
@@ -54,8 +54,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidation;
 	
-	public XmlEnvironmentProperty(String configurationId, Map<String, String> propertyMap) {
-		this.configurationId = configurationId;
+	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
+		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
 		
@@ -194,8 +194,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 	
 	@Override
-	public String getConfigurationId() {
-		return configurationId;
+	public String getId() {
+		return id;
 	}
 	@Override
 	public Dialect getDialect() {
