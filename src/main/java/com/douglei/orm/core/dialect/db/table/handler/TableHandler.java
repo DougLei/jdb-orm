@@ -632,14 +632,10 @@ public class TableHandler {
 	
 	private void clear(List<Mapping> tableMappings, List<String> tableMappingCodes, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) {
 		tableMappings.clear();
-		tableMappings = null;
 		if(tableMappingCodes != null) {
 			tableMappingCodes.clear();
-			tableMappingCodes = null;
 		}
 		dbObjectHolders.clear();
-		dbObjectHolders = null;
 		serializeObjectHolders.clear();
-		serializeObjectHolders = null;
 	}
 }
