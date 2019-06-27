@@ -21,7 +21,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
-		DialectType dialect = DBRunEnvironmentContext.getDialect().getType();
+		DialectType dialect = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的sql语句");

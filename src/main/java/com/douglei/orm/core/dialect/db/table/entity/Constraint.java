@@ -178,7 +178,7 @@ public class Constraint implements Serializable{
 	}
 	// 设置约束名
 	private void setName(String name) {
-		this.name = DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().fixDBObjectName(name);
+		this.name = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectNameHandler().fixDBObjectName(name);
 	}
 	
 	public ConstraintType getConstraintType() {

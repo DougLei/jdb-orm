@@ -15,7 +15,7 @@ public interface SessionFactory {
 	/**
 	 * <pre>
 	 * 	动态添加映射, 如果存在则覆盖
-	 * 	如果是表映射, 则顺便create或dynamic_update
+	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
 	 * @param entity
 	 */
@@ -23,14 +23,15 @@ public interface SessionFactory {
 	/**
 	 * <pre>
 	 * 	动态批量添加映射, 如果存在则覆盖
-	 * 	如果是表映射, 则顺便create或dynamic_update
+	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
 	 * @param entities
 	 */
 	void dynamicBatchAddMapping(List<DynamicMapping> entities);
+	
 	/**
 	 * <pre>
-	 * 	动态覆盖映射, 如果不存在则抛出异常
+	 * 	动态覆盖映射, 如果不存在添加
 	 * 	<b>只对映射操作</b>
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>
@@ -39,13 +40,14 @@ public interface SessionFactory {
 	void dynamicCoverMapping(DynamicMapping entity);
 	/**
 	 * <pre>
-	 * 	动态批量覆盖映射, 如果不存在则抛出异常
+	 * 	动态覆盖映射, 如果不存在添加
 	 * 	<b>只对映射操作</b>
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>
 	 * @param entities
 	 */
 	void dynamicBatchCoverMapping(List<DynamicMapping> entities);
+	
 	/**
 	 * <pre>
 	 * 	动态删除映射
@@ -97,6 +99,14 @@ public interface SessionFactory {
 	 */
 	TableSqlStatementHandler getTableSqlStatementHandler();
 	
+	/**
+	 * 销毁
+	 */
 	void destroy();
+	
+	/**
+	 * 
+	 * @return
+	 */
 	String getId();
 }

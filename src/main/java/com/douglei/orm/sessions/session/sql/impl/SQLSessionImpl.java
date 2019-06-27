@@ -66,7 +66,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 		}
 		SqlMetadata sm= (SqlMetadata) mapping.getMetadata();
-		RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+code+"], dialect=["+DBRunEnvironmentContext.getDialect().getType()+"]的SQL映射");
+		RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+code+"], dialect=["+DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType()+"]的SQL映射");
 		return sm;
 	}
 	
@@ -188,7 +188,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
 		
-		DialectType dialect = DBRunEnvironmentContext.getDialect().getType();
+		DialectType dialect = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的存储过程sql语句");
@@ -260,7 +260,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					callableStatement.execute();
 					
-					boolean procedureSupportDirectlyReturnResultSet = DBRunEnvironmentContext.getDialect().getDBFeatures().procedureSupportDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().procedureSupportDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						

@@ -53,7 +53,7 @@ public abstract class Column implements Serializable{
 	
 	// 处理dataTypeHandler和dbDataType的值
 	private void processDataType(String dataType) {
-		this.dataTypeHandler = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(this.dataType==null?dataType:this.dataType.getName());
+		this.dataTypeHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(this.dataType==null?dataType:this.dataType.getName());
 		this.dbDataType = dataTypeHandler.getDBDataType();
 	}
 	
@@ -153,7 +153,7 @@ public abstract class Column implements Serializable{
 		return dbDataType;
 	}
 	public void setNameByValidate(String name, String oldName) {
-		DBRunEnvironmentContext.getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectNameHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		
 		if(StringUtil.isEmpty(oldName)) {

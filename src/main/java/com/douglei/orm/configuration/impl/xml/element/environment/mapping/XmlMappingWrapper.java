@@ -71,10 +71,10 @@ public class XmlMappingWrapper extends MappingWrapper{
 	@Override
 	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
 		try {
-			logger.debug("dynamic cover mapping: {}", mappingConfigurationContent);
-			return coverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
+			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationContent);
+			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
-			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
+			throw new DynamicAddMappingException("动态覆盖映射时出现异常", e);
 		}
 	}
 	

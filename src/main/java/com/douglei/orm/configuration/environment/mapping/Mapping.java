@@ -7,10 +7,12 @@ import com.douglei.orm.core.metadata.Metadata;
  * @author DougLei
  */
 public interface Mapping {
+	
 	/**
 	 * 获取映射编码，绝对唯一
 	 * <pre>
 	 * 	表类型的映射: 如果指定了className, 则返回className; 否则返回name, 即表名
+	 * 	sql类型的映射: 如果指定了namespace, 则返回namespace.name, 否则只返回name
 	 * </pre>
 	 * @return
 	 */

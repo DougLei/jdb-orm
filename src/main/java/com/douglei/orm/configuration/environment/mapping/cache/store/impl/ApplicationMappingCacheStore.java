@@ -1,5 +1,6 @@
 package com.douglei.orm.configuration.environment.mapping.cache.store.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,15 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	}
 	
 	@Override
+	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
+		if(mappings != null) {
+			for (Mapping mapping : mappings) {
+				addMapping(mapping);
+			}
+		}
+	}
+
+	@Override
 	public void addOrCoverMapping(Mapping mapping) {
 		String code = mapping.getCode();
 		if(logger.isDebugEnabled() && mappingExists(code)) {
@@ -50,15 +60,14 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	}
 	
 	@Override
-	public void coverMapping(Mapping mapping) throws NotExistsMappingException {
-		String code = mapping.getCode();
-		if(!mappingExists(code)) {
-			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法覆盖");
+	public void addOrCoverMapping(Collection<Mapping> mappings) {
+		if(mappings != null) {
+			for (Mapping mapping : mappings) {
+				addOrCoverMapping(mapping);
+			}
 		}
-		mappings.put(code, mapping);
-		
 	}
-	
+
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
 		Mapping mp = mappings.remove(mappingCode);
@@ -66,6 +75,15 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 			throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象, 无法删除");
 		}
 		return mp;
+	}
+	
+	@Override
+	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
+		if(mappings != null) {
+			for (String mappingCode : mappingCodes) {
+				removeMapping(mappingCode);
+			}
+		}
 	}
 	
 	@Override

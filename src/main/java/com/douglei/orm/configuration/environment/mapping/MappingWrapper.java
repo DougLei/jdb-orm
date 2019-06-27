@@ -54,7 +54,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	/**
 	 * <pre>
 	 * 	添加/覆盖映射
-	 * 	如果是表映射, 则顺便create或dynamic_update
+	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * 	这个方法用在系统启动后, 动态的添加新的映射或修改映射时使用
 	 * </pre>
 	 * @param mapping
@@ -70,15 +70,15 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * <pre>
-	 * 	覆盖映射, 如果不存在则抛出异常
+	 * 	添加/覆盖映射
 	 * 	<b>只对映射操作</b>
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>
 	 * @param mapping
 	 * @return mapping的code
 	 */
-	protected String coverMapping(Mapping mapping) {
-		mappingCacheStore.coverMapping(mapping);
+	protected String addOrCoverMapping_simple(Mapping mapping) {
+		mappingCacheStore.addOrCoverMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -109,7 +109,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	/**
 	 * <pre>
 	 * 	动态添加映射, 如果存在则覆盖
-	 * 	如果是表映射, 则顺便create或dynamic_update
+	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
@@ -118,7 +118,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
 	/**
 	 * <pre>
-	 * 	动态覆盖映射, 如果不存在则抛出异常
+	 * 	动态覆盖映射, 如果不存在添加
 	 * 	<b>只对映射操作</b>
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>

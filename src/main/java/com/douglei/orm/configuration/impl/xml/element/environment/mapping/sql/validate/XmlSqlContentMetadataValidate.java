@@ -89,7 +89,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		String dialectValue = null; 
 		DialectType type = null;
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			type = DBRunEnvironmentContext.getDialect().getType();
+			type = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		}else {
 			type = DialectType.toValue(dialectValue);
 			if(type == null) {

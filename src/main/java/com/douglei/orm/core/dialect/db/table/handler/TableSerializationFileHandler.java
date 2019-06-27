@@ -31,11 +31,11 @@ class TableSerializationFileHandler {
 	
 	// 获取对应的orm序列化文件路径, 包括文件名
 	private String getOrmSerializationFilePath(String serializationFileName) {
-		String configurationId = DBRunEnvironmentContext.getConfigurationId();
+		String configurationId = DBRunEnvironmentContext.getEnvironmentProperty().getId();
 		
 		String ormSerializationFileRootPath = ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.get(configurationId);
 		if(ormSerializationFileRootPath == null) {
-			ormSerializationFileRootPath = DBRunEnvironmentContext.getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
+			ormSerializationFileRootPath = DBRunEnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
 			File rootFile = new File(ormSerializationFileRootPath);
 			if(!rootFile.exists()) {
 				rootFile.mkdirs();

@@ -1,5 +1,7 @@
 package com.douglei.orm.configuration.environment.mapping.cache.store;
 
+import java.util.Collection;
+
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 
@@ -26,6 +28,12 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * @throws RepeatedMappingException
 	 */
 	void addMapping(Mapping mapping) throws RepeatedMappingException;
+	/**
+	 * 批量addMapping
+	 * @param mappings
+	 * @throws RepeatedMappingException
+	 */
+	void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException;
 	
 	/**
 	 * <pre>
@@ -36,16 +44,11 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * @param mapping
 	 */
 	void addOrCoverMapping(Mapping mapping);
-	
 	/**
-	 * <pre>
-	 * 	覆盖映射, 如果不存在则抛出异常
-	 * 	如果存在相同code的映射, 将其cover
-	 * </pre>
-	 * @param mapping
-	 * @throws NotExistsMappingException
+	 * 批量addOrCoverMapping
+	 * @param mappings
 	 */
-	void coverMapping(Mapping mapping) throws NotExistsMappingException;
+	void addOrCoverMapping(Collection<Mapping> mappings);
 	
 	/**
 	 * 移除映射
@@ -54,6 +57,12 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * @throws NotExistsMappingException
 	 */
 	Mapping removeMapping(String mappingCode) throws NotExistsMappingException;
+	/**
+	 * 批量removeMapping
+	 * @param mappingCodes
+	 * @throws NotExistsMappingException
+	 */
+	void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException;
 	
 	/**
 	 * 获取映射

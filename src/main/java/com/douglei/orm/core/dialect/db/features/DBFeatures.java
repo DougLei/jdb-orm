@@ -35,15 +35,17 @@ public abstract class DBFeatures {
 	 * @return
 	 */
 	public boolean supportColumnDataTypeConvert(DataType originDataType, DataType targetDataType) {
-		if(DBRunEnvironmentContext.getEnableColumnDynamicUpdateValidation()) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
 			if(supportColumnDataTypeConvertMap == null) {
 				initSupportColumnDataTypeConvertMap();
 			}
-			DataType[] supportTargetDataTypes = supportColumnDataTypeConvertMap.get(originDataType);
-			if(supportTargetDataTypes != null && supportTargetDataTypes.length > 0) {
-				for (DataType tdt : supportTargetDataTypes) {
-					if(tdt == targetDataType) {
-						return true;
+			if(supportColumnDataTypeConvertMap.size() > 0) {
+				DataType[] supportTargetDataTypes = supportColumnDataTypeConvertMap.get(originDataType);
+				if(supportTargetDataTypes != null && supportTargetDataTypes.length > 0) {
+					for (DataType tdt : supportTargetDataTypes) {
+						if(tdt == targetDataType) {
+							return true;
+						}
 					}
 				}
 			}

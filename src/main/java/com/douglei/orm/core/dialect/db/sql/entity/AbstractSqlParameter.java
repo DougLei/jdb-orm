@@ -116,7 +116,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 	}
 	private void setDataType(String dataType) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() != SqlContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
 				this.dataType = mapping.getDefaultClassDataTypeHandler();
 			}else {
@@ -127,7 +127,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 	}
 	private void setDBDataType(String typeName) {
 		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
 				this.dataType = mapping.getDefaultDBDataTypeHandler();
 			}else {
@@ -196,7 +196,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		this.defaultValue = defaultValue;
 	}
 	private void setValidate(String validate) {
-		if(DBRunEnvironmentContext.getEnableDataValidation() && ValidationUtil.isBoolean(validate)) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && ValidationUtil.isBoolean(validate)) {
 			this.validate = Boolean.parseBoolean(validate);
 		}
 	}
