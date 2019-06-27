@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.mapping.Mapping;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.table.entity.Column;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
@@ -20,7 +22,8 @@ import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectHolder;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectOPType;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectType;
-import com.douglei.orm.core.dialect.db.table.handler.serializationobject.SerializationObjectHolder;
+import com.douglei.orm.core.dialect.db.table.handler.serializationobject.SerializeObjectHolder;
+import com.douglei.orm.core.dialect.db.table.handler.tablemapping.TableMappingHolder;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -326,18 +329,32 @@ public class TableHandler {
 	
 	/**
 	 * 回滚
+	 * @param tableMappingHolder
 	 * @param dbObjectHolders
-	 * @param serializationObjectHolders
+	 * @param serializeObjectHolders
 	 * @param connection
 	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @throws SQLException 
 	 */
-	private void rollback(List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void rollback(TableMappingHolder tableMappingHolder, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+		rollbackTableMapping(tableMappingHolder);
 		rollbackDDL(dbObjectHolders, connection, statement, tableSqlStatementHandler);
-		tableSerializationFileHandler.rollbackSerializationFile(serializationObjectHolders);
+		tableSerializationFileHandler.rollbackSerializationFile(serializeObjectHolders);
 	}
 	
+	private void rollbackTableMapping(TableMappingHolder tableMappingHolder) {
+		MappingCacheStore mcs = DBRunEnvironmentContext.getEnvironmentProperty().getMappingCacheStore();
+		switch(tableMappingHolder.getTableMappingOPType()) {
+			case CREATE:
+				mcs.addMapping(tableMappingHolder.getTableMappings());
+				break;
+			case DROP:
+				mcs.removeMapping(tableMappingHolder.getTableMappingCodes());
+				break;
+		}
+	}
+
 	private void rollbackDDL(List<DBObjectHolder> dbObjectHolders, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
 		if(dbObjectHolders.size() > 0) {
 			logger.debug("开始回滚 DDL操作");
@@ -411,12 +428,13 @@ public class TableHandler {
 	/**
 	 * create表
 	 * @param dataSourceWrapper
-	 * @param tables
+	 * @param tableMappings
 	 */
-	public void create(DataSourceWrapper dataSourceWrapper, List<TableMetadata> tables) {
+	public void create(DataSourceWrapper dataSourceWrapper, List<Mapping> tableMappings) {
 		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getTableSqlStatementHandler();
-		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tables.size());
-		List<SerializationObjectHolder> serializationObjectHolders = new ArrayList<SerializationObjectHolder>(tables.size());
+		List<String> tableMappingCodes = new ArrayList<String>(tableMappings.size());
+		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tableMappings.size()*2);
+		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -426,7 +444,10 @@ public class TableHandler {
 			connection = dataSourceWrapper.getConnection(false).getConnection();
 			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
 			
-			for (TableMetadata table : tables) {
+			TableMetadata table = null;
+			for (Mapping tableMapping : tableMappings) {
+				tableMappingCodes.add(tableMapping.getCode());
+				table = (TableMetadata) tableMapping.getMetadata();
 				if(tableExists(table.getName(), preparedStatement, rs)) {
 					switch(table.getCreateMode()) {
 						case DROP_CREATE:
@@ -438,7 +459,7 @@ public class TableHandler {
 							dropTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 							break;
 						case DYNAMIC_UPDATE:
-							syncTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders, serializationObjectHolders);
+							syncTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders, serializeObjectHolders);
 							continue;
 						default:
 							logger.debug("createTable, 而table存在时, 不处理table.createMode={}的表数据", table.getCreateMode());
@@ -452,21 +473,18 @@ public class TableHandler {
 				logger.debug("正向: create index");
 				createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create serialization file");
-				tableSerializationFileHandler.createSerializationFile(table, serializationObjectHolders);
+				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
 			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
-				rollback(dbObjectHolders, serializationObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
+				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
 			} catch (SQLException e1) {
 				logger.error("create 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {
-			dbObjectHolders.clear();
-			dbObjectHolders = null;
-			serializationObjectHolders.clear();
-			serializationObjectHolders = null;
+			clear(tableMappings, tableMappingCodes, dbObjectHolders, serializeObjectHolders);
 			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
 		}
 	}
@@ -478,10 +496,10 @@ public class TableHandler {
 	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
-	 * @param serializationObjectHolders
+	 * @param serializeObjectHolders
 	 * @throws SQLException 
 	 */
-	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializationObjectHolder> serializationObjectHolders) throws SQLException {
+	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
 		// 删除旧表的约束和索引
 		dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
@@ -493,7 +511,7 @@ public class TableHandler {
 		createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 		// 对序列化文件进行同步
-		syncSerializationFile(table, oldTable, serializationObjectHolders);
+		syncSerializationFile(table, oldTable, serializeObjectHolders);
 	}
 	
 	// 同步表
@@ -561,19 +579,19 @@ public class TableHandler {
 		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
 	// 同步序列化文件
-	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializationObjectHolder> serializationObjectHolders) {
-		tableSerializationFileHandler.updateSerializationFile(table, oldTable, serializationObjectHolders);
+	private void syncSerializationFile(TableMetadata table, TableMetadata oldTable, List<SerializeObjectHolder> serializeObjectHolders) {
+		tableSerializationFileHandler.updateSerializationFile(table, oldTable, serializeObjectHolders);
 	}
 
 	/**
 	 * drop表
 	 * @param dataSourceWrapper
-	 * @param tables
+	 * @param tableMappings
 	 */
-	public void drop(DataSourceWrapper dataSourceWrapper, List<TableMetadata> tables) {
+	public void drop(DataSourceWrapper dataSourceWrapper, List<Mapping> tableMappings) {
 		TableSqlStatementHandler tableSqlStatementHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getTableSqlStatementHandler();
-		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tables.size());
-		List<SerializationObjectHolder> serializationObjectHolders = new ArrayList<SerializationObjectHolder>(tables.size());
+		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tableMappings.size()*2);
+		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -583,7 +601,9 @@ public class TableHandler {
 			connection = dataSourceWrapper.getConnection(false).getConnection();
 			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
 			
-			for (TableMetadata table : tables) {
+			TableMetadata table = null;
+			for (Mapping tableMapping : tableMappings) {
+				table = (TableMetadata) tableMapping.getMetadata();
 				if(tableExists(table.getName(), preparedStatement, rs)) {
 					logger.debug("正向: drop index");
 					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
@@ -593,22 +613,33 @@ public class TableHandler {
 					dropTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders);
 				}
 				logger.debug("正向: drop serialization file");
-				tableSerializationFileHandler.dropSerializationFile(table, serializationObjectHolders);
+				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
 			logger.error("drop 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
-				rollback(dbObjectHolders, serializationObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
+				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
 			} catch (SQLException e1) {
 				logger.error("drop 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {
-			dbObjectHolders.clear();
-			dbObjectHolders = null;
-			serializationObjectHolders.clear();
-			serializationObjectHolders = null;
+			clear(tableMappings, null, dbObjectHolders, serializeObjectHolders);
 			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
 		}
+	}
+	
+	
+	private void clear(List<Mapping> tableMappings, List<String> tableMappingCodes, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) {
+		tableMappings.clear();
+		tableMappings = null;
+		if(tableMappingCodes != null) {
+			tableMappingCodes.clear();
+			tableMappingCodes = null;
+		}
+		dbObjectHolders.clear();
+		dbObjectHolders = null;
+		serializeObjectHolders.clear();
+		serializeObjectHolders = null;
 	}
 }

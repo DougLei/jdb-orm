@@ -8,7 +8,6 @@ import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.context.RunMappingConfigurationContext;
-import com.douglei.orm.core.metadata.table.TableMetadata;
 
 /**
  * 
@@ -20,11 +19,6 @@ public abstract class MappingWrapper implements SelfProcessing{
 	private MappingCacheStore mappingCacheStore;
 	public MappingWrapper(MappingCacheStore mappingCacheStore) {
 		this.mappingCacheStore = mappingCacheStore;
-	}
-	
-	// 是否是表映射
-	private boolean isTableMapping(Mapping mapping) {
-		return mapping.getMappingType() == MappingType.TABLE;
 	}
 	
 	/**
@@ -45,9 +39,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addMapping(Mapping mapping){
 		mappingCacheStore.addMapping(mapping);
-		if(isTableMapping(mapping)) {
-			RunMappingConfigurationContext.registerCreateTable((TableMetadata) mapping.getMetadata());
-		}
+		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 
@@ -62,9 +54,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addOrCoverMapping(Mapping mapping) {
 		mappingCacheStore.addOrCoverMapping(mapping);
-		if(isTableMapping(mapping)) {
-			RunMappingConfigurationContext.registerCreateTable((TableMetadata) mapping.getMetadata());
-		}
+		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -92,9 +82,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected void removeMapping(String mappingCode) {
 		Mapping mapping = mappingCacheStore.removeMapping(mappingCode);
-		if(isTableMapping(mapping)) {
-			RunMappingConfigurationContext.registerDropTable((TableMetadata) mapping.getMetadata());
-		}
+		RunMappingConfigurationContext.registerDropTableMapping(mapping);
 	}
 	
 	/**

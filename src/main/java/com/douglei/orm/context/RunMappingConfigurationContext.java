@@ -3,6 +3,8 @@ package com.douglei.orm.context;
 import java.util.ArrayList;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.mapping.Mapping;
+import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.core.dialect.db.table.handler.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
@@ -23,19 +25,23 @@ public class RunMappingConfigurationContext {
 		return runMappingConfiguration;
 	}
 	
+	// 是否要注册表映射
+	private static boolean isRegisterTableMapping(Mapping mapping) {
+		return mapping.getMappingType() == MappingType.TABLE && ((TableMetadata)mapping.getMetadata()).getCreateMode() != CreateMode.NONE;
+	}
+	
 	/**
-	 * 注册要create的TableMetadata
-	 * @param tableMetadata
+	 * 注册要create的TableMapping
+	 * @param mapping
 	 */
-	public static void registerCreateTable(TableMetadata tableMetadata) {
-		if(tableMetadata.getCreateMode() == CreateMode.NONE) {// 如果是NONE, 则不对表进行任何处理
-			return;
+	public static void registerCreateTableMapping(Mapping mapping) {
+		if(isRegisterTableMapping(mapping)) {
+			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+			if(runMappingConfiguration.createTableMappings == null) {
+				runMappingConfiguration.createTableMappings = new ArrayList<Mapping>(10);
+			}
+			runMappingConfiguration.createTableMappings.add(mapping);
 		}
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		if(runMappingConfiguration.createTables == null) {
-			runMappingConfiguration.createTables = new ArrayList<TableMetadata>(10);
-		}
-		runMappingConfiguration.createTables.add(tableMetadata);
 	}
 	
 	/**
@@ -45,22 +51,24 @@ public class RunMappingConfigurationContext {
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
 		if(RUN_MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.createTables != null) {
-				TableHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.createTables);
+			if(runMappingConfiguration.createTableMappings != null) {
+				TableHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.createTableMappings);
 			}
 		}
 	}
 	
 	/**
-	 * 注册要drop的TableMetadata
-	 * @param tableMetadata
+	 * 注册要drop的TableMapping
+	 * @param mapping
 	 */
-	public static void registerDropTable(TableMetadata tableMetadata) {
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		if(runMappingConfiguration.dropTables == null) {
-			runMappingConfiguration.dropTables = new ArrayList<TableMetadata>(4);
+	public static void registerDropTableMapping(Mapping mapping) {
+		if(isRegisterTableMapping(mapping)) {
+			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+			if(runMappingConfiguration.dropTableMappings == null) {
+				runMappingConfiguration.dropTableMappings = new ArrayList<Mapping>(4);
+			}
+			runMappingConfiguration.dropTableMappings.add(mapping);
 		}
-		runMappingConfiguration.dropTables.add(tableMetadata);
 	}
 	
 	/**
@@ -70,8 +78,8 @@ public class RunMappingConfigurationContext {
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
 		if(RUN_MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.dropTables != null) {
-				TableHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.dropTables);
+			if(runMappingConfiguration.dropTableMappings != null) {
+				TableHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.dropTableMappings);
 			}
 		}
 	}

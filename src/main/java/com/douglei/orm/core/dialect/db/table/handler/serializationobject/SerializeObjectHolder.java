@@ -6,11 +6,11 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * 序列化对象持有者
  * @author DougLei
  */
-public class SerializationObjectHolder {
+public class SerializeObjectHolder {
 	private TableMetadata table;// 本次操作的table
 	private TableMetadata oldTable;// 上一次操作的table, 该对象通过反序列化获得, 所以可能为空
 	
-	public SerializationObjectHolder(TableMetadata table, TableMetadata oldTable) {
+	public SerializeObjectHolder(TableMetadata table, TableMetadata oldTable) {
 		this.table = table;
 		this.oldTable = oldTable;
 	}
