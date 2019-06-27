@@ -43,13 +43,13 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private CreateMode tableCreateMode;
 	
 	@FieldMetaData
-	private String serializationFileRootPath;
-	
-	@FieldMetaData
 	private boolean enableDataValidation;
 	
 	@FieldMetaData
 	private boolean enableTableDynamicUpdate;
+	
+	@FieldMetaData
+	private String serializationFileRootPath;
 	
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidation;
@@ -62,6 +62,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
 		invokeSetMethodByFieldName(fieldNames);
+		validateFiledValue();
 	}
 	
 	/**
@@ -111,6 +112,15 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private String fieldNameToSetMethodName(String fieldName) {
 		return "set" + fieldName.substring(0,1).toUpperCase() + fieldName.substring(1);
 	}
+	
+	/**
+	 * 验证属性值
+	 */
+	private void validateFiledValue() {
+		if(enableTableDynamicUpdate && serializationFileRootPath == null) {
+			throw new NullPointerException("当开启了表动态更新[<property name=\"enableTableDynamicUpdate\" value=\"true\" />]的功能时, 必须配置<property name=\"serializationFileRootPath\" value=\"\" />的值, 标明序列化文件的根路径 [配置的路径从磁盘根路径起]");
+		}
+	}
 
 	void setDialect(String value) {
 		if(StringUtil.notEmpty(value)) {
@@ -143,11 +153,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.tableCreateMode = CreateMode.toValue(value);
 		}
 	}
-	void setSerializationFileRootPath(String value) {
-		if(StringUtil.notEmpty(value)) {
-			this.serializationFileRootPath = value;
-		}
-	}
 	void setEnableDataValidation(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableDataValidation = Boolean.parseBoolean(value);
@@ -156,6 +161,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	void setEnableTableDynamicUpdate(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableTableDynamicUpdate = Boolean.parseBoolean(value);
+		}
+	}
+	void setSerializationFileRootPath(String value) {
+		if(StringUtil.notEmpty(value)) {
+			this.serializationFileRootPath = value;
 		}
 	}
 	void setEnableColumnDynamicUpdateValidation(String value) {
@@ -208,16 +218,16 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return tableCreateMode;
 	}
 	@Override
-	public String getSerializationFileRootPath() {
-		return serializationFileRootPath;
-	}
-	@Override
 	public boolean getEnableDataValidation() {
 		return enableDataValidation;
 	}
 	@Override
 	public boolean getEnableTableDynamicUpdate() {
 		return enableTableDynamicUpdate;
+	}
+	@Override
+	public String getSerializationFileRootPath() {
+		return serializationFileRootPath;
 	}
 	@Override
 	public boolean getEnableColumnDynamicUpdateValidation() {

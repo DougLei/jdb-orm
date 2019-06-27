@@ -43,9 +43,6 @@ public class XmlTableMetadataValidate implements MetadataValidate{
 		if(cm == CreateMode.DYNAMIC_UPDATE && !DBRunEnvironmentContext.getEnvironmentProperty().getEnableTableDynamicUpdate()) {
 			cm = CreateMode.defaultCreateMode();
 		}
-		if(cm == CreateMode.DYNAMIC_UPDATE && DBRunEnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() == null) {
-			throw new NullPointerException("表映射的createMode值为["+CreateMode.DYNAMIC_UPDATE.name()+"]时, 在配置<configuration>元素时, 必须在其中配置<property name=\"serializationFileRootPath\" value=\"\" />的值, 标明序列化文件的根路径 [配置的路径从磁盘根路径起]");
-		}
 		return cm;
 	}
 }
