@@ -513,41 +513,78 @@ public class TableHandler {
 			createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
 			// 对序列化文件进行同步
 			syncSerializationFile(table, oldTable, serializeObjectHolders);
+		}else {
+			logger.debug("[{}]表没有任何更新, 不执行同步操作", table.getName());
 		}
 	}
 	
 	// 是否更新了表
 	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
-		if(!table.getName().equals(oldTable.getName())) {
-			return true;
-		}
-		if(isUpdateColumn(table.getColumns(), oldTable.getColumns())) {
-			return true;
-		}
-		if(isUpdateConstraint(table.getConstraints(), oldTable.getConstraints())) {
-			return true;
-		}
-		if(isUpdateIndex(table.getIndexes(), oldTable.getIndexes())) {
+		if(!table.getName().equals(oldTable.getName()) 
+				|| isUpdateColumn(table.getColumns(), oldTable)
+				|| isUpdateConstraint(table.getConstraints(), oldTable)
+				|| isUpdateIndex(table.getIndexes(), oldTable)) {
 			return true;
 		}
 		return false;
 	}
 	// 是否更新了列
-	private boolean isUpdateColumn(Collection<Column> columns, Collection<Column> oldColumns) {
-		if(columns.size() != oldColumns.size()) {
+	private boolean isUpdateColumn(Collection<Column> columns, TableMetadata oldTable) {
+		if(columns.size() != oldTable.getColumns().size()) {
 			return true;
 		}
-		// TODO Auto-generated method stub
+		Column oldColumn = null;
+		for (Column column : columns) {
+			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
+			if(oldColumn == null) {
+				return true;
+			}else {// 不为空, 标识可能为修改列
+				if(!column.getName().equals(oldColumn.getName())) {
+					return true;
+				}
+				if(isModifyColumn_simpleValidate(column, oldColumn)) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	// 是否更新了约束
-	private boolean isUpdateConstraint(Collection<Constraint> constraints, Collection<Constraint> oldConstraints) {
-		// TODO Auto-generated method stub
+	private boolean isUpdateConstraint(Collection<Constraint> constraints, TableMetadata oldTable) {
+		Collection<Constraint> oldConstraints = oldTable.getConstraints();
+		if(constraints == null) {
+			if(oldConstraints != null) {
+				return true;
+			}
+		}else {
+			if(oldConstraints == null || constraints.size() != oldConstraints.size()) {
+				return true;
+			}
+			for (Constraint constraint : constraints) {
+				if(oldTable.getConstraintByName(constraint.getName()) == null) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	// 是否更新了索引
-	private boolean isUpdateIndex(Collection<Index> indexes, Collection<Index> oldIndexes) {
-		// TODO Auto-generated method stub
+	private boolean isUpdateIndex(Collection<Index> indexes, TableMetadata oldTable) {
+		Collection<Index> oldIndexes = oldTable.getIndexes();
+		if(indexes == null) {
+			if(oldIndexes != null) {
+				return true;
+			}
+		}else {
+			if(oldIndexes == null || indexes.size() != oldIndexes.size()) {
+				return true;
+			}
+			for (Index index : indexes) {
+				if(oldTable.getIndexByName(index.getName()) == null) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	// 同步表
@@ -612,6 +649,10 @@ public class TableHandler {
 			}
 			return isModifyColumn;
 		}
+		return isModifyColumn_simpleValidate(column, oldColumn);
+	}
+	// 是否修改列(简单判断)
+	private boolean isModifyColumn_simpleValidate(Column column, Column oldColumn) {
 		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
 	// 根据列的oldName, 查询列对象

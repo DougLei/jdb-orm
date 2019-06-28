@@ -139,11 +139,23 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 		}
 		return constraints.values();
 	}
+	public Constraint getConstraintByName(String constraintName) {
+		if(constraints == null) {
+			return null;
+		}
+		return constraints.get(constraintName);
+	}
 	public Collection<Index> getIndexes(){
 		if(indexes == null) {
 			return null;
 		}
 		return indexes.values();
+	}
+	public Index getIndexByName(String indexName) {
+		if(indexes == null) {
+			return null;
+		}
+		return indexes.get(indexName);
 	}
 	
 	/**
