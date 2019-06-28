@@ -518,7 +518,7 @@ public class TableHandler {
 	
 	// 是否更新了表(结构)
 	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
-		// TODO 判断是否更新了表(结构)
+		// TODO 还未实现, 判断是否更新了表(结构)
 		return true;
 	}
 	// 同步表
