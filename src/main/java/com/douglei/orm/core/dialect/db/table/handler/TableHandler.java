@@ -501,19 +501,26 @@ public class TableHandler {
 	 */
 	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
-		// 删除旧表的约束和索引
-		dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		dropIndex(oldTable.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		// 对表和列进行同步
-		syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		// 创建新表的约束和索引
-		createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-		// 对序列化文件进行同步
-		syncSerializationFile(table, oldTable, serializeObjectHolders);
+		if(isUpdateTable(table, oldTable)) {
+			// 删除旧表的约束和索引
+			dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			dropIndex(oldTable.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			// 对表和列进行同步
+			syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			// 创建新表的约束和索引
+			createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			// 对序列化文件进行同步
+			syncSerializationFile(table, oldTable, serializeObjectHolders);
+		}
 	}
 	
+	// 是否更新了表(结构)
+	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
+		// TODO 判断是否更新了表(结构)
+		return true;
+	}
 	// 同步表
 	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(!table.getName().equals(oldTable.getName())) {
