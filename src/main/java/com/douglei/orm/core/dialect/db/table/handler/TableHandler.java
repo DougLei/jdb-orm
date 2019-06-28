@@ -516,10 +516,39 @@ public class TableHandler {
 		}
 	}
 	
-	// 是否更新了表(结构)
+	// 是否更新了表
 	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
-		// TODO 还未实现, 判断是否更新了表(结构)
-		return true;
+		if(!table.getName().equals(oldTable.getName())) {
+			return true;
+		}
+		if(isUpdateColumn(table.getColumns(), oldTable.getColumns())) {
+			return true;
+		}
+		if(isUpdateConstraint(table.getConstraints(), oldTable.getConstraints())) {
+			return true;
+		}
+		if(isUpdateIndex(table.getIndexes(), oldTable.getIndexes())) {
+			return true;
+		}
+		return false;
+	}
+	// 是否更新了列
+	private boolean isUpdateColumn(Collection<Column> columns, Collection<Column> oldColumns) {
+		if(columns.size() != oldColumns.size()) {
+			return true;
+		}
+		// TODO Auto-generated method stub
+		return false;
+	}
+	// 是否更新了约束
+	private boolean isUpdateConstraint(Collection<Constraint> constraints, Collection<Constraint> oldConstraints) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	// 是否更新了索引
+	private boolean isUpdateIndex(Collection<Index> indexes, Collection<Index> oldIndexes) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	// 同步表
 	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
