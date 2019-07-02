@@ -118,7 +118,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	 */
 	private void validateFiledValue() {
 		if(enableTableDynamicUpdate && serializationFileRootPath == null) {
-			throw new NullPointerException("当开启了表动态更新[<property name=\"enableTableDynamicUpdate\" value=\"true\" />]的功能时, 必须配置<property name=\"serializationFileRootPath\" value=\"\" />的值, 标明序列化文件的根路径 [配置的路径从磁盘根路径起]");
+			setSerializationFileRootPath(System.getProperty("user.home"));
 		}
 	}
 
