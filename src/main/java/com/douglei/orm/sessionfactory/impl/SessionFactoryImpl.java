@@ -39,10 +39,21 @@ public class SessionFactoryImpl implements SessionFactory {
 		return configuration.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}
 	
+	private void dynamicAddMapping_(DynamicMapping entity) {
+		switch(entity.getType()) {
+			case BY_PATH:
+				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
+				break;
+			case BY_CONTENT:
+				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+				break;
+		}
+	}
+	
 	@Override
 	public void dynamicAddMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-		entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+		dynamicAddMapping_(entity);
 		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
 	}
 	
@@ -50,25 +61,36 @@ public class SessionFactoryImpl implements SessionFactory {
 	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
-			entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+			dynamicAddMapping_(entity);
 		}
 		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
+	}
+	
+	private void dynamicCoverMapping_(DynamicMapping entity) {
+		switch(entity.getType()) {
+			case BY_PATH:
+				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
+				break;
+			case BY_CONTENT:
+				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+				break;
+		}
 	}
 	
 	@Override
 	public void dynamicCoverMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-		entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+		dynamicCoverMapping_(entity);
 	}
 
 	@Override
 	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
-			entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+			dynamicCoverMapping_(entity);
 		}
 	}
-
+	
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);

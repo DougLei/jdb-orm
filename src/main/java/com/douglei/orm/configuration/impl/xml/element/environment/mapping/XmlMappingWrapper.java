@@ -53,8 +53,18 @@ public class XmlMappingWrapper extends MappingWrapper{
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {
 		if(elements != null && elements.size() > 0) {
 			for (Object elem : elements) {
-				fileScanner.scan(((Attribute)elem).getValue());
+				fileScanner.scan(true, ((Attribute)elem).getValue());
 			}
+		}
+	}
+	
+	@Override
+	public String dynamicAddMapping(String mappingConfigurationFilePath) {
+		try {
+			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationFilePath);
+			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
+		} catch (Exception e) {
+			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
 		}
 	}
 	
@@ -65,6 +75,16 @@ public class XmlMappingWrapper extends MappingWrapper{
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
 			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
+		}
+	}
+	
+	@Override
+	public String dynamicCoverMapping(String mappingConfigurationFilePath) {
+		try {
+			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationFilePath);
+			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
+		} catch (Exception e) {
+			throw new DynamicAddMappingException("动态覆盖映射时出现异常", e);
 		}
 	}
 	

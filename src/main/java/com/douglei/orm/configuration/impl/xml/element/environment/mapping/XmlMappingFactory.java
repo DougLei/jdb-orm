@@ -1,7 +1,6 @@
 package com.douglei.orm.configuration.impl.xml.element.environment.mapping;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +16,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.Xm
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
 import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.file.FileReaderUtil;
 
 /**
  * 
@@ -26,10 +26,7 @@ public class XmlMappingFactory {
 	private static final Logger logger = LoggerFactory.getLogger(XmlMappingFactory.class);
 	
 	/**
-	 * <pre>
-	 * 	根据xml创建mapping实例
-	 * 	在初始化时, 加载配置文件时, 创建mapping实例的方法
-	 * </pre>
+	 * 指定映射配置的xml文件路径, 读取并创建mapping实例
 	 * @param mappingConfigurationXmlFilePath
 	 * @return
 	 * @throws FileNotFoundException
@@ -37,17 +34,14 @@ public class XmlMappingFactory {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public static Mapping newMappingInstance(String mappingConfigurationXmlFilePath) throws FileNotFoundException, DocumentException, SAXException, IOException {
+	public static Mapping newMappingInstance(String mappingConfigurationXmlFilePath) throws DocumentException, SAXException, IOException {
 		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationXmlFilePath, mappingType);
-		return newMappingInstance(mappingType, mappingConfigurationXmlFilePath, new FileInputStream(mappingConfigurationXmlFilePath));
+		return newMappingInstance(mappingType, mappingConfigurationXmlFilePath, FileReaderUtil.readByPath(mappingConfigurationXmlFilePath));
 	}
 	
 	/**
-	 * <pre>
-	 * 	根据xml创建mapping实例
-	 * 	系统运行后, 动态添加新的映射文件时, 创建mapping实例的方法
-	 * </pre>
+	 * 指定映射配置的content, 读取并创建mapping实例
 	 * @param mappingType
 	 * @param mappingConfigurationContent
 	 * @return

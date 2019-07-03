@@ -99,11 +99,30 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 	动态添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
+	 * @param mappingConfigurationFilePath 配置文件路径
+	 * @return mapping的code
+	 */
+	public abstract String dynamicAddMapping(String mappingConfigurationFilePath);
+	/**
+	 * <pre>
+	 * 	动态添加映射, 如果存在则覆盖
+	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
+	 * </pre>
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
 	 */
 	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	/**
+	 * <pre>
+	 * 	动态覆盖映射, 如果不存在添加
+	 * 	<b>只对映射操作</b>
+	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
+	 * </pre>
+	 * @param mappingConfigurationFilePath 配置文件路径
+	 * @return mapping的code
+	 */
+	public abstract String dynamicCoverMapping(String mappingConfigurationFilePath);
 	/**
 	 * <pre>
 	 * 	动态覆盖映射, 如果不存在添加
