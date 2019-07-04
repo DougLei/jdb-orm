@@ -21,6 +21,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public MappingWrapper(boolean searchAllPath, MappingCacheStore mappingCacheStore) {
 		this.searchAllPath = searchAllPath;
 		this.mappingCacheStore = mappingCacheStore;
+		logger.debug("searchAllPath value = {}", searchAllPath);
 	}
 	
 	/**

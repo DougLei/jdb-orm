@@ -26,7 +26,7 @@
 			<property name="maxPoolPreparedStatementPerConnectionSize" value="100" />
 		</datasource>
 		
-		<mappings searchAllPath="true"><!-- 是否扫描所有, 即是否扫描jar包中的配置 -->
+		<mappings searchAllPath="false"><!-- 是否扫描所有, 即是否扫描jar包中的配置 -->
 			<mapping path="mappings/sql/sql.smp.xml" />
 			<mapping path="mappings/table" />
 		</mappings>
