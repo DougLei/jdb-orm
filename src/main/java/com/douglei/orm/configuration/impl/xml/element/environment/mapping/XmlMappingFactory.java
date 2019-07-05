@@ -15,8 +15,8 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
 import com.douglei.orm.context.XmlReaderContext;
+import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.file.FileReaderUtil;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class XmlMappingFactory {
 	public static Mapping newMappingInstance(String mappingConfigurationXmlFilePath) throws DocumentException, SAXException, IOException {
 		MappingType mappingType = MappingType.toValueByMappingConfigurationFileName(mappingConfigurationXmlFilePath);
 		logger.debug("开始解析映射配置文件[{}], 映射类型为[{}]", mappingConfigurationXmlFilePath, mappingType);
-		return newMappingInstance(mappingType, mappingConfigurationXmlFilePath, FileReaderUtil.readByPath(mappingConfigurationXmlFilePath));
+		return newMappingInstance(mappingType, mappingConfigurationXmlFilePath, FileScanner.readByScanPath(mappingConfigurationXmlFilePath));
 	}
 	
 	/**
