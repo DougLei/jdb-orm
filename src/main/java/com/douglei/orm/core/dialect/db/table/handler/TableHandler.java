@@ -51,42 +51,51 @@ public class TableHandler {
 	 * @return
 	 * @throws SQLException 
 	 */
-	private boolean tableExists(String tableName, PreparedStatement preparedStatement, ResultSet rs) throws SQLException {
-		preparedStatement.setString(1, tableName);
-		rs = preparedStatement.executeQuery();
-		if(rs.next()) {
-			boolean tableExists = Integer.parseInt(rs.getObject(1).toString()) == 1;
+	private boolean tableExists(String tableName, PreparedStatement preparedStatement) throws SQLException {
+		ResultSet rs = null;
+		try {
+			preparedStatement.setString(1, tableName);
+			rs = preparedStatement.executeQuery();
+			if(rs.next()) {
+				boolean tableExists = Integer.parseInt(rs.getObject(1).toString()) == 1;
+				rs.close();
+				return tableExists;
+			}
+			throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据");
+		} finally {
 			rs.close();
-			return tableExists;
+			rs = null;
 		}
-		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据");
 	}
 	
 	/**
 	 * 执行DDL sql语句
 	 * @param ddlSQL
 	 * @param connection
-	 * @param statement
 	 * @throws SQLException
 	 */
-	private void executeDDLSQL(String ddlSQL, Connection connection, Statement statement) throws SQLException {
-		statement = connection.createStatement();
-		logger.debug("执行的DDL SQL语句为: {}", ddlSQL);
-		statement.execute(ddlSQL);
-		statement.close();
+	private void executeDDLSQL(String ddlSQL, Connection connection) throws SQLException {
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			logger.debug("执行的DDL SQL语句为: {}", ddlSQL);
+			statement.execute(ddlSQL);
+		} finally {
+			statement.close();
+			statement = null;
+		}
 	}
 	
 	/**
 	 * 创建表
 	 * @param table
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void createTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.tableCreateSqlStatement(table), connection, statement);
+	private void createTable(TableMetadata table, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableCreateSqlStatement(table), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(table, DBObjectType.TABLE, DBObjectOPType.CREATE));
 		}
@@ -96,13 +105,12 @@ public class TableHandler {
 	 * 删除表
 	 * @param table
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void dropTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.tableDropSqlStatement(table.getName()), connection, statement);
+	private void dropTable(TableMetadata table, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableDropSqlStatement(table.getName()), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(table, DBObjectType.TABLE, DBObjectOPType.DROP));
 		}
@@ -113,13 +121,12 @@ public class TableHandler {
 	 * @param originTableName
 	 * @param targetTableName
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void tableRename(String originTableName, String targetTableName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName), connection, statement);
+	private void tableRename(String originTableName, String targetTableName, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(null, originTableName, targetTableName, DBObjectType.TABLE, DBObjectOPType.RENAME));
 		}
@@ -130,13 +137,12 @@ public class TableHandler {
 	 * @param tableName
 	 * @param column
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void createColumn(String tableName, Column column, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.columnCreateSqlStatement(tableName, column), connection, statement);
+	private void createColumn(String tableName, Column column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnCreateSqlStatement(tableName, column), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.CREATE));
 		}
@@ -147,13 +153,12 @@ public class TableHandler {
 	 * @param tableName
 	 * @param column
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void dropColumn(String tableName, Column column, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()), connection, statement);
+	private void dropColumn(String tableName, Column column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.DROP));
 		}
@@ -165,13 +170,12 @@ public class TableHandler {
 	 * @param originColumnName
 	 * @param targetColumnName
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void columnRename(String tableName, String originColumnName, String targetColumnName, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.columnRenameSqlStatement(tableName, originColumnName, targetColumnName), connection, statement);
+	private void columnRename(String tableName, String originColumnName, String targetColumnName, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnRenameSqlStatement(tableName, originColumnName, targetColumnName), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, originColumnName, targetColumnName, DBObjectType.COLUMN, DBObjectOPType.RENAME));
 		}
@@ -183,13 +187,12 @@ public class TableHandler {
 	 * @param originColumn
 	 * @param targetColumn
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void columnModify(String tableName, Column originColumn, Column targetColumn, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.columnModifySqlStatement(tableName, targetColumn), connection, statement);
+	private void columnModify(String tableName, Column originColumn, Column targetColumn, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.columnModifySqlStatement(tableName, targetColumn), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, originColumn, targetColumn, DBObjectType.COLUMN, DBObjectOPType.MODIFY));
 		}
@@ -199,13 +202,12 @@ public class TableHandler {
 	 * 创建约束
 	 * @param constraint
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void createConstraint(Constraint constraint, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.constraintCreateSqlStatement(constraint), connection, statement);
+	private void createConstraint(Constraint constraint, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.constraintCreateSqlStatement(constraint), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(constraint, DBObjectType.CONSTRAINT, DBObjectOPType.CREATE));
 		}
@@ -215,15 +217,14 @@ public class TableHandler {
 	 * 创建约束
 	 * @param constraints
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void createConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void createConstraint(Collection<Constraint> constraints, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(constraints != null) {
 			for (Constraint constraint : constraints) {
-				createConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createConstraint(constraint, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -232,13 +233,12 @@ public class TableHandler {
 	 * 删除约束
 	 * @param constraint
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void dropConstraint(Constraint constraint, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(tableSqlStatementHandler.constraintDropSqlStatement(constraint), connection, statement);
+	private void dropConstraint(Constraint constraint, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(tableSqlStatementHandler.constraintDropSqlStatement(constraint), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(constraint, DBObjectType.CONSTRAINT, DBObjectOPType.DROP));
 		}
@@ -248,15 +248,14 @@ public class TableHandler {
 	 * 删除约束
 	 * @param constraints
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders 
 	 * @throws SQLException 
 	 */
-	private void dropConstraint(Collection<Constraint> constraints, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void dropConstraint(Collection<Constraint> constraints, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(constraints != null) {
 			for (Constraint constraint : constraints) {
-				dropConstraint(constraint, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				dropConstraint(constraint, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -265,13 +264,12 @@ public class TableHandler {
 	 * 创建索引
 	 * @param index
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void createIndex(Index index, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(index.getCreateSqlStatement(), connection, statement);
+	private void createIndex(Index index, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(index.getCreateSqlStatement(), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.CREATE));
 		}
@@ -281,15 +279,14 @@ public class TableHandler {
 	 * 创建索引
 	 * @param indexes
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void createIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void createIndex(Collection<Index> indexes, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(indexes != null) {
 			for (Index index : indexes) {
-				createIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createIndex(index, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -298,13 +295,12 @@ public class TableHandler {
 	 * 删除索引
 	 * @param index
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void dropIndex(Index index, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		executeDDLSQL(index.getDropSqlStatement(), connection, statement);
+	private void dropIndex(Index index, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		executeDDLSQL(index.getDropSqlStatement(), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.DROP));
 		}
@@ -314,15 +310,14 @@ public class TableHandler {
 	 * 删除索引
 	 * @param indexes
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void dropIndex(Collection<Index> indexes, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void dropIndex(Collection<Index> indexes, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(indexes != null) {
 			for (Index index : indexes) {
-				dropIndex(index, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				dropIndex(index, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -333,13 +328,12 @@ public class TableHandler {
 	 * @param dbObjectHolders
 	 * @param serializeObjectHolders
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @throws SQLException 
 	 */
-	private void rollback(TableMappingHolder tableMappingHolder, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void rollback(TableMappingHolder tableMappingHolder, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders, Connection connection, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
 		rollbackTableMapping(tableMappingHolder);
-		rollbackDDL(dbObjectHolders, connection, statement, tableSqlStatementHandler);
+		rollbackDDL(dbObjectHolders, connection, tableSqlStatementHandler);
 		tableSerializationFileHandler.rollbackSerializationFile(serializeObjectHolders);
 	}
 	
@@ -355,7 +349,7 @@ public class TableHandler {
 		}
 	}
 
-	private void rollbackDDL(List<DBObjectHolder> dbObjectHolders, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
+	private void rollbackDDL(List<DBObjectHolder> dbObjectHolders, Connection connection, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
 		if(dbObjectHolders.size() > 0) {
 			logger.debug("开始回滚 DDL操作");
 			DBObjectHolder holder = null;
@@ -365,25 +359,25 @@ public class TableHandler {
 					case TABLE:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop table");
-							dropTable((TableMetadata)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							dropTable((TableMetadata)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create table");
-							createTable((TableMetadata)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							createTable((TableMetadata)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
 							logger.debug("逆向: table rename");
-							tableRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
+							tableRename(holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, tableSqlStatementHandler, null);
 						}
 						break;
 					case COLUMN:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop column");
-							dropColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							dropColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create column");
-							createColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							createColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
 							logger.debug("逆向: column rename");
-							columnRename(holder.getTableName(), holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, statement, tableSqlStatementHandler, null);
+							columnRename(holder.getTableName(), holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.MODIFY) {
 							logger.debug("逆向: column modify");
 							
@@ -396,7 +390,7 @@ public class TableHandler {
 								tmpColumnName = targetColumn.getName();
 								targetColumn._danger2UpdateColumnName(originColumn.getName());
 							}
-							columnModify(holder.getTableName(), null, targetColumn, connection, statement, tableSqlStatementHandler, null);
+							columnModify(holder.getTableName(), null, targetColumn, connection, tableSqlStatementHandler, null);
 							if(updateColumnName) {
 								targetColumn._danger2UpdateColumnName(tmpColumnName);
 							}
@@ -405,19 +399,19 @@ public class TableHandler {
 					case CONSTRAINT:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop constraint");
-							dropConstraint((Constraint)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							dropConstraint((Constraint)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create constraint");
-							createConstraint((Constraint)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							createConstraint((Constraint)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}
 						break;
 					case INDEX:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop index");
-							dropIndex((Index)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							dropIndex((Index)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create index");
-							createIndex((Index)holder.getOriginObject(), connection, statement, tableSqlStatementHandler, null);
+							createIndex((Index)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}
 						break;
 				}
@@ -437,9 +431,7 @@ public class TableHandler {
 		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
 		
 		Connection connection = null;
-		Statement statement = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
 		try {
 			connection = dataSourceWrapper.getConnection(false).getConnection();
 			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
@@ -448,18 +440,18 @@ public class TableHandler {
 			for (Mapping tableMapping : tableMappings) {
 				tableMappingCodes.add(tableMapping.getCode());
 				table = (TableMetadata) tableMapping.getMetadata();
-				if(tableExists(table.getOldName(), preparedStatement, rs)) {
+				if(tableExists(table.getOldName(), preparedStatement)) {
 					switch(table.getCreateMode()) {
 						case DROP_CREATE:
 							logger.debug("正向: drop index");
-							dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+							dropIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
 							logger.debug("正向: drop constraint");
-							dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+							dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 							logger.debug("正向: drop table");
-							dropTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+							dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
 							break;
 						case DYNAMIC_UPDATE:
-							syncTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders, serializeObjectHolders);
+							syncTable(table, connection, tableSqlStatementHandler, dbObjectHolders, serializeObjectHolders);
 							continue;
 						default:
 							logger.debug("createTable, 而table存在时, 不处理table.createMode={}的表数据", table.getCreateMode());
@@ -467,25 +459,25 @@ public class TableHandler {
 					}
 				}
 				logger.debug("正向: create table");
-				createTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create constraint");
-				createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create index");
-				createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create serialization file");
 				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
 			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
-				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
+				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (SQLException e1) {
 				logger.error("create 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {
 			clear(tableMappings, tableMappingCodes, dbObjectHolders, serializeObjectHolders);
-			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
+			CloseUtil.closeDBConn(preparedStatement, connection);
 		}
 	}
 	
@@ -493,24 +485,23 @@ public class TableHandler {
 	 * 同步表
 	 * @param table
 	 * @param connection
-	 * @param statement
 	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @param serializeObjectHolders
 	 * @throws SQLException 
 	 */
-	private void syncTable(TableMetadata table, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) throws SQLException {
+	private void syncTable(TableMetadata table, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) throws SQLException {
 		TableMetadata oldTable = tableSerializationFileHandler.deserializeFromFile(table);
 		if(isUpdateTable(table, oldTable)) {
 			// 删除旧表的约束和索引
-			dropConstraint(oldTable.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-			dropIndex(oldTable.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			dropConstraint(oldTable.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
+			dropIndex(oldTable.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
 			// 对表和列进行同步
-			syncTable(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
-			syncColumns(table, oldTable, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			syncTable(table, oldTable, connection, tableSqlStatementHandler, dbObjectHolders);
+			syncColumns(table, oldTable, connection, tableSqlStatementHandler, dbObjectHolders);
 			// 创建新表的约束和索引
-			createConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
-			createIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			createConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
+			createIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
 			// 对序列化文件进行同步
 			syncSerializationFile(table, oldTable, serializeObjectHolders);
 		}else {
@@ -588,29 +579,29 @@ public class TableHandler {
 		return false;
 	}
 	// 同步表
-	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void syncTable(TableMetadata table, TableMetadata oldTable, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(!table.getName().equals(oldTable.getName())) {
 			logger.debug("正向: table rename");
-			tableRename(oldTable.getName(), table.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+			tableRename(oldTable.getName(), table.getName(), connection, tableSqlStatementHandler, dbObjectHolders);
 		}
 	}
 	// 同步列
-	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, Statement statement, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		Collection<Column> columns = table.getColumns();
 		Column oldColumn = null;
 		for (Column column : columns) {
 			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
 			if(oldColumn == null) {// 为空标识为新加的列
 				logger.debug("正向: create column");
-				createColumn(table.getName(), column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				createColumn(table.getName(), column, connection, tableSqlStatementHandler, dbObjectHolders);
 			}else {// 不为空, 标识可能为修改列
 				if(!column.getName().equals(oldColumn.getName())) {
 					logger.debug("正向: column rename");
-					columnRename(table.getName(), oldColumn.getName(), column.getName(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+					columnRename(table.getName(), oldColumn.getName(), column.getName(), connection, tableSqlStatementHandler, dbObjectHolders);
 				}
 				if(isModifyColumn(table, column, oldColumn)) {
 					logger.debug("正向: column modify");
-					columnModify(table.getName(), oldColumn, column, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+					columnModify(table.getName(), oldColumn, column, connection, tableSqlStatementHandler, dbObjectHolders);
 				}
 			}
 		}
@@ -618,7 +609,7 @@ public class TableHandler {
 		Collection<Column> oldColumns = oldTable.getColumns();
 		for (Column oldColumn_ : oldColumns) {
 			if(table.getColumnByName(oldColumn_.getName(), false) == null && getColumnByOldName(oldColumn_.getName(), columns) == null) {
-				dropColumn(table.getName(), oldColumn_, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+				dropColumn(table.getName(), oldColumn_, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
@@ -680,9 +671,7 @@ public class TableHandler {
 		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
 		
 		Connection connection = null;
-		Statement statement = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
 		try {
 			connection = dataSourceWrapper.getConnection(false).getConnection();
 			preparedStatement = connection.prepareStatement(tableSqlStatementHandler.tableExistsQueryPreparedSqlStatement());
@@ -690,13 +679,13 @@ public class TableHandler {
 			TableMetadata table = null;
 			for (Mapping tableMapping : tableMappings) {
 				table = (TableMetadata) tableMapping.getMetadata();
-				if(tableExists(table.getOldName(), preparedStatement, rs)) {
+				if(tableExists(table.getOldName(), preparedStatement)) {
 					logger.debug("正向: drop index");
-					dropIndex(table.getIndexes(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+					dropIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
 					logger.debug("正向: drop constraint");
-					dropConstraint(table.getConstraints(), connection, statement, tableSqlStatementHandler, dbObjectHolders);
+					dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 					logger.debug("正向: drop table");
-					dropTable(table, connection, statement, tableSqlStatementHandler, dbObjectHolders);
+					dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
 				}
 				logger.debug("正向: drop serialization file");
 				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);
@@ -704,14 +693,14 @@ public class TableHandler {
 		} catch (Exception e) {
 			logger.error("drop 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
-				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, preparedStatement, tableSqlStatementHandler);
+				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (SQLException e1) {
 				logger.error("drop 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				e1.printStackTrace();
 			}
 		} finally {
 			clear(tableMappings, null, dbObjectHolders, serializeObjectHolders);
-			CloseUtil.closeDBConn(rs, preparedStatement, statement, connection);
+			CloseUtil.closeDBConn(preparedStatement, connection);
 		}
 	}
 	
