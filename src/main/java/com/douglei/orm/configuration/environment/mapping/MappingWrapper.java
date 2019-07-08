@@ -16,12 +16,12 @@ import com.douglei.orm.context.RunMappingConfigurationContext;
 public abstract class MappingWrapper implements SelfProcessing{
 	private static final Logger logger = LoggerFactory.getLogger(MappingWrapper.class);
 	
-	protected boolean searchAllPath;
+	protected boolean searchJar;
 	private MappingCacheStore mappingCacheStore;
-	public MappingWrapper(boolean searchAllPath, MappingCacheStore mappingCacheStore) {
-		this.searchAllPath = searchAllPath;
+	public MappingWrapper(boolean searchJar, MappingCacheStore mappingCacheStore) {
+		this.searchJar = searchJar;
 		this.mappingCacheStore = mappingCacheStore;
-		logger.debug("searchAllPath value = {}", searchAllPath);
+		logger.debug("searchJar value = {}", searchJar);
 	}
 	
 	/**

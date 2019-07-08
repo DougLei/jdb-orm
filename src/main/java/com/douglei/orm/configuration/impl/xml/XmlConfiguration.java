@@ -24,6 +24,7 @@ import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
 
@@ -77,7 +78,7 @@ public class XmlConfiguration implements Configuration {
 	 */
 	private void initXmlConfiguration() {
 		try {
-			logger.debug("开始初始化jdb-orm系统的配置信息");
+			logger.debug("开始初始化jdb-orm框架的配置信息");
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
@@ -86,10 +87,11 @@ public class XmlConfiguration implements Configuration {
 			setProperties(new Properties(root.element("properties")));
 			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
-			logger.debug("结束初始化jdb-orm系统的配置信息");
+			logger.debug("结束初始化jdb-orm框架的配置信息");
 		} catch (Exception e) {
 			destroy();
-			throw new ConfigurationInitialException("jdb-orm程序在初始化时出现异常", e);
+			logger.error("jdb-orm框架在初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new ConfigurationInitialException("jdb-orm框架在初始化时出现异常", e);
 		}
 	}
 	

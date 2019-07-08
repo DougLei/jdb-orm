@@ -26,8 +26,8 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public XmlMappingWrapper(MappingCacheStore mappingCacheStore) {
 		super(false, mappingCacheStore);
 	}
-	public XmlMappingWrapper(boolean searchAllPath, List<?> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
-		super(searchAllPath, environmentProperty.getMappingCacheStore());
+	public XmlMappingWrapper(boolean searchJar, List<?> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
+		super(searchJar, environmentProperty.getMappingCacheStore());
 		
 		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
 		scanMappingFiles(fileScanner, paths);
@@ -53,7 +53,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {
 		if(elements != null && elements.size() > 0) {
 			for (Object elem : elements) {
-				fileScanner.scan(searchAllPath, ((Attribute)elem).getValue());
+				fileScanner.scan(searchJar, ((Attribute)elem).getValue());
 			}
 		}
 	}

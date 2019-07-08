@@ -19,10 +19,12 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.configuration.environment.remote.database.RemoteDatabase;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;
+import com.douglei.orm.configuration.impl.xml.element.environment.remote.database.XmlRemoteDatabase;
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -40,6 +42,8 @@ public class XmlEnvironment implements Environment{
 	
 	private EnvironmentProperty environmentProperty;
 	
+	private RemoteDatabase remoteDatabase;
+	
 	private DataSourceWrapper dataSourceWrapper;
 	
 	private MappingWrapper mappingWrapper;
@@ -51,6 +55,8 @@ public class XmlEnvironment implements Environment{
 		this.id = id;
 		this.properties = properties;
 		this.extConfiguration = extConfiguration;
+		
+		setRemoteDatabase(environmentElement.element("remoteDatabase"));// 处理远程数据库
 		
 		setDataSourceWrapper(Dom4jElementUtil.validateElementExists("datasource", environmentElement));// 处理配置的数据源
 		
@@ -76,9 +82,20 @@ public class XmlEnvironment implements Environment{
 	private String getValue(String key, Properties properties) {
 		String propertyValue = properties.getProperties(key);
 		if(propertyValue == null) {
-			propertyValue = key;
+			return key;
 		}
 		return propertyValue;
+	}
+	
+	private void setRemoteDatabase(Element remoteDatabaseElement) throws SQLException {
+		if(remoteDatabaseElement != null) {
+			logger.debug("开始处理<environment>下的<remoteDatabase>元素");
+			Map<String, String> propertyMap = elementListToPropertyMap(remoteDatabaseElement.elements("property"));
+			remoteDatabase = new XmlRemoteDatabase(propertyMap, Dom4jElementUtil.validateElementExists("createSql", remoteDatabaseElement), Dom4jElementUtil.validateElementExists("dropSql", remoteDatabaseElement));
+			remoteDatabase.selfChecking();
+			remoteDatabase.executeCreate();
+			logger.debug("处理<environment>下的<remoteDatabase>元素结束");
+		}
 	}
 	
 	/**
@@ -140,8 +157,8 @@ public class XmlEnvironment implements Environment{
 	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {
-			String searchAllPath = element.attributeValue("searchAllPath");
-			mappingWrapper = new XmlMappingWrapper(ValidationUtil.isBoolean(searchAllPath)?Boolean.parseBoolean(searchAllPath):false, element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
+			String searchJar = element.attributeValue("searchJar");
+			mappingWrapper = new XmlMappingWrapper(ValidationUtil.isBoolean(searchJar)?Boolean.parseBoolean(searchJar):false, element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
 		}else {
 			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingCacheStore());
 		}
@@ -151,6 +168,9 @@ public class XmlEnvironment implements Environment{
 	@Override
 	public void destroy() throws DestroyException{
 		logger.debug("{} 开始 destroy", getClass());
+		if(remoteDatabase != null) {
+			remoteDatabase.destroy();
+		}
 		if(dataSourceWrapper != null) {
 			dataSourceWrapper.destroy();
 		}
