@@ -53,67 +53,57 @@ public abstract class RemoteDatabase implements SelfProcessing{
 		dropSql.add(sql);
 	}
 	
-	private Connection connection;
-	private Statement statement;
-	private boolean executeAnySql;
-	
-	private void execute(List<String> sqls, RemoteDatabaseOperateType remoteDatabaseOperateType, boolean throwException) {
-		String sql_ = null;
+	private void execute(List<String> sqls, RemoteDatabaseOperateType remoteDatabaseOperateType) {
+		boolean executedAnySql = false;
+		Connection connection = null;
+		Statement statement = null;
 		try {
-			if(connection == null) {
-				connection = DriverManager.getConnection(url, username, password);
-			}
-			if(statement == null) {
-				statement = connection.createStatement();
-			}
+			connection = DriverManager.getConnection(url, username, password);
+			statement = connection.createStatement();
 			
 			for (String sql : sqls) {
-				sql_ = sql;
 				logger.debug("正向: {}", sql);
 				statement.execute(sql);
-				executeAnySql = true;
+				executedAnySql = true;
 			}
 		} catch (SQLException e) {
-			logger.error("{} 执行{}数据库的sql语句 [{}] 时出现异常 {}", throwException?"":"逆向: ", remoteDatabaseOperateType.name(), sql_, ExceptionUtil.getExceptionDetailMessage(e));
-			rollback(remoteDatabaseOperateType);
-			
-			if(throwException) {
-				throw new RemoteDatabaseOperateException("执行"+remoteDatabaseOperateType.name() + "数据库的sql语句 ["+sql_+"] 时出现异常", e);
-			}
+			logger.error("正向: 执行{}数据库的sql语句时出现异常 {}", remoteDatabaseOperateType.name(), ExceptionUtil.getExceptionDetailMessage(e));
+			rollback(statement, remoteDatabaseOperateType, executedAnySql);
+			throw new RemoteDatabaseOperateException("执行"+remoteDatabaseOperateType.name() + "数据库的sql语句时出现异常", e);
 		} finally {
-			if(throwException) {
-				CloseUtil.closeDBConn(statement, connection);
-			}
+			CloseUtil.closeDBConn(statement, connection);
 		}
 	}
 	
-	private void rollback(RemoteDatabaseOperateType remoteDatabaseOperateType) {
-		if(executeAnySql) { // 执行了任何sql, 才有回滚的意义
-			switch(remoteDatabaseOperateType) {
-			case CREATE:
-				execute(dropSql, RemoteDatabaseOperateType.DROP, false);
-				break;
-			case DROP:
-				execute(createSql, RemoteDatabaseOperateType.CREATE, false);
-				break;
+	private void rollback(Statement statement, RemoteDatabaseOperateType remoteDatabaseOperateType, boolean executedAnySql) {
+		if(executedAnySql) { // 执行过了任何一条或多条sql, 才有回滚的意义
+			RemoteDatabaseOperateType rollbackRemoteDatabaseOperateType = (remoteDatabaseOperateType==RemoteDatabaseOperateType.CREATE) ? RemoteDatabaseOperateType.DROP : RemoteDatabaseOperateType.CREATE;
+			List<String> sqls = (rollbackRemoteDatabaseOperateType==RemoteDatabaseOperateType.CREATE) ? createSql:dropSql;
+			for (String sql : sqls) {
+				logger.debug("逆向: {}", sql);
+				try {
+					statement.execute(sql);
+				} catch (SQLException e) {
+					logger.error("逆向(回滚): 执行{}数据库的sql语句时出现异常 {}", rollbackRemoteDatabaseOperateType.name(), ExceptionUtil.getExceptionDetailMessage(e));
+				}
 			}
 		}
 	}
 	
 	public void executeCreate() {
-		execute(createSql, RemoteDatabaseOperateType.CREATE, true);
+		execute(createSql, RemoteDatabaseOperateType.CREATE);
 	}
 	
 	private void executeDrop() {
-		execute(dropSql, RemoteDatabaseOperateType.DROP, true);
-		dropSql.clear();
+		execute(dropSql, RemoteDatabaseOperateType.DROP);
 	}
 
 	@Override
 	public void destroy() throws DestroyException {
-		createSql.clear();
 		if(destroy) {
 			executeDrop();
 		}
+		createSql.clear();
+		dropSql.clear();
 	}
 }
