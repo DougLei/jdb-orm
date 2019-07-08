@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.extconfiguration.datatypehandler;
+package com.douglei.orm.configuration.ext.configuration.datatypehandler;
 
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;

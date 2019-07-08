@@ -1,11 +1,11 @@
 package com.douglei.orm.configuration.impl.xml.element.extconfiguration;
 
 /**
- * <ext-configuration>元素重复异常
+ * <extConfiguration>元素重复异常
  * @author DougLei
  */
 public class RepeatedExtConfigurationElementException extends RuntimeException{
-	private static final long serialVersionUID = -2437206151671980031L;
+	private static final long serialVersionUID = -4195554822446156579L;
 
 	public RepeatedExtConfigurationElementException(String message) {
 		super(message);

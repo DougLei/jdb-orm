@@ -1,9 +1,9 @@
-package com.douglei.orm.configuration.extconfiguration;
+package com.douglei.orm.configuration.ext.configuration;
 
 import java.util.List;
 
 import com.douglei.orm.configuration.SelfProcessing;
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 
 /**
  * 扩展信息配置接口

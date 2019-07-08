@@ -10,7 +10,7 @@ import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCach
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStoreMap;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.table.CreateMode;

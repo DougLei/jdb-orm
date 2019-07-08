@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
-import com.douglei.orm.configuration.extconfiguration.ExtConfiguration;
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.datatypehandler.XmlExtDataTypeHandler;
 import com.douglei.tools.utils.StringUtil;
 
@@ -24,22 +24,22 @@ public class XmlExtConfiguration implements ExtConfiguration {
 	private List<ExtDataTypeHandler> extDataTypeHandlerList;
 	
 	public XmlExtConfiguration(Element extConfigurationElement) {
-		logger.debug("开始处理<ext-configuration>元素");
+		logger.debug("开始处理<extConfiguration>元素");
 		if(extConfigurationElement != null) {
-			setDataTypeHandlers(extConfigurationElement.elements("datatype-handlers"));
+			setDataTypeHandlers(extConfigurationElement.elements("datatypeHandlers"));
 			
 			// 如果有其他的ext, 再继续添加
 		}
-		logger.debug("处理<ext-configuration>元素结束");
+		logger.debug("处理<extConfiguration>元素结束");
 	}
 	
 	private void setDataTypeHandlers(List<?> elements) {
-		logger.debug("开始处理<datatype-handlers>元素");
+		logger.debug("开始处理<datatypeHandlers>元素");
 		if(elements != null && elements.size() > 0) {
 			if(elements.size() > 1) {
-				throw new DataTypeHandlersElementException("<datatype-handlers>元素最多只能配置一个");
+				throw new DataTypeHandlersElementException("<datatypeHandlers>元素最多只能配置一个");
 			}
-			elements = ((Element) elements.get(0)).elements("datatype-handler");
+			elements = ((Element) elements.get(0)).elements("datatypeHandler");
 			if(elements != null && elements.size() > 0) {
 				extDataTypeHandlerList = new ArrayList<ExtDataTypeHandler>(elements.size());
 				
@@ -55,7 +55,7 @@ public class XmlExtConfiguration implements ExtConfiguration {
 				}
 			}
 		}
-		logger.debug("处理<datatype-handlers>元素结束");
+		logger.debug("处理<datatypeHandlers>元素结束");
 	}
 
 	

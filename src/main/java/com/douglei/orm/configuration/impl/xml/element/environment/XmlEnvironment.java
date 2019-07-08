@@ -19,7 +19,7 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.configuration.extconfiguration.ExtConfiguration;
+import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;

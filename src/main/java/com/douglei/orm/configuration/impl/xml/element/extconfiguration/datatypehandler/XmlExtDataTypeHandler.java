@@ -1,7 +1,7 @@
 package com.douglei.orm.configuration.impl.xml.element.extconfiguration.datatypehandler;
 
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.DataTypeHandlerClassCastException;
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.DataTypeHandlerClassCastException;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;

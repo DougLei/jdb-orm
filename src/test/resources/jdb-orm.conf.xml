@@ -11,7 +11,23 @@
 		<!-- <property name="enableTableDynamicUpdate" value="false" /> --><!-- 是否开启表的动态更新, 默认值为false  -->
 		<!-- <property name="serializationFileRootPath" value="" /> --><!-- 序列化文件的根路径, 配置的路径从磁盘根路径起, 如果不配置则使用操作系统中的用户目录, 即user.home -->
 		<!-- <property name="enableColumnDynamicUpdateValidation" value="false" /> --><!-- 是否开启列的动态更新验证[列的动态更新验证含义为, 修改列的数据类型,长度,精度,是否可为空时, 判断是否可以进行修改, 如果不能修改, 则抛出相应的异常信息], 默认值为false  -->
-	
+		
+		<!-- 在添加多数据源时使用, 可以远程操作指定的数据库服务, 进行数据库的create/drop, 系统唯一默认的数据源(即启动服务时加载的数据源), 禁止配置该元素 -->
+		<remoteDatabase>
+			<driverClassName></driverClassName>
+			<username></username>
+			<password></password>
+			<url></url>
+			<createSqls>
+				<sql></sql>
+				<sql></sql>
+			</createSqls>
+			<dropSqls>
+				<sql></sql>
+				<sql></sql>
+			</dropSqls>
+		</remoteDatabase>
+		
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>
 			<property name="url" value="${jdbc.url}"/>
@@ -36,9 +52,9 @@
 		<resource path="jdbc.properties" />
 	</properties>
 	
-	<ext-configuration>
-		<datatype-handlers>
-			<datatype-handler dialect="" class="" /><!-- dialect如果不填, 就用[property dialect]的值 -->
-		</datatype-handlers>
-	</ext-configuration>
+	<extConfiguration>
+		<datatypeHandlers>
+			<datatypeHandler dialect="" class="" /><!-- dialect如果不填, 就用[property dialect]的值 -->
+		</datatypeHandlers>
+	</extConfiguration>
 </configuration>

@@ -92,7 +92,7 @@ public class Properties implements SelfProcessing{
 							keys.clear();
 						}
 					} catch (Exception e) {
-						throw new ProcessPropertiesElementException("读取<resource path=\""+path+"\" /> 的相关文件时出现异常/>", e); 
+						throw new ProcessPropertiesElementException("读取<resource path=\""+path+"\" /> 的properties文件时出现异常/>", e); 
 					} finally {
 						CloseUtil.closeIO(in);
 						juproperties.clear();

@@ -3,7 +3,7 @@ package com.douglei.orm.core.dialect.datatype.handler;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import com.douglei.orm.configuration.extconfiguration.datatypehandler.ExtDataTypeHandler;
+import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandlerMapping;
