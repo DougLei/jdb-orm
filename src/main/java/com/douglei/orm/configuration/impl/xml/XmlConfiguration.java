@@ -3,13 +3,11 @@ package com.douglei.orm.configuration.impl.xml;
 import java.io.InputStream;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.ConfigurationInitialException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
@@ -61,11 +59,13 @@ public class XmlConfiguration implements Configuration {
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) {
-		logger.debug("根据xml配置文件，初始化configuration实例");
 		try {
+			logger.debug("根据xml配置文件，初始化configuration实例");
 			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
 			initXmlConfiguration();
-		} catch (DocumentException e) {
+			logger.debug("根据xml配置文件，结束初始化configuration实例");
+		} catch (Exception e) {
+			logger.error("jdb-orm框架在初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			e.printStackTrace();
 		} finally {
 			CloseUtil.closeIO(in);
@@ -74,8 +74,9 @@ public class XmlConfiguration implements Configuration {
 	
 	/**
 	 * 根据xml配置文件，初始化Configuration对象
+	 * @throws Exception 
 	 */
-	private void initXmlConfiguration() {
+	private void initXmlConfiguration() throws Exception {
 		try {
 			logger.debug("开始初始化jdb-orm框架的配置信息");
 			if(logger.isDebugEnabled()) {
@@ -88,9 +89,9 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm框架的配置信息");
 		} catch (Exception e) {
+			logger.debug("jdb-orm框架在初始化时出现异常, 进行回滚操作-销毁-destroy()");
 			destroy();
-			logger.error("jdb-orm框架在初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ConfigurationInitialException("jdb-orm框架在初始化时出现异常", e);
+			throw e;
 		}
 	}
 	
@@ -104,17 +105,22 @@ public class XmlConfiguration implements Configuration {
 	
 	@Override
 	public void destroy() {
-		logger.debug("{} 开始 destroy", getClass());
-		if(properties != null) {
-			properties.destroy();
+		try {
+			logger.debug("{} 开始 destroy", getClass());
+			if(properties != null) {
+				properties.destroy();
+			}
+			if(extConfiguration != null) {
+				extConfiguration.destroy();
+			}
+			if(environment != null) {
+				environment.destroy();
+			}
+			logger.debug("{} 结束 destroy", getClass());
+		} catch (Exception e) {
+			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			e.printStackTrace();
 		}
-		if(extConfiguration != null) {
-			extConfiguration.destroy();
-		}
-		if(environment != null) {
-			environment.destroy();
-		}
-		logger.debug("{} 结束 destroy", getClass());
 	}
 	
 	// -------------------------------------------------------------

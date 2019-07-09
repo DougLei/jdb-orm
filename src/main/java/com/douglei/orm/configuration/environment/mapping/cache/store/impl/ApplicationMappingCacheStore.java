@@ -25,6 +25,10 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	
 	@Override
 	public void initializeStore(int size) {
+		if(mappings != null) {
+			mappings.clear();
+			mappings = null;
+		}
 		if(size < 1) {
 			mappings = new HashMap<String, Mapping>(DEFAULT_STORE_SIZE);
 		}else {
