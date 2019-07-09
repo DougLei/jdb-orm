@@ -25,7 +25,6 @@ import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
-import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -142,7 +141,7 @@ public class XmlConfiguration implements Configuration {
 	
 	private void setId(String id) {
 		if(StringUtil.isEmpty(id)) {
-			id = IdentityUtil.getUUID();
+			throw new NullPointerException("<configuration id=\"\">元素的id属性值不能为空");
 		}
 		this.id = id;
 	}
