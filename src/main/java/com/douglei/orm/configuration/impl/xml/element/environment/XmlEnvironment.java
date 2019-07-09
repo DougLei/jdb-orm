@@ -28,7 +28,6 @@ import com.douglei.orm.configuration.impl.xml.element.environment.remote.databas
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.ValidationUtil;
 
 /**
  * <environment>节点
@@ -157,8 +156,7 @@ public class XmlEnvironment implements Environment{
 	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {
-			String searchJar = element.attributeValue("searchJar");
-			mappingWrapper = new XmlMappingWrapper(ValidationUtil.isBoolean(searchJar)?Boolean.parseBoolean(searchJar):false, element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
+			mappingWrapper = new XmlMappingWrapper("true".equalsIgnoreCase(element.attributeValue("searchJar")), element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
 		}else {
 			mappingWrapper = new XmlMappingWrapper(environmentProperty.getMappingCacheStore());
 		}

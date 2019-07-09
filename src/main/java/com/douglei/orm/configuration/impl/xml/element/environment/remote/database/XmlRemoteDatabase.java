@@ -24,7 +24,7 @@ public class XmlRemoteDatabase extends RemoteDatabase{
 		super.url = propertyMap.get("url");
 		super.username = propertyMap.get("username");
 		super.password = propertyMap.get("password");
-		super.destroy = "true".equalsIgnoreCase(propertyMap.get("destroy"))?true:false;
+		super.destroy = "true".equalsIgnoreCase(propertyMap.get("destroy"));
 	}
 	
 	private void setSql(Element createSqlElement, Element dropSqlElement) {
