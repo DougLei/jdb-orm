@@ -3,6 +3,9 @@ package com.douglei.orm.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.core.dialect.db.object.DBObjectExistsException;
+import com.douglei.orm.core.dialect.db.object.DBObjectNotExistsException;
+import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 
 /**

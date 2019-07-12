@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.objectname;
+package com.douglei.orm.core.dialect.db.object;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.tools.utils.StringUtil;
@@ -7,7 +7,7 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class DBObjectNameHandler {
+public abstract class DBObjectHandler {
 	
 	protected abstract short nameMaxLength();
 	

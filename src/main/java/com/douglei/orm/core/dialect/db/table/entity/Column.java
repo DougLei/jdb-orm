@@ -153,7 +153,7 @@ public abstract class Column implements Serializable{
 		return dbDataType;
 	}
 	public void setNameByValidate(String name, String oldName) {
-		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		
 		if(StringUtil.isEmpty(oldName)) {

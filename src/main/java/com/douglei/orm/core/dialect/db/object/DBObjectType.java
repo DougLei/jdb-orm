@@ -1,4 +1,4 @@
-package com.douglei.orm.sessions.sqlsession;
+package com.douglei.orm.core.dialect.db.object;
 
 /**
  * 数据库对象类型

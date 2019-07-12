@@ -114,7 +114,7 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 		return createMode;
 	}
 	public void setNameByValidate(String name, String oldName) {
-		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectNameHandler().validateDBObjectName(name);
+		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		
 		if(StringUtil.isEmpty(oldName)) {
