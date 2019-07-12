@@ -18,15 +18,11 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 
 	@Override
 	public String getQueryDBObjectIsExistsSqlStatement(DBObjectType dbObjectType, String dbObjectName, List<Object> parameters) {
+		parameters.add(dbObjectName);
 		switch(dbObjectType) {
 			case PROCEDURE:
-				
-				
-				
-				
-				break;
+				return "select count(1) from mysql.proc where type = 'PROCEDURE' and db = ?";
 			case VIEW:
-				parameters.add(dbObjectName);
 				return "select count(1) from information_schema.views where table_schema = (select database()) and table_name = ?";
 		}
 		return null;
