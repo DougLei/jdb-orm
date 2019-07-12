@@ -8,6 +8,6 @@ public class DBObjectIsExistsException extends RuntimeException{
 	private static final long serialVersionUID = 7207617729549006728L;
 
 	public DBObjectIsExistsException(DBObjectType dbObjectType, String dbObjectName) {
-		super("已经存在名为[" + dbObjectName + "]的["+dbObjectType.getName()+"]");
+		super("已经存在名为[" + dbObjectName + "]的["+dbObjectType.name()+"]");
 	}
 }
