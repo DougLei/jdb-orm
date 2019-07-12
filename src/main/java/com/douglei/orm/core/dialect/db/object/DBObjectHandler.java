@@ -92,11 +92,9 @@ public abstract class DBObjectHandler {
 	 * 获取删除数据库对象的sql语句
 	 * @param dbObjectType
 	 * @param dbObjectName
-	 * @param parameters
 	 * @return
 	 */
-	public String getDropDBObjectSqlStatement(DBObjectType dbObjectType, String dbObjectName, List<Object> parameters) {
-		parameters.add(dbObjectName);
-		return "drop " + dbObjectType.name() + " ?";
+	public String getDropDBObjectSqlStatement(DBObjectType dbObjectType, String dbObjectName) {
+		return "drop " + dbObjectType.name() + " " + dbObjectName;
 	}
 }

@@ -2,6 +2,7 @@ package com.douglei.orm.sqlsession;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 
 import org.junit.Test;
 
@@ -10,18 +11,20 @@ public class JDBCTest {
 	
 	@Test
 	public void mysql() throws Exception {
-		String className = "com.mysql.cj.jdbc.Driver";
 		String url =  "jdbc:mysql://localhost:3306/douglei?characterEncoding=utf8&useSSL=true";
 		String username = "root";
 		String pwd = "root";
 		
-		Class.forName(className);
-		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
-		
+//		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
+//		
 		Connection conn = DriverManager.getConnection(url, username, pwd);
-		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
-		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
-		System.out.println(conn.getMetaData().getDatabaseProductVersion());
+		PreparedStatement pst = conn.prepareStatement("drop procedure test");
+//		pst.setString(1, "test.");
+		pst.executeUpdate();
+		
+//		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
+//		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
+//		System.out.println(conn.getMetaData().getDatabaseProductVersion());
 		
 //		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
 //				+ "delete sys_user where id = ?");

@@ -333,8 +333,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectIsExistsException {
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
 			if(isCover) {
-				List<Object> parameters = new ArrayList<Object>(1);
-				executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName, parameters), parameters);
+				executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
 			}else {
 				throw new DBObjectIsExistsException(dbObjectType, dbObjectName);
 			}
@@ -346,8 +345,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@Override
 	public boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException {
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
-			List<Object> parameters = new ArrayList<Object>(1);
-			executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName, parameters), parameters);
+			executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
 			return true;
 		}
 		throw new DBObjectNotExistsException(dbObjectType, dbObjectName);

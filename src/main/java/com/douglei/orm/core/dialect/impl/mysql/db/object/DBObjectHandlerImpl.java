@@ -18,10 +18,17 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 
 	@Override
 	public String getQueryDBObjectIsExistsSqlStatement(DBObjectType dbObjectType, String dbObjectName, List<Object> parameters) {
-		// TODO Auto-generated method stub
-		
-		
-		
+		switch(dbObjectType) {
+			case PROCEDURE:
+				
+				
+				
+				
+				break;
+			case VIEW:
+				parameters.add(dbObjectName);
+				return "select count(1) from information_schema.views where table_schema = (select database()) and table_name = ?";
+		}
 		return null;
 	}
 }
