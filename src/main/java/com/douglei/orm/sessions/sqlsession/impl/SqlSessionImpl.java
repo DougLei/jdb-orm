@@ -22,6 +22,9 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
 import com.douglei.orm.sessions.SessionImpl;
+import com.douglei.orm.sessions.sqlsession.DBObjectExistsException;
+import com.douglei.orm.sessions.sqlsession.DBObjectNotExistsException;
+import com.douglei.orm.sessions.sqlsession.DBObjectType;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CryptographyUtil;
@@ -318,5 +321,24 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.debug("分页查询的结果: {}", finalPageResult.toString());
 		}
 		return finalPageResult;
+	}
+
+	
+	@Override
+	public boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName) {
+		// TODO dbObjectExists
+		return false;
+	}
+
+	@Override
+	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectExistsException {
+		// TODO dbObjectCreate
+		return false;
+	}
+
+	@Override
+	public boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException {
+		// TODO dbObjectDrop
+		return false;
 	}
 }

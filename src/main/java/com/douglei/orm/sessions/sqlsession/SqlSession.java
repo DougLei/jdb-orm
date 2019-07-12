@@ -159,4 +159,34 @@ public interface SqlSession {
 	 * @return
 	 */
 	Object executeProcedure(ProcedureExecutor procedureExecutor);
+	
+	/**
+	 * 判断数据库对象是否存在
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @return
+	 */
+	boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName);
+	
+	/**
+	 * 创建数据库对象
+	 * 目前包括 {存储过程}, {视图}
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @param createSqlStatement
+	 * @param isCover 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出异常
+	 * @return
+	 * @throws DBObjectExistsException
+	 */
+	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectExistsException;
+	
+	/**
+	 * 删除数据库对象
+	 * 目前包括 {存储过程}, {视图}
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @return
+	 * @throws DBObjectNotExistsException 如果不存在则会抛出异常
+	 */
+	boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException;
 }
