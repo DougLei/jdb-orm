@@ -331,6 +331,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectIsExistsException {
+		environmentProperty.getDialect().getDBObjectHandler().validateDBObjectName(dbObjectName);
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
 			if(isCover) {
 				executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));

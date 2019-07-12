@@ -14,15 +14,12 @@ public abstract class DBObjectHandler {
 	protected abstract short nameMaxLength();
 	
 	/**
-	 * <pre>
-	 * 	验证数据库object名称
-	 * 	返回true表示验证通过, false表示验证失败
-	 * </pre>
+	 * 验证数据库object名称是否超长
 	 * @param dbObjectName
 	 * @return
 	 */
-	private boolean validateDBObjectName_(String dbObjectName) {
-		return dbObjectName.length() <= nameMaxLength();
+	private boolean validateDBObjectNameIsOverLength(String dbObjectName) {
+		return dbObjectName.length() > nameMaxLength();
 	}
 	
 	/**
@@ -34,7 +31,7 @@ public abstract class DBObjectHandler {
 	 * @throws DBObjectNameException
 	 */
 	public void validateDBObjectName(String dbObjectName) throws DBObjectNameException {
-		if(!validateDBObjectName_(dbObjectName)) {
+		if(validateDBObjectNameIsOverLength(dbObjectName)) {
 			throw new DBObjectNameException(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库的[表/列]名称["+dbObjectName+"]长度不能超过"+nameMaxLength()+"个字符");
 		}
 	}
@@ -52,31 +49,31 @@ public abstract class DBObjectHandler {
 	 * @return
 	 */
 	public String fixDBObjectName(String dbObjectName) {
-		if(validateDBObjectName_(dbObjectName)) {
-			return dbObjectName;
-		}
-		dbObjectName = StringUtil.trimUnderline(dbObjectName);
-		
-		StringBuilder sb = new StringBuilder(dbObjectName.length());
-		StringBuilder suffix = new StringBuilder(dbObjectName.length());
-		
-		String[] nameArr = dbObjectName.split("_");
-		int length = nameArr.length;
-		for(int i=0;i<length;i++){
-			if(i == 0){
-				sb.append(nameArr[i]).append("_");
-			}else{
-				if(StringUtil.notEmpty(nameArr[i])){
-					sb.append(nameArr[i].substring(0, 1));
-					suffix.append(nameArr[i].substring(nameArr[i].length()-1));
+		if(validateDBObjectNameIsOverLength(dbObjectName)) {
+			dbObjectName = StringUtil.trimUnderline(dbObjectName);
+			
+			StringBuilder sb = new StringBuilder(dbObjectName.length());
+			StringBuilder suffix = new StringBuilder(dbObjectName.length());
+			
+			String[] nameArr = dbObjectName.split("_");
+			int length = nameArr.length;
+			for(int i=0;i<length;i++){
+				if(i == 0){
+					sb.append(nameArr[i]).append("_");
+				}else{
+					if(StringUtil.notEmpty(nameArr[i])){
+						sb.append(nameArr[i].substring(0, 1));
+						suffix.append(nameArr[i].substring(nameArr[i].length()-1));
+					}
 				}
 			}
+			sb.append("_").append(suffix).append("_").append(dbObjectName.length());
+			if(sb.length() > nameMaxLength()) {
+				throw new DBObjectNameException("["+dbObjectName+"]经过fixDBObjectName()后为["+sb.toString()+"], 其长度依然大于"+ DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
+			}
+			return sb.toString();
 		}
-		sb.append("_").append(suffix).append("_").append(dbObjectName.length());
-		if(sb.length() > nameMaxLength()) {
-			throw new DBObjectNameException("["+dbObjectName+"]经过fixDBObjectName()后为["+sb.toString()+"], 其长度依然大于"+ DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
-		}
-		return sb.toString();
+		return dbObjectName;
 	}
 
 	/**
