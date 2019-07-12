@@ -3,7 +3,7 @@ package com.douglei.orm.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.db.object.DBObjectExistsException;
+import com.douglei.orm.core.dialect.db.object.DBObjectIsExistsException;
 import com.douglei.orm.core.dialect.db.object.DBObjectNotExistsException;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.pagequery.PageResult;
@@ -173,19 +173,17 @@ public interface SqlSession {
 	
 	/**
 	 * 创建数据库对象
-	 * 目前包括 {存储过程}, {视图}
 	 * @param dbObjectType
 	 * @param dbObjectName
 	 * @param createSqlStatement
 	 * @param isCover 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出异常
 	 * @return
-	 * @throws DBObjectExistsException
+	 * @throws DBObjectIsExistsException
 	 */
-	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectExistsException;
+	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectIsExistsException;
 	
 	/**
 	 * 删除数据库对象
-	 * 目前包括 {存储过程}, {视图}
 	 * @param dbObjectType
 	 * @param dbObjectName
 	 * @return

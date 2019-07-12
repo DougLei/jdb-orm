@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.db.object.DBObjectExistsException;
+import com.douglei.orm.core.dialect.db.object.DBObjectIsExistsException;
 import com.douglei.orm.core.dialect.db.object.DBObjectNotExistsException;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
@@ -59,7 +59,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			String code = CryptographyUtil.encodeMD5(sql);
 			
 			if(statementHandlerCache == null) {
-				statementHandlerCache = new HashMap<String, StatementHandler>(16);
+				statementHandlerCache = new HashMap<String, StatementHandler>(8);
 			}else {
 				statementHandler = statementHandlerCache.get(code);
 			}
@@ -323,22 +323,31 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		return finalPageResult;
 	}
 
-	
 	@Override
 	public boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName) {
-		// TODO dbObjectExists
-		return false;
+		List<Object> parameters = new ArrayList<Object>(2);
+		return Byte.parseByte(uniqueQuery_(environmentProperty.getDialect().getDBObjectHandler().getQueryDBObjectIsExistsSqlStatement(dbObjectType, dbObjectName, parameters), parameters)[0].toString()) == 1;
 	}
 
 	@Override
-	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectExistsException {
-		// TODO dbObjectCreate
-		return false;
+	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectIsExistsException {
+		if(dbObjectExists(dbObjectType, dbObjectName)) {
+			if(isCover) {
+				getStatementHandler(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName), null).executeUpdate(null);
+			}else {
+				throw new DBObjectIsExistsException(dbObjectType, dbObjectName);
+			}
+		}
+		getStatementHandler(createSqlStatement, null).executeUpdate(null);
+		return true;
 	}
 
 	@Override
 	public boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException {
-		// TODO dbObjectDrop
-		return false;
+		if(dbObjectExists(dbObjectType, dbObjectName)) {
+			getStatementHandler(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName), null).executeUpdate(null);
+			return true;
+		}
+		throw new DBObjectNotExistsException(dbObjectType, dbObjectName);
 	}
 }

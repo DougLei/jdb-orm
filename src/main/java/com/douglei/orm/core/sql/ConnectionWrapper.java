@@ -90,7 +90,7 @@ public class ConnectionWrapper {
 				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql));
 			}
 		} catch (SQLException e) {
-			throw new ConnectionWrapperException("创建StatementHander实例时出现异常", e);
+			throw new ConnectionWrapperException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.douglei.orm.core.dialect.db.object;
 
+import java.util.List;
+
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.tools.utils.StringUtil;
 
@@ -76,4 +78,21 @@ public abstract class DBObjectHandler {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * 获取查询数据库对象是否存在的sql语句
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @param parameters
+	 * @return
+	 */
+	public abstract String getQueryDBObjectIsExistsSqlStatement(DBObjectType dbObjectType, String dbObjectName, List<Object> parameters);
+
+	/**
+	 * 获取删除数据库对象的sql语句
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @return
+	 */
+	public abstract String getDropDBObjectSqlStatement(DBObjectType dbObjectType, String dbObjectName);
 }
