@@ -15,7 +15,5 @@ public class SessionTest {
 		session.getTableSession().save(SysUser.getList().get(1));
 		
 		session.close();
-		
-		
 	}
 }

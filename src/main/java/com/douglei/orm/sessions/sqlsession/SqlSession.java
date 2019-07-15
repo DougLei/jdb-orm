@@ -172,15 +172,25 @@ public interface SqlSession {
 	boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName);
 	
 	/**
+	 * 创建数据库对象, 如果存在则抛出已存在异常
+	 * @param dbObjectType
+	 * @param dbObjectName
+	 * @param createSqlStatement
+	 * @return
+	 * @throws DBObjectIsExistsException
+	 */
+	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement) throws DBObjectIsExistsException;
+	
+	/**
 	 * 创建数据库对象
 	 * @param dbObjectType
 	 * @param dbObjectName
 	 * @param createSqlStatement
-	 * @param isCover 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出异常
+	 * @param isOverride 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出已存在异常
 	 * @return
 	 * @throws DBObjectIsExistsException
 	 */
-	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isCover) throws DBObjectIsExistsException;
+	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride) throws DBObjectIsExistsException;
 	
 	/**
 	 * 删除数据库对象
