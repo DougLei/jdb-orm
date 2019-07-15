@@ -12,18 +12,18 @@ public enum DialectType {
 	 */
 	ALL,
 	
-	ORACLE(new int[] {11}),
+	ORACLE(new short[] {11}),
 	
-	MYSQL(new int[] {8}),
+	MYSQL(new short[] {8}),
 	
-	SQLSERVER(new int[] {11});
+	SQLSERVER(new short[] {11});
 	
-	private int[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
+	private short[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
 	
 	
 	private DialectType() {
 	}
-	private DialectType(int[] supportMajorVersions) {
+	private DialectType(short[] supportMajorVersions) {
 		this.supportMajorVersions = supportMajorVersions;
 	}
 
@@ -38,7 +38,7 @@ public enum DialectType {
 		return null;
 	}
 	
-	public int[] supportMajorVersions() {
+	public short[] supportMajorVersions() {
 		return supportMajorVersions;
 	}
 	

@@ -21,8 +21,8 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 		parameters.add(dbObjectName);
 		switch(dbObjectType) {
 			case PROCEDURE:
-				// TODO 还要确认
-				return "select count(1) from mysql.proc where type = 'PROCEDURE' and db = ?";
+				parameters.add(dbObjectType.name());
+				return "select count(1) from information_schema.routines where routine_schema = (select database()) and routine_name = ? and routine_type=?";
 			case VIEW:
 				return "select count(1) from information_schema.views where table_schema = (select database()) and table_name = ?";
 		}
