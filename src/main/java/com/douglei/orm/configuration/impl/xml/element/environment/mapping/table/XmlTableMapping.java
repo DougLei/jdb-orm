@@ -75,7 +75,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		// 解析<import-columns>
 		Element importColumnsElement = tableElement.element("import-columns");
 		if(importColumnsElement != null) {
-			List<?> importColumnElements = getImportColumnElements(((Element)importColumnsElement).attributeValue("path"));
+			List<?> importColumnElements = getImportColumnElements(((Element)importColumnsElement));
 			if(importColumnElements != null) {
 				columnElements = new ArrayList((localColumnElements==null?0:localColumnElements.size()) + importColumnElements.size());
 				addToColumnElements(localColumnElements, columnElements);
@@ -94,13 +94,14 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 
 	/**
 	 * 获取导入的column元素集合
-	 * @param importColumnFilePath
+	 * @param importColumnElement
 	 * @return
 	 * @throws DocumentException 
 	 */
-	private List<?> getImportColumnElements(String importColumnFilePath) throws DocumentException {
+	private List<?> getImportColumnElements(Element importColumnElement) throws DocumentException {
+		String importColumnFilePath = importColumnElement.attributeValue("path");
 		if(StringUtil.notEmpty(importColumnFilePath)) {
-			return ImportDataContext.getImportColumnElements(importColumnFilePath);
+			return ImportDataContext.getImportColumnElements(importColumnFilePath, "true".equalsIgnoreCase(importColumnElement.attributeValue("searchJar")));
 		}
 		return null;
 	}
