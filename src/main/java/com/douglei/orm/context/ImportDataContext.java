@@ -25,26 +25,25 @@ public class ImportDataContext {
 	 * @return
 	 * @throws DocumentException 
 	 */
-	@SuppressWarnings("unchecked")
-	public static List<Object> getImportColumnElements(String importColumnFilePath) throws DocumentException {
+	public static List<?> getImportColumnElements(String importColumnFilePath) throws DocumentException {
 		Object importData = IMPORT_DATA.get(importColumnFilePath);
 		if(importData == null) {
 			List<String> files = new FileScanner().scan(true, importColumnFilePath);
 			if(files.size() == 0) {
-				return null;
+				throw new NullPointerException("在import-columns时, 未能在指定path=["+importColumnFilePath+"]下发现对应的配置文件");
 			}
 			if(files.size() > 1) {
-				throw new MulitMatchImportColumnPathException(importColumnFilePath, files);
+				throw new MulitMatchImportPathException("在进行import-columns时, 根据指定path=["+importColumnFilePath+"], 扫描到多个相同的文件, 请检查:" + files.toString());
 			}
 			
-			List<Object> importDataList = new SAXReader().read(FileScanner.readByScanPath(files.get(0))).getRootElement().elements("column");
+			List<?> importDataList = new SAXReader().read(FileScanner.readByScanPath(files.get(0))).getRootElement().elements("column");
 			if(importDataList == null || importDataList.size() == 0) {
-				return null;
+				throw new NullPointerException("在指定path=["+importColumnFilePath+"]对应的配置文件中, 未能读取到任何<column>元素信息");
 			}
 			IMPORT_DATA.put(importColumnFilePath, importDataList);
 			importData = importDataList;
 		}
-		logger.debug("获取import的column集合为: {}", importData);
-		return (List<Object>) importData;
+		logger.debug("从指定的path=[{}], 获取的import-columns集合为: {}", importColumnFilePath, importData);
+		return (List<?>) importData;
 	}
 }

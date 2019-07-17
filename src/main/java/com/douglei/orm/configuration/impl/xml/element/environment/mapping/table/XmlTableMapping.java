@@ -1,5 +1,6 @@
 package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,22 +64,30 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @return
 	 * @throws DocumentException 
 	 */
-	@SuppressWarnings("unchecked")
-	private List<?> getColumnElements(Element tableElement) throws DocumentException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List getColumnElements(Element tableElement) throws DocumentException {
+		List columnElements = null;
+		
 		// 解析<columns>
 		Element columnsElement = Dom4jElementUtil.validateElementExists("columns", tableElement);
-		List<Object> columnElements = columnsElement.elements("column");
-		if(columnElements == null || columnElements.size() == 0) {
-			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
-		}
+		List<?> localColumnElements = columnsElement.elements("column");
 		
 		// 解析<import-columns>
 		Element importColumnsElement = tableElement.element("import-columns");
 		if(importColumnsElement != null) {
-			List<Object> importColumnElements = getImportColumnElements(((Element)importColumnsElement).attributeValue("path"));
+			List<?> importColumnElements = getImportColumnElements(((Element)importColumnsElement).attributeValue("path"));
 			if(importColumnElements != null) {
-				columnElements.addAll(importColumnElements);
+				columnElements = new ArrayList((localColumnElements==null?0:localColumnElements.size()) + importColumnElements.size());
+				addToColumnElements(localColumnElements, columnElements);
+				addToColumnElements(importColumnElements, columnElements);
 			}
+		}
+		
+		if(columnElements == null) {
+			columnElements = localColumnElements;
+		}
+		if(columnElements == null || columnElements.size() == 0) {
+			throw new NullPointerException("<columns>元素下至少配置一个<column>元素, 或通过<import-columns path=\"\">导入列");
 		}
 		return columnElements;
 	}
@@ -89,11 +98,24 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @return
 	 * @throws DocumentException 
 	 */
-	private List<Object> getImportColumnElements(String importColumnFilePath) throws DocumentException {
+	private List<?> getImportColumnElements(String importColumnFilePath) throws DocumentException {
 		if(StringUtil.notEmpty(importColumnFilePath)) {
 			return ImportDataContext.getImportColumnElements(importColumnFilePath);
 		}
 		return null;
+	}
+	
+	/**
+	 * 将sourceColumnElements集合中的数据, 添加到columnElements
+	 * @param sourceColumnElements
+	 * @param columnElements
+	 */
+	private void addToColumnElements(List<?> sourceColumnElements, List<Object> columnElements) {
+		if(sourceColumnElements != null && sourceColumnElements.size() > 0) {
+			for (Object sce : sourceColumnElements) {
+				columnElements.add(sce);
+			}
+		}
 	}
 
 	/**
