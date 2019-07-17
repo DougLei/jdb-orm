@@ -1,6 +1,8 @@
 package com.douglei.orm.xmlreader;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.Scanner;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -14,7 +16,9 @@ public class Dom4jReader {
 	
 	@Test
 	public void read() throws Exception {
-		Document doc = new SAXReader().read(new File(xmlFilePath));
+		FileInputStream fis = new FileInputStream(new File(xmlFilePath));
+		Document doc = new SAXReader().read(fis);
+		
 		Element elem = doc.getRootElement().element("table").element("indexes").element("index");
 		
 //		List<?> list = elem.selectNodes("column-name/@value");
@@ -31,8 +35,10 @@ public class Dom4jReader {
 		System.out.println("string value----------------------------");
 		System.out.println(elem.getStringValue());
 		
+		System.out.println(doc.getRootElement().element("table").element("import-columns").attributeValue("path"));
 		
-		
-		
+		@SuppressWarnings("resource")
+		String a = new Scanner(System.in).next();
+		System.out.println(a);
 	} 
 }

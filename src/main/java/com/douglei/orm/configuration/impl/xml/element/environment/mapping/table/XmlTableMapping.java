@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.dom4j.Attribute;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMap
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
+import com.douglei.orm.context.ImportDataContext;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.ConstraintType;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
@@ -24,6 +26,7 @@ import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * table 映射
@@ -44,7 +47,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		try {
 			Element tableElement = Dom4jElementUtil.validateElementExists("table", rootElement);
 			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
-			addColumnMetadata(Dom4jElementUtil.validateElementExists("columns", tableElement));
+			addColumnMetadata(getColumnElements(tableElement));
 			addConstraint(tableElement.element("constraints"));
 			addIndex(tableElement.element("indexes"));
 			tableMetadata.columnDataMigration();
@@ -55,19 +58,53 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	}
 
 	/**
+	 * 获取column元素集合
+	 * @param tableElement
+	 * @return
+	 * @throws DocumentException 
+	 */
+	@SuppressWarnings("unchecked")
+	private List<?> getColumnElements(Element tableElement) throws DocumentException {
+		// 解析<columns>
+		Element columnsElement = Dom4jElementUtil.validateElementExists("columns", tableElement);
+		List<Object> columnElements = columnsElement.elements("column");
+		if(columnElements == null || columnElements.size() == 0) {
+			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
+		}
+		
+		// 解析<import-columns>
+		Element importColumnsElement = tableElement.element("import-columns");
+		if(importColumnsElement != null) {
+			List<Object> importColumnElements = getImportColumnElements(((Element)importColumnsElement).attributeValue("path"));
+			if(importColumnElements != null) {
+				columnElements.addAll(importColumnElements);
+			}
+		}
+		return columnElements;
+	}
+
+	/**
+	 * 获取导入的column元素集合
+	 * @param importColumnFilePath
+	 * @return
+	 * @throws DocumentException 
+	 */
+	private List<Object> getImportColumnElements(String importColumnFilePath) throws DocumentException {
+		if(StringUtil.notEmpty(importColumnFilePath)) {
+			return ImportDataContext.getImportColumnElements(importColumnFilePath);
+		}
+		return null;
+	}
+
+	/**
 	 * 添加列元数据
 	 * @param columnsElement
 	 * @throws MetadataValidateException 
 	 */
-	private void addColumnMetadata(Element columnsElement) throws MetadataValidateException {
-		List<?> elems = columnsElement.elements("column");
-		if(elems == null || elems.size() == 0) {
-			throw new NullPointerException("<columns>元素下至少配置一个<column>元素");
-		}
-		
+	private void addColumnMetadata(List<?> columnElements) throws MetadataValidateException {
 		boolean classNameIsNull = tableMetadata.classNameIsNull();
 		ColumnMetadata columnMetadata = null;
-		for (Object object : elems) {
+		for (Object object : columnElements) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
