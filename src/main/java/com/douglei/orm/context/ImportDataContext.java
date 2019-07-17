@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.douglei.tools.instances.scanner.FileScanner;
 
@@ -14,6 +16,7 @@ import com.douglei.tools.instances.scanner.FileScanner;
  * @author DougLei
  */
 public class ImportDataContext {
+	private static final Logger logger = LoggerFactory.getLogger(ImportDataContext.class);
 	private static final Map<String, Object> IMPORT_DATA = new HashMap<String, Object>(2);
 	
 	/**
@@ -39,8 +42,9 @@ public class ImportDataContext {
 				return null;
 			}
 			IMPORT_DATA.put(importColumnFilePath, importDataList);
-			return importDataList;
+			importData = importDataList;
 		}
+		logger.debug("获取import的column集合为: {}", importData);
 		return (List<Object>) importData;
 	}
 }
