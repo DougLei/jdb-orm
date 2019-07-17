@@ -31,10 +31,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private Dialect dialect;
 	
 	@FieldMetaData
-	private boolean enableSessionCache;
+	private boolean enableSessionCache = true;
 	
 	@FieldMetaData
-	private boolean enableTableSessionCache;
+	private boolean enableTableSessionCache = true;
 	
 	@FieldMetaData
 	private MappingCacheStore mappingCacheStore;
@@ -130,16 +130,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	void setEnableSessionCache(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
-			return;
 		}
-		this.enableSessionCache = true;
 	}
 	void setEnableTableSessionCache(String value) {
 		if(ValidationUtil.isBoolean(value)) {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
-			return;
 		}
-		this.enableTableSessionCache = true;
 	}
 	private static final String DEFAULT_MAPPING_CACHE_STORE = "application";// 默认为 ApplicationMappingCacheStore
 	void setMappingCacheStore(String value) {
