@@ -62,10 +62,10 @@ public class SqlMetadata implements Metadata{
 		return name;
 	}
 	public List<SqlContentMetadata> getContents() {
-		DialectType dialect = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		DialectType currentDialectType = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
 		for (SqlContentMetadata content : contents) {
-			if(content.isMatchingDialectType(dialect)) {
+			if(content.isMatchingDialectType(currentDialectType)) {
 				list.add(content);
 			}
 		}

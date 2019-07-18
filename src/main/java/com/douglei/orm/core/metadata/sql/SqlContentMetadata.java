@@ -32,9 +32,9 @@ public class SqlContentMetadata implements Metadata{
 		rootSqlNodes.add(rootSqlNode);
 	}
 	
-	public boolean isMatchingDialectType(DialectType dialect) {
+	public boolean isMatchingDialectType(DialectType currentDialectType) {
 		for (DialectType dt : dialectTypes) {
-			if(dt == dialect) {
+			if(dt == currentDialectType) {
 				return true;
 			}
 		}
