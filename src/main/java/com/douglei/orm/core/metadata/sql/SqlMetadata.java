@@ -3,6 +3,7 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -60,10 +61,11 @@ public class SqlMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public List<SqlContentMetadata> getContents(DialectType dialect) {
+	public List<SqlContentMetadata> getContents() {
+		DialectType dialect = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
 		for (SqlContentMetadata content : contents) {
-			if(content.getDialectType() == dialect || content.getDialectType() == DialectType.ALL) {
+			if(content.isMatchingDialectType(dialect)) {
 				list.add(content);
 			}
 		}

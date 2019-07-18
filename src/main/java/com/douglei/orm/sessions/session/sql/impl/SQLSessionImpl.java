@@ -187,7 +187,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
 		
-		List<SqlContentMetadata> contents = sqlMetadata.getContents(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType());
+		List<SqlContentMetadata> contents = sqlMetadata.getContents();
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的存储过程sql语句");
 		}

@@ -1,6 +1,8 @@
 package com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -37,8 +39,8 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
 		
-		DialectType dialectType = getDialectType(attributeMap.getNamedItem("dialect"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectType, type);
+		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectTypes, type);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -85,16 +87,30 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 		return childrenLength;
 	}
 	
-	private DialectType getDialectType(Node dialect) {
+	private DialectType[] getDialectTypes(Node dialect) {
 		String dialectValue = null; 
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			return DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
+			return new DialectType[] { DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType() };
 		}else {
-			DialectType type = DialectType.toValue(dialectValue.toUpperCase());
-			if(type == null) {
-				throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
+			List<DialectType> dts = null;
+			DialectType dt = null;
+			String[] dialectValueArray = dialectValue.split(",");
+			
+			for(String _dialect: dialectValueArray) {
+				dt = DialectType.toValue(_dialect.toUpperCase());
+				if(dt == null) {
+					throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
+				}
+				if(dt == DialectType.ALL) {
+					return DialectType.values_();
+				}else {
+					if(dts == null) {
+						dts = new ArrayList<DialectType>(dialectValueArray.length);
+					}
+					dts.add(dt);
+				}
 			}
-			return type;
+			return dts.toArray(new DialectType[dts.size()]);
 		}
 	}
 }

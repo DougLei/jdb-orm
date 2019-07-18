@@ -250,7 +250,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		} else {
 			DialectType dt = null;
 			for(String _dialect : dialect.split(",")) {
-				dt = DialectType.toValue(_dialect);
+				dt = DialectType.toValue(_dialect.toUpperCase());
 				if(dt == null) {
 					throw new NullPointerException("<indexes> -> <index> -> <"+description+"Sql>元素中的dialect属性值错误:["+_dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
 				}

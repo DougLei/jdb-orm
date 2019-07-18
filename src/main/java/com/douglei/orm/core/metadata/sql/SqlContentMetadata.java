@@ -15,13 +15,13 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 public class SqlContentMetadata implements Metadata{
 	private static final long serialVersionUID = -3887183011478334184L;
 	
-	private DialectType dialectType;
+	private DialectType[] dialectTypes;
 	private SqlContentType type;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(DialectType dialectType, SqlContentType type) {
-		this.dialectType = dialectType;
+	public SqlContentMetadata(DialectType[] dialectTypes, SqlContentType type) {
+		this.dialectTypes = dialectTypes;
 		this.type = type;
 	}
 	
@@ -32,9 +32,13 @@ public class SqlContentMetadata implements Metadata{
 		rootSqlNodes.add(rootSqlNode);
 	}
 	
-	
-	public DialectType getDialectType() {
-		return dialectType;
+	public boolean isMatchingDialectType(DialectType dialect) {
+		for (DialectType dt : dialectTypes) {
+			if(dt == dialect) {
+				return true;
+			}
+		}
+		return false;
 	}
 	public SqlContentType getType() {
 		return type;
@@ -46,7 +50,7 @@ public class SqlContentMetadata implements Metadata{
 	@Deprecated
 	@Override
 	public String getCode() {
-		return dialectType.name();
+		return null;
 	}
 	
 	@Override
