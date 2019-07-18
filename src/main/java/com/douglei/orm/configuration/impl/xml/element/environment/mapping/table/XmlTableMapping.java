@@ -206,9 +206,9 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			if(elements != null && elements.size() > 0) {
 				Element indexElement = null;
 				String indexName = null;
-				Map<String, String> createSqlStatements = null;
-				Map<String, String> dropSqlStatements = null;
-				String currentDialectCode = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name();
+				Map<DialectType, String> createSqlStatements = null;
+				Map<DialectType, String> dropSqlStatements = null;
+				DialectType currentDialectType = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 				
 				for (Object object : elements) {
 					indexElement = ((Element)object);
@@ -216,8 +216,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 						throw new NullPointerException("索引名不能为空");
 					}
 					
-					createSqlStatements = getIndexSqlStatementMap("create", indexName, currentDialectCode, indexElement.elements("createSql"));
-					dropSqlStatements = getIndexSqlStatementMap("drop", indexName, currentDialectCode, indexElement.elements("dropSql"));
+					createSqlStatements = getIndexSqlStatementMap("create", indexName, currentDialectType, indexElement.elements("createSql"));
+					dropSqlStatements = getIndexSqlStatementMap("drop", indexName, currentDialectType, indexElement.elements("dropSql"));
 					if(!createSqlStatements.keySet().equals(dropSqlStatements.keySet())) {
 						throw new IndexException("索引[" + indexName + "]的create sql语句["+createSqlStatements.size()+"个]["+createSqlStatements.keySet()+"]和drop sql语句["+dropSqlStatements.size()+"个]["+dropSqlStatements.keySet()+"]不匹配");
 					}
@@ -229,24 +229,24 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	}
 	
 	// 获取索引sql语句map
-	private Map<String, String> getIndexSqlStatementMap(String description, String indexName, String currentDialectCode, List<?> sqlElements) {
+	private Map<DialectType, String> getIndexSqlStatementMap(String description, String indexName, DialectType currentDialectType, List<?> sqlElements) {
 		if(sqlElements == null || sqlElements.size() == 0) {
 			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
 		}
-		Map<String, String> sqlStatements = new HashMap<String, String>(sqlElements.size());
+		Map<DialectType, String> sqlStatements = new HashMap<DialectType, String>(sqlElements.size());
 		for (Object object : sqlElements) {
-			putIndexSqlStatement(description, indexName, ((Element)object).attributeValue("dialect"), ((Element)object).getTextTrim(), currentDialectCode, sqlStatements);
+			putIndexSqlStatement(description, indexName, ((Element)object).attributeValue("dialect"), ((Element)object).getTextTrim(), currentDialectType, sqlStatements);
 		}
 		return sqlStatements;
 	}
 	
 	// 将对应的索引sql语句put到map集合中
-	private void putIndexSqlStatement(String description, String indexName, String dialect, String sqlStatement, String currentDialectCode, Map<String, String> sqlStatements) {
+	private void putIndexSqlStatement(String description, String indexName, String dialect, String sqlStatement, DialectType currentDialectType, Map<DialectType, String> sqlStatements) {
 		if(StringUtil.isEmpty(sqlStatement)) {
 			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
 		}
 		if(StringUtil.isEmpty(dialect)) {
-			sqlStatements.put(currentDialectCode, sqlStatement);
+			sqlStatements.put(currentDialectType, sqlStatement);
 		} else {
 			DialectType dt = null;
 			for(String _dialect : dialect.split(",")) {
@@ -256,11 +256,11 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				}
 				if(dt == DialectType.ALL) {
 					for(DialectType _dt: DialectType.values_()) {
-						sqlStatements.put(_dt.name(), sqlStatement);
+						sqlStatements.put(_dt, sqlStatement);
 					}
 					break;
 				}else {
-					sqlStatements.put(dt.name(), sqlStatement);
+					sqlStatements.put(dt, sqlStatement);
 				}
 			}
 		}
