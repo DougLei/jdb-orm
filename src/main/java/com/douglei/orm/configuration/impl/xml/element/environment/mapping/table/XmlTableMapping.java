@@ -101,7 +101,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private List<?> getImportColumnElements(Element importColumnElement) throws DocumentException {
 		String importColumnFilePath = importColumnElement.attributeValue("path");
 		if(StringUtil.notEmpty(importColumnFilePath)) {
-			return ImportDataContext.getImportColumnElements(importColumnFilePath, "true".equalsIgnoreCase(importColumnElement.attributeValue("searchJar")));
+			return ImportDataContext.getImportColumnElements(importColumnFilePath, "true".equalsIgnoreCase(importColumnElement.attributeValue("searchAll")));
 		}
 		return null;
 	}

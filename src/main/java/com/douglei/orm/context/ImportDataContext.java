@@ -22,14 +22,14 @@ public class ImportDataContext {
 	/**
 	 * 获取导入的column元素集合
 	 * @param importColumnFilePath
-	 * @param searchJar
+	 * @param searchAll
 	 * @return
 	 * @throws DocumentException 
 	 */
-	public static List<?> getImportColumnElements(String importColumnFilePath, boolean searchJar) throws DocumentException {
+	public static List<?> getImportColumnElements(String importColumnFilePath, boolean searchAll) throws DocumentException {
 		Object importData = IMPORT_DATA.get(importColumnFilePath);
 		if(importData == null) {
-			List<String> files = new FileScanner().scan(searchJar, importColumnFilePath);
+			List<String> files = new FileScanner().scan(searchAll, importColumnFilePath);
 			if(files.size() == 0) {
 				throw new NullPointerException("在import-columns时, 未能在指定path=["+importColumnFilePath+"]下发现对应的配置文件");
 			}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<table name="SYS_USER" oldName="SYS_USRE" class="com.douglei.orm.session.SysUser" createMode="create"><!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用 -->
-		<import-columns path="" searchJar="false"/><!-- 从根路径查找, 要导入的列集合, 一般可以将所有表中的通用字段导入, searchJar同jdb-orm.conf.xml中<mappings>的searchJar, 默认值为false -->
+		<import-columns path="" searchAll="false"/><!-- 从根路径查找, 要导入的列集合, 一般可以将所有表中的通用字段导入, searchAll同jdb-orm.conf.xml中<mappings>的searchAll, 默认值为false -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
