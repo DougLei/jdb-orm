@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration id="default">
 	<environment>
-		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver -->
+		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver, 如果不配置, 则框架会解析jdbc url, 获取对应的方言 -->
 		<!-- <property name="enableSessionCache" value="true" /> --><!-- 是否开启Session缓存, 即对Statement缓存, 默认值为true  -->
 		<!-- <property name="enableTableSessionCache" value="true" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为true  -->
 		<!-- <property name="mappingCacheStore" value="application" /> --><!-- value的值包括: application, 默认值为application -->
@@ -63,7 +63,7 @@
 	
 	<extConfiguration>
 		<datatypeHandlers>
-			<datatypeHandler dialect="" class="" /><!-- dialect如果不填, 就用[property dialect]的值 -->
+			<datatypeHandler class="" />
 		</datatypeHandlers>
 	</extConfiguration>
 </configuration>

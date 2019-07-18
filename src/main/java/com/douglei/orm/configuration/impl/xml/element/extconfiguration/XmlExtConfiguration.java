@@ -51,7 +51,7 @@ public class XmlExtConfiguration implements ExtConfiguration {
 					if(StringUtil.isEmpty(clz)) {
 						continue;
 					}
-					extDataTypeHandlerList.add(new XmlExtDataTypeHandler(element.attributeValue("dialect"), clz));
+					extDataTypeHandlerList.add(new XmlExtDataTypeHandler(clz));
 				}
 			}
 		}

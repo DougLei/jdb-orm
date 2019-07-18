@@ -26,6 +26,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private Map<String, String> propertyMap;
 	private boolean propertyMapIsEmpty;
 	private String id;
+	private DatabaseMetadata databaseMetadata;
 	
 	@FieldMetaData
 	private Dialect dialect;
@@ -54,10 +55,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidation;
 	
-	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap) {
+	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata) {
 		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
+		this.databaseMetadata = databaseMetadata;
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
@@ -124,7 +126,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 
 	void setDialect(String value) {
 		if(StringUtil.notEmpty(value)) {
-			this.dialect = DialectMapping.getDialect(value);
+			this.dialect = DialectMapping.getDialect(value, databaseMetadata);
 		}
 	}
 	void setEnableSessionCache(String value) {
@@ -178,13 +180,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	// 设置扩展的数据类型Handler
 	public void setExtDataTypeHandlers(List<ExtDataTypeHandler> extDataTypeHandlerList) {
 		if(extDataTypeHandlerList != null  && extDataTypeHandlerList.size() > 0) {
-			Dialect dialect = null;
 			for (ExtDataTypeHandler extDataTypeHandler : extDataTypeHandlerList) {
-				dialect = extDataTypeHandler.getDialect();
-				if(dialect == null) {
-					dialect = this.dialect;
-				}
-				dialect.getDataTypeHandlerMapping().registerExtDataTypeHandler(extDataTypeHandler);
+				this.dialect.getDataTypeHandlerMapping().registerExtDataTypeHandler(extDataTypeHandler);
 			}
 		}
 	}

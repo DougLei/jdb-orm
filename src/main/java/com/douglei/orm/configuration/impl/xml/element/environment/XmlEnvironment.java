@@ -1,6 +1,5 @@
 package com.douglei.orm.configuration.impl.xml.element.environment;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -132,16 +131,16 @@ public class XmlEnvironment implements Environment{
 	private void setEnvironmentProperties(List<?> elements) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
-		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(id, propertyMap);
 		
+		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
+		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(id, propertyMap, databaseMetadata);
 		if(xmlEnvironmentProperty.getDialect() == null) {
-			Connection connection = dataSourceWrapper.getConnection(false, null).getConnection();
-			DatabaseMetadata databaseMetadata = new DatabaseMetadata(connection);
 			if(logger.isDebugEnabled()) {
 				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);
 			}
 			xmlEnvironmentProperty.setDialectByDatabaseMetadata(databaseMetadata);
 		}
+		
 		xmlEnvironmentProperty.setExtDataTypeHandlers(extConfiguration.getExtDataTypeHandlerList());
 		
 		this.environmentProperty = xmlEnvironmentProperty;

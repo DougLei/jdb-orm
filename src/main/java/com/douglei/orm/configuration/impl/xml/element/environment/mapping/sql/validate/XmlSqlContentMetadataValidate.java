@@ -87,15 +87,14 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate {
 	
 	private DialectType getDialectType(Node dialect) {
 		String dialectValue = null; 
-		DialectType type = null;
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			type = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
+			return DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		}else {
-			type = DialectType.toValue(dialectValue);
+			DialectType type = DialectType.toValue(dialectValue.toUpperCase());
 			if(type == null) {
 				throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
 			}
+			return type;
 		}
-		return type;
 	}
 }

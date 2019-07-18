@@ -2,7 +2,9 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Attribute;
 import org.dom4j.DocumentException;
@@ -17,11 +19,13 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMap
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
+import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.ImportDataContext;
+import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.entity.ConstraintType;
 import com.douglei.orm.core.dialect.db.table.entity.Index;
-import com.douglei.orm.core.dialect.db.table.entity.IndexType;
+import com.douglei.orm.core.dialect.db.table.entity.IndexException;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -101,7 +105,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private List<?> getImportColumnElements(Element importColumnElement) throws DocumentException {
 		String importColumnFilePath = importColumnElement.attributeValue("path");
 		if(StringUtil.notEmpty(importColumnFilePath)) {
-			return ImportDataContext.getImportColumnElements(importColumnFilePath, "true".equalsIgnoreCase(importColumnElement.attributeValue("searchAll")));
+			return ImportDataContext.getImportColumnElements(importColumnFilePath);
 		}
 		return null;
 	}
@@ -201,17 +205,62 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			List<?> elements = indexesElement.elements("index");
 			if(elements != null && elements.size() > 0) {
 				Element indexElement = null;
-				IndexType indexType = null;
+				String indexName = null;
+				Map<String, String> createSqlStatements = null;
+				Map<String, String> dropSqlStatements = null;
+				String currentDialectCode = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name();
+				
 				for (Object object : elements) {
 					indexElement = ((Element)object);
-					indexType = IndexType.toValue(indexElement.attributeValue("type"));
-//					if(indexType == null) { // TODO 目前索引这个类型为null, 因为还未实现索引的配置功能
-//						throw new NullPointerException("<index>元素中的type属性值错误:["+indexElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(IndexType.values()));
-//					}
-					tableMetadata.addIndex(new Index(indexType, tableMetadata.getName(), 
-							indexElement.attributeValue("name"), 
-							Dom4jElementUtil.validateElementExists("createSql", indexElement).getTextTrim(), 
-							Dom4jElementUtil.validateElementExists("dropSql", indexElement).getTextTrim()));
+					if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name"))) {
+						throw new NullPointerException("索引名不能为空");
+					}
+					
+					createSqlStatements = getIndexSqlStatementMap("create", indexName, currentDialectCode, indexElement.elements("createSql"));
+					dropSqlStatements = getIndexSqlStatementMap("drop", indexName, currentDialectCode, indexElement.elements("dropSql"));
+					if(!createSqlStatements.keySet().equals(dropSqlStatements.keySet())) {
+						throw new IndexException("索引[" + indexName + "]的create sql语句["+createSqlStatements.size()+"个]["+createSqlStatements.keySet()+"]和drop sql语句["+dropSqlStatements.size()+"个]["+dropSqlStatements.keySet()+"]不匹配");
+					}
+					
+					tableMetadata.addIndex(new Index(tableMetadata.getName(), indexName, createSqlStatements, dropSqlStatements));
+				}
+			}
+		}
+	}
+	
+	// 获取索引sql语句map
+	private Map<String, String> getIndexSqlStatementMap(String description, String indexName, String currentDialectCode, List<?> sqlElements) {
+		if(sqlElements == null || sqlElements.size() == 0) {
+			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
+		}
+		Map<String, String> sqlStatements = new HashMap<String, String>(sqlElements.size());
+		for (Object object : sqlElements) {
+			putIndexSqlStatement(description, indexName, ((Element)object).attributeValue("dialect"), ((Element)object).getTextTrim(), currentDialectCode, sqlStatements);
+		}
+		return sqlStatements;
+	}
+	
+	// 将对应的索引sql语句put到map集合中
+	private void putIndexSqlStatement(String description, String indexName, String dialect, String sqlStatement, String currentDialectCode, Map<String, String> sqlStatements) {
+		if(StringUtil.isEmpty(sqlStatement)) {
+			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
+		}
+		if(StringUtil.isEmpty(dialect)) {
+			sqlStatements.put(currentDialectCode, sqlStatement);
+		} else {
+			DialectType dt = null;
+			for(String _dialect : dialect.split(",")) {
+				dt = DialectType.toValue(_dialect);
+				if(dt == null) {
+					throw new NullPointerException("<indexes> -> <index> -> <"+description+"Sql>元素中的dialect属性值错误:["+_dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
+				}
+				if(dt == DialectType.ALL) {
+					for(DialectType _dt: DialectType.values_()) {
+						sqlStatements.put(_dt.name(), sqlStatement);
+					}
+					break;
+				}else {
+					sqlStatements.put(dt.name(), sqlStatement);
 				}
 			}
 		}

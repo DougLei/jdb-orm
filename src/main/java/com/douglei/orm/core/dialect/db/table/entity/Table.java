@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.converter.Entity2MappingContentConverter;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.tools.utils.StringUtil;
 
@@ -14,7 +13,7 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class Table implements Entity2MappingContentConverter, Serializable{
+public abstract class Table implements Serializable{
 	private static final long serialVersionUID = -824613028695129467L;
 	
 	protected String name;// 表名
@@ -166,84 +165,84 @@ public abstract class Table implements Entity2MappingContentConverter, Serializa
 		return primaryKeyColumns != null;
 	}
 	
-	@Override
-	public String toXmlMappingContent() {
-		StringBuilder xml = new StringBuilder(3000);
-		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append("<mapping-configuration>");
-		xml.append("<table name=\"").append(name).append("\" ").append("oldName=\"").append(getOldName()).append("\" ").append("createMode=\"").append(getCreateMode().name()).append("\">");
-		toXmlColumnContent(xml, columns.values());
-		toXmlConstraintContent(xml, getConstraints());
-		toXmlIndexContent(xml, getIndexes());
-		xml.append("</table>");
-		xml.append("</mapping-configuration>");
-		return xml.toString();
-	}
-	private void toXmlColumnContent(StringBuilder xml, Collection<Column> columns) {
-		if(columns != null) {
-			xml.append("<columns>");
-			for (Column column : columns) {
-				xml.append("<column ");
-				xml.append("name=\"").append(column.getName()).append("\" ").append("oldName=\"").append(column.getOldName()).append("\" ");
-				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
-				xml.append("length=\"").append(column.getLength()).append("\" ");
-				xml.append("precision=\"").append(column.getPrecision()).append("\"");
-				if(!column.isNullabled()) {
-					xml.append(" nullabled=\"false\"");
-				}
-				if(column.isValidate()) {
-					xml.append(" validate=\"true\"");
-				}
-				xml.append("/>");
-			}
-			xml.append("</columns>");
-		}
-	}
-	private void toXmlConstraintContent(StringBuilder xml, Collection<Constraint> constraints) {
-		if(constraints != null) {
-			Collection<Column> columns = null;
-			
-			xml.append("<constraints>");
-			for (Constraint constraint : constraints) {
-				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"");
-				toXmlConstraintTypeExtendProperties(xml, constraint);
-				xml.append(">");
-				columns = constraint.getColumns();
-				for (Column column : columns) {
-					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
-				}
-				xml.append("</constraint>");
-			}
-			xml.append("</constraints>");
-		}
-	}
-	private void toXmlConstraintTypeExtendProperties(StringBuilder xml, Constraint constraint) {// 约束类型扩展属性的xml内容
-		switch(constraint.getConstraintType()) {
-			case DEFAULT_VALUE:
-				xml.append(" value=\"").append(constraint.getDefaultValue()).append("\"");
-				break;
-			case CHECK:
-				xml.append(" expression=\"").append(constraint.getCheck()).append("\"");
-				break;
-			case FOREIGN_KEY:
-				xml.append(" fkTableName=\"").append(constraint.getFkTableName()).append("\"");
-				xml.append(" fkColumnName=\"").append(constraint.getFkColumnName()).append("\"");
-				break;
-			default:
-				// 不用处理 primaryKey unique, 他们没有扩展属性
-				break;	
-		}
-	}
-	private void toXmlIndexContent(StringBuilder xml, Collection<Index> indexes) {
-		if(indexes != null) {
-			xml.append("<indexes>");
-			for (Index index : indexes) {// TODO 索引的临时处理
-				xml.append("<index name=\"").append(index.getName()).append("\">");
-				xml.append("<create>").append(index.getCreateSqlStatement()).append("</create>");
-				xml.append("<drop>").append(index.getDropSqlStatement()).append("</drop>");
-				xml.append("</index>");
-			}
-			xml.append("</indexes>");
-		}
-	}
+//	@Override
+//	public String toXmlMappingContent() {
+//		StringBuilder xml = new StringBuilder(3000);
+//		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+//		xml.append("<mapping-configuration>");
+//		xml.append("<table name=\"").append(name).append("\" ").append("oldName=\"").append(getOldName()).append("\" ").append("createMode=\"").append(getCreateMode().name()).append("\">");
+//		toXmlColumnContent(xml, columns.values());
+//		toXmlConstraintContent(xml, getConstraints());
+//		toXmlIndexContent(xml, getIndexes());
+//		xml.append("</table>");
+//		xml.append("</mapping-configuration>");
+//		return xml.toString();
+//	}
+//	private void toXmlColumnContent(StringBuilder xml, Collection<Column> columns) {
+//		if(columns != null) {
+//			xml.append("<columns>");
+//			for (Column column : columns) {
+//				xml.append("<column ");
+//				xml.append("name=\"").append(column.getName()).append("\" ").append("oldName=\"").append(column.getOldName()).append("\" ");
+//				xml.append("dataType=\"").append(column.getDataTypeHandler().getCode()).append("\" ");
+//				xml.append("length=\"").append(column.getLength()).append("\" ");
+//				xml.append("precision=\"").append(column.getPrecision()).append("\"");
+//				if(!column.isNullabled()) {
+//					xml.append(" nullabled=\"false\"");
+//				}
+//				if(column.isValidate()) {
+//					xml.append(" validate=\"true\"");
+//				}
+//				xml.append("/>");
+//			}
+//			xml.append("</columns>");
+//		}
+//	}
+//	private void toXmlConstraintContent(StringBuilder xml, Collection<Constraint> constraints) {
+//		if(constraints != null) {
+//			Collection<Column> columns = null;
+//			
+//			xml.append("<constraints>");
+//			for (Constraint constraint : constraints) {
+//				xml.append("<constraint type=\"").append(constraint.getConstraintType().name()).append("\"");
+//				toXmlConstraintTypeExtendProperties(xml, constraint);
+//				xml.append(">");
+//				columns = constraint.getColumns();
+//				for (Column column : columns) {
+//					xml.append("<column-name value=\"").append(column.getName()).append("\"/>");
+//				}
+//				xml.append("</constraint>");
+//			}
+//			xml.append("</constraints>");
+//		}
+//	}
+//	private void toXmlConstraintTypeExtendProperties(StringBuilder xml, Constraint constraint) {// 约束类型扩展属性的xml内容
+//		switch(constraint.getConstraintType()) {
+//			case DEFAULT_VALUE:
+//				xml.append(" value=\"").append(constraint.getDefaultValue()).append("\"");
+//				break;
+//			case CHECK:
+//				xml.append(" expression=\"").append(constraint.getCheck()).append("\"");
+//				break;
+//			case FOREIGN_KEY:
+//				xml.append(" fkTableName=\"").append(constraint.getFkTableName()).append("\"");
+//				xml.append(" fkColumnName=\"").append(constraint.getFkColumnName()).append("\"");
+//				break;
+//			default:
+//				// 不用处理 primaryKey unique, 他们没有扩展属性
+//				break;	
+//		}
+//	}
+//	private void toXmlIndexContent(StringBuilder xml, Collection<Index> indexes) {
+//		if(indexes != null) {
+//			xml.append("<indexes>");
+//			for (Index index : indexes) {// TODO 索引的临时处理
+//				xml.append("<index name=\"").append(index.getName()).append("\">");
+//				xml.append("<create>").append(index.getCreateSqlStatement()).append("</create>");
+//				xml.append("<drop>").append(index.getDropSqlStatement()).append("</drop>");
+//				xml.append("</index>");
+//			}
+//			xml.append("</indexes>");
+//		}
+//	}
 }

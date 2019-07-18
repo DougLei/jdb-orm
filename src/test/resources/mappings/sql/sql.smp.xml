@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<sql namespace="com.test" name="queryUser">
-		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; all表示所有类型的dialect -->
+		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 			select * from sys_user 
 			
 		<!-- 

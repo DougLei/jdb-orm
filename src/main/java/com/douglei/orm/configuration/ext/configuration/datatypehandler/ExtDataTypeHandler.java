@@ -1,6 +1,5 @@
 package com.douglei.orm.configuration.ext.configuration.datatypehandler;
 
-import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
@@ -12,8 +11,6 @@ import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.Result
  */
 public interface ExtDataTypeHandler {
 
-	Dialect getDialect();
-	
 	DataTypeHandlerType getType();
 
 	ClassDataTypeHandler getClassDataTypeHandler();

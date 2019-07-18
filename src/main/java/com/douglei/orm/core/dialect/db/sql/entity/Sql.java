@@ -4,15 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.converter.Entity2MappingContentConverter;
 import com.douglei.orm.core.dialect.DialectType;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class Sql implements Entity2MappingContentConverter, Serializable {
+public class Sql implements Serializable {
 	private static final long serialVersionUID = -1384705272068010225L;
 	
 	private String namespace;
@@ -51,32 +49,32 @@ public class Sql implements Entity2MappingContentConverter, Serializable {
 		return list;
 	}
 
-	@Override
-	public String toXmlMappingContent() {
-		StringBuilder xml = new StringBuilder(3000);
-		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		xml.append("<mapping-configuration>");
-		xml.append("<sql name=\"").append(name).append("\"");
-		if(StringUtil.notEmpty(namespace)) {
-			xml.append(" namespace=\"").append(namespace).append("\"");
-		}
-		xml.append(">");
-		toXmlSqlContent(xml);
-		xml.append("</sql>");
-		xml.append("</mapping-configuration>");
-		return xml.toString();
-	}
-	private void toXmlSqlContent(StringBuilder xml) {
-		if(this.contents != null) {
-			for (SqlContent content : this.contents) {
-				xml.append("<content type=\"").append(content.getType().name()).append("\"");
-				if(content.getDialectType() != null) {
-					xml.append(" dialect=\"").append(content.getDialectType().name()).append("\"");
-				}
-				xml.append(">");
-				xml.append(content.getContent());
-				xml.append("</content>");
-			}
-		}
-	}
+//	@Override
+//	public String toXmlMappingContent() {
+//		StringBuilder xml = new StringBuilder(3000);
+//		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+//		xml.append("<mapping-configuration>");
+//		xml.append("<sql name=\"").append(name).append("\"");
+//		if(StringUtil.notEmpty(namespace)) {
+//			xml.append(" namespace=\"").append(namespace).append("\"");
+//		}
+//		xml.append(">");
+//		toXmlSqlContent(xml);
+//		xml.append("</sql>");
+//		xml.append("</mapping-configuration>");
+//		return xml.toString();
+//	}
+//	private void toXmlSqlContent(StringBuilder xml) {
+//		if(this.contents != null) {
+//			for (SqlContent content : this.contents) {
+//				xml.append("<content type=\"").append(content.getType().name()).append("\"");
+//				if(content.getDialectType() != null) {
+//					xml.append(" dialect=\"").append(content.getDialectType().name()).append("\"");
+//				}
+//				xml.append(">");
+//				xml.append(content.getContent());
+//				xml.append("</content>");
+//			}
+//		}
+//	}
 }

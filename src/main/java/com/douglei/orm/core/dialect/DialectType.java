@@ -2,33 +2,44 @@ package com.douglei.orm.core.dialect;
 
 import java.util.Arrays;
 
+import com.douglei.orm.core.dialect.impl.mysql.MySqlDialect;
+import com.douglei.orm.core.dialect.impl.oracle.OracleDialect;
+import com.douglei.orm.core.dialect.impl.sqlserver.SqlServerDialect;
+import com.douglei.tools.utils.reflect.ConstructorUtil;
+
 /**
  * 
  * @author DougLei
  */
 public enum DialectType {
 	/**
-	 * <b>主要是给sql映射用的, table映射禁用</b>
+	 * <b>主要是在指定配置属于哪个方言时使用</b>
 	 */
 	ALL,
 	
-	ORACLE(new short[] {11}),
+	ORACLE(OracleDialect.class, new short[] {11}),
 	
-	MYSQL(new short[] {8}),
+	MYSQL(MySqlDialect.class, new short[] {8}),
 	
-	SQLSERVER(new short[] {11});
+	SQLSERVER(SqlServerDialect.class, new short[] {11});
 	
+	private Class<? extends Dialect> dialectClass;// 方言类
+	private Dialect dialectInstance;// 方言实例
 	private short[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
-	
 	
 	private DialectType() {
 	}
-	private DialectType(short[] supportMajorVersions) {
+	private DialectType(Class<? extends Dialect> dialectClass, short[] supportMajorVersions) {
+		this.dialectClass = dialectClass;
 		this.supportMajorVersions = supportMajorVersions;
 	}
 
+	/**
+	 * 调用该方法, 传入的参数必须先调用.toUpperCase()方法
+	 * @param dialect
+	 * @return
+	 */
 	public static DialectType toValue(String dialect) {
-		dialect = dialect.toUpperCase();
 		DialectType[] dts = DialectType.values();
 		for (DialectType dt : dts) {
 			if(dt.name().equals(dialect)) {
@@ -38,25 +49,57 @@ public enum DialectType {
 		return null;
 	}
 	
+	/**
+	 * 获取方言实例
+	 * @return
+	 */
+	public Dialect getDialectInstance() {
+		if(dialectInstance == null) {
+			dialectInstance = (Dialect) ConstructorUtil.newInstance(dialectClass);
+		}
+		return dialectInstance;
+	}
+	
 	public short[] supportMajorVersions() {
 		return supportMajorVersions;
 	}
 	
 	@Override
 	public String toString() {
-		return "Database dialect=["+name()+"], 支持的主版本包括="+Arrays.toString(supportMajorVersions);
+		return "Database dialect=["+name()+"], 支持的主版本="+Arrays.toString(supportMajorVersions);
 	}
 	
+	/**
+	 * 支持的数据库
+	 * @return
+	 */
 	public static String supportDatabase() {
 		StringBuilder sb = new StringBuilder();
-		DialectType[] dialectTypes = DialectType.values();
+		DialectType[] dialectTypes = values_();
 		for (DialectType dialectType : dialectTypes) {
-			if(dialectType == ALL) {
-				continue;
-			}
 			sb.append(dialectType.toString());
 			sb.append("\n");
 		}
 		return sb.toString();
 	}
+	
+	/**
+	 * 返回不包括ALL的数组
+	 * @return
+	 */
+	public static DialectType[] values_() {
+		if(values_ == null) {
+			DialectType[] origin = DialectType.values();
+			values_ = new DialectType[origin.length - 1];
+			
+			byte i = 0;
+			for (DialectType odt : origin) {
+				if(odt != ALL) {
+					values_[i++] = odt;
+				}
+			}
+		}
+		return values_;
+	}
+	private static DialectType[] values_;
 }
