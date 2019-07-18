@@ -6,6 +6,7 @@ import java.util.List;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * sql元数据
@@ -42,7 +43,7 @@ public class SqlMetadata implements Metadata{
 	 */
 	@Override
 	public String getCode() {
-		if(namespace == null) {
+		if(StringUtil.isEmpty(namespace)) {
 			return name;
 		}
 		return namespace+"."+name;

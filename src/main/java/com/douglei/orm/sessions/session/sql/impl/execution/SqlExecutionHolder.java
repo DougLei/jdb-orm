@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
-import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
@@ -21,8 +20,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
-		DialectType dialect = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
-		List<SqlContentMetadata> contents = sqlMetadata.getContents(dialect);
+		List<SqlContentMetadata> contents = sqlMetadata.getContents(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType());
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的sql语句");
 		}
