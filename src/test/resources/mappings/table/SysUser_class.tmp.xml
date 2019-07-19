@@ -1,43 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER" oldName="SYS_USRE" class="com.douglei.orm.session.SysUser" createMode="create"><!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用 -->
+	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" createMode="create"><!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用 -->
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 一般可以将所有表中的通用字段导入 -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
 			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column name="name" oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
+			<column name="age" property="age" dataType="integer" />
+			<column name="sex" property="sex" dataType="string" />
 		</columns>
 		
-		<constraints>
-			<!-- type的值包括primary_key, unique, default_value, check, foreign_key -->
-			
-			<constraint type="unique"><!-- primary_key, unique -->
-				<column-name value="name" />
-			</constraint>
-			
-			<constraint type="default_value" value="哈哈"><!-- default_value -->
-				<column-name value="name" />
-			</constraint>
-			
-			<constraint type="check" expression="name != '哈哈'"><!-- check -->
-				<column-name value="name" />
-			</constraint>
-			
-			<constraint type="foreign_key" fkTableName="" fkColumnName=""><!-- foreign_key -->
-				<column-name value="name" />
-			</constraint>
-		</constraints>
-		
-		<indexes>
-			<index name=""><!-- 索引名称, 名称的命名规范为 [索引前缀+_+表名+_+列名] 的格式 -->
-				<createSql dialect=""><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
-					<!-- 创建索引的sql语句 -->
-				</createSql>
-				<dropSql dialect=""><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
-					<!-- 删除索引的sql语句 -->
-				</dropSql>
-			</index>
-		</indexes>
 	</table>
 </mapping-configuration>
