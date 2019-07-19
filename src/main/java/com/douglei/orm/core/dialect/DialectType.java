@@ -77,9 +77,10 @@ public enum DialectType {
 		StringBuilder sb = new StringBuilder();
 		DialectType[] dialectTypes = values_();
 		for (DialectType dialectType : dialectTypes) {
-			sb.append(dialectType.toString());
 			sb.append("\n");
+			sb.append(dialectType.toString());
 		}
+		sb.append("\n");
 		return sb.toString();
 	}
 	
