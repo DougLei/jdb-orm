@@ -72,6 +72,8 @@ public class PageSqlStatement {
 					c = originSql.charAt(i);
 					if(c == ' ' || c == '\r' || c == '\n' || c == '\t') {
 						continue;
+					}else if(c == ')'){
+						throw new WithClauseException("语法错误, with子句语的 [)] 不匹配, 请检查: " + originSql);
 					}else {
 						index = i++;
 						if(c != ',') {
@@ -82,7 +84,10 @@ public class PageSqlStatement {
 				}
 				
 				if(i == length) {
-					throw new WithClauseException("with子句语法异常, 请检查: " + originSql);
+					if(parentheses.isEmpty()) {
+						throw new WithClauseException("语法错误, 只有with子句, 请检查: " + originSql);
+					}
+					throw new WithClauseException("语法错误, with子句语的 [(] 不匹配, 请检查: " + originSql); 
 				}
 			}while(isContinue);
 			return index;
