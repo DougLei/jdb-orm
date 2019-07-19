@@ -13,29 +13,6 @@
 		<!-- <property name="enableColumnDynamicUpdateValidation" value="false" /> --><!-- 是否开启列的动态更新验证[列的动态更新验证含义为, 修改列的数据类型,长度,精度,是否可为空时, 判断是否可以进行修改, 如果不能修改, 则抛出相应的异常信息], 默认值为false  -->
 		
 		<!-- 可以远程操作指定的数据库服务, 进行数据库的create/drop -->
-		<remoteDatabase>
-			<property name="url" value="${jdbc.url}"/>
-			<property name="username" value="${jdbc.username}"/>
-			<property name="password" value="${jdbc.password}"/>
-			<property name="destroy" value="true"/><!-- destroy如果为true, 在销毁数据源的时候, 也会drop数据库, 默认值为false -->
-			
-			<!-- 
-				create的sql语句和drop的sql语句反向对应 
-				例如 create第一个sql语句是create database, drop最后一个sql语句应该是drop database
-				框架会按照顺序执行create/drop database
-				
-				创建时先创建数据库, 再创建用户
-				删除时与创建相反, 先删除用户, 再删除数据库
-			-->
-			<createSql>
-				<sql><!-- create database xxx --></sql>
-				<sql><!-- create user xxx --></sql>
-			</createSql>
-			<dropSql>
-				<sql><!-- drop user xxx --></sql>
-				<sql><!-- drop database xxx --></sql>
-			</dropSql>
-		</remoteDatabase>
 		
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>

@@ -79,7 +79,7 @@ public class DialectMapping {
 	 */
 	private static DialectType getDialectTypeByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
 		String databaseProductName = extractDatabaseProductName(databaseMetadata.getJDBCUrl());
-		DialectType dt = DialectType.toValue(databaseProductName);
+		DialectType dt = DialectType.toValue(databaseProductName.toUpperCase());
 		if(dt == null || dt == DialectType.ALL) {
 			throw new UnsupportDialectException("系统目前不支持["+databaseProductName+"], 目前支持的数据库dialect包括:"+DialectType.supportDatabase());
 		}
