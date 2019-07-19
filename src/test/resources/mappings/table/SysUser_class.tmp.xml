@@ -3,7 +3,7 @@
 	<table name="SYS_USER" oldName="SYS_USRE" class="com.douglei.orm.session.SysUser" createMode="create"><!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用 -->
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 一般可以将所有表中的通用字段导入 -->
 		<columns>
-			<!-- dataType的值包括: string, nstring, char, nchar, short, integer, long, float, double, date, clob, blob, 默认值为string -->
+			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
 			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column name="name" oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />

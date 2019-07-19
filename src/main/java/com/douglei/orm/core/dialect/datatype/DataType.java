@@ -10,6 +10,7 @@ public enum DataType {
 	CHAR,
 	NCHAR,
 	
+	BYTE,
 	SHORT,
 	INTEGER,
 	LONG,
