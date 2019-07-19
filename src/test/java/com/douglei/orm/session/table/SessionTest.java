@@ -16,7 +16,13 @@ public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		PageResult<SysUser> page = session.getTableSession().pageQuery(SysUser.class, 1, 10, "with b as (select * from sys_user) select * from b");
+		PageResult<SysUser> page = session.getTableSession().pageQuery(SysUser.class, 1, 10, "with b as (select"
+				+ ""
+				+ " * from "
+				+ ""
+				+ "\nsys_user"
+				+ ""
+				+ "\n) select * from b");
 		
 		System.out.println(page.toString());
 		
