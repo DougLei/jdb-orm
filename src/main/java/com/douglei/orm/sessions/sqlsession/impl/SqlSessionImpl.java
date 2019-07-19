@@ -28,7 +28,7 @@ import com.douglei.orm.sessions.SessionImpl;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CryptographyUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.utils.datatype.ConvertertUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -287,7 +287,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return ResultSetMapConvertUtil.toClass(map, targetClass);
 		}else {
 			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
-			return IntrospectorUtil.mapToClass(map, targetClass);
+			return ConvertertUtil.mapToClass(map, targetClass);
 		}
 	}
 
