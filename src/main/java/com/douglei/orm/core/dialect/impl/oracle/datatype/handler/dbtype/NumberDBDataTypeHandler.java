@@ -10,7 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.DoubleDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.LongDataTypeHandler;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -33,9 +33,9 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(value != null) {
 			String valueString = value.toString();
-			if(ValidationUtil.isInteger(valueString)) {
+			if(VerifyTypeMatchUtil.isInteger(valueString)) {
 				LongDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
-			}else if(ValidationUtil.isDouble(valueString)) {
+			}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
 				DoubleDataTypeHandler.singleInstance().setValue(preparedStatement, parameterIndex, value);
 			}
 		}
@@ -72,9 +72,9 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	@Override
 	public String doValidate(Object value, short length, short precision) {
 		String valueString = value.toString();
-		if(ValidationUtil.isInteger(valueString)) {
+		if(VerifyTypeMatchUtil.isInteger(valueString)) {
 			return LongDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
-		}else if(ValidationUtil.isDouble(valueString)) {
+		}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
 			return DoubleDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
 		}
 		return "数据值类型错误, 应为数字类型";

@@ -8,7 +8,7 @@ import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 列元数据验证
@@ -27,12 +27,12 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		}
 		
 		String value = element.attributeValue("length");
-		short length = ValidationUtil.isLimitShort(value)?Short.parseShort(value):0;
+		short length = VerifyTypeMatchUtil.isLimitShort(value)?Short.parseShort(value):0;
 		value = element.attributeValue("precision");
-		short precision = ValidationUtil.isLimitShort(value)?Short.parseShort(value):0;
+		short precision = VerifyTypeMatchUtil.isLimitShort(value)?Short.parseShort(value):0;
 		value = element.attributeValue("nullabled");
-		boolean nullabled = ValidationUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
-		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && ValidationUtil.isBoolean(value))?Boolean.parseBoolean(element.attributeValue("validate")):false;
+		boolean nullabled = VerifyTypeMatchUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
+		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && VerifyTypeMatchUtil.isBoolean(value))?Boolean.parseBoolean(element.attributeValue("validate")):false;
 		
 		return new ColumnMetadata(element.attributeValue("property"), name, element.attributeValue("oldName"), element.attributeValue("descriptionName"), element.attributeValue("dataType"), length, precision, nullabled,
 				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 

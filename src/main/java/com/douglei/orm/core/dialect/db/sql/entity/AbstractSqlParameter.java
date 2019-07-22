@@ -16,7 +16,7 @@ import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.sql.SqlParameterMode;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -147,7 +147,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		}
 	}
 	private void setUsePlaceholder(String usePlaceholder) {
-		if(ValidationUtil.isBoolean(usePlaceholder)) {
+		if(VerifyTypeMatchUtil.isBoolean(usePlaceholder)) {
 			this.usePlaceholder = Boolean.parseBoolean(usePlaceholder);
 		}else {
 			this.usePlaceholder = true;
@@ -176,19 +176,19 @@ public abstract class AbstractSqlParameter implements Serializable{
 		}
 	}
 	private void setLength(String length) {
-		if(ValidationUtil.isLimitShort(length)) {
+		if(VerifyTypeMatchUtil.isLimitShort(length)) {
 			this.length = Short.parseShort(length);
 		}
 		this.length = this.dbDataType.fixInputLength(this.length);
 	}
 	private void setPrecision(String precision) {
-		if(ValidationUtil.isLimitShort(precision)) {
+		if(VerifyTypeMatchUtil.isLimitShort(precision)) {
 			this.precision = Short.parseShort(precision);
 		}
 		this.precision = this.dbDataType.fixInputPrecision(this.length, this.precision);
 	}
 	private void setNullabled(String nullabled) {
-		if(ValidationUtil.isBoolean(nullabled)) {
+		if(VerifyTypeMatchUtil.isBoolean(nullabled)) {
 			this.nullabled = Boolean.parseBoolean(nullabled);
 		}
 	}
@@ -196,7 +196,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		this.defaultValue = defaultValue;
 	}
 	private void setValidate(String validate) {
-		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && ValidationUtil.isBoolean(validate)) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && VerifyTypeMatchUtil.isBoolean(validate)) {
 			this.validate = Boolean.parseBoolean(validate);
 		}
 	}

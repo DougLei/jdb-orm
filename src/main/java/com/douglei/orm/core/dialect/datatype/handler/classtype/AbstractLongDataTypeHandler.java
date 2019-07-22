@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -26,7 +26,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(value != null && ValidationUtil.isInteger(value.toString())) {
+		if(value != null && VerifyTypeMatchUtil.isInteger(value.toString())) {
 			if(value.getClass() == long.class || value instanceof Long) {
 				preparedStatement.setLong(parameterIndex, (long)value);
 			}else {
@@ -39,7 +39,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value.getClass() == long.class || value instanceof Long || ValidationUtil.isInteger(value.toString())) {
+		if(value.getClass() == long.class || value instanceof Long || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			// long变量的值, 一般不会超过最大值、也不会低于最小值, 用isInteger方法判断即可满足, 所以这里就暂时不做多余的判断, 上面setValue时同理, 也用isInteger方法判断
 			return null;
 		}

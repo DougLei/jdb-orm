@@ -7,7 +7,7 @@ import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.tools.instances.ognl.OgnlHandler;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * sql参数元数据
@@ -76,7 +76,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 		Object value = null;
 		if(sqlParameter instanceof Map<?, ?> && isSingleName) {
 			value = ((Map<?, ?>)sqlParameter).get(name); 
-		}else if(ValidationUtil.isBasicDataType(sqlParameter)){
+		}else if(VerifyTypeMatchUtil.isBasicDataType(sqlParameter)){
 			value = sqlParameter;
 		}else {
 			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);

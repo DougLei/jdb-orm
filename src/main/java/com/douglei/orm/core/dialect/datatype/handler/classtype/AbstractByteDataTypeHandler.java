@@ -1,7 +1,7 @@
 package com.douglei.orm.core.dialect.datatype.handler.classtype;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -23,7 +23,7 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value.getClass() == byte.class || value instanceof Byte || ValidationUtil.isInteger(value.toString())) {
+		if(value.getClass() == byte.class || value instanceof Byte || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Byte.MAX_VALUE || l < Byte.MIN_VALUE) {
 				return "数据值大小异常, 应在["+Byte.MIN_VALUE+"]至["+Byte.MAX_VALUE+"]范围内";

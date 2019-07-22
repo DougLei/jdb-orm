@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -27,7 +27,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(value != null && ValidationUtil.isDouble(value.toString())) {
+		if(value != null && VerifyTypeMatchUtil.isDouble(value.toString())) {
 			if(value.getClass() == double.class || value instanceof Double) {
 				preparedStatement.setDouble(parameterIndex, (double)value);
 			}else if(value instanceof BigDecimal){
@@ -45,7 +45,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 		Object o = null;
 		if(value.getClass() == double.class || value instanceof Double || value instanceof BigDecimal) {
 			o = value;
-		}else if(ValidationUtil.isDouble(value.toString())) {
+		}else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Double.parseDouble(value.toString());
 		}else {
 			return "数据值类型错误, 应为浮点型(double)";

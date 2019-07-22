@@ -15,7 +15,7 @@ import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * <environment>节点下所有的<property>节点
@@ -130,12 +130,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setEnableSessionCache(String value) {
-		if(ValidationUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
 	void setEnableTableSessionCache(String value) {
-		if(ValidationUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
@@ -152,12 +152,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setEnableDataValidation(String value) {
-		if(ValidationUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableDataValidation = Boolean.parseBoolean(value);
 		}
 	}
 	void setEnableTableDynamicUpdate(String value) {
-		if(ValidationUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableTableDynamicUpdate = Boolean.parseBoolean(value);
 		}
 	}
@@ -167,7 +167,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setEnableColumnDynamicUpdateValidation(String value) {
-		if(ValidationUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableColumnDynamicUpdateValidation = Boolean.parseBoolean(value);
 		}
 	}

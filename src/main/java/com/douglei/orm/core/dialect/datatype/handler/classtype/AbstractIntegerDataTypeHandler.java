@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.ValidationUtil;
+import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
  * 
@@ -26,7 +26,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(value != null && ValidationUtil.isLimitInteger(value.toString())) {
+		if(value != null && VerifyTypeMatchUtil.isLimitInteger(value.toString())) {
 			if(value.getClass() == int.class || value instanceof Integer) {
 				preparedStatement.setInt(parameterIndex, (int)value);
 			}else {
@@ -39,7 +39,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value.getClass() == int.class || value instanceof Integer || ValidationUtil.isInteger(value.toString())) {
+		if(value.getClass() == int.class || value instanceof Integer || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE) {
 				return "数据值大小异常, 应在["+Integer.MIN_VALUE+"]至["+Integer.MAX_VALUE+"]范围内";
