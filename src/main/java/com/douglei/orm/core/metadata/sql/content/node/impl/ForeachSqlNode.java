@@ -12,7 +12,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
 import com.douglei.orm.core.metadata.sql.content.node.UnsupportCollectionTypeException;
 import com.douglei.tools.instances.ognl.OgnlHandler;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
 /**
  * 
@@ -75,7 +75,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			
 			Iterator<?> it = tc.iterator();
 			Object obj = it.next();
-			if(VerifyTypeMatchUtil.isBasicDataType(obj)) {
+			if(ConverterUtil.isSimpleType(obj)) {
 				array = new Object[tc.size()];
 				
 				Map<String, Object> map = null;

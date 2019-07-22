@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.datatype.date.DateFormatUtil;
 
 /**
@@ -28,7 +27,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
-		if(VerifyTypeMatchUtil.isDate(value)) {
+		if(DateFormatUtil.verifyIsDate(value)) {
 			preparedStatement.setTimestamp(parameterIndex, DateFormatUtil.parseSqlTimestamp(value));
 		} else {
 			preparedStatement.setNull(parameterIndex, getSqlType());
@@ -37,7 +36,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
-		if(value instanceof Date || VerifyTypeMatchUtil.isDate(value.toString())) {
+		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) {
 			return null;
 		}
 		return "数据值类型错误, 应为日期类型";
