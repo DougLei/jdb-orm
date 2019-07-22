@@ -26,28 +26,28 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 		StringBuilder values = new StringBuilder();
 		values.append(" values(");
 		
-		int size = propertyMap.size();
-		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(propertyMap.size());// 使用TableExecutionHolder.parameters属性
 		
-		int index = 1;
+		boolean isFirst = true;
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		Set<String> codes = propertyMap.keySet();
 		for (String code : codes) {
 			value = propertyMap.get(code);
 			if(value != null) {// 只保存不为空的值
+				if(isFirst) {
+					isFirst = false;
+				}else {
+					insertSql.append(",");
+					values.append(",");
+				}
+				
 				columnMetadata = tableMetadata.getColumnMetadata(code);
 				
 				insertSql.append(columnMetadata.getName());
 				values.append("?");
 				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
-				
-				if(index < size) {
-					insertSql.append(",");
-					values.append(",");
-				}
 			}
-			index++;
 		}
 		
 		insertSql.append(")").append(values).append(")");

@@ -24,71 +24,45 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
 		Set<String> codes = propertyMap.keySet();
-		int size = propertyMap.size();
-		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(propertyMap.size());// 使用TableExecutionHolder.parameters属性
 		
 		// 处理update set
-		int index = 1;
+		boolean isFirst = true;
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : codes) {
 			if(!tableMetadata.isPrimaryKeyColumnMetadata(code)) {
 				value = propertyMap.get(code);
 				if(value != null) {// 只修改不为空的值
+					if(isFirst) {
+						isFirst = false;
+					}else {
+						updateSql.append(", ");
+					}
+					
 					columnMetadata = tableMetadata.getColumnMetadata(code);
 					
 					updateSql.append(columnMetadata.getName()).append("=?");
 					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
-					
-					if(index < size) {
-						updateSql.append(", ");
-					}
 				}
 			}
-			index++;
 		}
 		
-		if(tableMetadata.existsPrimaryKey()) {
-			setWhereSqlWhenExistsPrimaryKey(updateSql, size, columnMetadata);
-		}else {
-			setWhereSqlWhenUnExistsPrimaryKey(updateSql, size, codes, columnMetadata, value);
-		}
+		setWhereSqlWhenExistsPrimaryKey(updateSql, columnMetadata);
 		this.sql = updateSql.toString();
 	}
 	
 	// 当存在primaryKey时, set对应的where sql语句
-	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, int size, ColumnMetadata columnMetadata) {
+	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, ColumnMetadata columnMetadata) {
 		updateSql.append(" where ");
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
-		size = primaryKeyColumnMetadataCodes.size();
-		int index = 1;
+		int size = primaryKeyColumnMetadataCodes.size();
+		byte index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
 			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), columnMetadata.getDataTypeHandler()));
-			
-			if(index < size) {
-				updateSql.append(" and ");
-			}
-			index++;
-		}
-	}
-	
-	// 当不存在primaryKey时, set对应的where sql语句
-	private void setWhereSqlWhenUnExistsPrimaryKey(StringBuilder updateSql, int size, Set<String> codes, ColumnMetadata columnMetadata, Object value) {
-		updateSql.append(" where ");
-		int index = 1;
-		for (String code : codes) {
-			columnMetadata = tableMetadata.getColumnMetadata(code);
-			value = propertyMap.get(code);
-			
-			if(value == null) {
-				updateSql.append(columnMetadata.getName()).append(" is null");
-			}else {
-				updateSql.append(columnMetadata.getName()).append("=?");
-				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
-			}
 			
 			if(index < size) {
 				updateSql.append(" and ");
