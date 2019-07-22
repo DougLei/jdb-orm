@@ -6,7 +6,7 @@ import java.util.Date;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
-import com.douglei.tools.utils.datatype.date.DateTypeUtil;
+import com.douglei.tools.utils.datatype.date.DateFormatUtil;
 
 /**
  * 
@@ -29,7 +29,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
 		if(VerifyTypeMatchUtil.isDate(value)) {
-			preparedStatement.setTimestamp(parameterIndex, DateTypeUtil.parseSqlTimestamp(value));
+			preparedStatement.setTimestamp(parameterIndex, DateFormatUtil.parseSqlTimestamp(value));
 		} else {
 			preparedStatement.setNull(parameterIndex, getSqlType());
 		}
