@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.tools.utils.datatype.date.DateFormatUtil;
+import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
 
 /**
  * 
