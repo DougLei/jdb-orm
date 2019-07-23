@@ -3,8 +3,9 @@ package com.douglei.orm.core.metadata.table;
 import com.douglei.orm.core.dialect.db.table.entity.Column;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.orm.core.utils.NamingUtil;
 import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.utils.naming.converter.ConverterUtil;
+import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
 
 /**
  * 列元数据
@@ -50,7 +51,7 @@ public class ColumnMetadata extends Column implements Metadata{
 			}
 		}else {
 			if(property == null) {
-				property = NamingUtil.columnName2PropertyName(name);
+				property = ConverterUtil.convert(name, ColumnName2PropertyNameConverter.class);
 				setCode();
 			}
 		}

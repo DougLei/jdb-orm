@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.douglei.tools.utils.naming.converter.ConverterUtil;
+import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
@@ -20,7 +22,7 @@ public class ResultSetMapConvertUtil {
 		Map<String, Object> targetMap = new HashMap<String, Object>(originResultsetMap.size());
 		Set<String> keys = originResultsetMap.keySet();
 		for (String key : keys) {
-			targetMap.put(NamingUtil.columnName2PropertyName(key), originResultsetMap.get(key));
+			targetMap.put(ConverterUtil.convert(key, ColumnName2PropertyNameConverter.class), originResultsetMap.get(key));
 		}
 		return targetMap;
 	}
