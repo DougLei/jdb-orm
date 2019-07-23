@@ -24,7 +24,7 @@ public class NamingUtil {
 			sb.append(columnInfo[0]);
 		}
 		
-		columnName = columnInfo[2].toLowerCase();
+		columnName = columnInfo[1].toLowerCase();
 		String[] words = columnName.split("_");
 		sb.append(words[0]);
 		
@@ -41,8 +41,8 @@ public class NamingUtil {
 			}
 		}
 		
-		if(columnInfo[1] != null) {
-			sb.append(columnInfo[1]);
+		if(columnInfo[2] != null) {
+			sb.append(columnInfo[2]);
 		}
 		return sb.toString();
 	}
