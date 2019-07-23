@@ -57,7 +57,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	public String doValidate(Object value, short length, short precision) {
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof StringWrapper) {
 			int actualLength = 0;
-			if((actualLength = StringUtil.calcStringLength(value.toString())) > length) {
+			if((actualLength = StringUtil.computeStringLength(value.toString())) > length) {
 				return "数据值长度超长, 设置长度为" + length +", 实际长度为" + actualLength;
 			}
 			return null;
