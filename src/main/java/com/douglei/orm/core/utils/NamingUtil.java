@@ -19,7 +19,7 @@ public class NamingUtil {
 	 */
 	public static String columnName2PropertyName(String columnName){
 		StringBuilder sb = new StringBuilder(columnName.length());
-		String[] columnInfo = StringUtil.trimUnderline_(columnName);
+		String[] columnInfo = StringUtil.trim_(columnName, '_');
 		if(columnInfo[0] != null) {
 			sb.append(columnInfo[0]);
 		}

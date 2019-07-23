@@ -50,7 +50,7 @@ public abstract class DBObjectHandler {
 	 */
 	public String fixDBObjectName(String dbObjectName) {
 		if(validateDBObjectNameIsOverLength(dbObjectName)) {
-			dbObjectName = StringUtil.trimUnderline(dbObjectName);
+			dbObjectName = StringUtil.trim(dbObjectName, '_');
 			
 			StringBuilder sb = new StringBuilder(dbObjectName.length());
 			StringBuilder suffix = new StringBuilder(dbObjectName.length());
