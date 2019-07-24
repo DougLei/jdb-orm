@@ -263,6 +263,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public void close() {
 		if(!isClosed) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("close {}", getClass().getName());
+			}
 			flushPersistentObjectCache();
 			super.close();
 		}

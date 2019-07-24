@@ -34,6 +34,8 @@ public interface Session {
 	Connection getConnection();
 
 	boolean isBeginTransaction();
+	
 	void beginTransaction();
+	
 	void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel);
 }
