@@ -70,9 +70,8 @@ public class PersistentObject {
 	
 	@Override
 	public String toString() {
-		return "\n"
-				+ "operationState:" + operationState 
-				+ "\n" 
+		return "operationState:" + operationState 
+				+ "\t" 
 				+ originObject.toString();
 	}
 	
