@@ -1,11 +1,13 @@
 package com.douglei.orm.core;
 
+import com.douglei.tools.RootRuntimeException;
+
 /**
  * 
  * @author DougLei
  */
-public class DBOrmException extends RuntimeException {
-	private static final long serialVersionUID = -227184058155082196L;
+public class DBOrmException extends RootRuntimeException {
+	private static final long serialVersionUID = 3738560687002962748L;
 
 	public DBOrmException() {
 		super();
@@ -25,5 +27,10 @@ public class DBOrmException extends RuntimeException {
 
 	public DBOrmException(Throwable cause) {
 		super(cause);
+	}
+
+	@Override
+	public String getName() {
+		return "jdb-orm";
 	}
 }
