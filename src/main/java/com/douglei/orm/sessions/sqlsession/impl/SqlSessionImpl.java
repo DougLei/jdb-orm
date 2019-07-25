@@ -24,6 +24,7 @@ import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
+import com.douglei.orm.sessions.SessionException;
 import com.douglei.orm.sessions.SessionImpl;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
@@ -243,7 +244,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return procedureExecutor.execute(getConnection());
 		} catch (SQLException e) {
-			throw new RuntimeException("调用并执行存储过程时出现异常", e);
+			throw new SessionException("调用并执行存储过程时出现异常", e);
 		}
 	}
 

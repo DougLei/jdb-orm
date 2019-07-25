@@ -24,6 +24,7 @@ import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.utils.ResultSetUtil;
+import com.douglei.orm.sessions.SessionException;
 import com.douglei.orm.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.sql.SQLSession;
@@ -275,7 +276,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					return null;
 				} catch(SQLException e){
-					throw new RuntimeException("调用并执行存储过程时出现异常", e);
+					throw new SessionException("调用并执行存储过程时出现异常", e);
 				} finally {
 					callableStatement.close();
 					callableStatement = null;

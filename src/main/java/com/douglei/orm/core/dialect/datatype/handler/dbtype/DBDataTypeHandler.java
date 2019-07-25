@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
+import com.douglei.orm.core.dialect.datatype.handler.ReadDataStreamException;
 import com.douglei.tools.utils.CloseUtil;
 
 /**
@@ -63,7 +64,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFe
 			}
 			return writer.toString();
 		} catch (IOException e) {
-			throw new RuntimeException("读取大字符(clob)类型的数据时出现异常", e);
+			throw new ReadDataStreamException("读取大字符(clob)类型的数据时出现异常", e);
 		} finally {
 			CloseUtil.closeDBConn(reader, writer);
 		}
@@ -89,7 +90,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFe
 			}
 			return output.toByteArray();
 		} catch (IOException e) {
-			throw new RuntimeException("读取二进制流(blob)类型的数据时出现异常", e);
+			throw new ReadDataStreamException("读取二进制流(blob)类型的数据时出现异常", e);
 		} finally {
 			CloseUtil.closeDBConn(input, output);
 		}

@@ -133,7 +133,7 @@ public class ConnectionWrapper {
 				connection.close();
 				isClosed = true;
 			} catch (SQLException e) {
-				throw new RuntimeException("close connection 时出现异常", e);
+				throw new ConnectionWrapperException("close connection 时出现异常", e);
 			}
 		}
 	}
