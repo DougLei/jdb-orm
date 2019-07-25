@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
-import com.douglei.orm.core.sql.statement.StatementWrapperException;
+import com.douglei.orm.core.sql.statement.StatementExecuteException;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 import com.douglei.tools.utils.CloseUtil;
 
@@ -18,10 +18,12 @@ import com.douglei.tools.utils.CloseUtil;
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	
 	private PreparedStatement preparedStatement;
+	private String sql;
 	private List<List<Object>> lastParametersList; // 上一次请求参数
 
-	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement) {
+	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
 		this.preparedStatement = preparedStatement;
+		this.sql = sql;
 	}
 	
 	/**
@@ -89,7 +91,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, parameters, e);
 		} 
 	}
 	
@@ -106,7 +108,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return executeUniqueQuery(preparedStatement.executeQuery());
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, parameters, e);
 		} 
 	}
 	
@@ -123,7 +125,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return executeQuery_(preparedStatement.executeQuery());
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, parameters, e);
 		} 
 	}
 
@@ -140,7 +142,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return executeUniqueQuery_(preparedStatement.executeQuery());
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, parameters, e);
 		} 
 	}
 	
@@ -153,7 +155,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			return preparedStatement.executeUpdate();
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" executeUpdate(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, parameters, e);
 		} 
 	}
 

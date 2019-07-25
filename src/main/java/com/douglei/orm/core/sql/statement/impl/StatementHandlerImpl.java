@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
-import com.douglei.orm.core.sql.statement.StatementWrapperException;
+import com.douglei.orm.core.sql.statement.StatementExecuteException;
 import com.douglei.tools.utils.CloseUtil;
 
 /**
@@ -33,7 +33,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeQuery(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, e);
 		} finally {
 			close();
 		}
@@ -50,7 +50,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeUniqueQuery(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, e);
 		} finally {
 			close();
 		}
@@ -67,7 +67,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeQuery_(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryResultList(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, e);
 		} finally {
 			close();
 		}
@@ -84,7 +84,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			}
 			return executeUniqueQuery_(statement.executeQuery(sql));
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" getQueryUniqueResult(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, e);
 		} finally {
 			close();
 		}
@@ -95,7 +95,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		try {
 			return statement.executeUpdate(sql);
 		} catch (Exception e) {
-			throw new StatementWrapperException(getClass().getName()+" executeUpdate(List<Object>)时出现异常", e);
+			throw new StatementExecuteException(sql, e);
 		}
 	}
 	

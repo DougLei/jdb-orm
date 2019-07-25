@@ -44,6 +44,11 @@ public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFe
 		return DataTypeHandlerType.DB;
 	}
 	
+	@Override
+	public String getCode() {
+		return getTypeName();
+	}
+	
 	/**
 	 * 
 	 * @param reader

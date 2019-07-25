@@ -87,7 +87,7 @@ public class ConnectionWrapper {
 					logger.debug("有参数, 创建PreparedStatementHandler实例");
 					logger.debug("参数为: {}", parameters.toString());
 				}
-				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql));
+				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql), sql);
 			}
 		} catch (SQLException e) {
 			throw new ConnectionWrapperException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);

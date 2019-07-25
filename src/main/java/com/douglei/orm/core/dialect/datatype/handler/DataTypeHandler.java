@@ -14,6 +14,12 @@ import com.douglei.orm.core.validate.ValueDataTypeValidator;
 public interface DataTypeHandler extends ValueDataTypeValidator, Serializable{
 	
 	/**
+	 * 获取标识
+	 * @return
+	 */
+	String getCode();
+	
+	/**
 	 * 获取类型
 	 * @return
 	 */

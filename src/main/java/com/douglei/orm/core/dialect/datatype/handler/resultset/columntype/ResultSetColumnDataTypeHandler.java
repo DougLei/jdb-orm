@@ -25,6 +25,11 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 		return getClass().getName() + " supportColumnTypes=["+Arrays.toString(supportColumnTypes())+"]";
 	}
 	
+	@Override
+	public String getCode() {
+		return getClass().getName() + "为["+getType()+"]类型, 没有code";
+	}
+	
 
 	@Override
 	public DataTypeHandlerType getType() {

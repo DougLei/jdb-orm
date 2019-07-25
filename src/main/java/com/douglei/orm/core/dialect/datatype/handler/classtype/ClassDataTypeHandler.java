@@ -15,13 +15,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
 	private static final long serialVersionUID = 6844324481758038907L;
 
-	/**
-	 * <pre>
-	 * 	获取DataTypeHandler的唯一编码值
-	 * 	默认值为类名
-	 * </pre>
-	 * @return
-	 */
+	@Override
 	public String getCode() {
 		return getClass().getName();
 	}

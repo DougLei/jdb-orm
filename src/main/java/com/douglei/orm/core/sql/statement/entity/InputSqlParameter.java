@@ -37,7 +37,7 @@ public class InputSqlParameter {
 	
 	@Override
 	public String toString() {
-		return "value="+value+", dataTypeHandler="+dataTypeHandler;
+		return "value="+value+", dataTypeHandler="+dataTypeHandler.getCode();
 	}
 	
 	@Override
