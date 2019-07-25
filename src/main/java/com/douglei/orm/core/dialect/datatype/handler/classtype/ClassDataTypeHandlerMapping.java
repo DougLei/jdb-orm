@@ -47,12 +47,7 @@ public class ClassDataTypeHandlerMapping {
 		ClassDataTypeHandler dataTypeHandler = CODE_DATATYPE_HANDLER_MAP.get(code.toLowerCase());
 		if(dataTypeHandler == null) {
 			logger.debug("没有获取到code=[{}]的DataTypeHandler实例, 尝试加载该自定义ClassDataTypeHandler实现子类", code);
-			Object obj = null;
-			try {
-				obj = ConstructorUtil.newInstance(code);
-			} catch (Exception e) {
-				throw new UnsupportDataTypeHandlerException("目前无法处理ClassDataTypeHandler code=["+code+"]的数据类型");
-			}
+			Object obj = ConstructorUtil.newInstance(code);
 			if(!(obj instanceof ClassDataTypeHandler)) {
 				throw new UnsupportDataTypeHandlerException("["+code+"]的类必须继承["+ClassDataTypeHandler.class.getName()+"]");
 			}

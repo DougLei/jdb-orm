@@ -118,6 +118,7 @@ public class ConnectionWrapper {
 				connection.rollback();
 				finishTransaction = true;
 			} catch (SQLException e) {
+				logger.error("rollback 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw new ConnectionWrapperException("rollback 时出现异常", e);
 			} finally {
 				close();
@@ -133,6 +134,7 @@ public class ConnectionWrapper {
 				connection.close();
 				isClosed = true;
 			} catch (SQLException e) {
+				logger.error("close connection 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw new ConnectionWrapperException("close connection 时出现异常", e);
 			}
 		}

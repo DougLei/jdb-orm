@@ -38,12 +38,7 @@ public class DBDataTypeHandlerMapping {
 		DBDataTypeHandler dbDataTypeHandler = DB_DATA_TYPE_HANDLER_MAP.get(typeName.toUpperCase());
 		if(dbDataTypeHandler == null) {
 			logger.debug("没有获取到typeName=[{}]的DBDataTypeHandler实例, 尝试加载该自定义DBDataTypeHandler实现子类", typeName);
-			Object obj = null;
-			try {
-				obj = ConstructorUtil.newInstance(typeName);
-			} catch (Exception e) {
-				throw new UnsupportDataTypeHandlerException("目前无法处理DBTypeName=["+typeName+"]的数据类型");
-			}
+			Object obj = ConstructorUtil.newInstance(typeName);
 			if(!(obj instanceof DBDataTypeHandler)) {
 				throw new UnsupportDataTypeHandlerException("["+typeName+"]的类必须继承["+DBDataTypeHandler.class.getName()+"]");
 			}

@@ -89,7 +89,7 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm框架的配置信息");
 		} catch (Exception e) {
-			logger.debug("jdb-orm框架在初始化时出现异常, 进行回滚操作-销毁-destroy()");
+			logger.error("jdb-orm框架在初始化时出现异常, 进行回滚操作-销毁-destroy()");
 			destroy();
 			throw e;
 		}
