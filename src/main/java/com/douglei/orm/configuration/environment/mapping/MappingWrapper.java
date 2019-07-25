@@ -104,8 +104,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @param mappingConfigurationFilePath 配置文件路径
 	 * @return mapping的code
+	 * @throws DynamicAddMappingException
 	 */
-	public abstract String dynamicAddMapping(String mappingConfigurationFilePath);
+	public abstract String dynamicAddMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态添加映射, 如果存在则覆盖
@@ -114,8 +115,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
+	 * @throws DynamicAddMappingException
 	 */
-	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态覆盖映射, 如果不存在添加
@@ -124,8 +126,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @param mappingConfigurationFilePath 配置文件路径
 	 * @return mapping的code
+	 * @throws DynamicAddMappingException
 	 */
-	public abstract String dynamicCoverMapping(String mappingConfigurationFilePath);
+	public abstract String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态覆盖映射, 如果不存在添加
@@ -135,8 +138,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
+	 * @throws DynamicAddMappingException
 	 */
-	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent);
+	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态删除映射

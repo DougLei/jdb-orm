@@ -1,7 +1,9 @@
 package com.douglei.orm.core.sql.statement;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +22,10 @@ import com.douglei.tools.utils.CloseUtil;
 public abstract class AbstractStatementHandler implements StatementHandler{
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStatementHandler.class);
 	
+	protected String sql;// 执行的sql语句
 	private boolean isExecuted;// 是否已经执行过
-	private short currentEecutedIndex;// 当前执行的index, 可以理解为当前共执行了多少次, 从0开始
 	private boolean isClosed;// 是否关闭
+	private short currentEecutedIndex;// 当前执行的index, 可以理解为当前共执行了多少次, 从0开始
 	
 	// <列名:值>
 	private List<Map<String, Object>> queryUniqueResult;
@@ -34,14 +37,18 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private List<Object[]> queryUniqueResult_;
 	private List<List<Object[]>> queryResultList_;
 	
+	protected AbstractStatementHandler(String sql) {
+		this.sql = sql;
+	}
+
 	/**
 	 * 记录[标识]该StatementHandler已经执行过
 	 */
 	private void recordStatementHandlerIsExecuted() {
-		if(this.isExecuted) {
+		if(isExecuted) {
 			currentEecutedIndex++;
 		}else {
-			this.isExecuted = true;
+			isExecuted = true;
 		}
 	}
 	
@@ -158,6 +165,16 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		recordStatementHandlerIsExecuted();
 	}
 	
+	/**
+	 * 验证Statement是否已经被关闭
+	 * @throws StatementIsClosedException 
+	 */
+	protected void validateStatementIsClosed() throws StatementIsClosedException {
+		if(isClosed()) {
+			throw new StatementIsClosedException();
+		}
+	}
+	
 	protected List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
 		try {
 			setQueryResultList(resultSet);
@@ -216,20 +233,33 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	}
 	
 	@Override
+	public boolean isExecuted() {
+		return isExecuted;
+	}
+	
+	@Override
 	public boolean isClosed() {
 		return isClosed;
 	} 
 	
 	@Override
-	public boolean isExecuted() {
-		return isExecuted;
-	}
-
-	@Override
-	public void close() {
+	public void close() throws StatementExecutionException{
 		isClosed = true;
 		if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) {
 			resultsetMetadatas.clear();
+		}
+	}
+	
+	/**
+	 * 关闭 {@link Statement} or {@link PreparedStatement}
+	 * @param statement
+	 * @throws StatementExecutionException 
+	 */
+	protected void closeStatement(Statement statement) throws StatementExecutionException {
+		try {
+			statement.close();
+		} catch (SQLException e) {
+			throw new StatementExecutionException("关闭["+statement.getClass().getName()+"]时出现异常", e);
 		}
 	}
 }

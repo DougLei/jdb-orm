@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.XmlEnvironment;
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
@@ -98,7 +95,7 @@ public class XmlConfiguration implements Configuration {
 	@Override
 	public SessionFactory buildSessionFactory() {
 		if(sessionFactory == null) {
-			sessionFactory = new SessionFactoryImpl(this);
+			sessionFactory = new SessionFactoryImpl(this, environment);
 		}
 		return sessionFactory;
 	}
@@ -127,22 +124,6 @@ public class XmlConfiguration implements Configuration {
 	@Override
 	public String getId() {
 		return id;
-	}
-	@Override
-	public DataSourceWrapper getDataSourceWrapper() {
-		return environment.getDataSourceWrapper();
-	}
-	@Override
-	public Environment getEnvironment() {
-		return environment;
-	}
-	@Override
-	public EnvironmentProperty getEnvironmentProperty() {
-		return environment.getEnvironmentProperty();
-	}
-	@Override
-	public MappingWrapper getMappingWrapper() {
-		return environment.getMappingWrapper();
 	}
 	
 	private void setId(String id) {

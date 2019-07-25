@@ -1,9 +1,5 @@
 package com.douglei.orm.configuration;
 
-import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 /**
@@ -28,16 +24,4 @@ public interface Configuration extends SelfProcessing{
 	 * @return
 	 */
 	SessionFactory buildSessionFactory();
-	
-	/**
-	 * 获取environment实例
-	 * @return
-	 */
-	Environment getEnvironment();
-	
-	DataSourceWrapper getDataSourceWrapper();
-	
-	EnvironmentProperty getEnvironmentProperty();
-	
-	MappingWrapper getMappingWrapper();
 }

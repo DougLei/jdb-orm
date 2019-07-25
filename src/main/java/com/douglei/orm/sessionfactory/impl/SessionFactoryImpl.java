@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.DBRunEnvironmentContext;
@@ -26,20 +28,22 @@ public class SessionFactoryImpl implements SessionFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SessionFactoryImpl.class);
 	
 	private Configuration configuration;
+	private Environment environment;
 	private EnvironmentProperty environmentProperty;
 	private MappingWrapper mappingWrapper;
 	
-	public SessionFactoryImpl(Configuration configuration) {
+	public SessionFactoryImpl(Configuration configuration, Environment environment) {
 		this.configuration = configuration;
-		this.environmentProperty = configuration.getEnvironmentProperty();
-		this.mappingWrapper = configuration.getMappingWrapper();
+		this.environment = environment;
+		this.environmentProperty = environment.getEnvironmentProperty();
+		this.mappingWrapper = environment.getMappingWrapper();
 	}
 	
 	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return configuration.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
+		return environment.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}
 	
-	private void dynamicAddMapping_(DynamicMapping entity) {
+	private void dynamicAddMapping_(DynamicMapping entity) throws DynamicAddMappingException {
 		switch(entity.getType()) {
 			case BY_PATH:
 				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
@@ -51,22 +55,22 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicAddMapping(DynamicMapping entity) {
+	public void dynamicAddMapping(DynamicMapping entity) throws DynamicAddMappingException {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		dynamicAddMapping_(entity);
-		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
+		RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 	}
 	
 	@Override
-	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
+	public void dynamicBatchAddMapping(List<DynamicMapping> entities) throws DynamicAddMappingException {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
 			dynamicAddMapping_(entity);
 		}
-		RunMappingConfigurationContext.executeCreateTable(configuration.getDataSourceWrapper());
+		RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 	}
 	
-	private void dynamicCoverMapping_(DynamicMapping entity) {
+	private void dynamicCoverMapping_(DynamicMapping entity) throws DynamicAddMappingException {
 		switch(entity.getType()) {
 			case BY_PATH:
 				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
@@ -78,13 +82,13 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicCoverMapping(DynamicMapping entity) {
+	public void dynamicCoverMapping(DynamicMapping entity) throws DynamicAddMappingException {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		dynamicCoverMapping_(entity);
 	}
 
 	@Override
-	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
+	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) throws DynamicAddMappingException {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
 			dynamicCoverMapping_(entity);
@@ -95,7 +99,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	public void dynamicRemoveMapping(String mappingCode) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		mappingWrapper.dynamicRemoveMapping(mappingCode);
-		RunMappingConfigurationContext.executeDropTable(configuration.getDataSourceWrapper());
+		RunMappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
 	}
 	
 	@Override
@@ -104,7 +108,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		for (String mappingCode : mappingCodes) {
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
 		}
-		RunMappingConfigurationContext.executeDropTable(configuration.getDataSourceWrapper());
+		RunMappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
 	}
 	
 	@Override

@@ -59,7 +59,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public String dynamicAddMapping(String mappingConfigurationFilePath) {
+	public String dynamicAddMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationFilePath);
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
@@ -69,7 +69,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) {
+	public String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationContent);
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
@@ -79,7 +79,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public String dynamicCoverMapping(String mappingConfigurationFilePath) {
+	public String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationFilePath);
 			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
@@ -89,7 +89,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	
 	@Override
-	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) {
+	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationContent);
 			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));

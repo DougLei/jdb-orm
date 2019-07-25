@@ -1,6 +1,5 @@
 package com.douglei.orm.sessions.sqlsession.impl;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
-import com.douglei.orm.sessions.SessionException;
 import com.douglei.orm.sessions.SessionImpl;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
@@ -241,11 +239,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
-		try {
-			return procedureExecutor.execute(getConnection());
-		} catch (SQLException e) {
-			throw new SessionException("调用并执行存储过程时出现异常", e);
-		}
+		return procedureExecutor.execute(getConnection());
 	}
 
 	@Override

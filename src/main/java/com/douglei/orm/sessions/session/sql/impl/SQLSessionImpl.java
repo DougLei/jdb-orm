@@ -24,11 +24,11 @@ import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.utils.ResultSetUtil;
-import com.douglei.orm.sessions.SessionException;
 import com.douglei.orm.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessions.session.sql.impl.execution.SqlExecutionHolder;
+import com.douglei.orm.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CloseUtil;
@@ -234,7 +234,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private Object executeProcedure(final String callableSqlContent, final List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
 		Object executeResult = super.executeProcedure(new ProcedureExecutor() {
 			@Override
-			public Object execute(Connection connection) throws SQLException {
+			public Object execute(Connection connection) throws ProcedureExecutionException {
 				CallableStatement callableStatement = null;
 				try {
 					callableStatement = connection.prepareCall(callableSqlContent);
@@ -276,10 +276,15 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					return null;
 				} catch(SQLException e){
-					throw new SessionException("调用并执行存储过程时出现异常", e);
+					throw new ProcedureExecutionException("调用并执行存储过程时出现异常", e);
 				} finally {
-					callableStatement.close();
-					callableStatement = null;
+					try {
+						callableStatement.close();
+					} catch (SQLException e) {
+						throw new ProcedureExecutionException("关闭["+CallableStatement.class.getName()+"]时出现异常", e);
+					} finally {
+						callableStatement = null;
+					}
 				}
 			}
 

@@ -7,23 +7,21 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
-import com.douglei.orm.core.sql.statement.StatementExecuteException;
+import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
-import com.douglei.tools.utils.CloseUtil;
 
 /**
  * java.sql.PreparedStatement的处理器
  * @author DougLei
  */
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
-	
 	private PreparedStatement preparedStatement;
 	private String sql;
 	private List<List<Object>> lastParametersList; // 上一次请求参数
 
 	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
+		super(sql);
 		this.preparedStatement = preparedStatement;
-		this.sql = sql;
 	}
 	
 	/**
@@ -78,91 +76,80 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * 获取查询的结果集合
 	 * @param parameters
 	 * @return
+	 * @throws StatementExecutionException 
 	 */
-	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) {
+	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) throws StatementExecutionException {
 		int index = isSameParameters(parameters);
 		if(index > -1) {
 			return getQueryResultList(index);
 		}
 		try {
-			if(isClosed()) {
-				throw new Exception("无法执行, 连接已经关闭");
-			}
+			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
-		} catch (Exception e) {
-			throw new StatementExecuteException(sql, parameters, e);
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
 	
 	@Override
-	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) {
+	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
 		int index = isSameParameters(parameters);
 		if(index > -1) {
 			return getQueryUniqueResult(index);
 		}
 		try {
-			if(isClosed()) {
-				throw new Exception("无法执行, 连接已经关闭");
-			}
+			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeUniqueQuery(preparedStatement.executeQuery());
-		} catch (Exception e) {
-			throw new StatementExecuteException(sql, parameters, e);
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
 	
 	@Override
-	public List<Object[]> getQueryResultList_(List<Object> parameters) {
+	public List<Object[]> getQueryResultList_(List<Object> parameters) throws StatementExecutionException {
 		int index = isSameParameters(parameters);
 		if(index > -1) {
 			return getQueryResultList_(index);
 		}
 		try {
-			if(isClosed()) {
-				throw new Exception("无法执行, 连接已经关闭");
-			}
+			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeQuery_(preparedStatement.executeQuery());
-		} catch (Exception e) {
-			throw new StatementExecuteException(sql, parameters, e);
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<Object> parameters) {
+	public Object[] getQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
 		int index = isSameParameters(parameters);
 		if(index > -1) {
 			return getQueryUniqueResult_(index);
 		}
 		try {
-			if(isClosed()) {
-				throw new Exception("无法执行, 连接已经关闭");
-			}
+			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeUniqueQuery_(preparedStatement.executeQuery());
-		} catch (Exception e) {
-			throw new StatementExecuteException(sql, parameters, e);
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
 	
 	@Override
-	public int executeUpdate(List<Object> parameters) {
+	public int executeUpdate(List<Object> parameters) throws StatementExecutionException {
 		try {
-			if(isClosed()) {
-				throw new Exception("无法执行, 连接已经关闭");
-			}
+			validateStatementIsClosed();
 			setParameters(parameters);
 			return preparedStatement.executeUpdate();
-		} catch (Exception e) {
-			throw new StatementExecuteException(sql, parameters, e);
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
 
-	/**
-	 * 关闭statementHandler
-	 */
-	public void close() {
+	@Override
+	public void close() throws StatementExecutionException {
 		if(!isClosed()) {
 			super.close();
 			if(lastParametersList != null) {
@@ -172,7 +159,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 				lastParametersList.clear();
 				lastParametersList = null;
 			}
-			CloseUtil.closeDBConn(preparedStatement);
+			closeStatement(preparedStatement);
 		}
 	}
 }

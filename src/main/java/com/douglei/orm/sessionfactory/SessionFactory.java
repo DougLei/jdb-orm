@@ -2,6 +2,7 @@ package com.douglei.orm.sessionfactory;
 
 import java.util.List;
 
+import com.douglei.orm.configuration.environment.mapping.DynamicAddMappingException;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
 import com.douglei.orm.sessions.Session;
@@ -18,16 +19,18 @@ public interface SessionFactory {
 	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
 	 * @param entity
+	 * @throws DynamicAddMappingException 
 	 */
-	void dynamicAddMapping(DynamicMapping entity);
+	void dynamicAddMapping(DynamicMapping entity) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态批量添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * </pre>
 	 * @param entities
+	 * @throws DynamicAddMappingException 
 	 */
-	void dynamicBatchAddMapping(List<DynamicMapping> entities);
+	void dynamicBatchAddMapping(List<DynamicMapping> entities) throws DynamicAddMappingException;
 	
 	/**
 	 * <pre>
@@ -36,8 +39,9 @@ public interface SessionFactory {
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>
 	 * @param entity
+	 * @throws DynamicAddMappingException 
 	 */
-	void dynamicCoverMapping(DynamicMapping entity);
+	void dynamicCoverMapping(DynamicMapping entity) throws DynamicAddMappingException;
 	/**
 	 * <pre>
 	 * 	动态覆盖映射, 如果不存在添加
@@ -45,8 +49,9 @@ public interface SessionFactory {
 	 * 	<b>不对实体进行任何操作, 主要是不会对表进行相关的操作</b>
 	 * </pre>
 	 * @param entities
+	 * @throws DynamicAddMappingException 
 	 */
-	void dynamicBatchCoverMapping(List<DynamicMapping> entities);
+	void dynamicBatchCoverMapping(List<DynamicMapping> entities) throws DynamicAddMappingException;
 	
 	/**
 	 * <pre>
