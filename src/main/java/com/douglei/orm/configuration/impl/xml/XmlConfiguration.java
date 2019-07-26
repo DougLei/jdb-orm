@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
@@ -57,35 +58,49 @@ public class XmlConfiguration implements Configuration {
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) {
+		ConfigurationInitializeException ex = null;
 		try {
-			logger.debug("根据xml配置文件，初始化configuration实例");
-			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
-			initXmlConfiguration();
-			logger.debug("根据xml配置文件，结束初始化configuration实例");
-		} catch (Exception e) {
-			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			initXmlConfiguration(in);
+		} catch (ConfigurationInitializeException e) {
+			ex = e;
 			destroy();
-			// TODO 销毁和初始化的异常怎么处理
 		} finally {
-			CloseUtil.closeIO(in);
+			if(ex != null) {
+				throw ex;
+			}
 		}
 	}
 	
 	/**
 	 * 根据xml配置文件，初始化Configuration对象
-	 * @throws Exception 
+	 * @param in
+	 * @throws ConfigurationInitializeException 
 	 */
-	private void initXmlConfiguration() throws Exception {
-		logger.debug("开始初始化jdb-orm框架的配置信息");
+	private void initXmlConfiguration(InputStream in) throws ConfigurationInitializeException {
 		if(logger.isDebugEnabled()) {
-			logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
+			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
-		Element root = xmlDocument.getRootElement();
-		setId(root.attributeValue("id"));
-		setProperties(new Properties(root.element("properties")));
-		setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
-		setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
-		logger.debug("结束初始化jdb-orm框架的配置信息");
+		
+		try {
+			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
+			if(logger.isDebugEnabled()) {
+				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
+			}
+			Element root = xmlDocument.getRootElement();
+			setId(root.attributeValue("id"));
+			setProperties(new Properties(root.element("properties")));
+			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
+			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
+		} catch (Exception e) {
+			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new ConfigurationInitializeException(e);
+		} finally {
+			CloseUtil.closeIO(in);
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("结束初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
+		}
 	}
 	
 	@Override
