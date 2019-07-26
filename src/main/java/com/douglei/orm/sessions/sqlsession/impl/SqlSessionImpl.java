@@ -99,8 +99,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.getQueryResultList(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询结果集时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new SessionExecutionException("在查询结果集时出现异常", e);
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -119,13 +119,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.getQueryUniqueResult(parameters);
 		} catch (StatementExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			
-			
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -140,10 +135,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public List<Object[]> query_(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = null;
+		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.getQueryResultList_(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -158,10 +155,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = null;
+		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.getQueryUniqueResult_(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -176,10 +175,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public int executeUpdate(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = null;
+		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.executeUpdate(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在修改数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在修改数据时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
