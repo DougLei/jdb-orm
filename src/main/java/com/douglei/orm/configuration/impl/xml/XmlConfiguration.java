@@ -65,7 +65,7 @@ public class XmlConfiguration implements Configuration {
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			destroy();
-			// TODO 
+			// TODO 销毁和初始化的异常怎么处理
 		} finally {
 			CloseUtil.closeIO(in);
 		}
