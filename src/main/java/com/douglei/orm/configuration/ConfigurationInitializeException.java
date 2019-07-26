@@ -5,8 +5,11 @@ package com.douglei.orm.configuration;
  * @author DougLei
  */
 public class ConfigurationInitializeException extends RuntimeException{
-	private static final long serialVersionUID = 679157047633070619L;
-
+	private static final long serialVersionUID = 6898051437420810674L;
+	
+	public ConfigurationInitializeException(Throwable cause) {
+		super(cause);
+	}
 	public ConfigurationInitializeException(String message, Throwable cause) {
 		super(message, cause);
 	}

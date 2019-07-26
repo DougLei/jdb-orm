@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
@@ -64,8 +63,9 @@ public class XmlConfiguration implements Configuration {
 			initXmlConfiguration();
 			logger.debug("根据xml配置文件，结束初始化configuration实例");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			destroy();
+			// TODO 
 		} finally {
 			CloseUtil.closeIO(in);
 		}
@@ -76,21 +76,16 @@ public class XmlConfiguration implements Configuration {
 	 * @throws Exception 
 	 */
 	private void initXmlConfiguration() throws Exception {
-		try {
-			logger.debug("开始初始化jdb-orm框架的配置信息");
-			if(logger.isDebugEnabled()) {
-				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
-			}
-			Element root = xmlDocument.getRootElement();
-			setId(root.attributeValue("id"));
-			setProperties(new Properties(root.element("properties")));
-			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
-			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
-			logger.debug("结束初始化jdb-orm框架的配置信息");
-		} catch (Exception e) {
-			logger.error("jdb-orm框架初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ConfigurationInitializeException("jdb-orm框架在初始化时出现异常", e);
+		logger.debug("开始初始化jdb-orm框架的配置信息");
+		if(logger.isDebugEnabled()) {
+			logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 		}
+		Element root = xmlDocument.getRootElement();
+		setId(root.attributeValue("id"));
+		setProperties(new Properties(root.element("properties")));
+		setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
+		setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
+		logger.debug("结束初始化jdb-orm框架的配置信息");
 	}
 	
 	@Override
@@ -102,7 +97,7 @@ public class XmlConfiguration implements Configuration {
 	}
 	
 	@Override
-	public void destroy() {
+	public void destroy() throws DestroyException{
 		try {
 			logger.debug("{} 开始 destroy", getClass().getName());
 			if(properties != null) {
