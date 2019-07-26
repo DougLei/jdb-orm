@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.ConfigurationInitializeException;
+import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
@@ -62,8 +64,8 @@ public class XmlConfiguration implements Configuration {
 			initXmlConfiguration();
 			logger.debug("根据xml配置文件，结束初始化configuration实例");
 		} catch (Exception e) {
-			logger.error("jdb-orm框架在初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			e.printStackTrace();
+			destroy();
 		} finally {
 			CloseUtil.closeIO(in);
 		}
@@ -86,9 +88,8 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 			logger.debug("结束初始化jdb-orm框架的配置信息");
 		} catch (Exception e) {
-			logger.error("jdb-orm框架在初始化时出现异常, 进行回滚操作-销毁-destroy()");
-			destroy();
-			throw e;
+			logger.error("jdb-orm框架初始化时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new ConfigurationInitializeException("jdb-orm框架在初始化时出现异常", e);
 		}
 	}
 	
@@ -103,7 +104,7 @@ public class XmlConfiguration implements Configuration {
 	@Override
 	public void destroy() {
 		try {
-			logger.debug("{} 开始 destroy", getClass());
+			logger.debug("{} 开始 destroy", getClass().getName());
 			if(properties != null) {
 				properties.destroy();
 			}
@@ -113,10 +114,10 @@ public class XmlConfiguration implements Configuration {
 			if(environment != null) {
 				environment.destroy();
 			}
-			logger.debug("{} 结束 destroy", getClass());
+			logger.debug("{} 结束 destroy", getClass().getName());
 		} catch (Exception e) {
 			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			e.printStackTrace();
+			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
 		}
 	}
 	

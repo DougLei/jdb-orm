@@ -149,7 +149,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 
 	@Override
-	public void close() throws StatementExecutionException {
+	public void close() {
 		if(!isClosed()) {
 			super.close();
 			if(lastParametersList != null) {

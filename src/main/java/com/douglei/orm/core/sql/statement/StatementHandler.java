@@ -51,9 +51,8 @@ public interface StatementHandler {
 	
 	/**
 	 * 关闭
-	 * @throws StatementExecutionException
 	 */
-	void close() throws StatementExecutionException;
+	void close();
 	
 	/**
 	 * 标识该StatementHandler是否已经执行过一次

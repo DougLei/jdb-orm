@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * StatementHander抽象父类
@@ -243,7 +244,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	} 
 	
 	@Override
-	public void close() throws StatementExecutionException{
+	public void close() {
 		isClosed = true;
 		if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) {
 			resultsetMetadatas.clear();
@@ -253,13 +254,13 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	/**
 	 * 关闭 {@link Statement} or {@link PreparedStatement}
 	 * @param statement
-	 * @throws StatementExecutionException 
 	 */
-	protected void closeStatement(Statement statement) throws StatementExecutionException {
+	protected void closeStatement(Statement statement) {
 		try {
 			statement.close();
 		} catch (SQLException e) {
-			throw new StatementExecutionException("关闭["+statement.getClass().getName()+"]时出现异常", e);
+			logger.error("关闭[{}]时出现异常: {}", statement.getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
+			throw new CloseStatementException(statement, e);
 		}
 	}
 }

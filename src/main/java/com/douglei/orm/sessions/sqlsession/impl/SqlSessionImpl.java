@@ -21,12 +21,15 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
+import com.douglei.orm.sessions.SessionExecutionException;
 import com.douglei.orm.sessions.SessionImpl;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CryptographyUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
 /**
@@ -44,7 +47,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		this.enableSessionCache = environmentProperty.getEnableSessionCache();
 		logger.debug("是否开启Session缓存: {}", enableSessionCache);
 	}
-
+	
 	/**
 	 * 获取StatementHandler
 	 * @param sql
@@ -92,10 +95,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = null;
+		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.getQueryResultList(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询结果集时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询结果集时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -110,10 +115,17 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = null;
+		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			statementHandler = getStatementHandler(sql, parameters);
 			return statementHandler.getQueryUniqueResult(parameters);
+		} catch (StatementExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			
+			
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();

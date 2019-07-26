@@ -16,9 +16,11 @@ import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.DynamicMapping;
+import com.douglei.orm.sessionfactory.DynamicMappingException;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessions.Session;
 import com.douglei.orm.sessions.SessionImpl;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * 
@@ -43,26 +45,31 @@ public class SessionFactoryImpl implements SessionFactory {
 		return environment.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}
 	
-	private void dynamicAddMapping_(DynamicMapping entity) throws DynamicAddMappingException {
-		switch(entity.getType()) {
-			case BY_PATH:
-				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
-				break;
-			case BY_CONTENT:
-				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
-				break;
+	private void dynamicAddMapping_(DynamicMapping entity) {
+		try {
+			switch(entity.getType()) {
+				case BY_PATH:
+					entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
+					break;
+				case BY_CONTENT:
+					entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+					break;
+			}
+		} catch (DynamicAddMappingException e) {
+			logger.error("在动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new DynamicMappingException("在动态添加映射时出现异常", e);
 		}
 	}
 	
 	@Override
-	public void dynamicAddMapping(DynamicMapping entity) throws DynamicAddMappingException {
+	public void dynamicAddMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		dynamicAddMapping_(entity);
 		RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 	}
 	
 	@Override
-	public void dynamicBatchAddMapping(List<DynamicMapping> entities) throws DynamicAddMappingException {
+	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
 			dynamicAddMapping_(entity);
@@ -70,25 +77,30 @@ public class SessionFactoryImpl implements SessionFactory {
 		RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 	}
 	
-	private void dynamicCoverMapping_(DynamicMapping entity) throws DynamicAddMappingException {
-		switch(entity.getType()) {
-			case BY_PATH:
-				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
-				break;
-			case BY_CONTENT:
-				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
-				break;
+	private void dynamicCoverMapping_(DynamicMapping entity) {
+		try {
+			switch(entity.getType()) {
+				case BY_PATH:
+					entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
+					break;
+				case BY_CONTENT:
+					entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+					break;
+			}
+		} catch (DynamicAddMappingException e) {
+			logger.error("在动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new DynamicMappingException("在动态覆盖映射时出现异常", e);
 		}
 	}
 	
 	@Override
-	public void dynamicCoverMapping(DynamicMapping entity) throws DynamicAddMappingException {
+	public void dynamicCoverMapping(DynamicMapping entity) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		dynamicCoverMapping_(entity);
 	}
 
 	@Override
-	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) throws DynamicAddMappingException {
+	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
 		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		for (DynamicMapping entity : entities) {
 			dynamicCoverMapping_(entity);

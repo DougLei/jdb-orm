@@ -89,7 +89,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	}
 	
 	@Override
-	public void close() throws StatementExecutionException {
+	public void close() {
 		if(!isClosed()) {
 			super.close();
 			closeStatement(statement);
