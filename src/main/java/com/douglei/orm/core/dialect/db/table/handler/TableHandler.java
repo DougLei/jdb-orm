@@ -26,7 +26,8 @@ import com.douglei.orm.core.dialect.db.table.handler.serializationobject.Seriali
 import com.douglei.orm.core.dialect.db.table.handler.tablemapping.TableMappingHolder;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.utils.exception.ExceptionUtil;
+import com.douglei.tools.utils.exception.MultiExceptionHolder;
 
 
 /**
@@ -349,6 +350,13 @@ public class TableHandler {
 		}
 	}
 
+	/**
+	 * 
+	 * @param dbObjectHolders
+	 * @param connection
+	 * @param tableSqlStatementHandler
+	 * @throws SQLException
+	 */
 	private void rollbackDDL(List<DBObjectHolder> dbObjectHolders, Connection connection, TableSqlStatementHandler tableSqlStatementHandler) throws SQLException {
 		if(dbObjectHolders.size() > 0) {
 			logger.debug("开始回滚 DDL操作");
@@ -468,13 +476,15 @@ public class TableHandler {
 				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
-			logger.error("create 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("create表时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			MultiExceptionHolder meHolder = new MultiExceptionHolder("创建表时出现异常", e);
 			try {
 				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (SQLException e1) {
-				logger.error("create 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				e1.printStackTrace();
+				logger.error("create表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				meHolder.addException(e1);
 			}
+			meHolder.throwExceptions();
 		} finally {
 			clear(tableMappings, tableMappingCodes, dbObjectHolders, serializeObjectHolders);
 			CloseUtil.closeDBConn(preparedStatement, connection);
@@ -691,20 +701,28 @@ public class TableHandler {
 				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
-			logger.error("drop 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("drop表时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			MultiExceptionHolder meHolder = new MultiExceptionHolder("删除表时出现异常", e);
 			try {
 				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (SQLException e1) {
-				logger.error("drop 时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				e1.printStackTrace();
+				logger.error("drop表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				meHolder.addException(e1);
 			}
+			meHolder.throwExceptions();
 		} finally {
 			clear(tableMappings, null, dbObjectHolders, serializeObjectHolders);
 			CloseUtil.closeDBConn(preparedStatement, connection);
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * @param tableMappings
+	 * @param tableMappingCodes
+	 * @param dbObjectHolders
+	 * @param serializeObjectHolders
+	 */
 	private void clear(List<Mapping> tableMappings, List<String> tableMappingCodes, List<DBObjectHolder> dbObjectHolders, List<SerializeObjectHolder> serializeObjectHolders) {
 		tableMappings.clear();
 		if(tableMappingCodes != null) {

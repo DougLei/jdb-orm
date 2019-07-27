@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.utils.exception.ExceptionUtil;
 
 /**
  * 远程数据库

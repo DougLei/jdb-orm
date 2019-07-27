@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.utils.exception.ExceptionUtil;
 
 /**
  * StatementHander抽象父类

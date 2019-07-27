@@ -1,21 +1,15 @@
 package com.douglei.orm.configuration.environment.mapping;
 
+import com.douglei.orm.sessionfactory.DynamicMappingException;
+
 /**
  * 动态添加映射异常
  * @author DougLei
  */
-public class DynamicAddMappingException extends Exception{
-	private static final long serialVersionUID = -3504172059478482055L;
+public class DynamicAddMappingException extends DynamicMappingException{
+	private static final long serialVersionUID = -3854835049734570104L;
 
-	public DynamicAddMappingException() {
-		super();
-	}
-
-	public DynamicAddMappingException(String message) {
-		super(message);
-	}
-
-	public DynamicAddMappingException(String message, Throwable cause) {
-		super(message, cause);
+	public DynamicAddMappingException(Throwable cause) {
+		super("动态添加映射时出现异常", cause);
 	}
 }

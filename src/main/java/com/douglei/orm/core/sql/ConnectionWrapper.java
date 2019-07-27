@@ -13,7 +13,7 @@ import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.sql.statement.impl.PreparedStatementHandlerImpl;
 import com.douglei.orm.core.sql.statement.impl.StatementHandlerImpl;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.utils.exception.ExceptionUtil;
 
 /**
  * java.sql.Connection包装类

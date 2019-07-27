@@ -126,9 +126,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @param mappingConfigurationFilePath 配置文件路径
 	 * @return mapping的code
-	 * @throws DynamicAddMappingException
+	 * @throws DynamicCoverMappingException
 	 */
-	public abstract String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException;
+	public abstract String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicCoverMappingException;
 	/**
 	 * <pre>
 	 * 	动态覆盖映射, 如果不存在添加
@@ -138,17 +138,18 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingType
 	 * @param mappingConfigurationContent 配置内容
 	 * @return mapping的code
-	 * @throws DynamicAddMappingException
+	 * @throws DynamicCoverMappingException
 	 */
-	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException;
+	public abstract String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicCoverMappingException;
 	/**
 	 * <pre>
 	 * 	动态删除映射
 	 * 	如果是表映射, 则顺便drop表
 	 * </pre>
 	 * @param mappingCode
+	 * @throws DynamicRemoveMappingException
 	 */
-	public abstract void dynamicRemoveMapping(String mappingCode);
+	public abstract void dynamicRemoveMapping(String mappingCode) throws DynamicRemoveMappingException;
 	
 	@Override
 	public void destroy() throws DestroyException {

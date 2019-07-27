@@ -5,11 +5,8 @@ package com.douglei.orm.sessionfactory;
  * @author DougLei
  */
 public class DynamicMappingException extends RuntimeException {
-	private static final long serialVersionUID = -8920790026226798906L;
-	
-	public DynamicMappingException(String message) {
-		super(message);
-	}
+	private static final long serialVersionUID = -6415337605909196775L;
+
 	public DynamicMappingException(String message, Throwable t) {
 		super(message, t);
 	}

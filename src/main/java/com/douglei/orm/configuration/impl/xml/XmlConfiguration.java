@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
@@ -21,8 +20,9 @@ import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.utils.exception.ExceptionUtil;
+import com.douglei.tools.utils.exception.MultiExceptionHolder;
 
 /**
  * xml配置接口实现
@@ -58,25 +58,6 @@ public class XmlConfiguration implements Configuration {
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) {
-		ConfigurationInitializeException ex = null;
-		try {
-			initXmlConfiguration(in);
-		} catch (ConfigurationInitializeException e) {
-			ex = e;
-			destroy();
-		} finally {
-			if(ex != null) {
-				throw ex;
-			}
-		}
-	}
-	
-	/**
-	 * 根据xml配置文件，初始化Configuration对象
-	 * @param in
-	 * @throws ConfigurationInitializeException 
-	 */
-	private void initXmlConfiguration(InputStream in) throws ConfigurationInitializeException {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
@@ -93,7 +74,13 @@ public class XmlConfiguration implements Configuration {
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ConfigurationInitializeException(e);
+			MultiExceptionHolder meHolder = new MultiExceptionHolder("jdb-orm框架初始化时出现异常", e);
+			try {
+				destroy();
+			} catch (DestroyException e1) {
+				meHolder.addException(e1);
+			}
+			meHolder.throwExceptions();
 		} finally {
 			CloseUtil.closeIO(in);
 		}

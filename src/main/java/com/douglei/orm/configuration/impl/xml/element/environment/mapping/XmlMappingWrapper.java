@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.DynamicAddMappingException;
+import com.douglei.orm.configuration.environment.mapping.DynamicCoverMappingException;
+import com.douglei.orm.configuration.environment.mapping.DynamicRemoveMappingException;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
@@ -64,7 +66,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationFilePath);
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
 		} catch (Exception e) {
-			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
+			throw new DynamicAddMappingException(e);
 		}
 	}
 	
@@ -74,33 +76,37 @@ public class XmlMappingWrapper extends MappingWrapper{
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationContent);
 			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
-			throw new DynamicAddMappingException("动态添加映射时出现异常", e);
+			throw new DynamicAddMappingException(e);
 		}
 	}
 	
 	@Override
-	public String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException {
+	public String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicCoverMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationFilePath);
 			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
 		} catch (Exception e) {
-			throw new DynamicAddMappingException("动态覆盖映射时出现异常", e);
+			throw new DynamicCoverMappingException(e);
 		}
 	}
 	
 	@Override
-	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException {
+	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicCoverMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationContent);
 			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
 		} catch (Exception e) {
-			throw new DynamicAddMappingException("动态覆盖映射时出现异常", e);
+			throw new DynamicCoverMappingException(e);
 		}
 	}
 	
 	@Override
-	public void dynamicRemoveMapping(String mappingCode) {
-		logger.debug("dynamic remove mapping-mappingCode: {}", mappingCode);
-		removeMapping(mappingCode);
+	public void dynamicRemoveMapping(String mappingCode) throws DynamicRemoveMappingException {
+		try {
+			logger.debug("dynamic remove mapping-mappingCode: {}", mappingCode);
+			removeMapping(mappingCode);
+		} catch (Exception e) {
+			throw new DynamicRemoveMappingException(e);
+		}
 	}
 }
