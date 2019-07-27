@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
@@ -20,9 +21,8 @@ import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.exception.ExceptionUtil;
-import com.douglei.tools.utils.exception.MultiExceptionHolder;
 
 /**
  * xml配置接口实现
@@ -51,13 +51,13 @@ public class XmlConfiguration implements Configuration {
 	private Environment environment;
 	
 	
-	public XmlConfiguration() {
+	public XmlConfiguration() throws ConfigurationInitializeException, DestroyException{
 		this(DEFAULT_CONF_FILE);
 	}
-	public XmlConfiguration(String configurationFile) {
+	public XmlConfiguration(String configurationFile) throws ConfigurationInitializeException, DestroyException{
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
-	public XmlConfiguration(InputStream in) {
+	public XmlConfiguration(InputStream in) throws ConfigurationInitializeException, DestroyException{
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
@@ -73,14 +73,16 @@ public class XmlConfiguration implements Configuration {
 			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 		} catch (Exception e) {
+			if(logger.isDebugEnabled()) {
+				e.printStackTrace();
+			}
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			MultiExceptionHolder meHolder = new MultiExceptionHolder("jdb-orm框架初始化时出现异常", e);
 			try {
 				destroy();
 			} catch (DestroyException e1) {
-				meHolder.addException(e1);
+				throw e1;
 			}
-			meHolder.throwExceptions();
+			throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
 		} finally {
 			CloseUtil.closeIO(in);
 		}
@@ -100,8 +102,11 @@ public class XmlConfiguration implements Configuration {
 	
 	@Override
 	public void destroy() throws DestroyException{
-		try {
+		if(logger.isDebugEnabled()) {
 			logger.debug("{} 开始 destroy", getClass().getName());
+		}
+		
+		try {
 			if(properties != null) {
 				properties.destroy();
 			}
@@ -111,10 +116,16 @@ public class XmlConfiguration implements Configuration {
 			if(environment != null) {
 				environment.destroy();
 			}
-			logger.debug("{} 结束 destroy", getClass().getName());
 		} catch (Exception e) {
+			if(logger.isDebugEnabled()) {
+				e.printStackTrace();
+			}
 			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("{} 结束 destroy", getClass().getName());
 		}
 	}
 	

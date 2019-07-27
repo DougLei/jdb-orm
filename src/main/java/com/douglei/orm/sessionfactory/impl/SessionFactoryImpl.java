@@ -18,7 +18,7 @@ import com.douglei.orm.sessionfactory.DynamicMapping;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessions.Session;
 import com.douglei.orm.sessions.SessionImpl;
-import com.douglei.tools.utils.exception.ExceptionUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * 
