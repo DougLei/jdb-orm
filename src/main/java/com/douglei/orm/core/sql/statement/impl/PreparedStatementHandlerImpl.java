@@ -16,7 +16,6 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  */
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private PreparedStatement preparedStatement;
-	private String sql;
 	private List<List<Object>> lastParametersList; // 上一次请求参数
 
 	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
