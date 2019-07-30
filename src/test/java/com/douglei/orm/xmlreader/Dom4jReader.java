@@ -24,7 +24,7 @@ public class Dom4jReader {
 		if(elems != null) {
 			System.out.println(elems.size());
 			for (Object object : elems) {
-				System.out.println(((Element)object).attributeValue("name"));
+				System.out.println(((Element)object).attributeValue("name") == null);
 			}
 		}else {
 			System.out.println("elems is null");

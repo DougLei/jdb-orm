@@ -5,10 +5,10 @@
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
-			<!-- primaryKeyValueType主键值的类型, 默认为null, 即用户自定义, 还包括的值 uuid36, uuid32, identity(自增主键, 会强制将dataType改为integer类型, 或自定义long类型) -->
-			<!-- 如果指定了sequenceName, 则使用指定的序列名, 不自动生成序列名, 目前序列主要是oracle使用 -->
-			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyValueType="" sequenceName="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
-			<column name="name" oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
+			
+			<!-- primaryKeyType主键的类型, 包括的值user, uuid36, uuid32, increment, 默认为user, 用户自定义, 即需要用户手动进行setId()操作 -->
+			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyType="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
+			<column oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
 		</columns>
@@ -16,13 +16,13 @@
 		
 		
 		<!-- 
-			--sqlserver
+			sqlserver
 			create table ddd(
 				id int identity primary key,
 				name varchar(100)
 			);
 			
-			--oracle
+			oracle
 			create sequence ddd
 		       increment by 1
 		       start with 1
@@ -33,16 +33,20 @@
 		       select ddd.nextval from dual;
 			
 			
-			--mysql
+			mysql
 			create table ddd (
 				id int auto_increment not null primary key,
 				name varchar(100)
 			);
-			
-		
-		
 		 -->
 		
-		
+		<!-- 序列, 对应上面primaryKeyType=increment, 且是oracle数据库时 -->
+		<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
+		<!-- destroyType销毁方式, 即在表被删除时怎样处理该序列: none(不处理),drop(删除), reset(重置)  -->
+		<sequence name="" destroyType="">
+			<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
+			<resetSql></resetSql><!-- 如果不配置, 则使用系统默认的重置语句 -->
+			<!--  drop sequence ddd 语句没有特殊化, 所以不用配置, 系统提供 -->
+		</sequence>
 	</table>
 </mapping-configuration>

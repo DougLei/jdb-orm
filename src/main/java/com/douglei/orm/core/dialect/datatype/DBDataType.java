@@ -97,7 +97,6 @@ public abstract class DBDataType implements Serializable{
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " [sqlType=" + sqlType + ", typeName=" + typeName + ", length=" + length + ", precision="
-				+ precision + "]";
+		return typeName;
 	}
 }

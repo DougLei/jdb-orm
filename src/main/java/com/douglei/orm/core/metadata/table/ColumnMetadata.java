@@ -15,18 +15,17 @@ import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConv
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = -9079589507178307392L;
 	
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
 	private String oldName;// 旧列名
 	private String descriptionName;// 描述名
-	private DataType dataType;// 数据类型
 	private short length;// 长度
 	private short precision;// 精度
 	boolean nullabled;// 是否可为空
 	boolean primaryKey;// 是否是主键
+	PrimaryKeyType primaryKeyType;// 主键类型
 	boolean unique;// 是否唯一
 	String defaultValue;// 默认值
 	String check;// 检查约束表达式
@@ -37,10 +36,9 @@ public class ColumnMetadata implements Metadata{
 	private ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, PrimaryKeyType primaryKeyType, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
-		this.dataType = DataType.toValue(dataType);
-		processDataType(dataType);
+		processDataType(DataType.toValue(dataType), dataType);
 		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
 		this.property = StringUtil.isEmpty(property)?null:property;
 	}
@@ -57,8 +55,8 @@ public class ColumnMetadata implements Metadata{
 	}
 	
 	// 处理dataTypeHandler和dbDataType的值
-	private void processDataType(String dataType) {
-		this.dataTypeHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(this.dataType==null?dataType:this.dataType.getName());
+	private void processDataType(DataType dataType, String dataType_) {
+		this.dataTypeHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
 		this.dbDataType = dataTypeHandler.getDBDataType();
 	}
 	
@@ -149,11 +147,11 @@ public class ColumnMetadata implements Metadata{
 	public String getProperty() {
 		return property;
 	}
-	public DataType getDataType() {
-		return dataType;
-	}
 	public boolean isPrimaryKey() {
 		return primaryKey;
+	}
+	public PrimaryKeyType getPrimaryKeyType() {
+		return primaryKeyType;
 	}
 	public short getLength() {
 		return length;

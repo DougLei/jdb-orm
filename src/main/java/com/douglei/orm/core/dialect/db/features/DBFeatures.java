@@ -3,7 +3,7 @@ package com.douglei.orm.core.dialect.db.features;
 import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 
 /**
  * 数据库特性
@@ -22,28 +22,28 @@ public abstract class DBFeatures {
 	public abstract boolean procedureSupportDirectlyReturnResultSet();
 
 	
-	protected Map<DataType, DataType[]> supportColumnDataTypeConvertMap;
-	protected abstract void initSupportColumnDataTypeConvertMap();
+	protected Map<DBDataType, DBDataType[]> supportColumnDBDataTypeConvertMap;
+	protected abstract void initSupportColumnDBDataTypeConvertMap();
 	
 	/**
 	 * 是否支持改变列的数据类型
 	 * 
-	 * 从originDataType转换为targetDataType
+	 * 从originDBDataType转换为targetDBDataType
 	 * 
-	 * @param originDataType
-	 * @param targetDataType
+	 * @param originDBDataType
+	 * @param targetDBDataType
 	 * @return
 	 */
-	public boolean supportColumnDataTypeConvert(DataType originDataType, DataType targetDataType) {
+	public boolean supportColumnDataTypeConvert(DBDataType originDBDataType, DBDataType targetDBDataType) {
 		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
-			if(supportColumnDataTypeConvertMap == null) {
-				initSupportColumnDataTypeConvertMap();
+			if(supportColumnDBDataTypeConvertMap == null) {
+				initSupportColumnDBDataTypeConvertMap();
 			}
-			if(supportColumnDataTypeConvertMap.size() > 0) {
-				DataType[] supportTargetDataTypes = supportColumnDataTypeConvertMap.get(originDataType);
-				if(supportTargetDataTypes != null && supportTargetDataTypes.length > 0) {
-					for (DataType tdt : supportTargetDataTypes) {
-						if(tdt == targetDataType) {
+			if(supportColumnDBDataTypeConvertMap.size() > 0) {
+				DBDataType[] supportTargetDBDataTypes = supportColumnDBDataTypeConvertMap.get(originDBDataType);
+				if(supportTargetDBDataTypes != null && supportTargetDBDataTypes.length > 0) {
+					for (DBDataType dt : supportTargetDBDataTypes) {
+						if(dt == targetDBDataType) {
 							return true;
 						}
 					}

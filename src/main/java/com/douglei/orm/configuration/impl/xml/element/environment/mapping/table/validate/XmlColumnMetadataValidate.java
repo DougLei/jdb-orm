@@ -7,6 +7,7 @@ import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.metadata.table.PrimaryKeyType;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
@@ -35,7 +36,8 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && VerifyTypeMatchUtil.isBoolean(value))?Boolean.parseBoolean(element.attributeValue("validate")):false;
 		
 		return new ColumnMetadata(element.attributeValue("property"), name, element.attributeValue("oldName"), element.attributeValue("descriptionName"), element.attributeValue("dataType"), length, precision, nullabled,
-				Boolean.parseBoolean(element.attributeValue("primaryKey")), Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
+				Boolean.parseBoolean(element.attributeValue("primaryKey")), PrimaryKeyType.toValue(element.attributeValue("primaryKeyType")),
+				Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
 				element.attributeValue("check"), element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"), 
 				validate);
 	}

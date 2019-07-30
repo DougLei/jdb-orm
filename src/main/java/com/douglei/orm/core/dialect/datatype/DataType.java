@@ -1,5 +1,7 @@
 package com.douglei.orm.core.dialect.datatype;
 
+import com.douglei.tools.utils.StringUtil;
+
 /**
  * 
  * @author DougLei
@@ -33,6 +35,9 @@ public enum DataType {
 	}
 
 	public static DataType toValue(String type) {
+		if(StringUtil.isEmpty(type)) {
+			return STRING;
+		}
 		type = type.toUpperCase();
 		DataType[] dts = DataType.values();
 		for (DataType dt : dts) {

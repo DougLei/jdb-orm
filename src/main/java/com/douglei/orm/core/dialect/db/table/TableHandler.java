@@ -635,9 +635,9 @@ public class TableHandler {
 	private boolean isModifyColumn(TableMetadata table, ColumnMetadata column, ColumnMetadata oldColumn) {
 		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
 			boolean isModifyColumn = false;
-			if(column.getDataType() != oldColumn.getDataType()) {
-				if(!DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDataType(), column.getDataType())) {
-					throw new ColumnModifyException("在数据库["+DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDataType()+"]类型, 改为["+column.getDataType()+"]类型");
+			if(column.getDataTypeHandler() != oldColumn.getDataTypeHandler()) {
+				if(!DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
+					throw new ColumnModifyException("在数据库["+DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
 				}
 				isModifyColumn = true;
 			}
@@ -662,7 +662,7 @@ public class TableHandler {
 	}
 	// 是否修改列(简单判断)
 	private boolean isModifyColumn_simpleValidate(ColumnMetadata column, ColumnMetadata oldColumn) {
-		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
+		return column.getDataTypeHandler() != oldColumn.getDataTypeHandler() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
 	// 根据列的oldName, 查询列对象
 	private ColumnMetadata getColumnByOldName(String oldColumnName, Collection<ColumnMetadata> columns) {
