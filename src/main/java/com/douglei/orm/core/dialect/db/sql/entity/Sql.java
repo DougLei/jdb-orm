@@ -48,33 +48,4 @@ public class Sql implements Serializable {
 		}
 		return list;
 	}
-
-//	@Override
-//	public String toXmlMappingContent() {
-//		StringBuilder xml = new StringBuilder(3000);
-//		xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-//		xml.append("<mapping-configuration>");
-//		xml.append("<sql name=\"").append(name).append("\"");
-//		if(StringUtil.notEmpty(namespace)) {
-//			xml.append(" namespace=\"").append(namespace).append("\"");
-//		}
-//		xml.append(">");
-//		toXmlSqlContent(xml);
-//		xml.append("</sql>");
-//		xml.append("</mapping-configuration>");
-//		return xml.toString();
-//	}
-//	private void toXmlSqlContent(StringBuilder xml) {
-//		if(this.contents != null) {
-//			for (SqlContent content : this.contents) {
-//				xml.append("<content type=\"").append(content.getType().name()).append("\"");
-//				if(content.getDialectType() != null) {
-//					xml.append(" dialect=\"").append(content.getDialectType().name()).append("\"");
-//				}
-//				xml.append(">");
-//				xml.append(content.getContent());
-//				xml.append("</content>");
-//			}
-//		}
-//	}
 }

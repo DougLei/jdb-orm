@@ -42,7 +42,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 					values.append(",");
 				}
 				
-				columnMetadata = tableMetadata.getColumnMetadata(code);
+				columnMetadata = tableMetadata.getColumnByCode(code);
 				
 				insertSql.append(columnMetadata.getName());
 				values.append("?");

@@ -33,7 +33,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 	
 	// 当存在primaryKey时, set对应的sql语句
 	private void setSqlWhenExistsPrimaryKey(StringBuilder deleteSql) {
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
 		int size = primaryKeyColumnMetadataCodes.size();
 		
 		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
@@ -41,7 +41,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 		ColumnMetadata primaryKeyColumnMetadata = null;
 		byte index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
+			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), primaryKeyColumnMetadata.getDataTypeHandler()));
@@ -63,7 +63,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : codes) {
-			columnMetadata = tableMetadata.getColumnMetadata(code);
+			columnMetadata = tableMetadata.getColumnByCode(code);
 			value = propertyMap.get(code);
 			
 			if(value == null) {

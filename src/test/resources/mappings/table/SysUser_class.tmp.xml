@@ -5,11 +5,44 @@
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
-			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
+			<!-- primaryKeyValueType主键值的类型, 默认为null, 即用户自定义, 还包括的值 uuid36, uuid32, identity(自增主键, 会强制将dataType改为integer类型, 或自定义long类型) -->
+			<!-- 如果指定了sequenceName, 则使用指定的序列名, 不自动生成序列名, 目前序列主要是oracle使用 -->
+			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyValueType="" sequenceName="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column name="name" oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
 		</columns>
+		
+		
+		
+		<!-- 
+			--sqlserver
+			create table ddd(
+				id int identity primary key,
+				name varchar(100)
+			);
+			
+			--oracle
+			create sequence ddd
+		       increment by 1
+		       start with 1
+		       nomaxvalue
+		       nocycle
+		       cache 10;
+		       
+		       select ddd.nextval from dual;
+			
+			
+			--mysql
+			create table ddd (
+				id int auto_increment not null primary key,
+				name varchar(100)
+			);
+			
+		
+		
+		 -->
+		
 		
 	</table>
 </mapping-configuration>

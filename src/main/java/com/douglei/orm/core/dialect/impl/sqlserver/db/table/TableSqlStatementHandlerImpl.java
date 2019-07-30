@@ -1,8 +1,8 @@
 package com.douglei.orm.core.dialect.impl.sqlserver.db.table;
 
-import com.douglei.orm.core.dialect.db.table.entity.Column;
-import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.metadata.table.Constraint;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	}
 	
 	@Override
-	public String columnModifySqlStatement(String tableName, Column column) {
+	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" alter column ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");

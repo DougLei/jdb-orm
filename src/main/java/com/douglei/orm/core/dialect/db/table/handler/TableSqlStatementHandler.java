@@ -2,9 +2,9 @@ package com.douglei.orm.core.dialect.db.table.handler;
 
 import java.util.Collection;
 
-import com.douglei.orm.core.dialect.db.table.entity.Column;
-import com.douglei.orm.core.dialect.db.table.entity.Constraint;
-import com.douglei.orm.core.dialect.db.table.entity.Table;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.metadata.table.Constraint;
+import com.douglei.orm.core.metadata.table.TableMetadata;
 
 /**
  * 表sql语句处理器
@@ -29,24 +29,21 @@ public abstract class TableSqlStatementHandler {
 	 * @param table
 	 * @return
 	 */
-	public String tableCreateSqlStatement(Table table) {
+	public String tableCreateSqlStatement(TableMetadata table) {
 		StringBuilder sql = new StringBuilder(1000);
 		sql.append("create table ").append(table.getName());
 		sql.append("(");
 		
-		Collection<Column> columns = table.getColumns();
-		int index=0, lastIndex = columns.size()-1;
-		for (Column column : columns) {
+		Collection<ColumnMetadata> columns = table.getDeclareColumns();
+		for (ColumnMetadata column : columns) {
 			sql.append(column.getName()).append(" ");
 			sql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
 			if(!column.isNullabled()) {
 				sql.append("not null");
 			}
-			if(index<lastIndex) {
-				sql.append(",");
-			}
-			index++;
+			sql.append(",");
 		}
+		
 		sql.append(")");
 		return sql.toString();
 	}
@@ -81,7 +78,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnCreateSqlStatement(String tableName, Column column) {
+	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -122,7 +119,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnModifySqlStatement(String tableName, Column column) {
+	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");

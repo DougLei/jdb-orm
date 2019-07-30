@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.entity;
+package com.douglei.orm.core.metadata.table;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -21,8 +21,8 @@ public class Constraint implements Serializable{
 	private static final long serialVersionUID = 1567281866700788439L;
 	
 	private String name;// (前缀+表名+列名)
-	private Column column;// 记录第一个add的列对象
-	private Map<String, Column> columns;// 相关的列集合
+	private ColumnMetadata column;// 记录第一个add的列对象
+	private Map<String, ColumnMetadata> columns;// 相关的列集合
 	private String tableName;// 表名
 	
 	private ConstraintType constraintType;
@@ -42,9 +42,9 @@ public class Constraint implements Serializable{
 	 * 添加约束列
 	 * @param column
 	 */
-	public Constraint addColumn(Column column) {
+	public Constraint addColumn(ColumnMetadata column) {
 		if(columns == null) {
-			columns = new HashMap<String, Column>(constraintType.supportMultipleColumn()?4:1);
+			columns = new HashMap<String, ColumnMetadata>(constraintType.supportMultipleColumn()?4:1);
 			this.column = column;
 		}else if(columns.containsKey(column.getName())) {
 			throw new ConstraintException("在同一个["+this.constraintType.name()+"]约束中, 出现重复的列["+column.getName()+"]");
@@ -55,7 +55,7 @@ public class Constraint implements Serializable{
 	}
 	
 	// 处理列对象的元数据
-	private void processColumnMetadata(Column column) {
+	private void processColumnMetadata(ColumnMetadata column) {
 		switch(constraintType) {
 			// 修改主键=false, unique=false, 或置空其他约束属性值的目的, 是在根据对象生成xml配置文件时, 在<constraints>中生成主键和唯一约束配置, 而不在<column>中生成对应的primaryKey=true和unique=true的配置
 			// @see com.douglei.orm.core.dialect.db.table.entity.Table.toXmlColumnContent()/toXmlConstraintContent()
@@ -63,7 +63,7 @@ public class Constraint implements Serializable{
 				column.primaryKey = false;
 				column.nullabled = false;
 				column.unique = false;// 如果是主键, 则不需要设置唯一
-				column.clearDefaultValue();// 如果是主键, 则不能有默认值
+				column.defaultValue = null;// 如果是主键, 则不能有默认值
 				break;
 			case UNIQUE:
 				// 判断列是否是主键, 如果不是, 则给列加上唯一约束
@@ -116,11 +116,11 @@ public class Constraint implements Serializable{
 			nameBuilder.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
 			
 			if(constraintType.supportMultipleColumn()) {
-				Collection<Column> cs = columns.values();
+				Collection<ColumnMetadata> cs = columns.values();
 				int index = 0, lastIndex = cs.size()-1;
 				
 				StringBuilder constraintColumnNamesBuilder = new StringBuilder(cs.size()*20);
-				for (Column column : cs) {
+				for (ColumnMetadata column : cs) {
 					validateDataType(column.getDataTypeHandler());
 					
 					constraintColumnNamesBuilder.append(column.getName());
@@ -191,7 +191,7 @@ public class Constraint implements Serializable{
 		processConstraint();
 		return name;
 	}
-	public Collection<Column> getColumns(){
+	public Collection<ColumnMetadata> getColumns(){
 		processConstraint();
 		return columns.values();
 	}

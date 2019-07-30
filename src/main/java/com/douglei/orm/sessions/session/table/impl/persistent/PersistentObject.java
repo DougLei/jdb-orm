@@ -45,7 +45,7 @@ public class PersistentObject {
 	public Identity getId() {
 		if(id == null) {
 			if(tableMetadata.existsPrimaryKey()) {
-				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
 				Object id;
 				if(primaryKeyColumnMetadataCodes.size() == 1) {
 					id = propertyMap.get(primaryKeyColumnMetadataCodes.iterator().next());
@@ -105,7 +105,7 @@ public class PersistentObject {
 			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
 		}else {
 			logger.debug("originObject is Object type [{}], 从该object中, 通过java内省机制, 获取相关列的数据信息", originObject.getClass());
-			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnMetadataCodes());
+			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnCodes());
 		}
 		if(propertyMap == null || propertyMap.size() == 0) {
 			throw new NullPointerException("要操作的数据不能为空");
@@ -124,14 +124,14 @@ public class PersistentObject {
 	 * @return
 	 */
 	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		Set<String> columnMetadataCodes = tableMetadata.getColumnMetadataCodes();
+		Set<String> columnMetadataCodes = tableMetadata.getColumnCodes();
 		int columnSize = columnMetadataCodes.size();
 		Map<String, Object> resultPropertyMap = new HashMap<String, Object>(columnSize);
 		
 		int index = 1;
 		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
 		for (String originPMkey : originPropertyMapKeys) {
-			if(tableMetadata.isColumnMetadata(originPMkey)) {
+			if(tableMetadata.isColumnByCode(originPMkey)) {
 				resultPropertyMap.put(originPMkey, originPropertyMap.get(originPMkey));
 				if(index == columnSize) {
 					break;
@@ -152,7 +152,7 @@ public class PersistentObject {
 			String result = null;
 			Set<String> keys = propertyMap.keySet();
 			for (String key : keys) {
-				if((validateColumn = tableMetadata.getValidateColumn(key)) != null) {
+				if((validateColumn = tableMetadata.getValidateColumnByCode(key)) != null) {
 					value = propertyMap.get(key);
 					
 					if(!validateColumn.isNullabled() && value == null && validateColumn.getDefaultValue() == null) {

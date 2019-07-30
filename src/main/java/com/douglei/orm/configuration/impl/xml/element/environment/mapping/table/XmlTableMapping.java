@@ -22,14 +22,14 @@ import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.ImportDataContext;
 import com.douglei.orm.core.dialect.DialectType;
-import com.douglei.orm.core.dialect.db.table.entity.Constraint;
-import com.douglei.orm.core.dialect.db.table.entity.ConstraintType;
-import com.douglei.orm.core.dialect.db.table.entity.Index;
-import com.douglei.orm.core.dialect.db.table.entity.IndexException;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.metadata.table.Constraint;
+import com.douglei.orm.core.metadata.table.ConstraintType;
+import com.douglei.orm.core.metadata.table.Index;
+import com.douglei.orm.core.metadata.table.IndexException;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.StringUtil;
 
@@ -55,7 +55,6 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			addColumnMetadata(getColumnElements(tableElement));
 			addConstraint(tableElement.element("constraints"));
 			addIndex(tableElement.element("indexes"));
-			tableMetadata.columnDataMigration();
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}
@@ -129,17 +128,17 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @throws MetadataValidateException 
 	 */
 	private void addColumnMetadata(List<?> columnElements) throws MetadataValidateException {
-		boolean classNameIsNull = tableMetadata.classNameIsNull();
+		boolean classNameEmpty = tableMetadata.classNameEmpty();
 		ColumnMetadata columnMetadata = null;
 		for (Object object : columnElements) {
 			columnMetadata = (ColumnMetadata)columnMetadataValidate.doValidate(object);
 			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			}
-			
-			columnMetadata.fixPropertyNameValue(classNameIsNull);
+			columnMetadata.correctProperty(classNameEmpty);
 			tableMetadata.addColumn(columnMetadata);
 		}
+		tableMetadata.sync();
 	}
 	
 	/**

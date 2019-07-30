@@ -16,14 +16,14 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.db.table.entity.Column;
-import com.douglei.orm.core.dialect.db.table.entity.Constraint;
-import com.douglei.orm.core.dialect.db.table.entity.Index;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectHolder;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectOPType;
 import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectType;
 import com.douglei.orm.core.dialect.db.table.handler.serializationobject.SerializeObjectHolder;
 import com.douglei.orm.core.dialect.db.table.handler.tablemapping.TableMappingHolder;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.metadata.table.Constraint;
+import com.douglei.orm.core.metadata.table.Index;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -141,7 +141,7 @@ public class TableHandler {
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void createColumn(String tableName, Column column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void createColumn(String tableName, ColumnMetadata column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.columnCreateSqlStatement(tableName, column), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.CREATE));
@@ -157,7 +157,7 @@ public class TableHandler {
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void dropColumn(String tableName, Column column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void dropColumn(String tableName, ColumnMetadata column, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, column, DBObjectType.COLUMN, DBObjectOPType.DROP));
@@ -191,7 +191,7 @@ public class TableHandler {
 	 * @param dbObjectHolders
 	 * @throws SQLException 
 	 */
-	private void columnModify(String tableName, Column originColumn, Column targetColumn, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void columnModify(String tableName, ColumnMetadata originColumn, ColumnMetadata targetColumn, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(tableSqlStatementHandler.columnModifySqlStatement(tableName, targetColumn), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(tableName, originColumn, targetColumn, DBObjectType.COLUMN, DBObjectOPType.MODIFY));
@@ -382,10 +382,10 @@ public class TableHandler {
 					case COLUMN:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop column");
-							dropColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
+							dropColumn(holder.getTableName(), (ColumnMetadata)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create column");
-							createColumn(holder.getTableName(), (Column)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
+							createColumn(holder.getTableName(), (ColumnMetadata)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.RENAME) {
 							logger.debug("逆向: column rename");
 							columnRename(holder.getTableName(), holder.getTargetObject().toString(), holder.getOriginObject().toString(), connection, tableSqlStatementHandler, null);
@@ -394,16 +394,16 @@ public class TableHandler {
 							
 							// 如果修改了列名, 则要将originColumn的列名暂时给targetColumn, 等修改完成后, 再替换回来, 因为在修改列的sql语句中, 会用到column.getName()
 							String tmpColumnName = null;
-							Column originColumn = (Column)holder.getTargetObject();
-							Column targetColumn = (Column)holder.getOriginObject();
+							ColumnMetadata originColumn = (ColumnMetadata)holder.getTargetObject();
+							ColumnMetadata targetColumn = (ColumnMetadata)holder.getOriginObject();
 							boolean updateColumnName = !originColumn.getName().equals(targetColumn.getName());
 							if(updateColumnName) {
 								tmpColumnName = targetColumn.getName();
-								targetColumn._danger2UpdateColumnName(originColumn.getName());
+								targetColumn.forceUpdateName(originColumn.getName());
 							}
 							columnModify(holder.getTableName(), null, targetColumn, connection, tableSqlStatementHandler, null);
 							if(updateColumnName) {
-								targetColumn._danger2UpdateColumnName(tmpColumnName);
+								targetColumn.forceUpdateName(tmpColumnName);
 							}
 						}
 						break;
@@ -530,7 +530,7 @@ public class TableHandler {
 	// 是否更新了表
 	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
 		if(!table.getName().equals(oldTable.getName()) 
-				|| isUpdateColumn(table.getColumns(), oldTable)
+				|| isUpdateColumn(table.getDeclareColumns(), oldTable)
 				|| isUpdateConstraint(table.getConstraints(), oldTable)
 				|| isUpdateIndex(table.getIndexes(), oldTable)) {
 			return true;
@@ -538,12 +538,12 @@ public class TableHandler {
 		return false;
 	}
 	// 是否更新了列
-	private boolean isUpdateColumn(Collection<Column> columns, TableMetadata oldTable) {
-		if(columns.size() != oldTable.getColumns().size()) {
+	private boolean isUpdateColumn(Collection<ColumnMetadata> columns, TableMetadata oldTable) {
+		if(columns.size() != oldTable.getDeclareColumns().size()) {
 			return true;
 		}
-		Column oldColumn = null;
-		for (Column column : columns) {
+		ColumnMetadata oldColumn = null;
+		for (ColumnMetadata column : columns) {
 			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
 			if(oldColumn == null) {
 				return true;
@@ -605,9 +605,9 @@ public class TableHandler {
 	}
 	// 同步列
 	private void syncColumns(TableMetadata table, TableMetadata oldTable, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		Collection<Column> columns = table.getColumns();
-		Column oldColumn = null;
-		for (Column column : columns) {
+		Collection<ColumnMetadata> columns = table.getDeclareColumns();
+		ColumnMetadata oldColumn = null;
+		for (ColumnMetadata column : columns) {
 			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
 			if(oldColumn == null) {// 为空标识为新加的列
 				logger.debug("正向: create column");
@@ -624,15 +624,15 @@ public class TableHandler {
 			}
 		}
 		
-		Collection<Column> oldColumns = oldTable.getColumns();
-		for (Column oldColumn_ : oldColumns) {
+		Collection<ColumnMetadata> oldColumns = oldTable.getDeclareColumns();
+		for (ColumnMetadata oldColumn_ : oldColumns) {
 			if(table.getColumnByName(oldColumn_.getName(), false) == null && getColumnByOldName(oldColumn_.getName(), columns) == null) {
 				dropColumn(table.getName(), oldColumn_, connection, tableSqlStatementHandler, dbObjectHolders);
 			}
 		}
 	}
 	// 是否修改列
-	private boolean isModifyColumn(TableMetadata table, Column column, Column oldColumn) {
+	private boolean isModifyColumn(TableMetadata table, ColumnMetadata column, ColumnMetadata oldColumn) {
 		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
 			boolean isModifyColumn = false;
 			if(column.getDataType() != oldColumn.getDataType()) {
@@ -661,12 +661,12 @@ public class TableHandler {
 		return isModifyColumn_simpleValidate(column, oldColumn);
 	}
 	// 是否修改列(简单判断)
-	private boolean isModifyColumn_simpleValidate(Column column, Column oldColumn) {
+	private boolean isModifyColumn_simpleValidate(ColumnMetadata column, ColumnMetadata oldColumn) {
 		return column.getDataType() != oldColumn.getDataType() || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
 	}
 	// 根据列的oldName, 查询列对象
-	private Column getColumnByOldName(String oldColumnName, Collection<Column> columns) {
-		for (Column column : columns) {
+	private ColumnMetadata getColumnByOldName(String oldColumnName, Collection<ColumnMetadata> columns) {
+		for (ColumnMetadata column : columns) {
 			if(column.getOldName().equals(oldColumnName)) {
 				return column;
 			}

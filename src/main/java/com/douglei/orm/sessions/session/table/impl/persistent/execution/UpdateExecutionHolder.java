@@ -31,7 +31,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : codes) {
-			if(!tableMetadata.isPrimaryKeyColumnMetadata(code)) {
+			if(!tableMetadata.isPrimaryKeyColumnByCode(code)) {
 				value = propertyMap.get(code);
 				if(value != null) {// 只修改不为空的值
 					if(isFirst) {
@@ -40,7 +40,7 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 						updateSql.append(", ");
 					}
 					
-					columnMetadata = tableMetadata.getColumnMetadata(code);
+					columnMetadata = tableMetadata.getColumnByCode(code);
 					
 					updateSql.append(columnMetadata.getName()).append("=?");
 					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
@@ -55,11 +55,11 @@ public class UpdateExecutionHolder extends TableExecutionHolder{
 	// 当存在primaryKey时, set对应的where sql语句
 	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, ColumnMetadata columnMetadata) {
 		updateSql.append(" where ");
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnMetadataCodes();
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
 		int size = primaryKeyColumnMetadataCodes.size();
 		byte index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			columnMetadata = tableMetadata.getPrimaryKeyColumnMetadata(pkCode);
+			columnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), columnMetadata.getDataTypeHandler()));

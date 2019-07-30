@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.entity;
+package com.douglei.orm.core.metadata.table;
 
 import java.io.Serializable;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.douglei.orm.core.dialect.impl.oracle.db.table;
 
-import com.douglei.orm.core.dialect.db.table.entity.Constraint;
 import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
+import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.tools.utils.StringUtil;
 
 /**
