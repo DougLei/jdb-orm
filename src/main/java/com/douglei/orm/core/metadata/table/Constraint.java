@@ -18,7 +18,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
-	private static final long serialVersionUID = 1567281866700788439L;
+	private static final long serialVersionUID = 8740901502006722700L;
 	
 	private String name;// (前缀+表名+列名)
 	private ColumnMetadata column;// 记录第一个add的列对象

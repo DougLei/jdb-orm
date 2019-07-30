@@ -77,7 +77,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 		}
 		
 		if(value == null) {
-			value = defaultValue;
+			value = DefaultValueHandler.getDefaultValue(defaultValue);
 		}
 		doValidate(value);
 		return value;

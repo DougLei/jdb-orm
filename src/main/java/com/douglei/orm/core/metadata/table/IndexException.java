@@ -5,7 +5,7 @@ package com.douglei.orm.core.metadata.table;
  * @author DougLei
  */
 public class IndexException extends RuntimeException{
-	private static final long serialVersionUID = 3636317294839120442L;
+	private static final long serialVersionUID = -1207383002835624549L;
 
 	public IndexException(String message) {
 		super(message);

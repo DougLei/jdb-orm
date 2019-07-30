@@ -11,8 +11,8 @@ import com.douglei.orm.core.dialect.DialectType;
  * @author DougLei
  */
 public class Index implements Serializable{
-	private static final long serialVersionUID = 6729441929256756138L;
-	
+	private static final long serialVersionUID = -558201651567272757L;
+
 	private String tableName;// 表名
 	
 	private String name;// 索引名

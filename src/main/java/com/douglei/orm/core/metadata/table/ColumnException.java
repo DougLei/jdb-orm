@@ -5,7 +5,7 @@ package com.douglei.orm.core.metadata.table;
  * @author DougLei
  */
 public class ColumnException extends RuntimeException{
-	private static final long serialVersionUID = -7880113402940567688L;
+	private static final long serialVersionUID = -7672396128148206936L;
 
 	public ColumnException(String message) {
 		super(message);

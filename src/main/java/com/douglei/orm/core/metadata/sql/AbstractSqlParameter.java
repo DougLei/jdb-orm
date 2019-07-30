@@ -20,7 +20,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlParameter implements Serializable{
-	private static final long serialVersionUID = 7832943566086284261L;
+	private static final long serialVersionUID = -7947921907711909432L;
 	
 	protected String configurationText;
 	protected Map<String, String> propertyMap; // 根据configurationText解析出来的<属性:值>map集合
