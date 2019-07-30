@@ -2,7 +2,6 @@ package com.douglei.orm.core.metadata.sql;
 
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.db.sql.entity.AbstractSqlParameter;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.validate.ValidateException;
@@ -26,11 +25,6 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 		return name;
 	}
 	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.SQL_PARAMETER;
-	}
-
 	@Override
 	public String toString() {
 		return "SqlParameterMetadata [configurationText=" + configurationText + ", propertyMap=" + propertyMap
@@ -102,5 +96,10 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 				}
 			}
 		}
+	}
+	
+	@Override
+	public MetadataType getMetadataType() {
+		return MetadataType.SQL_PARAMETER;
 	}
 }

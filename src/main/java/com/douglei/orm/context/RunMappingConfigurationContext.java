@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.core.dialect.db.table.handler.TableHandler;
+import com.douglei.orm.core.dialect.db.table.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;

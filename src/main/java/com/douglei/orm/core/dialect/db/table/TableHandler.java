@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler;
+package com.douglei.orm.core.dialect.db.table;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,11 +16,11 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectHolder;
-import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectOPType;
-import com.douglei.orm.core.dialect.db.table.handler.dbobject.DBObjectType;
-import com.douglei.orm.core.dialect.db.table.handler.serializationobject.SerializeObjectHolder;
-import com.douglei.orm.core.dialect.db.table.handler.tablemapping.TableMappingHolder;
+import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectHolder;
+import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectOPType;
+import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectType;
+import com.douglei.orm.core.dialect.db.table.serializationobject.SerializeObjectHolder;
+import com.douglei.orm.core.dialect.db.table.tablemapping.TableMappingHolder;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.orm.core.metadata.table.Index;

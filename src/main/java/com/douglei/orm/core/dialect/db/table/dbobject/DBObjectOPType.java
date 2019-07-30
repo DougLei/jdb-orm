@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler.dbobject;
+package com.douglei.orm.core.dialect.db.table.dbobject;
 
 /**
  * 数据库对象操作类型

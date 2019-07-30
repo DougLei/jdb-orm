@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler.serializationobject;
+package com.douglei.orm.core.dialect.db.table.serializationobject;
 
 /**
  * 序列化操作类型

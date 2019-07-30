@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler;
+package com.douglei.orm.core.dialect.db.table;
 
 import java.io.File;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.core.dialect.db.table.handler.serializationobject.SerializeObjectHolder;
+import com.douglei.orm.core.dialect.db.table.serializationobject.SerializeObjectHolder;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 

@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler;
+package com.douglei.orm.core.dialect.db.table;
 
 /**
  * 列修改异常

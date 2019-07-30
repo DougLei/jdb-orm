@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler.dbobject;
+package com.douglei.orm.core.dialect.db.table.dbobject;
 
 
 /**

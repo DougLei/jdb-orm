@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table.handler.tablemapping;
+package com.douglei.orm.core.dialect.db.table.tablemapping;
 
 import java.util.List;
 

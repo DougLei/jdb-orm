@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.sql.entity;
+package com.douglei.orm.core.metadata.sql;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -12,9 +12,6 @@ import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
-import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
-import com.douglei.orm.core.metadata.sql.SqlContentType;
-import com.douglei.orm.core.metadata.sql.SqlParameterMode;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 

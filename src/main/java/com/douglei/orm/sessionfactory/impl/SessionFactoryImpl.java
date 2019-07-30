@@ -12,7 +12,7 @@ import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
-import com.douglei.orm.core.dialect.db.table.handler.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.DynamicMapping;
 import com.douglei.orm.sessionfactory.SessionFactory;
