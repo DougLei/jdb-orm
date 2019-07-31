@@ -35,8 +35,7 @@ import com.douglei.orm.core.metadata.table.Index;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandlerContext;
-import com.douglei.orm.core.metadata.table.pk.PrimaryKeySequence;
-import com.douglei.orm.core.metadata.table.pk.impl.IncrementPrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -320,23 +319,22 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				
 				// 如果是自增类型, 且需要创建主键序列, 则去解析<sequence>元素
-				if(primaryKeyHandler instanceof IncrementPrimaryKeyHandler && DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().needCreatePrimaryKeySequence()) {
-					((IncrementPrimaryKeyHandler)primaryKeyHandler).setPrimaryKeySequence(getPrimaryKeySequence(primaryKeyHandlerElement.element("sequence")));
+				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler && DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().needCreatePrimaryKeySequence()) {
+					setPrimaryKeySequence(primaryKeyHandlerElement.element("sequence"));
 				}
 			}
 		}
 	}
 	
 	/**
-	 * 获取主键序列配置对象
+	 * 设置主键序列配置对象
 	 * @param sequenceElement
-	 * @return
 	 */
-	private PrimaryKeySequence getPrimaryKeySequence(Element sequenceElement) {
+	private void setPrimaryKeySequence(Element sequenceElement) {
 		if(sequenceElement != null) {
 			// TODO 
+			tableMetadata.setPrimaryKeySequence(null);
 		}
-		return null;
 	}
 
 	@Override

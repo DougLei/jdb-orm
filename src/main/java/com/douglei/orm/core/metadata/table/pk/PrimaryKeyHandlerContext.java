@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.table.pk;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.core.metadata.table.pk.impl.IncrementPrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.UUID32PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.UUID36PrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
@@ -16,9 +16,12 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
 public class PrimaryKeyHandlerContext {
 	private static final Map<String, PrimaryKeyHandler> handlers = new HashMap<String, PrimaryKeyHandler>(4);
 	static {
-		handlers.put("uuid32", new UUID32PrimaryKeyHandler());
-		handlers.put("uuid36", new UUID36PrimaryKeyHandler());
-		handlers.put("increment", new IncrementPrimaryKeyHandler());
+		registerHandler(new UUID32PrimaryKeyHandler());
+		registerHandler(new UUID36PrimaryKeyHandler());
+		registerHandler(new SequencePrimaryKeyHandler());
+	}
+	private static void registerHandler(PrimaryKeyHandler handler) {
+		handlers.put(handler.getName(), handler);
 	}
 	
 	/**
@@ -33,7 +36,7 @@ public class PrimaryKeyHandlerContext {
 		PrimaryKeyHandler handler = handlers.get(primaryKeyHandler);
 		if(handler == null) {
 			handler = (PrimaryKeyHandler) ConstructorUtil.newInstance(primaryKeyHandler);
-			handlers.put(handler.getName(), handler);
+			registerHandler(handler);
 		}
 		return handler;
 	}

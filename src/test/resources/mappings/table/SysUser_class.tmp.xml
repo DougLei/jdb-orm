@@ -51,9 +51,9 @@
 			</index>
 		</indexes>
 		
-		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, increment, 或自定义的类(继承 {@link PrimaryKeyHandler}) -->
-		<primaryKeyHandler type="increment">
-			<!-- 序列, 当上面的类型是increment时, 该配置才生效 -->
+		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, sequence, 或自定义的类(继承 {@link PrimaryKeyHandler}) -->
+		<primaryKeyHandler type="sequence">
+			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
 			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
 			<!-- destroy是否销毁, 指表在被drop时是否删除该序列, 默认值为true  -->
 			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop(如果destroy配置了false, 则不会被跟着drop), 其余时候, 不会有任何处理 -->

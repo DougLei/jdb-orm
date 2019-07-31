@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.douglei.orm.configuration.environment.mapping.table.ColumnConfigurationException;
@@ -15,6 +16,7 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeySequence;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -35,6 +37,7 @@ public class TableMetadata implements Metadata{
 	
 	private Map<String, ColumnMetadata> primaryKeyColumns_;// 主键列<code: 列>
 	private PrimaryKeyHandler primaryKeyHandler;
+	private PrimaryKeySequence primaryKeySequence;
 	
 	private byte validateColumnLength;// 需要验证列的数量
 	private Map<String, ColumnMetadata> validateColumns;// 需要验证列<code: 列>
@@ -226,7 +229,11 @@ public class TableMetadata implements Metadata{
 	 */
 	public void setPrimaryKeyValue2EntityMap(Map<String, Object> entityMap) {
 		if(primaryKeyHandler != null) {
-			primaryKeyColumns_.forEach((code, column) -> primaryKeyHandler.setValue2EntityMap(code, column, entityMap));
+			for (Entry<String, ColumnMetadata> entry : primaryKeyColumns_.entrySet()) {
+				if(!primaryKeyHandler.setValue2EntityMap(entry.getKey(), entry.getValue(), primaryKeyColumns_, this, entityMap, primaryKeySequence)) {
+					return;
+				}
+			}
 		}
 	}
 	
@@ -262,6 +269,9 @@ public class TableMetadata implements Metadata{
 	}
 	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
 		this.primaryKeyHandler = primaryKeyHandler;
+	}
+	public void setPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) {
+		this.primaryKeySequence = primaryKeySequence;
 	}
 
 	// 获取列的code集合

@@ -31,7 +31,7 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 		
 		boolean isFirst = true;
 		Object value = null;
-		ColumnMetadata columnMetadata = null;
+		ColumnMetadata column = null;
 		Set<String> codes = propertyMap.keySet();
 		for (String code : codes) {
 			value = propertyMap.get(code);
@@ -42,17 +42,16 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 					insertSql.append(",");
 					values.append(",");
 				}
+				column = tableMetadata.getColumnByCode(code);
+
+				// TODO
 				
-				columnMetadata = tableMetadata.getColumnByCode(code);
-				
-				insertSql.append(columnMetadata.getName());
+				insertSql.append(column.getName());
 				values.append("?");
-				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+				parameters.add(new InputSqlParameter(value, column.getDataTypeHandler()));
 			}
 		}
-		
 		insertSql.append(")").append(values).append(")");
-		
 		this.sql = insertSql.toString();
 	}
 }
