@@ -6,6 +6,7 @@ import java.util.Map;
 import com.douglei.orm.core.metadata.table.pk.impl.IncrementPrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.UUID32PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.UUID36PrimaryKeyHandler;
+import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -26,10 +27,13 @@ public class PrimaryKeyHandlerContext {
 	 * @return
 	 */
 	public static PrimaryKeyHandler getHandler(String primaryKeyHandler) {
+		if(StringUtil.isEmpty(primaryKeyHandler)) {
+			return null;
+		}
 		PrimaryKeyHandler handler = handlers.get(primaryKeyHandler);
 		if(handler == null) {
 			handler = (PrimaryKeyHandler) ConstructorUtil.newInstance(primaryKeyHandler);
-			handlers.put(handler.getClass().getName(), handler);
+			handlers.put(handler.getName(), handler);
 		}
 		return handler;
 	}

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
+import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -54,9 +55,9 @@ public abstract class TableExecutionHolder implements ExecutionHolder {
 	
 	@Override
 	public String toString() {
-		return "\n" + 
-				(StringUtil.isEmpty(sql)?"sql is null":sql) + 
-				" \n------------------------------------------------------------\n " + 
-				((parameters==null || parameters.size()==0)?"parameters is null":parameters.toString());
+		return "\n" + getClass().getName() +
+			   "\n" + (StringUtil.isEmpty(sql)?"sql is null":sql) + 
+			   "\n" + (Collections.isEmpty(parameters)?"parameters is null":parameters.toString()) + 
+			   "\n";
 	}
 }

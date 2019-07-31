@@ -5,9 +5,7 @@
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
-			
-			<!-- primaryKeyHandler主键的处理器, 包括的值user, uuid36, uuid32, increment, 默认为user, 用户自定义, 即需要用户手动进行setId()操作 -->
-			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyHandler="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
+			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
@@ -40,19 +38,29 @@
 			);
 		 -->
 		<constraints>
-			<!-- type = PRIMARY_KEY(primaryKeyHandler), UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
-			<constraint primaryKeyHandler="" type="" value="" expression="" fkTableName="" fkColumnName="">
+			<!-- type = PRIMARY_KEY, UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
+			<constraint type="" value="" expression="" fkTableName="" fkColumnName="">
 				<column-name value="" />
 			</constraint>
 		</constraints>
 		
-		<!-- 序列, 对应上面primaryKeyType=increment, 且是oracle数据库时 -->
-		<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
-		<!-- destroyType销毁方式, 即在表被删除时怎样处理该序列: none(不处理),drop(删除), reset(重置)  -->
-		<sequence name="" destroyType="">
-			<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
-			<resetSql></resetSql><!-- 如果不配置, 则使用系统默认的重置语句 -->
-			<!--  drop sequence ddd 语句没有特殊化, 所以不用配置, 系统提供 -->
-		</sequence>
+		<indexes>
+			<index name="">
+				<createSql dialect=""></createSql>
+				<dropSql dialect=""></dropSql>
+			</index>
+		</indexes>
+		
+		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, increment, 或自定义的类(继承 {@link PrimaryKeyHandler}) -->
+		<primaryKeyHandler type="increment">
+			<!-- 序列, 当上面的类型是increment时, 该配置才生效 -->
+			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
+			<!-- destroy是否销毁, 指表在被drop时是否删除该序列, 默认值为true  -->
+			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop(如果destroy配置了false, 则不会被跟着drop), 其余时候, 不会有任何处理 -->
+			<sequence name="" destroy="true">
+				<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
+				<!--  drop sequence ddd 语句没有特殊化, 所以不用配置, 系统提供 -->
+			</sequence>
+		</primaryKeyHandler>
 	</table>
 </mapping-configuration>

@@ -73,9 +73,6 @@ public class XmlConfiguration implements Configuration {
 			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
 			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
 		} catch (Exception e) {
-			if(logger.isDebugEnabled()) {
-				e.printStackTrace();
-			}
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
 				destroy();
@@ -117,9 +114,6 @@ public class XmlConfiguration implements Configuration {
 				environment.destroy();
 			}
 		} catch (Exception e) {
-			if(logger.isDebugEnabled()) {
-				e.printStackTrace();
-			}
 			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
 		}

@@ -6,7 +6,6 @@ import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -26,7 +25,6 @@ public class ColumnMetadata implements Metadata{
 	private short precision;// 精度
 	private boolean nullabled;// 是否可为空
 	private boolean primaryKey;// 是否是主键
-	private PrimaryKeyHandler primaryKeyHandler;// 主键类型
 	private boolean unique;// 是否唯一
 	private String defaultValue;// 默认值
 	private String check;// 检查约束表达式
@@ -37,7 +35,7 @@ public class ColumnMetadata implements Metadata{
 	private ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, PrimaryKeyHandler primaryKeyHandler, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
 		
 		this.property = StringUtil.isEmpty(property)?null:property;
@@ -50,7 +48,7 @@ public class ColumnMetadata implements Metadata{
 		set2ForeginKeyConstraint(fkTableName, fkColumnName);
 		
 		processDataType(DataType.toValue(dataType), dataType, length, precision);
-		set2PrimaryKeyConstraint(primaryKey, primaryKeyHandler);
+		set2PrimaryKeyConstraint(primaryKey);
 	}
 	
 	// 设置name的同时, 对name进行验证
@@ -73,9 +71,8 @@ public class ColumnMetadata implements Metadata{
 	}
 	
 	// 设置主键约束
-	public void set2PrimaryKeyConstraint(boolean primaryKey, PrimaryKeyHandler primaryKeyHandler) {
+	public void set2PrimaryKeyConstraint(boolean primaryKey) {
 		this.primaryKey = primaryKey;
-		this.primaryKeyHandler = primaryKeyHandler;
 		if(primaryKey) {
 			this.nullabled = false;// 如果是主键, 则不能为空
 			this.unique = false;// 如果是主键, 则不需要设置唯一
@@ -175,9 +172,6 @@ public class ColumnMetadata implements Metadata{
 	}
 	public boolean isPrimaryKey() {
 		return primaryKey;
-	}
-	public PrimaryKeyHandler getPrimaryKeyHandler() {
-		return primaryKeyHandler;
 	}
 	public short getLength() {
 		return length;

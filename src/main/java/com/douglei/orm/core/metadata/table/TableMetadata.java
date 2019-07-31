@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.douglei.orm.configuration.environment.mapping.table.ColumnConfigurationException;
+import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
+import com.douglei.orm.configuration.environment.mapping.table.IndexConfigurationException;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -30,6 +34,7 @@ public class TableMetadata implements Metadata{
 	private Map<String, ColumnMetadata> columns_;// 列<code: 列>
 	
 	private Map<String, ColumnMetadata> primaryKeyColumns_;// 主键列<code: 列>
+	private PrimaryKeyHandler primaryKeyHandler;
 	
 	private byte validateColumnLength;// 需要验证列的数量
 	private Map<String, ColumnMetadata> validateColumns;// 需要验证列<code: 列>
@@ -87,7 +92,7 @@ public class TableMetadata implements Metadata{
 		if(columns == null) {
 			columns = new HashMap<String, ColumnMetadata>();
 		}else if(columns.containsKey(column.getName())) {
-			throw new ColumnException("列名"+column.getName()+"重复");
+			throw new ColumnConfigurationException("列名"+column.getName()+"重复");
 		}
 		columns.put(column.getName(), column);
 		addConstraint(column);
@@ -155,7 +160,7 @@ public class TableMetadata implements Metadata{
 		if(constraints == null) {
 			constraints = new HashMap<String, Constraint>(8);
 		}else if(constraints.containsKey(constraint.getName())) {
-			throw new ConstraintException("约束名"+constraint.getName()+"重复");
+			throw new ConstraintConfigurationException("约束名"+constraint.getName()+"重复");
 		}
 		if(constraint.getConstraintType() == ConstraintType.PRIMARY_KEY) {
 			validatePrimaryKeyColumnExists();
@@ -172,7 +177,7 @@ public class TableMetadata implements Metadata{
 		if(indexes == null) {
 			indexes = new HashMap<String, Index>(8);
 		}else if(indexes.containsKey(index.getName())) {
-			throw new IndexException("索引名"+index.getName()+"重复");
+			throw new IndexConfigurationException("索引名"+index.getName()+"重复");
 		}
 		indexes.put(index.getName(), index);
 	}
@@ -216,6 +221,16 @@ public class TableMetadata implements Metadata{
 	}
 	
 	/**
+	 * 给实体map设置主键值
+	 * @param entityMap
+	 */
+	public void setPrimaryKeyValue2EntityMap(Map<String, Object> entityMap) {
+		if(primaryKeyHandler != null) {
+			primaryKeyColumns_.forEach((code, column) -> primaryKeyHandler.setValue2EntityMap(code, column, entityMap));
+		}
+	}
+	
+	/**
 	 * <pre>
 	 * 	如果指定了className, 则返回className
 	 * 	否则返回name, 即表名
@@ -245,7 +260,10 @@ public class TableMetadata implements Metadata{
 	public boolean classNameEmpty() {
 		return StringUtil.isEmpty(className);
 	}
-	
+	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
+		this.primaryKeyHandler = primaryKeyHandler;
+	}
+
 	// 获取列的code集合
 	public Set<String> getColumnCodes() {
 		return columns_.keySet();
@@ -270,6 +288,10 @@ public class TableMetadata implements Metadata{
 	// 根据code判断是否是主键列
 	public boolean isPrimaryKeyColumnByCode(String code) {
 		return primaryKeyColumns_.containsKey(code);
+	}
+	// 获取主键列的数量
+	public int getPrimaryKeyCount() {
+		return primaryKeyColumns_.size();
 	}
 	
 	// 根据code获取要验证的列

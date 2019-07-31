@@ -20,7 +20,7 @@ public class DeleteExecutionHolder extends TableExecutionHolder{
 
 	@Override
 	protected void initializeInstance() {
-		StringBuilder deleteSql = new StringBuilder(256);
+		StringBuilder deleteSql = new StringBuilder(200);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
 		if(tableMetadata.existsPrimaryKey()) {

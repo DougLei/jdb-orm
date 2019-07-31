@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.db.features;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
@@ -12,18 +13,40 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 public abstract class DBFeatures {
 	
 	/**
+	 * 是否需要创建主键序列, 目前主要是oracle
+	 * 默认是false
+	 * @return
+	 */
+	public boolean needCreatePrimaryKeySequence() {
+		return false;
+	}
+	
+	/**
 	 * <pre>
-	 * 	存储过程支持直接返回 ResultSet
+	 * 	支持存储过程直接返回 ResultSet
 	 * 	即存储过程中编写 select语句, 执行该存储过程后, 会展示出该select结果集, 例如sqlserver数据库, mysql数据库
 	 * 	像oracle数据库, 是必须通过输出参数才能返回结果集(cursor类型)
+	 * 	默认是true
 	 * </pre>
 	 * @return
 	 */
-	public abstract boolean procedureSupportDirectlyReturnResultSet();
+	public boolean supportProcedureDirectlyReturnResultSet() {
+		return true;
+	}
 
 	
+	/**
+	 * 支持列类型转换的集合
+	 */
 	protected Map<DBDataType, DBDataType[]> supportColumnDBDataTypeConvertMap;
-	protected abstract void initSupportColumnDBDataTypeConvertMap();
+	
+	/**
+	 * 初始化支持列类型转换的集合
+	 * 默认实现为空
+	 */
+	protected void initSupportColumnDBDataTypeConvertMap() {
+		supportColumnDBDataTypeConvertMap = new HashMap<DBDataType, DBDataType[]>(1);
+	}
 	
 	/**
 	 * 是否支持改变列的数据类型

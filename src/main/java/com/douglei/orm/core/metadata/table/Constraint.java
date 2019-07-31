@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
+import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
@@ -47,7 +47,7 @@ public class Constraint implements Serializable{
 			columns = new HashMap<String, ColumnMetadata>(constraintType.supportColumnCount());
 			this.column = column;
 		}else if(columns.containsKey(column.getName())) {
-			throw new ConstraintException("在同一个["+this.constraintType.name()+"]约束中, 出现重复的列["+column.getName()+"]");
+			throw new ConstraintConfigurationException("在同一个["+this.constraintType.name()+"]约束中, 出现重复的列["+column.getName()+"]");
 		}
 		columns.put(column.getName(), column);
 		processColumnMetadata(column);
@@ -142,7 +142,7 @@ public class Constraint implements Serializable{
 	// 验证数据类型是否符合创建约束
 	private void validateDataType(DataTypeHandler dataType) {
 		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
-			throw new ConstraintException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
+			throw new ConstraintConfigurationException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
 		}
 	}
 	// 设置约束名
@@ -175,27 +175,27 @@ public class Constraint implements Serializable{
 			processConstraint();
 			return defaultValue;
 		}
-		throw new UnsupportConstraintConfigurationException("非默认值约束, 而是["+constraintType.name()+"]约束, 无法获取默认值");
+		throw new ConstraintConfigurationException("非默认值约束, 而是["+constraintType.name()+"]约束, 无法获取默认值");
 	}
 	public String getCheck() {
 		if(constraintType == ConstraintType.CHECK) {
 			processConstraint();
 			return check;
 		}
-		throw new UnsupportConstraintConfigurationException("非检查约束, 而是["+constraintType.name()+"]约束, 无法获取检查约束表达式");
+		throw new ConstraintConfigurationException("非检查约束, 而是["+constraintType.name()+"]约束, 无法获取检查约束表达式");
 	}
 	public String getFkTableName() {
 		if(constraintType == ConstraintType.FOREIGN_KEY) {
 			processConstraint();
 			return fkTableName;
 		}
-		throw new UnsupportConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键表名");
+		throw new ConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键表名");
 	}
 	public String getFkColumnName() {
 		if(constraintType == ConstraintType.FOREIGN_KEY) {
 			processConstraint();
 			return fkColumnName;
 		}
-		throw new UnsupportConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键列名");
+		throw new ConstraintConfigurationException("非外键约束, 而是["+constraintType.name()+"]约束, 无法获取关联的外键列名");
 	}
 }

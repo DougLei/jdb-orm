@@ -20,12 +20,13 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 	
 	@Override
 	protected void initializeInstance() {
-		StringBuilder insertSql = new StringBuilder(256);
+		StringBuilder insertSql = new StringBuilder(300);
 		insertSql.append("insert into ").append(tableMetadata.getName()).append("(");
 		
 		StringBuilder values = new StringBuilder();
 		values.append(" values(");
 		
+		tableMetadata.setPrimaryKeyValue2EntityMap(propertyMap);
 		parameters = new ArrayList<Object>(propertyMap.size());// 使用TableExecutionHolder.parameters属性
 		
 		boolean isFirst = true;

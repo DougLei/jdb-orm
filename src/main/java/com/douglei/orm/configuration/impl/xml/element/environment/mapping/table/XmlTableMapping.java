@@ -13,9 +13,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.mapping.MappingType;
+import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
+import com.douglei.orm.configuration.environment.mapping.table.IndexConfigurationException;
+import com.douglei.orm.configuration.environment.mapping.table.PrimaryKeyHandlerConfigurationException;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.TableMapping;
-import com.douglei.orm.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
@@ -28,13 +30,13 @@ import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
-import com.douglei.orm.core.metadata.table.ConstraintException;
 import com.douglei.orm.core.metadata.table.ConstraintType;
 import com.douglei.orm.core.metadata.table.Index;
-import com.douglei.orm.core.metadata.table.IndexException;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandlerContext;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeySequence;
+import com.douglei.orm.core.metadata.table.pk.impl.IncrementPrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -59,6 +61,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			addColumnMetadata(getColumnElements(tableElement));
 			addConstraint(tableElement.element("constraints"));
 			addIndex(tableElement.element("indexes"));
+			setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
 		}
@@ -171,18 +174,16 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 						throw new NullPointerException("<constraint>元素中的type属性值错误:["+((Element) object).attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
 					}
 					if(columnNames.size() > 1 && constraintType.supportColumnCount() == 1) {
-						throw new ConstraintException("不支持给多个列添加联合["+constraintType.name()+"]约束");
+						throw new ConstraintConfigurationException("不支持给多个列添加联合["+constraintType.name()+"]约束");
 					}
 					
 					constraint = new Constraint(constraintType, tableMetadata.getName());
 					switch(constraintType) {
 						case PRIMARY_KEY:
 							tableMetadata.validatePrimaryKeyColumnExists();
-							String primaryKeyHandler = constraintElement.attributeValue("primaryKeyHandler");
-							PrimaryKeyHandler handler = StringUtil.isEmpty(primaryKeyHandler)?null:PrimaryKeyHandlerContext.getHandler(primaryKeyHandler);
 							for(Object columnName: columnNames) {
 								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase(), true);
-								columnMetadata.set2PrimaryKeyConstraint(true, handler);
+								columnMetadata.set2PrimaryKeyConstraint(true);
 								constraint.addColumn(columnMetadata);
 							}
 						case UNIQUE:
@@ -230,7 +231,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	// 验证指定列是否已经存在主键约束
 	private void isAlreadyExistsPrimaryKeyConstraint(ColumnMetadata column, ConstraintType ct) {
 		if(column.isPrimaryKey()) {
-			throw new UnsupportConstraintConfigurationException("列["+column.getName()+"]为主键列, 禁止配置["+ct.name()+"]约束");
+			throw new ConstraintConfigurationException("列["+column.getName()+"]为主键列, 禁止配置["+ct.name()+"]约束");
 		}
 	}
 	
@@ -257,7 +258,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					createSqlStatements = getIndexSqlStatementMap("create", indexName, currentDialectType, indexElement.elements("createSql"));
 					dropSqlStatements = getIndexSqlStatementMap("drop", indexName, currentDialectType, indexElement.elements("dropSql"));
 					if(!createSqlStatements.keySet().equals(dropSqlStatements.keySet())) {
-						throw new IndexException("索引[" + indexName + "]的create sql语句["+createSqlStatements.size()+"个]["+createSqlStatements.keySet()+"]和drop sql语句["+dropSqlStatements.size()+"个]["+dropSqlStatements.keySet()+"]不匹配");
+						throw new IndexConfigurationException("索引[" + indexName + "]的create sql语句["+createSqlStatements.size()+"个]["+createSqlStatements.keySet()+"]和drop sql语句["+dropSqlStatements.size()+"个]["+dropSqlStatements.keySet()+"]不匹配");
 					}
 					
 					tableMetadata.addIndex(new Index(tableMetadata.getName(), indexName, createSqlStatements, dropSqlStatements));
@@ -304,6 +305,40 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		}
 	}
 	
+	/**
+	 * 设置主键处理器
+	 * @param primaryKeyHandlerElement
+	 */
+	private void setPrimaryKeyHandler(Element primaryKeyHandlerElement) {
+		if(tableMetadata.existsPrimaryKey() && primaryKeyHandlerElement != null) {
+			// 获取主键处理器
+			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
+			if(primaryKeyHandler != null) {
+				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.getPrimaryKeyCount() > 1) {
+					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
+				}
+				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
+				
+				// 如果是自增类型, 且需要创建主键序列, 则去解析<sequence>元素
+				if(primaryKeyHandler instanceof IncrementPrimaryKeyHandler && DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().needCreatePrimaryKeySequence()) {
+					((IncrementPrimaryKeyHandler)primaryKeyHandler).setPrimaryKeySequence(getPrimaryKeySequence(primaryKeyHandlerElement.element("sequence")));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 获取主键序列配置对象
+	 * @param sequenceElement
+	 * @return
+	 */
+	private PrimaryKeySequence getPrimaryKeySequence(Element sequenceElement) {
+		if(sequenceElement != null) {
+			// TODO 
+		}
+		return null;
+	}
+
 	@Override
 	public MappingType getMappingType() {
 		return MappingType.TABLE;
