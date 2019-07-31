@@ -6,8 +6,8 @@
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullabled默认值为true, validate默认值为false -->
 			
-			<!-- primaryKeyType主键的类型, 包括的值user, uuid36, uuid32, increment, 默认为user, 用户自定义, 即需要用户手动进行setId()操作 -->
-			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyType="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
+			<!-- primaryKeyHandler主键的处理器, 包括的值user, uuid36, uuid32, increment, 默认为user, 用户自定义, 即需要用户手动进行setId()操作 -->
+			<column name="id" property="id" dataType="string" primaryKey="true" primaryKeyHandler="" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
@@ -39,6 +39,12 @@
 				name varchar(100)
 			);
 		 -->
+		<constraints>
+			<!-- type = PRIMARY_KEY(primaryKeyHandler), UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
+			<constraint primaryKeyHandler="" type="" value="" expression="" fkTableName="" fkColumnName="">
+				<column-name value="" />
+			</constraint>
+		</constraints>
 		
 		<!-- 序列, 对应上面primaryKeyType=increment, 且是oracle数据库时 -->
 		<!-- name序列名, 如果不指定, 则系统自动生成一个 -->

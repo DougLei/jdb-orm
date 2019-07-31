@@ -6,6 +6,7 @@ import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -23,24 +24,33 @@ public class ColumnMetadata implements Metadata{
 	private String descriptionName;// 描述名
 	private short length;// 长度
 	private short precision;// 精度
-	boolean nullabled;// 是否可为空
-	boolean primaryKey;// 是否是主键
-	PrimaryKeyType primaryKeyType;// 主键类型
-	boolean unique;// 是否唯一
-	String defaultValue;// 默认值
-	String check;// 检查约束表达式
-	String fkTableName;// 外键约束关联的表名
-	String fkColumnName;// 外键约束关联的列名
+	private boolean nullabled;// 是否可为空
+	private boolean primaryKey;// 是否是主键
+	private PrimaryKeyHandler primaryKeyHandler;// 主键类型
+	private boolean unique;// 是否唯一
+	private String defaultValue;// 默认值
+	private String check;// 检查约束表达式
+	private String fkTableName;// 外键约束关联的表名
+	private String fkColumnName;// 外键约束关联的列名
 	private boolean validate;// 是否验证
 	
 	private ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
 	
-	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, PrimaryKeyType primaryKeyType, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, PrimaryKeyHandler primaryKeyHandler, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
-		processDataType(DataType.toValue(dataType), dataType);
-		processOtherPropertyValues(descriptionName, length, precision, nullabled, primaryKey, unique, defaultValue, check, fkTableName, fkColumnName, validate);
+		
 		this.property = StringUtil.isEmpty(property)?null:property;
+		this.descriptionName = StringUtil.isEmpty(descriptionName)?name:descriptionName;
+		this.nullabled = nullabled;
+		this.unique = unique;
+		this.validate = validate;
+		set2DefaultValue(defaultValue);
+		set2CheckConstraint(check);
+		set2ForeginKeyConstraint(fkTableName, fkColumnName);
+		
+		processDataType(DataType.toValue(dataType), dataType, length, precision);
+		set2PrimaryKeyConstraint(primaryKey, primaryKeyHandler);
 	}
 	
 	// 设置name的同时, 对name进行验证
@@ -54,53 +64,61 @@ public class ColumnMetadata implements Metadata{
 		}
 	}
 	
-	// 处理dataTypeHandler和dbDataType的值
-	private void processDataType(DataType dataType, String dataType_) {
+	// 处理数据类型
+	private void processDataType(DataType dataType, String dataType_, short length, short precision) {
 		this.dataTypeHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
 		this.dbDataType = dataTypeHandler.getDBDataType();
+		this.length = dbDataType.correctInputLength(length);
+		this.precision = dbDataType.correctInputPrecision(this.length, precision);
 	}
 	
-	// 处理其他属性值
-	private void processOtherPropertyValues(String descriptionName, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		if(StringUtil.isEmpty(descriptionName)) {
-			descriptionName = name;
-		}
-		this.descriptionName = descriptionName;
-		this.defaultValue = defaultValue;
-		processLengthAndPrecision(length, precision);
-		processPrimaryKeyAndNullabledAndUnique(primaryKey, nullabled, unique);
-		processCheckAndForeignKey(check, fkTableName, fkColumnName);
-		this.validate = validate;
-	}
-	
-	// 处理主键和是否为空和是否唯一的值
-	private void processPrimaryKeyAndNullabledAndUnique(boolean primaryKey, boolean nullabled, boolean unique) {
+	// 设置主键约束
+	public void set2PrimaryKeyConstraint(boolean primaryKey, PrimaryKeyHandler primaryKeyHandler) {
 		this.primaryKey = primaryKey;
+		this.primaryKeyHandler = primaryKeyHandler;
 		if(primaryKey) {
-			this.nullabled = false;
+			this.nullabled = false;// 如果是主键, 则不能为空
 			this.unique = false;// 如果是主键, 则不需要设置唯一
 			this.defaultValue = null;// 如果是主键, 则不能有默认值
-		}else {
-			this.nullabled = nullabled;
-			this.unique = unique;
+			this.check = null;// 如果是主键, 则不能有检查约束
+			this.fkTableName = null;// 如果是主键, 则不能有外键约束
+			this.fkColumnName = null;
 		}
 	}
 	
-	// 处理检查约束值和外键约束值
-	private void processCheckAndForeignKey(String check, String fkTableName, String fkColumnName) {
-		if(StringUtil.notEmpty(check)) {
-			this.check = check;
+	/**
+	 * 设置为唯一约束
+	 */
+	public void set2UniqueConstraint() {
+		this.unique = true;
+	}
+	
+	public void set2DefaultValue(String defaultValue) {
+		if(StringUtil.notEmpty(defaultValue)) {
+			this.defaultValue = defaultValue;
 		}
+	}
+	
+	/**
+	 * 设置检查约束
+	 * @param checkConstraint
+	 */
+	public void set2CheckConstraint(String checkConstraint) {
+		if(StringUtil.notEmpty(checkConstraint)) {
+			this.check = checkConstraint;
+		}
+	}
+	
+	/**
+	 * 设置外键约束
+	 * @param fkTableName
+	 * @param fkColumnName
+	 */
+	public void set2ForeginKeyConstraint(String fkTableName, String fkColumnName) {
 		if(StringUtil.notEmpty(fkTableName) && StringUtil.notEmpty(fkColumnName)) {
 			this.fkTableName = fkTableName;
 			this.fkColumnName = fkColumnName;
 		}
-	}
-	
-	// 处理长度和精度的值
-	private void processLengthAndPrecision(short length, short precision) {
-		this.length = dbDataType.fixInputLength(length);
-		this.precision = dbDataType.fixInputPrecision(this.length, precision);
 	}
 	
 	/**
@@ -117,6 +135,14 @@ public class ColumnMetadata implements Metadata{
 		}else if(!classNameEmpty && property == null){
 			property = ConverterUtil.convert(name, ColumnName2PropertyNameConverter.class);
 		}
+	}
+	
+	/**
+	 * 【慎用】该方法直接强制修改了name属性的值, 没有任何理由
+	 * @param name
+	 */
+	public void forceUpdateName(String name) {
+		this.name = name;
 	}
 	
 	/**
@@ -150,8 +176,8 @@ public class ColumnMetadata implements Metadata{
 	public boolean isPrimaryKey() {
 		return primaryKey;
 	}
-	public PrimaryKeyType getPrimaryKeyType() {
-		return primaryKeyType;
+	public PrimaryKeyHandler getPrimaryKeyHandler() {
+		return primaryKeyHandler;
 	}
 	public short getLength() {
 		return length;
@@ -185,15 +211,6 @@ public class ColumnMetadata implements Metadata{
 	}
 	public boolean isValidate() {
 		return validate;
-	}
-	
-	/**
-	 * <b>【慎用】</b>
-	 * 该方法直接修改了name属性的值, 没有任何理由
-	 * @param name
-	 */
-	public void forceUpdateName(String name) {
-		this.name = name;
 	}
 	
 	@Override

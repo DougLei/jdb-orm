@@ -18,7 +18,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = 3729435886697625186L;
 	
 	private String name;// 表名
 	private String className;// 映射的代码类名
@@ -115,7 +114,7 @@ public class TableMetadata implements Metadata{
 	/**
 	 * 验证主键列是否存在
 	 */
-	private void validatePrimaryKeyColumnExists() {
+	public void validatePrimaryKeyColumnExists() {
 		if(existsPrimaryKey()) {
 			throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
 		}

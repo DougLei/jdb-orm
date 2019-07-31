@@ -7,7 +7,8 @@ import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
-import com.douglei.orm.core.metadata.table.PrimaryKeyType;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandlerContext;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
@@ -29,16 +30,37 @@ public class XmlColumnMetadataValidate implements MetadataValidate{
 		
 		String value = element.attributeValue("length");
 		short length = VerifyTypeMatchUtil.isLimitShort(value)?Short.parseShort(value):0;
+		
 		value = element.attributeValue("precision");
 		short precision = VerifyTypeMatchUtil.isLimitShort(value)?Short.parseShort(value):0;
-		value = element.attributeValue("nullabled");
-		boolean nullabled = VerifyTypeMatchUtil.isBoolean(value)?Boolean.parseBoolean(value):true;
-		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && VerifyTypeMatchUtil.isBoolean(value))?Boolean.parseBoolean(element.attributeValue("validate")):false;
 		
-		return new ColumnMetadata(element.attributeValue("property"), name, element.attributeValue("oldName"), element.attributeValue("descriptionName"), element.attributeValue("dataType"), length, precision, nullabled,
-				Boolean.parseBoolean(element.attributeValue("primaryKey")), PrimaryKeyType.toValue(element.attributeValue("primaryKeyType")),
+		value = element.attributeValue("nullabled");
+		boolean nullabled = value == null?true:Boolean.parseBoolean(value);
+		
+		value = element.attributeValue("validate");
+		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && value != null)?Boolean.parseBoolean(value):false;
+		
+		boolean primaryKey = Boolean.parseBoolean(element.attributeValue("primaryKey"));
+		PrimaryKeyHandler primaryKeyHandler = getHandler(primaryKey, element);
+		
+		return new ColumnMetadata(
+				element.attributeValue("property"), name, element.attributeValue("oldName"), element.attributeValue("descriptionName"), 
+				element.attributeValue("dataType"), length, precision, 
+				nullabled,
+				primaryKey, primaryKeyHandler,
 				Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
-				element.attributeValue("check"), element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"), 
+				element.attributeValue("check"), 
+				element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"), 
 				validate);
+	}
+
+	private PrimaryKeyHandler getHandler(boolean primaryKey, Element element) {
+		if(primaryKey) {
+			String primaryKeyHandler = element.attributeValue("primaryKeyHandler");
+			if(StringUtil.notEmpty(primaryKeyHandler)) {
+				return PrimaryKeyHandlerContext.getHandler(primaryKeyHandler);
+			}
+		}
+		return null;
 	}
 }

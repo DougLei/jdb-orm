@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.TableMapping;
+import com.douglei.orm.configuration.environment.mapping.table.UnsupportConstraintConfigurationException;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
@@ -27,10 +28,13 @@ import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
+import com.douglei.orm.core.metadata.table.ConstraintException;
 import com.douglei.orm.core.metadata.table.ConstraintType;
 import com.douglei.orm.core.metadata.table.Index;
 import com.douglei.orm.core.metadata.table.IndexException;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandlerContext;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -166,32 +170,67 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					if(constraintType == null) {
 						throw new NullPointerException("<constraint>元素中的type属性值错误:["+((Element) object).attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
 					}
+					if(columnNames.size() > 1 && constraintType.supportColumnCount() == 1) {
+						throw new ConstraintException("不支持给多个列添加联合["+constraintType.name()+"]约束");
+					}
 					
 					constraint = new Constraint(constraintType, tableMetadata.getName());
 					switch(constraintType) {
 						case PRIMARY_KEY:
+							tableMetadata.validatePrimaryKeyColumnExists();
+							String primaryKeyHandler = constraintElement.attributeValue("primaryKeyHandler");
+							PrimaryKeyHandler handler = StringUtil.isEmpty(primaryKeyHandler)?null:PrimaryKeyHandlerContext.getHandler(primaryKeyHandler);
+							for(Object columnName: columnNames) {
+								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase(), true);
+								columnMetadata.set2PrimaryKeyConstraint(true, handler);
+								constraint.addColumn(columnMetadata);
+							}
 						case UNIQUE:
 							for(Object columnName: columnNames) {
 								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnName).getValue().toUpperCase(), true);
+								isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
+								columnMetadata.set2UniqueConstraint();
 								constraint.addColumn(columnMetadata);
 							}
 							break;
 						case DEFAULT_VALUE:
 							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
-							constraint.addColumn(columnMetadata).setDefaultValue(constraintElement.attributeValue("value"));
+							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
+							columnMetadata.set2DefaultValue(constraintElement.attributeValue("value"));
+							if(columnMetadata.getDefaultValue() == null) {
+								throw new NullPointerException("配置默认值约束, 默认值不能为空");
+							}
+							constraint.addColumn(columnMetadata);
 							break;
 						case CHECK:
 							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
-							constraint.addColumn(columnMetadata).setCheck(constraintElement.attributeValue("expression"));
+							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
+							columnMetadata.set2CheckConstraint(constraintElement.attributeValue("expression"));
+							if(columnMetadata.getCheck() == null) {
+								throw new NullPointerException("配置检查约束, 检查约束的表达式不能为空");
+							}
+							constraint.addColumn(columnMetadata);
 							break;
 						case FOREIGN_KEY:
 							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(((Attribute)columnNames.get(0)).getValue().toUpperCase(), true);
-							constraint.addColumn(columnMetadata).setForeignKey(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
+							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
+							columnMetadata.set2ForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
+							if(columnMetadata.getFkTableName() == null) {
+								throw new NullPointerException("配置外键约束, 关联的表名和列名均不能为空");
+							}
+							constraint.addColumn(columnMetadata);
 							break;
 					}
 					tableMetadata.addConstraint(constraint);
 				}
 			}
+		}
+	}
+	
+	// 验证指定列是否已经存在主键约束
+	private void isAlreadyExistsPrimaryKeyConstraint(ColumnMetadata column, ConstraintType ct) {
+		if(column.isPrimaryKey()) {
+			throw new UnsupportConstraintConfigurationException("列["+column.getName()+"]为主键列, 禁止配置["+ct.name()+"]约束");
 		}
 	}
 	

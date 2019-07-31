@@ -50,7 +50,7 @@ public abstract class DBDataType implements Serializable{
 	 * @param inputLength
 	 * @return
 	 */
-	public short fixInputLength(short inputLength) {
+	public short correctInputLength(short inputLength) {
 		if(this.length == NO_LIMIT) {
 			return NO_LIMIT;
 		}
@@ -66,7 +66,7 @@ public abstract class DBDataType implements Serializable{
 	 * @param inputPrecision
 	 * @return
 	 */
-	public short fixInputPrecision(short inputLength, short inputPrecision) {
+	public short correctInputPrecision(short inputLength, short inputPrecision) {
 		if(this.precision == NO_LIMIT) {
 			return NO_LIMIT;
 		}

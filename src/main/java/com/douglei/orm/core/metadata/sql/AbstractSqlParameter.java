@@ -176,13 +176,13 @@ public abstract class AbstractSqlParameter implements Serializable{
 		if(VerifyTypeMatchUtil.isLimitShort(length)) {
 			this.length = Short.parseShort(length);
 		}
-		this.length = this.dbDataType.fixInputLength(this.length);
+		this.length = this.dbDataType.correctInputLength(this.length);
 	}
 	private void setPrecision(String precision) {
 		if(VerifyTypeMatchUtil.isLimitShort(precision)) {
 			this.precision = Short.parseShort(precision);
 		}
-		this.precision = this.dbDataType.fixInputPrecision(this.length, this.precision);
+		this.precision = this.dbDataType.correctInputPrecision(this.length, this.precision);
 	}
 	private void setNullabled(String nullabled) {
 		if(VerifyTypeMatchUtil.isBoolean(nullabled)) {
