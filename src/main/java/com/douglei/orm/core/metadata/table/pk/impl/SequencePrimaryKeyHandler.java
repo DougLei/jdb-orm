@@ -12,7 +12,8 @@ import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
  * @author DougLei
  */
 public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
-	
+	private static final long serialVersionUID = 8613215141130789619L;
+
 	@Override
 	public boolean supportProcessMultiPKColumns() {
 		return false;

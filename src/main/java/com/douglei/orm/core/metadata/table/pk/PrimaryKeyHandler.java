@@ -1,5 +1,6 @@
 package com.douglei.orm.core.metadata.table.pk;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,8 +12,9 @@ import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
  * 
  * @author DougLei
  */
-public abstract class PrimaryKeyHandler {
-	
+public abstract class PrimaryKeyHandler implements Serializable{
+	private static final long serialVersionUID = -1283935510687315485L;
+
 	/**
 	 * 获取处理器名称
 	 * @return

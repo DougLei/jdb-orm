@@ -1,5 +1,7 @@
 package com.douglei.orm.core.dialect.db.object.pk.sequence;
 
+import java.io.Serializable;
+
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
@@ -8,7 +10,9 @@ import com.douglei.tools.utils.StringUtil;
  * 主键序列
  * @author DougLei
  */
-public abstract class PrimaryKeySequence {
+public abstract class PrimaryKeySequence implements Serializable{
+	private static final long serialVersionUID = 6042801554245330246L;
+	
 	private String name;// 序列名
 	private String createSql;
 	private String dropSql;

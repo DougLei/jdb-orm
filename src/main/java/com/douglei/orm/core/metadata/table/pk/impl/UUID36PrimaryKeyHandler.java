@@ -13,7 +13,8 @@ import com.douglei.tools.utils.IdentityUtil;
  * @author DougLei
  */
 public class UUID36PrimaryKeyHandler extends PrimaryKeyHandler{
-	
+	private static final long serialVersionUID = 6781517677433036200L;
+
 	@Override
 	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence) {
 		primaryKeyColumnCodes.forEach(code -> entityMap.put(code, IdentityUtil.getUUID()));

@@ -13,6 +13,7 @@ import com.douglei.tools.utils.IdentityUtil;
  * @author DougLei
  */
 public class UUID32PrimaryKeyHandler extends PrimaryKeyHandler{
+	private static final long serialVersionUID = -7004062766789548064L;
 
 	@Override
 	public boolean supportProcessMultiPKColumns() {
