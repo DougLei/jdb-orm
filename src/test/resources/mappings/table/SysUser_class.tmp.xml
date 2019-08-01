@@ -10,35 +10,7 @@
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
 		</columns>
-		
-		
-		
-		<!-- 
-			sqlserver
-			create table ddd(
-				id int identity primary key,
-				name varchar(100)
-			);
-			
-			oracle
-			create sequence ddd
-		       increment by 1
-		       start with 1
-		       nomaxvalue
-		       nocycle
-		       cache 10;
-		       
-		       drop sequence ddd
-		       
-		       select ddd.nextval from dual;
-			
-			
-			mysql
-			create table ddd (
-				id int auto_increment not null primary key,
-				name varchar(100)
-			);
-		 -->
+
 		<constraints>
 			<!-- type = PRIMARY_KEY, UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
 			<constraint type="" value="" expression="" fkTableName="" fkColumnName="">
