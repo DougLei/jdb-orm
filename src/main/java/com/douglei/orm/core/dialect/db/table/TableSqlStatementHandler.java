@@ -38,6 +38,9 @@ public abstract class TableSqlStatementHandler {
 		for (ColumnMetadata column : columns) {
 			sql.append(column.getName()).append(" ");
 			sql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+			if(column.isPrimaryKeySequence()) {
+				sql.append(primaryKeySequenceSqlKeyword()).append(" ");
+			}
 			if(!column.isNullabled()) {
 				sql.append("not null");
 			}
@@ -48,6 +51,12 @@ public abstract class TableSqlStatementHandler {
 		return sql.toString();
 	}
 	
+	/**
+	 * 主键序列的sql关键字
+	 * @return
+	 */
+	protected abstract String primaryKeySequenceSqlKeyword();
+
 	/**
 	 * 获取drop table的sql语句
 	 * @param tableName

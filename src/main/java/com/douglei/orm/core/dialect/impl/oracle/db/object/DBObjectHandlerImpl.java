@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.core.dialect.impl.oracle.db.object.pk.sequence.OraclePrimaryKeySequence;
 
 /**
  * 
@@ -21,5 +23,11 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 		parameters.add(dbObjectName);
 		parameters.add(dbObjectType.name());
 		return "select count(1) from user_objects where object_name = ? and object_type = ?";
+	}
+
+	@Override
+	public PrimaryKeySequence createPrimaryKeySequence(String tableName, String primaryKeyColumnName, String name, String createSql, String dropSql) {
+		// TODO 创建oracle主键序列对象
+		return new OraclePrimaryKeySequence();
 	}
 }

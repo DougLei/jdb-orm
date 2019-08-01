@@ -16,7 +16,7 @@
 		<!-- 
 			sqlserver
 			create table ddd(
-				id int identity primary key,
+				id int  primary key,
 				name varchar(100)
 			);
 			
@@ -27,6 +27,8 @@
 		       nomaxvalue
 		       nocycle
 		       cache 10;
+		       
+		       drop sequence ddd
 		       
 		       select ddd.nextval from dual;
 			
@@ -55,11 +57,10 @@
 		<primaryKeyHandler type="sequence">
 			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
 			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
-			<!-- destroy是否销毁, 指表在被drop时是否删除该序列, 默认值为true  -->
-			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop(如果destroy配置了false, 则不会被跟着drop), 其余时候, 不会有任何处理 -->
-			<sequence name="" destroy="true">
+			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop, 其余时候, 不会有任何处理 -->
+			<sequence name="">
 				<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
-				<!--  drop sequence ddd 语句没有特殊化, 所以不用配置, 系统提供 -->
+				<dropSql></dropSql><!-- 如果不配置, 则使用系统默认的删除语句 -->
 			</sequence>
 		</primaryKeyHandler>
 	</table>

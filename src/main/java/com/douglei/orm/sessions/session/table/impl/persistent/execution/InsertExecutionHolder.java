@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
@@ -44,11 +45,13 @@ public class InsertExecutionHolder extends TableExecutionHolder{
 				}
 				column = tableMetadata.getColumnByCode(code);
 
-				// TODO
-				
 				insertSql.append(column.getName());
-				values.append("?");
-				parameters.add(new InputSqlParameter(value, column.getDataTypeHandler()));
+				if(value instanceof PrimaryKeySequence) {
+					values.append(((PrimaryKeySequence)value).getNextvalSql());
+				}else {
+					values.append("?");
+					parameters.add(new InputSqlParameter(value, column.getDataTypeHandler()));
+				}
 			}
 		}
 		insertSql.append(")").append(values).append(")");

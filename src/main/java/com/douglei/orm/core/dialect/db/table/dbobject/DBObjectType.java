@@ -8,5 +8,6 @@ public enum DBObjectType {
 	TABLE,
 	COLUMN,
 	CONSTRAINT,
-	INDEX;
+	INDEX,
+	PRIMARY_KEY_SEQUENCE;
 }

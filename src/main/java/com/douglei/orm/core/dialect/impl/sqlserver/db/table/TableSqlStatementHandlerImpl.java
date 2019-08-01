@@ -15,10 +15,14 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	// --------------------------------------------------------------------------------------------
 	@Override
 	public String tableExistsQueryPreparedSqlStatement() {
-		return tableExistsQuerySql;
+		return "select count(1) from sysobjects where id = object_id(?) and type = 'U'";
 	}
-	private static final String tableExistsQuerySql = "select count(1) from sysobjects where id = object_id(?) and type = 'U'";
 	
+	@Override
+	protected String primaryKeySequenceSqlKeyword() {
+		return "identity";
+	}
+
 	@Override
 	public String tableRenameSqlStatement(String originTableName, String targetTableName) {
 		StringBuilder tmpSql = new StringBuilder(80);

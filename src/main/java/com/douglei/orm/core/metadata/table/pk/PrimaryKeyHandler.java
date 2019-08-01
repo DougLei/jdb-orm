@@ -1,8 +1,9 @@
 package com.douglei.orm.core.metadata.table.pk;
 
 import java.util.Map;
+import java.util.Set;
 
-import com.douglei.orm.core.metadata.table.ColumnMetadata;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 
@@ -31,13 +32,10 @@ public abstract class PrimaryKeyHandler {
 	
 	/**
 	 * 给实体map设置主键值
-	 * @param code 当前操作的主键列的code
-	 * @param column 当前操作的主键列
-	 * @param primaryKeyColumns 当前操作的所有主键列集合
+	 * @param primaryKeyColumnCodes 当前操作的所有主键列code集合
 	 * @param table 当前操作的主键列所属的表
 	 * @param entityMap 当前操作的实体map
 	 * @param primaryKeySequence 主键序列对象, 针对 {@link SequencePrimaryKeyHandler}
-	 * @return 是否继续, 返回false则停止设置主键值的操作
 	 */
-	public abstract boolean setValue2EntityMap(String code, ColumnMetadata column, Map<String, ColumnMetadata> primaryKeyColumns, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence);
+	public abstract void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence);
 }

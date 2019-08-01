@@ -31,6 +31,7 @@ public class ColumnMetadata implements Metadata{
 	private String fkTableName;// 外键约束关联的表名
 	private String fkColumnName;// 外键约束关联的列名
 	private boolean validate;// 是否验证
+	private boolean isPrimaryKeySequence;// 是否是主键序列
 	
 	private ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
@@ -116,6 +117,13 @@ public class ColumnMetadata implements Metadata{
 			this.fkTableName = fkTableName;
 			this.fkColumnName = fkColumnName;
 		}
+	}
+	
+	/**
+	 * 设置该列为主键序列
+	 */
+	public void set2PrimaryKeySequence() {
+		this.isPrimaryKeySequence = true;
 	}
 	
 	/**
@@ -206,7 +214,10 @@ public class ColumnMetadata implements Metadata{
 	public boolean isValidate() {
 		return validate;
 	}
-	
+	public boolean isPrimaryKeySequence() {
+		return isPrimaryKeySequence;
+	}
+
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.COLUMN;

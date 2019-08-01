@@ -16,6 +16,7 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectHolder;
 import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectOPType;
 import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectType;
@@ -75,10 +76,10 @@ public class TableHandler {
 	 * @throws SQLException
 	 */
 	private void executeDDLSQL(String ddlSQL, Connection connection) throws SQLException {
+		logger.debug("执行的DDL SQL语句为: {}", ddlSQL);
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			logger.debug("执行的DDL SQL语句为: {}", ddlSQL);
 			statement.execute(ddlSQL);
 		} finally {
 			statement.close();
@@ -264,11 +265,10 @@ public class TableHandler {
 	 * 创建索引
 	 * @param index
 	 * @param connection
-	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void createIndex(Index index, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void createIndex(Index index, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(index.getCreateSqlStatement(), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.CREATE));
@@ -279,14 +279,13 @@ public class TableHandler {
 	 * 创建索引
 	 * @param indexes
 	 * @param connection
-	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void createIndex(Collection<Index> indexes, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void createIndex(Collection<Index> indexes, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(indexes != null) {
 			for (Index index : indexes) {
-				createIndex(index, connection, tableSqlStatementHandler, dbObjectHolders);
+				createIndex(index, connection, dbObjectHolders);
 			}
 		}
 	}
@@ -295,11 +294,10 @@ public class TableHandler {
 	 * 删除索引
 	 * @param index
 	 * @param connection
-	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void dropIndex(Index index, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void dropIndex(Index index, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		executeDDLSQL(index.getDropSqlStatement(), connection);
 		if(dbObjectHolders != null) {
 			dbObjectHolders.add(new DBObjectHolder(index, DBObjectType.INDEX, DBObjectOPType.DROP));
@@ -310,17 +308,51 @@ public class TableHandler {
 	 * 删除索引
 	 * @param indexes
 	 * @param connection
-	 * @param tableSqlStatementHandler
 	 * @param dbObjectHolders
 	 * @throws SQLException
 	 */
-	private void dropIndex(Collection<Index> indexes, Connection connection, TableSqlStatementHandler tableSqlStatementHandler, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+	private void dropIndex(Collection<Index> indexes, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(indexes != null) {
 			for (Index index : indexes) {
-				dropIndex(index, connection, tableSqlStatementHandler, dbObjectHolders);
+				dropIndex(index, connection, dbObjectHolders);
 			}
 		}
 	}
+	
+	
+	/**
+	 * 创建主键序列
+	 * @param primaryKeySequence
+	 * @param connection
+	 * @param dbObjectHolders 
+	 * @throws SQLException 
+	 */
+	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		if(primaryKeySequence != null) {
+			executeDDLSQL(primaryKeySequence.getCreateSqlStatement(), connection);
+			if(dbObjectHolders != null) {
+				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.CREATE));
+			}
+		}
+	}
+
+	/**
+	 * 删除主键序列
+	 * @param primaryKeySequence
+	 * @param connection
+	 * @param dbObjectHolders 
+	 * @throws SQLException 
+	 */
+	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
+		if(primaryKeySequence != null) {
+			executeDDLSQL(primaryKeySequence.getDropSqlStatement(), connection);
+			if(dbObjectHolders != null) {
+				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.DROP));
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * 回滚
@@ -419,12 +451,20 @@ public class TableHandler {
 					case INDEX:
 						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
 							logger.debug("逆向: create ==> drop index");
-							dropIndex((Index)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
+							dropIndex((Index)holder.getOriginObject(), connection, null);
 						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
 							logger.debug("逆向: drop ==> create index");
-							createIndex((Index)holder.getOriginObject(), connection, tableSqlStatementHandler, null);
+							createIndex((Index)holder.getOriginObject(), connection, null);
 						}
 						break;
+					case PRIMARY_KEY_SEQUENCE:
+						if(holder.getDbObjectOPType() == DBObjectOPType.CREATE) {
+							logger.debug("逆向: create ==> drop primary key sequence");
+							dropPrimaryKeySequence((PrimaryKeySequence)holder.getOriginObject(), connection, null);
+						}else if(holder.getDbObjectOPType() == DBObjectOPType.DROP) {
+							logger.debug("逆向: drop ==> create primary key sequence");
+							createPrimaryKeySequence((PrimaryKeySequence)holder.getOriginObject(), connection, null);
+						}
 				}
 			}
 		}
@@ -455,11 +495,13 @@ public class TableHandler {
 					switch(table.getCreateMode()) {
 						case DROP_CREATE:
 							logger.debug("正向: drop index");
-							dropIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
+							dropIndex(table.getIndexes(), connection, dbObjectHolders);
 							logger.debug("正向: drop constraint");
 							dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 							logger.debug("正向: drop table");
 							dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
+							logger.debug("正向: drop primary key sequence");
+							dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 							break;
 						case DYNAMIC_UPDATE:
 							syncTable(table, connection, tableSqlStatementHandler, dbObjectHolders, serializeObjectHolders);
@@ -469,12 +511,14 @@ public class TableHandler {
 							continue;
 					}
 				}
+				logger.debug("正向: create primary key sequence");
+				createPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 				logger.debug("正向: create table");
 				createTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create constraint");
 				createConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create index");
-				createIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
+				createIndex(table.getIndexes(), connection, dbObjectHolders);
 				logger.debug("正向: create serialization file");
 				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}
@@ -513,13 +557,13 @@ public class TableHandler {
 		if(isUpdateTable(table, oldTable)) {
 			// 删除旧表的约束和索引
 			dropConstraint(oldTable.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
-			dropIndex(oldTable.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
+			dropIndex(oldTable.getIndexes(), connection, dbObjectHolders);
 			// 对表和列进行同步
 			syncTable(table, oldTable, connection, tableSqlStatementHandler, dbObjectHolders);
 			syncColumns(table, oldTable, connection, tableSqlStatementHandler, dbObjectHolders);
 			// 创建新表的约束和索引
 			createConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
-			createIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
+			createIndex(table.getIndexes(), connection, dbObjectHolders);
 			// 对序列化文件进行同步
 			syncSerializationFile(table, oldTable, serializeObjectHolders);
 		}else {
@@ -699,11 +743,13 @@ public class TableHandler {
 				table = (TableMetadata) tableMapping.getMetadata();
 				if(tableExists(table.getOldName(), preparedStatement)) {
 					logger.debug("正向: drop index");
-					dropIndex(table.getIndexes(), connection, tableSqlStatementHandler, dbObjectHolders);
+					dropIndex(table.getIndexes(), connection, dbObjectHolders);
 					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 					logger.debug("正向: drop table");
 					dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
+					logger.debug("正向: drop primary key sequence");
+					dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 				}
 				logger.debug("正向: drop serialization file");
 				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);

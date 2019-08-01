@@ -25,6 +25,7 @@ import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.ImportDataContext;
 import com.douglei.orm.core.dialect.DialectType;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -319,7 +320,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				
 				// 如果是自增类型, 且需要创建主键序列, 则去解析<sequence>元素
-				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler && DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().needCreatePrimaryKeySequence()) {
+				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler && DBRunEnvironmentContext.getDialect().getDBFeatures().needCreatePrimaryKeySequence()) {
 					setPrimaryKeySequence(primaryKeyHandlerElement.element("sequence"));
 				}
 			}
@@ -331,10 +332,22 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @param sequenceElement
 	 */
 	private void setPrimaryKeySequence(Element sequenceElement) {
+		// 获取主键列的code值, 并将该主键列标记为主键序列
+		String primaryKeyColumnCode = tableMetadata.getPrimaryKeyColumnCodes().iterator().next();
+		tableMetadata.getPrimaryKeyColumnByCode(primaryKeyColumnCode).set2PrimaryKeySequence();
+		
+		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
+		String primaryKeySequenceName = null;
+		String createSqlStatement = null;
+		String dropSqlStatement = null;
 		if(sequenceElement != null) {
-			// TODO 
-			tableMetadata.setPrimaryKeySequence(null);
+			primaryKeySequenceName = sequenceElement.attributeValue("name");
+			createSqlStatement = sequenceElement.element("createSql").getTextTrim();
+			dropSqlStatement = sequenceElement.element("dropSql").getTextTrim();
 		}
+		PrimaryKeySequence primaryKeySequence = 
+				DBRunEnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(tableMetadata.getName(), primaryKeyColumnCode, primaryKeySequenceName, createSqlStatement, dropSqlStatement);
+		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
 	}
 
 	@Override

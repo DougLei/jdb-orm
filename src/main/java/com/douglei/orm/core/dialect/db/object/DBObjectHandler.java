@@ -3,6 +3,7 @@ package com.douglei.orm.core.dialect.db.object;
 import java.util.List;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -93,5 +94,18 @@ public abstract class DBObjectHandler {
 	 */
 	public String getDropDBObjectSqlStatement(DBObjectType dbObjectType, String dbObjectName) {
 		return "drop " + dbObjectType.name() + " " + dbObjectName;
+	}
+
+	/**
+	 * 创建主键序列对象
+	 * @param tableName 表名
+	 * @param primaryKeyColumnName 主键列名
+	 * @param name 序列名, 如果序列名为空, 则要自动生成序列名
+	 * @param createSql 创建序列的sql语句
+	 * @param dropSql 删除序列的sql语句
+	 * @return
+	 */
+	public PrimaryKeySequence createPrimaryKeySequence(String tableName, String primaryKeyColumnName, String name, String createSql, String dropSql) {
+		return null;
 	}
 }
