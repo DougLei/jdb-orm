@@ -342,8 +342,12 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		String dropSqlStatement = null;
 		if(sequenceElement != null) {
 			primaryKeySequenceName = sequenceElement.attributeValue("name");
-			createSqlStatement = sequenceElement.element("createSql").getTextTrim();
-			dropSqlStatement = sequenceElement.element("dropSql").getTextTrim();
+			
+			Element elem = sequenceElement.element("createSql");
+			createSqlStatement = elem==null?null:elem.getTextTrim();
+			
+			elem = sequenceElement.element("dropSql");
+			dropSqlStatement = elem==null?null:elem.getTextTrim();
 		}
 		PrimaryKeySequence primaryKeySequence = 
 				DBRunEnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(

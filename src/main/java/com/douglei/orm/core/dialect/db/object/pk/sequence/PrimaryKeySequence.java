@@ -10,8 +10,8 @@ import com.douglei.tools.utils.StringUtil;
  */
 public abstract class PrimaryKeySequence {
 	private String name;// 序列名
-	protected String createSql;
-	protected String dropSql;
+	private String createSql;
+	private String dropSql;
 	
 	public PrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		setName(name, tableName);
@@ -31,7 +31,7 @@ public abstract class PrimaryKeySequence {
 	 * 获取序列名
 	 * @return
 	 */
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 	

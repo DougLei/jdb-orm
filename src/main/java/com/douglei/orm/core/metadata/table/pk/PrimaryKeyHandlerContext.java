@@ -20,6 +20,7 @@ public class PrimaryKeyHandlerContext {
 		registerHandler(new UUID36PrimaryKeyHandler());
 		registerHandler(new SequencePrimaryKeyHandler());
 	}
+	
 	private static void registerHandler(PrimaryKeyHandler handler) {
 		handlers.put(handler.getName(), handler);
 	}

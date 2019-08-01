@@ -494,14 +494,14 @@ public class TableHandler {
 				if(tableExists(table.getOldName(), preparedStatement)) {
 					switch(table.getCreateMode()) {
 						case DROP_CREATE:
+							logger.debug("正向: drop primary key sequence");
+							dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 							logger.debug("正向: drop index");
 							dropIndex(table.getIndexes(), connection, dbObjectHolders);
 							logger.debug("正向: drop constraint");
 							dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 							logger.debug("正向: drop table");
 							dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
-							logger.debug("正向: drop primary key sequence");
-							dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 							break;
 						case DYNAMIC_UPDATE:
 							syncTable(table, connection, tableSqlStatementHandler, dbObjectHolders, serializeObjectHolders);
@@ -742,14 +742,14 @@ public class TableHandler {
 			for (Mapping tableMapping : tableMappings) {
 				table = (TableMetadata) tableMapping.getMetadata();
 				if(tableExists(table.getOldName(), preparedStatement)) {
+					logger.debug("正向: drop primary key sequence");
+					dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 					logger.debug("正向: drop index");
 					dropIndex(table.getIndexes(), connection, dbObjectHolders);
 					logger.debug("正向: drop constraint");
 					dropConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 					logger.debug("正向: drop table");
 					dropTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
-					logger.debug("正向: drop primary key sequence");
-					dropPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 				}
 				logger.debug("正向: drop serialization file");
 				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);
