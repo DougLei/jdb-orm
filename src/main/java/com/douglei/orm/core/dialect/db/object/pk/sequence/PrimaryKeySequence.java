@@ -17,18 +17,21 @@ public abstract class PrimaryKeySequence implements Serializable{
 	private String createSql;
 	private String dropSql;
 	
-	public PrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		setName(name, tableName);
+	// processName 用来标识是否处理序列名
+	protected PrimaryKeySequence(boolean processName, String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
+		setName(processName, name, tableName);
 		this.createSql = processCreateSql(createSql, tableName, primaryKeyColumn);
 		this.dropSql = processDropSql(dropSql, tableName, primaryKeyColumn);
 	}
 
-	private void setName(String name, String tableName) {
-		if(StringUtil.isEmpty(name)) {
-			name = "PKSEQ_" + tableName;
+	private void setName(boolean processName, String name, String tableName) {
+		if(processName) {
+			if(StringUtil.isEmpty(name)) {
+				name = "PKSEQ_" + tableName;
+			}
+			this.name = name;
+			DBRunEnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(this.name);
 		}
-		this.name = name;
-		DBRunEnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(this.name);
 	}
 
 	/**

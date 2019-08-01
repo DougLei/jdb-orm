@@ -12,7 +12,7 @@ public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 	private static final long serialVersionUID = -7741465855053611421L;
 
 	public OraclePrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		super(name, createSql, dropSql, tableName, primaryKeyColumn);
+		super(true, name, createSql, dropSql, tableName, primaryKeyColumn);
 	}
 
 	@Override
