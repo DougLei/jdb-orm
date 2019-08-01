@@ -20,7 +20,7 @@ public class MySqlPrimaryKeySequence extends PrimaryKeySequence{
 
 	@Override
 	protected String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return null;
+		return "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getTypeName();
 	}
 
 	@Override
