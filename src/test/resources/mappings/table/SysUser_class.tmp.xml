@@ -16,7 +16,7 @@
 		<!-- 
 			sqlserver
 			create table ddd(
-				id int  primary key,
+				id int identity primary key,
 				name varchar(100)
 			);
 			

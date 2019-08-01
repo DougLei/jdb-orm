@@ -329,7 +329,7 @@ public class TableHandler {
 	 */
 	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(primaryKeySequence != null) {
-			executeDDLSQL(primaryKeySequence.getCreateSqlStatement(), connection);
+			executeDDLSQL(primaryKeySequence.getCreateSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.CREATE));
 			}
@@ -345,7 +345,7 @@ public class TableHandler {
 	 */
 	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
 		if(primaryKeySequence != null) {
-			executeDDLSQL(primaryKeySequence.getDropSqlStatement(), connection);
+			executeDDLSQL(primaryKeySequence.getDropSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.DROP));
 			}

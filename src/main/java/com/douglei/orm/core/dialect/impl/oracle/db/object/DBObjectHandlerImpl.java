@@ -26,8 +26,8 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 	}
 
 	@Override
-	public PrimaryKeySequence createPrimaryKeySequence(String tableName, String primaryKeyColumnName, String name, String createSql, String dropSql) {
+	public PrimaryKeySequence createPrimaryKeySequence(String name, String tableName, String createSql, String dropSql) {
 		// TODO 创建oracle主键序列对象
-		return new OraclePrimaryKeySequence();
+		return new OraclePrimaryKeySequence(name, tableName, createSql, dropSql);
 	}
 }

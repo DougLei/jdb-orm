@@ -332,9 +332,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @param sequenceElement
 	 */
 	private void setPrimaryKeySequence(Element sequenceElement) {
-		// 获取主键列的code值, 并将该主键列标记为主键序列
-		String primaryKeyColumnCode = tableMetadata.getPrimaryKeyColumnCodes().iterator().next();
-		tableMetadata.getPrimaryKeyColumnByCode(primaryKeyColumnCode).set2PrimaryKeySequence();
+		// 因为主键序列只支持单列主键, 所以这里获取唯一的主键列, 将其标识为主键序列
+		tableMetadata.getPrimaryKeyColumnByCode(tableMetadata.getPrimaryKeyColumnCodes().iterator().next()).set2PrimaryKeySequence();
 		
 		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
 		String primaryKeySequenceName = null;
@@ -346,7 +345,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			dropSqlStatement = sequenceElement.element("dropSql").getTextTrim();
 		}
 		PrimaryKeySequence primaryKeySequence = 
-				DBRunEnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(tableMetadata.getName(), primaryKeyColumnCode, primaryKeySequenceName, createSqlStatement, dropSqlStatement);
+				DBRunEnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(
+						primaryKeySequenceName, tableMetadata.getName(), createSqlStatement, dropSqlStatement);
 		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
 	}
 

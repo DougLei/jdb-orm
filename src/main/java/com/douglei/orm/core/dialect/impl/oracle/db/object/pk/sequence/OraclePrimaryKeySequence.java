@@ -8,34 +8,27 @@ import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
  */
 public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+	public OraclePrimaryKeySequence(String name, String tableName, String createSql, String dropSql) {
+		super(name, tableName, createSql, dropSql);
 	}
 
 	@Override
-	public String getCreateSqlStatement() {
-		// TODO Auto-generated method stub
-		return null;
+	protected String defaultCreateSql() {
+		return "create sequence " + getName();
 	}
 
 	@Override
-	public String getDropSqlStatement() {
-		// TODO Auto-generated method stub
-		return null;
+	protected String defaultDropSql() {
+		return "drop sequence " + getName();
 	}
 
 	@Override
 	public String getNextvalSql() {
-		// TODO Auto-generated method stub
-		return null;
+		return getName() + ".nextval";
 	}
-
+	
 	@Override
 	public String getCurrvalSql() {
-		// TODO Auto-generated method stub
-		return null;
+		return getName() + ".currval";
 	}
-
 }
