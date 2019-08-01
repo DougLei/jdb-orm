@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -99,12 +100,13 @@ public abstract class DBObjectHandler {
 	/**
 	 * 创建主键序列对象
 	 * @param name 序列名, 如果序列名为空, 则要使用tableName自动生成序列名
-	 * @param tableName 表名
 	 * @param createSql 创建序列的sql语句
 	 * @param dropSql 删除序列的sql语句
+	 * @param tableName 表名
+	 * @param primaryKeyColumn 主键列
 	 * @return
 	 */
-	public PrimaryKeySequence createPrimaryKeySequence(String name, String tableName, String createSql, String dropSql) {
+	public PrimaryKeySequence createPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		return null;
 	}
 }

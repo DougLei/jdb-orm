@@ -18,11 +18,6 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ?";
 	}
 	
-	@Override
-	protected String primaryKeySequenceSqlKeyword() {
-		return "auto_increment";
-	}
-	
 	// --------------------------------------------------------------------------------------------
 	// constraint
 	// --------------------------------------------------------------------------------------------

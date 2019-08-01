@@ -1,36 +1,35 @@
-package com.douglei.orm.core.dialect.impl.oracle.db.object.pk.sequence;
+package com.douglei.orm.core.dialect.impl.mysql.db.object.pk.sequence;
 
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * oracle主键序列
  * @author DougLei
  */
-public class OraclePrimaryKeySequence extends PrimaryKeySequence{
+public class MySqlPrimaryKeySequence extends PrimaryKeySequence{
 
-	public OraclePrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
+	public MySqlPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		super(name, createSql, dropSql, tableName, primaryKeyColumn);
 	}
-
+	
 	@Override
 	protected String processCreateSql(String createSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return StringUtil.isEmpty(createSql)?"create sequence " + getName():createSql;
+		return "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getTypeName()+" auto_increment";
 	}
 
 	@Override
 	protected String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return StringUtil.isEmpty(dropSql)?"drop sequence " + getName():dropSql;
+		return null;
 	}
 
 	@Override
 	public String getNextvalSql() {
-		return getName() + ".nextval";
+		return null;
 	}
 	
 	@Override
 	public String getCurrvalSql() {
-		return getName() + ".currval";
+		return null;
 	}
 }

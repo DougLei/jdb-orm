@@ -55,7 +55,9 @@ public abstract class TableSqlStatementHandler {
 	 * 主键序列的sql关键字
 	 * @return
 	 */
-	protected abstract String primaryKeySequenceSqlKeyword();
+	protected String primaryKeySequenceSqlKeyword() {
+		return "";
+	}
 
 	/**
 	 * 获取drop table的sql语句

@@ -9,11 +9,6 @@ import com.douglei.orm.core.dialect.db.features.DBFeatures;
 public class DBFeaturesImpl extends DBFeatures {
 
 	@Override
-	public boolean needCreatePrimaryKeySequence() {
-		return true;
-	}
-
-	@Override
 	public boolean supportProcedureDirectlyReturnResultSet() {
 		return false;
 	}

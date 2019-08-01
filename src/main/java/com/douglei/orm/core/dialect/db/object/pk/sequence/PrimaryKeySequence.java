@@ -1,6 +1,7 @@
 package com.douglei.orm.core.dialect.db.object.pk.sequence;
 
 import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -12,12 +13,11 @@ public abstract class PrimaryKeySequence {
 	protected String createSql;
 	protected String dropSql;
 	
-	public PrimaryKeySequence(String name, String tableName, String createSql, String dropSql) {
+	public PrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		setName(name, tableName);
-		this.createSql = StringUtil.isEmpty(createSql)?defaultCreateSql():createSql;
-		this.dropSql = StringUtil.isEmpty(dropSql)?defaultDropSql():dropSql;
+		this.createSql = processCreateSql(createSql, tableName, primaryKeyColumn);
+		this.dropSql = processDropSql(dropSql, tableName, primaryKeyColumn);
 	}
-
 
 	private void setName(String name, String tableName) {
 		if(StringUtil.isEmpty(name)) {
@@ -52,16 +52,22 @@ public abstract class PrimaryKeySequence {
 	}
 	
 	/**
-	 * 默认的创建sql语句
+	 * 处理创建sql语句
+	 * @param createSql
+	 * @param tableName
+	 * @param primaryKeyColumn
 	 * @return
 	 */
-	protected abstract String defaultCreateSql();
+	protected abstract String processCreateSql(String createSql, String tableName, ColumnMetadata primaryKeyColumn);
 
 	/**
-	 * 默认的删除sql语句
+	 * 处理删除sql语句
+	 * @param dropSql
+	 * @param tableName
+	 * @param primaryKeyColumn
 	 * @return
 	 */
-	protected abstract String defaultDropSql();
+	protected abstract String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn);
 	
 	/**
 	 * 获取下一个序列值的sql语句

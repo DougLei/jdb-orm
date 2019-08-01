@@ -13,15 +13,6 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 public abstract class DBFeatures {
 	
 	/**
-	 * 是否需要创建主键序列, 目前主要是oracle
-	 * 默认是false
-	 * @return
-	 */
-	public boolean needCreatePrimaryKeySequence() {
-		return false;
-	}
-	
-	/**
 	 * <pre>
 	 * 	支持存储过程直接返回 ResultSet
 	 * 	即存储过程中编写 select语句, 执行该存储过程后, 会展示出该select结果集, 例如sqlserver数据库, mysql数据库

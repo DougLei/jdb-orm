@@ -328,7 +328,7 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		if(primaryKeySequence != null) {
+		if(primaryKeySequence != null && primaryKeySequence.getCreateSql() != null) {
 			executeDDLSQL(primaryKeySequence.getCreateSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.CREATE));
@@ -344,7 +344,7 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		if(primaryKeySequence != null) {
+		if(primaryKeySequence != null && primaryKeySequence.getDropSql() != null) {
 			executeDDLSQL(primaryKeySequence.getDropSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.DROP));
@@ -511,14 +511,14 @@ public class TableHandler {
 							continue;
 					}
 				}
-				logger.debug("正向: create primary key sequence");
-				createPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 				logger.debug("正向: create table");
 				createTable(table, connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create constraint");
 				createConstraint(table.getConstraints(), connection, tableSqlStatementHandler, dbObjectHolders);
 				logger.debug("正向: create index");
 				createIndex(table.getIndexes(), connection, dbObjectHolders);
+				logger.debug("正向: create primary key sequence");
+				createPrimaryKeySequence(table.getPrimaryKeySequence(), connection, dbObjectHolders);
 				logger.debug("正向: create serialization file");
 				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}

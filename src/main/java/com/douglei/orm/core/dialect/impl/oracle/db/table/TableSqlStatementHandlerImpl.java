@@ -18,11 +18,6 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		return "select count(1) from user_objects where object_name = ? and object_type = 'TABLE'";
 	}
 	
-	@Override
-	protected String primaryKeySequenceSqlKeyword() {
-		return "";
-	}
-	
 	// --------------------------------------------------------------------------------------------
 	// constraint
 	// --------------------------------------------------------------------------------------------
