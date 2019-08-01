@@ -17,7 +17,7 @@ public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 
 	@Override
 	protected String processCreateSql(String createSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return StringUtil.isEmpty(createSql)?"create sequence " + getName():createSql;
+		return StringUtil.isEmpty(createSql)?"create sequence " + getName() +" nocache":createSql;
 	}
 
 	@Override
