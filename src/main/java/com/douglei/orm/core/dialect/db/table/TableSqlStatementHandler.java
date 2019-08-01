@@ -46,7 +46,7 @@ public abstract class TableSqlStatementHandler {
 			}
 			sql.append(",");
 		}
-		
+		sql.setLength(sql.length()-1);
 		sql.append(")");
 		return sql.toString();
 	}

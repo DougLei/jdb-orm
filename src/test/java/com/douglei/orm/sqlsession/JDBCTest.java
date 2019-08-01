@@ -3,11 +3,25 @@ package com.douglei.orm.sqlsession;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 import org.junit.Test;
 
 
 public class JDBCTest {
+	
+	@Test
+	public void test() throws Exception {
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:ORCL", "douglei", "root");
+		
+		Statement st = connection.createStatement();
+		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
+		
+//		PreparedStatement pst = connection.prepareStatement("insert into sys_user(id, name) values (pkseq_sys_user.nextval, ?)");
+//		pst.setString(1, "哈哈");
+//		pst.executeUpdate();
+		connection.commit();
+	}
 	
 	@Test
 	public void mysql() throws Exception {
