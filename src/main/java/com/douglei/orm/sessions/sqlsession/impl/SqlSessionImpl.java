@@ -225,11 +225,11 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			pageSize = 10;
 		}
 		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
-		long totalCount = queryTotalCount(pageSqlStatement, parameters);
-		logger.debug("查询到的数据总量为:{}条", totalCount);
-		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, totalCount);
-		if(totalCount > 0) {
-			sql = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageNum, pageSize, pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
+		long count = queryCount(pageSqlStatement, parameters);
+		logger.debug("查询到的数据总量为:{}条", count);
+		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, count);
+		if(count > 0) {
+			sql = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
 			List<Map<String, Object>> listMap = query(sql, parameters);
 			pageResult.setResultDatas(listMap);
 		}
@@ -245,9 +245,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	private long queryTotalCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
-		Object totalCount =  uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0];
-		return Integer.parseInt(totalCount.toString());
+	private long queryCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
+		Object count =  uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0];
+		return Integer.parseInt(count.toString());
 	}
 
 	@Override

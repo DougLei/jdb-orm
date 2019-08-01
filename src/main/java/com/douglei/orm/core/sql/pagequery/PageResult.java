@@ -2,11 +2,15 @@ package com.douglei.orm.core.sql.pagequery;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 分页查询结果对象
  * @author DougLei
  */
 public class PageResult<T> {
+	private static final Logger logger = LoggerFactory.getLogger(PageResult.class);
 	
 	/**
 	 * 页数(当前第几页)
@@ -19,13 +23,11 @@ public class PageResult<T> {
 	/**
 	 * 总数量
 	 */
-	private long totalCount;
-	
+	private long count;
 	/**
 	 * 总页数
 	 */
-	private int pageTotalNum;
-	
+	private int pageCount;
 	/**
 	 * 结果集
 	 */
@@ -43,37 +45,37 @@ public class PageResult<T> {
 	private void copyBaseData(PageResult<? extends Object> origin) {
 		this.pageNum = origin.pageNum;
 		this.pageSize = origin.pageSize;
-		this.totalCount = origin.totalCount;
-		this.pageTotalNum = origin.pageTotalNum;
+		this.count = origin.count;
+		this.pageCount = origin.pageCount;
 	}
 	
-	public PageResult(int pageNum, int pageSize, long totalCount) {
+	public PageResult(int pageNum, int pageSize, long count) {
 		this.pageNum = pageNum;
 		this.pageSize = pageSize;
-		this.totalCount = totalCount;
-		calcPageDataInfo();
+		this.count = count;
+		processPageData();
 	}
 	
-	// 计算各种分页数据信息
-	private void calcPageDataInfo() {
-		if(totalCount > 0) { // 只有有数据的时候, 才进行计算
-			calcAndSetPageTotalNum();
+	// 处理分页数据
+	private void processPageData() {
+		// 只有有数据的时候, 才进行计算
+		if(count > 0) {
+			// 计算总页数
+			pageCount = (int)(count/pageSize);
+			if(count%pageSize != 0) {
+				pageCount++;
+			}
+
+			// 判断请求的页数是否大于总页数, 如果大于总页数, 则修正并记录日志
+			if(pageNum > pageCount) {
+				pageNum = pageCount;
+				logger.info("请求的页数溢出, pageCount={}, pageNum={}, 修正pageNum={}", pageCount, pageNum, pageCount);
+			}
 		}
 	}
 	
-	// 计算并set pageTotalNum 总页数
-	private void calcAndSetPageTotalNum() {
-		pageTotalNum = (int)(totalCount/pageSize);
-		if(totalCount%pageSize != 0) {
-			pageTotalNum++;
-		}
-		if(pageNum > pageTotalNum) {
-			throw new PageNumOutOfBoundsException("页数溢出, pageTotalNum="+pageTotalNum+", pageNum="+pageNum);
-		}
-	}
-	
-	public long getTotalCount() {
-		return totalCount;
+	public long getCount() {
+		return count;
 	}
 	public int getPageNum() {
 		return pageNum;
@@ -81,8 +83,8 @@ public class PageResult<T> {
 	public int getPageSize() {
 		return pageSize;
 	}
-	public int getPageTotalNum() {
-		return pageTotalNum;
+	public int getPageCount() {
+		return pageCount;
 	}
 	public List<T> getResultDatas() {
 		return resultDatas;
@@ -95,21 +97,21 @@ public class PageResult<T> {
 	 * 是否是第一页
 	 * @return
 	 */
-	public boolean isFirstPageNum() {
+	public boolean isFirstPage() {
 		return pageNum == 1;
 	}
 	/**
 	 * 是否是最后一页
 	 * @return
 	 */
-	public boolean isLastPageNum() {
-		return pageNum == pageTotalNum;
+	public boolean isLastPage() {
+		return pageNum == pageCount;
 	}
 
 	@Override
 	public String toString() {
-		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", totalCount=" + totalCount
-				+ ", pageTotalNum=" + pageTotalNum + ", resultDatas="
+		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", count=" + count
+				+ ", pageCount=" + pageCount + ", resultDatas="
 				+ resultDatas + "]";
 	}
 }
