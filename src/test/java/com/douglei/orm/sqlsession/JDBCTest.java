@@ -3,7 +3,6 @@ package com.douglei.orm.sqlsession;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 
 import org.junit.Test;
 
@@ -12,14 +11,14 @@ public class JDBCTest {
 	
 	@Test
 	public void test() throws Exception {
-		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:ORCL", "douglei", "root");
+		Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=douglei", "sa", "root");
 		
-		Statement st = connection.createStatement();
-		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
+//		Statement st = connection.createStatement();
+//		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
 		
-//		PreparedStatement pst = connection.prepareStatement("insert into sys_user(id, name) values (pkseq_sys_user.nextval, ?)");
-//		pst.setString(1, "哈哈");
-//		pst.executeUpdate();
+		PreparedStatement pst = connection.prepareStatement("insert into log_operation(id, is_success) values (newid(), ?)");
+		pst.setShort(1, (short)-1);
+		pst.executeUpdate();
 		connection.commit();
 	}
 	

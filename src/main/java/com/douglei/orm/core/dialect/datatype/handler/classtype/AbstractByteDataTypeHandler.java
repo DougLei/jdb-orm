@@ -20,7 +20,7 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 		return supportClasses;
 	}
 	private static final Class<?>[] supportClasses = {byte.class, Byte.class};
-
+	
 	@Override
 	public String doValidate(Object value, short length, short precision) {
 		if(value.getClass() == byte.class || value instanceof Byte || VerifyTypeMatchUtil.isInteger(value.toString())) {
