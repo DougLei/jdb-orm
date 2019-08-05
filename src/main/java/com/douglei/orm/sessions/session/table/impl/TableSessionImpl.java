@@ -115,7 +115,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param cache
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
-		if(tableMetadata.existsPrimaryKey()) {
+		if(!tableMetadata.existsPrimaryKey()) {
 			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode());
 		}
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
