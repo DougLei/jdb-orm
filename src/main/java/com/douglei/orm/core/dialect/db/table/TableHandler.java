@@ -523,16 +523,10 @@ public class TableHandler {
 				tableSerializationFileHandler.createSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
-			if(logger.isDebugEnabled()) {
-				e.printStackTrace();
-			}
 			logger.error("create表时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
 				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (RollbackException e1) {
-				if(logger.isDebugEnabled()) {
-					e1.printStackTrace();
-				}
 				logger.error("create表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw e1;
 			}
@@ -755,16 +749,10 @@ public class TableHandler {
 				tableSerializationFileHandler.dropSerializationFile(table, serializeObjectHolders);
 			}
 		} catch (Exception e) {
-			if(logger.isDebugEnabled()) {
-				e.printStackTrace();
-			}
 			logger.error("drop表时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
 				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (RollbackException e1) {
-				if(logger.isDebugEnabled()) {
-					e1.printStackTrace();
-				}
 				logger.error("drop表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				throw e1;
 			}
