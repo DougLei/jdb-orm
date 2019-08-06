@@ -36,6 +36,8 @@ public class TableMetadata implements Metadata{
 	private Map<String, ColumnMetadata> columns_;// 列<code: 列>
 	
 	private Map<String, ColumnMetadata> primaryKeyColumns_;// 主键列<code: 列>
+	
+	private boolean coverValue;
 	private PrimaryKeyHandler primaryKeyHandler;
 	private PrimaryKeySequence primaryKeySequence;
 	
@@ -229,7 +231,7 @@ public class TableMetadata implements Metadata{
 	 */
 	public void setPrimaryKeyValue2EntityMap(Map<String, Object> entityMap) {
 		if(primaryKeyHandler != null) {
-			primaryKeyHandler.setValue2EntityMap(primaryKeyColumns_.keySet(), this, entityMap, primaryKeySequence);
+			primaryKeyHandler.setValue2EntityMap(primaryKeyColumns_.keySet(), this, entityMap, coverValue, primaryKeySequence);
 		}
 	}
 	
@@ -263,8 +265,9 @@ public class TableMetadata implements Metadata{
 	public boolean classNameEmpty() {
 		return StringUtil.isEmpty(className);
 	}
-	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
+	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler, boolean coverValue) {
 		this.primaryKeyHandler = primaryKeyHandler;
+		this.coverValue = coverValue;
 	}
 	public void setPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) {
 		this.primaryKeySequence = primaryKeySequence;

@@ -26,7 +26,8 @@
 		</indexes>
 		
 		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, sequence, 或自定义的类(继承 {@link PrimaryKeyHandler}) -->
-		<primaryKeyHandler type="sequence">
+		<!-- 如果对象中已经存在主键值, 是否覆盖, 默认值为false, 该配置依赖type, 不同的type可以有不同的效果 -->
+		<primaryKeyHandler type="sequence" coverValue="false">
 			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
 			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
 			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop, 其余时候, 不会有任何处理 -->

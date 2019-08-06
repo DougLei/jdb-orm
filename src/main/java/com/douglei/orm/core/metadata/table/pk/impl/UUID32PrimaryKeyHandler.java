@@ -13,7 +13,7 @@ import com.douglei.tools.utils.IdentityUtil;
  * @author DougLei
  */
 public class UUID32PrimaryKeyHandler extends PrimaryKeyHandler{
-	private static final long serialVersionUID = -7004062766789548064L;
+	private static final long serialVersionUID = 5086007177843168571L;
 
 	@Override
 	public boolean supportProcessMultiPKColumns() {
@@ -21,8 +21,12 @@ public class UUID32PrimaryKeyHandler extends PrimaryKeyHandler{
 	}
 
 	@Override
-	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence) {
-		primaryKeyColumnCodes.forEach(code -> entityMap.put(code, IdentityUtil.get32UUID()));
+	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, boolean coverValue, PrimaryKeySequence primaryKeySequence) {
+		primaryKeyColumnCodes.forEach(code -> {
+			if(entityMap.get(code) == null || coverValue) {
+				entityMap.put(code, IdentityUtil.get32UUID());
+			}
+		});
 	}
 	
 	@Override

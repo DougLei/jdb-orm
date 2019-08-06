@@ -12,7 +12,7 @@ import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
  * @author DougLei
  */
 public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
-	private static final long serialVersionUID = 8613215141130789619L;
+	private static final long serialVersionUID = 4737430578874954772L;
 
 	@Override
 	public boolean supportProcessMultiPKColumns() {
@@ -20,7 +20,7 @@ public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
 	}
 	
 	@Override
-	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence) {
+	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, boolean coverValue, PrimaryKeySequence primaryKeySequence) {
 		entityMap.put(primaryKeyColumnCodes.iterator().next(), (primaryKeySequence == null || primaryKeySequence.getNextvalSql() == null)?null:primaryKeySequence);
 	}
 	

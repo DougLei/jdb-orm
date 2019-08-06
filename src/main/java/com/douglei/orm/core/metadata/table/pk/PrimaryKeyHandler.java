@@ -13,7 +13,7 @@ import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
  * @author DougLei
  */
 public abstract class PrimaryKeyHandler implements Serializable{
-	private static final long serialVersionUID = -1283935510687315485L;
+	private static final long serialVersionUID = -7199090604705065656L;
 
 	/**
 	 * 获取处理器名称
@@ -37,7 +37,8 @@ public abstract class PrimaryKeyHandler implements Serializable{
 	 * @param primaryKeyColumnCodes 当前操作的所有主键列code集合
 	 * @param table 当前操作的主键列所属的表
 	 * @param entityMap 当前操作的实体map
+	 * @param coverValue 如果对象中已经存在主键值, 是否覆盖, 默认值为false, 该配置依赖具体的实现类, 不同的实现类可以有不同的效果
 	 * @param primaryKeySequence 主键序列对象, 针对 {@link SequencePrimaryKeyHandler}
 	 */
-	public abstract void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence);
+	public abstract void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, boolean coverValue, PrimaryKeySequence primaryKeySequence);
 }
