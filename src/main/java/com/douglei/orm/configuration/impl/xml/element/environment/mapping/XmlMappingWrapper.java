@@ -54,9 +54,11 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {
 		if(elements != null && elements.size() > 0) {
-			for (Object elem : elements) {
-				fileScanner.scan(searchAll, ((Attribute)elem).getValue());
-			}
+			StringBuilder path = new StringBuilder(elements.size() * 20);
+			elements.forEach(elem -> {
+				path.append(",").append(((Attribute)elem).getValue());
+			});
+			fileScanner.multiScan(searchAll, path.substring(1).split(","));
 		}
 	}
 	
