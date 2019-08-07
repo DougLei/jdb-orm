@@ -57,6 +57,7 @@ public class PersistentObject {
 					id = idMap;
 				}
 				this.id = new Identity(id);
+				this.id.setTableMetadata(tableMetadata);
 			}else {
 				this.id = new Identity(propertyMap);// 不存在主键配置时, 就将整个对象做为id
 			}

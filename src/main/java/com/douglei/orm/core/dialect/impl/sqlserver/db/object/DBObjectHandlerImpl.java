@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.core.dialect.impl.sqlserver.db.object.pk.sequence.SqlServerPrimaryKeySequence;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 
 /**
  * 
@@ -28,5 +31,10 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 				break;
 		}
 		return "select count(1) from  sysobjects where id = object_id(?) and type = ?";
+	}
+
+	@Override
+	public PrimaryKeySequence createPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
+		return SqlServerPrimaryKeySequence.singleInstance();
 	}
 }

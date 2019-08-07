@@ -59,6 +59,14 @@ public abstract class PrimaryKeySequence implements Serializable{
 	}
 	
 	/**
+	 * 
+	 * @return
+	 */
+	public boolean unuse() {
+		return true;
+	}
+	
+	/**
 	 * 处理创建sql语句
 	 * @param createSql
 	 * @param tableName

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -16,6 +17,7 @@ public class Identity {
 	private static final Logger logger = LoggerFactory.getLogger(Identity.class);
 	
 	private Object id;
+	private TableMetadata tableMetadata;
 
 	public Identity(Object id) {
 		this.id = id;
@@ -26,8 +28,12 @@ public class Identity {
 			throw new UnsupportedIdentityDataTypeException("目前id只支持[int][java.lang.Integer类型][java.lang.String类型]或[java.util.Map<String, Object>类型]");
 		}
 		if(logger.isDebugEnabled()) {
-			logger.debug("获取持久化对象id为: {} -- {}", id.getClass(), id.toString());
+			logger.debug("获取持久化对象id为: {} -- {}", id.getClass().getName(), id.toString());
 		}
+	}
+	
+	public void setTableMetadata(TableMetadata tableMetadata) {
+		this.tableMetadata = tableMetadata;
 	}
 
 	@Override
@@ -53,7 +59,11 @@ public class Identity {
 			}
 			return false;
 		}
-		return id.equals(other.id);
+		// 当主键一致时， 如果该表没有配置主键, 且没有使用到主键序列, 则返回true, 表现为两个对象主键一致, 会发生冲突
+		if(id.equals(other.id) && tableMetadata != null && tableMetadata.getPrimaryKeySequence() == null) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

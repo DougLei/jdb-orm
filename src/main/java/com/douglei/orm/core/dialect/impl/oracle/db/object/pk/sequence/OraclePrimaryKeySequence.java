@@ -34,4 +34,9 @@ public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 	public String getCurrvalSql() {
 		return getName() + ".currval";
 	}
+	
+	@Override
+	public boolean unuse() {
+		return false;
+	}
 }

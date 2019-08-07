@@ -21,7 +21,7 @@ public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
 	
 	@Override
 	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, boolean coverValue, PrimaryKeySequence primaryKeySequence) {
-		entityMap.put(primaryKeyColumnCodes.iterator().next(), (primaryKeySequence == null || primaryKeySequence.getNextvalSql() == null)?null:primaryKeySequence);
+		entityMap.put(primaryKeyColumnCodes.iterator().next(), primaryKeySequence.unuse()?null:primaryKeySequence);
 	}
 	
 	@Override

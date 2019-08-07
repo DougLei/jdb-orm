@@ -4,7 +4,7 @@ import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 
 /**
- * oracle主键序列
+ * mysql主键序列
  * @author DougLei
  */
 public class MySqlPrimaryKeySequence extends PrimaryKeySequence{

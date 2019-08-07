@@ -106,7 +106,5 @@ public abstract class DBObjectHandler {
 	 * @param primaryKeyColumn 主键列
 	 * @return
 	 */
-	public PrimaryKeySequence createPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return null;
-	}
+	public abstract PrimaryKeySequence createPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn);
 }
