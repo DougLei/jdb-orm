@@ -36,6 +36,11 @@ public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 	}
 	
 	@Override
+	public boolean use() {
+		return true;
+	}
+
+	@Override
 	public boolean unuse() {
 		return false;
 	}

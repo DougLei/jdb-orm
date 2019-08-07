@@ -58,10 +58,10 @@ public abstract class PrimaryKeySequence implements Serializable{
 		return dropSql;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+	public boolean use() {
+		return false;
+	}
+	
 	public boolean unuse() {
 		return true;
 	}

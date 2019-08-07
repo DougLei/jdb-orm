@@ -32,10 +32,11 @@ public class ColumnMetadata implements Metadata{
 	private String fkTableName;// 外键约束关联的表名
 	private String fkColumnName;// 外键约束关联的列名
 	private boolean validate;// 是否验证
-	private boolean isPrimaryKeySequence;// 是否是主键序列
 	
 	private ClassDataTypeHandler dataTypeHandler;// dataType处理器, 根据dataType得到
 	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
+	
+	private boolean isPrimaryKeySequence;// 是否是主键序列
 	
 	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
