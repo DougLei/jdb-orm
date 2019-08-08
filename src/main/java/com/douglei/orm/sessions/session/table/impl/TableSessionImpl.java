@@ -276,20 +276,10 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql) {
-		return query(targetClass, sql, null);
-	}
-	
-	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 		return listMap2listClass(targetClass, listMap, tableMetadata);
-	}
-	
-	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
-		return uniqueQuery(targetClass, sql, null);
 	}
 	
 	@Override
@@ -302,11 +292,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return null;
 	}
 	
-	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
-		return pageQuery(targetClass, pageNum, pageSize, sql, null);
-	}
-
 	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		if(logger.isDebugEnabled()) {
@@ -321,5 +306,33 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			logger.debug("分页查询的结果: {}", finalPageResult.toString());
 		}
 		return finalPageResult;
+	}
+
+	@Override
+	public String getColumnNames(String code, String... excludeColumnNames) {
+		TableMetadata tableMetadata = getTableMetadata(code);
+		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 30);
+		tableMetadata.getDeclareColumns().forEach(column -> {
+			if(unExcludeColumnName(column.getName(), excludeColumnNames)) {
+				cns.append(", ").append(column.getName());
+			}
+		});
+		if(cns.length() == 0) {
+			throw new NullPointerException("在code=["+code+"]的表映射中, 没有匹配到任何列名, 请确保没有对过多的列名进行排除 (excludeColumnNames)");
+		}
+		logger.debug("得到的列名为 -> {}", cns);
+		return cns.substring(1);
+	}
+	
+	// 不排除指定的列名
+	private boolean unExcludeColumnName(String columnName, String[] excludeColumnNames) {
+		if(excludeColumnNames.length > 0) {
+			for (String ecn : excludeColumnNames) {
+				if(columnName.equalsIgnoreCase(ecn)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

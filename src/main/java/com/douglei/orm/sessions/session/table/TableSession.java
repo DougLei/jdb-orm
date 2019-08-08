@@ -53,7 +53,9 @@ public interface TableSession {
 	 * @param sql
 	 * @return 
 	 */
-	<T> List<T> query(Class<T> targetClass, String sql);
+	default <T> List<T> query(Class<T> targetClass, String sql) {
+		return query(targetClass, sql, null);
+	}
 	/**
 	 * 查询结果集
 	 * @param targetClass
@@ -69,7 +71,10 @@ public interface TableSession {
 	 * @param sql
 	 * @return 
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql);
+	default <T> T uniqueQuery(Class<T> targetClass, String sql) {
+		return uniqueQuery(targetClass, sql, null);
+	}
+	
 	/**
 	 * 查询唯一结果
 	 * @param targetClass
@@ -87,7 +92,9 @@ public interface TableSession {
 	 * @param sql
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
+	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
+		return pageQuery(targetClass, pageNum, pageSize, sql, null);
+	}
 	
 	/**
 	 * 分页查询
@@ -99,4 +106,22 @@ public interface TableSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 获取指定类的列名, 多个用, 分割
+	 * @param clz
+	 * @param excludeColumnNames 要排除的列名
+	 * @return
+	 */
+	default String getColumnNames(Class<?> clz, String... excludeColumnNames) {
+		return getColumnNames(clz.getClass().getName(), excludeColumnNames);
+	}
+	
+	/**
+	 * 获取指定code的列名, 多个用, 分割
+	 * @param code
+	 * @param excludeColumnNames 要排除的列名
+	 * @return
+	 */
+	String getColumnNames(String code, String... excludeColumnNames);
 }
