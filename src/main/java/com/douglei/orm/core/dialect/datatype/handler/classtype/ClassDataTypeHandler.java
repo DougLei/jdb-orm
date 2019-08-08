@@ -1,9 +1,11 @@
 package com.douglei.orm.core.dialect.datatype.handler.classtype;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
@@ -47,5 +49,21 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTyp
 	@Override
 	public Object getValue(short columnIndex, ResultSet resultSet) throws SQLException {
 		return null;
+	}
+
+	@Override
+	public DBDataType getDBDataType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean unEquals(Object obj) {
+		return !getCode().equals(((ClassDataTypeHandler)obj).getCode());
 	}
 }

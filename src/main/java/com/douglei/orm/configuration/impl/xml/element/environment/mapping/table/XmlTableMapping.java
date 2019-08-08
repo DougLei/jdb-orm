@@ -79,8 +79,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		List columnElements = null;
 		
 		// 解析<columns>
-		Element columnsElement = Dom4jElementUtil.validateElementExists("columns", tableElement);
-		List<?> localColumnElements = columnsElement.elements("column");
+		Element columnsElement = tableElement.element("columns");
+		List<?> localColumnElements = columnsElement == null?null:columnsElement.elements("column");
 		
 		// 解析<import-columns>
 		Element importColumnsElement = tableElement.element("import-columns");

@@ -673,7 +673,7 @@ public class TableHandler {
 	private boolean isModifyColumn(TableMetadata table, ColumnMetadata column, ColumnMetadata oldColumn) {
 		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
 			boolean isModifyColumn = false;
-			if(column.getDataTypeHandler() != oldColumn.getDataTypeHandler()) {
+			if(column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler())) {
 				if(!DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
 					throw new ColumnModifyException("在数据库["+DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
 				}
