@@ -89,11 +89,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public List<Map<String, Object>> query(String sql) {
-		return query(sql, null);
-	}
-	
-	@Override
 	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
@@ -106,11 +101,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 				statementHandler.close();
 			}
 		}
-	}
-	
-	@Override
-	public Map<String, Object> uniqueQuery(String sql) {
-		return uniqueQuery(sql, null);
 	}
 	
 	@Override
@@ -129,11 +119,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public List<Object[]> query_(String sql) {
-		return query_(sql, null);
-	}
-
-	@Override
 	public List<Object[]> query_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
@@ -149,11 +134,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 
 	@Override
-	public Object[] uniqueQuery_(String sql) {
-		return uniqueQuery_(sql, null);
-	}
-
-	@Override
 	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
@@ -166,11 +146,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 				statementHandler.close();
 			}
 		}
-	}
-	
-	@Override
-	public int executeUpdate(String sql) {
-		return executeUpdate(sql, null);
 	}
 	
 	@Override
@@ -206,11 +181,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			}
 			isClosed = true;
 		}
-	}
-
-	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql) {
-		return pageQuery(pageNum, pageSize, sql, null);
 	}
 
 	@Override

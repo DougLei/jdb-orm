@@ -18,7 +18,10 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<列名:值>的list-map集合
 	 */
-	List<Map<String, Object>> query(String namespace, String name);
+	default List<Map<String, Object>> query(String namespace, String name) {
+		return query(namespace, name, null);
+	}
+	
 	/**
 	 * 执行批量查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
@@ -35,7 +38,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<列名:值>的list-map集合
 	 */
-	<T> List<T> query(Class<T> targetClass, String namespace, String name);
+	default <T> List<T> query(Class<T> targetClass, String namespace, String name) {
+		return query(targetClass, namespace, name, null);
+	}
 	/**
 	 * 执行批量查询
 	 * @param targetClass
@@ -52,7 +57,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<列名:值>的map集合
 	 */
-	Map<String, Object> uniqueQuery(String namespace, String name);
+	default Map<String, Object> uniqueQuery(String namespace, String name) {
+		return uniqueQuery(namespace, name, null);
+	}
 	/**
 	 * 执行唯一查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
@@ -69,7 +76,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<列名:值>的map集合
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String namespace, String name);
+	default <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
+		return uniqueQuery(targetClass, namespace, name, null);
+	}
 	/**
 	 * 执行唯一查询
 	 * @param targetClass
@@ -86,7 +95,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<值>的list-数组集合
 	 */
-	List<Object[]> query_(String namespace, String name);
+	default List<Object[]> query_(String namespace, String name) {
+		return query_(namespace, name, null);
+	}
 	/**
 	 * 执行批量查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
@@ -102,7 +113,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return 返回<值>的数组
 	 */
-	Object[] uniqueQuery_(String namespace, String name);
+	default Object[] uniqueQuery_(String namespace, String name) {
+		return uniqueQuery_(namespace, name, null);
+	}
 	/**
 	 * 执行唯一查询
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
@@ -120,8 +133,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return
 	 */
-	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name);
-	
+	default PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name) {
+		return pageQuery(pageNum, pageSize, namespace, name, null);
+	}
 	/**
 	 * 分页查询
 	 * @param pageNum
@@ -142,8 +156,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name);
-	
+	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name) {
+		return pageQuery(targetClass, pageNum, pageSize, namespace, name, null);
+	}
 	/**
 	 * 分页查询
 	 * @param targetClass
@@ -163,7 +178,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 不能为空
 	 * @return
 	 */
-	int executeUpdate(String namespace, String name);
+	default int executeUpdate(String namespace, String name) {
+		return executeUpdate(namespace, name, null);
+	}
 	/**
 	 * 执行增删改查操作
 	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
@@ -179,7 +196,9 @@ public interface SQLSession {
 	 * @param name
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
-	Object executeProcedure(String namespace, String name);
+	default Object executeProcedure(String namespace, String name) {
+		return executeProcedure(namespace, namespace, null);
+	}
 	/**
 	 * 执行存储过程
 	 * @param namespace

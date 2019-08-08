@@ -77,19 +77,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public List<Map<String, Object>> query(String namespace, String name) {
-		return query(namespace, name, null);
-	}
-
-	@Override
 	public List<Map<String, Object>> query(String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
-	}
-
-	@Override
-	public Map<String, Object> uniqueQuery(String namespace, String name) {
-		return uniqueQuery(namespace, name, null);
 	}
 
 	@Override
@@ -99,19 +89,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public List<Object[]> query_(String namespace, String name) {
-		return query_(namespace, name, null);
-	}
-
-	@Override
 	public List<Object[]> query_(String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query_(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
-	}
-
-	@Override
-	public Object[] uniqueQuery_(String namespace, String name) {
-		return uniqueQuery_(namespace, name, null);
 	}
 
 	@Override
@@ -121,21 +101,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name) {
-		return pageQuery(pageNum, pageSize, namespace, name, null);
-	}
-
-	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 	
-	@Override
-	public int executeUpdate(String namespace, String name) {
-		return executeUpdate(namespace, name, null);
-	}
-
 	@Override
 	public int executeUpdate(String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
@@ -147,19 +117,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String namespace, String name) {
-		return query(targetClass, namespace, name, null);
-	}
-
-	@Override
 	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.query(targetClass, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
-	}
-
-	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
-		return uniqueQuery(targetClass, namespace, name, null);
 	}
 
 	@Override
@@ -169,19 +129,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name) {
-		return pageQuery(targetClass, pageNum, pageSize, namespace, name, null);
-	}
-
-	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(targetClass, pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
-	}
-
-	@Override
-	public Object executeProcedure(String namespace, String name) {
-		return executeProcedure(namespace, namespace, null);
 	}
 
 	@Override
