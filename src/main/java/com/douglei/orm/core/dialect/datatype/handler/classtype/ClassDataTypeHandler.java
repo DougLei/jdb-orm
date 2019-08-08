@@ -63,7 +63,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTyp
 		
 	}
 
-	public boolean unEquals(Object obj) {
-		return !getCode().equals(((ClassDataTypeHandler)obj).getCode());
+	public boolean unEquals(ClassDataTypeHandler otherHandler) {
+		return !getCode().equals(otherHandler.getCode());
 	}
 }
