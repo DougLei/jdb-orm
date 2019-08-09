@@ -277,7 +277,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = query(sql, parameters);
+		List<Map<String, Object>> listMap = super.query(sql, parameters);
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 		return listMap2listClass(targetClass, listMap, tableMetadata);
 	}
