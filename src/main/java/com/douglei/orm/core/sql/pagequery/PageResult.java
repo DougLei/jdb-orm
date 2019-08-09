@@ -116,6 +116,6 @@ public class PageResult<T> {
 	public String toString() {
 		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", count=" + count
 				+ ", pageCount=" + pageCount + ", resultDatas="
-				+ getResultDatas() + "]";
+				+ resultDatas + "]";
 	}
 }
