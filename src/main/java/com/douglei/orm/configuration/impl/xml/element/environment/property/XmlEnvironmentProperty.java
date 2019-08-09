@@ -140,12 +140,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
-	private static final String DEFAULT_MAPPING_CACHE_STORE = "application";// 默认为 ApplicationMappingCacheStore
 	void setMappingCacheStore(String value) {
 		if(this.mappingCacheStore == null) {
-			if(StringUtil.isEmpty(value)) {
-				value = DEFAULT_MAPPING_CACHE_STORE;
-			}
 			this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 		}
 	}

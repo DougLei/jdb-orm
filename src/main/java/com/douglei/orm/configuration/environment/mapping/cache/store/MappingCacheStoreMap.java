@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.configuration.environment.mapping.cache.store.impl.ApplicationMappingCacheStore;
+import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -11,14 +12,12 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public class MappingCacheStoreMap {
-	private static final Map<String, Class<? extends MappingCacheStore>> MAPPING_CACHE_STORE_CLASS_MAP = new HashMap<String, Class<? extends MappingCacheStore>>(4);
-	static {
-		MAPPING_CACHE_STORE_CLASS_MAP.put("application", ApplicationMappingCacheStore.class);
-		// TODO 后续可以集成其他缓存, 存储映射信息
-	}
+	private static final Map<String, Class<? extends MappingCacheStore>> MAPPING_CACHE_STORE_CLASS_MAP = new HashMap<String, Class<? extends MappingCacheStore>>(2);
 	
 	public static MappingCacheStore getMappingCacheStore(String type) {
-		type = type.toLowerCase();
+		if(StringUtil.isEmpty(type)) {
+			return new ApplicationMappingCacheStore();
+		}
 		Class<? extends MappingCacheStore> mappingCacheStoreClass = MAPPING_CACHE_STORE_CLASS_MAP.get(type);
 		if(mappingCacheStoreClass == null) {
 			Object obj = null;
@@ -33,7 +32,7 @@ public class MappingCacheStoreMap {
 			
 			@SuppressWarnings("unchecked")
 			Class<? extends MappingCacheStore> dynamicMappingCacheStore = (Class<? extends MappingCacheStore>) obj.getClass();
-			MAPPING_CACHE_STORE_CLASS_MAP.put(dynamicMappingCacheStore.getName().toLowerCase(), dynamicMappingCacheStore);
+			MAPPING_CACHE_STORE_CLASS_MAP.put(dynamicMappingCacheStore.getName(), dynamicMappingCacheStore);
 			return (MappingCacheStore) obj;
 		}
 		return (MappingCacheStore) ConstructorUtil.newInstance(mappingCacheStoreClass);
