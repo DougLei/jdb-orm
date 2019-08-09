@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
@@ -92,7 +93,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		if(setResutSetColumnNames(resultSet)) {
 			queryResultList.add(ResultSetUtil.getResultSetListMap(resultsetMetadatas, resultSet));
 		}else {
-			queryResultList.add(null);
+			queryResultList.add(Collections.emptyList());
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -116,7 +117,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult.add(null);
+			queryUniqueResult.add(Collections.emptyMap());
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -137,7 +138,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		if(setResutSetColumnNames(resultSet)) {
 			queryResultList_.add(ResultSetUtil.getResultSetListArray(resultsetMetadatas, resultSet));
 		}else {
-			queryResultList_.add(null);
+			queryResultList_.add(Collections.emptyList());
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -161,7 +162,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult_.add(null);
+			queryUniqueResult_.add(Collections.emptyArray());
 		}
 		recordStatementHandlerIsExecuted();
 	}
