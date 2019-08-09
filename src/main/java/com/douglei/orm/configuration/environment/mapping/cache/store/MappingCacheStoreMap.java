@@ -15,7 +15,7 @@ public class MappingCacheStoreMap {
 	private static final Map<String, Class<? extends MappingCacheStore>> MAPPING_CACHE_STORE_CLASS_MAP = new HashMap<String, Class<? extends MappingCacheStore>>(2);
 	
 	public static MappingCacheStore getMappingCacheStore(String type) {
-		if(StringUtil.isEmpty(type)) {
+		if(StringUtil.isEmpty(type) || type.equals("application") || type.equals(ApplicationMappingCacheStore.class.getName())) {
 			return new ApplicationMappingCacheStore();
 		}
 		Class<? extends MappingCacheStore> mappingCacheStoreClass = MAPPING_CACHE_STORE_CLASS_MAP.get(type);
@@ -37,6 +37,4 @@ public class MappingCacheStoreMap {
 		}
 		return (MappingCacheStore) ConstructorUtil.newInstance(mappingCacheStoreClass);
 	}
-	
-	
 }

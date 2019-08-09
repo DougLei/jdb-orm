@@ -4,7 +4,7 @@
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver, 如果不配置, 则框架会解析jdbc url, 获取对应的方言 -->
 		<!-- <property name="enableSessionCache" value="true" /> --><!-- 是否开启Session缓存, 即对Statement缓存, 默认值为true  -->
 		<!-- <property name="enableTableSessionCache" value="true" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为true  -->
-		<!-- <property name="mappingCacheStore" value="application" /> --><!-- value的值包括: application, 默认值为application -->
+		<!-- <property name="mappingCacheStore" value="application" /> --><!-- value的值包括: application, 或实现了 {@link com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore} 接口的全类名, 或在new XmlConfiguration时传入 {@link com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore} 接口的实现类实例, 默认值为application -->
 		<!-- <property name="tableCreateMode" value="none" /> --><!-- value的值包括: none, create, drop_create, dynamic_update, 没有默认值, 可以不配置, 该属性值为全局配置, 如果配置了该属性值, 则所有表映射的createMode属性配置失效 -->
 		<!-- <property name="enableDataValidation" value="false" /> --><!-- 是否开启数据验证, 即对提交的数据的验证, 默认值为false  -->
 		
