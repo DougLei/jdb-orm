@@ -17,6 +17,7 @@ import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.remote.database.RemoteDatabase;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
@@ -48,7 +49,7 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExtConfiguration extConfiguration) throws Exception {
+	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExtConfiguration extConfiguration, MappingCacheStore mappingCacheStore) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.id = id;
 		this.properties = properties;
@@ -58,7 +59,7 @@ public class XmlEnvironment implements Environment{
 		
 		setDataSourceWrapper(Dom4jElementUtil.validateElementExists("datasource", environmentElement));// 处理配置的数据源
 		
-		setEnvironmentProperties(environmentElement.elements("property"));// 处理environment下的所有property元素
+		setEnvironmentProperties(environmentElement.elements("property"), mappingCacheStore);// 处理environment下的所有property元素
 		
 		setMappingWrapper(environmentElement.element("mappings"));// 处理配置的映射文件
 		
@@ -126,14 +127,15 @@ public class XmlEnvironment implements Environment{
 	/**
 	 * 处理environment下的所有property元素
 	 * @param elements
+	 * @param mappingCacheStore
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(List<?> elements) throws SQLException {
+	private void setEnvironmentProperties(List<?> elements, MappingCacheStore mappingCacheStore) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
 		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
-		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(id, propertyMap, databaseMetadata);
+		XmlEnvironmentProperty xmlEnvironmentProperty = new XmlEnvironmentProperty(id, propertyMap, databaseMetadata, mappingCacheStore);
 		if(xmlEnvironmentProperty.getDialect() == null) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);

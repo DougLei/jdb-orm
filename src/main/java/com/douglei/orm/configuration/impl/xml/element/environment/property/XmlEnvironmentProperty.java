@@ -55,11 +55,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidation;
 	
-	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata) {
+	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingCacheStore mappingCacheStore) {
 		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
 		this.databaseMetadata = databaseMetadata;
+		this.mappingCacheStore = mappingCacheStore;
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
@@ -141,10 +142,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 	private static final String DEFAULT_MAPPING_CACHE_STORE = "application";// 默认为 ApplicationMappingCacheStore
 	void setMappingCacheStore(String value) {
-		if(StringUtil.isEmpty(value)) {
-			value = DEFAULT_MAPPING_CACHE_STORE;
+		if(this.mappingCacheStore == null) {
+			if(StringUtil.isEmpty(value)) {
+				value = DEFAULT_MAPPING_CACHE_STORE;
+			}
+			this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 		}
-		this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
 	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) {

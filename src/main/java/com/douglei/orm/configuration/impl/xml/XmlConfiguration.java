@@ -12,6 +12,7 @@ import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.XmlEnvironment;
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
@@ -58,6 +59,9 @@ public class XmlConfiguration implements Configuration {
 		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
 	}
 	public XmlConfiguration(InputStream in) throws ConfigurationInitializeException, DestroyException{
+		this(in, null);
+	}
+	public XmlConfiguration(InputStream in, MappingCacheStore mappingCacheStore) throws ConfigurationInitializeException, DestroyException{
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
@@ -71,7 +75,7 @@ public class XmlConfiguration implements Configuration {
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.element("properties")));
 			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
-			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration));
+			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, extConfiguration, mappingCacheStore));
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
