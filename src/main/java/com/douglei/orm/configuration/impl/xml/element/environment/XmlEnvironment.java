@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
+import com.douglei.orm.configuration.ExternalDataSource;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.Environment;
@@ -49,7 +50,7 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExtConfiguration extConfiguration, MappingCacheStore mappingCacheStore) throws Exception {
+	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource dataSource, MappingCacheStore mappingCacheStore, ExtConfiguration extConfiguration) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.id = id;
 		this.properties = properties;
@@ -57,7 +58,7 @@ public class XmlEnvironment implements Environment{
 		
 		setRemoteDatabase(environmentElement.element("remoteDatabase"));// 处理远程数据库
 		
-		setDataSourceWrapper(Dom4jElementUtil.validateElementExists("datasource", environmentElement));// 处理配置的数据源
+		setDataSourceWrapper(dataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):dataSource);// 处理配置的数据源
 		
 		setEnvironmentProperties(environmentElement.elements("property"), mappingCacheStore);// 处理environment下的所有property元素
 		
@@ -99,29 +100,46 @@ public class XmlEnvironment implements Environment{
 	
 	/**
 	 * 处理environment下的datasource元素
-	 * @param element
+	 * @param dsobj
 	 * @throws ClassNotFoundException 
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	private void setDataSourceWrapper(Element datasourceElement) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		logger.debug("开始处理<environment>下的<datasource>元素");
-		String dataSourceClassStr = datasourceElement.attributeValue("class");
-		if(StringUtil.isEmpty(dataSourceClassStr)) {
-			throw new NullPointerException("<datasource>元素的class属性不能为空");
-		}
-		Object dataSourceInstance = Class.forName(dataSourceClassStr).newInstance();
-		if(!(dataSourceInstance instanceof DataSource)) {
-			throw new ClassCastException("<datasource>元素的class, 必须实现了javax.sql.DataSource接口");
+	private void setDataSourceWrapper(Object dsobj) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		logger.debug("开始处理数据源");
+		Object dataSourceInstance = null;
+		String closeMethod = null;
+		Map<String, String> propertyMap = null;
+		
+		if(dsobj instanceof ExternalDataSource) {
+			logger.debug("开始处理外部传入的数据源");
+			dataSourceInstance = ((ExternalDataSource)dsobj).getDataSource();
+			closeMethod = ((ExternalDataSource)dsobj).getCloseMethodName();
+			logger.debug("处理外部传入的数据源结束");
+		}else {
+			logger.debug("开始处理<environment>下的<datasource>元素");
+			Element datasourceElement = (Element) dsobj;
+			String dataSourceClassStr = datasourceElement.attributeValue("class");
+			if(StringUtil.isEmpty(dataSourceClassStr)) {
+				throw new NullPointerException("<datasource>元素的class属性不能为空");
+			}
+			dataSourceInstance = Class.forName(dataSourceClassStr).newInstance();
+			if(!(dataSourceInstance instanceof DataSource)) {
+				throw new ClassCastException("<datasource>元素的class, 必须实现了"+DataSource.class.getName()+"接口");
+			}
+			
+			closeMethod = datasourceElement.attributeValue("closeMethod");
+			
+			propertyMap = elementListToPropertyMap(datasourceElement.elements("property"));
+			if(propertyMap == null || propertyMap.size() == 0) {
+				throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
+			}
+			
+			logger.debug("处理<environment>下的<datasource>元素结束");
 		}
 		
-		Map<String, String> propertyMap = elementListToPropertyMap(datasourceElement.elements("property"));
-		if(propertyMap == null || propertyMap.size() == 0) {
-			throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
-		}
-		
-		dataSourceWrapper = new XmlDataSourceWrapper((DataSource)dataSourceInstance, datasourceElement.attributeValue("closeMethod"), propertyMap, this);
-		logger.debug("处理<environment>下的<datasource>元素结束");
+		dataSourceWrapper = new XmlDataSourceWrapper((DataSource)dataSourceInstance, closeMethod, propertyMap);
+		logger.debug("处理数据源结束");
 	}
 	
 	/**

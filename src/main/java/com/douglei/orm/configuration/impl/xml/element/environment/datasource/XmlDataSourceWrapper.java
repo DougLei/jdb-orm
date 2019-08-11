@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.impl.xml.element.environment.XmlEnvironment;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.tools.utils.StringUtil;
@@ -30,7 +29,7 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	
 	public XmlDataSourceWrapper() {
 	}
-	public XmlDataSourceWrapper(DataSource dataSource, String closeMethodName, Map<String, String> propertyMap, XmlEnvironment environment) {
+	public XmlDataSourceWrapper(DataSource dataSource, String closeMethodName, Map<String, String> propertyMap) {
 		this.dataSource = dataSource;
 		this.closeMethodName = closeMethodName;
 		this.propertyMap = propertyMap;
