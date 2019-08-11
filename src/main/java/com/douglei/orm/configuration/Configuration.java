@@ -1,5 +1,6 @@
 package com.douglei.orm.configuration;
 
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 /**
@@ -16,6 +17,8 @@ public interface Configuration extends SelfProcessing{
 	 * @return
 	 */
 	String getId();
+	
+	void setMappingCacheStore(MappingCacheStore mappingCacheStore);
 	
 	/**
 	 * <pre>

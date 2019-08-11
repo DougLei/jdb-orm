@@ -51,12 +51,14 @@ public class XmlConfiguration implements Configuration {
 	 */
 	private Environment environment;
 	
-	
 	public XmlConfiguration() throws ConfigurationInitializeException, DestroyException{
 		this(DEFAULT_CONF_FILE);
 	}
 	public XmlConfiguration(String configurationFile) throws ConfigurationInitializeException, DestroyException{
-		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
+		this(configurationFile, null);
+	}
+	public XmlConfiguration(String configurationFile, MappingCacheStore mappingCacheStore) throws ConfigurationInitializeException, DestroyException{
+		this(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile), mappingCacheStore);
 	}
 	public XmlConfiguration(InputStream in) throws ConfigurationInitializeException, DestroyException{
 		this(in, null);
@@ -65,7 +67,6 @@ public class XmlConfiguration implements Configuration {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
-		
 		try {
 			xmlDocument = XmlReaderContext.getConfigurationSAXReader().read(in);
 			if(logger.isDebugEnabled()) {
