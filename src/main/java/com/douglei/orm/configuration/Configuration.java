@@ -44,6 +44,25 @@ public abstract class Configuration implements SelfProcessing{
 		this.id = id;
 	}
 	
+	protected InputStream getConfigurationInputStream() {
+		if(configurationInputStream == null) {
+			if(StringUtil.isEmpty(configurationFile)) {
+				throw new NullPointerException("buildSessionFactory时, 必须指定configurationFile或configurationInputStream");
+			}
+			configurationInputStream = Configuration.class.getClassLoader().getResourceAsStream(configurationFile);
+		}
+		return configurationInputStream;
+	}
+	
+	protected void closeConfigurationInputStream() {
+		if(configurationInputStream != null) {
+			CloseUtil.closeIO(configurationInputStream);
+			configurationInputStream = null;
+		}
+	}
+	
+	protected abstract void setSessionFactory();
+	
 	/**
 	 * 设置配置文件的路径
 	 * @param configurationFile
@@ -82,26 +101,7 @@ public abstract class Configuration implements SelfProcessing{
 		return sessionFactory;
 	}
 	
-	protected InputStream getConfigurationInputStream() {
-		if(this.configurationInputStream == null) {
-			if(StringUtil.isEmpty(configurationFile)) {
-				throw new NullPointerException("buildSessionFactory时, 必须指定configurationFile或configurationInputStream");
-			}
-			this.configurationInputStream = Configuration.class.getClassLoader().getResourceAsStream(configurationFile);
-		}
-		return this.configurationInputStream;
-	}
-	
-	protected void closeConfigurationInputStream() {
-		if(this.configurationInputStream != null) {
-			CloseUtil.closeIO(this.configurationInputStream);
-			this.configurationInputStream = null;
-		}
-	}
-	
 	@Override
 	public void selfChecking() throws SelfCheckingException {
 	}
-
-	protected abstract void setSessionFactory();
 }
