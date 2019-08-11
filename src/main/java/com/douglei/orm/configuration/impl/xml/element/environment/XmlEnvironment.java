@@ -36,9 +36,7 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class XmlEnvironment implements Environment{
 	private static final Logger logger = LoggerFactory.getLogger(XmlEnvironment.class);
-	private String id;
 	private Properties properties;
-	private ExtConfiguration extConfiguration;
 	
 	private EnvironmentProperty environmentProperty;
 	
@@ -52,15 +50,13 @@ public class XmlEnvironment implements Environment{
 	}
 	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource dataSource, MappingCacheStore mappingCacheStore, ExtConfiguration extConfiguration) throws Exception {
 		logger.debug("开始处理<environment>元素");
-		this.id = id;
 		this.properties = properties;
-		this.extConfiguration = extConfiguration;
 		
 		setRemoteDatabase(environmentElement.element("remoteDatabase"));// 处理远程数据库
 		
 		setDataSourceWrapper(dataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):dataSource);// 处理配置的数据源
 		
-		setEnvironmentProperties(environmentElement.elements("property"), mappingCacheStore);// 处理environment下的所有property元素
+		setEnvironmentProperties(id, environmentElement.elements("property"), mappingCacheStore, extConfiguration);// 处理environment下的所有property元素
 		
 		setMappingWrapper(environmentElement.element("mappings"));// 处理配置的映射文件
 		
@@ -144,11 +140,13 @@ public class XmlEnvironment implements Environment{
 	
 	/**
 	 * 处理environment下的所有property元素
+	 * @param id
 	 * @param elements
 	 * @param mappingCacheStore
+	 * @param extConfiguration
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(List<?> elements, MappingCacheStore mappingCacheStore) throws SQLException {
+	private void setEnvironmentProperties(String id, List<?> elements, MappingCacheStore mappingCacheStore, ExtConfiguration extConfiguration) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
@@ -198,10 +196,6 @@ public class XmlEnvironment implements Environment{
 	}
 	
 	// -------------------------------------------------------------
-	@Override
-	public String getId() {
-		return id;
-	}
 	@Override
 	public EnvironmentProperty getEnvironmentProperty() {
 		return environmentProperty;

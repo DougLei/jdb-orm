@@ -12,7 +12,7 @@ import com.douglei.tools.utils.StringUtil;
 
 /**
  * 配置接口
- * <b>Configuration的id、SessionFactory的id、Environment的id、EnvironmentProperty的id, 这几个id都是同一个值, 都是给configuration中配置的id</b>
+ * <b>Configuration的id、SessionFactory的id、EnvironmentProperty的id, 这几个id都是同一个值, 都是给configuration中配置的id</b>
  * @author DougLei
  */
 public abstract class Configuration implements SelfProcessing{
