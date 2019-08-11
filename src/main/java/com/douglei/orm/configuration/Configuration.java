@@ -2,8 +2,6 @@ package com.douglei.orm.configuration;
 
 import java.io.InputStream;
 
-import javax.sql.DataSource;
-
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.instances.reader.Reader;
@@ -64,11 +62,8 @@ public abstract class Configuration implements SelfProcessing{
 		this.configurationInputStream = configurationInputStream;
 	}
 	
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = new ExternalDataSource(dataSource);
-	}
-	public void setDataSource(DataSource dataSource, String closeMethodName) {
-		this.dataSource = new ExternalDataSource(dataSource, closeMethodName);
+	public void setExternalDataSource(ExternalDataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 	
 	public void setMappingCacheStore(MappingCacheStore mappingCacheStore) {
