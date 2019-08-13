@@ -32,13 +32,12 @@ class RedisMappingStoreHandler {
 		}
 		return prefix;
 	}
-	
 	private String getCode(String code) {
 		return getPrefix() + code;
 	}
 	
 	public void initializeStore(Jedis connection) {
-		Set<String> keys = connection.keys(getPrefix());
+		Set<String> keys = connection.keys(getPrefix() + "*");
 		if(Collections.unEmpty(keys)) {
 			removeMapping(keys, connection);
 		}
