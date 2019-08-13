@@ -71,6 +71,5 @@ public class RedisTest {
 		Set<String> keys = jedis.keys("name*");
 		keys.forEach(name -> System.out.println(name));
 		jedis.close();
-		
 	}
 }
