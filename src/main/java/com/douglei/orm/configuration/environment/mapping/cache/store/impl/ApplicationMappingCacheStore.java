@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.environment.mapping.cache.store.NotExistsMappingException;
@@ -109,9 +108,5 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 		if(mappings != null && mappings.size() > 0) {
 			mappings.clear();
 		}
-	}
-
-	@Override
-	public void selfChecking() throws SelfCheckingException {
 	}
 }

@@ -16,5 +16,6 @@ public interface SelfProcessing {
 	 * 自检
 	 * @throws SelfCheckingException
 	 */
-	void selfChecking() throws SelfCheckingException;
+	default void selfChecking() throws SelfCheckingException{
+	}
 }
