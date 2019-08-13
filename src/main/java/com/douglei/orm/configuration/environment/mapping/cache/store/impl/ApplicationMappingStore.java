@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
 import com.douglei.orm.configuration.environment.mapping.cache.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.cache.store.RepeatedMappingException;
 import com.douglei.tools.utils.Collections;
@@ -18,8 +18,8 @@ import com.douglei.tools.utils.Collections;
  * 使用当前系统的内存空间存储映射信息
  * @author DougLei
  */
-public class ApplicationMappingCacheStore implements MappingCacheStore {
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingCacheStore.class);
+public class ApplicationMappingStore implements MappingStore {
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingStore.class);
 	
 	private Map<String, Mapping> mappings;
 	

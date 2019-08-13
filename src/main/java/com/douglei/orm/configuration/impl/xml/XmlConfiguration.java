@@ -73,7 +73,7 @@ public class XmlConfiguration extends Configuration {
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.element("properties")));
 			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
-			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingCacheStore, extConfiguration));
+			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingStore, extConfiguration));
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {

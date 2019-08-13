@@ -9,7 +9,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
  * 映射信息缓存存储的目标位置
  * @author DougLei
  */
-public interface MappingCacheStore extends SelfProcessing{
+public interface MappingStore extends SelfProcessing{
 	static final short DEFAULT_STORE_SIZE = 64;
 	
 	/**
@@ -17,8 +17,7 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * <b>如果需要清空之前的数据, 也在这个方法中实现</b>
 	 * @param size 如果size<1, 则使用默认的大小
 	 */
-	default void initializeStore(int size) {
-	}
+	void initializeStore(int size);
 	
 	/**
 	 * <pre>

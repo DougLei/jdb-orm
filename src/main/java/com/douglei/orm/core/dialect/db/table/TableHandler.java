@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectHolder;
@@ -374,7 +374,7 @@ public class TableHandler {
 	}
 	
 	private void rollbackTableMapping(TableMappingHolder tableMappingHolder) {
-		MappingCacheStore mcs = DBRunEnvironmentContext.getEnvironmentProperty().getMappingCacheStore();
+		MappingStore mcs = DBRunEnvironmentContext.getEnvironmentProperty().getMappingStore();
 		switch(tableMappingHolder.getTableMappingOPType()) {
 			case CREATE:
 				mcs.addMapping(tableMappingHolder.getTableMappings());

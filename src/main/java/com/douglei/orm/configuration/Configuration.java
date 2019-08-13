@@ -2,7 +2,7 @@ package com.douglei.orm.configuration;
 
 import java.io.InputStream;
 
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.instances.reader.Reader;
 import com.douglei.tools.utils.CloseUtil;
@@ -21,7 +21,7 @@ public abstract class Configuration implements SelfProcessing{
 	
 	protected String id;
 	protected ExternalDataSource dataSource;
-	protected MappingCacheStore mappingCacheStore;
+	protected MappingStore mappingStore;
 	
 	protected SessionFactory sessionFactory;
 	
@@ -85,8 +85,8 @@ public abstract class Configuration implements SelfProcessing{
 		this.dataSource = dataSource;
 	}
 	
-	public void setMappingCacheStore(MappingCacheStore mappingCacheStore) {
-		this.mappingCacheStore = mappingCacheStore;
+	public void setMappingStore(MappingStore mappingStore) {
+		this.mappingStore = mappingStore;
 	}
 	
 	/**

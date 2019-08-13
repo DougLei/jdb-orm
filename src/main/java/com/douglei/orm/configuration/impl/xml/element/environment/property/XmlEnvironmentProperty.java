@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStoreMap;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStoreMap;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
 import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
@@ -38,7 +38,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableTableSessionCache = true;
 	
 	@FieldMetaData
-	private MappingCacheStore mappingCacheStore;
+	private MappingStore mappingStore;
 	
 	@FieldMetaData
 	private CreateMode tableCreateMode;
@@ -55,12 +55,12 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidation;
 	
-	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingCacheStore mappingCacheStore) {
+	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
 		this.databaseMetadata = databaseMetadata;
-		this.mappingCacheStore = mappingCacheStore;
+		this.mappingStore = mappingStore;
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
@@ -140,9 +140,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
-	void setMappingCacheStore(String value) {
-		if(this.mappingCacheStore == null) {
-			this.mappingCacheStore = MappingCacheStoreMap.getMappingCacheStore(value);
+	void setMappingStore(String value) {
+		if(this.mappingStore == null) {
+			this.mappingStore = MappingStoreMap.getMappingStore(value);
 		}
 	}
 	void setTableCreateMode(String value) {
@@ -202,8 +202,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return enableTableSessionCache;
 	}
 	@Override
-	public MappingCacheStore getMappingCacheStore() {
-		return mappingCacheStore;
+	public MappingStore getMappingStore() {
+		return mappingStore;
 	}
 	@Override
 	public CreateMode getTableCreateMode() {

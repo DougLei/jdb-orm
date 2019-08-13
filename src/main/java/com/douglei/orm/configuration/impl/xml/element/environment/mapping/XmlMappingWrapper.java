@@ -12,7 +12,6 @@ import com.douglei.orm.configuration.environment.mapping.DynamicCoverMappingExce
 import com.douglei.orm.configuration.environment.mapping.DynamicRemoveMappingException;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
@@ -25,11 +24,11 @@ import com.douglei.tools.instances.scanner.FileScanner;
 public class XmlMappingWrapper extends MappingWrapper{
 	private static final Logger logger = LoggerFactory.getLogger(XmlMappingWrapper.class);
 	
-	public XmlMappingWrapper(MappingCacheStore mappingCacheStore) {
-		super(false, mappingCacheStore);
+	public XmlMappingWrapper(EnvironmentProperty environmentProperty) {
+		super(false, environmentProperty.getMappingStore());
 	}
 	public XmlMappingWrapper(boolean searchAll, List<?> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
-		super(searchAll, environmentProperty.getMappingCacheStore());
+		super(searchAll, environmentProperty.getMappingStore());
 		
 		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
 		scanMappingFiles(fileScanner, paths);
@@ -38,7 +37,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 		if(list.size() > 0) {
 			try {
 				DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-				initializeMappingCacheStore(list.size());
+				initializeMappingStore(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
@@ -49,7 +48,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 				fileScanner.destroy();
 			}
 		}else {
-			initializeMappingCacheStore(0);
+			initializeMappingStore(0);
 		}
 	}
 	private void scanMappingFiles(FileScanner fileScanner, List<?> elements) {

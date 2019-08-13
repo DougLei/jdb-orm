@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 
 /**
@@ -17,10 +17,10 @@ public abstract class MappingWrapper implements SelfProcessing{
 	private static final Logger logger = LoggerFactory.getLogger(MappingWrapper.class);
 	
 	protected boolean searchAll;
-	private MappingCacheStore mappingCacheStore;
-	public MappingWrapper(boolean searchAll, MappingCacheStore mappingCacheStore) {
+	private MappingStore mappingStore;
+	public MappingWrapper(boolean searchAll, MappingStore mappingStore) {
 		this.searchAll = searchAll;
-		this.mappingCacheStore = mappingCacheStore;
+		this.mappingStore = mappingStore;
 		logger.debug("searchAll value = {}", searchAll);
 	}
 	
@@ -28,8 +28,8 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 初始化存储空间
 	 * @param size
 	 */
-	protected void initializeMappingCacheStore(int size) {
-		mappingCacheStore.initializeStore(size);
+	protected void initializeMappingStore(int size) {
+		mappingStore.initializeStore(size);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return mapping的code
 	 */
 	protected synchronized String addMapping(Mapping mapping){
-		mappingCacheStore.addMapping(mapping);
+		mappingStore.addMapping(mapping);
 		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
@@ -56,7 +56,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return mapping的code
 	 */
 	protected synchronized String addOrCoverMapping(Mapping mapping) {
-		mappingCacheStore.addOrCoverMapping(mapping);
+		mappingStore.addOrCoverMapping(mapping);
 		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
@@ -71,7 +71,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return mapping的code
 	 */
 	protected synchronized String addOrCoverMapping_simple(Mapping mapping) {
-		mappingCacheStore.addOrCoverMapping(mapping);
+		mappingStore.addOrCoverMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -84,7 +84,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mappingCode
 	 */
 	protected synchronized void removeMapping(String mappingCode) {
-		Mapping mapping = mappingCacheStore.removeMapping(mappingCode);
+		Mapping mapping = mappingStore.removeMapping(mappingCode);
 		RunMappingConfigurationContext.registerDropTableMapping(mapping);
 	}
 	
@@ -94,7 +94,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return
 	 */
 	public Mapping getMapping(String mappingCode) {
-		return mappingCacheStore.getMapping(mappingCode);
+		return mappingStore.getMapping(mappingCode);
 	}
 	
 	/**
@@ -154,7 +154,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	@Override
 	public void destroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());
-		mappingCacheStore.destroy();
+		mappingStore.destroy();
 		logger.debug("{} 结束 destroy", getClass());
 	}
 
