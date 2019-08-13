@@ -40,7 +40,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @return mapping的code
 	 */
-	protected synchronized String addMapping(Mapping mapping){
+	protected String addMapping(Mapping mapping){
 		mappingStore.addMapping(mapping);
 		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
@@ -55,7 +55,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 * @return mapping的code
 	 */
-	protected synchronized String addOrCoverMapping(Mapping mapping) {
+	protected String addOrCoverMapping(Mapping mapping) {
 		mappingStore.addOrCoverMapping(mapping);
 		RunMappingConfigurationContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
@@ -70,7 +70,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @param mapping
 	 * @return mapping的code
 	 */
-	protected synchronized String addOrCoverMapping_simple(Mapping mapping) {
+	protected String addOrCoverMapping_simple(Mapping mapping) {
 		mappingStore.addOrCoverMapping(mapping);
 		return mapping.getCode();
 	}
@@ -83,7 +83,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * </pre>
 	 * @param mappingCode
 	 */
-	protected synchronized void removeMapping(String mappingCode) {
+	protected void removeMapping(String mappingCode) {
 		Mapping mapping = mappingStore.removeMapping(mappingCode);
 		RunMappingConfigurationContext.registerDropTableMapping(mapping);
 	}

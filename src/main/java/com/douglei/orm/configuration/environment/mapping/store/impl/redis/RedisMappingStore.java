@@ -1,8 +1,5 @@
 package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 
 import com.douglei.orm.configuration.DestroyException;
@@ -21,18 +18,24 @@ import redis.clients.jedis.JedisPool;
  */
 public class RedisMappingStore implements MappingStore {
 	private final RedisMappingStoreHandler handler = new RedisMappingStoreHandler();
-	
-	private boolean multiDataSource;// 是否是多个数据源, 如果包含多个数据源, 则code需要前缀区分是哪个数据源
 	private JedisPool redisPool;
-	public RedisMappingStore(boolean multiDataSource, JedisPool redisPool) {
-		this.multiDataSource = multiDataSource;
+
+	public RedisMappingStore(JedisPool redisPool) {
 		this.redisPool = redisPool;
 	}
-	
+	public RedisMappingStore(JedisPool redisPool, boolean multiDataSource) {
+		this.redisPool = redisPool;
+		handler.setMultiDataSource(multiDataSource);
+	}
+
 	@Override
 	public void initializeStore(int size) {
 		try(Jedis connection = redisPool.getResource()){
 			handler.initializeStore(connection);
+		}
+		if(!handler.isMultiDataSource()) {
+			redisPool.destroy();
+			redisPool = null;
 		}
 	}
 	
@@ -68,12 +71,6 @@ public class RedisMappingStore implements MappingStore {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException {
-		try(InputStream in = new ByteArrayInputStream("dd".getBytes())){
-			System.out.println(1);
-		}
-	}
-
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
 		try(Jedis connection = redisPool.getResource()){

@@ -55,7 +55,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicAddMapping(DynamicMapping entity) {
+	public synchronized void dynamicAddMapping(DynamicMapping entity) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicAddMapping_(entity);
@@ -67,7 +67,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicBatchAddMapping(List<DynamicMapping> entities) {
+	public synchronized void dynamicBatchAddMapping(List<DynamicMapping> entities) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
@@ -92,7 +92,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicCoverMapping(DynamicMapping entity) {
+	public synchronized void dynamicCoverMapping(DynamicMapping entity) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicCoverMapping_(entity);
@@ -103,7 +103,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 
 	@Override
-	public void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
+	public synchronized void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
@@ -116,7 +116,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicRemoveMapping(String mappingCode) {
+	public synchronized void dynamicRemoveMapping(String mappingCode) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
@@ -128,7 +128,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public void dynamicBatchRemoveMapping(List<String> mappingCodes) {
+	public synchronized void dynamicBatchRemoveMapping(List<String> mappingCodes) {
 		try {
 			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (String mappingCode : mappingCodes) {
