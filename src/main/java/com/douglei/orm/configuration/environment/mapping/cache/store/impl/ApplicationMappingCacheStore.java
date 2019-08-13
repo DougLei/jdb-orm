@@ -12,6 +12,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
 import com.douglei.orm.configuration.environment.mapping.cache.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.cache.store.RepeatedMappingException;
+import com.douglei.tools.utils.Collections;
 
 /**
  * 使用当前系统的内存空间存储映射信息
@@ -46,7 +47,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
-		if(mappings != null) {
+		if(Collections.unEmpty(mappings)) {
 			for (Mapping mapping : mappings) {
 				addMapping(mapping);
 			}
@@ -57,14 +58,14 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	public void addOrCoverMapping(Mapping mapping) {
 		String code = mapping.getCode();
 		if(logger.isDebugEnabled() && mappingExists(code)) {
-			logger.debug("覆盖已经存在code为[]的映射对象: {}", code, mappings.get(code));
+			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", code, mappings.get(code));
 		}
 		mappings.put(code, mapping);
 	}
 	
 	@Override
 	public void addOrCoverMapping(Collection<Mapping> mappings) {
-		if(mappings != null) {
+		if(Collections.unEmpty(mappings)) {
 			for (Mapping mapping : mappings) {
 				addOrCoverMapping(mapping);
 			}
@@ -82,7 +83,7 @@ public class ApplicationMappingCacheStore implements MappingCacheStore {
 	
 	@Override
 	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
-		if(mappings != null) {
+		if(Collections.unEmpty(mappingCodes)) {
 			for (String mappingCode : mappingCodes) {
 				removeMapping(mappingCode);
 			}

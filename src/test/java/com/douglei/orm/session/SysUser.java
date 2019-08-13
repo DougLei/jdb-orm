@@ -1,9 +1,11 @@
 package com.douglei.orm.session;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SysUser {
+public class SysUser implements Serializable{
+	private static final long serialVersionUID = 8240817972018054005L;
 	private String id;
 	private String name;
 	private int age;

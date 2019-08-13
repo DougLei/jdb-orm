@@ -17,7 +17,8 @@ public interface MappingCacheStore extends SelfProcessing{
 	 * <b>如果需要清空之前的数据, 也在这个方法中实现</b>
 	 * @param size 如果size<1, 则使用默认的大小
 	 */
-	void initializeStore(int size);
+	default void initializeStore(int size) {
+	}
 	
 	/**
 	 * <pre>

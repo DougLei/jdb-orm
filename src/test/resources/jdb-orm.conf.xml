@@ -13,6 +13,20 @@
 		<!-- <property name="enableColumnDynamicUpdateValidation" value="false" /> --><!-- 是否开启列的动态更新验证[列的动态更新验证含义为, 修改列的数据类型,长度,精度,是否可为空时, 判断是否可以进行修改, 如果不能修改, 则抛出相应的异常信息], 默认值为false  -->
 		
 		<!-- 可以远程操作指定的数据库服务, 进行数据库的create/drop -->
+		<remoteDatabase>
+			<property name="url" value=""/>
+			<property name="username" value=""/>
+			<property name="password" value=""/>
+			<property name="destroy" value=""/><!-- 在销毁该配置时, 是否也销毁该数据库 -->
+			
+			<!-- create和drop的顺序是相反的, 例如第一条create语句是create database, 则drop的最后一条语句才是drop database -->
+			<createSql>
+				<sql></sql>
+			</createSql>
+			<dropSql>
+				<sql></sql>
+			</dropSql>
+		</remoteDatabase>
 		
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>
