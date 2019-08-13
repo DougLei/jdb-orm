@@ -1,9 +1,9 @@
-package com.douglei.orm.configuration.environment.mapping.cache.store;
+package com.douglei.orm.configuration.environment.mapping.store;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.configuration.environment.mapping.cache.store.impl.ApplicationMappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.impl.ApplicationMappingStore;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
@@ -24,7 +24,10 @@ public class MappingStoreMap {
 			try {
 				obj = ConstructorUtil.newInstance(type);
 			} catch (Exception e) {
-				throw new UnsupportMappingStoreException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+MAPPING_STORE_CLASS_MAP.keySet());
+				StringBuilder supportType = new StringBuilder(100);
+				supportType.append("application, ").append(ApplicationMappingStore.class.getName());
+				MAPPING_STORE_CLASS_MAP.keySet().forEach(key -> supportType.append(", ").append(key));
+				throw new UnsupportMappingStoreException("系统目前不支持["+type+"], 目前支持的mappingStore值包括:"+supportType);
 			}
 			if(!(obj instanceof MappingStore)) {
 				throw new UnsupportMappingStoreException("["+type+"]的类必须继承["+MappingStore.class.getName()+"]");

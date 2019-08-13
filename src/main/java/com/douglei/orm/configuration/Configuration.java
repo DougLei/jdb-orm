@@ -2,7 +2,7 @@ package com.douglei.orm.configuration;
 
 import java.io.InputStream;
 
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.instances.reader.Reader;
 import com.douglei.tools.utils.CloseUtil;

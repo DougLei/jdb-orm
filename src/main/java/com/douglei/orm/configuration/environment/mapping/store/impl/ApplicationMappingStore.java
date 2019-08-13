@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.environment.mapping.cache.store.impl;
+package com.douglei.orm.configuration.environment.mapping.store.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
-import com.douglei.orm.configuration.environment.mapping.cache.store.NotExistsMappingException;
-import com.douglei.orm.configuration.environment.mapping.cache.store.RepeatedMappingException;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
+import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
 import com.douglei.tools.utils.Collections;
 
 /**

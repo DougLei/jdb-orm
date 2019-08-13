@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 
 /**

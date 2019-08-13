@@ -18,7 +18,7 @@ import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.remote.database.RemoteDatabase;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;

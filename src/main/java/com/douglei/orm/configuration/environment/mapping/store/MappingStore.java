@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.environment.mapping.cache.store;
+package com.douglei.orm.configuration.environment.mapping.store;
 
 import java.util.Collection;
 

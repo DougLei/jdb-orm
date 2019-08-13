@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStoreMap;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStoreMap;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
 import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;

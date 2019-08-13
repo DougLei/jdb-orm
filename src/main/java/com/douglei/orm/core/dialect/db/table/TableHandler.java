@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.dialect.db.table.dbobject.DBObjectHolder;

@@ -1,6 +1,6 @@
 package com.douglei.orm.configuration.environment.property;
 
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.metadata.table.CreateMode;
 
