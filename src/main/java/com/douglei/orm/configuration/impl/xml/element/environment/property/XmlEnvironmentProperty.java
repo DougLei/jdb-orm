@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStoreMap;
+import com.douglei.orm.configuration.environment.mapping.store.impl.ApplicationMappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
 import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
@@ -142,7 +142,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 	void setMappingStore(String value) {
 		if(this.mappingStore == null) {
-			this.mappingStore = MappingStoreMap.getMappingStore(value);
+			this.mappingStore = new ApplicationMappingStore();
 		}
 	}
 	void setTableCreateMode(String value) {

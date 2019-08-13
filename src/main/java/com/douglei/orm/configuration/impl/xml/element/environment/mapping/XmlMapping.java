@@ -7,6 +7,8 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
  * @author DougLei
  */
 public abstract class XmlMapping implements Mapping{
+	private static final long serialVersionUID = -8925090454525280779L;
+	
 	protected String configFileName;
 
 	public XmlMapping(String configFileName) {

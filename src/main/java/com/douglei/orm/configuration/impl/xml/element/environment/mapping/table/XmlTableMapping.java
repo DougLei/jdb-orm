@@ -44,6 +44,8 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlTableMapping extends XmlMapping implements TableMapping{
+	private static final long serialVersionUID = -3966509657251325723L;
+
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
 	
 	private static final MetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();

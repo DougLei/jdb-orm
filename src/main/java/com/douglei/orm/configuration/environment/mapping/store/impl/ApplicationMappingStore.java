@@ -40,7 +40,7 @@ public class ApplicationMappingStore implements MappingStore {
 	public void addMapping(Mapping mapping) throws RepeatedMappingException{
 		String code = mapping.getCode();
 		if(mappingExists(code)) {
-			throw new RepeatedMappingException("已经存在code为["+code+"]的映射对象: " + mappings.get(code));
+			throw new RepeatedMappingException("已经存在相同code为["+code+"]的映射对象: " + mappings.get(code));
 		}
 		mappings.put(code, mapping);
 	}

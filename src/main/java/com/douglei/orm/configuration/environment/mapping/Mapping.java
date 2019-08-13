@@ -1,12 +1,14 @@
 package com.douglei.orm.configuration.environment.mapping;
 
+import java.io.Serializable;
+
 import com.douglei.orm.core.metadata.Metadata;
 
 /**
  * 
  * @author DougLei
  */
-public interface Mapping {
+public interface Mapping extends Serializable{
 	
 	/**
 	 * 获取映射编码，绝对唯一
