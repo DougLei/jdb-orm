@@ -10,7 +10,7 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
  * @author DougLei
  */
 public abstract class RedisHandler{
-	protected static final String prefix = "MP:";
+	protected static final String prefix = "ORM:MP:";
 	protected boolean multiDataSource;// 是否是多个数据源, 如果包含多个数据源, 则code需要前缀区分是哪个数据源
 	
 	protected String getPrefix() {
