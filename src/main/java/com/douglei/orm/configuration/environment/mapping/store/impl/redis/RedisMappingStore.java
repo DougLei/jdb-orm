@@ -102,7 +102,9 @@ public class RedisMappingStore implements MappingStore {
 		try(Jedis connection = redisPool.getResource()){
 			handler.destroy(connection);
 		}
-		redisPool.destroy();
-		redisPool = null;	
+		if(!handler.isMultiDataSource()) {
+			redisPool.destroy();
+			redisPool = null;	
+		}
 	}
 }

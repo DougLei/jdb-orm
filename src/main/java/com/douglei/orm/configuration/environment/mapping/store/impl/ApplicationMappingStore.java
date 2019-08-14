@@ -25,10 +25,7 @@ public class ApplicationMappingStore implements MappingStore {
 	
 	@Override
 	public void initializeStore(int size) {
-		if(mappings != null) {
-			mappings.clear();
-			mappings = null;
-		}
+		destroy();
 		if(size < 1) {
 			mappings = new HashMap<String, Mapping>(DEFAULT_STORE_SIZE);
 		}else {
@@ -106,8 +103,9 @@ public class ApplicationMappingStore implements MappingStore {
 	
 	@Override
 	public void destroy() throws DestroyException {
-		if(mappings != null && mappings.size() > 0) {
+		if(Collections.unEmpty(mappings)) {
 			mappings.clear();
+			mappings = null;
 		}
 	}
 }

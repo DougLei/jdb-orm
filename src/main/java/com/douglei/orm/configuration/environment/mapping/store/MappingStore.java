@@ -6,7 +6,7 @@ import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 
 /**
- * 映射信息缓存存储的目标位置
+ * 
  * @author DougLei
  */
 public interface MappingStore extends SelfProcessing{
