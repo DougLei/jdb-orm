@@ -1,5 +1,8 @@
 package com.douglei.orm.redis;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -95,5 +98,50 @@ public class RedisTest {
 		Jedis jedis = jedisPool.getResource();
 		System.out.println(jedis.get("MP:default:com.ibs.demo.entity.SysUser"));
 		jedis.close();
+	}
+	
+	@Test
+	public void test3() {
+		Jedis jedis = jedisPool.getResource();
+		jedis.set("test1", "test1");
+		jedis.set("test2", "test2");
+		jedis.set("test3", "test3");
+		jedis.close();
+	}
+	
+	@Test
+	public void test4() {
+		Jedis jedis = jedisPool.getResource();
+		Set<String> keys = jedis.keys("test*");
+		for (String string : keys) {
+			System.out.println(jedis.get(string));
+		}
+		System.out.println("------------------");
+		jedis.close();
+	}
+	
+	@Test
+	public void test5() {
+//		Jedis jedis = jedisPool.getResource();
+//		Pipeline p  = jedis.pipelined();
+//		p.del("test1", "test2", "test3");
+//		p.sync();
+//		jedis.close();
+		
+		List<String> mappingCodes = new ArrayList<String>();
+		mappingCodes.add("test1");
+		mappingCodes.add("test2");
+		mappingCodes.add("test3");
+		
+		Jedis connection = jedisPool.getResource();
+		Pipeline pipeline = connection.pipelined();
+		byte index = 0;
+		byte[][] codes = new byte[mappingCodes.size()][];
+		for (String code : mappingCodes) {
+			codes[index++] = code.getBytes(StandardCharsets.UTF_8);
+		}
+		pipeline.del(codes);
+		pipeline.sync();
+		
 	}
 }
