@@ -113,7 +113,4 @@ class RedisMappingStoreHandler {
 	public void setMultiDataSource(boolean multiDataSource) {
 		this.multiDataSource = multiDataSource;
 	}
-	public boolean isMultiDataSource() {
-		return multiDataSource;
-	}
 }

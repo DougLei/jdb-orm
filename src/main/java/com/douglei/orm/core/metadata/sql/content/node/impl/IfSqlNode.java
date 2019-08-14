@@ -8,6 +8,7 @@ import com.douglei.tools.instances.ognl.OgnlHandler;
  * @author DougLei
  */
 public class IfSqlNode extends AbstractSqlNode {
+	private static final long serialVersionUID = 4563707729228309699L;
 	private String expression;
 	
 	public IfSqlNode(String expression, String content) {

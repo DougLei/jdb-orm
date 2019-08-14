@@ -12,6 +12,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = 5345548518449205053L;
 	private String prefix;
 	private String suffix;
 	

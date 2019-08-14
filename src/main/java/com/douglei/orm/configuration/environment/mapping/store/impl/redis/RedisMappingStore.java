@@ -33,10 +33,6 @@ public class RedisMappingStore implements MappingStore {
 		try(Jedis connection = redisPool.getResource()){
 			handler.initializeStore(connection);
 		}
-		if(!handler.isMultiDataSource()) {
-			redisPool.destroy();
-			redisPool = null;
-		}
 	}
 	
 	@Override
@@ -106,5 +102,7 @@ public class RedisMappingStore implements MappingStore {
 		try(Jedis connection = redisPool.getResource()){
 			handler.destroy(connection);
 		}
+		redisPool.destroy();
+		redisPool = null;	
 	}
 }

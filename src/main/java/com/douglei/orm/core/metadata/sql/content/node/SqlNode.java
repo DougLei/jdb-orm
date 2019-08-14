@@ -1,10 +1,12 @@
 package com.douglei.orm.core.metadata.sql.content.node;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author DougLei
  */
-public interface SqlNode {
+public interface SqlNode extends Serializable{
 	
 	SqlNodeType getType();
 	

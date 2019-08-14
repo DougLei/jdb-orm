@@ -9,6 +9,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = 6500829001502771501L;
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
