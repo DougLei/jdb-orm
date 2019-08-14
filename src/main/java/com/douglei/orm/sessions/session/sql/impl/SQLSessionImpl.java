@@ -26,6 +26,7 @@ import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.orm.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
+import com.douglei.orm.sessions.session.sql.ExecuteSql;
 import com.douglei.orm.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessions.session.sql.impl.execution.SqlExecutionHolder;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutionException;
@@ -132,6 +133,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return super.pageQuery(targetClass, pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
+	}
+	
+	@Override
+	public ExecuteSql getExecuteSql(String namespace, String name, Object sqlParameter) {
+		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
+		return new ExecuteSql(executionHolder);
 	}
 
 	@Override

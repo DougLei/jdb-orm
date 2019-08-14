@@ -171,6 +171,24 @@ public interface SQLSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
+	/**
+	 * 获取要执行的sql
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	default ExecuteSql getExecuteSql(String namespace, String name) {
+		return getExecuteSql(namespace, namespace, null);
+	}
+	
+	/**
+	 * 获取要执行的sql
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	ExecuteSql getExecuteSql(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行增删改查操作
