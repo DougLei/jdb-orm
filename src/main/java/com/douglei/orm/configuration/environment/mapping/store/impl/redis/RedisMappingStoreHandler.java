@@ -1,6 +1,5 @@
 package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Set;
 
@@ -75,14 +74,7 @@ class RedisMappingStoreHandler extends RedisHandler {
 	}
 	
 	public void removeMapping(Collection<String> mappingCodes, Jedis connection) throws NotExistsMappingException {
-		Pipeline pipeline = connection.pipelined();
-		byte index = 0;
-		byte[][] codes = new byte[mappingCodes.size()][];
-		for (String code : mappingCodes) {
-			codes[index++] = getCode(code).getBytes(StandardCharsets.UTF_8);
-		}
-		pipeline.del(codes);
-		pipeline.sync();
+		connection.del(getCodeByteArray(mappingCodes));
 	}
 	
 	public Mapping getMapping(String mappingCode, Jedis connection) throws NotExistsMappingException {
