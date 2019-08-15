@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.douglei.orm.core.sql.SqlStatement;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
+import com.douglei.tools.utils.Collections;
 
 /**
  * 
@@ -25,6 +26,9 @@ public class ExecuteSql {
 		return sql.getSql();
 	}
 	public List<Object> getParameters(){
+		if(parameters == null) {
+			parameters = Collections.emptyArrayList();
+		}
 		return parameters;
 	}
 }

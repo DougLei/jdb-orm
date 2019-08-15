@@ -15,7 +15,9 @@ public interface SqlNode extends Serializable{
 	 * @param sqlParameter
 	 * @return
 	 */
-	boolean matching(Object sqlParameter);
+	default boolean matching(Object sqlParameter) {
+		return matching(sqlParameter, null);
+	}
 	
 	/**
 	 * 该node是否满足匹配
@@ -23,14 +25,19 @@ public interface SqlNode extends Serializable{
 	 * @param alias
 	 * @return
 	 */
-	boolean matching(Object sqlParameter, String alias);
+	default boolean matching(Object sqlParameter, String alias) {
+		return true;
+	}
 	
 	/**
 	 * 获取可执行的sql node
 	 * @param sqlParameter
 	 * @return
 	 */
-	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter);
+	default ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
+		return getExecuteSqlNode(sqlParameter, null);
+	}
+	
 	/**
 	 * 获取可执行的sql node
 	 * @param sqlParameter

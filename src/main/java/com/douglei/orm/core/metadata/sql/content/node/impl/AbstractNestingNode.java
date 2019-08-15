@@ -3,7 +3,6 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 
 /**
@@ -25,20 +24,5 @@ public abstract class AbstractNestingNode implements SqlNode{
 	
 	public boolean existsSqlNode() {
 		return sqlNodes != null;
-	}
-	
-	@Override
-	public boolean matching(Object sqlParameter) {
-		return matching(sqlParameter, null);
-	}
-	
-	@Override
-	public boolean matching(Object sqlParameter, String alias) {
-		return true;
-	}
-	
-	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
-		return getExecuteSqlNode(sqlParameter, null);
 	}
 }

@@ -16,13 +16,12 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
-	private static final long serialVersionUID = -7381734331126725728L;
+	private static final long serialVersionUID = 7952613062688250954L;
 
 	protected String content;
 	
-	// sql参数, 按照配置中定义的顺序记录
-	protected List<SqlParameterMetadata> sqlParametersByDefinedOrder;
-	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配${
+	protected List<SqlParameterMetadata> sqlParametersByDefinedOrder;// sql参数, 按照配置中定义的顺序记录
+	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配#{
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public AbstractSqlNode(String content) {
@@ -72,21 +71,6 @@ public abstract class AbstractSqlNode implements SqlNode{
 		}else{
 			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
 		}
-	}
-	
-	@Override
-	public boolean matching(Object sqlParameter) {
-		return matching(sqlParameter, null);
-	}
-	
-	@Override
-	public boolean matching(Object sqlParameter, String alias) {
-		return true;
-	}
-
-	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
-		return getExecuteSqlNode(sqlParameter, null);
 	}
 	
 	@Override

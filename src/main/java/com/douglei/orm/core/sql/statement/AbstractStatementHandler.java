@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
@@ -162,7 +162,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult_.add(Collections.emptyArray());
+			queryUniqueResult_.add(com.douglei.tools.utils.Collections.emptyArray());
 		}
 		recordStatementHandlerIsExecuted();
 	}

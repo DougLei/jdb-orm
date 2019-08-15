@@ -151,7 +151,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		}
 		
 		int length = contents.size();
-		List<Object> listMap = new ArrayList<Object>(length);
+		List<Object> list = new ArrayList<Object>(length);
 		
 		StringBuilder sqlContent = new StringBuilder();
 		List<SqlParameterMetadata> sqlParameters = new ArrayList<SqlParameterMetadata>(10);
@@ -170,12 +170,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				}
 			}
 			
-			listMap.add(executeProcedure(sqlContent.toString(), sqlParameters, sqlParameter));
+			list.add(executeProcedure(sqlContent.toString(), sqlParameters, sqlParameter));
 		}
 		if(length == 1) {
-			return listMap.get(0);
+			return list.get(0);
 		}
-		return listMap;
+		return list;
 	}
 	
 	private void reset(StringBuilder sqlContent, List<SqlParameterMetadata> sqlParameters) {
@@ -188,17 +188,15 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	// 执行存储过程
-	private Object executeProcedure(final String callableSqlContent, final List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
+	private Object executeProcedure(String callableSqlContent, List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
 		Object executeResult = super.executeProcedure(new ProcedureExecutor() {
 			@Override
 			public Object execute(Connection connection) throws ProcedureExecutionException {
-				CallableStatement callableStatement = null;
-				try {
-					callableStatement = connection.prepareCall(callableSqlContent);
+				try (CallableStatement callableStatement = connection.prepareCall(callableSqlContent)){
 					
 					short outParameterCount = 0;
 					short[] outParameterIndex = null;
-					if(callableSqlParameters != null) {
+					if(callableSqlParameters.size() > 0) {
 						outParameterIndex = new short[callableSqlParameters.size()];
 						
 						short index = 1;
@@ -234,20 +232,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					return null;
 				} catch(SQLException e){
 					throw new ProcedureExecutionException("调用并执行存储过程时出现异常", e);
-				} finally {
-					try {
-						callableStatement.close();
-					} catch (SQLException e) {
-						throw new ProcedureExecutionException("关闭["+CallableStatement.class.getName()+"]时出现异常", e);
-					} finally {
-						callableStatement = null;
-					}
 				}
 			}
 
 			// 处理直接返回 ResultSet
 			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement) throws SQLException {
-				short sequence = 1;
+				byte sequence = 1;
 				ResultSet rs = null;
 				while((rs = callableStatement.getResultSet()) != null && rs.next()) {
 					outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
