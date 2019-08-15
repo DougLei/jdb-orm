@@ -11,10 +11,10 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
  */
 public abstract class RedisHandler{
 	protected static final String prefix = "ORM:MP:";
-	protected boolean multiDataSource;// 是否是多个数据源, 如果包含多个数据源, 则code需要前缀区分是哪个数据源
+	protected boolean storeMultiDataSource;// 是否存储多个数据源的映射, 如果是 则code需要前缀区分是哪个数据源
 	
 	protected String getPrefix() {
-		if(multiDataSource) {
+		if(storeMultiDataSource) {
 			return prefix + DBRunEnvironmentContext.getEnvironmentProperty().getId() + ":";
 		}
 		return prefix;
@@ -38,10 +38,10 @@ public abstract class RedisHandler{
 	}
 	
 	
-	public void setMultiDataSource(boolean multiDataSource) {
-		this.multiDataSource = multiDataSource;
+	public void setStoreMultiDataSource(boolean storeMultiDataSource) {
+		this.storeMultiDataSource = storeMultiDataSource;
 	}
-	public boolean isMultiDataSource() {
-		return multiDataSource;
+	public boolean isStoreMultiDataSource() {
+		return storeMultiDataSource;
 	}
 }

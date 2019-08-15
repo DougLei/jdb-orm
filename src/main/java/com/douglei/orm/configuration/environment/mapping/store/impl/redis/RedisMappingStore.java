@@ -23,9 +23,9 @@ public class RedisMappingStore implements MappingStore {
 	public RedisMappingStore(JedisPool redisPool) {
 		this.redisPool = redisPool;
 	}
-	public RedisMappingStore(JedisPool redisPool, boolean multiDataSource) {
+	public RedisMappingStore(JedisPool redisPool, boolean storeMultiDataSource) {
 		this.redisPool = redisPool;
-		handler.setMultiDataSource(multiDataSource);
+		handler.setStoreMultiDataSource(storeMultiDataSource);
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class RedisMappingStore implements MappingStore {
 		try(Jedis connection = redisPool.getResource()){
 			handler.destroy(connection);
 		}
-		if(!handler.isMultiDataSource()) {
+		if(!handler.isStoreMultiDataSource()) {
 			redisPool.destroy();
 			redisPool = null;	
 		}
