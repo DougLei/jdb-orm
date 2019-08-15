@@ -144,4 +144,11 @@ public class RedisTest {
 		pipeline.sync();
 		
 	}
+	
+	@Test
+	public void test6() {
+		Jedis connection = jedisPool.getResource();
+		System.out.println(connection.exists("ORM:MP:queryUser".getBytes()));;
+		
+	}
 }
