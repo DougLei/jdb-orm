@@ -13,6 +13,21 @@ public abstract class RedisHandler{
 	protected static final String prefix = "ORM:MP:";
 	protected boolean storeMultiDataSource;// 是否存储多个数据源的映射, 如果是 则code需要前缀区分是哪个数据源
 	
+	// 获取byte数组的key
+	protected byte[] getByteArrayKey(String code) {
+		return code.getBytes(StandardCharsets.UTF_8);
+	}
+	
+	// 获取映射code的byte二维数组
+	protected byte[][] getCodeByteArray(Collection<String> codes){
+		byte index = 0;
+		byte[][] codeByteArray = new byte[codes.size()][];
+		for (String code : codes) {
+			codeByteArray[index++] = getByteArrayKey(code);
+		}
+		return codeByteArray;
+	}
+	
 	protected String getPrefix() {
 		if(storeMultiDataSource) {
 			return prefix + DBRunEnvironmentContext.getEnvironmentProperty().getId() + ":";
@@ -22,21 +37,6 @@ public abstract class RedisHandler{
 	protected String getCode(String code) {
 		return getPrefix() + code;
 	}
-	
-	/**
-	 * 获取映射code的byte二维数组
-	 * @param mappingCodes
-	 * @return
-	 */
-	protected byte[][] getCodeByteArray(Collection<String> mappingCodes){
-		byte index = 0;
-		byte[][] codeByteArray = new byte[mappingCodes.size()][];
-		for (String code : mappingCodes) {
-			codeByteArray[index++] = getCode(code).getBytes(StandardCharsets.UTF_8);
-		}
-		return codeByteArray;
-	}
-	
 	
 	public void setStoreMultiDataSource(boolean storeMultiDataSource) {
 		this.storeMultiDataSource = storeMultiDataSource;

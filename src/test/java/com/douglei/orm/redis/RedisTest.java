@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore;
 import com.douglei.orm.session.SysUser;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
@@ -147,8 +148,20 @@ public class RedisTest {
 	
 	@Test
 	public void test6() {
-		Jedis connection = jedisPool.getResource();
-		System.out.println(connection.exists("ORM:MP:queryUser".getBytes()));;
+		Jedis jedis = jedisPool.getResource();
+		jedis.set("name".getBytes(StandardCharsets.UTF_8), "哈哈".getBytes());
+		jedis.del("name");
+		System.out.println(jedis.get("name"));
+		System.out.println(jedis.get("name".getBytes(StandardCharsets.UTF_8)));
+	}
+	
+	@Test
+	public void test7() {
+		RedisMappingStore r = new RedisMappingStore(jedisPool);
+		r.initializeStore(0);
 		
+		System.out.println(r.getMapping("com.ibs.demo.entity.SysUser"));;
+		System.out.println(r.mappingExists("ORM:MP:com.ibs.demo.entity.SysUser"));
+//		System.out.println("删除------------->" + r.removeMapping("queryUser"));;
 	}
 }
