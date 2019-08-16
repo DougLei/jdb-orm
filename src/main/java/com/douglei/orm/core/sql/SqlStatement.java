@@ -24,7 +24,13 @@ public class SqlStatement {
 	 */
 	private String sql;
 	
+	public SqlStatement() {
+	}
 	public SqlStatement(String originSql) {
+		setSql(originSql);
+	}
+	
+	public void setSql(String originSql) {
 		int withClauseEndIndex = withClauseEndIndex(originSql);
 		if(withClauseEndIndex == -1) {
 			withClause = ""; 

@@ -12,7 +12,7 @@ public interface ExecutionHolder {
 	 * 要执行的sql语句的数量
 	 * @return
 	 */
-	int executeSqlCount();
+	short executeSqlCount();
 	
 	/**
 	 * 移动到下一个sql语句和parameters

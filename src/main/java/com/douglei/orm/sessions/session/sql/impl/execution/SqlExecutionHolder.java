@@ -24,7 +24,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的sql语句");
 		}
 		
-		executeSqlCount = contents.size();
+		executeSqlCount = (short) contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
 		for (SqlContentMetadata content : contents) {
@@ -32,12 +32,12 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		}
 	}
 	
-	private int executeSqlCount;
-	private int executeSqlIndex; // 从0开始
+	private short executeSqlCount;
+	private short executeSqlIndex; // 从0开始
 	private List<ExecuteSql> executeSqls;
 	
 	@Override
-	public int executeSqlCount() {
+	public short executeSqlCount() {
 		return executeSqlCount;
 	}
 
@@ -46,7 +46,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		executeSqlIndex++;
 		return executeSqlIndex < executeSqlCount;
 	}
-
+	
 	@Override
 	public String getCurrentSql() {
 		if(logger.isDebugEnabled()) {

@@ -43,7 +43,7 @@ public abstract class TableExecutionHolder implements ExecutionHolder {
 	
 	@Deprecated
 	@Override
-	public int executeSqlCount() {
+	public short executeSqlCount() {
 		return 1;
 	}
 
