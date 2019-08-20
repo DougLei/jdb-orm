@@ -36,5 +36,9 @@
 				<dropSql></dropSql><!-- 如果不配置, 则使用系统默认的删除语句 -->
 			</sequence>
 		</primaryKeyHandler>
+		
+		<validatorHandler>
+			<validate column-name="id" min="1" max="10" reg="" />
+		</validatorHandler>
 	</table>
 </mapping-configuration>
