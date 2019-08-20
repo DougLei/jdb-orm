@@ -37,8 +37,8 @@
 			</sequence>
 		</primaryKeyHandler>
 		
-		<validatorHandler>
-			<validate column-name="id" min="1" max="10" reg="" />
-		</validatorHandler>
+		<validators>
+			<validator column-name="id" min="1" max="10" reg="" />
+		</validators>
 	</table>
 </mapping-configuration>
