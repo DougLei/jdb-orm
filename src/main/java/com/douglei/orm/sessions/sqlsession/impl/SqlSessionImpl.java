@@ -1,7 +1,6 @@
 package com.douglei.orm.sessions.sqlsession.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import com.douglei.orm.sessions.SessionExecutionException;
 import com.douglei.orm.sessions.SessionImpl;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.SqlSession;
+import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
@@ -169,15 +169,10 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(logger.isDebugEnabled()) {
 				logger.debug("close {}", getClass().getName());
 			}
-			if(enableSessionCache) {
-				if(statementHandlerCache != null && statementHandlerCache.size() > 0) {
-					Collection<StatementHandler> statementHandlers = statementHandlerCache.values();
-					for (StatementHandler statementHandler : statementHandlers) {
-						statementHandler.close();
-					}
-					statementHandlerCache.clear();
-					statementHandlerCache = null;
-				}
+			if(enableSessionCache && Collections.unEmpty(statementHandlerCache)) {
+				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
+				statementHandlerCache.clear();
+				statementHandlerCache = null;
 			}
 			isClosed = true;
 		}
