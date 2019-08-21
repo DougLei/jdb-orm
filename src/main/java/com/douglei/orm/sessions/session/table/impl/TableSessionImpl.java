@@ -16,6 +16,7 @@ import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.sessions.SessionExecutionException;
 import com.douglei.orm.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.TableSession;
@@ -228,24 +229,28 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return mapping;
 	}
 
-	private void flushPersistentObjectCache() {
+	private void flushPersistentObjectCache() throws SessionExecutionException {
 		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
 			Map<Identity, PersistentObject> map = null;
 			Collection<PersistentObject> persistentObjects = null;
 			Set<String> codes = persistentObjectCache.keySet();
-			for (String code : codes) {
-				map = persistentObjectCache.get(code);
-				if(map.size() > 0) {
-					persistentObjects = map.values();
-					for(PersistentObject persistentObject: persistentObjects) {
-						executePersistentObject(persistentObject);
+			try {
+				for (String code : codes) {
+					map = persistentObjectCache.get(code);
+					if(map.size() > 0) {
+						persistentObjects = map.values();
+						for(PersistentObject persistentObject: persistentObjects) {
+							executePersistentObject(persistentObject);
+						}
 					}
 				}
+			} finally {
+				persistentObjectCache.clear();
 			}
 		}
 	}
 	
-	private void executePersistentObject(PersistentObject persistentObject) {
+	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
 		ExecutionHolder executionHolder = persistentObject.getExecutionHolder();
 		if(executionHolder == null) {
 			if(logger.isDebugEnabled()) {
@@ -268,9 +273,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			try {
 				flushPersistentObjectCache();
 			} finally {
-				if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
-					persistentObjectCache.clear();
-				}
 				super.close();
 			}
 		}

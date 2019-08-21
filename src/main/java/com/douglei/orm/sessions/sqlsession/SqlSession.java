@@ -5,8 +5,6 @@ import java.util.Map;
 
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.pagequery.PageResult;
-import com.douglei.orm.sessions.db.object.DBObjectIsExistsException;
-import com.douglei.orm.sessions.db.object.DBObjectNotExistsException;
 
 /**
  * 和数据库交互的sql session接口
@@ -188,10 +186,8 @@ public interface SqlSession {
 	 * @param dbObjectType
 	 * @param dbObjectName
 	 * @param createSqlStatement
-	 * @return
-	 * @throws DBObjectIsExistsException
 	 */
-	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement) throws DBObjectIsExistsException;
+	void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement);
 	
 	/**
 	 * 创建数据库对象
@@ -199,17 +195,13 @@ public interface SqlSession {
 	 * @param dbObjectName
 	 * @param createSqlStatement
 	 * @param isOverride 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出已存在异常
-	 * @return
-	 * @throws DBObjectIsExistsException
 	 */
-	boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride) throws DBObjectIsExistsException;
+	void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride);
 	
 	/**
 	 * 删除数据库对象
 	 * @param dbObjectType
 	 * @param dbObjectName
-	 * @return
-	 * @throws DBObjectNotExistsException 如果不存在则会抛出异常
 	 */
-	boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException;
+	void dbObjectDrop(DBObjectType dbObjectType, String dbObjectName);
 }

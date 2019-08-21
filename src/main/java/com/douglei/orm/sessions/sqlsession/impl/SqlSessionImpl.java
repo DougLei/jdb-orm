@@ -154,8 +154,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeUpdate(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在修改数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new SessionExecutionException("在修改数据时出现异常", e);
+			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("execute update sql时出现异常", e);
 		} finally {
 			if(!enableSessionCache) {
 				statementHandler.close();
@@ -306,12 +306,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 
 	@Override
-	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement) throws DBObjectIsExistsException {
-		return dbObjectCreate(dbObjectType, dbObjectName, createSqlStatement, false);
+	public void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement) {
+		dbObjectCreate(dbObjectType, dbObjectName, createSqlStatement, false);
 	}
 	
 	@Override
-	public boolean dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride) throws DBObjectIsExistsException {
+	public void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride) {
 		environmentProperty.getDialect().getDBObjectHandler().validateDBObjectName(dbObjectName);
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
 			if(isOverride) {
@@ -321,14 +321,13 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			}
 		}
 		executeUpdate(createSqlStatement);
-		return true;
 	}
 
 	@Override
-	public boolean dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) throws DBObjectNotExistsException {
+	public void dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) {
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
 			executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
-			return true;
+			return;
 		}
 		throw new DBObjectNotExistsException(dbObjectType, dbObjectName);
 	}
