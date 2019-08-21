@@ -3,10 +3,10 @@ package com.douglei.orm.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.db.object.DBObjectIsExistsException;
-import com.douglei.orm.core.dialect.db.object.DBObjectNotExistsException;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.sessions.db.object.DBObjectIsExistsException;
+import com.douglei.orm.sessions.db.object.DBObjectNotExistsException;
 
 /**
  * 和数据库交互的sql session接口

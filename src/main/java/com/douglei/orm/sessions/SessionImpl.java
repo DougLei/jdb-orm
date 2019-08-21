@@ -127,41 +127,32 @@ public class SessionImpl implements Session {
 	}
 	
 	private void closeSessions() {
+		if(SqlSession != null) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("close , 将该实例置为null", SqlSession.getClass().getName());
+			}
+			((Session)SqlSession).close();
+			SqlSession = null;
+		}
+		if(SQLSession != null) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("close , 将该实例置为null", SQLSession.getClass().getName());
+			}
+			((Session)SQLSession).close();
+			SQLSession = null;
+		}
 		if(TableSession != null) {
-			logClose(TableSession);
+			if(logger.isDebugEnabled()) {
+				logger.debug("close , 将该实例置为null", TableSession.getClass().getName());
+			}
+			
 			try {
 				((Session)TableSession).close();
-			} catch (SessionExecutionException e) {
+			} catch (ExecutionException e) {
 				throw e;
 			} finally {
 				TableSession = null;
 			}
-		}
-		if(SQLSession != null) {
-			logClose(SQLSession);
-			try {
-				((Session)SQLSession).close();
-			} catch (SessionExecutionException e) {
-				throw e;
-			} finally {
-				SQLSession = null;
-			}
-		}
-		if(SqlSession != null) {
-			logClose(SqlSession);
-			try {
-				((Session)SqlSession).close();
-			} catch (SessionExecutionException e) {
-				throw e;
-			} finally {
-				SqlSession = null;
-			}
-		}
-	}
-	
-	private void logClose(Object session) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("close , 将该实例 = null", session.getClass().getName());
 		}
 	}
 }

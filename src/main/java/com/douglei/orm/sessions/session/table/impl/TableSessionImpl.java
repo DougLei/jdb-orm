@@ -242,7 +242,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 					}
 				}
 			}
-			persistentObjectCache.clear();
 		}
 	}
 	
@@ -266,8 +265,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			if(logger.isDebugEnabled()) {
 				logger.debug("close {}", getClass().getName());
 			}
-			flushPersistentObjectCache();
-			super.close();
+			try {
+				flushPersistentObjectCache();
+			} finally {
+				if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
+					persistentObjectCache.clear();
+				}
+				super.close();
+			}
 		}
 	}
 
