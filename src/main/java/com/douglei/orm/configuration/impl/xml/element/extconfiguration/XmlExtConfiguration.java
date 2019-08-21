@@ -12,6 +12,7 @@ import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.datatypehandler.XmlExtDataTypeHandler;
+import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -26,27 +27,22 @@ public class XmlExtConfiguration implements ExtConfiguration {
 	public XmlExtConfiguration(Element extConfigurationElement) {
 		logger.debug("开始处理<extConfiguration>元素");
 		if(extConfigurationElement != null) {
-			setDataTypeHandlers(extConfigurationElement.elements("datatypeHandlers"));
+			setDataTypeHandlers(Dom4jElementUtil.element("datatypeHandlers", extConfigurationElement));
 			
-			// 如果有其他的ext, 再继续添加
+			// TODO 如果以后再有其他的ext, 继续添加
 		}
 		logger.debug("处理<extConfiguration>元素结束");
 	}
 	
-	private void setDataTypeHandlers(List<?> elements) {
+	private void setDataTypeHandlers(Element datatypeHandlersElement) {
 		logger.debug("开始处理<datatypeHandlers>元素");
-		if(elements != null && elements.size() > 0) {
-			if(elements.size() > 1) {
-				throw new DataTypeHandlersElementException("<datatypeHandlers>元素最多只能配置一个");
-			}
-			elements = ((Element) elements.get(0)).elements("datatypeHandler");
-			if(elements != null && elements.size() > 0) {
+		if(datatypeHandlersElement != null) {
+			List<Element> elements = Dom4jElementUtil.elements("datatypeHandler", datatypeHandlersElement);
+			if(elements != null) {
 				extDataTypeHandlerList = new ArrayList<ExtDataTypeHandler>(elements.size());
 				
-				Element element = null;
 				String clz = null;
-				for (Object object : elements) {
-					element = (Element) object;
+				for (Element element : elements) {
 					clz = element.attributeValue("class");
 					if(StringUtil.isEmpty(clz)) {
 						continue;

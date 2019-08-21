@@ -6,6 +6,7 @@ import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -15,7 +16,6 @@ import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConv
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = -7324218009024226599L;
 	
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
@@ -24,7 +24,7 @@ public class ColumnMetadata implements Metadata{
 	private String descriptionName;// 描述名
 	private short length;// 长度
 	private short precision;// 精度
-	private boolean nullabled;// 是否可为空
+	private boolean nullable;// 是否可为空
 	private boolean primaryKey;// 是否是主键
 	private boolean unique;// 是否唯一
 	private String defaultValue;// 默认值
@@ -38,12 +38,14 @@ public class ColumnMetadata implements Metadata{
 	
 	private boolean isPrimaryKeySequence;// 是否是主键序列
 	
-	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullabled, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
+	private ValidatorHandler validatorHandler;// 验证器
+	
+	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullable, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
 		
 		this.property = StringUtil.isEmpty(property)?null:property;
 		this.descriptionName = StringUtil.isEmpty(descriptionName)?name:descriptionName;
-		this.nullabled = nullabled;
+		this.nullable = nullable;
 		this.unique = unique;
 		this.validate = validate;
 		set2DefaultValue(defaultValue);
@@ -77,7 +79,7 @@ public class ColumnMetadata implements Metadata{
 	public void set2PrimaryKeyConstraint(boolean primaryKey) {
 		this.primaryKey = primaryKey;
 		if(primaryKey) {
-			this.nullabled = false;// 如果是主键, 则不能为空
+			this.nullable = false;// 如果是主键, 则不能为空
 			this.unique = false;// 如果是主键, 则不需要设置唯一
 			this.defaultValue = null;// 如果是主键, 则不能有默认值
 			this.check = null;// 如果是主键, 则不能有检查约束
@@ -130,13 +132,13 @@ public class ColumnMetadata implements Metadata{
 	
 	/**
 	 * <pre>
-	 * 	修正propertyName的值
+	 * 	修正property的值
 	 * 	如果没有配置类名, 则属性名必须不存在, 如果配置了就置空, 没有配置就不处理
 	 * 	如果配置了类名, 则属性名必须存在, 如果配置了就使用, 没有配置, 就将列名转换为属性名
 	 * </pre>
 	 * @param classNameEmpty
 	 */
-	public void correctProperty(boolean classNameEmpty) {
+	public void correctPropertyValue(boolean classNameEmpty) {
 		if(classNameEmpty && property != null) {
 			property = null;
 		}else if(!classNameEmpty && property == null){
@@ -150,6 +152,15 @@ public class ColumnMetadata implements Metadata{
 	 */
 	public void forceUpdateName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * 设置验证器
+	 * @param validatorHandler
+	 */
+	public void setValidatorHandler(ValidatorHandler validatorHandler) {
+		this.validatorHandler = validatorHandler;
+		this.validatorHandler.setCommonValidatorConfig(nullable,defaultValue);
 	}
 	
 	/**
@@ -192,8 +203,8 @@ public class ColumnMetadata implements Metadata{
 	public boolean isUnique() {
 		return unique;
 	}
-	public boolean isNullabled() {
-		return nullabled;
+	public boolean isNullable() {
+		return nullable;
 	}
 	public String getDefaultValue() {
 		return defaultValue;

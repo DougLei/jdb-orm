@@ -45,7 +45,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" alter column ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
-		if(!column.isNullabled()) {
+		if(!column.isNullable()) {
 			tmpSql.append("not null");
 		}
 		return tmpSql.toString();

@@ -4,8 +4,8 @@
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 一般可以将所有表中的通用字段导入 -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
-			<!-- nullabled默认值为true, validate默认值为false -->
-			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullabled="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
+			<!-- nullable默认值为true, validate默认值为false -->
+			<column name="id" property="id" dataType="string" primaryKey="true" length="30" precision="" nullable="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column oldName="NANE" descriptionName="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
 			<column name="age" property="age" dataType="integer" />
 			<column name="sex" property="sex" dataType="string" />
@@ -14,7 +14,7 @@
 		<constraints>
 			<!-- type = PRIMARY_KEY, UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
 			<constraint type="" value="" expression="" fkTableName="" fkColumnName="">
-				<column-name value="" />
+				<column name="" />
 			</constraint>
 		</constraints>
 		
@@ -37,8 +37,12 @@
 			</sequence>
 		</primaryKeyHandler>
 		
+		<!-- 验证器配置 -->
 		<validators>
-			<validator column-name="id" min="1" max="10" reg="" />
+			<!-- name 列名 -->
+			<!-- regex 正则表达式 -->
+			<!-- blankable 是否可以为空字符串 -->
+			<validator name="id" regex="" blankable="true" />
 		</validators>
 	</table>
 </mapping-configuration>

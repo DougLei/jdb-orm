@@ -156,7 +156,7 @@ public class PersistentObject {
 				if((validateColumn = tableMetadata.getValidateColumnByCode(key)) != null) {
 					value = propertyMap.get(key);
 					
-					if(!validateColumn.isNullabled() && value == null && validateColumn.getDefaultValue() == null) {
+					if(!validateColumn.isNullable() && value == null && validateColumn.getDefaultValue() == null) {
 						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
 					}
 					if(value != null) {

@@ -691,7 +691,7 @@ public class TableHandler {
 				}
 				isModifyColumn = true;
 			}
-			if(column.isNullabled() != oldColumn.isNullabled()) {
+			if(column.isNullable() != oldColumn.isNullable()) {
 				isModifyColumn = true;
 			}
 			return isModifyColumn;
@@ -700,7 +700,7 @@ public class TableHandler {
 	}
 	// 是否修改列(简单判断)
 	private boolean isModifyColumn_simpleValidate(ColumnMetadata column, ColumnMetadata oldColumn) {
-		return column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler()) || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullabled() != oldColumn.isNullabled();
+		return column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler()) || column.getLength() != oldColumn.getLength() || column.getPrecision() != oldColumn.getPrecision() || column.isNullable() != oldColumn.isNullable();
 	}
 	// 根据列的oldName, 查询列对象
 	private ColumnMetadata getColumnByOldName(String oldColumnName, Collection<ColumnMetadata> columns) {

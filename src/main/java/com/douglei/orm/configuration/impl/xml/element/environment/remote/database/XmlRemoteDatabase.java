@@ -7,7 +7,7 @@ import org.dom4j.Element;
 
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.remote.database.RemoteDatabase;
-import com.douglei.tools.utils.Collections;
+import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -29,15 +29,14 @@ public class XmlRemoteDatabase extends RemoteDatabase{
 	}
 	
 	private void setSql(Element createSqlElement, Element dropSqlElement) {
-		String sql = null;
-		addSql((byte) 1, createSqlElement.elements("sql"), sql);
-		addSql((byte) 2, dropSqlElement.elements("sql"), sql);
+		addSql((byte) 1, Dom4jElementUtil.elements("sql", createSqlElement));
+		addSql((byte) 2, Dom4jElementUtil.elements("sql", dropSqlElement));
 	}
 	
-	private void addSql(byte sqlType, List<?> sqlElements, String sql) {
-		if(Collections.unEmpty(sqlElements)) {
-			for (Object sqlElement : sqlElements) {
-				sql = ((Element)sqlElement).getTextTrim();
+	private void addSql(byte sqlType, List<Element> sqlElements) {
+		if(sqlElements != null) {
+			for (Element sqlElement : sqlElements) {
+				String sql = sqlElement.getTextTrim();
 				if(StringUtil.notEmpty(sql)) {
 					if(sqlType == 1) {
 						addCreateSql(sql);

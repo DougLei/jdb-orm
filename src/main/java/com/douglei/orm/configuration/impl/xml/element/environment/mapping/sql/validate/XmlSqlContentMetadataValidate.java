@@ -12,7 +12,6 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.dialect.DialectType;
-import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
@@ -24,14 +23,10 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class XmlSqlContentMetadataValidate implements MetadataValidate {
+public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, SqlContentMetadata> {
 
 	@Override
-	public Metadata doValidate(Object obj) throws MetadataValidateException {
-		return doValidate((Node)obj);
-	}
-
-	private SqlContentMetadata doValidate(Node contentNode) {
+	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
 		RunMappingConfigurationContext.setCurrentSqlContentType(type);

@@ -19,10 +19,20 @@ public interface Session {
 	
 	SQLSession getSQLSession();
 	
+	/**
+	 * 提交后会自动close
+	 */
 	void commit();
 	
+	/**
+	 * 回滚后会自动close
+	 */
 	void rollback();
 	
+	/**
+	 * 关闭
+	 * 如果开启了事物会默认进行commit, 如果commit失败, 则自动进行回滚
+	 */
 	void close();
 	
 	/**

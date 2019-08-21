@@ -56,8 +56,8 @@ public abstract class DBFeatures {
 			if(supportColumnDBDataTypeConvertMap.size() > 0) {
 				DBDataType[] supportTargetDBDataTypes = supportColumnDBDataTypeConvertMap.get(originDBDataType);
 				if(supportTargetDBDataTypes != null && supportTargetDBDataTypes.length > 0) {
-					for (DBDataType dt : supportTargetDBDataTypes) {
-						if(dt == targetDBDataType) {
+					for (DBDataType stdt : supportTargetDBDataTypes) {
+						if(stdt.equalsTypeName(targetDBDataType)) {
 							return true;
 						}
 					}

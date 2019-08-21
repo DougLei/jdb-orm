@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
@@ -13,7 +14,8 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata extends AbstractSqlParameter implements Metadata{
-	private static final long serialVersionUID = -2141160768098739859L;
+	
+	private ValidatorHandler validatorHandler;// 验证器
 	
 	public SqlParameterMetadata(String configurationText) {
 		super(configurationText);
@@ -29,7 +31,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 	public String toString() {
 		return "SqlParameterMetadata [configurationText=" + configurationText + ", propertyMap=" + propertyMap
 				+ ", name=" + name + ", dataType=" + dataType + ", mode=" + mode + ", usePlaceholder=" + usePlaceholder
-				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullabled=" + nullabled
+				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullable=" + nullable
 				+ ", defaultValue=" + defaultValue + ", validate=" + validate + "]";
 	}
 	
@@ -86,7 +88,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 	// 验证数据
 	private void doValidate(Object value) {
 		if(validate) {
-			if(!nullabled && value == null) {
+			if(!nullable && value == null) {
 				throw new ValidateException(descriptionName, name, "不能为空");
 			}
 			if(value != null) {

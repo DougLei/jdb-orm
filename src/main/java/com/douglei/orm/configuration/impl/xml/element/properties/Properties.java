@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
+import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.StringUtil;
 
@@ -41,7 +42,7 @@ public class Properties implements SelfProcessing{
 		logger.debug("开始处理<properties>元素");
 		if(propertiesElement != null) {
 			processPlaceholderCharacter(propertiesElement);// 处理占位符前后缀字符
-			readAndSetProperties(propertiesElement.elements("resource"));// 读取并set
+			readAndSetProperties(Dom4jElementUtil.elements("resource", propertiesElement));// 读取并set
 		}
 		logger.debug("处理<properties>元素结束");
 	}
@@ -69,16 +70,16 @@ public class Properties implements SelfProcessing{
 	 * 读取并set
 	 * @param resourceElements
 	 */
-	private void readAndSetProperties(List<?> resourceElements) {
-		if(resourceElements != null && resourceElements.size() > 0) {
+	private void readAndSetProperties(List<Element> resourceElements) {
+		if(resourceElements != null) {
 			String path = null;
 			InputStream in = null;
 			java.util.Properties juproperties = new java.util.Properties();
 			Set<Object> keys = null;
 			String keyString = null;
 			
-			for (Object object : resourceElements) {
-				path = ((Element) object).attributeValue("path");
+			for (Element element : resourceElements) {
+				path = element.attributeValue("path");
 				if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
 					try {
 						in = getLoader().getResourceAsStream(path.trim());

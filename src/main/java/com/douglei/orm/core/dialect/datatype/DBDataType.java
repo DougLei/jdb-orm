@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author DougLei
  */
 public abstract class DBDataType implements Serializable{
-	private static final long serialVersionUID = -7322756485117419574L;
+	private static final long serialVersionUID = -2656288653528204942L;
 
 	protected static final short NO_LIMIT = -1;
 	
@@ -98,5 +98,20 @@ public abstract class DBDataType implements Serializable{
 	@Override
 	public String toString() {
 		return typeName;
+	}
+	
+	/**
+	 * 比较类型名称
+	 * @param other
+	 * @return
+	 */
+	public boolean equalsTypeName(DBDataType other) {
+		if(other == null) {
+			return false;
+		}
+		if(other == this) {
+			return true;
+		}
+		return typeName.equals(other.typeName);
 	}
 }

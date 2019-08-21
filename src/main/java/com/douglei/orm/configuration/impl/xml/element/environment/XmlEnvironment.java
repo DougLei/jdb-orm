@@ -56,19 +56,17 @@ public class XmlEnvironment implements Environment{
 		
 		setDataSourceWrapper(dataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):dataSource);// 处理配置的数据源
 		
-		setEnvironmentProperties(id, environmentElement.elements("property"), mappingStore, extConfiguration);// 处理environment下的所有property元素
+		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingStore, extConfiguration);// 处理environment下的所有property元素
 		
 		setMappingWrapper(environmentElement.element("mappings"));// 处理配置的映射文件
 		
 		logger.debug("处理<environment>元素结束");
 	}
 	
-	private Map<String, String> elementListToPropertyMap(List<?> elements){
-		if(elements != null && elements.size() > 0) {
+	private Map<String, String> elementListToPropertyMap(List<Element> elements){
+		if(elements != null) {
 			Map<String, String> propertyMap = new HashMap<String, String>(elements.size());
-			Element elem = null;
-			for (Object object : elements) {
-				elem = (Element) object;
+			for (Element elem : elements) {
 				propertyMap.put(elem.attributeValue("name"), getValue(elem.attributeValue("value"), properties));
 			}
 			return propertyMap;
@@ -86,7 +84,7 @@ public class XmlEnvironment implements Environment{
 	private void setRemoteDatabase(Element remoteDatabaseElement) throws SQLException {
 		if(remoteDatabaseElement != null) {
 			logger.debug("开始处理<environment>下的<remoteDatabase>元素");
-			Map<String, String> propertyMap = elementListToPropertyMap(remoteDatabaseElement.elements("property"));
+			Map<String, String> propertyMap = elementListToPropertyMap(Dom4jElementUtil.elements("property", remoteDatabaseElement));
 			remoteDatabase = new XmlRemoteDatabase(propertyMap, Dom4jElementUtil.validateElementExists("createSql", remoteDatabaseElement), Dom4jElementUtil.validateElementExists("dropSql", remoteDatabaseElement));
 			remoteDatabase.selfChecking();
 			remoteDatabase.executeCreate();
@@ -126,7 +124,7 @@ public class XmlEnvironment implements Environment{
 			
 			closeMethod = datasourceElement.attributeValue("closeMethod");
 			
-			propertyMap = elementListToPropertyMap(datasourceElement.elements("property"));
+			propertyMap = elementListToPropertyMap(Dom4jElementUtil.elements("property", datasourceElement));
 			if(propertyMap == null || propertyMap.size() == 0) {
 				throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
 			}
@@ -146,7 +144,7 @@ public class XmlEnvironment implements Environment{
 	 * @param extConfiguration
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(String id, List<?> elements, MappingStore mappingStore, ExtConfiguration extConfiguration) throws SQLException {
+	private void setEnvironmentProperties(String id, List<Element> elements, MappingStore mappingStore, ExtConfiguration extConfiguration) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
@@ -170,6 +168,7 @@ public class XmlEnvironment implements Environment{
 	 * @param element
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("unchecked")
 	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {

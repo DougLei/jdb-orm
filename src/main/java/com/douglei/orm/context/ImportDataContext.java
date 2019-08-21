@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.instances.scanner.FileScanner;
 
 /**
@@ -25,7 +27,8 @@ public class ImportDataContext {
 	 * @return
 	 * @throws DocumentException 
 	 */
-	public static List<?> getImportColumnElements(String importColumnFilePath) throws DocumentException {
+	@SuppressWarnings("unchecked")
+	public static List<Element> getImportColumnElements(String importColumnFilePath) throws DocumentException {
 		Object importData = IMPORT_DATA.get(importColumnFilePath);
 		if(importData == null) {
 			List<String> files = new FileScanner().scan(importColumnFilePath);
@@ -33,7 +36,7 @@ public class ImportDataContext {
 				throw new NullPointerException("在import-columns时, 未能在指定path=["+importColumnFilePath+"]下发现对应的配置文件");
 			}
 			
-			List<?> importDataList = new SAXReader().read(FileScanner.readByScanPath(files.get(0))).getRootElement().elements("column");
+			List<Element> importDataList = Dom4jElementUtil.elements("column", new SAXReader().read(FileScanner.readByScanPath(files.get(0))).getRootElement());
 			if(importDataList == null || importDataList.size() == 0) {
 				throw new NullPointerException("在指定path=["+importColumnFilePath+"]对应的配置文件中, 未能读取到任何<column>元素信息");
 			}
@@ -41,6 +44,6 @@ public class ImportDataContext {
 			importData = importDataList;
 		}
 		logger.debug("从指定的path=[{}], 获取的import-columns集合为: {}", importColumnFilePath, importData);
-		return (List<?>) importData;
+		return (List<Element>) importData;
 	}
 }

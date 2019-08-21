@@ -38,7 +38,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 	
 	protected short length;// 长度
 	protected short precision;// 精度
-	protected boolean nullabled;// 是否可为空
+	protected boolean nullable;// 是否可为空
 	protected String defaultValue;// 默认值
 	protected boolean validate;// 是否验证
 	
@@ -59,7 +59,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		}
 		setLength(propertyMap.get("length"));
 		setPrecision(propertyMap.get("precision"));
-		setNullabled(propertyMap.get("nullabled"));
+		setNullable(propertyMap.get("nullable"));
 		setDefaultValue(propertyMap.get("defaultValue"));
 		setValidate(propertyMap.get("validate"));
 		
@@ -184,9 +184,9 @@ public abstract class AbstractSqlParameter implements Serializable{
 		}
 		this.precision = this.dbDataType.correctInputPrecision(this.length, this.precision);
 	}
-	private void setNullabled(String nullabled) {
-		if(VerifyTypeMatchUtil.isBoolean(nullabled)) {
-			this.nullabled = Boolean.parseBoolean(nullabled);
+	private void setNullable(String nullable) {
+		if(VerifyTypeMatchUtil.isBoolean(nullable)) {
+			this.nullable = Boolean.parseBoolean(nullable);
 		}
 	}
 	private void setDefaultValue(String defaultValue) {
@@ -231,8 +231,8 @@ public abstract class AbstractSqlParameter implements Serializable{
 	public short getPrecision() {
 		return precision;
 	}
-	public boolean isNullabled() {
-		return nullabled;
+	public boolean isNullable() {
+		return nullable;
 	}
 	public String getDefaultValue() {
 		return defaultValue;

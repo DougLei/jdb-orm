@@ -15,9 +15,7 @@ import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
 import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 
 /**
@@ -25,12 +23,9 @@ import com.douglei.orm.core.metadata.sql.SqlMetadata;
  * @author DougLei
  */
 public class XmlSqlMapping extends XmlMapping implements SqlMapping{
-	private static final long serialVersionUID = 7603945398456938103L;
-
 	private static final Logger logger = LoggerFactory.getLogger(XmlSqlMapping.class);
-	
-	private static final MetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
-	private static final MetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
+	private static final XmlSqlMetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
+	private static final XmlSqlContentMetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
 	
 	private SqlMetadata sqlMetadata;
 	
@@ -40,11 +35,11 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		
 		try {
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
-			sqlMetadata = (SqlMetadata) sqlMetadataValidate.doValidate(sqlNode);
+			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			int length = contentNodeList.getLength();
 			for (int i=0;i<length ;i++) {
-				sqlMetadata.addSqlContentMetadata((SqlContentMetadata)sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
+				sqlMetadata.addSqlContentMetadata(sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
