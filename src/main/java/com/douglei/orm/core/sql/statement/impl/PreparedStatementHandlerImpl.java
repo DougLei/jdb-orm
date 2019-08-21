@@ -9,6 +9,7 @@ import java.util.Map;
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
+import com.douglei.tools.utils.Collections;
 
 /**
  * java.sql.PreparedStatement的处理器
@@ -151,10 +152,8 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	public void close() {
 		if(!isClosed()) {
 			super.close();
-			if(lastParametersList != null) {
-				for (List<Object> list : lastParametersList) {
-					list.clear();
-				}
+			if(Collections.unEmpty(lastParametersList)) {
+				lastParametersList.forEach(list -> list.clear());
 				lastParametersList.clear();
 				lastParametersList = null;
 			}

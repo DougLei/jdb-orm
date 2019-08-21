@@ -247,7 +247,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	@Override
 	public void close() {
 		isClosed = true;
-		if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) {
+		if(com.douglei.tools.utils.Collections.unEmpty(resultsetMetadatas)) {
 			resultsetMetadatas.clear();
 		}
 	}

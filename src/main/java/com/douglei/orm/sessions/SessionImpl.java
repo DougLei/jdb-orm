@@ -128,19 +128,40 @@ public class SessionImpl implements Session {
 	
 	private void closeSessions() {
 		if(TableSession != null) {
-			logger.debug("close TableSession, 将该实例 = null");
-			((Session)TableSession).close();
-			TableSession = null;
+			logClose(TableSession);
+			try {
+				((Session)TableSession).close();
+			} catch (SessionExecutionException e) {
+				throw e;
+			} finally {
+				TableSession = null;
+			}
 		}
 		if(SQLSession != null) {
-			logger.debug("close SQLSession, 将该实例 = null");
-			((Session)SQLSession).close();
-			SQLSession = null;
+			logClose(SQLSession);
+			try {
+				((Session)SQLSession).close();
+			} catch (SessionExecutionException e) {
+				throw e;
+			} finally {
+				SQLSession = null;
+			}
 		}
 		if(SqlSession != null) {
-			logger.debug("close SqlSession, 将该实例 = null");
-			((Session)SqlSession).close();
-			SqlSession = null;
+			logClose(SqlSession);
+			try {
+				((Session)SqlSession).close();
+			} catch (SessionExecutionException e) {
+				throw e;
+			} finally {
+				SqlSession = null;
+			}
+		}
+	}
+	
+	private void logClose(Object session) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("close , 将该实例 = null", session.getClass().getName());
 		}
 	}
 }
