@@ -8,6 +8,7 @@ import com.douglei.orm.core.dialect.datatype.handler.wrapper.Char;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.NChar;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.NString;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.StringWrapper;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -15,7 +16,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -7221275201845462627L;
+	private static final long serialVersionUID = -1655302836346195269L;
 
 	@Override
 	public String getCode() {
@@ -54,14 +55,36 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof StringWrapper) {
-			int actualLength = 0;
-			if((actualLength = StringUtil.computeStringLength(value.toString())) > length) {
-				return "数据值长度超长, 设置长度为" + length +", 实际长度为" + actualLength;
+			int actualLength = StringUtil.computeStringLength(value.toString());
+			if(actualLength > length) {
+				return new ValidatorResult() {
+					
+					@Override
+					public String getMessage() {
+						return "数据值长度超长, 设置长度为" + length +", 实际长度为" + actualLength;
+					}
+					
+					@Override
+					protected String getI18nCode() {
+						return i18nCodePrefix + "value.overdlength";
+					}
+				};
 			}
 			return null;
 		}
-		return "数据值类型错误, 应为字符类型";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为字符类型";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.string";
+			}
+		};
 	}
 }

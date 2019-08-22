@@ -7,13 +7,14 @@ import java.util.Arrays;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 用于处理映射文件中dataType属性
  * @author DougLei
  */
 public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
-	private static final long serialVersionUID = 6844324481758038907L;
+	private static final long serialVersionUID = 3495547933383545224L;
 
 	@Override
 	public String getCode() {
@@ -29,7 +30,7 @@ public abstract class ClassDataTypeHandler implements DataTypeHandler, DBDataTyp
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return null;// 默认验证通过
 	}
 	

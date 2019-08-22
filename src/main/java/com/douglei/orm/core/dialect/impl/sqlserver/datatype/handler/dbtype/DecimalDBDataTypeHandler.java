@@ -9,13 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Decimal;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.DoubleDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = 5078445599485987195L;
+	private static final long serialVersionUID = -1003012981779529862L;
 	private DecimalDBDataTypeHandler() {}
 	private static final DecimalDBDataTypeHandler instance = new DecimalDBDataTypeHandler();
 	public static final DecimalDBDataTypeHandler singleInstance() {
@@ -43,7 +44,7 @@ public class DecimalDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return DoubleDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

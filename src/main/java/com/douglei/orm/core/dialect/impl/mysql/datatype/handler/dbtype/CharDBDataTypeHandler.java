@@ -9,13 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Char;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.StringDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class CharDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -8209210258056741052L;
+	private static final long serialVersionUID = -6074259729698418286L;
 	private static final CharDBDataTypeHandler instance = new CharDBDataTypeHandler();
 	public static final CharDBDataTypeHandler singleInstance() {
 		return instance;
@@ -47,7 +48,7 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return StringDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

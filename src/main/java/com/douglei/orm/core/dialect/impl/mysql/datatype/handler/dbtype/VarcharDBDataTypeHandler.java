@@ -9,13 +9,15 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Varchar;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.StringDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class VarcharDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -6293880893165604960L;
+	private static final long serialVersionUID = 4321659589284788326L;
+	private VarcharDBDataTypeHandler() {}
 	private static final VarcharDBDataTypeHandler instance = new VarcharDBDataTypeHandler();
 	public static final VarcharDBDataTypeHandler singleInstance() {
 		return instance;
@@ -47,7 +49,7 @@ public class VarcharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return StringDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

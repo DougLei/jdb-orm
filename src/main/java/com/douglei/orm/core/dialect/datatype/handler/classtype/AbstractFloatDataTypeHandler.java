@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -11,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -6449916095443394131L;
+	private static final long serialVersionUID = 4260413941111256501L;
 
 	@Override
 	public String getCode() {
@@ -38,19 +39,41 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		Object o = null;
 		if(value.getClass() == float.class || value instanceof Float) {
 			o = value;
 		} else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Float.parseFloat(value.toString());
 		}else {
-			return "数据值类型错误, 应为浮点型(float)";
+			return new ValidatorResult() {
+				
+				@Override
+				public String getMessage() {
+					return "数据值类型错误, 应为浮点型(float)";
+				}
+				
+				@Override
+				protected String getI18nCode() {
+					return i18nCodePrefix + "value.datatype.error.float";
+				}
+			};
 		}
 		
 		String string = o.toString();
-		if(string.length() - 1 > length) {
-			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
+		if(string.length() - 1 > length) {// -1是减去小数点的长度
+			return new ValidatorResult() {
+				
+				@Override
+				public String getMessage() {
+					return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
+				}
+				
+				@Override
+				protected String getI18nCode() {
+					return i18nCodePrefix + "value.digital.length.overdlength";
+				}
+			};
 		}
 		
 		short dotIndex = (short)string.indexOf(".");
@@ -62,7 +85,19 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 				pl++;
 			}
 			if(pl > precision) {
-				return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + pl;
+				short apl = pl;
+				return new ValidatorResult() {
+					
+					@Override
+					public String getMessage() {
+						return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
+					}
+					
+					@Override
+					protected String getI18nCode() {
+						return i18nCodePrefix + "value.digital.precision.overdlength";
+					}
+				};
 			}
 		}
 		return null;

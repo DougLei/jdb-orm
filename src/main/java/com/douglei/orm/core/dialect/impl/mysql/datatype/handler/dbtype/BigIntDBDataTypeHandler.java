@@ -9,13 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Bigint;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.LongDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -3660044508144051219L;
+	private static final long serialVersionUID = 6436806345341700510L;
 	private BigIntDBDataTypeHandler() {}
 	private static final BigIntDBDataTypeHandler instance = new BigIntDBDataTypeHandler();
 	public static final BigIntDBDataTypeHandler singleInstance() {
@@ -43,7 +44,7 @@ public class BigIntDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return LongDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -11,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 1631712457355966838L;
+	private static final long serialVersionUID = -8769807245272846909L;
 
 	@Override
 	public String getCode() {
@@ -38,11 +39,22 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		if(value.getClass() == long.class || value instanceof Long || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			// long变量的值, 一般不会超过最大值、也不会低于最小值, 用isInteger方法判断即可满足, 所以这里就暂时不做多余的判断, 上面setValue时同理, 也用isInteger方法判断
 			return null;
 		}
-		return "数据值类型错误, 应为长整型(long)";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为长整型(long)";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.long";
+			}
+		};
 	}
 }

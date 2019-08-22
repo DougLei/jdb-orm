@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
 import com.douglei.orm.core.dialect.datatype.handler.ReadDataStreamException;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.CloseUtil;
 
 /**
@@ -18,10 +19,10 @@ import com.douglei.tools.utils.CloseUtil;
  * @author DougLei
  */
 public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
-	private static final long serialVersionUID = 5282175460553670393L;
+	private static final long serialVersionUID = 3659383896353886721L;
 
 	/**
-	 * 从CallableStatement中获取输出参数的指
+	 * 从 {@link CallableStatement} 中获取输出参数的值
 	 * @param parameterIndex
 	 * @param callableStatement
 	 * @return
@@ -30,7 +31,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFe
 	public abstract Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException;
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return null;// 默认验证通过
 	}
 	

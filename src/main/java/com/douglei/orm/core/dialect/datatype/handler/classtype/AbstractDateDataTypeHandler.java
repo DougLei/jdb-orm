@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
 
 /**
@@ -12,7 +13,7 @@ import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
  * @author DougLei
  */
 public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 2173313902868843968L;
+	private static final long serialVersionUID = 833576092653603998L;
 
 	@Override
 	public String getCode() {
@@ -35,10 +36,21 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) {
 			return null;
 		}
-		return "数据值类型错误, 应为日期类型";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为日期类型";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.date";
+			}
+		};
 	}
 }

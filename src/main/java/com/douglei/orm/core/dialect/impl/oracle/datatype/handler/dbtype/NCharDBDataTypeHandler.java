@@ -9,13 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.NChar;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.StringDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class NCharDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = 7274795694770231097L;
+	private static final long serialVersionUID = 9126380334554639616L;
 	private NCharDBDataTypeHandler() {}
 	private static final NCharDBDataTypeHandler instance = new NCharDBDataTypeHandler();
 	public static final NCharDBDataTypeHandler singleInstance() {
@@ -48,7 +49,7 @@ public class NCharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return StringDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }

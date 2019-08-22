@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -11,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 6484637321538308380L;
+	private static final long serialVersionUID = 3640586179041942416L;
 
 	@Override
 	public String getCode() {
@@ -38,14 +39,36 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		if(value.getClass() == short.class || value instanceof Short || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Short.MAX_VALUE || l < Short.MIN_VALUE) {
-				return "数据值大小异常, 应在["+Short.MIN_VALUE+"]至["+Short.MAX_VALUE+"]范围内";
+				return new ValidatorResult() {
+					
+					@Override
+					public String getMessage() {
+						return "数据值大小异常, 应在["+Short.MIN_VALUE+"]至["+Short.MAX_VALUE+"]范围内";
+					}
+					
+					@Override
+					protected String getI18nCode() {
+						return i18nCodePrefix + "value.digital.range.overflow";
+					}
+				};
 			}
 			return null;
 		}
-		return "数据值类型错误, 应为短整型(short)";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为短整型(short)";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.short";
+			}
+		};
 	}
 }

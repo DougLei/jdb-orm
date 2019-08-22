@@ -10,6 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.DoubleDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.LongDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -17,7 +18,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class NumberDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -3267167014030904581L;
+	private static final long serialVersionUID = -5834617026883473244L;
 	private NumberDBDataTypeHandler() {}
 	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
 	public static final NumberDBDataTypeHandler singleInstance() {
@@ -70,13 +71,24 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		String valueString = value.toString();
 		if(VerifyTypeMatchUtil.isInteger(valueString)) {
 			return LongDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
 		}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
 			return DoubleDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
 		}
-		return "数据值类型错误, 应为数字类型";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为数字类型";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.number";
+			}
+		};
 	}
 }

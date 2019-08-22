@@ -165,24 +165,6 @@ public class ColumnMetadata implements Metadata{
 			this.validatorHandler = validatorHandler;
 			this.validatorHandler.setNullableValidator(defaultValue==null?unique:true);
 			this.validatorHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
-			
-			
-			
-			
-//			for (String key : keys) {
-//				if((validateColumn = tableMetadata.getValidateColumnByCode(key)) != null) {
-//					value = propertyMap.get(key);
-//					
-//					if(value != null) {
-//						result = validateColumn.getDataTypeHandler().doValidate(value, validateColumn.getLength(), validateColumn.getPrecision());
-//						if(result != null) {
-//							throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), value, result);
-//						}
-//					}
-//				}
-//			}
-			
-			
 			return this;
 		}
 		return null;

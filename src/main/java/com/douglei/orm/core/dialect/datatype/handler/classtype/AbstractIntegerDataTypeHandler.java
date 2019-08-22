@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -11,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -5165576091979289698L;
+	private static final long serialVersionUID = 4420183985016757607L;
 
 	@Override
 	public String getCode() {
@@ -38,14 +39,36 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		if(value.getClass() == int.class || value instanceof Integer || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE) {
-				return "数据值大小异常, 应在["+Integer.MIN_VALUE+"]至["+Integer.MAX_VALUE+"]范围内";
+				return new ValidatorResult() {
+					
+					@Override
+					public String getMessage() {
+						return "数据值大小异常, 应在["+Integer.MIN_VALUE+"]至["+Integer.MAX_VALUE+"]范围内";
+					}
+					
+					@Override
+					protected String getI18nCode() {
+						return i18nCodePrefix + "value.digital.range.overflow";
+					}
+				};
 			}
 			return null;
 		}
-		return "数据值类型错误, 应为整型(int)";
+		return new ValidatorResult() {
+			
+			@Override
+			public String getMessage() {
+				return "数据值类型错误, 应为整型(int)";
+			}
+			
+			@Override
+			protected String getI18nCode() {
+				return i18nCodePrefix + "value.datatype.error.int";
+			}
+		};
 	}
 }

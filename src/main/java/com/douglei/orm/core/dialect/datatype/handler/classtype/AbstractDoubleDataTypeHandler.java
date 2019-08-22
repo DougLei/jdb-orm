@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -12,7 +13,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 5024739902381433048L;
+	private static final long serialVersionUID = -7794996918400919536L;
 
 	@Override
 	public String getCode() {
@@ -41,19 +42,41 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		Object o = null;
 		if(value.getClass() == double.class || value instanceof Double || value instanceof BigDecimal) {
 			o = value;
 		}else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Double.parseDouble(value.toString());
 		}else {
-			return "数据值类型错误, 应为浮点型(double)";
+			return new ValidatorResult() {
+				
+				@Override
+				public String getMessage() {
+					return "数据值类型错误, 应为浮点型(double)";
+				}
+				
+				@Override
+				protected String getI18nCode() {
+					return i18nCodePrefix + "value.datatype.error.double";
+				}
+			};
 		}
 		
 		String string = o.toString();
 		if(string.length() - 1 > length) {
-			return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
+			return new ValidatorResult() {
+				
+				@Override
+				public String getMessage() {
+					return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
+				}
+				
+				@Override
+				protected String getI18nCode() {
+					return i18nCodePrefix + "value.digital.length.overdlength";
+				}
+			};
 		}
 		
 		short dotIndex = (short)string.indexOf(".");
@@ -65,7 +88,19 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				pl++;
 			}
 			if(pl > precision) {
-				return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + pl;
+				short apl = pl;
+				return new ValidatorResult() {
+					
+					@Override
+					public String getMessage() {
+						return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
+					}
+					
+					@Override
+					protected String getI18nCode() {
+						return i18nCodePrefix + "value.digital.precision.overdlength";
+					}
+				};
 			}
 		}
 		return null;

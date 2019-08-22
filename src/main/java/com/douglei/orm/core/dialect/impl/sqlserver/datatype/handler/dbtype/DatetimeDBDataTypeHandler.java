@@ -9,13 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Datetime;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.classtype.DateDataTypeHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
  * 
  * @author DougLei
  */
 public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -1421382931766017836L;
+	private static final long serialVersionUID = 3971877887894573043L;
 	private DatetimeDBDataTypeHandler() {}
 	private static final DatetimeDBDataTypeHandler instance = new DatetimeDBDataTypeHandler();
 	public static final DatetimeDBDataTypeHandler singleInstance() {
@@ -43,7 +44,7 @@ public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public String doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(Object value, short length, short precision) {
 		return DateDataTypeHandler.singleInstance().doValidate(value, length, precision);
 	}
 }
