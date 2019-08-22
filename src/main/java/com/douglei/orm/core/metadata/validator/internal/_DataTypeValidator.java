@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.validator.impl;
+package com.douglei.orm.core.metadata.validator.internal;
 
 import com.douglei.orm.core.metadata.validator.Validator;
 import com.douglei.orm.core.metadata.validator.ValidatorResult;
@@ -11,7 +11,7 @@ public class _DataTypeValidator extends Validator {
 
 	@Override
 	public String getName() {
-		return "<_datatype_validator_内部方法>";
+		return null;
 	}
 
 	@Override

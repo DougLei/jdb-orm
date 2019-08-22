@@ -2,7 +2,6 @@ package com.douglei.orm.core.metadata.validator.impl;
 
 import com.douglei.orm.core.metadata.validator.Validator;
 import com.douglei.orm.core.metadata.validator.ValidatorResult;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 不能为空字符串验证
@@ -18,7 +17,7 @@ public class NotBlankValidator extends Validator{
 
 	@Override
 	public ValidatorResult doValidate(Object value) {
-		if(StringUtil.isEmpty(value)) {
+		if(value.toString().trim().length() == 0) {
 			return new ValidatorResult() {
 				
 				@Override

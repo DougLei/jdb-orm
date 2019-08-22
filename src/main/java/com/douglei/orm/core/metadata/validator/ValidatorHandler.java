@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.validator.impl._NullableValidator;
+import com.douglei.orm.core.metadata.validator.internal._NullableValidator;
 
 /**
  * 

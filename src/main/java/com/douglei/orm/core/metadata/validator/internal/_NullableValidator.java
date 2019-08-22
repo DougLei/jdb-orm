@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.validator.impl;
+package com.douglei.orm.core.metadata.validator.internal;
 
 import com.douglei.orm.core.metadata.validator.Validator;
 import com.douglei.orm.core.metadata.validator.ValidatorResult;
@@ -8,7 +8,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
-	private static final long serialVersionUID = -6644318115059923918L;
+	private static final long serialVersionUID = -6495482852688490519L;
 	private boolean nullable;
 	
 	public _NullableValidator(boolean nullable) {
@@ -17,7 +17,7 @@ public class _NullableValidator extends Validator {
 	
 	@Override
 	public String getName() {
-		return "<_nullable_validator_内部方法>";
+		return null;
 	}
 
 	@Override
