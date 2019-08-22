@@ -3,7 +3,6 @@ package com.douglei.orm.core.dialect.db.features;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 
 /**
@@ -49,17 +48,15 @@ public abstract class DBFeatures {
 	 * @return
 	 */
 	public boolean supportColumnDataTypeConvert(DBDataType originDBDataType, DBDataType targetDBDataType) {
-		if(DBRunEnvironmentContext.getEnvironmentProperty().enableColumnDynamicUpdateValidation()) {
-			if(supportColumnDBDataTypeConvertMap == null) {
-				initSupportColumnDBDataTypeConvertMap();
-			}
-			if(supportColumnDBDataTypeConvertMap.size() > 0) {
-				DBDataType[] supportTargetDBDataTypes = supportColumnDBDataTypeConvertMap.get(originDBDataType);
-				if(supportTargetDBDataTypes != null && supportTargetDBDataTypes.length > 0) {
-					for (DBDataType stdt : supportTargetDBDataTypes) {
-						if(stdt.equalsTypeName(targetDBDataType)) {
-							return true;
-						}
+		if(supportColumnDBDataTypeConvertMap == null) {
+			initSupportColumnDBDataTypeConvertMap();
+		}
+		if(supportColumnDBDataTypeConvertMap.size() > 0) {
+			DBDataType[] supportTargetDBDataTypes = supportColumnDBDataTypeConvertMap.get(originDBDataType);
+			if(supportTargetDBDataTypes != null && supportTargetDBDataTypes.length > 0) {
+				for (DBDataType stdt : supportTargetDBDataTypes) {
+					if(stdt.equalsTypeName(targetDBDataType)) {
+						return true;
 					}
 				}
 			}

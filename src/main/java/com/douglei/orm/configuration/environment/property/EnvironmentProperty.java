@@ -22,11 +22,11 @@ public interface EnvironmentProperty {
 	
 	public CreateMode getTableCreateMode();
 	
-	public boolean enableDataValidation();
+	public boolean enableDataValidate();
 	
 	public boolean enableTableDynamicUpdate();
 	
 	public String getSerializationFileRootPath();
 	
-	public boolean enableColumnDynamicUpdateValidation();
+	public boolean enableColumnDynamicUpdateValidate();
 }

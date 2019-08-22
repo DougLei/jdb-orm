@@ -7,6 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -146,7 +147,7 @@ public class PersistentObject {
 	
 	// 进行验证
 	private void doValidate() {
-		if(tableMetadata.existsValidateColumns()) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().enableDataValidate() && tableMetadata.existsValidateColumns()) {
 			RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+tableMetadata.getCode()+"]的TABLE映射");
 			
 			Object value = null;

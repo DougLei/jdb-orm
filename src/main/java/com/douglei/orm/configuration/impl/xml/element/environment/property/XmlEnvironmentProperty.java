@@ -44,7 +44,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private CreateMode tableCreateMode;
 	
 	@FieldMetaData
-	private boolean enableDataValidation;
+	private boolean enableDataValidate;
 	
 	@FieldMetaData
 	private boolean enableTableDynamicUpdate;
@@ -53,7 +53,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private String serializationFileRootPath;
 	
 	@FieldMetaData
-	private boolean enableColumnDynamicUpdateValidation;
+	private boolean enableColumnDynamicUpdateValidate;
 	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
@@ -150,9 +150,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.tableCreateMode = CreateMode.toValue(value);
 		}
 	}
-	void setEnableDataValidation(String value) {
+	void setEnableDataValidate(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
-			this.enableDataValidation = Boolean.parseBoolean(value);
+			this.enableDataValidate = Boolean.parseBoolean(value);
 		}
 	}
 	void setEnableTableDynamicUpdate(String value) {
@@ -165,9 +165,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.serializationFileRootPath = value;
 		}
 	}
-	void setEnableColumnDynamicUpdateValidation(String value) {
+	void setEnableColumnDynamicUpdateValidate(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
-			this.enableColumnDynamicUpdateValidation = Boolean.parseBoolean(value);
+			this.enableColumnDynamicUpdateValidate = Boolean.parseBoolean(value);
 		}
 	}
 
@@ -210,8 +210,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return tableCreateMode;
 	}
 	@Override
-	public boolean enableDataValidation() {
-		return enableDataValidation;
+	public boolean enableDataValidate() {
+		return enableDataValidate;
 	}
 	@Override
 	public boolean enableTableDynamicUpdate() {
@@ -222,7 +222,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return serializationFileRootPath;
 	}
 	@Override
-	public boolean enableColumnDynamicUpdateValidation() {
-		return enableColumnDynamicUpdateValidation;
+	public boolean enableColumnDynamicUpdateValidate() {
+		return enableColumnDynamicUpdateValidate;
 	}
 }
