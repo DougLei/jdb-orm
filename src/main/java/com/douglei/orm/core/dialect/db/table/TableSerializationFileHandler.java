@@ -46,7 +46,7 @@ class TableSerializationFileHandler {
 
 	// 是否启用表的动态更新
 	private boolean getEnableTableDynamicUpdate() {
-		return DBRunEnvironmentContext.getEnvironmentProperty().getEnableTableDynamicUpdate();
+		return DBRunEnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate();
 	}
 	
 	/**

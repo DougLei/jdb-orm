@@ -147,7 +147,7 @@ public class ColumnMetadata implements Metadata{
 	}
 	
 	/**
-	 * 【慎用】该方法直接强制修改了name属性的值, 没有任何理由
+	 * 【慎用】该方法直接强制修改了name属性的值, 目前只在同步表时使用过, 能不用绝对不要用
 	 * @param name
 	 */
 	public void forceUpdateName(String name) {
@@ -159,9 +159,14 @@ public class ColumnMetadata implements Metadata{
 	 * @param validatorHandler
 	 */
 	public void setValidatorHandler(ValidatorHandler validatorHandler) {
-		this.validatorHandler = validatorHandler;
-		this.validatorHandler.addValidator(validator);
-		// TODO 
+		if(validate || validatorHandler.byConfig()) {
+			this.validate = true;
+			this.validatorHandler = validatorHandler;
+			this.validatorHandler.setNullableValidator(defaultValue==null?unique:true);
+			// TODO
+			
+			
+		}
 	}
 	
 	/**

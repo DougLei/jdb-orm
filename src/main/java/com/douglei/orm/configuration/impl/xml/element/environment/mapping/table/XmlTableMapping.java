@@ -356,10 +356,12 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @param validatorsElement
 	 */
 	private void setColumnValidator(Element validatorsElement) {
-		Map<String, ValidatorHandler> validatorHandlerMap = getValidatorHandlerMap(validatorsElement);
-		tableMetadata.getDeclareColumns().forEach(column -> {
-			column.setValidatorHandler(getValidatorHandler(column.getName(), validatorHandlerMap));
-		});
+		if(DBRunEnvironmentContext.getEnvironmentProperty().enableDataValidation()) {
+			Map<String, ValidatorHandler> validatorHandlerMap = getValidatorHandlerMap(validatorsElement);
+			tableMetadata.getDeclareColumns().forEach(column -> {
+				column.setValidatorHandler(getValidatorHandler(column.getName(), validatorHandlerMap));
+			});
+		}
 	}
 	
 	@Override

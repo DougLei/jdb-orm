@@ -65,7 +65,7 @@ public abstract class XmlMapping implements Mapping{
 	private ValidatorHandler getValidatorHandler(Element validatorElement) {
 		String name = validatorElement.attributeValue("name");
 		if(StringUtil.notEmpty(name)) {
-			ValidatorHandler handler = new ValidatorHandler(name);
+			ValidatorHandler handler = new ValidatorHandler(name, true);
 			List<Attribute> attributes = validatorElement.attributes();
 			if(attributes.size() > 1) {
 				attributes.forEach(attribute -> {

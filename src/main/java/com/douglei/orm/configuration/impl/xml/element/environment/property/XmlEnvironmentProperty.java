@@ -194,11 +194,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return dialect;
 	}
 	@Override
-	public boolean getEnableSessionCache() {
+	public boolean enableSessionCache() {
 		return enableSessionCache;
 	}
 	@Override
-	public boolean getEnableTableSessionCache() {
+	public boolean enableTableSessionCache() {
 		return enableTableSessionCache;
 	}
 	@Override
@@ -210,11 +210,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return tableCreateMode;
 	}
 	@Override
-	public boolean getEnableDataValidation() {
+	public boolean enableDataValidation() {
 		return enableDataValidation;
 	}
 	@Override
-	public boolean getEnableTableDynamicUpdate() {
+	public boolean enableTableDynamicUpdate() {
 		return enableTableDynamicUpdate;
 	}
 	@Override
@@ -222,7 +222,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return serializationFileRootPath;
 	}
 	@Override
-	public boolean getEnableColumnDynamicUpdateValidation() {
+	public boolean enableColumnDynamicUpdateValidation() {
 		return enableColumnDynamicUpdateValidation;
 	}
 }

@@ -44,7 +44,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
-		this.enableSessionCache = environmentProperty.getEnableSessionCache();
+		this.enableSessionCache = environmentProperty.enableSessionCache();
 		logger.debug("是否开启Session缓存: {}", enableSessionCache);
 	}
 	

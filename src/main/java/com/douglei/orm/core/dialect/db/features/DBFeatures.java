@@ -49,7 +49,7 @@ public abstract class DBFeatures {
 	 * @return
 	 */
 	public boolean supportColumnDataTypeConvert(DBDataType originDBDataType, DBDataType targetDBDataType) {
-		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().enableColumnDynamicUpdateValidation()) {
 			if(supportColumnDBDataTypeConvertMap == null) {
 				initSupportColumnDBDataTypeConvertMap();
 			}

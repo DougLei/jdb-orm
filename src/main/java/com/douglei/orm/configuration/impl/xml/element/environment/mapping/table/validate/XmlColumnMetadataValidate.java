@@ -2,7 +2,6 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 
 import org.dom4j.Element;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
@@ -30,9 +29,6 @@ public class XmlColumnMetadataValidate implements MetadataValidate<Element, Colu
 		value = element.attributeValue("nullable");
 		boolean nullable = value == null?true:Boolean.parseBoolean(value);
 		
-		value = element.attributeValue("validate");
-		boolean validate = (DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && value != null)?Boolean.parseBoolean(value):false;
-		
 		return new ColumnMetadata(
 				element.attributeValue("property"), name, element.attributeValue("oldName"), element.attributeValue("descriptionName"), 
 				element.attributeValue("dataType"), length, precision, 
@@ -41,6 +37,6 @@ public class XmlColumnMetadataValidate implements MetadataValidate<Element, Colu
 				Boolean.parseBoolean(element.attributeValue("unique")), element.attributeValue("defaultValue"), 
 				element.attributeValue("check"), 
 				element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"), 
-				validate);
+				Boolean.parseBoolean(element.attributeValue("validate")));
 	}
 }

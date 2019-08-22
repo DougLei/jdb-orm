@@ -671,7 +671,7 @@ public class TableHandler {
 	}
 	// 是否修改列
 	private boolean isModifyColumn(TableMetadata table, ColumnMetadata column, ColumnMetadata oldColumn) {
-		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableColumnDynamicUpdateValidation()) {
+		if(DBRunEnvironmentContext.getEnvironmentProperty().enableColumnDynamicUpdateValidation()) {
 			boolean isModifyColumn = false;
 			if(column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler())) {
 				if(!DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {

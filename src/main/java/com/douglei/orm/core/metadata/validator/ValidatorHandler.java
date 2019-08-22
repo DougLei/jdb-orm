@@ -4,20 +4,37 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.core.metadata.validator.impl._NullableValidator;
+
 /**
  * 
  * @author DougLei
  */
 public class ValidatorHandler implements Serializable{
-	private static final long serialVersionUID = 8181298106722552127L;
-	
+	private static final long serialVersionUID = -5576744183225333021L;
 	private String name;
+	private boolean byConfig;// 是否使用配置方式创建的ValidatorHandler实例
+	private _NullableValidator _nullableValidator;// 必须先验证非空, 然后再进行其他验证, 如果可为空, 且值为空, 则不用进行其他验证, 所以该验证器必须配置
 	private List<Validator> validators;
 	
 	public ValidatorHandler(String name) {
+		this(name, false);
+	}
+	public ValidatorHandler(String name, boolean byConfig) {
 		this.name = name;
+		this.byConfig = byConfig;
 	}
 
+	/**
+	 * [必须设置] 设置非空验证
+	 * @param nullable
+	 */
+	public void setNullableValidator(boolean nullable) {
+		if(_nullableValidator == null){
+			_nullableValidator = new _NullableValidator(nullable + "");
+		}
+	}
+	
 	/**
 	 * 添加验证器
 	 * @param validatorName 验证器的名称, 即配置文件中的属性名
@@ -36,19 +53,25 @@ public class ValidatorHandler implements Serializable{
 	 * @return
 	 */
 	public ValidatorResult doValidate(Object value) {
-		if(validators != null) {
-			ValidatorResult result = null;
+		if(_nullableValidator == null) {
+			throw new NullPointerException("必须设置是否为空验证器["+_NullableValidator.class.getName()+"]");
+		}
+		ValidatorResult result = _nullableValidator.doValidate(value);
+		if(result == null && value != null && validators != null) {
 			for (Validator validator : validators) {
 				result = validator.doValidate(value);
 				if(result != null) {
-					return result;
+					break;
 				}
 			}
 		}
-		return null;
+		return result;
 	}
 
 	public String getName() {
 		return name;
+	}
+	public boolean byConfig() {
+		return byConfig;
 	}
 }

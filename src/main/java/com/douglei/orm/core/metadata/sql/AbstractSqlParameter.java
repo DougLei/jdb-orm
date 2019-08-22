@@ -20,10 +20,9 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlParameter implements Serializable{
-	private static final long serialVersionUID = -7947921907711909432L;
-	
+	private static final long serialVersionUID = 1092808135722127545L;
+
 	protected String configurationText;
-	protected Map<String, String> propertyMap; // 根据configurationText解析出来的<属性:值>map集合
 	
 	protected String name;// 参数名
 	protected String descriptionName;// 描述名
@@ -45,7 +44,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 	protected AbstractSqlParameter(String configurationText) {
 		this.configurationText = configurationText;
 		
-		propertyMap = resolvingPropertyMap(configurationText);
+		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
 		setName(propertyMap.get("name"));
 		setDescriptionName(propertyMap.get("descriptionName"));
 		setDataType(propertyMap.get("datatype"));
@@ -64,7 +63,6 @@ public abstract class AbstractSqlParameter implements Serializable{
 		setValidate(propertyMap.get("validate"));
 		
 		propertyMap.clear();
-		propertyMap = null;
 	}
 	
 	// 解析出属性map集合
@@ -193,9 +191,7 @@ public abstract class AbstractSqlParameter implements Serializable{
 		this.defaultValue = defaultValue;
 	}
 	private void setValidate(String validate) {
-		if(DBRunEnvironmentContext.getEnvironmentProperty().getEnableDataValidation() && VerifyTypeMatchUtil.isBoolean(validate)) {
-			this.validate = Boolean.parseBoolean(validate);
-		}
+		this.validate = Boolean.parseBoolean(validate);
 	}
 
 	public String getConfigurationText() {

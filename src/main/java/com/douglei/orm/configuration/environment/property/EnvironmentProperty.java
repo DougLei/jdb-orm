@@ -14,19 +14,19 @@ public interface EnvironmentProperty {
 	
 	public Dialect getDialect();
 	
-	public boolean getEnableSessionCache();
+	public boolean enableSessionCache();
 	
-	public boolean getEnableTableSessionCache();
+	public boolean enableTableSessionCache();
 	
 	public MappingStore getMappingStore();
 	
 	public CreateMode getTableCreateMode();
 	
-	public boolean getEnableDataValidation();
+	public boolean enableDataValidation();
 	
-	public boolean getEnableTableDynamicUpdate();
+	public boolean enableTableDynamicUpdate();
 	
 	public String getSerializationFileRootPath();
 	
-	public boolean getEnableColumnDynamicUpdateValidation();
+	public boolean enableColumnDynamicUpdateValidation();
 }

@@ -29,7 +29,7 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 	
 	@Override
 	public String toString() {
-		return "SqlParameterMetadata [configurationText=" + configurationText + ", propertyMap=" + propertyMap
+		return "SqlParameterMetadata [configurationText=" + configurationText
 				+ ", name=" + name + ", dataType=" + dataType + ", mode=" + mode + ", usePlaceholder=" + usePlaceholder
 				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullable=" + nullable
 				+ ", defaultValue=" + defaultValue + ", validate=" + validate + "]";

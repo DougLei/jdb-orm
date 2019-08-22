@@ -35,7 +35,7 @@ public class XmlTableMetadataValidate implements MetadataValidate<Element, Table
 				cm = CreateMode.defaultCreateMode();
 			}
 		}
-		if(cm == CreateMode.DYNAMIC_UPDATE && !DBRunEnvironmentContext.getEnvironmentProperty().getEnableTableDynamicUpdate()) {
+		if(cm == CreateMode.DYNAMIC_UPDATE && !DBRunEnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
 			cm = CreateMode.defaultCreateMode();
 		}
 		return cm;
