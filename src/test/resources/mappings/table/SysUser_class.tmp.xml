@@ -41,7 +41,7 @@
 		<validators>
 			<!-- name 列名 -->
 			<!-- regex 正则表达式 -->
-			<!-- notblank 不能为空字符串, 后面的值不重要(无论配置什么, 验证器中的值都是true), 只要配置了该验证器, 则该列的值一定不能为空字符串, 如果不需要验证, 则不要配置该验证器 -->
+			<!-- notblank 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置 -->
 			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置',''multiline:'','message':'','i18nCode':''}" notblank="true" />
 		</validators>
 	</table>
