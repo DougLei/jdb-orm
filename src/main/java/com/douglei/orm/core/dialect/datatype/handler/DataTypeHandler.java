@@ -5,13 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.core.validate.ValueDataTypeValidator;
-
 /**
  * 
  * @author DougLei
  */
-public interface DataTypeHandler extends ValueDataTypeValidator, Serializable{
+public interface DataTypeHandler extends DataTypeValidator, Serializable{
 	
 	/**
 	 * 获取标识

@@ -4,8 +4,8 @@ import java.util.Map;
 
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
+import com.douglei.orm.core.metadata.validator.DataValidateException;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
-import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
@@ -89,12 +89,12 @@ public class SqlParameterMetadata extends AbstractSqlParameter implements Metada
 	private void doValidate(Object value) {
 		if(validate) {
 			if(!nullable && value == null) {
-				throw new ValidateException(descriptionName, name, "不能为空");
+				throw new DataValidateException(descriptionName, name, "不能为空");
 			}
 			if(value != null) {
 				String result = dataType.doValidate(value, length, precision);
 				if(result != null) {
-					throw new ValidateException(descriptionName, name, result);
+					throw new DataValidateException(descriptionName, name, result);
 				}
 			}
 		}

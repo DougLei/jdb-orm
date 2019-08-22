@@ -11,8 +11,8 @@ import com.douglei.orm.context.DBRunEnvironmentContext;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.validator.DataValidateException;
 import com.douglei.orm.core.metadata.validator.ValidatorResult;
-import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
@@ -156,7 +156,7 @@ public class PersistentObject {
 				value = propertyMap.get(column.getCode());
 				result = column.getValidatorHandler().doValidate(value);
 				if(result != null) {
-					throw new ValidateException(column.getDescriptionName(), column.getName(), value, result.getMessage());
+					throw new DataValidateException(column.getDescriptionName(), column.getName(), value, result.getMessage());
 				}
 			}
 		}

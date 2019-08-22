@@ -172,9 +172,6 @@ public class ColumnMetadata implements Metadata{
 //				if((validateColumn = tableMetadata.getValidateColumnByCode(key)) != null) {
 //					value = propertyMap.get(key);
 //					
-//					if(!validateColumn.isNullable() && value == null && validateColumn.getDefaultValue() == null) {
-//						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
-//					}
 //					if(value != null) {
 //						result = validateColumn.getDataTypeHandler().doValidate(value, validateColumn.getLength(), validateColumn.getPrecision());
 //						if(result != null) {
