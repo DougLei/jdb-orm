@@ -9,6 +9,7 @@ import java.util.List;
  * @author DougLei
  */
 public class ValidatorHandler implements Serializable{
+	private static final long serialVersionUID = 8181298106722552127L;
 	
 	private String name;
 	private List<Validator> validators;

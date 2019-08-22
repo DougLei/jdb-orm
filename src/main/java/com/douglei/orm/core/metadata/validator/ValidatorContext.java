@@ -68,6 +68,6 @@ class ValidatorContext {
 				throw new UnsupportValidatorException(validatorName);
 			}
 		}
-		return ((Validator) ConstructorUtil.newInstance(vc)).setValidatorConfigValue(validatorConfigValue);
+		return ((Validator) ConstructorUtil.newInstance(vc)).initialValidator(validatorConfigValue);
 	}
 }

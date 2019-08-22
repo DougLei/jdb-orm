@@ -41,8 +41,8 @@
 		<validators>
 			<!-- name 列名 -->
 			<!-- regex 正则表达式 -->
-			<!-- blankable 是否可以为空字符串 -->
-			<validator name="id" regex="" blankable="true" />
+			<!-- notblank 是否可以为空字符串 -->
+			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置',''multiline:'','message':'','i18nCode':''}" notblank="true" />
 		</validators>
 	</table>
 </mapping-configuration>

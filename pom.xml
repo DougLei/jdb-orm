@@ -31,6 +31,15 @@
 		    <artifactId>jaxen</artifactId>
 		    <version>1.2.0</version>
 		</dependency>
+		<!-- 需要使用到验证器功能时, 才需要alibaba.fastjson包 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.58</version>
+			<optional>true</optional>
+		</dependency>
+		<!-- 需要使用本框架提供的redis支持, 保存映射时, 才需要jedis包 -->
+		<!-- com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
