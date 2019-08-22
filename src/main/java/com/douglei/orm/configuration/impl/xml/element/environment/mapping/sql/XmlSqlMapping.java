@@ -36,6 +36,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		try {
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
 			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
+			setParameterValidator(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			int length = contentNodeList.getLength();
 			for (int i=0;i<length;i++) {
@@ -60,6 +61,15 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			throw new RepeatedElementException("<sql>元素最多只能配置一个");
 		}
 		return sqlNodeList.item(0);
+	}
+	
+	/**
+	 * 设置各个参数的验证器
+	 * @param sqlNode
+	 */
+	private void setParameterValidator(Node sqlNode) {
+		// TODO 获取<validators>配置
+		
 	}
 
 	/**

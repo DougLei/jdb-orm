@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<sql namespace="com.test" name="queryUser">
-		<content dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
+		<!-- TODO content的name, 可以调用指定的content, 如果没有指定, 则全部调用 -->
+		<content name="" dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 			select * from sys_user 
+			
+			<!-- TODO 可以引用其他content的内容 -->
+			<sql-content ref="" />
 			
 		<!-- 
 			defaultValue的一些内置值:
@@ -80,5 +84,13 @@
 			)}
 		</content>
 	-->	
+	
+		<!-- 验证器配置 -->
+		<validators>
+			<!-- name 参数名 -->
+			<!-- regex 正则表达式 -->
+			<!-- notblank 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置 -->
+			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置',''multiline:'','message':'','i18nCode':''}" notblank="true" />
+		</validators>
 	</sql>
 </mapping-configuration>
