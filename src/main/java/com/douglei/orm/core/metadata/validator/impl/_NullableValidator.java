@@ -8,21 +8,16 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
-	private static final long serialVersionUID = -5894775458262230720L;
+	private static final long serialVersionUID = -6644318115059923918L;
 	private boolean nullable;
 	
-	public _NullableValidator(String validatorConfigValue) {
-		super(validatorConfigValue);
+	public _NullableValidator(boolean nullable) {
+		this.nullable = nullable;
 	}
 	
 	@Override
-	protected void doInitial(String validatorConfigValue) {
-		nullable = Boolean.parseBoolean(validatorConfigValue);
-	}
-
-	@Override
 	public String getName() {
-		return "<_nullable_内部方法>";
+		return "<_nullable_validator_内部方法>";
 	}
 
 	@Override

@@ -9,13 +9,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class Validator implements Serializable{
-	private static final long serialVersionUID = -1515818080968550653L;
-
-	protected Validator() {
-	}
-	protected Validator(String validatorConfigValue) {
-		initialValidator(validatorConfigValue);
-	}
+	private static final long serialVersionUID = -7558722172307885973L;
 
 	/**
 	 * 获取验证器的名称

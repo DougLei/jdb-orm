@@ -31,7 +31,7 @@ public class ValidatorHandler implements Serializable{
 	 */
 	public void setNullableValidator(boolean nullable) {
 		if(_nullableValidator == null){
-			_nullableValidator = new _NullableValidator(nullable + "");
+			_nullableValidator = new _NullableValidator(nullable);
 		}
 	}
 	
