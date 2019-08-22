@@ -13,7 +13,7 @@ public abstract class Validator implements Serializable{
 	 * 即在配置文件中, 属性名等于号后面配置的值
 	 */
 	protected String validatorConfigValue;
-
+	
 	/**
 	 * 获取验证器的名称
 	 * 这个是必须配置, 和配置文件中的属性名一致
