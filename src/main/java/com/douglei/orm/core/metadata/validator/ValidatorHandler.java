@@ -11,7 +11,7 @@ import com.douglei.orm.core.metadata.validator.internal._NullableValidator;
  * @author DougLei
  */
 public class ValidatorHandler implements Serializable{
-	private static final long serialVersionUID = -5576744183225333021L;
+	private static final long serialVersionUID = -7215057359068412569L;
 	private String name;
 	private boolean byConfig;// 是否使用配置方式创建的ValidatorHandler实例
 	private _NullableValidator _nullableValidator;// 必须先验证非空, 然后再进行其他验证, 如果可为空, 且值为空, 则不用进行其他验证, 所以该验证器必须配置
@@ -41,10 +41,18 @@ public class ValidatorHandler implements Serializable{
 	 * @param validatorConfigValue 验证器的配置值, 即配置文件中属性名等号右边配置的值
 	 */
 	public void addValidator(String validatorName, String validatorConfigValue) {
+		addValidator(ValidatorContext.getValidatorInstance(validatorName, validatorConfigValue));
+	}
+	
+	/**
+	 * 添加验证器
+	 * @param validator
+	 */
+	public void addValidator(Validator validator) {
 		if(validators == null) {
 			validators = new ArrayList<Validator>();
 		}
-		validators.add(ValidatorContext.getValidatorInstance(validatorName, validatorConfigValue));
+		validators.add(validator);
 	}
 	
 	/**

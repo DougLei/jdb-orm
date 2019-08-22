@@ -7,6 +7,7 @@ import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHand
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -163,7 +164,7 @@ public class ColumnMetadata implements Metadata{
 			this.validate = true;
 			this.validatorHandler = validatorHandler;
 			this.validatorHandler.setNullableValidator(defaultValue==null?unique:true);
-			// TODO 设置验证器
+			this.validatorHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
 			
 			
 			
