@@ -17,19 +17,19 @@ public enum DialectType {
 	 */
 	ALL,
 	
-	ORACLE(OracleDialect.class, new short[] {11}),
+	ORACLE(OracleDialect.class, new byte[] {11}),
 	
-	MYSQL(MySqlDialect.class, new short[] {8}),
+	MYSQL(MySqlDialect.class, new byte[] {8}),
 	
-	SQLSERVER(SqlServerDialect.class, new short[] {11});
+	SQLSERVER(SqlServerDialect.class, new byte[] {11});
 	
 	private Class<? extends Dialect> dialectClass;// 方言类
 	private Dialect dialectInstance;// 方言实例
-	private short[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
+	private byte[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
 	
 	private DialectType() {
 	}
-	private DialectType(Class<? extends Dialect> dialectClass, short[] supportMajorVersions) {
+	private DialectType(Class<? extends Dialect> dialectClass, byte[] supportMajorVersions) {
 		this.dialectClass = dialectClass;
 		this.supportMajorVersions = supportMajorVersions;
 	}
@@ -60,7 +60,7 @@ public enum DialectType {
 		return dialectInstance;
 	}
 	
-	public short[] supportMajorVersions() {
+	public byte[] supportMajorVersions() {
 		return supportMajorVersions;
 	}
 	

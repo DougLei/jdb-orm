@@ -9,17 +9,14 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 映射的抽象父类
  * @author DougLei
  */
 public abstract class XmlMapping implements Mapping{
-	private static final long serialVersionUID = 2817014948073187035L;
 	
 	protected String configFileName;
 
@@ -32,22 +29,19 @@ public abstract class XmlMapping implements Mapping{
 	 * @param validatorsElement
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	protected Map<String, ValidatorHandler> getValidatorHandlerMap(Element validatorsElement) {
 		if(validatorsElement != null) {
-			List<Element> validatorElements = Dom4jElementUtil.elements("validator", validatorsElement);
-			if(validatorElements != null) {
+			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name]");
+			if(com.douglei.tools.utils.Collections.unEmpty(validatorElements)) {
 				Map<String, ValidatorHandler> validatorMap = new HashMap<String, ValidatorHandler>(validatorElements.size());
 				
 				ValidatorHandler handler = null;
 				for (Element ve : validatorElements) {
 					handler = getValidatorHandler(ve);
-					if(handler != null) {
-						validatorMap.put(processValidatorNameValue(handler.getName()), handler);
-					}
+					validatorMap.put(processValidatorNameValue(handler.getName()), handler);
 				}
-				if(validatorMap.size() > 0) {
-					return validatorMap;
-				}
+				return validatorMap;
 			}
 		}
 		return Collections.emptyMap();
@@ -69,15 +63,20 @@ public abstract class XmlMapping implements Mapping{
 	 */
 	@SuppressWarnings("unchecked")
 	private ValidatorHandler getValidatorHandler(Element validatorElement) {
-		if(validatorElement.attributeCount() > 0) {
+		String name = validatorElement.attributeValue("name");
+		if(StringUtil.notEmpty(name)) {
+			ValidatorHandler handler = new ValidatorHandler(name);
 			List<Attribute> attributes = validatorElement.attributes();
-			Map<String, String> propertyMap = new HashMap<String, String>(attributes.size());
-			attributes.forEach(attribute -> propertyMap.put(attribute.getName(), attribute.getValue()));
-			if(StringUtil.notEmpty(propertyMap.get("name"))) {
-				return (ValidatorHandler) IntrospectorUtil.setProperyValues(new ValidatorHandler(), propertyMap);
+			if(attributes.size() > 1) {
+				attributes.forEach(attribute -> {
+					if(!"name".equals(attribute.getName())) {
+						handler.addValidator(attribute.getName(), attribute.getValue());
+					}
+				});
 			}
+			return handler;
 		}
-		return null;
+		throw new NullPointerException("<validator>元素中的name属性值不能为空");
 	}
 	
 	/**
@@ -88,11 +87,11 @@ public abstract class XmlMapping implements Mapping{
 	 */
 	protected ValidatorHandler getValidatorHandler(String name, Map<String, ValidatorHandler> validatorHandlerMap) {
 		if(validatorHandlerMap.isEmpty()) {
-			return new ValidatorHandler();
+			return new ValidatorHandler(name);
 		}
 		ValidatorHandler handler = validatorHandlerMap.get(name);
 		if(handler == null) {
-			handler = new ValidatorHandler();
+			handler = new ValidatorHandler(name);
 		}
 		return handler;
 	}

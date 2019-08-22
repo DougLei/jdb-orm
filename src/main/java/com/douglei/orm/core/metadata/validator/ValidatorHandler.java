@@ -1,56 +1,53 @@
 package com.douglei.orm.core.metadata.validator;
 
 import java.io.Serializable;
-
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
  * @author DougLei
  */
 public class ValidatorHandler implements Serializable{
-	/**
-	 * name
-	 */
+	
 	private String name;
-	/**
-	 * 验证的正则表达式
-	 */
-	private String regex;
-	/**
-	 * 验证是否可为空字符串, 默认值为true
-	 */
-	private boolean blankable = true;
-	/**
-	 * 是否可为空
-	 */
-	private boolean nullable;
-	/**
-	 * 默认值
-	 */
-	private String defaultValue;
+	private List<Validator> validators;
 	
-	// 设置通用的验证配置信息
-	public void setCommonValidatorConfig(boolean nullable, String defaultValue) {
-		this.nullable = nullable;
-		this.defaultValue = defaultValue;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
+	public ValidatorHandler(String name) {
 		this.name = name;
 	}
-	public void setRegex(String regex) {
-		if(StringUtil.notEmpty(regex)) {
-			this.regex = regex;
+
+	/**
+	 * 添加验证器
+	 * @param validatorName 验证器的名称, 即配置文件中的属性名
+	 * @param validatorConfigValue 验证器的配置值, 即配置文件中属性名等号右边配置的值
+	 */
+	public void addValidator(String validatorName, String validatorConfigValue) {
+		if(validators == null) {
+			validators = new ArrayList<Validator>();
 		}
+		validators.add(ValidatorContext.getValidatorInstance(validatorName, validatorConfigValue));
 	}
-	public void setBlankable(String blankable) {
-		if(VerifyTypeMatchUtil.isBoolean(blankable)) {
-			this.blankable = Boolean.parseBoolean(blankable);
+	
+	/**
+	 * 进行验证, 如果验证通过, 则返回null, 否则返回验证失败的message
+	 * @param value
+	 * @return
+	 */
+	public ValidatorResult doValidate(Object value) {
+		if(validators != null) {
+			ValidatorResult result = null;
+			for (Validator validator : validators) {
+				result = validator.doValidate(value);
+				if(result != null) {
+					return result;
+				}
+			}
 		}
+		return null;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

@@ -160,7 +160,8 @@ public class ColumnMetadata implements Metadata{
 	 */
 	public void setValidatorHandler(ValidatorHandler validatorHandler) {
 		this.validatorHandler = validatorHandler;
-		this.validatorHandler.setCommonValidatorConfig(nullable,defaultValue);
+		this.validatorHandler.addValidator(validator);
+		// TODO 
 	}
 	
 	/**

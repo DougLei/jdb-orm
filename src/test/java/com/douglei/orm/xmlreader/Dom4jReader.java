@@ -2,17 +2,13 @@ package com.douglei.orm.xmlreader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
+import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
-
-import com.douglei.orm.core.metadata.validator.ValidatorHandler;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 public class Dom4jReader {
 	private String xmlFilePath = "D:\\workspace4\\jdb-orm\\src\\test\\resources\\mappings\\table\\SysUser_class.tmp.xml";
@@ -36,11 +32,23 @@ public class Dom4jReader {
 //			System.out.println("elems is null");
 //		}
 		
-		List<Attribute> attributes = doc.getRootElement().element("table").element("validators").element("validator").attributes();
-		Map<String, String> propertyMap = new HashMap<String, String>();
-		attributes.forEach(attribute -> propertyMap.put(attribute.getName(), attribute.getValue()));
-		ValidatorHandler vc = (ValidatorHandler) IntrospectorUtil.setProperyValues(new ValidatorHandler(), propertyMap);
-		System.out.println(vc);
+//		List<Attribute> attributes = doc.getRootElement().element("table").element("validators").element("validator").attributes();
+//		Map<String, String> propertyMap = new HashMap<String, String>();
+//		attributes.forEach(attribute -> propertyMap.put(attribute.getName(), attribute.getValue()));
+//		ValidatorHandler vc = (ValidatorHandler) IntrospectorUtil.setProperyValues(new ValidatorHandler(), propertyMap);
+//		System.out.println(vc);
+		
+		List<Element> elems = doc.getRootElement().element("table").element("validators").selectNodes("validator[@name]");
+		for (Element element : elems) {
+			System.out.println(element.asXML());
+			
+			List<Attribute> as = element.attributes();
+			for (Attribute a : as) {
+				System.out.println(a.getName() +"\t\t" + a.getValue());
+			}
+			
+			
+		}
 		
 		
 //		List<?> list = elem.selectNodes("column/@name");
