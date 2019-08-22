@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
 import com.douglei.orm.core.validate.ValidateException;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
@@ -145,26 +146,16 @@ public class PersistentObject {
 	
 	// 进行验证
 	private void doValidate() {
-		if(tableMetadata.isValidateColumn()) {
+		if(tableMetadata.existsValidateColumns()) {
 			RunMappingConfigurationContext.setCurrentExecuteMappingDescription("执行code=["+tableMetadata.getCode()+"]的TABLE映射");
 			
 			Object value = null;
-			ColumnMetadata validateColumn = null;
-			String result = null;
-			Set<String> keys = propertyMap.keySet();
-			for (String key : keys) {
-				if((validateColumn = tableMetadata.getValidateColumnByCode(key)) != null) {
-					value = propertyMap.get(key);
-					
-					if(!validateColumn.isNullable() && value == null && validateColumn.getDefaultValue() == null) {
-						throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), "不能为空");
-					}
-					if(value != null) {
-						result = validateColumn.getDataTypeHandler().doValidate(value, validateColumn.getLength(), validateColumn.getPrecision());
-						if(result != null) {
-							throw new ValidateException(validateColumn.getDescriptionName(), validateColumn.getName(), value, result);
-						}
-					}
+			ValidatorResult result = null;
+			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
+				value = propertyMap.get(column.getCode());
+				result = column.getValidatorHandler().doValidate(value);
+				if(result != null) {
+					throw new ValidateException(column.getDescriptionName(), column.getName(), value, result.getMessage());
 				}
 			}
 		}

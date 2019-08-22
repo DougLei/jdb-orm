@@ -40,8 +40,7 @@ public class TableMetadata implements Metadata{
 	private PrimaryKeyHandler primaryKeyHandler;
 	private PrimaryKeySequence primaryKeySequence;
 	
-	private byte validateColumnLength;// 需要验证列的数量
-	private Map<String, ColumnMetadata> validateColumns;// 需要验证列<code: 列>
+	private List<ColumnMetadata> validateColumns;// 需要验证列
 	
 	private Map<String, Constraint> constraints;// 约束
 	private Map<String, Index> indexes;// 索引
@@ -73,21 +72,8 @@ public class TableMetadata implements Metadata{
 			columns_ = new HashMap<String, ColumnMetadata>(columns.size());
 			columns.forEach((key, value) -> columns_.put(value.getProperty(), value));
 		}
-		setValidateColumns();
 	}
 
-	// 设置需要验证的列
-	private void setValidateColumns() {
-		if(validateColumnLength > 0) {
-			validateColumns = new HashMap<String, ColumnMetadata>(validateColumnLength);
-			columns_.forEach((key, value) -> {
-				if(value.isValidate()) {
-					validateColumns.put(value.getProperty(), value);
-				}
-			});
-		}
-	}
-	
 	/**
 	 * 添加列
 	 * @param column
@@ -100,7 +86,6 @@ public class TableMetadata implements Metadata{
 		}
 		columns.put(column.getName(), column);
 		addConstraint(column);
-		if(column.isValidate()) validateColumnLength++;
 		addDeclareColumn(column);
 	}
 	
@@ -118,6 +103,27 @@ public class TableMetadata implements Metadata{
 		for (ColumnMetadata pkcolumn : pkColumns) {
 			this.primaryKeyColumns_.put(pkcolumn.getProperty(), pkcolumn);
 		}
+	}
+	
+	/**
+	 * 设置要验证的列
+	 * @param column
+	 */
+	public void setValidateColumn(ColumnMetadata column) {
+		if(column != null) {
+			if(validateColumns == null) {
+				validateColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
+			}
+			validateColumns.add(column);
+		}
+	}
+	
+	/**
+	 * 是否存在需要验证字段
+	 * @return
+	 */
+	public boolean existsValidateColumns() {
+		return validateColumns != null;
 	}
 	
 	/**
@@ -217,14 +223,6 @@ public class TableMetadata implements Metadata{
 	}
 
 	/**
-	 * 是否有需要验证字段
-	 * @return
-	 */
-	public boolean isValidateColumn() {
-		return validateColumns != null;
-	}
-	
-	/**
 	 * 给实体map设置主键值
 	 * @param entityMap
 	 */
@@ -305,9 +303,9 @@ public class TableMetadata implements Metadata{
 		return primaryKeyColumns_.size();
 	}
 	
-	// 根据code获取要验证的列
-	public ColumnMetadata getValidateColumnByCode(String code) {
-		return validateColumns.get(code);
+	// 获取要验证的列集合
+	public List<ColumnMetadata> getValidateColumns() {
+		return validateColumns;
 	}
 	
 	// 获取按照定义顺序的列集合

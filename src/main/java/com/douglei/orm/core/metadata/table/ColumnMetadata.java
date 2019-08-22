@@ -158,15 +158,17 @@ public class ColumnMetadata implements Metadata{
 	 * 设置验证器
 	 * @param validatorHandler
 	 */
-	public void setValidatorHandler(ValidatorHandler validatorHandler) {
+	public ColumnMetadata setValidatorHandler(ValidatorHandler validatorHandler) {
 		if(validate || validatorHandler.byConfig()) {
 			this.validate = true;
 			this.validatorHandler = validatorHandler;
 			this.validatorHandler.setNullableValidator(defaultValue==null?unique:true);
-			// TODO
+			// TODO 设置验证器
 			
 			
+			return this;
 		}
+		return null;
 	}
 	
 	/**
@@ -235,6 +237,9 @@ public class ColumnMetadata implements Metadata{
 	}
 	public boolean isPrimaryKeySequence() {
 		return isPrimaryKeySequence;
+	}
+	public ValidatorHandler getValidatorHandler() {
+		return validatorHandler;
 	}
 
 	@Override
