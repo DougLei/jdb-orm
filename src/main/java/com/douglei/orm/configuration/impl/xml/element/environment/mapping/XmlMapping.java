@@ -17,6 +17,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class XmlMapping implements Mapping{
+	private static final long serialVersionUID = 2817014948073187035L;
 	
 	protected String configFileName;
 

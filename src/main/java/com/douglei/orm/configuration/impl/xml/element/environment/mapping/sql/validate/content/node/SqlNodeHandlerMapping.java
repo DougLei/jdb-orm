@@ -18,12 +18,12 @@ public class SqlNodeHandlerMapping {
 	private static Map<String, SqlNodeHandler> SQL_NODE_HANDLER_MAPPING;
 	static {
 		ClassScanner cs = new ClassScanner();
-		List<String> classPaths = cs.scan(SqlNodeHandlerMapping.class.getPackage().getName() + ".impl");
-		SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>(classPaths.size());
+		List<String> classes = cs.scan(SqlNodeHandlerMapping.class.getPackage().getName() + ".impl");
+		SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>(classes.size());
 		
 		Object obj = null;
 		SqlNodeHandler sqlNodeHandler = null;
-		for (String cp : classPaths) {
+		for (String cp : classes) {
 			obj = ConstructorUtil.newInstance(cp);
 			if(obj instanceof SqlNodeHandler) {
 				sqlNodeHandler= (SqlNodeHandler) obj;

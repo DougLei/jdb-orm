@@ -7,7 +7,7 @@ import com.douglei.tools.utils.IdentityUtil;
  * sql参数默认值处理器
  * @author DougLei
  */
-public class DefaultValueHandler {
+class DefaultValueHandler {
 
 	/**
 	 * 获取默认值

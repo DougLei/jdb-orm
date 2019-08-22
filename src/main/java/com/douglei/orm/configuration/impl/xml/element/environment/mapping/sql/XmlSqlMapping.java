@@ -38,7 +38,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			int length = contentNodeList.getLength();
-			for (int i=0;i<length ;i++) {
+			for (int i=0;i<length;i++) {
 				sqlMetadata.addSqlContentMetadata(sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {

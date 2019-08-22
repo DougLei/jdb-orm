@@ -45,7 +45,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 				endIndex = suffixMatcher.start();
 				addSqlParameter(content.substring(startIndex+2, endIndex));
 			}else {
-				throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, [${ 和 }]标识符不匹配(多一个/少一个), 请检查");
+				throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, [#{ 和 }]标识符不匹配(多一个/少一个), 请检查");
 			}
 		}
 		
