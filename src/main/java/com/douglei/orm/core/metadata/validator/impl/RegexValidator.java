@@ -13,7 +13,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class RegexValidator extends Validator {
-	private static final long serialVersionUID = 5401625349843688959L;
+	private static final long serialVersionUID = -6788243515396774377L;
 	private List<RegexEntity> regexes;
 	
 	@Override
@@ -30,14 +30,14 @@ public class RegexValidator extends Validator {
 	}
 
 	@Override
-	public ValidatorResult doValidate(Object value) {
-		return doValidate(value.toString());
+	public ValidatorResult doValidate(String validateFieldName, Object value) {
+		return doValidate(validateFieldName, value.toString());
 	}
 	
-	private ValidatorResult doValidate(String value) {
+	private ValidatorResult doValidate(String validateFieldName, String value) {
 		ValidatorResult result = null;
 		for (RegexEntity regex : regexes) {
-			if((result = regex.match(value)) != null) {
+			if((result = regex.match(validateFieldName, value)) != null) {
 				break;
 			}
 		}
@@ -50,7 +50,7 @@ public class RegexValidator extends Validator {
  * @author DougLei
  */
 class RegexEntity implements Serializable{
-	private static final long serialVersionUID = 7408609547665907392L;
+	private static final long serialVersionUID = -6411684647723481525L;
 	private static final String DEFAULT_MESSAGE = "正则表达式匹配失败";
 	private static final String DEFAULT_I18N_CODE = ValidatorResult.i18nCodePrefix + "regex.matching.fail";
 	
@@ -60,11 +60,11 @@ class RegexEntity implements Serializable{
 	private String message = DEFAULT_MESSAGE;
 	private String i18nCode = DEFAULT_I18N_CODE;
 	
-	public ValidatorResult match(String value) {
+	public ValidatorResult match(String validateFieldName, String value) {
 		if(getPattern().matcher(value).matches()) {
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

@@ -18,7 +18,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class NumberDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -5834617026883473244L;
+	private static final long serialVersionUID = 7655863760350504605L;
 	private NumberDBDataTypeHandler() {}
 	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
 	public static final NumberDBDataTypeHandler singleInstance() {
@@ -71,14 +71,14 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		String valueString = value.toString();
 		if(VerifyTypeMatchUtil.isInteger(valueString)) {
-			return LongDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
+			return LongDataTypeHandler.singleInstance().doValidate(validateFieldName, valueString, length, precision);
 		}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
-			return DoubleDataTypeHandler.singleInstance().doValidate(valueString, length, precision);
+			return DoubleDataTypeHandler.singleInstance().doValidate(validateFieldName, valueString, length, precision);
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

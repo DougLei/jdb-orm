@@ -8,7 +8,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
-	private static final long serialVersionUID = -6495482852688490519L;
+	private static final long serialVersionUID = -5939247064758791584L;
 	private boolean nullable;
 	
 	public _NullableValidator(boolean nullable) {
@@ -21,9 +21,9 @@ public class _NullableValidator extends Validator {
 	}
 
 	@Override
-	public ValidatorResult doValidate(Object value) {
+	public ValidatorResult doValidate(String validateFieldName, Object value) {
 		if(!nullable && value == null) {
-			return new ValidatorResult() {
+			return new ValidatorResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {

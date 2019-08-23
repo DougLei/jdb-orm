@@ -13,7 +13,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
-	private static final long serialVersionUID = 7183486573816489968L;
+	private static final long serialVersionUID = 6375386167667181039L;
 
 	/**
 	 * 支持处理的ColumnType类型
@@ -44,7 +44,7 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 
 	@Deprecated
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		return null;
 	}
 }

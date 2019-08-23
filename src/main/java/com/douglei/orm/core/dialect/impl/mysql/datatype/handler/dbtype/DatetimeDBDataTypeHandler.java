@@ -16,7 +16,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -1822517111426215178L;
+	private static final long serialVersionUID = -8316291750848192199L;
 	private DatetimeDBDataTypeHandler() {}
 	private static final DatetimeDBDataTypeHandler instance = new DatetimeDBDataTypeHandler();
 	public static final DatetimeDBDataTypeHandler singleInstance() {
@@ -44,7 +44,7 @@ public class DatetimeDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
-		return DateDataTypeHandler.singleInstance().doValidate(value, length, precision);
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+		return DateDataTypeHandler.singleInstance().doValidate(validateFieldName, value, length, precision);
 	}
 }

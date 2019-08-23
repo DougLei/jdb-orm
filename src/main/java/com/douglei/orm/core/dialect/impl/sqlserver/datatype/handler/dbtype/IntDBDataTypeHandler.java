@@ -16,7 +16,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class IntDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = 4108758954350896094L;
+	private static final long serialVersionUID = 5617776247815407670L;
 	private IntDBDataTypeHandler() {}
 	private static final IntDBDataTypeHandler instance = new IntDBDataTypeHandler();
 	public static final IntDBDataTypeHandler singleInstance() {
@@ -44,7 +44,7 @@ public class IntDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
-		return IntegerDataTypeHandler.singleInstance().doValidate(value, length, precision);
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+		return IntegerDataTypeHandler.singleInstance().doValidate(validateFieldName, value, length, precision);
 	}
 }

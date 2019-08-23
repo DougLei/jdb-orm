@@ -6,6 +6,15 @@ package com.douglei.orm.core.metadata.validator;
  */
 public abstract class ValidatorResult {
 	public static final String i18nCodePrefix = "jdb.validator.";
+	private String validateFieldName;
+	
+	public ValidatorResult(String validateFieldName) {
+		this.validateFieldName = validateFieldName;
+	}
+	
+	public final String getValidateFieldName() {
+		return validateFieldName;
+	}
 	
 	/**
 	 * 返回验证结果message

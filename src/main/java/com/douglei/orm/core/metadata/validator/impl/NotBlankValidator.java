@@ -8,7 +8,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class NotBlankValidator extends Validator{
-	private static final long serialVersionUID = 4477656770129913047L;
+	private static final long serialVersionUID = -8402258251004055916L;
 
 	@Override
 	public String getName() {
@@ -16,9 +16,9 @@ public class NotBlankValidator extends Validator{
 	}
 
 	@Override
-	public ValidatorResult doValidate(Object value) {
+	public ValidatorResult doValidate(String validateFieldName, Object value) {
 		if(value.toString().trim().length() == 0) {
-			return new ValidatorResult() {
+			return new ValidatorResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {

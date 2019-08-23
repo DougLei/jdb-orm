@@ -16,7 +16,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class CharDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -8929461511989611836L;
+	private static final long serialVersionUID = -2662183514397203003L;
 	private CharDBDataTypeHandler() {}
 	private static final CharDBDataTypeHandler instance = new CharDBDataTypeHandler();
 	public static final CharDBDataTypeHandler singleInstance() {
@@ -49,7 +49,7 @@ public class CharDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
-		return StringDataTypeHandler.singleInstance().doValidate(value, length, precision);
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+		return StringDataTypeHandler.singleInstance().doValidate(validateFieldName, value, length, precision);
 	}
 }

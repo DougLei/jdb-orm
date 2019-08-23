@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -8769807245272846909L;
+	private static final long serialVersionUID = 8735493773025593439L;
 
 	@Override
 	public String getCode() {
@@ -39,12 +39,12 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == long.class || value instanceof Long || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			// long变量的值, 一般不会超过最大值、也不会低于最小值, 用isInteger方法判断即可满足, 所以这里就暂时不做多余的判断, 上面setValue时同理, 也用isInteger方法判断
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

@@ -9,7 +9,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeHandler{
-	private static final long serialVersionUID = 2367735453967294018L;
+	private static final long serialVersionUID = 565865852212181071L;
 
 	@Override
 	public String getCode() {
@@ -23,11 +23,11 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 	private static final Class<?>[] supportClasses = {byte.class, Byte.class};
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == byte.class || value instanceof Byte || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Byte.MAX_VALUE || l < Byte.MIN_VALUE) {
-				return new ValidatorResult() {
+				return new ValidatorResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -42,7 +42,7 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 			}
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

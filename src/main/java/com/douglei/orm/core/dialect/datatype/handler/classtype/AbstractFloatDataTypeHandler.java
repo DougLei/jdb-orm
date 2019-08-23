@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 4260413941111256501L;
+	private static final long serialVersionUID = -8869330255244140843L;
 
 	@Override
 	public String getCode() {
@@ -39,14 +39,14 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		Object o = null;
 		if(value.getClass() == float.class || value instanceof Float) {
 			o = value;
 		} else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Float.parseFloat(value.toString());
 		}else {
-			return new ValidatorResult() {
+			return new ValidatorResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {
@@ -62,7 +62,7 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 		
 		String string = o.toString();
 		if(string.length() - 1 > length) {// -1是减去小数点的长度
-			return new ValidatorResult() {
+			return new ValidatorResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {
@@ -86,7 +86,7 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 			}
 			if(pl > precision) {
 				short apl = pl;
-				return new ValidatorResult() {
+				return new ValidatorResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {

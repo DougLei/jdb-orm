@@ -64,10 +64,10 @@ public class ValidatorHandler implements Serializable{
 		if(_nullableValidator == null) {
 			throw new NullPointerException("必须设置是否为空验证器["+_NullableValidator.class.getName()+"]");
 		}
-		ValidatorResult result = _nullableValidator.doValidate(value);
+		ValidatorResult result = _nullableValidator.doValidate(name, value);
 		if(result == null && value != null && validators != null) {
 			for (Validator validator : validators) {
-				result = validator.doValidate(value);
+				result = validator.doValidate(name, value);
 				if(result != null) {
 					break;
 				}

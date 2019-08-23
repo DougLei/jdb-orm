@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
  * @author DougLei
  */
 public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 833576092653603998L;
+	private static final long serialVersionUID = -6225768595647748110L;
 
 	@Override
 	public String getCode() {
@@ -36,11 +36,11 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) {
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

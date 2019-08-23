@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 4420183985016757607L;
+	private static final long serialVersionUID = 1056682819053678236L;
 
 	@Override
 	public String getCode() {
@@ -39,11 +39,11 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == int.class || value instanceof Integer || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Integer.MAX_VALUE || l < Integer.MIN_VALUE) {
-				return new ValidatorResult() {
+				return new ValidatorResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -58,7 +58,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 			}
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

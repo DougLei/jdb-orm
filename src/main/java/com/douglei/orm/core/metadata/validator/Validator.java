@@ -9,7 +9,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class Validator implements Serializable{
-	private static final long serialVersionUID = -7558722172307885973L;
 
 	/**
 	 * 获取验证器的名称
@@ -26,10 +25,11 @@ public abstract class Validator implements Serializable{
 	
 	/**
 	 * 进行验证, 如果验证通过, 则返回null, 否则返回验证失败的message
+	 * @param validateFieldName
 	 * @param value
 	 * @return
 	 */
-	public abstract ValidatorResult doValidate(Object value);
+	public abstract ValidatorResult doValidate(String validateFieldName, Object value);
 
 	/**
 	 * 初始化验证器

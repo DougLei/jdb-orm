@@ -19,7 +19,7 @@ import com.douglei.tools.utils.CloseUtil;
  * @author DougLei
  */
 public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFeatures{
-	private static final long serialVersionUID = 3659383896353886721L;
+	private static final long serialVersionUID = -2914541368715153601L;
 
 	/**
 	 * 从 {@link CallableStatement} 中获取输出参数的值
@@ -31,7 +31,7 @@ public abstract class DBDataTypeHandler implements DataTypeHandler, DBDataTypeFe
 	public abstract Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException;
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		return null;// 默认验证通过
 	}
 	

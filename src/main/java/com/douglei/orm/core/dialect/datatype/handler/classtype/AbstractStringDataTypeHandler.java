@@ -16,7 +16,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -1655302836346195269L;
+	private static final long serialVersionUID = -139645288589094676L;
 
 	@Override
 	public String getCode() {
@@ -55,11 +55,11 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	}
 	
 	@Override
-	public ValidatorResult doValidate(Object value, short length, short precision) {
+	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof StringWrapper) {
 			int actualLength = StringUtil.computeStringLength(value.toString());
 			if(actualLength > length) {
-				return new ValidatorResult() {
+				return new ValidatorResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -74,7 +74,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 			}
 			return null;
 		}
-		return new ValidatorResult() {
+		return new ValidatorResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {
