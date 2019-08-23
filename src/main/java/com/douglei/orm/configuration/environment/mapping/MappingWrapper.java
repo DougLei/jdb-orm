@@ -42,7 +42,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addMapping(Mapping mapping){
 		mappingStore.addMapping(mapping);
-		MappingConfigContext.registerCreateTableMapping(mapping);
+		MappingConfigContext.addCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 
@@ -57,7 +57,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addOrCoverMapping(Mapping mapping) {
 		mappingStore.addOrCoverMapping(mapping);
-		MappingConfigContext.registerCreateTableMapping(mapping);
+		MappingConfigContext.addCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -85,7 +85,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected void removeMapping(String mappingCode) {
 		Mapping mapping = mappingStore.removeMapping(mappingCode);
-		MappingConfigContext.registerDropTableMapping(mapping);
+		MappingConfigContext.addDropTableMapping(mapping);
 	}
 	
 	/**

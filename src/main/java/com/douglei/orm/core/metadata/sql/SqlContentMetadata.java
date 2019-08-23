@@ -3,6 +3,7 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.context.MappingConfigContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -13,16 +14,15 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
-	private static final long serialVersionUID = -3887183011478334184L;
-	
+	private static final long serialVersionUID = 2059027597550056200L;
 	private DialectType[] dialectTypes;
 	private SqlContentType type;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(DialectType[] dialectTypes, SqlContentType type) {
+	public SqlContentMetadata(DialectType[] dialectTypes) {
 		this.dialectTypes = dialectTypes;
-		this.type = type;
+		this.type = MappingConfigContext.getCurrentSqlContentType();
 	}
 	
 	public void addRootSqlNode(SqlNode rootSqlNode) {

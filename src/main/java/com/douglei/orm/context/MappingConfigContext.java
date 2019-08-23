@@ -12,6 +12,7 @@ import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.tools.utils.Collections;
 
 /**
  * 
@@ -19,7 +20,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorHandler;
  */
 public class MappingConfigContext {
 	private static final ThreadLocal<MappingConfig> mappingConfig = new ThreadLocal<MappingConfig>();
-	private static MappingConfig getRunMappingConfiguration() {
+	private static MappingConfig getMappingConfig() {
 		MappingConfig mc = mappingConfig.get();
 		if(mc == null) {
 			mc = new MappingConfig();
@@ -27,24 +28,36 @@ public class MappingConfigContext {
 		}
 		return mc;
 	}
+
+	
+	// -----------------------------------------------------------------------------------------
+	// 获取表映射配置对象
+	private static TableMappingConfig getTableMappingConfig() {
+		return getMappingConfig().getTableMappingConfig();
+	}
 	
 	// 是否注册表映射
 	private static boolean isRegisterTableMapping(Mapping mapping) {
 		return mapping.getMappingType() == MappingType.TABLE && ((TableMetadata)mapping.getMetadata()).getCreateMode() != CreateMode.NONE;
 	}
 	
-	// -----------------------------------------------------------------------------------------
 	/**
-	 * 注册要create的TableMapping
+	 * 添加要create的TableMapping
 	 * @param mapping
 	 */
-	public static void registerCreateTableMapping(Mapping mapping) {
+	public static void addCreateTableMapping(Mapping mapping) {
 		if(isRegisterTableMapping(mapping)) {
-			MappingConfig mc = getRunMappingConfiguration();
-			if(mc.createTableMappings == null) {
-				mc.createTableMappings = new ArrayList<Mapping>(10);
-			}
-			mc.createTableMappings.add(mapping);
+			getTableMappingConfig().addCreateTableMapping(mapping);
+		}
+	}
+	
+	/**
+	 * 添加要drop的TableMapping
+	 * @param mapping
+	 */
+	public static void addDropTableMapping(Mapping mapping) {
+		if(isRegisterTableMapping(mapping)) {
+			getTableMappingConfig().addDropTableMapping(mapping);
 		}
 	}
 	
@@ -53,26 +66,8 @@ public class MappingConfigContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
-		if(mappingConfig.get() != null) {
-			MappingConfig mc = getRunMappingConfiguration();
-			if(mc.createTableMappings != null) {
-				TableHandler.singleInstance().create(dataSourceWrapper, mc.createTableMappings);
-			}
-		}
-	}
-	
-	// -----------------------------------------------------------------------------------------
-	/**
-	 * 注册要drop的TableMapping
-	 * @param mapping
-	 */
-	public static void registerDropTableMapping(Mapping mapping) {
-		if(isRegisterTableMapping(mapping)) {
-			MappingConfig mc = getRunMappingConfiguration();
-			if(mc.dropTableMappings == null) {
-				mc.dropTableMappings = new ArrayList<Mapping>(4);
-			}
-			mc.dropTableMappings.add(mapping);
+		if(getMappingConfig().existsTableMappingConfig() && getTableMappingConfig().existsCreateTable()) {
+			TableHandler.singleInstance().create(dataSourceWrapper, getTableMappingConfig().getCreateTables());
 		}
 	}
 	
@@ -81,22 +76,23 @@ public class MappingConfigContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
-		if(mappingConfig.get() != null) {
-			MappingConfig mc = getRunMappingConfiguration();
-			if(mc.dropTableMappings != null) {
-				TableHandler.singleInstance().drop(dataSourceWrapper, mc.dropTableMappings);
-			}
+		if(getMappingConfig().existsTableMappingConfig() && getTableMappingConfig().existsDropTable()) {
+			TableHandler.singleInstance().drop(dataSourceWrapper, getTableMappingConfig().getDropTables());
 		}
 	}
 	
 	// -----------------------------------------------------------------------------------------
+	// 获取sql映射配置对象
+	private static SqlMappingConfig getSqlMappingConfig() {
+		return getMappingConfig().getSqlMappingConfig();
+	}
+	
 	/**
 	 * 记录当前解析的sql content的type
 	 * @param sqlContentType
 	 */
 	public static void setCurrentSqlContentType(SqlContentType sqlContentType) {
-		MappingConfig mc = getRunMappingConfiguration();
-		mc.sqlContentType = sqlContentType;
+		getSqlMappingConfig().setSqlContentType(sqlContentType);
 	}
 	
 	/**
@@ -104,40 +100,32 @@ public class MappingConfigContext {
 	 * @return
 	 */
 	public static SqlContentType getCurrentSqlContentType() {
-		return getRunMappingConfiguration().sqlContentType;
+		return getSqlMappingConfig().getSqlContentType();
 	}
 	
-	// -----------------------------------------------------------------------------------------
 	/**
 	 * 记录当前解析的sql验证器集合
 	 * @param sqlValidatorHandlerMap
 	 */
 	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
-		MappingConfig mc = getRunMappingConfiguration();
-		mc.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
+		getSqlMappingConfig().setSqlValidatorHandlerMap(sqlValidatorHandlerMap);
 	}
 	
 	/**
 	 * 获取当前解析的sql验证器集合
-	 * @param sqlParamName
 	 * @return
 	 */
 	public static Map<String, ValidatorHandler> getCurrentSqlValidatorHandlerMap() {
-		return getRunMappingConfiguration().sqlValidatorHandlerMap;
+		return getSqlMappingConfig().getSqlValidatorHandlerMap();
 	}
-	
-	
 	
 	// -----------------------------------------------------------------------------------------
 	/**
 	 * 销毁
 	 */
 	public static void destroy() {
-		MappingConfig mc = getRunMappingConfiguration();
-		if(mc != null) {
-			mappingConfig.remove();
-			mc.destroy();
-		}
+		getMappingConfig().destroy();
+		mappingConfig.remove();
 	}
 }
 
@@ -146,15 +134,99 @@ public class MappingConfigContext {
  * @author DougLei
  */
 class MappingConfig {
-	List<Mapping> createTableMappings;// 记录create table mapping对象集合
-	List<Mapping> dropTableMappings;// 记录drop table mapping对象集合
+	private TableMappingConfig tmc;
+	private SqlMappingConfig smc;
 	
-	SqlContentType sqlContentType;// 记录每个sql content的type
-	Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
+	public TableMappingConfig getTableMappingConfig() {
+		if(tmc == null) {
+			tmc = new TableMappingConfig();
+		}
+		return tmc;
+	}
+	public SqlMappingConfig getSqlMappingConfig() {
+		if(smc == null) {
+			smc = new SqlMappingConfig();
+		}
+		return smc;
+	}
 	
-	void destroy() {
-		if(createTableMappings != null) createTableMappings.clear();
-		if(dropTableMappings != null) dropTableMappings.clear();
-		if(sqlValidatorHandlerMap != null) sqlValidatorHandlerMap.clear();
+	public boolean existsTableMappingConfig() {
+		return tmc != null;
+	}
+	public boolean existsSqlMappingConfig() {
+		return smc != null;
+	}
+
+	public void destroy() {
+		if(tmc!=null) tmc.destroy();
+		if(smc!=null) smc.destroy();
+	}
+}
+
+/**
+ * 
+ * @author DougLei
+ */
+class TableMappingConfig {
+	private List<Mapping> createTableMappings;// 记录create table mapping对象集合
+	private List<Mapping> dropTableMappings;// 记录drop table mapping对象集合
+	
+	public void addCreateTableMapping(Mapping mapping) {
+		if(createTableMappings == null) {
+			createTableMappings = new ArrayList<Mapping>(10);
+		}
+		createTableMappings.add(mapping);
+	}
+	
+	public void addDropTableMapping(Mapping mapping) {
+		if(dropTableMappings == null) {
+			dropTableMappings = new ArrayList<Mapping>(4);
+		}
+		dropTableMappings.add(mapping);
+	}
+	
+	public boolean existsCreateTable() {
+		return createTableMappings != null;
+	}
+	public List<Mapping> getCreateTables() {
+		return createTableMappings;
+	}
+	public boolean existsDropTable() {
+		return dropTableMappings != null;
+	}
+	public List<Mapping> getDropTables() {
+		return dropTableMappings;
+	}
+	
+	public void destroy() {
+		Collections.clear(createTableMappings);
+		Collections.clear(dropTableMappings);
+	}
+}
+
+/**
+ * 
+ * @author DougLei
+ */
+class SqlMappingConfig {
+	private SqlContentType sqlContentType;// 记录每个sql content的type
+	private Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
+	
+	public SqlContentType getSqlContentType() {
+		return sqlContentType;
+	}
+	public void setSqlContentType(SqlContentType sqlContentType) {
+		this.sqlContentType = sqlContentType;
+	}
+	public Map<String, ValidatorHandler> getSqlValidatorHandlerMap() {
+		return sqlValidatorHandlerMap;
+	}
+	public void setSqlValidatorHandlerMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
+		Collections.clear(this.sqlValidatorHandlerMap);
+		this.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
+	}
+	
+	public void destroy() {
+		Collections.clear(sqlValidatorHandlerMap);
 	}
 }

@@ -28,14 +28,13 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	@Override
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
-		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
-		MappingConfigContext.setCurrentSqlContentType(type);
+		setSqlContentType(attributeMap.getNamedItem("type"));
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
 		
 		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectTypes, type);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectTypes);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -46,7 +45,11 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		return sqlContentMetadata;
 	}
 
-	private SqlContentType getSqlContentType(Node type) {
+	/**
+	 * 设置当前sql content的类型
+	 * @param type
+	 */
+	private void setSqlContentType(Node type) {
 		if(type == null) {
 			throw new MetadataValidateException("<content>元素的type属性值不能为空");
 		}else {
@@ -54,7 +57,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 			if(sqlContentType == null) {
 				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
 			}
-			return sqlContentType;
+			MappingConfigContext.setCurrentSqlContentType(sqlContentType);
 		}
 	}
 	
