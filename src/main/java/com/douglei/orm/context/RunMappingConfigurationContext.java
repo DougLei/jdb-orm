@@ -1,6 +1,8 @@
 package com.douglei.orm.context;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
@@ -9,6 +11,7 @@ import com.douglei.orm.core.dialect.db.table.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 
 /**
  * 运行时映射配置 上下文
@@ -25,11 +28,12 @@ public class RunMappingConfigurationContext {
 		return runMappingConfiguration;
 	}
 	
-	// 是否要注册表映射
+	// 是否注册表映射
 	private static boolean isRegisterTableMapping(Mapping mapping) {
 		return mapping.getMappingType() == MappingType.TABLE && ((TableMetadata)mapping.getMetadata()).getCreateMode() != CreateMode.NONE;
 	}
 	
+	// -----------------------------------------------------------------------------------------
 	/**
 	 * 注册要create的TableMapping
 	 * @param mapping
@@ -57,6 +61,7 @@ public class RunMappingConfigurationContext {
 		}
 	}
 	
+	// -----------------------------------------------------------------------------------------
 	/**
 	 * 注册要drop的TableMapping
 	 * @param mapping
@@ -84,6 +89,7 @@ public class RunMappingConfigurationContext {
 		}
 	}
 	
+	// -----------------------------------------------------------------------------------------
 	/**
 	 * 记录当前解析的sql content的type
 	 * @param sqlContentType
@@ -101,6 +107,25 @@ public class RunMappingConfigurationContext {
 		return getRunMappingConfiguration().sqlContentType;
 	}
 	
+	// -----------------------------------------------------------------------------------------
+	/**
+	 * 记录当前解析的sql验证器集合
+	 * @param sqlContentType
+	 */
+	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorMap) {
+		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
+		runMappingConfiguration.sqlValidatorMap = sqlValidatorMap;
+	}
+	
+	/**
+	 * 获取当前解析的sql验证器集合
+	 * @return
+	 */
+	public static Map<String, ValidatorHandler> getCurrentSqlValidatorMap() {
+		return getRunMappingConfiguration().sqlValidatorMap;
+	}
+	
+	// -----------------------------------------------------------------------------------------
 	/**
 	 * 记录当前执行的映射描述
 	 * @param executeMappingDescription
@@ -111,9 +136,23 @@ public class RunMappingConfigurationContext {
 	}
 	
 	/**
-	 * 记录当前执行的映射描述
+	 * 获取当前执行的映射描述
 	 */
 	public static String getCurrentExecuteMappingDescription() {
 		return getRunMappingConfiguration().executeMappingDescription;
 	}
+}
+
+/**
+ * 运行时映射配置
+ * @author DougLei
+ */
+class RunMappingConfiguration {
+	List<Mapping> createTableMappings;// 记录create table mapping对象集合
+	List<Mapping> dropTableMappings;// 记录drop table mapping对象集合
+	
+	SqlContentType sqlContentType;// 记录每个sql content的type
+	Map<String, ValidatorHandler> sqlValidatorMap;// 记录sql的验证器map集合
+	
+	String executeMappingDescription;// 记录执行的每个映射描述
 }

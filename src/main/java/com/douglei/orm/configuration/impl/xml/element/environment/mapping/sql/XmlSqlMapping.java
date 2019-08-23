@@ -1,8 +1,13 @@
 package com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -13,10 +18,13 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
+import com.douglei.orm.context.RunMappingConfigurationContext;
 import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
+import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -68,8 +76,36 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	 * @param sqlNode
 	 */
 	private void setParameterValidator(Node sqlNode) {
-		// TODO 获取<validators>配置
-		
+		Map<String, ValidatorHandler> validatorMap = null;
+		NodeList validatorNodeList = XmlReaderContext.getValidatorNodeList(sqlNode);
+		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
+			validatorMap =new HashMap<String, ValidatorHandler>(validatorNodeList.getLength());
+			NamedNodeMap attributes = null;
+			String name = null;
+			Node attribute = null;
+			for(int i=0;i<validatorNodeList.getLength();i++) {
+				attributes = validatorNodeList.item(i).getAttributes();
+				name = attributes.getNamedItem("name").getNodeValue();
+				if(StringUtil.notEmpty(name)) {
+					ValidatorHandler handler = new ValidatorHandler(name, true);
+					if(attributes.getLength() > 1) {
+						for(int j=0;j<attributes.getLength();j++) {
+							attribute = attributes.item(j);
+							if(!"name".equals(attribute.getNodeName())) {
+								handler.addValidator(attribute.getNodeName(), attribute.getNodeValue());
+							}
+						}
+					}
+					validatorMap.put(handler.getName(), handler);
+					continue;
+				}
+				throw new NullPointerException("<validator>元素中的name属性值不能为空");
+			}
+		}
+		if(validatorMap == null) {
+			validatorMap = Collections.emptyMap();
+		}
+		RunMappingConfigurationContext.setCurrentSqlValidatorMap(validatorMap);
 	}
 
 	/**

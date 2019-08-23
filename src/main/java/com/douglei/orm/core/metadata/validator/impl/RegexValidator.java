@@ -13,7 +13,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class RegexValidator extends Validator {
-	private static final long serialVersionUID = -6788243515396774377L;
+	private static final long serialVersionUID = 4320630855473369862L;
 	private List<RegexEntity> regexes;
 	
 	@Override
@@ -23,12 +23,7 @@ public class RegexValidator extends Validator {
 		}
 		regexes = JSONArray.parseArray(validatorConfigValue, RegexEntity.class);
 	}
-
-	@Override
-	public String getName() {
-		return "regex";
-	}
-
+	
 	@Override
 	public ValidatorResult doValidate(String validateFieldName, Object value) {
 		return doValidate(validateFieldName, value.toString());

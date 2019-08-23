@@ -9,7 +9,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class _DataTypeValidator extends Validator {
-	private static final long serialVersionUID = -2404135499933548109L;
+	private static final long serialVersionUID = -370030424802596945L;
 	private DataTypeHandler dataTypeHandler;
 	private short length;
 	private short precision;
@@ -18,11 +18,6 @@ public class _DataTypeValidator extends Validator {
 		this.dataTypeHandler = dataTypeHandler;
 		this.length = length;
 		this.precision = precision;
-	}
-
-	@Override
-	public String getName() {
-		return null;
 	}
 
 	@Override

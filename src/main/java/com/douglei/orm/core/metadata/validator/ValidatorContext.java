@@ -26,9 +26,9 @@ class ValidatorContext {
 	 */
 	private static void scanAndRegisterValidators() {
 		ClassScanner cs = new ClassScanner();
-		List<String> validatorClasses = cs.scan(Validator.class.getClass().getPackage().getName() +".impl");
+		List<String> validatorClasses = cs.scan(Validator.class.getPackage().getName() +".impl");
 		if(validatorClasses.size() > 0) {
-			validatorClasses.forEach(clz -> registerValidator(ClassLoadUtil.loadClass(clz)));
+			validatorClasses.forEach(clz -> registerValidatorByScan(ClassLoadUtil.loadClass(clz)));
 		}
 		cs.destroy();
 	}
@@ -45,13 +45,16 @@ class ValidatorContext {
 		}
 	}
 	
-	private static void registerValidator(Class<? extends Validator> vc) {
-		registerValidator(((Validator)ConstructorUtil.newInstance(vc)).getName(), vc);
+	private static void registerValidatorByScan(Class<? extends Validator> vc) {
+		String name =vc.getSimpleName();
+		if(name.endsWith("Validator")) {
+			registerValidator(((char)(name.charAt(0)+ 32)) + name.substring(1, name.indexOf("Va")), vc);
+		}
 	}
 	private static void registerValidator(String validatorName, Class<? extends Validator> vc) {
 		validators.put(validatorName, vc);
 	}
-
+	
 	/**
 	 * 获取验证器实例
 	 * @param validatorName

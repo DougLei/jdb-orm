@@ -2,6 +2,7 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlTableMapping extends XmlMapping implements TableMapping{
-	private static final long serialVersionUID = -3317062065254787203L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
 	private static final XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
 	private static final XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
@@ -363,12 +363,75 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		});
 	}
 	
-	@Override
-	protected String processValidatorNameValue(String columnName) {
+	/**
+	 * 获取配置的ValidatorHandler集合
+	 * @param validatorsElement
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private Map<String, ValidatorHandler> getValidatorHandlerMap(Element validatorsElement) {
+		if(validatorsElement != null) {
+			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
+			if(com.douglei.tools.utils.Collections.unEmpty(validatorElements)) {
+				Map<String, ValidatorHandler> validatorMap = new HashMap<String, ValidatorHandler>(validatorElements.size());
+				
+				ValidatorHandler handler = null;
+				for (Element ve : validatorElements) {
+					handler = getValidatorHandler(ve);
+					validatorMap.put(processValidationColumnName(handler.getName()), handler);
+				}
+				return validatorMap;
+			}
+		}
+		return Collections.emptyMap();
+	}
+	
+	/**
+	 * 获取validatorHandler实例
+	 * @param validatorElement
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private ValidatorHandler getValidatorHandler(Element validatorElement) {
+		String name = validatorElement.attributeValue("name");
+		if(StringUtil.notEmpty(name)) {
+			ValidatorHandler handler = new ValidatorHandler(name, true);
+			List<Attribute> attributes = validatorElement.attributes();
+			if(attributes.size() > 1) {
+				attributes.forEach(attribute -> {
+					if(!"name".equals(attribute.getName())) {
+						handler.addValidator(attribute.getName(), attribute.getValue());
+					}
+				});
+			}
+			return handler;
+		}
+		throw new NullPointerException("<validator>元素中的name属性值不能为空");
+	}
+	
+	// 处理要验证的列名
+	private String processValidationColumnName(String columnName) {
 		tableMetadata.validateColumnExistsByName(columnName);
 		return columnName.toUpperCase();
 	}
-
+	
+	/**
+	 * 获取指定name的ValidatorHandler
+	 * @param name
+	 * @param validatorHandlerMap
+	 * @return
+	 */
+	private ValidatorHandler getValidatorHandler(String name, Map<String, ValidatorHandler> validatorHandlerMap) {
+		if(validatorHandlerMap.isEmpty()) {
+			return new ValidatorHandler(name);
+		}
+		ValidatorHandler handler = validatorHandlerMap.get(name);
+		if(handler == null) {
+			handler = new ValidatorHandler(name);
+		}
+		return handler;
+	}
+	
 	@Override
 	public MappingType getMappingType() {
 		return MappingType.TABLE;

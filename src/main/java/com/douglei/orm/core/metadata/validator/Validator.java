@@ -9,14 +9,8 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class Validator implements Serializable{
+	private static final long serialVersionUID = 1587862778246048587L;
 
-	/**
-	 * 获取验证器的名称
-	 * 这个是必须配置, 和配置文件中的属性名一致
-	 * @return
-	 */
-	public abstract String getName();
-	
 	/**
 	 * 在获取了validatorConfigValue后, 初始化验证器操作, 可为空
 	 */

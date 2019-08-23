@@ -8,12 +8,7 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class NotBlankValidator extends Validator{
-	private static final long serialVersionUID = -8402258251004055916L;
-
-	@Override
-	public String getName() {
-		return "notblank";
-	}
+	private static final long serialVersionUID = 1797231860362178986L;
 
 	@Override
 	public ValidatorResult doValidate(String validateFieldName, Object value) {
