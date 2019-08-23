@@ -126,13 +126,4 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		}
 		return null;
 	}
-	
-	/**
-	 * 
-	 * @param defaultExecuteAttribute
-	 * @return
-	 */
-	private boolean getDefaultExecute(Node defaultExecuteAttribute) {
-		return false;
-	}
 }

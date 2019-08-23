@@ -15,15 +15,13 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  */
 public class SqlContentMetadata implements Metadata{
 	private String name;
-	private boolean defaultExecute;
 	private SqlContentType type;
 	private DialectType[] dialectTypes;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(String name, boolean defaultExecute, DialectType[] dialectTypes) {
+	public SqlContentMetadata(String name, DialectType[] dialectTypes) {
 		this.name = name;
-		this.defaultExecute = defaultExecute;
 		this.type = MappingConfigContext.getCurrentSqlContentType();
 		this.dialectTypes = dialectTypes;
 	}
@@ -45,9 +43,6 @@ public class SqlContentMetadata implements Metadata{
 	}
 	public String getName() {
 		return name;
-	}
-	public boolean isDefaultExecute() {
-		return defaultExecute;
 	}
 	public SqlContentType getType() {
 		return type;
