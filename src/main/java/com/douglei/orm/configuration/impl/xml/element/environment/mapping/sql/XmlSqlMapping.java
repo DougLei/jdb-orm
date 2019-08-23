@@ -76,10 +76,10 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	 * @param sqlNode
 	 */
 	private void setParameterValidator(Node sqlNode) {
-		Map<String, ValidatorHandler> validatorMap = null;
+		Map<String, ValidatorHandler> validatorHandlerMap = null;
 		NodeList validatorNodeList = MappingXmlReaderContext.getValidatorNodeList(sqlNode);
 		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
-			validatorMap =new HashMap<String, ValidatorHandler>(validatorNodeList.getLength());
+			validatorHandlerMap =new HashMap<String, ValidatorHandler>(validatorNodeList.getLength());
 			NamedNodeMap attributes = null;
 			String name = null;
 			Node attribute = null;
@@ -96,16 +96,16 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 							}
 						}
 					}
-					validatorMap.put(handler.getName(), handler);
+					validatorHandlerMap.put(handler.getName(), handler);
 					continue;
 				}
 				throw new NullPointerException("<validator>元素中的name属性值不能为空");
 			}
 		}
-		if(validatorMap == null) {
-			validatorMap = Collections.emptyMap();
+		if(validatorHandlerMap == null) {
+			validatorHandlerMap = Collections.emptyMap();
 		}
-		MappingConfigContext.setCurrentSqlValidatorMap(validatorMap);
+		MappingConfigContext.setCurrentSqlValidatorMap(validatorHandlerMap);
 	}
 
 	/**

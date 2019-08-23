@@ -15,6 +15,8 @@ import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
@@ -69,6 +71,7 @@ public class SqlParameterMetadata implements Metadata{
 		setValidate(propertyMap.get("validate"));
 		
 		propertyMap.clear();
+		setValidatorHandler();
 	}
 	
 	// 解析出属性map集合
@@ -199,19 +202,26 @@ public class SqlParameterMetadata implements Metadata{
 	private void setValidate(String validate) {
 		this.validate = Boolean.parseBoolean(validate);
 	}
+	
+	private void setValidatorHandler() {
+		ValidatorHandler validatorHandler = MappingConfigContext.getCurrentSqlValidatorHandlerMap().get(name);
+		if(validatorHandler == null && validate) {
+			validatorHandler = new ValidatorHandler(name);
+		}
+		if(validatorHandler != null) {
+			this.validate = true;
+			this.validatorHandler = validatorHandler;
+			if(validatorHandler.unexistsNullableValidator()) {
+				this.validatorHandler.setNullableValidator(nullable);
+				this.validatorHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
+			}
+		}
+	}
 
 	@Deprecated
 	@Override
 	public String getCode() {
 		return name;
-	}
-	
-	@Override
-	public String toString() {
-		return "SqlParameterMetadata [configurationText=" + configurationText
-				+ ", name=" + name + ", dataType=" + dataType + ", mode=" + mode + ", usePlaceholder=" + usePlaceholder
-				+ ", valuePrefix=" + valuePrefix + ", valueSuffix=" + valueSuffix + ", nullable=" + nullable
-				+ ", defaultValue=" + defaultValue + ", validate=" + validate + "]";
 	}
 	
 	private boolean unProcessNamePrefix = true;// 是否【没有】处理过name前缀, 默认都没有处理
@@ -266,15 +276,10 @@ public class SqlParameterMetadata implements Metadata{
 	
 	// 验证数据
 	private void doValidate(Object value) {
-		if(validate) {
-			if(!nullable && value == null) {
-				throw new DataValidateException(descriptionName, name, "不能为空");
-			}
-			if(value != null) {
-				String result = dataType.doValidate(value, length, precision);
-				if(result != null) {
-					throw new DataValidateException(descriptionName, name, result);
-				}
+		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
+			ValidatorResult result = validatorHandler.doValidate(value);
+			if(result != null) {
+				throw new DataValidateException(descriptionName, name, value, result.getMessage());
 			}
 		}
 	}

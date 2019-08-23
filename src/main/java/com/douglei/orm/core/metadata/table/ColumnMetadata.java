@@ -163,7 +163,7 @@ public class ColumnMetadata implements Metadata{
 		if(validate || validatorHandler.byConfig()) {
 			this.validate = true;
 			this.validatorHandler = validatorHandler;
-			this.validatorHandler.setNullableValidator(defaultValue==null?unique:true);
+			this.validatorHandler.setNullableValidator(defaultValue==null?nullable:true);
 			this.validatorHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
 			return this;
 		}

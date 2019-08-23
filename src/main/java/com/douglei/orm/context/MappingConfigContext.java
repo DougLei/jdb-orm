@@ -110,19 +110,20 @@ public class MappingConfigContext {
 	// -----------------------------------------------------------------------------------------
 	/**
 	 * 记录当前解析的sql验证器集合
-	 * @param sqlContentType
+	 * @param sqlValidatorHandlerMap
 	 */
-	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorMap) {
+	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
 		MappingConfig mc = getRunMappingConfiguration();
-		mc.sqlValidatorMap = sqlValidatorMap;
+		mc.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
 	}
 	
 	/**
 	 * 获取当前解析的sql验证器集合
+	 * @param sqlParamName
 	 * @return
 	 */
-	public static Map<String, ValidatorHandler> getCurrentSqlValidatorMap() {
-		return getRunMappingConfiguration().sqlValidatorMap;
+	public static Map<String, ValidatorHandler> getCurrentSqlValidatorHandlerMap() {
+		return getRunMappingConfiguration().sqlValidatorHandlerMap;
 	}
 	
 	// -----------------------------------------------------------------------------------------
@@ -160,7 +161,7 @@ class MappingConfig {
 	List<Mapping> dropTableMappings;// 记录drop table mapping对象集合
 	
 	SqlContentType sqlContentType;// 记录每个sql content的type
-	Map<String, ValidatorHandler> sqlValidatorMap;// 记录sql的验证器map集合
+	Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
 	
 	String executeMappingDescription;// 记录执行的每个映射描述
 }
