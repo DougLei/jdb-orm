@@ -70,8 +70,8 @@ public class SqlParameterMetadata implements Metadata{
 		setDefaultValue(propertyMap.get("defaultValue"));
 		setValidate(propertyMap.get("validate"));
 		
-		propertyMap.clear();
 		setValidatorHandler();
+		propertyMap.clear();
 	}
 	
 	// 解析出属性map集合

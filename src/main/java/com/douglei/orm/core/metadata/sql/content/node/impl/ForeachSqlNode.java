@@ -61,7 +61,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 				return false;
 			}
 		}else {
-			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持[java.util.Collection<E>类型], [数组类型]");
+			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
 		}
 		return true;
 	}
