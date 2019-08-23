@@ -1,6 +1,6 @@
 package com.douglei.orm.core.metadata.table;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
@@ -18,7 +18,6 @@ import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConv
  */
 public class ColumnMetadata implements Metadata{
 	private static final long serialVersionUID = -8811168548476748974L;
-	
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
@@ -60,7 +59,7 @@ public class ColumnMetadata implements Metadata{
 	
 	// 设置name的同时, 对name进行验证
 	private void setNameByValidate(String name, String oldName) {
-		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;
@@ -71,7 +70,7 @@ public class ColumnMetadata implements Metadata{
 	
 	// 处理数据类型
 	private void processDataType(DataType dataType, String dataType_, short length, short precision) {
-		this.dataTypeHandler = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
+		this.dataTypeHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
 		this.dbDataType = dataTypeHandler.getDBDataType();
 		this.length = dbDataType.correctInputLength(length);
 		this.precision = dbDataType.correctInputPrecision(this.length, precision);

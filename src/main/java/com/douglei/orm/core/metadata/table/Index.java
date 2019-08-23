@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.table;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.DialectType;
 
 /**
@@ -33,9 +33,9 @@ public class Index implements Serializable{
 		return name;
 	}
 	public String getCreateSqlStatement() {
-		return createSqlStatements.get(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType());
+		return createSqlStatements.get(EnvironmentContext.getEnvironmentProperty().getDialect().getType());
 	}
 	public String getDropSqlStatement() {
-		return dropSqlStatements.get(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType());
+		return dropSqlStatements.get(EnvironmentContext.getEnvironmentProperty().getDialect().getType());
 	}
 }

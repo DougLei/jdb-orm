@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessions.session.sql.SQLSession;
@@ -37,7 +37,7 @@ public class SessionImpl implements Session {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
-		DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 	}
 	
 	// 验证session是否被关闭

@@ -11,7 +11,7 @@ import com.douglei.orm.configuration.environment.mapping.table.ColumnConfigurati
 import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
 import com.douglei.orm.configuration.environment.mapping.table.IndexConfigurationException;
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -24,7 +24,6 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class TableMetadata implements Metadata{
 	private static final long serialVersionUID = 4660413514966131688L;
-	
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -54,7 +53,7 @@ public class TableMetadata implements Metadata{
 	
 	// 设置name的同时, 对name进行验证
 	private void setNameByValidate(String name, String oldName) {
-		DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;

@@ -4,10 +4,10 @@ import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.dialect.Dialect;
 
 /**
- * 数据库运行环境 上下文
+ * 
  * @author DougLei
  */
-public class DBRunEnvironmentContext {
+public class EnvironmentContext {
 	private static final ThreadLocal<EnvironmentProperty> ENVIRONMENT_PROPERTY = new ThreadLocal<EnvironmentProperty>();
 	
 	/**

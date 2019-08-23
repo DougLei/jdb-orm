@@ -18,7 +18,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
-import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.context.MappingConfigurationContext;
 import com.douglei.orm.context.XmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -105,7 +105,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		if(validatorMap == null) {
 			validatorMap = Collections.emptyMap();
 		}
-		RunMappingConfigurationContext.setCurrentSqlValidatorMap(validatorMap);
+		MappingConfigurationContext.setCurrentSqlValidatorMap(validatorMap);
 	}
 
 	/**

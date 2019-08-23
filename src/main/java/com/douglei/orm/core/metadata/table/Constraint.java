@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
@@ -19,7 +19,6 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class Constraint implements Serializable{
 	private static final long serialVersionUID = 8639988230743248353L;
-	
 	private String name;// (前缀+表名+列名)
 	private ColumnMetadata column;// 记录第一个add的列对象
 	private Map<String, ColumnMetadata> columns;// 相关的列集合
@@ -147,7 +146,7 @@ public class Constraint implements Serializable{
 	}
 	// 设置约束名
 	private void setName(String name) {
-		this.name = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().fixDBObjectName(name);
+		this.name = EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().fixDBObjectName(name);
 	}
 	
 	Collection<ColumnMetadata> getColumns(){

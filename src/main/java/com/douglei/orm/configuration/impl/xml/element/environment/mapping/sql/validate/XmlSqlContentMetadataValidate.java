@@ -9,8 +9,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
-import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.context.MappingConfigurationContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -29,7 +29,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		SqlContentType type = getSqlContentType(attributeMap.getNamedItem("type"));
-		RunMappingConfigurationContext.setCurrentSqlContentType(type);
+		MappingConfigurationContext.setCurrentSqlContentType(type);
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
@@ -63,7 +63,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		if(children == null || (childrenLength = children.getLength()) == 0) {
 			throw new NullPointerException("<content>元素中不存在任何sql语句");
 		}
-		if(RunMappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
+		if(MappingConfigurationContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
 			short nodeType, textNodeCount = 0, otherNodeCount = 0;
 			for(int i=0;i<childrenLength;i++) {
 				nodeType = children.item(i).getNodeType();
@@ -85,7 +85,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	private DialectType[] getDialectTypes(Node dialect) {
 		String dialectValue = null; 
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			return new DialectType[] { DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType() };
+			return new DialectType[] { EnvironmentContext.getEnvironmentProperty().getDialect().getType() };
 		}else {
 			String[] dialectValueArray = dialectValue.split(",");
 			DialectType dt = null;

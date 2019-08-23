@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -14,8 +14,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
-	private static final long serialVersionUID = 3313091168856720946L;
-	
+	private static final long serialVersionUID = 855997694980560169L;
 	private String namespace;
 	private String name;
 	private List<SqlContentMetadata> contents;
@@ -62,7 +61,7 @@ public class SqlMetadata implements Metadata{
 		return name;
 	}
 	public List<SqlContentMetadata> getContents() {
-		DialectType currentDialectType = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
 		for (SqlContentMetadata content : contents) {
 			if(content.isMatchingDialectType(currentDialectType)) {

@@ -2,7 +2,7 @@ package com.douglei.orm.core.dialect.db.object.pk.sequence;
 
 import java.io.Serializable;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
 
@@ -11,8 +11,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class PrimaryKeySequence implements Serializable{
-	private static final long serialVersionUID = 6042801554245330246L;
-	
+	private static final long serialVersionUID = 3023593096916572732L;
 	private String name;// 序列名
 	private String createSql;
 	private String dropSql;
@@ -30,7 +29,7 @@ public abstract class PrimaryKeySequence implements Serializable{
 				name = "PKSEQ_" + tableName;
 			}
 			this.name = name;
-			DBRunEnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(this.name);
+			EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(this.name);
 		}
 	}
 

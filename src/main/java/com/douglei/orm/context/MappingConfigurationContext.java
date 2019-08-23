@@ -14,10 +14,10 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 
 /**
- * 运行时映射配置 上下文
+ * 
  * @author DougLei
  */
-public class RunMappingConfigurationContext {
+public class MappingConfigurationContext {
 	private static final ThreadLocal<RunMappingConfiguration> RUN_MAPPING_CONFIGURATION = new ThreadLocal<RunMappingConfiguration>();
 	private static RunMappingConfiguration getRunMappingConfiguration() {
 		RunMappingConfiguration runMappingConfiguration = RUN_MAPPING_CONFIGURATION.get();

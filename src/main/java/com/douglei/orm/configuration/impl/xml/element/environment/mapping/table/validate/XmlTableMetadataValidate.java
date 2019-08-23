@@ -2,7 +2,7 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 
 import org.dom4j.Element;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.CreateMode;
@@ -26,7 +26,7 @@ public class XmlTableMetadataValidate implements MetadataValidate<Element, Table
 	}
 
 	private CreateMode getCreateMode(String createMode) {
-		CreateMode cm = DBRunEnvironmentContext.getEnvironmentProperty().getTableCreateMode();
+		CreateMode cm = EnvironmentContext.getEnvironmentProperty().getTableCreateMode();
 		if(cm == null) {
 			if(StringUtil.notEmpty(createMode)) {
 				cm = CreateMode.toValue(createMode);
@@ -35,7 +35,7 @@ public class XmlTableMetadataValidate implements MetadataValidate<Element, Table
 				cm = CreateMode.defaultCreateMode();
 			}
 		}
-		if(cm == CreateMode.DYNAMIC_UPDATE && !DBRunEnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
+		if(cm == CreateMode.DYNAMIC_UPDATE && !EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
 			cm = CreateMode.defaultCreateMode();
 		}
 		return cm;

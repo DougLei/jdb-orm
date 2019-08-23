@@ -2,7 +2,7 @@ package com.douglei.orm.core.dialect.db.object;
 
 import java.util.List;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
@@ -34,7 +34,7 @@ public abstract class DBObjectHandler {
 	 */
 	public void validateDBObjectName(String dbObjectName) throws DBObjectNameException {
 		if(validateDBObjectNameIsOverLength(dbObjectName)) {
-			throw new DBObjectNameException(DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库的[表/列]名称["+dbObjectName+"]长度不能超过"+nameMaxLength()+"个字符");
+			throw new DBObjectNameException(EnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库的[表/列]名称["+dbObjectName+"]长度不能超过"+nameMaxLength()+"个字符");
 		}
 	}
 	
@@ -71,7 +71,7 @@ public abstract class DBObjectHandler {
 			}
 			sb.append("_").append(suffix).append("_").append(dbObjectName.length());
 			if(sb.length() > nameMaxLength()) {
-				throw new DBObjectNameException("["+dbObjectName+"]经过fixDBObjectName()后为["+sb.toString()+"], 其长度依然大于"+ DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
+				throw new DBObjectNameException("["+dbObjectName+"]经过fixDBObjectName()后为["+sb.toString()+"], 其长度依然大于"+ EnvironmentContext.getEnvironmentProperty().getDialect().getType().name() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
 			}
 			return sb.toString();
 		}

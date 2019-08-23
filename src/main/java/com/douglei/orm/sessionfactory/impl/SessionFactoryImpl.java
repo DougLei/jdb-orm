@@ -9,8 +9,8 @@ import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.context.MappingConfigurationContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -57,9 +57,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicAddMapping(DynamicMapping entity) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicAddMapping_(entity);
-			RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -69,11 +69,11 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicBatchAddMapping(List<DynamicMapping> entities) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
 				dynamicAddMapping_(entity);
 			}
-			RunMappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -94,7 +94,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicCoverMapping(DynamicMapping entity) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicCoverMapping_(entity);
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -105,7 +105,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
 				dynamicCoverMapping_(entity);
 			}
@@ -118,9 +118,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicRemoveMapping(String mappingCode) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
-			RunMappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -130,11 +130,11 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public synchronized void dynamicBatchRemoveMapping(List<String> mappingCodes) {
 		try {
-			DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (String mappingCode : mappingCodes) {
 				mappingWrapper.dynamicRemoveMapping(mappingCode);
 			}
-			RunMappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;

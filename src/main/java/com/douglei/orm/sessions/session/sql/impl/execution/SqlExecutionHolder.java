@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.context.MappingConfigurationContext;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
@@ -21,7 +21,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
 		List<SqlContentMetadata> contents = sqlMetadata.getContents();
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException(RunMappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的sql语句");
+			throw new NullPointerException(MappingConfigurationContext.getCurrentExecuteMappingDescription()+", 不存在可以执行的sql语句");
 		}
 		
 		executeSqlCount = (short) contents.size();

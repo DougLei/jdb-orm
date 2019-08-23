@@ -23,7 +23,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMap
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.ImportDataContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
@@ -245,7 +245,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				String indexName = null;
 				Map<DialectType, String> createSqlStatements = null;
 				Map<DialectType, String> dropSqlStatements = null;
-				DialectType currentDialectType = DBRunEnvironmentContext.getEnvironmentProperty().getDialect().getType();
+				DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
 				
 				for (Element indexElement : elements) {
 					if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name"))) {
@@ -347,7 +347,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			dropSqlStatement = elem==null?null:elem.getTextTrim();
 		}
 		PrimaryKeySequence primaryKeySequence = 
-				DBRunEnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(
+				EnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(
 						primaryKeySequenceName, createSqlStatement, dropSqlStatement, tableMetadata.getName(), primaryKeyColumn);
 		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
 	}

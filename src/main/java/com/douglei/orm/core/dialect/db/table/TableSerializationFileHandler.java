@@ -8,7 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.table.serializationobject.SerializeObjectHolder;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
@@ -31,10 +31,10 @@ class TableSerializationFileHandler {
 	
 	// 获取对应的orm序列化文件路径, 包括文件名
 	private String getOrmSerializationFilePath(String serializationFileName) {
-		String configurationId = DBRunEnvironmentContext.getEnvironmentProperty().getId();
+		String configurationId = EnvironmentContext.getEnvironmentProperty().getId();
 		String ormSerializationFileRootPath = ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.get(configurationId);
 		if(ormSerializationFileRootPath == null) {
-			ormSerializationFileRootPath = DBRunEnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
+			ormSerializationFileRootPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
 			File rootFile = new File(ormSerializationFileRootPath);
 			if(!rootFile.exists()) {
 				rootFile.mkdirs();
@@ -46,7 +46,7 @@ class TableSerializationFileHandler {
 
 	// 是否启用表的动态更新
 	private boolean getEnableTableDynamicUpdate() {
-		return DBRunEnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate();
+		return EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate();
 	}
 	
 	/**

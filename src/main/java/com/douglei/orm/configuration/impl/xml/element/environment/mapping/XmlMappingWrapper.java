@@ -13,8 +13,8 @@ import com.douglei.orm.configuration.environment.mapping.DynamicRemoveMappingExc
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.DBRunEnvironmentContext;
-import com.douglei.orm.context.RunMappingConfigurationContext;
+import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.context.MappingConfigurationContext;
 import com.douglei.tools.instances.scanner.FileScanner;
 
 /**
@@ -36,12 +36,12 @@ public class XmlMappingWrapper extends MappingWrapper{
 		List<String> list = fileScanner.getResult();
 		if(list.size() > 0) {
 			try {
-				DBRunEnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+				EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 				initializeMappingStore(list.size());
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
-				RunMappingConfigurationContext.executeCreateTable(dataSourceWrapper);
+				MappingConfigurationContext.executeCreateTable(dataSourceWrapper);
 			} catch (Exception e) {
 				throw e;
 			} finally {

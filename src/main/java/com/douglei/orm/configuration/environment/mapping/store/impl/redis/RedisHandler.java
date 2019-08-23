@@ -3,7 +3,7 @@ package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
-import com.douglei.orm.context.DBRunEnvironmentContext;
+import com.douglei.orm.context.EnvironmentContext;
 
 /**
  * 
@@ -30,7 +30,7 @@ public abstract class RedisHandler{
 	
 	protected String getPrefix() {
 		if(storeMultiDataSource) {
-			return prefix + DBRunEnvironmentContext.getEnvironmentProperty().getId() + ":";
+			return prefix + EnvironmentContext.getEnvironmentProperty().getId() + ":";
 		}
 		return prefix;
 	}
