@@ -122,7 +122,6 @@ class XmlReader {
  */
 class BuildDocumentBuilderInstanceException extends RuntimeException{
 	private static final long serialVersionUID = 2685054482425871566L;
-
 	public BuildDocumentBuilderInstanceException(Throwable cause) {
 		super("创建"+DocumentBuilder.class.getName()+"实例时出现异常", cause);
 	}
@@ -134,7 +133,6 @@ class BuildDocumentBuilderInstanceException extends RuntimeException{
  */
 class DocumentBuilderException extends RuntimeException{
 	private static final long serialVersionUID = -2367902688769800990L;
-
 	public DocumentBuilderException(String message, Throwable cause) {
 		super(message, cause);
 	}
