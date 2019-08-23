@@ -10,7 +10,8 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingConfigurationContext;
+import com.douglei.orm.context.MappingXmlReaderContext;
+import com.douglei.orm.context.MappingConfigContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -59,10 +60,12 @@ public class SessionFactoryImpl implements SessionFactory {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicAddMapping_(entity);
-			MappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -73,10 +76,12 @@ public class SessionFactoryImpl implements SessionFactory {
 			for (DynamicMapping entity : entities) {
 				dynamicAddMapping_(entity);
 			}
-			MappingConfigurationContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -99,6 +104,8 @@ public class SessionFactoryImpl implements SessionFactory {
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
 		}
 	}
 
@@ -112,6 +119,8 @@ public class SessionFactoryImpl implements SessionFactory {
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -120,10 +129,12 @@ public class SessionFactoryImpl implements SessionFactory {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
-			MappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingConfigContext.destroy();
 		}
 	}
 	
@@ -134,10 +145,12 @@ public class SessionFactoryImpl implements SessionFactory {
 			for (String mappingCode : mappingCodes) {
 				mappingWrapper.dynamicRemoveMapping(mappingCode);
 			}
-			MappingConfigurationContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
+		} finally {
+			MappingConfigContext.destroy();
 		}
 	}
 	

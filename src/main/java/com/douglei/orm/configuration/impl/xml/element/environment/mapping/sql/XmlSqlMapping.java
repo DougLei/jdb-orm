@@ -18,8 +18,8 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
-import com.douglei.orm.context.MappingConfigurationContext;
-import com.douglei.orm.context.XmlReaderContext;
+import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
@@ -77,7 +77,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	 */
 	private void setParameterValidator(Node sqlNode) {
 		Map<String, ValidatorHandler> validatorMap = null;
-		NodeList validatorNodeList = XmlReaderContext.getValidatorNodeList(sqlNode);
+		NodeList validatorNodeList = MappingXmlReaderContext.getValidatorNodeList(sqlNode);
 		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
 			validatorMap =new HashMap<String, ValidatorHandler>(validatorNodeList.getLength());
 			NamedNodeMap attributes = null;
@@ -105,7 +105,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		if(validatorMap == null) {
 			validatorMap = Collections.emptyMap();
 		}
-		MappingConfigurationContext.setCurrentSqlValidatorMap(validatorMap);
+		MappingConfigContext.setCurrentSqlValidatorMap(validatorMap);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	 * @return
 	 */
 	private NodeList getContents(Node sqlNode) {
-		NodeList contentNodeList = XmlReaderContext.getContentNodeList(sqlNode);
+		NodeList contentNodeList = MappingXmlReaderContext.getContentNodeList(sqlNode);
 		if(contentNodeList == null || contentNodeList.getLength() == 0) {
 			throw new MetadataValidateException("至少有一个<content>元素");
 		}

@@ -17,15 +17,15 @@ import com.douglei.orm.core.metadata.validator.ValidatorHandler;
  * 
  * @author DougLei
  */
-public class MappingConfigurationContext {
-	private static final ThreadLocal<RunMappingConfiguration> MAPPING_CONFIGURATION = new ThreadLocal<RunMappingConfiguration>();
-	private static RunMappingConfiguration getRunMappingConfiguration() {
-		RunMappingConfiguration runMappingConfiguration = MAPPING_CONFIGURATION.get();
-		if(runMappingConfiguration == null) {
-			runMappingConfiguration = new RunMappingConfiguration();
-			MAPPING_CONFIGURATION.set(runMappingConfiguration);
+public class MappingConfigContext {
+	private static final ThreadLocal<MappingConfig> mappingConfig = new ThreadLocal<MappingConfig>();
+	private static MappingConfig getRunMappingConfiguration() {
+		MappingConfig mc = mappingConfig.get();
+		if(mc == null) {
+			mc = new MappingConfig();
+			mappingConfig.set(mc);
 		}
-		return runMappingConfiguration;
+		return mc;
 	}
 	
 	// 是否注册表映射
@@ -40,11 +40,11 @@ public class MappingConfigurationContext {
 	 */
 	public static void registerCreateTableMapping(Mapping mapping) {
 		if(isRegisterTableMapping(mapping)) {
-			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.createTableMappings == null) {
-				runMappingConfiguration.createTableMappings = new ArrayList<Mapping>(10);
+			MappingConfig mc = getRunMappingConfiguration();
+			if(mc.createTableMappings == null) {
+				mc.createTableMappings = new ArrayList<Mapping>(10);
 			}
-			runMappingConfiguration.createTableMappings.add(mapping);
+			mc.createTableMappings.add(mapping);
 		}
 	}
 	
@@ -53,10 +53,10 @@ public class MappingConfigurationContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
-		if(MAPPING_CONFIGURATION.get() != null) {
-			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.createTableMappings != null) {
-				TableHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.createTableMappings);
+		if(mappingConfig.get() != null) {
+			MappingConfig mc = getRunMappingConfiguration();
+			if(mc.createTableMappings != null) {
+				TableHandler.singleInstance().create(dataSourceWrapper, mc.createTableMappings);
 			}
 		}
 	}
@@ -68,11 +68,11 @@ public class MappingConfigurationContext {
 	 */
 	public static void registerDropTableMapping(Mapping mapping) {
 		if(isRegisterTableMapping(mapping)) {
-			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.dropTableMappings == null) {
-				runMappingConfiguration.dropTableMappings = new ArrayList<Mapping>(4);
+			MappingConfig mc = getRunMappingConfiguration();
+			if(mc.dropTableMappings == null) {
+				mc.dropTableMappings = new ArrayList<Mapping>(4);
 			}
-			runMappingConfiguration.dropTableMappings.add(mapping);
+			mc.dropTableMappings.add(mapping);
 		}
 	}
 	
@@ -81,10 +81,10 @@ public class MappingConfigurationContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
-		if(MAPPING_CONFIGURATION.get() != null) {
-			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-			if(runMappingConfiguration.dropTableMappings != null) {
-				TableHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.dropTableMappings);
+		if(mappingConfig.get() != null) {
+			MappingConfig mc = getRunMappingConfiguration();
+			if(mc.dropTableMappings != null) {
+				TableHandler.singleInstance().drop(dataSourceWrapper, mc.dropTableMappings);
 			}
 		}
 	}
@@ -95,8 +95,8 @@ public class MappingConfigurationContext {
 	 * @param sqlContentType
 	 */
 	public static void setCurrentSqlContentType(SqlContentType sqlContentType) {
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		runMappingConfiguration.sqlContentType = sqlContentType;
+		MappingConfig mc = getRunMappingConfiguration();
+		mc.sqlContentType = sqlContentType;
 	}
 	
 	/**
@@ -113,8 +113,8 @@ public class MappingConfigurationContext {
 	 * @param sqlContentType
 	 */
 	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorMap) {
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		runMappingConfiguration.sqlValidatorMap = sqlValidatorMap;
+		MappingConfig mc = getRunMappingConfiguration();
+		mc.sqlValidatorMap = sqlValidatorMap;
 	}
 	
 	/**
@@ -131,8 +131,8 @@ public class MappingConfigurationContext {
 	 * @param executeMappingDescription
 	 */
 	public static void setCurrentExecuteMappingDescription(String executeMappingDescription) {
-		RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
-		runMappingConfiguration.executeMappingDescription = executeMappingDescription;
+		MappingConfig mc = getRunMappingConfiguration();
+		mc.executeMappingDescription = executeMappingDescription;
 	}
 	
 	/**
@@ -147,15 +147,15 @@ public class MappingConfigurationContext {
 	 * 销毁
 	 */
 	public static void destroy() {
-		MAPPING_CONFIGURATION.remove();
+		mappingConfig.remove();
 	}
 }
 
 /**
- * 运行时映射配置
+ * 
  * @author DougLei
  */
-class RunMappingConfiguration {
+class MappingConfig {
 	List<Mapping> createTableMappings;// 记录create table mapping对象集合
 	List<Mapping> dropTableMappings;// 记录drop table mapping对象集合
 	

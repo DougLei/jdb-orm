@@ -7,7 +7,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.context.MappingConfigurationContext;
+import com.douglei.orm.context.MappingConfigContext;
 
 /**
  * 
@@ -42,7 +42,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addMapping(Mapping mapping){
 		mappingStore.addMapping(mapping);
-		MappingConfigurationContext.registerCreateTableMapping(mapping);
+		MappingConfigContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 
@@ -57,7 +57,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected String addOrCoverMapping(Mapping mapping) {
 		mappingStore.addOrCoverMapping(mapping);
-		MappingConfigurationContext.registerCreateTableMapping(mapping);
+		MappingConfigContext.registerCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -85,7 +85,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	protected void removeMapping(String mappingCode) {
 		Mapping mapping = mappingStore.removeMapping(mappingCode);
-		MappingConfigurationContext.registerDropTableMapping(mapping);
+		MappingConfigContext.registerDropTableMapping(mapping);
 	}
 	
 	/**

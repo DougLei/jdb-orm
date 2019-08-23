@@ -13,10 +13,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * xml reader上下文
+ * 
  * @author DougLei
  */
-public class XmlReaderContext {
+public class MappingXmlReaderContext {
 	private static final ThreadLocal<XmlReader> XML_READER = new ThreadLocal<XmlReader>();
 	private static XmlReader getXmlReader() {
 		XmlReader xmlReader = XML_READER.get();
@@ -100,6 +100,15 @@ public class XmlReaderContext {
 		} catch (XPathExpressionException e) {
 			throw new DocumentBuilderException("获取<sql>下<content>元素的NodeList时出现异常", e);
 		}
+	}
+	
+	// -----------------------------------------------------------------------------------------
+	/**
+	 * 销毁
+	 */
+	public static void destroy() {
+		XML_READER.remove();
+		MappingConfigContext.destroy();
 	}
 }
 
