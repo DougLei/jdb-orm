@@ -18,12 +18,12 @@ import com.douglei.orm.core.metadata.validator.ValidatorHandler;
  * @author DougLei
  */
 public class MappingConfigurationContext {
-	private static final ThreadLocal<RunMappingConfiguration> RUN_MAPPING_CONFIGURATION = new ThreadLocal<RunMappingConfiguration>();
+	private static final ThreadLocal<RunMappingConfiguration> MAPPING_CONFIGURATION = new ThreadLocal<RunMappingConfiguration>();
 	private static RunMappingConfiguration getRunMappingConfiguration() {
-		RunMappingConfiguration runMappingConfiguration = RUN_MAPPING_CONFIGURATION.get();
+		RunMappingConfiguration runMappingConfiguration = MAPPING_CONFIGURATION.get();
 		if(runMappingConfiguration == null) {
 			runMappingConfiguration = new RunMappingConfiguration();
-			RUN_MAPPING_CONFIGURATION.set(runMappingConfiguration);
+			MAPPING_CONFIGURATION.set(runMappingConfiguration);
 		}
 		return runMappingConfiguration;
 	}
@@ -53,7 +53,7 @@ public class MappingConfigurationContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
-		if(RUN_MAPPING_CONFIGURATION.get() != null) {
+		if(MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
 			if(runMappingConfiguration.createTableMappings != null) {
 				TableHandler.singleInstance().create(dataSourceWrapper, runMappingConfiguration.createTableMappings);
@@ -81,7 +81,7 @@ public class MappingConfigurationContext {
 	 * @param dataSourceWrapper
 	 */
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
-		if(RUN_MAPPING_CONFIGURATION.get() != null) {
+		if(MAPPING_CONFIGURATION.get() != null) {
 			RunMappingConfiguration runMappingConfiguration = getRunMappingConfiguration();
 			if(runMappingConfiguration.dropTableMappings != null) {
 				TableHandler.singleInstance().drop(dataSourceWrapper, runMappingConfiguration.dropTableMappings);
@@ -140,6 +140,14 @@ public class MappingConfigurationContext {
 	 */
 	public static String getCurrentExecuteMappingDescription() {
 		return getRunMappingConfiguration().executeMappingDescription;
+	}
+	
+	// -----------------------------------------------------------------------------------------
+	/**
+	 * 销毁
+	 */
+	public static void destroy() {
+		MAPPING_CONFIGURATION.remove();
 	}
 }
 
