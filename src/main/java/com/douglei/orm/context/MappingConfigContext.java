@@ -126,29 +126,18 @@ public class MappingConfigContext {
 		return getRunMappingConfiguration().sqlValidatorHandlerMap;
 	}
 	
-	// -----------------------------------------------------------------------------------------
-	/**
-	 * 记录当前执行的映射描述
-	 * @param executeMappingDescription
-	 */
-	public static void setCurrentExecuteMappingDescription(String executeMappingDescription) {
-		MappingConfig mc = getRunMappingConfiguration();
-		mc.executeMappingDescription = executeMappingDescription;
-	}
 	
-	/**
-	 * 获取当前执行的映射描述
-	 */
-	public static String getCurrentExecuteMappingDescription() {
-		return getRunMappingConfiguration().executeMappingDescription;
-	}
 	
 	// -----------------------------------------------------------------------------------------
 	/**
 	 * 销毁
 	 */
 	public static void destroy() {
-		mappingConfig.remove();
+		MappingConfig mc = getRunMappingConfiguration();
+		if(mc != null) {
+			mappingConfig.remove();
+			mc.destroy();
+		}
 	}
 }
 
@@ -163,5 +152,9 @@ class MappingConfig {
 	SqlContentType sqlContentType;// 记录每个sql content的type
 	Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
 	
-	String executeMappingDescription;// 记录执行的每个映射描述
+	void destroy() {
+		if(createTableMappings != null) createTableMappings.clear();
+		if(dropTableMappings != null) dropTableMappings.clear();
+		if(sqlValidatorHandlerMap != null) sqlValidatorHandlerMap.clear();
+	}
 }
