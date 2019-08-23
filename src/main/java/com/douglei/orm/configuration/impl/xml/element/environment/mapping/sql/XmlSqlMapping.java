@@ -45,6 +45,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
 			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
 			setParameterValidator(sqlNode);
+			setSqlContent(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			int length = contentNodeList.getLength();
 			for (int i=0;i<length;i++) {
@@ -72,7 +73,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	}
 	
 	/**
-	 * 设置各个参数的验证器
+	 * 设置配置的参数验证器
 	 * @param sqlNode
 	 */
 	private void setParameterValidator(Node sqlNode) {
@@ -108,6 +109,20 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		MappingConfigContext.setCurrentSqlValidatorMap(validatorHandlerMap);
 	}
 
+	/**
+	 * 设置配置的可引用的sql-content
+	 * @param sqlNode
+	 */
+	private void setSqlContent(Node sqlNode) {
+		NodeList sqlContentNodeList = MappingXmlReaderContext.getSqlContentNodeList(sqlNode);
+		if(sqlContentNodeList != null && sqlContentNodeList.getLength() > 0) {
+			// TODO Auto-generated method stub
+			
+			
+			
+		}
+	}
+	
 	/**
 	 * 获取<content>元素集合
 	 * @param sqlNode

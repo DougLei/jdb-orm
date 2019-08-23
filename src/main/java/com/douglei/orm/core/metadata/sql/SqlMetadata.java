@@ -7,21 +7,17 @@ import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * sql元数据
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
-	private static final long serialVersionUID = 855997694980560169L;
 	private String namespace;
-	private String name;
 	private List<SqlContentMetadata> contents;
 	
-	public SqlMetadata(String namespace, String name) {
+	public SqlMetadata(String namespace) {
 		this.namespace = namespace;
-		this.name = name;
 	}
 
 	/**
@@ -35,18 +31,9 @@ public class SqlMetadata implements Metadata{
 		contents.add(sqlContentMetadata);
 	}
 	
-	/**
-	 * <pre>
-	 * 	如果namespace为空, 返回name
-	 * 	如果namespace不为空, 返回namespace.name
-	 * </pre>
-	 */
 	@Override
 	public String getCode() {
-		if(StringUtil.isEmpty(namespace)) {
-			return name;
-		}
-		return namespace+"."+name;
+		return namespace;
 	}
 	
 	@Override
@@ -56,9 +43,6 @@ public class SqlMetadata implements Metadata{
 	
 	public String getNamespace() {
 		return namespace;
-	}
-	public String getName() {
-		return name;
 	}
 	public List<SqlContentMetadata> getContents() {
 		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();

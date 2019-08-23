@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<sql namespace="com.test">
+		<sql-content name="rs">
+			select * from test
+		</sql-content>
+	
 		<!-- TODO content的name, 可以调用指定的content, 如果没有指定, 则全部调用 -->
 		<content name="" dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 			select * from sys_user 
 			
 			<!-- TODO 可以引用其他content的内容 -->
-			<sql-content ref="" />
+			<sql-content ref="rs" />
 			
 		<!-- 
 			defaultValue的一些内置值:

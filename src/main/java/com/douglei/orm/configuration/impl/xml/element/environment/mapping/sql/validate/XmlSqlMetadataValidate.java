@@ -17,29 +17,16 @@ public class XmlSqlMetadataValidate implements MetadataValidate<Node, SqlMetadat
 	@Override
 	public SqlMetadata doValidate(Node sqlNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = sqlNode.getAttributes();
-		String name = getName(attributeMap.getNamedItem("name"));
-		String namespace = getNamespace(attributeMap.getNamedItem("namespace"));
-		return new SqlMetadata(namespace, name);
-	}
-	
-	private String getName(Node nameItem) {
-		if(nameItem == null) {
-			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
-		}
-		String name = nameItem.getNodeValue();
-		if(StringUtil.isEmpty(name)) {
-			throw new MetadataValidateException("<sql>元素的name属性值不能为空");
-		}
-		return name;
+		return new SqlMetadata(getNamespace(attributeMap.getNamedItem("namespace")));
 	}
 	
 	private String getNamespace(Node namespaceItem) {
 		if(namespaceItem == null) {
-			return null;
+			throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
 		}
 		String namespace = namespaceItem.getNodeValue();
 		if(StringUtil.isEmpty(namespace)) {
-			return null;
+			throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
 		}
 		return namespace;
 	}

@@ -279,7 +279,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
 			ValidatorResult result = validatorHandler.doValidate(value);
 			if(result != null) {
-				throw new DataValidateException(descriptionName, name, value, result.getMessage());
+				throw new DataValidateException(descriptionName, name, value, result);
 			}
 		}
 	}

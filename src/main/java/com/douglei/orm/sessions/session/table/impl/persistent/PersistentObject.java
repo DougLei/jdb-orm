@@ -157,7 +157,7 @@ public class PersistentObject {
 				value = propertyMap.get(column.getCode());
 				result = column.getValidatorHandler().doValidate(value);
 				if(result != null) {
-					throw new DataValidateException(column.getDescriptionName(), column.getName(), value, result.getMessage());
+					throw new DataValidateException(column.getDescriptionName(), column.getName(), value, result);
 				}
 			}
 		}

@@ -353,7 +353,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	}
 	
 	/**
-	 * 设置各个列的验证器
+	 * 设置配置的列验证器
 	 * @param validatorsElement
 	 */
 	private void setColumnValidator(Element validatorsElement) {

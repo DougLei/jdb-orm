@@ -86,6 +86,23 @@ public class MappingXmlReaderContext {
 	}
 	
 	/**
+	 * 读取sql-xml时, 获取<sql-content>节点
+	 * @param sqlNode
+	 * @return
+	 */
+	public static NodeList getSqlContentNodeList(Node sqlNode) {
+		XmlReader xmlReader = getXmlReader();
+		try {
+			if(xmlReader.sqlContentNodeXPathExpression == null) {
+				xmlReader.sqlContentNodeXPathExpression = XPathFactory.newInstance().newXPath().compile("sql-content[@name!='']");
+			}
+			return (NodeList) xmlReader.sqlContentNodeXPathExpression.evaluate(sqlNode, XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			throw new DocumentBuilderException("获取<sql>下<sql-content>元素的NodeList时出现异常", e);
+		}
+	}
+	
+	/**
 	 * 读取sql-xml时, 获取<content>节点
 	 * @param sqlNode
 	 * @return
@@ -122,6 +139,7 @@ class XmlReader {
 	
 	DocumentBuilder sqlMappingDocumentBuilder;// 读取sql-xml映射文件的DocumentBuilder实例
 	XPathExpression validatorNodeXPathExpression;// 读取sql-xml时,获取<validators>节点下<validator>子节点的表达式
+	XPathExpression sqlContentNodeXPathExpression;// 读取sql-xml时,获取<sql-content>节点的表达式
 	XPathExpression contentNodeXPathExpression;// 读取sql-xml时, 获取<content>节点的表达式
 }
 
