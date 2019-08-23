@@ -14,15 +14,18 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class SqlContentMetadata implements Metadata{
-	private static final long serialVersionUID = 2059027597550056200L;
-	private DialectType[] dialectTypes;
+	private String name;
+	private boolean defaultExecute;
 	private SqlContentType type;
+	private DialectType[] dialectTypes;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public SqlContentMetadata(DialectType[] dialectTypes) {
-		this.dialectTypes = dialectTypes;
+	public SqlContentMetadata(String name, boolean defaultExecute, DialectType[] dialectTypes) {
+		this.name = name;
+		this.defaultExecute = defaultExecute;
 		this.type = MappingConfigContext.getCurrentSqlContentType();
+		this.dialectTypes = dialectTypes;
 	}
 	
 	public void addRootSqlNode(SqlNode rootSqlNode) {
@@ -39,6 +42,12 @@ public class SqlContentMetadata implements Metadata{
 			}
 		}
 		return false;
+	}
+	public String getName() {
+		return name;
+	}
+	public boolean isDefaultExecute() {
+		return defaultExecute;
 	}
 	public SqlContentType getType() {
 		return type;

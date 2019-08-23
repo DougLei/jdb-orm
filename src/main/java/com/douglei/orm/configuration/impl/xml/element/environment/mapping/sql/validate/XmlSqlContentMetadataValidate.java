@@ -34,7 +34,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		int length = doValidateContent(children);
 		
 		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(dialectTypes);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(getContentName(attributeMap.getNamedItem("name")), getDefaultExecute(attributeMap.getNamedItem("defaultExecute")), dialectTypes);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -110,5 +110,29 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 			}
 			return dts.toArray(new DialectType[dts.size()]);
 		}
+	}
+	
+	/**
+	 * 获取<content>元素中name属性的值
+	 * @param nameAttribute
+	 * @return
+	 */
+	private String getContentName(Node nameAttribute) {
+		if(nameAttribute != null) {
+			String name = nameAttribute.getNodeValue();
+			if(StringUtil.notEmpty(name)) {
+				return name;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param defaultExecuteAttribute
+	 * @return
+	 */
+	private boolean getDefaultExecute(Node defaultExecuteAttribute) {
+		return false;
 	}
 }
