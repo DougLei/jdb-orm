@@ -7,7 +7,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.context.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 
 /**
  * 

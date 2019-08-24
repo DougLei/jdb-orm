@@ -1,4 +1,4 @@
-package com.douglei.orm.context;
+package com.douglei.orm.context.xml;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -30,7 +30,6 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		String contentName = getName(attributeMap.getNamedItem("name"));
-		
 		if(getContentType(attributeMap) == SqlContentType._SQL_CONTENT_ && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
 			return MappingXmlConfigContext.getSqlContentByName(contentName);
 		}
@@ -63,7 +62,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	 * @param nameAttribute
 	 * @return
 	 */
-	private String getName(Node nameAttribute) {
+	public String getName(Node nameAttribute) {
 		if(nameAttribute != null) {
 			String name = nameAttribute.getNodeValue();
 			if(StringUtil.notEmpty(name)) {
@@ -72,7 +71,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		}
 		throw new MetadataValidateException(getNodeName() + "元素的name属性值不能为空");
 	}
-
+	
 	/**
 	 * 获取当前sql content的类型
 	 * @param attributeMap

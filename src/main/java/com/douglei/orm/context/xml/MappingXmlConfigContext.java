@@ -1,4 +1,4 @@
-package com.douglei.orm.context;
+package com.douglei.orm.context.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +126,7 @@ public class MappingXmlConfigContext {
 	}
 	
 	/**
-	 * 初始化当前解析的sql的sqlContent容器
+	 * 初始化当前解析的sql的sql-content容器
 	 * @param sqlNode
 	 * @param sqlContentMetadataValidate
 	 */
@@ -262,9 +262,9 @@ class SqlMappingConfig {
 		destroySqlContentContainer();
 		NodeList sqlContentNodeList = MappingXmlReaderContext.getSqlContentNodeList(sqlNode);
 		if(sqlContentNodeList != null && sqlContentNodeList.getLength() > 0) {
-			sqlContentContainer = new SqlContentContainer();
+			sqlContentContainer = new SqlContentContainer(sqlContentMetadataValidate);
 			for (int i=0;i<sqlContentNodeList.getLength();i++) {
-				sqlContentContainer.put(sqlContentMetadataValidate.doValidate(sqlContentNodeList.item(i)));
+				sqlContentContainer.put(sqlContentNodeList.item(i));
 			}
 		}
 	}
@@ -300,7 +300,23 @@ class SqlMappingConfig {
  * @author DougLei
  */
 class SqlContentContainer {
+	private XmlSqlContentMetadataValidate sqlContentMetadataValidate;
+	private Map<String, Node> sqlContentNodeMap;// 记录sql-content node map集合
 	private Map<String, SqlContentMetadata> sqlContentMap;// 记录sqlContent map集合
+	
+	public SqlContentContainer(XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
+		this.sqlContentMetadataValidate = sqlContentMetadataValidate;
+	}
+	
+	public void put(Node sqlContentNode) {
+		String name = sqlContentMetadataValidate.getName(sqlContentNode.getAttributes().getNamedItem("name"));
+		if(sqlContentNodeMap == null) {
+			sqlContentNodeMap = new HashMap<String, Node>();
+		}else if(sqlContentNodeMap.containsKey(name)) {
+			throw new RepeatedSqlContentNameException(name);
+		}
+		sqlContentNodeMap.put(name, sqlContentNode);
+	}
 	
 	public void put(SqlContentMetadata sqlContent) {
 		if(sqlContentMap == null) {
@@ -316,5 +332,12 @@ class SqlContentContainer {
 	}
 	public void destroy() {
 		Collections.clear(sqlContentMap);
+	}
+	
+	private class RepeatedSqlContentNameException extends RuntimeException{
+		private static final long serialVersionUID = 8489471705644931667L;
+		public RepeatedSqlContentNameException(String sqlContentName) {
+			super("重复配置了name=["+sqlContentName+"]的<sql-content>元素");
+		}
 	}
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;

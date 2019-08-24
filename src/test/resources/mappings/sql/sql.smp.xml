@@ -3,14 +3,14 @@
 	<sql namespace="com.test">
 		<sql-content name="rs" dialect="">
 			select * from test
-			<sql-content ref="xx" />
+			<include ref-name="xx" />
 		</sql-content>
 	
 		<content name="" dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 			select * from sys_user 
 			
 			<!-- TODO 可以引用sql-content的内容 -->
-			<sql-content ref="rs" />
+			<include ref-name="rs" />
 			
 		<!-- 
 			defaultValue的一些内置值:

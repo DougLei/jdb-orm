@@ -14,7 +14,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.XmlSqlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.XmlTableMapping;
-import com.douglei.orm.context.MappingXmlReaderContext;
+import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.CloseUtil;
 

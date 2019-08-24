@@ -19,8 +19,8 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
-import com.douglei.orm.context.MappingXmlConfigContext;
-import com.douglei.orm.context.MappingXmlReaderContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;

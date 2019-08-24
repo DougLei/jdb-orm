@@ -14,7 +14,7 @@ import com.douglei.orm.core.metadata.MetadataType;
  */
 public class SqlMetadata implements Metadata{
 	private String namespace;
-	private List<SqlContentMetadata> contents;
+	private List<SqlContentMetadata> contents;// TODO 解决下重复name的问题
 	
 	public SqlMetadata(String namespace) {
 		this.namespace = namespace;

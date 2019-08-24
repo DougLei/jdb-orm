@@ -6,7 +6,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.context.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 

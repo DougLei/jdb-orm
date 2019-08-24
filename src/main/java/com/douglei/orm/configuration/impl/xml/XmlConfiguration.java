@@ -16,7 +16,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.XmlEnvironment
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
-import com.douglei.orm.context.MappingXmlReaderContext;
+import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.orm.sessionfactory.impl.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 

@@ -14,7 +14,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingXmlConfigContext;
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.tools.instances.scanner.FileScanner;
 
 /**

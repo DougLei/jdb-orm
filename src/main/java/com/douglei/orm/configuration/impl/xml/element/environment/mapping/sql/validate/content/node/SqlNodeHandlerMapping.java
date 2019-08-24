@@ -19,16 +19,12 @@ public class SqlNodeHandlerMapping {
 	static {
 		ClassScanner cs = new ClassScanner();
 		List<String> classes = cs.scan(SqlNodeHandlerMapping.class.getPackage().getName() + ".impl");
-		SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>(classes.size());
+		SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>();
 		
-		Object obj = null;
 		SqlNodeHandler sqlNodeHandler = null;
 		for (String cp : classes) {
-			obj = ConstructorUtil.newInstance(cp);
-			if(obj instanceof SqlNodeHandler) {
-				sqlNodeHandler= (SqlNodeHandler) obj;
-				SQL_NODE_HANDLER_MAPPING.put(sqlNodeHandler.getNodeName(), sqlNodeHandler);
-			}
+			sqlNodeHandler= (SqlNodeHandler) ConstructorUtil.newInstance(cp);
+			SQL_NODE_HANDLER_MAPPING.put(sqlNodeHandler.getNodeName(), sqlNodeHandler);
 		}
 		cs.destroy();
 	}
