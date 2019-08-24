@@ -47,9 +47,10 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 		for(int i=0;i<cl;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(childrens.item(i));
 			if(sqlNode != null) {
-				if(sqlNode.getType() == SqlNodeType.INCLUDE) {
-					throw new SqlNodeUnmatchingException("<foreach>元素中, 不支持使用<include>元素");
-				}
+				// TODO 待定
+//				if(sqlNode.getType() == SqlNodeType.INCLUDE) {
+//					throw new SqlNodeUnmatchingException("<foreach>元素中, 不支持使用<include>元素");
+//				}
 				foreachSqlNode.addSqlNode(sqlNode);
 			}
 		}
