@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -22,7 +22,7 @@ public class SqlContentMetadata implements Metadata{
 	
 	public SqlContentMetadata(String name, DialectType[] dialectTypes) {
 		this.name = name;
-		this.type = MappingConfigContext.getCurrentSqlContentType();
+		this.type = MappingXmlConfigContext.getSqlContentType();
 		this.dialectTypes = dialectTypes;
 	}
 	

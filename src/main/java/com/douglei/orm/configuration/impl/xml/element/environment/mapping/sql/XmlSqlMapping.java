@@ -14,11 +14,12 @@ import org.w3c.dom.NodeList;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.sql.SqlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlContentMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.orm.context.MappingXmlReaderContext;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -34,6 +35,7 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	private static final Logger logger = LoggerFactory.getLogger(XmlSqlMapping.class);
 	private static final XmlSqlMetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
 	private static final XmlSqlContentMetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
+	private static final XmlContentMetadataValidate contentMetadataValidate = new XmlContentMetadataValidate();
 	
 	private SqlMetadata sqlMetadata;
 	
@@ -45,11 +47,10 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
 			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
 			setParameterValidator(sqlNode);
-			setSqlContent(sqlNode);
+			MappingXmlConfigContext.initialSqlContentContainer(sqlNode, sqlContentMetadataValidate);
 			NodeList contentNodeList = getContents(sqlNode);
-			int length = contentNodeList.getLength();
-			for (int i=0;i<length;i++) {
-				sqlMetadata.addSqlContentMetadata(sqlContentMetadataValidate.doValidate(contentNodeList.item(i)));
+			for (int i=0;i<contentNodeList.getLength();i++) {
+				sqlMetadata.addSqlContentMetadata(contentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
@@ -106,23 +107,9 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		if(validatorHandlerMap == null) {
 			validatorHandlerMap = Collections.emptyMap();
 		}
-		MappingConfigContext.setCurrentSqlValidatorMap(validatorHandlerMap);
+		MappingXmlConfigContext.setSqlValidatorMap(validatorHandlerMap);
 	}
 
-	/**
-	 * 设置配置的可引用的sql-content
-	 * @param sqlNode
-	 */
-	private void setSqlContent(Node sqlNode) {
-		NodeList sqlContentNodeList = MappingXmlReaderContext.getSqlContentNodeList(sqlNode);
-		if(sqlContentNodeList != null && sqlContentNodeList.getLength() > 0) {
-			// TODO Auto-generated method stub
-			
-			
-			
-		}
-	}
-	
 	/**
 	 * 获取<content>元素集合
 	 * @param sqlNode

@@ -90,7 +90,7 @@ public class MappingXmlReaderContext {
 	 * @param sqlNode
 	 * @return
 	 */
-	public static NodeList getSqlContentNodeList(Node sqlNode) {
+	static NodeList getSqlContentNodeList(Node sqlNode) {
 		XmlReader xmlReader = getXmlReader();
 		try {
 			if(xmlReader.sqlContentNodeXPathExpression == null) {
@@ -125,7 +125,7 @@ public class MappingXmlReaderContext {
 	 */
 	public static void destroy() {
 		XML_READER.remove();
-		MappingConfigContext.destroy();
+		MappingXmlConfigContext.destroy();
 	}
 }
 

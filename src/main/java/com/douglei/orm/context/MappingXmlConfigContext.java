@@ -1,13 +1,19 @@
 package com.douglei.orm.context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.orm.core.dialect.db.table.TableHandler;
+import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -18,7 +24,7 @@ import com.douglei.tools.utils.Collections;
  * 
  * @author DougLei
  */
-public class MappingConfigContext {
+public class MappingXmlConfigContext {
 	private static final ThreadLocal<MappingConfig> mappingConfig = new ThreadLocal<MappingConfig>();
 	private static MappingConfig getMappingConfig() {
 		MappingConfig mc = mappingConfig.get();
@@ -91,7 +97,7 @@ public class MappingConfigContext {
 	 * 记录当前解析的sql content的type
 	 * @param sqlContentType
 	 */
-	public static void setCurrentSqlContentType(SqlContentType sqlContentType) {
+	public static void setSqlContentType(SqlContentType sqlContentType) {
 		getSqlMappingConfig().setSqlContentType(sqlContentType);
 	}
 	
@@ -99,7 +105,7 @@ public class MappingConfigContext {
 	 * 获取当前解析的sql content的type
 	 * @return
 	 */
-	public static SqlContentType getCurrentSqlContentType() {
+	public static SqlContentType getSqlContentType() {
 		return getSqlMappingConfig().getSqlContentType();
 	}
 	
@@ -107,7 +113,7 @@ public class MappingConfigContext {
 	 * 记录当前解析的sql验证器集合
 	 * @param sqlValidatorHandlerMap
 	 */
-	public static void setCurrentSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
+	public static void setSqlValidatorMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
 		getSqlMappingConfig().setSqlValidatorHandlerMap(sqlValidatorHandlerMap);
 	}
 	
@@ -115,8 +121,34 @@ public class MappingConfigContext {
 	 * 获取当前解析的sql验证器集合
 	 * @return
 	 */
-	public static Map<String, ValidatorHandler> getCurrentSqlValidatorHandlerMap() {
+	public static Map<String, ValidatorHandler> getSqlValidatorHandlerMap() {
 		return getSqlMappingConfig().getSqlValidatorHandlerMap();
+	}
+	
+	/**
+	 * 初始化当前解析的sql的sqlContent容器
+	 * @param sqlNode
+	 * @param sqlContentMetadataValidate
+	 */
+	public static void initialSqlContentContainer(Node sqlNode, XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
+		getSqlMappingConfig().initialSqlContentContainer(sqlNode, sqlContentMetadataValidate);
+	}
+	
+	/**
+	 * 是否存在指定name的sql-content
+	 * @param sqlContentName
+	 * @return
+	 */
+	public static boolean existsSqlContent(String sqlContentName) {
+		return getSqlMappingConfig().existsSqlContent(sqlContentName);
+	}
+	
+	/**
+	 * 根据name, 获取sql-content实例
+	 * @param sqlContentName
+	 */
+	public static SqlContentMetadata getSqlContentByName(String sqlContentName) {
+		return getSqlMappingConfig().getSqlContentByName(sqlContentName);
 	}
 	
 	// -----------------------------------------------------------------------------------------
@@ -158,8 +190,8 @@ class MappingConfig {
 	}
 
 	public void destroy() {
-		if(tmc!=null) tmc.destroy();
-		if(smc!=null) smc.destroy();
+		if(tmc!=null) {tmc.destroy(); tmc = null;}
+		if(smc!=null) {smc.destroy(); smc = null;}
 	}
 }
 
@@ -211,6 +243,7 @@ class TableMappingConfig {
 class SqlMappingConfig {
 	private SqlContentType sqlContentType;// 记录每个sql content的type
 	private Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
+	private SqlContentContainer sqlContentContainer;// 记录sql content容器
 	
 	public SqlContentType getSqlContentType() {
 		return sqlContentType;
@@ -225,8 +258,63 @@ class SqlMappingConfig {
 		Collections.clear(this.sqlValidatorHandlerMap);
 		this.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
 	}
+	public void initialSqlContentContainer(Node sqlNode, XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
+		destroySqlContentContainer();
+		NodeList sqlContentNodeList = MappingXmlReaderContext.getSqlContentNodeList(sqlNode);
+		if(sqlContentNodeList != null && sqlContentNodeList.getLength() > 0) {
+			sqlContentContainer = new SqlContentContainer();
+			for (int i=0;i<sqlContentNodeList.getLength();i++) {
+				sqlContentContainer.put(sqlContentMetadataValidate.doValidate(sqlContentNodeList.item(i)));
+			}
+		}
+	}
+	public boolean existsSqlContent(String sqlContentName) {
+		if(sqlContentContainer != null) {
+			return sqlContentContainer.existsSqlContent(sqlContentName);
+		}
+		return false;
+	}
+	public SqlContentMetadata getSqlContentByName(String sqlContentName) {
+		if(sqlContentContainer != null) {
+			SqlContentMetadata sc = sqlContentContainer.getSqlContentByName(sqlContentName);
+			if(sc == null) {
+				throw new NullPointerException("不存在name=["+sqlContentName+"]的<sql-content>元素");
+			}
+			return sc;
+		}
+		return null;
+	}
+	
+	private void destroySqlContentContainer() {
+		if(sqlContentContainer!=null) {sqlContentContainer.destroy(); sqlContentContainer = null;}
+	}
 	
 	public void destroy() {
 		Collections.clear(sqlValidatorHandlerMap);
+		destroySqlContentContainer();
+	}
+}
+
+/**
+ * sql-content容器
+ * @author DougLei
+ */
+class SqlContentContainer {
+	private Map<String, SqlContentMetadata> sqlContentMap;// 记录sqlContent map集合
+	
+	public void put(SqlContentMetadata sqlContent) {
+		if(sqlContentMap == null) {
+			sqlContentMap = new HashMap<String, SqlContentMetadata>();
+		}
+		sqlContentMap.put(sqlContent.getName(), sqlContent);
+	}
+	public boolean existsSqlContent(String sqlContentName) {
+		return sqlContentMap.containsKey(sqlContentName);
+	}
+	public SqlContentMetadata getSqlContentByName(String sqlContentName) {
+		return sqlContentMap.get(sqlContentName);
+	}
+	public void destroy() {
+		Collections.clear(sqlContentMap);
 	}
 }

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
@@ -119,7 +119,7 @@ public class SqlParameterMetadata implements Metadata{
 		this.descriptionName = descriptionName;
 	}
 	private void setDataType(String dataType) {
-		if(MappingConfigContext.getCurrentSqlContentType() != SqlContentType.PROCEDURE) {
+		if(MappingXmlConfigContext.getSqlContentType() != SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
 				this.dataType = mapping.getDefaultClassDataTypeHandler();
@@ -130,7 +130,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	private void setDBDataType(String typeName) {
-		if(MappingConfigContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
+		if(MappingXmlConfigContext.getSqlContentType() == SqlContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
 				this.dataType = mapping.getDefaultDBDataTypeHandler();
@@ -141,7 +141,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	private void setMode(String mode) {
-		if(MappingConfigContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
+		if(MappingXmlConfigContext.getSqlContentType() == SqlContentType.PROCEDURE) {
 			if(StringUtil.notEmpty(mode)) {
 				this.mode = SqlParameterMode.toValue(mode);
 			}
@@ -204,7 +204,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	private void setValidatorHandler() {
-		ValidatorHandler validatorHandler = MappingConfigContext.getCurrentSqlValidatorHandlerMap().get(name);
+		ValidatorHandler validatorHandler = MappingXmlConfigContext.getSqlValidatorHandlerMap().get(name);
 		if(validatorHandler == null && validate) {
 			validatorHandler = new ValidatorHandler(name);
 		}

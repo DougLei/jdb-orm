@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -20,21 +20,26 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.tools.utils.StringUtil;
 
 /**
- * 
+ * <sql-content>
  * @author DougLei
  */
 public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, SqlContentMetadata> {
-
+	private static final String nodeName = "<sql-content>";
+	
 	@Override
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
-		setSqlContentType(attributeMap.getNamedItem("type"));
+		String contentName = getName(attributeMap.getNamedItem("name"));
+		
+		if(getContentType(attributeMap) == SqlContentType._SQL_CONTENT_ && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
+			return MappingXmlConfigContext.getSqlContentByName(contentName);
+		}
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
 		
 		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(getContentName(attributeMap.getNamedItem("name")), getDefaultExecute(attributeMap.getNamedItem("defaultExecute")), dialectTypes);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialectTypes);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -44,45 +49,54 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		}
 		return sqlContentMetadata;
 	}
+	
+	/**
+	 * 获取节点名称
+	 * @return
+	 */
+	protected String getNodeName() {
+		return nodeName;
+	}
+	
+	/**
+	 * 获取元素中name属性的值
+	 * @param nameAttribute
+	 * @return
+	 */
+	private String getName(Node nameAttribute) {
+		if(nameAttribute != null) {
+			String name = nameAttribute.getNodeValue();
+			if(StringUtil.notEmpty(name)) {
+				return name;
+			}
+		}
+		throw new MetadataValidateException(getNodeName() + "元素的name属性值不能为空");
+	}
 
 	/**
-	 * 设置当前sql content的类型
-	 * @param type
+	 * 获取当前sql content的类型
+	 * @param attributeMap
 	 */
-	private void setSqlContentType(Node type) {
-		if(type == null) {
-			throw new MetadataValidateException("<content>元素的type属性值不能为空");
-		}else {
-			SqlContentType sqlContentType = SqlContentType.toValue(type.getNodeValue());
-			if(sqlContentType == null) {
-				throw new NullPointerException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
-			}
-			MappingConfigContext.setCurrentSqlContentType(sqlContentType);
-		}
+	protected SqlContentType getContentType(NamedNodeMap attributeMap) {
+		MappingXmlConfigContext.setSqlContentType(SqlContentType._SQL_CONTENT_);
+		return SqlContentType._SQL_CONTENT_;
 	}
 	
 	private int doValidateContent(NodeList children) {
 		int childrenLength = 0;
 		if(children == null || (childrenLength = children.getLength()) == 0) {
-			throw new NullPointerException("<content>元素中不存在任何sql语句");
+			throw new MetadataValidateException(getNodeName() + "元素中不存在任何sql语句");
 		}
-		if(MappingConfigContext.getCurrentSqlContentType() == SqlContentType.PROCEDURE) {
-			short nodeType, textNodeCount = 0, otherNodeCount = 0;
-			for(int i=0;i<childrenLength;i++) {
-				nodeType = children.item(i).getNodeType();
-				if(nodeType != Node.COMMENT_NODE) {
-					if(nodeType == Node.TEXT_NODE) {
-						textNodeCount++;
-					}else {
-						otherNodeCount++;
-					}
-				}
-			}
-			if(textNodeCount == 0 || otherNodeCount > 0) {
-				throw new IllegalArgumentException("<content type='procedure'>时, 其中必须配置, 且只能配置sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
-			}
-		}
+		doValidateProcedureContent(childrenLength, children);
 		return childrenLength;
+	}
+	
+	/**
+	 * 验证存储过程的内容
+	 * @param childrenLength
+	 * @param children
+	 */
+	protected void doValidateProcedureContent(int childrenLength, NodeList children) {
 	}
 	
 	private DialectType[] getDialectTypes(Node dialect) {
@@ -97,7 +111,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 			for(String _dialect: dialectValueArray) {
 				dt = DialectType.toValue(_dialect.toUpperCase());
 				if(dt == null) {
-					throw new NullPointerException("<content>元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
+					throw new MetadataValidateException(getNodeName() + "元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
 				}
 				if(dt == DialectType.ALL) {
 					return DialectType.values_();
@@ -110,20 +124,5 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 			}
 			return dts.toArray(new DialectType[dts.size()]);
 		}
-	}
-	
-	/**
-	 * 获取<content>元素中name属性的值
-	 * @param nameAttribute
-	 * @return
-	 */
-	private String getContentName(Node nameAttribute) {
-		if(nameAttribute != null) {
-			String name = nameAttribute.getNodeValue();
-			if(StringUtil.notEmpty(name)) {
-				return name;
-			}
-		}
-		return null;
 	}
 }

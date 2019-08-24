@@ -11,7 +11,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.MappingXmlReaderContext;
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -60,7 +60,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			dynamicAddMapping_(entity);
-			MappingConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -76,7 +76,7 @@ public class SessionFactoryImpl implements SessionFactory {
 			for (DynamicMapping entity : entities) {
 				dynamicAddMapping_(entity);
 			}
-			MappingConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -129,12 +129,12 @@ public class SessionFactoryImpl implements SessionFactory {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
-			MappingConfigContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingConfigContext.destroy();
+			MappingXmlConfigContext.destroy();
 		}
 	}
 	
@@ -145,12 +145,12 @@ public class SessionFactoryImpl implements SessionFactory {
 			for (String mappingCode : mappingCodes) {
 				mappingWrapper.dynamicRemoveMapping(mappingCode);
 			}
-			MappingConfigContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingConfigContext.destroy();
+			MappingXmlConfigContext.destroy();
 		}
 	}
 	

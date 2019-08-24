@@ -14,7 +14,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.MappingConfigContext;
+import com.douglei.orm.context.MappingXmlConfigContext;
 import com.douglei.tools.instances.scanner.FileScanner;
 
 /**
@@ -41,7 +41,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 				for (String mappingConfigFilePath : list) {
 					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 				}
-				MappingConfigContext.executeCreateTable(dataSourceWrapper);
+				MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
 			} catch (Exception e) {
 				throw e;
 			} finally {
