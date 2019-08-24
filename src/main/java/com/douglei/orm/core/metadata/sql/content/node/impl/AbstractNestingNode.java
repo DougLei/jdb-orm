@@ -10,13 +10,11 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public abstract class AbstractNestingNode implements SqlNode{
+	private static final long serialVersionUID = 1196837802103130661L;
 	protected List<SqlNode> sqlNodes;
 	public void addSqlNode(SqlNode sqlNode) {
-		if(sqlNode == null) {
-			return;
-		}
 		if(sqlNodes == null) {
-			sqlNodes = new ArrayList<SqlNode>();
+			sqlNodes = new ArrayList<SqlNode>(10);
 		}
 		sqlNodes.add(sqlNode);
 	}

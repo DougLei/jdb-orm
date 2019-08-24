@@ -6,7 +6,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeMismatchingException;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeUnmatchingException;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
 import com.douglei.orm.core.metadata.sql.content.node.impl.TrimSqlNode;
@@ -39,7 +39,7 @@ public class TrimSqlNodeHandler implements SqlNodeHandler {
 				if(c_sn.getType() == SqlNodeType.IF) {
 					trimSqlNode.addSqlNode(c_sn);
 				}else {
-					throw new SqlNodeMismatchingException("<trim>元素中, 只能使用<if>元素; 也不支持在<trim>元素中, 直接编写sql语句");
+					throw new SqlNodeUnmatchingException("<trim>元素中, 只能使用<if>元素; 也不支持在<trim>元素中, 直接编写sql语句");
 				}
 			}
 		}

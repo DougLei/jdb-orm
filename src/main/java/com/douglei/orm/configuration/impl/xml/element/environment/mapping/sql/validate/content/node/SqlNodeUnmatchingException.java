@@ -6,10 +6,10 @@ import com.douglei.orm.core.metadata.MetadataValidateException;
  * sql node不匹配异常
  * @author DougLei
  */
-public class SqlNodeMismatchingException extends MetadataValidateException{
-	private static final long serialVersionUID = -1261093446312232208L;
+public class SqlNodeUnmatchingException extends MetadataValidateException{
+	private static final long serialVersionUID = 5747962360494994816L;
 
-	public SqlNodeMismatchingException(String message) {
+	public SqlNodeUnmatchingException(String message) {
 		super(message);
 	}
 }

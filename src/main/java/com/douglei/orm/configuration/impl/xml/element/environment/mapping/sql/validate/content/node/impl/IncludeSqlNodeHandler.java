@@ -6,6 +6,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
+import com.douglei.orm.core.metadata.sql.content.node.impl.IncludeSqlNode;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -25,12 +26,11 @@ public class IncludeSqlNodeHandler implements SqlNodeHandler {
 		if(sqlContent == null) {
 			throw new NullPointerException("不存在name=["+refName+"]的<sql-content>元素");
 		}
-		return null;// TODO 怎么返回
+		return new IncludeSqlNode(sqlContent);
 	}
 
 	@Override
 	public String getNodeName() {
 		return "include";
 	}
-
 }
