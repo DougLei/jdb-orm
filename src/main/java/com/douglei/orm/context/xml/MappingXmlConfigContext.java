@@ -15,6 +15,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.core.dialect.db.table.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlContentType;
+import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
@@ -110,6 +111,22 @@ public class MappingXmlConfigContext {
 	}
 	
 	/**
+	 * 根据参数的配置信息, 获取参数
+	 * @param parameterConfigText
+	 * @return
+	 */
+	public static SqlParameterMetadata getSqlParameter(String parameterConfigText) {
+		return getSqlMappingConfig().getSqlParameter(parameterConfigText);
+	}
+	
+	/**
+	 * 销毁sql参数集合
+	 */
+	public static void destroySqlParameters() {
+		getMappingConfig().destroySqlParameters();
+	}
+	
+	/**
 	 * 记录当前解析的sql验证器集合
 	 * @param sqlValidatorHandlerMap
 	 */
@@ -192,6 +209,9 @@ class MappingConfig {
 		if(tmc!=null) {tmc.destroy(); tmc = null;}
 		if(smc!=null) {smc.destroy(); smc = null;}
 	}
+	public void destroySqlParameters() {
+		if(smc!=null) smc.destroySqlParameters();
+	}
 }
 
 /**
@@ -241,6 +261,7 @@ class TableMappingConfig {
  */
 class SqlMappingConfig {
 	private SqlContentType sqlContentType;// 记录每个sql content的type
+	private Map<String, SqlParameterMetadata> sqlParameters;// 记录sql参数
 	private Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
 	private SqlContentContainer sqlContentContainer;// 记录sql content容器
 	
@@ -249,6 +270,19 @@ class SqlMappingConfig {
 	}
 	public void setSqlContentType(SqlContentType sqlContentType) {
 		this.sqlContentType = sqlContentType;
+	}
+	public SqlParameterMetadata getSqlParameter(String parameterConfigText) {
+		SqlParameterMetadata sqlParameterMetadata = null;
+		if(sqlParameters == null) {
+			sqlParameters = new HashMap<String, SqlParameterMetadata>(16);
+		}else {
+			sqlParameterMetadata = sqlParameters.get(parameterConfigText.substring(0, parameterConfigText.indexOf(",")).trim());
+		}
+		if(sqlParameterMetadata == null) {
+			sqlParameterMetadata = new SqlParameterMetadata(parameterConfigText);
+			sqlParameters.put(sqlParameterMetadata.getName(), sqlParameterMetadata);
+		}
+		return sqlParameterMetadata;
 	}
 	public Map<String, ValidatorHandler> getSqlValidatorHandlerMap() {
 		return sqlValidatorHandlerMap;
@@ -280,13 +314,16 @@ class SqlMappingConfig {
 		return null;
 	}
 	
-	private void destroySqlContentContainer() {
-		if(sqlContentContainer!=null) {sqlContentContainer.destroy(); sqlContentContainer = null;}
-	}
-	
 	public void destroy() {
+		destroySqlParameters();
 		Collections.clear(sqlValidatorHandlerMap);
 		destroySqlContentContainer();
+	}
+	public void destroySqlParameters() {
+		Collections.clear(sqlParameters);
+	}
+	private void destroySqlContentContainer() {
+		if(sqlContentContainer!=null) {sqlContentContainer.destroy(); sqlContentContainer = null;}
 	}
 }
 

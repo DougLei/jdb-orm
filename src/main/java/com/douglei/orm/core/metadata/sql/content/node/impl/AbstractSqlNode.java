@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
@@ -16,7 +17,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
-	private static final long serialVersionUID = 7952613062688250954L;
 
 	protected String content;
 	
@@ -57,19 +57,19 @@ public abstract class AbstractSqlNode implements SqlNode{
 	}
 	
 	// 添加 sql parameter
-	private void addSqlParameter(String configurationText) {
+	private void addSqlParameter(String configText) {
 		if(sqlParametersByDefinedOrder == null) {
 			sqlParametersByDefinedOrder = new ArrayList<SqlParameterMetadata>();
 		}
-		sqlParametersByDefinedOrder.add(new SqlParameterMetadata(configurationText));
+		sqlParametersByDefinedOrder.add(MappingXmlConfigContext.getSqlParameter(configText));
 	}
 	
 	// 替换Sql语句内容中的参数
 	private void replaceSqlParameterInSqlContent(SqlParameterMetadata sqlParameter) {
 		if(sqlParameter.isUsePlaceholder()) {
-			content = content.replaceAll("#\\{"+sqlParameter.getConfigurationText()+"\\}", "?");
+			content = content.replaceAll("#\\{"+sqlParameter.getConfigText()+"\\}", "?");
 		}else{
-			content = content.replaceAll(sqlParameter.getConfigurationText(), sqlParameter.getName());
+			content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
 		}
 	}
 	

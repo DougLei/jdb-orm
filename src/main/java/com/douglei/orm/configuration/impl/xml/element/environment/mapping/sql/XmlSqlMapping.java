@@ -52,6 +52,8 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());
+		} finally {
+			MappingXmlConfigContext.destroySqlParameters();
 		}
 		logger.debug("结束解析sql类型的映射文件");
 	}

@@ -28,7 +28,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  */
 public class SqlParameterMetadata implements Metadata{
 	
-	private String configurationText;
+	private String configText;
 	
 	private String name;// 参数名
 	private String descriptionName;// 描述名
@@ -49,10 +49,10 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private ValidatorHandler validatorHandler;// 验证器
 	
-	public SqlParameterMetadata(String configurationText) {
-		this.configurationText = configurationText;
+	public SqlParameterMetadata(String configText) {
+		this.configText = configText;
 		
-		Map<String, String> propertyMap = resolvingPropertyMap(configurationText);
+		Map<String, String> propertyMap = resolvingPropertyMap(configText);
 		setName(propertyMap.get("name"));
 		setDescriptionName(propertyMap.get("descriptionName"));
 		setDataType(propertyMap.get("datatype"));
@@ -75,8 +75,8 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	// 解析出属性map集合
-	private Map<String, String> resolvingPropertyMap(String configurationText) {
-		String[] cts = configurationText.split(",");
+	private Map<String, String> resolvingPropertyMap(String configText) {
+		String[] cts = configText.split(",");
 		int length = cts.length;
 		if(length < 1) {
 			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");
@@ -289,8 +289,8 @@ public class SqlParameterMetadata implements Metadata{
 		return MetadataType.SQL_PARAMETER;
 	}
 	
-	public String getConfigurationText() {
-		return configurationText;
+	public String getConfigText() {
+		return configText;
 	}
 	public String getName() {
 		return name;
