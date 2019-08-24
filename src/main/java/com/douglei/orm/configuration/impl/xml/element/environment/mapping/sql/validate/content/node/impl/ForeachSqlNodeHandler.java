@@ -6,9 +6,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandler;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeHandlerMapping;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.content.node.SqlNodeUnmatchingException;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
-import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
 import com.douglei.orm.core.metadata.sql.content.node.impl.ForeachSqlNode;
 import com.douglei.tools.utils.StringUtil;
 
@@ -47,10 +45,6 @@ public class ForeachSqlNodeHandler implements SqlNodeHandler {
 		for(int i=0;i<cl;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(childrens.item(i));
 			if(sqlNode != null) {
-				// TODO 待定
-//				if(sqlNode.getType() == SqlNodeType.INCLUDE) {
-//					throw new SqlNodeUnmatchingException("<foreach>元素中, 不支持使用<include>元素");
-//				}
 				foreachSqlNode.addSqlNode(sqlNode);
 			}
 		}
