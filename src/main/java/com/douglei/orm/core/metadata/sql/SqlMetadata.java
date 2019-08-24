@@ -14,7 +14,7 @@ import com.douglei.orm.core.metadata.MetadataType;
  */
 public class SqlMetadata implements Metadata{
 	private String namespace;
-	private List<ContentMetadata> contents;// TODO 解决下重复name的问题
+	private List<ContentMetadata> contents;
 	
 	public SqlMetadata(String namespace) {
 		this.namespace = namespace;
@@ -24,11 +24,18 @@ public class SqlMetadata implements Metadata{
 	 * 添加 sql content
 	 * @param sqlContentMetadata
 	 */
-	public void addContentMetadata(ContentMetadata sqlContentMetadata) {
+	public void addContentMetadata(ContentMetadata contentMetadata) {
 		if(contents == null) {
 			contents = new ArrayList<ContentMetadata>(10);
+		}else {
+			String contentName = contentMetadata.getName();
+			contents.forEach(content -> {
+				if(content.getName().equals(contentName)) {
+					throw new RepeatedContentNameException(contentName);
+				}
+			});
 		}
-		contents.add(sqlContentMetadata);
+		contents.add(contentMetadata);
 	}
 	
 	@Override
@@ -53,5 +60,11 @@ public class SqlMetadata implements Metadata{
 			}
 		}
 		return list;
+	}
+	
+	private class RepeatedContentNameException extends RuntimeException{
+		public RepeatedContentNameException(String contentName) {
+			super("重复配置了name=["+contentName+"]的<content>元素");
+		}
 	}
 }

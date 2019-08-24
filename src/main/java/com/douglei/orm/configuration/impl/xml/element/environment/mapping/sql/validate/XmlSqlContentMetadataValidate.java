@@ -30,7 +30,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		String contentName = getName(attributeMap.getNamedItem("name"));
-		if(getContentType(attributeMap) == SqlContentType._SQL_CONTENT_ && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
+		if(getContentType(attributeMap) == null && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
 			return MappingXmlConfigContext.getSqlContent(contentName);
 		}
 		
@@ -77,8 +77,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	 * @param attributeMap
 	 */
 	protected SqlContentType getContentType(NamedNodeMap attributeMap) {
-		MappingXmlConfigContext.setSqlContentType(SqlContentType._SQL_CONTENT_);
-		return SqlContentType._SQL_CONTENT_;
+		return null;
 	}
 	
 	private int doValidateContent(NodeList children) {
