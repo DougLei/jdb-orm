@@ -178,7 +178,7 @@ public interface SQLSession {
 	 * @return
 	 */
 	default ExecuteSql getExecuteSql(String namespace, String name) {
-		return getExecuteSql(namespace, namespace, null);
+		return getExecuteSql(namespace, name, null);
 	}
 	
 	/**
@@ -215,7 +215,7 @@ public interface SQLSession {
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	default Object executeProcedure(String namespace, String name) {
-		return executeProcedure(namespace, namespace, null);
+		return executeProcedure(namespace, name, null);
 	}
 	/**
 	 * 执行存储过程

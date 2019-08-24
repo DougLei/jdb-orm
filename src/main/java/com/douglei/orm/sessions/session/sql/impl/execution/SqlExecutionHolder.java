@@ -18,13 +18,13 @@ import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 public class SqlExecutionHolder implements ExecutionHolder{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
-	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
-		List<ContentMetadata> contents = sqlMetadata.getContents();
+	public SqlExecutionHolder(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+		List<ContentMetadata> contents = sqlMetadata.getContents(name);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的sql语句");
 		}
 		
-		executeSqlCount = (short) contents.size();
+		executeSqlCount = (byte) contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
 		for (ContentMetadata content : contents) {
@@ -32,8 +32,8 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		}
 	}
 	
-	private short executeSqlCount;
-	private short executeSqlIndex; // 从0开始
+	private byte executeSqlCount;
+	private byte executeSqlIndex; // 从0开始
 	private List<ExecuteSql> executeSqls;
 	
 	@Override

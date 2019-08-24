@@ -51,7 +51,26 @@ public class SqlMetadata implements Metadata{
 	public String getNamespace() {
 		return namespace;
 	}
-	public List<ContentMetadata> getContents() {
+	
+	public List<ContentMetadata> getContents(String name) {
+		return name==null?getContentByName(name):getAllContents();
+	}
+	
+	// 获取指定name的content集合
+	private List<ContentMetadata> getContentByName(String name) {
+		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		List<ContentMetadata> list = new ArrayList<ContentMetadata>(1);
+		for (ContentMetadata content : contents) {
+			if(content.getName().equals(name) && content.isMatchingDialectType(currentDialectType)) {
+				list.add(content);
+				break;
+			}
+		}
+		return list;
+	}
+
+	// 获取所有满足方言的content集合
+	private List<ContentMetadata> getAllContents(){
 		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
 		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
 		for (ContentMetadata content : contents) {

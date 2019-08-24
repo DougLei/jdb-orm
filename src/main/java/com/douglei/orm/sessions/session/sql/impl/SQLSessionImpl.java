@@ -33,7 +33,6 @@ import com.douglei.orm.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -45,36 +44,24 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		super(connection, environmentProperty, mappingWrapper);
 	}
 	
-	// 获取code值
-	private String getCode(String namespace, String name) {
-		if(StringUtil.isEmpty(name)) {
-			throw new NullPointerException("参数name值不能为空");
-		}
-		if(namespace == null) {
-			return name;
-		}
-		return namespace+"."+name;
-	}
-	
 	// 获取SqlMetadata实例
-	private SqlMetadata getSqlMetadata(String namespace, String name) {
-		String code = getCode(namespace, name);
-		Mapping mapping = mappingWrapper.getMapping(code);
+	private SqlMetadata getSqlMetadata(String namespace) {
+		Mapping mapping = mappingWrapper.getMapping(namespace);
 		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+code+"]的映射");
+			throw new NullPointerException("不存在code为["+namespace+"]的映射");
 		}
 		if(mapping.getMappingType() != MappingType.SQL) {
-			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.SQL+"]类型");
+			throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 		}
 		SqlMetadata sm= (SqlMetadata) mapping.getMetadata();
-		ExecMappingDescriptionContext.setExecMappingDescription(code, MappingType.SQL);
+		ExecMappingDescriptionContext.setExecMappingDescription(namespace, MappingType.SQL);
 		return sm;
 	}
 	
 	// 获取ExecutionHolder
 	private ExecutionHolder getExecutionHolder(String namespace, String name, Object sqlParameter) {
-		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
-		return new SqlExecutionHolder(sqlMetadata, sqlParameter);
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
+		return new SqlExecutionHolder(sqlMetadata, name, sqlParameter);
 	}
 
 	@Override
@@ -143,11 +130,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
-		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		
-		List<ContentMetadata> contents = sqlMetadata.getContents();
+		List<ContentMetadata> contents = sqlMetadata.getContents(name);
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的存储过程sql语句");
+			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的存储过程");
 		}
 		
 		int length = contents.size();
