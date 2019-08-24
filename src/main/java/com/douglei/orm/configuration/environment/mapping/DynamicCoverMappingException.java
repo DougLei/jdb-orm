@@ -1,6 +1,6 @@
 package com.douglei.orm.configuration.environment.mapping;
 
-import com.douglei.orm.sessionfactory.DynamicMappingException;
+import com.douglei.orm.factory.dynamic.mapping.DynamicMappingException;
 
 /**
  * 动态覆盖映射异常

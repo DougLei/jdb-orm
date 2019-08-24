@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
-import com.douglei.orm.sessionfactory.SessionFactory;
+import com.douglei.orm.factory.OrmFactory;
 
 public class SessionFactoryTest {
 	
@@ -35,7 +35,7 @@ public class SessionFactoryTest {
 	
 	private Configuration conf;
 	@SuppressWarnings("unused")
-	private SessionFactory sessionFactory;
+	private OrmFactory sessionFactory;
 	
 	@Before
 	public void before() {
