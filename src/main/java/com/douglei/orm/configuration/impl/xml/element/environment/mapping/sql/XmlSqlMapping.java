@@ -15,7 +15,6 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.sql.SqlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlContentMetadataValidate;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
@@ -34,7 +33,6 @@ import com.douglei.tools.utils.StringUtil;
 public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	private static final Logger logger = LoggerFactory.getLogger(XmlSqlMapping.class);
 	private static final XmlSqlMetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
-	private static final XmlSqlContentMetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
 	private static final XmlContentMetadataValidate contentMetadataValidate = new XmlContentMetadataValidate();
 	
 	private SqlMetadata sqlMetadata;
@@ -47,10 +45,10 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
 			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
 			setParameterValidator(sqlNode);
-			MappingXmlConfigContext.initialSqlContentContainer(sqlNode, sqlContentMetadataValidate);
+			MappingXmlConfigContext.initialSqlContentContainer(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			for (int i=0;i<contentNodeList.getLength();i++) {
-				sqlMetadata.addSqlContentMetadata(contentMetadataValidate.doValidate(contentNodeList.item(i)));
+				sqlMetadata.addContentMetadata(contentMetadataValidate.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());

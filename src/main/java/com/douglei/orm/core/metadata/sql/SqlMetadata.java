@@ -14,7 +14,7 @@ import com.douglei.orm.core.metadata.MetadataType;
  */
 public class SqlMetadata implements Metadata{
 	private String namespace;
-	private List<SqlContentMetadata> contents;// TODO 解决下重复name的问题
+	private List<ContentMetadata> contents;// TODO 解决下重复name的问题
 	
 	public SqlMetadata(String namespace) {
 		this.namespace = namespace;
@@ -24,9 +24,9 @@ public class SqlMetadata implements Metadata{
 	 * 添加 sql content
 	 * @param sqlContentMetadata
 	 */
-	public void addSqlContentMetadata(SqlContentMetadata sqlContentMetadata) {
+	public void addContentMetadata(ContentMetadata sqlContentMetadata) {
 		if(contents == null) {
-			contents = new ArrayList<SqlContentMetadata>(10);
+			contents = new ArrayList<ContentMetadata>(10);
 		}
 		contents.add(sqlContentMetadata);
 	}
@@ -44,10 +44,10 @@ public class SqlMetadata implements Metadata{
 	public String getNamespace() {
 		return namespace;
 	}
-	public List<SqlContentMetadata> getContents() {
+	public List<ContentMetadata> getContents() {
 		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
-		List<SqlContentMetadata> list = new ArrayList<SqlContentMetadata>(contents.size());
-		for (SqlContentMetadata content : contents) {
+		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
+		for (ContentMetadata content : contents) {
 			if(content.isMatchingDialectType(currentDialectType)) {
 				list.add(content);
 			}

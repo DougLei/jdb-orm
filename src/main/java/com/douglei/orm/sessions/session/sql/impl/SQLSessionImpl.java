@@ -15,7 +15,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.ExecMappingDescriptionContext;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.SqlParameterMode;
@@ -145,7 +145,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace, name);
 		
-		List<SqlContentMetadata> contents = sqlMetadata.getContents();
+		List<ContentMetadata> contents = sqlMetadata.getContents();
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的存储过程sql语句");
 		}
@@ -158,7 +158,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		
 		List<SqlNode> sqlNodes = null;
 		TextSqlNode textSqlNode = null;
-		for (SqlContentMetadata content : contents) {
+		for (ContentMetadata content : contents) {
 			reset(sqlContent, sqlParameters);
 			sqlNodes = content.getRootSqlNodes();
 			

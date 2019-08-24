@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.context.ExecMappingDescriptionContext;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.sessions.session.execution.ExecutionHolder;
 
@@ -19,7 +19,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
 
 	public SqlExecutionHolder(SqlMetadata sqlMetadata, Object sqlParameter) {
-		List<SqlContentMetadata> contents = sqlMetadata.getContents();
+		List<ContentMetadata> contents = sqlMetadata.getContents();
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的sql语句");
 		}
@@ -27,7 +27,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		executeSqlCount = (short) contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
-		for (SqlContentMetadata content : contents) {
+		for (ContentMetadata content : contents) {
 			executeSqls.add(new ExecuteSql(content, sqlParameter));
 		}
 	}

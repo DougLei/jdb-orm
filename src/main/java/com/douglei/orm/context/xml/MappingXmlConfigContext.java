@@ -128,10 +128,9 @@ public class MappingXmlConfigContext {
 	/**
 	 * 初始化当前解析的sql的sql-content容器
 	 * @param sqlNode
-	 * @param sqlContentMetadataValidate
 	 */
-	public static void initialSqlContentContainer(Node sqlNode, XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
-		getSqlMappingConfig().initialSqlContentContainer(sqlNode, sqlContentMetadataValidate);
+	public static void initialSqlContentContainer(Node sqlNode) {
+		getSqlMappingConfig().initialSqlContentContainer(sqlNode);
 	}
 	
 	/**
@@ -147,8 +146,8 @@ public class MappingXmlConfigContext {
 	 * 根据name, 获取sql-content实例
 	 * @param sqlContentName
 	 */
-	public static SqlContentMetadata getSqlContentByName(String sqlContentName) {
-		return getSqlMappingConfig().getSqlContentByName(sqlContentName);
+	public static SqlContentMetadata getSqlContent(String sqlContentName) {
+		return getSqlMappingConfig().getSqlContent(sqlContentName);
 	}
 	
 	// -----------------------------------------------------------------------------------------
@@ -258,11 +257,11 @@ class SqlMappingConfig {
 		Collections.clear(this.sqlValidatorHandlerMap);
 		this.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
 	}
-	public void initialSqlContentContainer(Node sqlNode, XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
+	public void initialSqlContentContainer(Node sqlNode) {
 		destroySqlContentContainer();
 		NodeList sqlContentNodeList = MappingXmlReaderContext.getSqlContentNodeList(sqlNode);
 		if(sqlContentNodeList != null && sqlContentNodeList.getLength() > 0) {
-			sqlContentContainer = new SqlContentContainer(sqlContentMetadataValidate);
+			sqlContentContainer = new SqlContentContainer();
 			for (int i=0;i<sqlContentNodeList.getLength();i++) {
 				sqlContentContainer.put(sqlContentNodeList.item(i));
 			}
@@ -274,13 +273,9 @@ class SqlMappingConfig {
 		}
 		return false;
 	}
-	public SqlContentMetadata getSqlContentByName(String sqlContentName) {
+	public SqlContentMetadata getSqlContent(String sqlContentName) {
 		if(sqlContentContainer != null) {
-			SqlContentMetadata sc = sqlContentContainer.getSqlContentByName(sqlContentName);
-			if(sc == null) {
-				throw new NullPointerException("不存在name=["+sqlContentName+"]的<sql-content>元素");
-			}
-			return sc;
+			return sqlContentContainer.getSqlContent(sqlContentName);
 		}
 		return null;
 	}
@@ -300,37 +295,48 @@ class SqlMappingConfig {
  * @author DougLei
  */
 class SqlContentContainer {
-	private XmlSqlContentMetadataValidate sqlContentMetadataValidate;
+	private static final XmlSqlContentMetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
+	
 	private Map<String, Node> sqlContentNodeMap;// 记录sql-content node map集合
 	private Map<String, SqlContentMetadata> sqlContentMap;// 记录sqlContent map集合
-	
-	public SqlContentContainer(XmlSqlContentMetadataValidate sqlContentMetadataValidate) {
-		this.sqlContentMetadataValidate = sqlContentMetadataValidate;
-	}
 	
 	public void put(Node sqlContentNode) {
 		String name = sqlContentMetadataValidate.getName(sqlContentNode.getAttributes().getNamedItem("name"));
 		if(sqlContentNodeMap == null) {
-			sqlContentNodeMap = new HashMap<String, Node>();
+			sqlContentNodeMap = new HashMap<String, Node>(8);
 		}else if(sqlContentNodeMap.containsKey(name)) {
 			throw new RepeatedSqlContentNameException(name);
 		}
 		sqlContentNodeMap.put(name, sqlContentNode);
 	}
 	
-	public void put(SqlContentMetadata sqlContent) {
-		if(sqlContentMap == null) {
-			sqlContentMap = new HashMap<String, SqlContentMetadata>();
-		}
-		sqlContentMap.put(sqlContent.getName(), sqlContent);
-	}
 	public boolean existsSqlContent(String sqlContentName) {
-		return sqlContentMap.containsKey(sqlContentName);
+		if(sqlContentMap != null) {
+			return sqlContentMap.containsKey(sqlContentName);
+		}
+		return false;
 	}
-	public SqlContentMetadata getSqlContentByName(String sqlContentName) {
-		return sqlContentMap.get(sqlContentName);
+	
+	public SqlContentMetadata getSqlContent(String sqlContentName) {
+		if(sqlContentNodeMap.containsKey(sqlContentName)) {
+			SqlContentMetadata sqlContentMetadata = null;
+			if(sqlContentMap != null) {
+				sqlContentMetadata = sqlContentMap.get(sqlContentName);
+			}
+			if(sqlContentMetadata == null) {
+				sqlContentMetadata = sqlContentMetadataValidate.doValidate(sqlContentNodeMap.get(sqlContentName));
+				if(sqlContentMap == null) {
+					sqlContentMap = new HashMap<String, SqlContentMetadata>(8);
+				}
+				sqlContentMap.put(sqlContentMetadata.getName(), sqlContentMetadata);
+			}
+			return sqlContentMetadata;
+		}
+		return null;
 	}
+	
 	public void destroy() {
+		Collections.clear(sqlContentNodeMap);
 		Collections.clear(sqlContentMap);
 	}
 	

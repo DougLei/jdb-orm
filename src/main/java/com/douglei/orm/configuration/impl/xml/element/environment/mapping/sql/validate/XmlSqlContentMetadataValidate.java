@@ -31,7 +31,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		String contentName = getName(attributeMap.getNamedItem("name"));
 		if(getContentType(attributeMap) == SqlContentType._SQL_CONTENT_ && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
-			return MappingXmlConfigContext.getSqlContentByName(contentName);
+			return MappingXmlConfigContext.getSqlContent(contentName);
 		}
 		
 		NodeList children = contentNode.getChildNodes();

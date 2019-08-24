@@ -3,7 +3,7 @@ package com.douglei.orm.sessions.session.sql.impl.execution;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 
@@ -15,7 +15,7 @@ public class ExecuteSql {
 	private String content;
 	private List<Object> parameters;
 	
-	public ExecuteSql(SqlContentMetadata contentMetadata, Object sqlParameter) {
+	public ExecuteSql(ContentMetadata contentMetadata, Object sqlParameter) {
 		StringBuilder sqlContent = new StringBuilder();
 		
 		List<SqlNode> rootSqlNodes = contentMetadata.getRootSqlNodes();

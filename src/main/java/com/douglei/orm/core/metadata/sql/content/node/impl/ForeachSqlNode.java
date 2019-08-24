@@ -10,7 +10,6 @@ import java.util.Map;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
-import com.douglei.orm.core.metadata.sql.content.node.UnsupportCollectionTypeException;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
@@ -146,5 +145,16 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.FOREACH;
+	}
+}
+
+/**
+ * 不支持的collection类型异常
+ * @author DougLei
+ */
+class UnsupportCollectionTypeException extends RuntimeException{
+	private static final long serialVersionUID = -7853124286489644740L;
+	public UnsupportCollectionTypeException(String message) {
+		super(message);
 	}
 }
