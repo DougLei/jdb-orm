@@ -10,12 +10,12 @@ import com.douglei.orm.sessions.session.execution.ExecutionHolder;
  * 
  * @author DougLei
  */
-public class ExecuteSql {
+public class ExecutionSql {
 	private ExecutionHolder executionHolder;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
-	public ExecuteSql(ExecutionHolder executionHolder) {
+	public ExecutionSql(ExecutionHolder executionHolder) {
 		this.executionHolder = executionHolder;
 		this.sql = new SqlStatement(executionHolder.getCurrentSql());
 		this.parameters = executionHolder.getCurrentParameters();

@@ -177,7 +177,7 @@ public interface SQLSession {
 	 * @param name
 	 * @return
 	 */
-	default ExecuteSql getExecuteSql(String namespace, String name) {
+	default ExecutionSql getExecuteSql(String namespace, String name) {
 		return getExecuteSql(namespace, name, null);
 	}
 	
@@ -188,7 +188,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return
 	 */
-	ExecuteSql getExecuteSql(String namespace, String name, Object sqlParameter);
+	ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 执行增删改查操作
