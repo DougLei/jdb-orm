@@ -34,7 +34,7 @@ public class DynamicMappingProcessor {
 	 * 动态添加映射
 	 * @param entity
 	 */
-	private void dynamicAddMapping_(DynamicMapping entity) {
+	private void addMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
 			case BY_PATH:
 				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
@@ -49,10 +49,10 @@ public class DynamicMappingProcessor {
 	 * 动态添加映射
 	 * @param entity
 	 */
-	public synchronized void dynamicAddMapping(DynamicMapping entity) {
+	public synchronized void addMapping(DynamicMapping entity) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-			dynamicAddMapping_(entity);
+			addMapping_(entity);
 			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -66,11 +66,11 @@ public class DynamicMappingProcessor {
 	 * 动态批量添加映射
 	 * @param entities
 	 */
-	public synchronized void dynamicBatchAddMapping(List<DynamicMapping> entities) {
+	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
-				dynamicAddMapping_(entity);
+				addMapping_(entity);
 			}
 			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
@@ -85,7 +85,7 @@ public class DynamicMappingProcessor {
 	 * 动态覆盖映射
 	 * @param entity
 	 */
-	private void dynamicCoverMapping_(DynamicMapping entity) {
+	private void coverMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
 			case BY_PATH:
 				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
@@ -100,10 +100,10 @@ public class DynamicMappingProcessor {
 	 * 动态覆盖映射
 	 * @param entity
 	 */
-	public synchronized void dynamicCoverMapping(DynamicMapping entity) {
+	public synchronized void coverMapping(DynamicMapping entity) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-			dynamicCoverMapping_(entity);
+			coverMapping_(entity);
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -116,11 +116,11 @@ public class DynamicMappingProcessor {
 	 * 动态批量覆盖映射
 	 * @param entities
 	 */
-	public synchronized void dynamicBatchCoverMapping(List<DynamicMapping> entities) {
+	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
-				dynamicCoverMapping_(entity);
+				coverMapping_(entity);
 			}
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -134,7 +134,7 @@ public class DynamicMappingProcessor {
 	 * 动态删除映射
 	 * @param mappingCode
 	 */
-	public synchronized void dynamicRemoveMapping(String mappingCode) {
+	public synchronized void removeMapping(String mappingCode) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
@@ -151,7 +151,7 @@ public class DynamicMappingProcessor {
 	 * 动态批量删除映射
 	 * @param mappingCodes
 	 */
-	public synchronized void dynamicBatchRemoveMapping(List<String> mappingCodes) {
+	public synchronized void batchRemoveMapping(List<String> mappingCodes) {
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (String mappingCode : mappingCodes) {
