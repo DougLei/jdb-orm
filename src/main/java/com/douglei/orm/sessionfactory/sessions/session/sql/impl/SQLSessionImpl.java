@@ -44,12 +44,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		super(connection, environmentProperty, mappingWrapper);
 	}
 	
-	// 获取SqlMetadata实例
 	private SqlMetadata getSqlMetadata(String namespace) {
 		Mapping mapping = mappingWrapper.getMapping(namespace);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+namespace+"]的映射");
-		}
 		if(mapping.getMappingType() != MappingType.SQL) {
 			throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 		}
@@ -61,6 +57,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	// 获取ExecutionHolder
 	private ExecutionHolder getExecutionHolder(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
+		return getExecutionHolder(sqlMetadata, name, sqlParameter);
+	}
+	
+	// 获取ExecutionHolder
+	private ExecutionHolder getExecutionHolder(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		return new SqlExecutionHolder(sqlMetadata, name, sqlParameter);
 	}
 
@@ -94,6 +95,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return super.pageQuery(pageNum, pageSize, executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
 	}
 	
+	
 	@Override
 	public int executeUpdate(String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
@@ -103,7 +105,22 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		}while(executionHolder.next());
 		return updateRowCount;
 	}
+	
+	@Override
+	public int executeUpdate(String namespace, String name, List<Object> sqlParameters) {
+		SqlMetadata sql = getSqlMetadata(namespace);
+		int updateRowCount = 0;
+		ExecutionHolder executionHolder = null;
+		for (Object sqlParameter : sqlParameters) {
+			executionHolder = getExecutionHolder(sql, name, sqlParameter);
+			do {
+				updateRowCount += super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
+			}while(executionHolder.next());
+		}
+		return updateRowCount;
+	}
 
+	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
@@ -127,11 +144,22 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		ExecutionHolder executionHolder = getExecutionHolder(namespace, name, sqlParameter);
 		return new ExecutionSql(executionHolder);
 	}
-
+	
+	
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
+		return executeProcedure_(getSqlMetadata(namespace), name, sqlParameter);
+	}
+	
+	@Override
+	public List<Object> executeProcedure(String namespace, String name, List<Object> sqlParameters) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		
+		List<Object> objects = new ArrayList<Object>(sqlParameters.size());
+		sqlParameters.forEach(sqlParameter -> objects.add(executeProcedure_(sqlMetadata, name, sqlParameters)));
+		return objects;
+	}
+	
+	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的存储过程");

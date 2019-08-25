@@ -94,7 +94,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return
 	 */
 	public Mapping getMapping(String mappingCode) {
-		return mappingStore.getMapping(mappingCode);
+		Mapping mapping = mappingStore.getMapping(mappingCode);
+		if(mapping == null) {
+			throw new NullPointerException("不存在code为["+mappingCode+"]的映射");
+		}
+		return mapping;
 	}
 	
 	/**

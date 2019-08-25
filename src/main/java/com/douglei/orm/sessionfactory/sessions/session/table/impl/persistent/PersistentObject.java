@@ -7,9 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.ExecMappingDescriptionContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
@@ -149,8 +147,6 @@ public class PersistentObject {
 	// 进行验证
 	private void doValidate() {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && tableMetadata.existsValidateColumns()) {
-			ExecMappingDescriptionContext.setExecMappingDescription(tableMetadata.getCode(), MappingType.TABLE);
-			
 			Object value = null;
 			ValidatorResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {

@@ -1,5 +1,7 @@
 package com.douglei.orm.sessionfactory.data.validator;
 
+import java.util.List;
+
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
@@ -22,7 +24,7 @@ public class DataValidatorProcessor {
 	public ValidatorResult doValidate(Object obj) {
 		return doValidate(obj.getClass().getName(), obj);
 	}
-
+	
 	/**
 	 * 
 	 * @param code 表映射的tableName/className, sql映射的namespace
@@ -32,9 +34,6 @@ public class DataValidatorProcessor {
 	public ValidatorResult doValidate(String code, Object obj) {
 		// TODO 
 		Mapping mapping = mappingWrapper.getMapping(code);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+code+"]的映射");
-		}
 		switch(mapping.getMappingType()) {
 			case TABLE:
 				return validateTableMappingData((TableMetadata)mapping.getMetadata(), obj);
@@ -42,6 +41,25 @@ public class DataValidatorProcessor {
 				return validateSqlMappingData((SqlMetadata)mapping.getMetadata(), obj);
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param objs
+	 * @return
+	 */
+	public ValidatorResult doValidate(List<Object> objs) {
+		return doValidate(objs.get(0).getClass().getName(), objs);
+	}
+	
+	/**
+	 * 
+	 * @param code 表映射的tableName/className, sql映射的namespace
+	 * @param objs
+	 * @return
+	 */
+	public ValidatorResult doValidate(String code, List<Object> objs) {
+		
 	}
 
 	/**

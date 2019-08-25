@@ -18,10 +18,21 @@ public interface TableSession {
 	void save(Object object);
 	/**
 	 * 保存对象
+	 * @param objects
+	 */
+	void save(List<Object> objects);
+	/**
+	 * 保存对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void save(String code, Map<String, Object> propertyMap);
+	/**
+	 * 保存对象
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param propertyMaps
+	 */
+	void save(String code, List<Map<String, Object>> propertyMaps);
 	
 	/**
 	 * 修改对象
@@ -30,10 +41,21 @@ public interface TableSession {
 	void update(Object object);
 	/**
 	 * 修改对象
+	 * @param objects
+	 */
+	void update(List<Object> objects);
+	/**
+	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void update(String code, Map<String, Object> propertyMap);
+	/**
+	 * 修改对象
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param propertyMaps
+	 */
+	void update(String code, List<Map<String, Object>> propertyMaps);
 	
 	/**
 	 * 删除对象
@@ -42,10 +64,21 @@ public interface TableSession {
 	void delete(Object object);
 	/**
 	 * 删除对象
+	 * @param objects
+	 */
+	void delete(List<Object> objects);
+	/**
+	 * 删除对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
 	 */
 	void delete(String code, Map<String, Object> propertyMap);
+	/**
+	 * 删除对象
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param propertyMaps
+	 */
+	void delete(String code, List<Map<String, Object>> propertyMaps);
 	
 	/**
 	 * 执行批量查询

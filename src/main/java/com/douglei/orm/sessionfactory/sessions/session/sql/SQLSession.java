@@ -207,6 +207,14 @@ public interface SQLSession {
 	 * @return
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
+	/**
+	 * 执行增删改查操作
+	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
+	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param sqlParameters
+	 * @return
+	 */
+	int executeUpdate(String namespace, String name, List<Object> sqlParameters);
 	
 	/**
 	 * 执行存储过程
@@ -225,4 +233,12 @@ public interface SQLSession {
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
+	/**
+	 * 执行存储过程
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameters
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 */
+	List<Object> executeProcedure(String namespace, String name, List<Object> sqlParameters);
 }

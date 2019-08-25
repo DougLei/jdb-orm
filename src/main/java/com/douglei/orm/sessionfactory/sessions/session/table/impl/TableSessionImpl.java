@@ -13,6 +13,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.context.ExecMappingDescriptionContext;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
@@ -25,7 +26,6 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Per
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -65,18 +65,41 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return null;
 	}
 	
-	@Override
-	public void save(Object object) {
-		Mapping mapping = getTableMapping(object, "save");
-		PersistentObject persistent = new PersistentObject((TableMetadata)mapping.getMetadata(), object, OperationState.CREATE);
+	private TableMetadata getTableMetadata(String code) {
+		Mapping mapping = mappingWrapper.getMapping(code);
+		if(mapping.getMappingType() != MappingType.TABLE) {
+			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
+		}
+		TableMetadata tm = (TableMetadata) mapping.getMetadata();
+		ExecMappingDescriptionContext.setExecMappingDescription(tm.getCode(), MappingType.TABLE);
+		return tm;
+	}
+	
+	private void save_(TableMetadata table, Object object) {
+		PersistentObject persistent = new PersistentObject(table, object, OperationState.CREATE);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
+	public void save(Object object) {
+		save_(getTableMetadata(object.getClass().getName()), object);
+	}
+	
+	@Override
+	public void save(List<Object> objects) {
+		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> save_(table, object));
+	}
+	
+	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getTableMapping(code, "save");
-		PersistentObject persistent = new PersistentObject((TableMetadata)mapping.getMetadata(), propertyMap, OperationState.CREATE);
-		putInsertPersistentObjectCache(persistent);
+		save_(getTableMetadata(code), propertyMap);
+	}
+	
+	@Override
+	public void save(String code, List<Map<String, Object>> propertyMaps) {
+		TableMetadata table = getTableMetadata(code);
+		propertyMaps.forEach(propertyMap -> save_(table, propertyMap));
 	}
 	
 	/**
@@ -97,16 +120,31 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 	}
 	
+	
+	private void update_(TableMetadata table, Object object) {
+		putUpdatePersistentObjectCache(object, table, getCache(table.getCode()));
+	}
+	
 	@Override
 	public void update(Object object) {
-		Mapping mapping = getTableMapping(object, "update");
-		putUpdatePersistentObjectCache(object, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
+		update_(getTableMetadata(object.getClass().getName()), object);
+	}
+	
+	@Override
+	public void update(List<Object> objects) {
+		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> update_(table, object));
 	}
 	
 	@Override
 	public void update(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getTableMapping(code, "update");
-		putUpdatePersistentObjectCache(propertyMap, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
+		update_(getTableMetadata(code), propertyMap);
+	}
+	
+	@Override
+	public void update(String code, List<Map<String, Object>> propertyMaps) {
+		TableMetadata table = getTableMetadata(code);
+		propertyMaps.forEach(propertyMap -> update_(table, propertyMap));
 	}
 	
 	/**
@@ -143,19 +181,34 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			executePersistentObject(persistentObject);
 		}
 	}
+	
+	
+	private void delete_(TableMetadata table, Object object) {
+		putDeletePersistentObjectCache(object, table, getCache(table.getCode()));
+	}
 
 	@Override
 	public void delete(Object object) {
-		Mapping mapping = getTableMapping(object, "delete");
-		putDeletePersistentObjectCache(object, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
+		delete_(getTableMetadata(object.getClass().getName()), object);
+	}
+	
+	@Override
+	public void delete(List<Object> objects) {
+		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> delete_(table, object));
 	}
 
 	@Override
 	public void delete(String code, Map<String, Object> propertyMap) {
-		Mapping mapping = getTableMapping(code, "delete");
-		putDeletePersistentObjectCache(propertyMap, (TableMetadata)mapping.getMetadata(), getCache(mapping.getCode()));
+		delete_(getTableMetadata(code), propertyMap);
 	}
 	
+	@Override
+	public void delete(String code, List<Map<String, Object>> propertyMaps) {
+		TableMetadata table = getTableMetadata(code);
+		propertyMaps.forEach(propertyMap -> delete_(table, propertyMap));
+	}
+
 	/**
 	 * 将要【删除的持久化对象】放到缓存中
 	 * @param object
@@ -188,47 +241,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			executePersistentObject(persistentObject);
 		}
 	}
+	
 		
-	/**
-	 * 获取mapping实例
-	 * @param object
-	 * @param description 传入调用该方法的方法名
-	 * @return
-	 */
-	private Mapping getTableMapping(Object object, String description) {
-		if(object == null) {
-			throw new NullPointerException("要"+description+"的对象不能为空");
-		}
-		String code = object.getClass().getName();
-		logger.debug("对实体对象{} 进行{}操作", code, description);
-		return getTableMapping(code);
-	}
-	
-	/**
-	 * 获取mapping实例
-	 * @param code
-	 * @param description 传入调用该方法的方法名
-	 * @return
-	 */
-	private Mapping getTableMapping(String code, String description) {
-		if(StringUtil.isEmpty(code)) {
-			throw new NullPointerException("要"+description+"的对象的code值不能为空");
-		}
-		logger.debug("对code={} 的对象进行{}操作", code, description);
-		return getTableMapping(code);
-	}
-	
-	private Mapping getTableMapping(String code) {
-		Mapping mapping = mappingWrapper.getMapping(code);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+code+"]的映射");
-		}
-		if(mapping.getMappingType() != MappingType.TABLE) {
-			throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
-		}
-		return mapping;
-	}
-
 	private void flushPersistentObjectCache() throws SessionExecutionException {
 		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
 			Map<Identity, PersistentObject> map = null;
@@ -278,10 +292,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 	}
 
-	private TableMetadata getTableMetadata(String code) {
-		return (TableMetadata) getTableMapping(code).getMetadata();
-	}
-	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = super.query(sql, parameters);
