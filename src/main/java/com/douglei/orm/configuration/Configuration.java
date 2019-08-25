@@ -3,7 +3,7 @@ package com.douglei.orm.configuration;
 import java.io.InputStream;
 
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.factory.OrmFactory;
+import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.instances.reader.Reader;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -23,7 +23,7 @@ public abstract class Configuration implements SelfProcessing{
 	protected ExternalDataSource dataSource;
 	protected MappingStore mappingStore;
 	
-	protected OrmFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 	
 	/**
 	 * Configuration的唯一标识
@@ -94,7 +94,7 @@ public abstract class Configuration implements SelfProcessing{
 	 * 一个configuration也只能有一个sessionFactory实例
 	 * @return
 	 */
-	public OrmFactory buildSessionFactory() {
+	public SessionFactory buildSessionFactory() {
 		if(sessionFactory == null) {
 			setSessionFactory();
 		}

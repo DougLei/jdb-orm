@@ -17,7 +17,7 @@ import com.douglei.orm.configuration.impl.xml.element.extconfiguration.XmlExtCon
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
-import com.douglei.orm.factory.OrmFactoryImpl;
+import com.douglei.orm.sessionfactory.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
@@ -54,7 +54,7 @@ public class XmlConfiguration extends Configuration {
 	@Override
 	protected void setSessionFactory() {
 		initializeConfiguration();
-		sessionFactory = new OrmFactoryImpl(this, environment);
+		sessionFactory = new SessionFactoryImpl(this, environment);
 	}
 	
 	/**
