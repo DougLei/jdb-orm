@@ -230,13 +230,14 @@ public class SqlParameterMetadata implements Metadata{
 		if(unProcessNamePrefix) {
 			unProcessNamePrefix = false;
 			
+			// 在foreach中, 传入一个List<String>, alias=id, #{id}, 即别名和参数名一致, 这个时候就不能substring
 			if(sqlParameterNamePrefix != null) {
 				int subLength = sqlParameterNamePrefix.length()+1;// +1是把表达式后面的.去掉
 				if(name.length() > subLength) {
 					name = name.substring(subLength);
 				}
 			}
-			isSingleName = name.indexOf(".") == -1;
+			isSingleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的形式
 		}
 	}
 	

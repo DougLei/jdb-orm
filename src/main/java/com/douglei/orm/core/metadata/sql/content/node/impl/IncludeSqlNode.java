@@ -26,7 +26,7 @@ public class IncludeSqlNode implements SqlNode {
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		if(content.isMatchingDialectType(EnvironmentContext.getEnvironmentProperty().getDialect().getType())) {
-			ExecuteSql executeSql = new ExecuteSql(content, sqlParameterNamePrefix);
+			ExecuteSql executeSql = new ExecuteSql(content, sqlParameter);
 			return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters());
 		}
 		return new ExecuteSqlNode("", null);

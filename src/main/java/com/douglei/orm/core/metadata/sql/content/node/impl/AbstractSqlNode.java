@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
@@ -61,7 +60,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(sqlParametersByDefinedOrder == null) {
 			sqlParametersByDefinedOrder = new ArrayList<SqlParameterMetadata>();
 		}
-		sqlParametersByDefinedOrder.add(MappingXmlConfigContext.getSqlParameter(configText));
+		sqlParametersByDefinedOrder.add(new SqlParameterMetadata(configText));
 	}
 	
 	// 替换Sql语句内容中的参数
