@@ -14,8 +14,7 @@ public class DataValidatorProcessor {
 	 * @return
 	 */
 	public ValidatorResult doValidate(Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		return doValidate(obj.getClass().getName(), obj);
 	}
 
 	/**
