@@ -8,7 +8,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.metadata.MetadataValidateException;
-import com.douglei.orm.core.metadata.sql.SqlContentType;
+import com.douglei.orm.core.metadata.sql.ContentType;
 
 /**
  * <content>
@@ -23,23 +23,23 @@ public class XmlContentMetadataValidate extends XmlSqlContentMetadataValidate {
 	}
 
 	@Override
-	protected SqlContentType getContentType(NamedNodeMap attributeMap) {
+	protected ContentType getContentType(NamedNodeMap attributeMap) {
 		Node type = attributeMap.getNamedItem("type");
 		if(type  == null) {
 			throw new MetadataValidateException("<content>元素的type属性值不能为空");
 		}else {
-			SqlContentType sqlContentType = SqlContentType.toValue(type.getNodeValue());
+			ContentType sqlContentType = ContentType.toValue(type.getNodeValue());
 			if(sqlContentType == null) {
-				throw new MetadataValidateException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(SqlContentType.values()));
+				throw new MetadataValidateException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(ContentType.values()));
 			}
-			MappingXmlConfigContext.setSqlContentType(sqlContentType);
+			MappingXmlConfigContext.setContentType(sqlContentType);
 			return sqlContentType;
 		}
 	}
 
 	@Override
 	protected void doValidateProcedureContent(int childrenLength, NodeList children) {
-		if(MappingXmlConfigContext.getSqlContentType() == SqlContentType.PROCEDURE) {
+		if(MappingXmlConfigContext.getContentType() == ContentType.PROCEDURE) {
 			short nodeType, textNodeCount = 0, otherNodeCount = 0;
 			for(int i=0;i<childrenLength;i++) {
 				nodeType = children.item(i).getNodeType();

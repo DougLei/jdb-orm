@@ -15,7 +15,7 @@ import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataValidate;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
-import com.douglei.orm.core.metadata.sql.SqlContentType;
+import com.douglei.orm.core.metadata.sql.ContentType;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.tools.utils.StringUtil;
 
@@ -76,7 +76,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	 * 获取当前sql content的类型
 	 * @param attributeMap
 	 */
-	protected SqlContentType getContentType(NamedNodeMap attributeMap) {
+	protected ContentType getContentType(NamedNodeMap attributeMap) {
 		return null;
 	}
 	

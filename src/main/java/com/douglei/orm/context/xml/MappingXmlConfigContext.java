@@ -14,7 +14,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
 import com.douglei.orm.core.dialect.db.table.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
-import com.douglei.orm.core.metadata.sql.SqlContentType;
+import com.douglei.orm.core.metadata.sql.ContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
@@ -95,18 +95,18 @@ public class MappingXmlConfigContext {
 	
 	/**
 	 * 记录当前解析的sql content的type
-	 * @param sqlContentType
+	 * @param contentType
 	 */
-	public static void setSqlContentType(SqlContentType sqlContentType) {
-		getSqlMappingConfig().setSqlContentType(sqlContentType);
+	public static void setContentType(ContentType contentType) {
+		getSqlMappingConfig().setContentType(contentType);
 	}
 	
 	/**
 	 * 获取当前解析的sql content的type
 	 * @return
 	 */
-	public static SqlContentType getSqlContentType() {
-		return getSqlMappingConfig().getSqlContentType();
+	public static ContentType getContentType() {
+		return getSqlMappingConfig().getContentType();
 	}
 	
 	/**
@@ -240,15 +240,15 @@ class TableMappingConfig {
  * @author DougLei
  */
 class SqlMappingConfig {
-	private SqlContentType sqlContentType;// 记录每个sql content的type
+	private ContentType contentType;// 记录每个sql content的type
 	private Map<String, ValidatorHandler> sqlValidatorHandlerMap;// 记录sql的验证器map集合
 	private SqlContentContainer sqlContentContainer;// 记录sql content容器
 	
-	public SqlContentType getSqlContentType() {
-		return sqlContentType;
+	public ContentType getContentType() {
+		return contentType;
 	}
-	public void setSqlContentType(SqlContentType sqlContentType) {
-		this.sqlContentType = sqlContentType;
+	public void setContentType(ContentType contentType) {
+		this.contentType = contentType;
 	}
 	public Map<String, ValidatorHandler> getSqlValidatorHandlerMap() {
 		return sqlValidatorHandlerMap;

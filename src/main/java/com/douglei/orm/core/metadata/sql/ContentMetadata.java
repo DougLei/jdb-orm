@@ -15,14 +15,14 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  */
 public class ContentMetadata implements Metadata{
 	protected String name;
-	protected SqlContentType type;
+	protected ContentType type;
 	protected DialectType[] dialectTypes;
 	
 	private List<SqlNode> rootSqlNodes;
 	
 	public ContentMetadata(String name, DialectType[] dialectTypes) {
 		this.name = name;
-		this.type = MappingXmlConfigContext.getSqlContentType();
+		this.type = MappingXmlConfigContext.getContentType();
 		this.dialectTypes = dialectTypes;
 	}
 	
@@ -44,7 +44,7 @@ public class ContentMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public SqlContentType getType() {
+	public ContentType getType() {
 		return type;
 	}
 	public List<SqlNode> getRootSqlNodes() {
