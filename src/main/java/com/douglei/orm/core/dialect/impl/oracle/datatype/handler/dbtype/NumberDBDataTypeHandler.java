@@ -10,7 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.DoubleDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.classtype.LongDataTypeHandler;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -18,7 +18,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class NumberDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = 7655863760350504605L;
+	private static final long serialVersionUID = -7147328253187136682L;
 	private NumberDBDataTypeHandler() {}
 	private static final NumberDBDataTypeHandler instance = new NumberDBDataTypeHandler();
 	public static final NumberDBDataTypeHandler singleInstance() {
@@ -71,14 +71,14 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		String valueString = value.toString();
 		if(VerifyTypeMatchUtil.isInteger(valueString)) {
 			return LongDataTypeHandler.singleInstance().doValidate(validateFieldName, valueString, length, precision);
 		}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
 			return DoubleDataTypeHandler.singleInstance().doValidate(validateFieldName, valueString, length, precision);
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

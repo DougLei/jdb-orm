@@ -15,7 +15,7 @@ import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.StringUtil;
@@ -278,7 +278,7 @@ public class SqlParameterMetadata implements Metadata{
 	// 验证数据
 	private void doValidate(Object value) {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
-			ValidatorResult result = validatorHandler.doValidate(value);
+			ValidationResult result = validatorHandler.doValidate(value);
 			if(result != null) {
 				throw new DataValidateException(descriptionName, name, value, result);
 			}

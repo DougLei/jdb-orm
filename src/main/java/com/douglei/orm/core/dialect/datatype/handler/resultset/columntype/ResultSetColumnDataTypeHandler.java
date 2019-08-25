@@ -6,14 +6,14 @@ import java.util.Arrays;
 
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandlerType;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 用于处理根据java.sql.ResultSet columnType类型, 获取对应的DataTypeHandler
  * @author DougLei
  */
 public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
-	private static final long serialVersionUID = 6375386167667181039L;
+	private static final long serialVersionUID = -3804325797513630249L;
 
 	/**
 	 * 支持处理的ColumnType类型
@@ -44,7 +44,7 @@ public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
 
 	@Deprecated
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		return null;
 	}
 }

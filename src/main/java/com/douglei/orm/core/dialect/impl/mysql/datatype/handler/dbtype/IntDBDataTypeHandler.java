@@ -9,14 +9,14 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.Int;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.classtype.IntegerDataTypeHandler;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public class IntDBDataTypeHandler extends DBDataTypeHandler{
-	private static final long serialVersionUID = -8850952534525152394L;
+	private static final long serialVersionUID = -8414414202304322206L;
 	private IntDBDataTypeHandler() {}
 	private static final IntDBDataTypeHandler instance = new IntDBDataTypeHandler();
 	public static final IntDBDataTypeHandler singleInstance() {
@@ -44,7 +44,7 @@ public class IntDBDataTypeHandler extends DBDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		return IntegerDataTypeHandler.singleInstance().doValidate(validateFieldName, value, length, precision);
 	}
 }

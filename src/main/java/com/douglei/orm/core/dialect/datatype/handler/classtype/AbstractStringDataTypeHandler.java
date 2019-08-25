@@ -8,7 +8,7 @@ import com.douglei.orm.core.dialect.datatype.handler.wrapper.Char;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.NChar;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.NString;
 import com.douglei.orm.core.dialect.datatype.handler.wrapper.StringWrapper;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -16,7 +16,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -139645288589094676L;
+	private static final long serialVersionUID = -5546733496863017903L;
 
 	@Override
 	public String getCode() {
@@ -55,11 +55,11 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof StringWrapper) {
 			int actualLength = StringUtil.computeStringLength(value.toString());
 			if(actualLength > length) {
-				return new ValidatorResult(validateFieldName) {
+				return new ValidationResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -74,7 +74,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 			}
 			return null;
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

@@ -80,7 +80,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public DataValidatorProcessor getDataValidatorProcessor() {
 		if(dataValidatorProcessor == null) {
-			dataValidatorProcessor = new DataValidatorProcessor();
+			dataValidatorProcessor = new DataValidatorProcessor(mappingWrapper);
 		}
 		return dataValidatorProcessor;
 	}

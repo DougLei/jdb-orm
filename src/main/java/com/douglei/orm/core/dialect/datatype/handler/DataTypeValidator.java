@@ -1,6 +1,6 @@
 package com.douglei.orm.core.dialect.datatype.handler;
 
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 数据类型验证器
@@ -17,5 +17,5 @@ public interface DataTypeValidator {
 	 * @param precision
 	 * @return 
 	 */
-	ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision);
+	ValidationResult doValidate(String validateFieldName, Object value, short length, short precision);
 }

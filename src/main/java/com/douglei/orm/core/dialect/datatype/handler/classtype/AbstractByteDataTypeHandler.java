@@ -1,7 +1,7 @@
 package com.douglei.orm.core.dialect.datatype.handler.classtype;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -9,7 +9,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeHandler{
-	private static final long serialVersionUID = 565865852212181071L;
+	private static final long serialVersionUID = 6313837660106407765L;
 
 	@Override
 	public String getCode() {
@@ -23,11 +23,11 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 	private static final Class<?>[] supportClasses = {byte.class, Byte.class};
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == byte.class || value instanceof Byte || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Byte.MAX_VALUE || l < Byte.MIN_VALUE) {
-				return new ValidatorResult(validateFieldName) {
+				return new ValidationResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -42,7 +42,7 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 			}
 			return null;
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

@@ -11,7 +11,7 @@ import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
@@ -148,7 +148,7 @@ public class PersistentObject {
 	private void doValidate() {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && tableMetadata.existsValidateColumns()) {
 			Object value = null;
-			ValidatorResult result = null;
+			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
 				value = propertyMap.get(column.getCode());
 				result = column.getValidatorHandler().doValidate(value);

@@ -1,14 +1,14 @@
 package com.douglei.orm.core.metadata.validator.internal;
 
 import com.douglei.orm.core.metadata.validator.Validator;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 是否可为空验证器
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
-	private static final long serialVersionUID = 2043096311403051115L;
+	private static final long serialVersionUID = -631515537317711665L;
 	private boolean nullable;
 	
 	public _NullableValidator(boolean nullable) {
@@ -16,9 +16,9 @@ public class _NullableValidator extends Validator {
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value) {
+	public ValidationResult doValidate(String validateFieldName, Object value) {
 		if(!nullable && value == null) {
-			return new ValidatorResult(validateFieldName) {
+			return new ValidationResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {

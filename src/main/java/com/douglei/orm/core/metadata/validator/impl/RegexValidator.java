@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSONArray;
 import com.douglei.orm.core.metadata.validator.Validator;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 正则验证器
  * @author DougLei
  */
 public class RegexValidator extends Validator {
-	private static final long serialVersionUID = 4320630855473369862L;
+	private static final long serialVersionUID = 1902868937312498286L;
 	private List<RegexEntity> regexes;
 	
 	@Override
@@ -25,12 +25,12 @@ public class RegexValidator extends Validator {
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value) {
+	public ValidationResult doValidate(String validateFieldName, Object value) {
 		return doValidate(validateFieldName, value.toString());
 	}
 	
-	private ValidatorResult doValidate(String validateFieldName, String value) {
-		ValidatorResult result = null;
+	private ValidationResult doValidate(String validateFieldName, String value) {
+		ValidationResult result = null;
 		for (RegexEntity regex : regexes) {
 			if((result = regex.match(validateFieldName, value)) != null) {
 				break;
@@ -47,7 +47,7 @@ public class RegexValidator extends Validator {
 class RegexEntity implements Serializable{
 	private static final long serialVersionUID = -6411684647723481525L;
 	private static final String DEFAULT_MESSAGE = "正则表达式匹配失败";
-	private static final String DEFAULT_I18N_CODE = ValidatorResult.i18nCodePrefix + "regex.matching.fail";
+	private static final String DEFAULT_I18N_CODE = ValidationResult.i18nCodePrefix + "regex.matching.fail";
 	
 	private Pattern pattern;
 	private String express;
@@ -55,11 +55,11 @@ class RegexEntity implements Serializable{
 	private String message = DEFAULT_MESSAGE;
 	private String i18nCode = DEFAULT_I18N_CODE;
 	
-	public ValidatorResult match(String validateFieldName, String value) {
+	public ValidationResult match(String validateFieldName, String value) {
 		if(getPattern().matcher(value).matches()) {
 			return null;
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

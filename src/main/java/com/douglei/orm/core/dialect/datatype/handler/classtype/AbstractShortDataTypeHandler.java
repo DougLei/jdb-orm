@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -5762743437333424807L;
+	private static final long serialVersionUID = 9210555213283448257L;
 
 	@Override
 	public String getCode() {
@@ -39,11 +39,11 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == short.class || value instanceof Short || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			long l = Long.parseLong(value.toString());
 			if(l > Short.MAX_VALUE || l < Short.MIN_VALUE) {
-				return new ValidatorResult(validateFieldName) {
+				return new ValidationResult(validateFieldName) {
 					
 					@Override
 					public String getMessage() {
@@ -58,7 +58,7 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 			}
 			return null;
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

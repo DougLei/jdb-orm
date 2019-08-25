@@ -1,19 +1,19 @@
 package com.douglei.orm.core.metadata.validator.impl;
 
 import com.douglei.orm.core.metadata.validator.Validator;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 不能为空字符串验证
  * @author DougLei
  */
 public class NotBlankValidator extends Validator{
-	private static final long serialVersionUID = 1797231860362178986L;
+	private static final long serialVersionUID = -2268961920747527794L;
 
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value) {
+	public ValidationResult doValidate(String validateFieldName, Object value) {
 		if(value.toString().trim().length() == 0) {
-			return new ValidatorResult(validateFieldName) {
+			return new ValidationResult(validateFieldName) {
 				
 				@Override
 				public String getMessage() {

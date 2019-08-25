@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
 
 /**
@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
  * @author DougLei
  */
 public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -6225768595647748110L;
+	private static final long serialVersionUID = -7253480282861333667L;
 
 	@Override
 	public String getCode() {
@@ -36,11 +36,11 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	}
 	
 	@Override
-	public ValidatorResult doValidate(String validateFieldName, Object value, short length, short precision) {
+	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) {
 			return null;
 		}
-		return new ValidatorResult(validateFieldName) {
+		return new ValidationResult(validateFieldName) {
 			
 			@Override
 			public String getMessage() {

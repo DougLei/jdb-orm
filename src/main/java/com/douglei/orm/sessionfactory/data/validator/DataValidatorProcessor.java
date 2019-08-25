@@ -1,12 +1,13 @@
 package com.douglei.orm.sessionfactory.data.validator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.core.metadata.validator.ValidatorResult;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 
@@ -16,59 +17,85 @@ public class DataValidatorProcessor {
 	
 	private MappingWrapper mappingWrapper;
 	
+	public DataValidatorProcessor(MappingWrapper mappingWrapper) {
+		this.mappingWrapper = mappingWrapper;
+	}
+
 	/**
 	 * 
-	 * @param obj
+	 * @param object
 	 * @return
 	 */
-	public ValidatorResult doValidate(Object obj) {
-		return doValidate(obj.getClass().getName(), obj);
+	public ValidationResult doValidate(Object object) {
+		return doValidate(object.getClass().getName(), object);
 	}
 	
 	/**
 	 * 
 	 * @param code 表映射的tableName/className, sql映射的namespace
-	 * @param obj
+	 * @param object
 	 * @return
 	 */
-	public ValidatorResult doValidate(String code, Object obj) {
-		// TODO 
+	public ValidationResult doValidate(String code, Object object) {
+		return doValidate(mappingWrapper.getMapping(code), object);
+	}
+	
+	/**
+	 * 
+	 * @param objects
+	 * @return
+	 */
+	public List<BatchValidationResult> doValidate(List<Object> objects) {
+		return doValidate(objects.get(0).getClass().getName(), objects);
+	}
+	
+	/**
+	 * 
+	 * @param code 表映射的tableName/className, sql映射的namespace
+	 * @param objects
+	 * @return
+	 */
+	public List<BatchValidationResult> doValidate(String code, List<Object> objects) {
 		Mapping mapping = mappingWrapper.getMapping(code);
+		List<BatchValidationResult> batchValidationResults = null;
+		
+		byte index = 0;
+		BatchValidationResult bvr = null;
+		for (Object object : objects) {
+			bvr = BatchValidationResult.newInstance(index, doValidate(mapping, object));
+			if(bvr != null) {
+				if(batchValidationResults == null) {
+					batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+				}
+				batchValidationResults.add(bvr);
+			}
+		}
+		return batchValidationResults;
+	}
+	
+	/**
+	 * 
+	 * @param mapping
+	 * @param object
+	 * @return
+	 */
+	private ValidationResult doValidate(Mapping mapping, Object object) {
 		switch(mapping.getMappingType()) {
 			case TABLE:
-				return validateTableMappingData((TableMetadata)mapping.getMetadata(), obj);
+				return validateTableMappingData((TableMetadata)mapping.getMetadata(), object);
 			case SQL:
-				return validateSqlMappingData((SqlMetadata)mapping.getMetadata(), obj);
+				return validateSqlMappingData((SqlMetadata)mapping.getMetadata(), object);
 		}
 		return null;
-	}
-	
-	/**
-	 * 
-	 * @param objs
-	 * @return
-	 */
-	public ValidatorResult doValidate(List<Object> objs) {
-		return doValidate(objs.get(0).getClass().getName(), objs);
-	}
-	
-	/**
-	 * 
-	 * @param code 表映射的tableName/className, sql映射的namespace
-	 * @param objs
-	 * @return
-	 */
-	public ValidatorResult doValidate(String code, List<Object> objs) {
-		
 	}
 
 	/**
 	 * 验证表映射数据
 	 * @param table
-	 * @param obj
+	 * @param object
 	 * @return
 	 */
-	private ValidatorResult validateTableMappingData(TableMetadata table, Object obj) {
+	private ValidationResult validateTableMappingData(TableMetadata table, Object object) {
 		// TODO 验证表映射数据
 		return null;
 	}
@@ -76,10 +103,10 @@ public class DataValidatorProcessor {
 	/**
 	 * 验证sql映射数据
 	 * @param sql
-	 * @param obj
+	 * @param object
 	 * @return
 	 */
-	private ValidatorResult validateSqlMappingData(SqlMetadata sql, Object obj) {
+	private ValidationResult validateSqlMappingData(SqlMetadata sql, Object object) {
 		// TODO 验证sql映射数据
 		return null;
 	}
