@@ -1,5 +1,9 @@
 package com.douglei.orm.sessionfactory.data.validator;
 
+import com.douglei.orm.configuration.environment.mapping.Mapping;
+import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.core.metadata.sql.SqlMetadata;
+import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorResult;
 
 /**
@@ -7,7 +11,9 @@ import com.douglei.orm.core.metadata.validator.ValidatorResult;
  * @author DougLei
  */
 public class DataValidatorProcessor {
-
+	
+	private MappingWrapper mappingWrapper;
+	
 	/**
 	 * 
 	 * @param obj
@@ -19,14 +25,44 @@ public class DataValidatorProcessor {
 
 	/**
 	 * 
-	 * @param code
+	 * @param code 表映射的tableName/className, sql映射的namespace
 	 * @param obj
 	 * @return
 	 */
 	public ValidatorResult doValidate(String code, Object obj) {
 		// TODO 
-		// 1.获取映射对象
-		// 2.用映射对象去验证数据
+		Mapping mapping = mappingWrapper.getMapping(code);
+		if(mapping == null) {
+			throw new NullPointerException("不存在code为["+code+"]的映射");
+		}
+		switch(mapping.getMappingType()) {
+			case TABLE:
+				return validateTableMappingData((TableMetadata)mapping.getMetadata(), obj);
+			case SQL:
+				return validateSqlMappingData((SqlMetadata)mapping.getMetadata(), obj);
+		}
+		return null;
+	}
+
+	/**
+	 * 验证表映射数据
+	 * @param table
+	 * @param obj
+	 * @return
+	 */
+	private ValidatorResult validateTableMappingData(TableMetadata table, Object obj) {
+		// TODO 验证表映射数据
+		return null;
+	}
+
+	/**
+	 * 验证sql映射数据
+	 * @param sql
+	 * @param obj
+	 * @return
+	 */
+	private ValidatorResult validateSqlMappingData(SqlMetadata sql, Object obj) {
+		// TODO 验证sql映射数据
 		return null;
 	}
 }
