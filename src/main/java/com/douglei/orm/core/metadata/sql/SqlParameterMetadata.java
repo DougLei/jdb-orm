@@ -212,7 +212,7 @@ public class SqlParameterMetadata implements Metadata{
 			this.validate = true;
 			this.validatorHandler = validatorHandler;
 			if(validatorHandler.unexistsNullableValidator()) {
-				this.validatorHandler.setNullableValidator(nullable);
+				this.validatorHandler.setNullableValidator(defaultValue==null?nullable:true);
 				this.validatorHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
 			}
 		}
