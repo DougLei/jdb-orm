@@ -225,7 +225,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	private boolean unProcessNamePrefix = true;// 是否【没有】处理过name前缀, 默认都没有处理
-	private boolean isSingleName;// 是否只是一个name, 如果不是的话(xxx.xxx), 则需要ognl解析
+	private boolean isSingleName;// 是否只是一个name, 如果不是的话(即alias.xxx这种多层级name), 则需要ognl解析
 	private void processNamePrefix(String sqlParameterNamePrefix) {
 		if(unProcessNamePrefix) {
 			unProcessNamePrefix = false;
@@ -237,7 +237,7 @@ public class SqlParameterMetadata implements Metadata{
 					name = name.substring(subLength);
 				}
 			}
-			isSingleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的形式
+			isSingleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的多层级形式
 		}
 	}
 	
