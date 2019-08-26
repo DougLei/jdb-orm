@@ -9,7 +9,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Abs
  * 持久化对象验证器
  * @author DougLei
  */
-public class PersistentObjectValidator extends AbstractPersistentObject{
+public class PersistentObjectValidator extends AbstractPersistentObject {
 	
 	public PersistentObjectValidator(TableMetadata tableMetadata) {
 		super(tableMetadata);

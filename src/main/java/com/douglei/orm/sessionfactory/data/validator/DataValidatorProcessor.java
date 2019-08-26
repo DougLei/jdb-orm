@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.data.validator.sql.SqlParameterValidator;
 import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
 
 /**
@@ -40,8 +42,8 @@ public class DataValidatorProcessor {
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), object).doValidate();
-			case SQL:// TODO 怎么验证sql数据
-				break;
+			case SQL:// 验证sql数据
+				return new SqlParameterValidator((SqlMetadata)mapping.getMetadata()).setOriginObjectAndDoValidate(object);
 			}
 		return null;
 	}
@@ -82,9 +84,16 @@ public class DataValidatorProcessor {
 					}
 				}
 				break;
-			case SQL:// TODO 怎么验证sql数据
+			case SQL:// 验证sql数据
+				SqlParameterValidator sqlParameterValidator = new SqlParameterValidator((SqlMetadata) mapping.getMetadata());
 				for (Object object : objects) {
-					
+					bvr = BatchValidationResult.newInstance(index++, sqlParameterValidator.setOriginObjectAndDoValidate(object));
+					if(bvr != null) {
+						if(batchValidationResults == null) {
+							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+						}
+						batchValidationResults.add(bvr);
+					}
 				}
 				break;
 		}
