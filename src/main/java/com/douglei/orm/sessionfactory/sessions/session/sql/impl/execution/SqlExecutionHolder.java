@@ -24,7 +24,7 @@ public class SqlExecutionHolder implements ExecutionHolder{
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的sql语句");
 		}
 		
-		executeSqlCount = (byte) contents.size();
+		executeSqlCount = (short)contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
 		for (ContentMetadata content : contents) {
@@ -32,8 +32,8 @@ public class SqlExecutionHolder implements ExecutionHolder{
 		}
 	}
 	
-	private byte executeSqlCount;
-	private byte executeSqlIndex; // 从0开始
+	private short executeSqlCount;
+	private short executeSqlIndex; // 从0开始
 	private List<ExecuteSql> executeSqls;
 	
 	@Override
