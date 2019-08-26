@@ -3,7 +3,6 @@ package com.douglei.orm;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class SocketClient {
 		try {
 			socket = new Socket(serverHost, serverPort);
 			os = socket.getOutputStream();
-			os.write(getHexByteArray(message.getBytes(StandardCharsets.UTF_8)));
+			os.write(getHexByteArray(message));
 			os.flush();
 		} catch (IOException e) {
 			logger.error("socket连接发送消息时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -37,13 +36,23 @@ public class SocketClient {
 	}
 	
 	/**
-	 * 将字符串转换为16进制byte数组
-	 * @param bytes
+	 * 将消息转换为16进制byte数组
+	 * @param message
 	 * @return
 	 */
-	private byte[] getHexByteArray(byte[] bytes) {
-		// TODO Auto-generated method stub
-		return null;
+	private static byte[] getHexByteArray(String message) {
+		String[] ms = message.split(" ");
+		byte[] b = new byte[ms.length];
+		for (int i = 0; i < b.length; i++) {
+			b[i] = Byte.parseByte(ms[i], 16);
+			System.out.print(b[i] + "  ");
+		}
+		return b;
+	}
+	
+	public static void main(String[] args) {
+		SocketClient client = new SocketClient("192.168.1.252", 504);
+		client.sendMessage("01 00 02 05 07 08 09 10 11 12 13 14 15 16 17 18 70");
 	}
 
 	private void close() {
