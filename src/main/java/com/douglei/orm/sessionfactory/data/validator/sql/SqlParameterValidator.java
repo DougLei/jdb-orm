@@ -1,5 +1,8 @@
 package com.douglei.orm.sessionfactory.data.validator.sql;
 
+import java.util.List;
+
+import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 
@@ -9,12 +12,10 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
  */
 public class SqlParameterValidator {
 	
-	private SqlMetadata sqlMetadata;
-	private String name;
+	List<ContentMetadata> contents;
 	
 	public SqlParameterValidator(SqlMetadata sqlMetadata, String name) {
-		this.sqlMetadata = sqlMetadata;
-		this.name = name;
+		contents = sqlMetadata.getContents(name);
 	}
 	
 	public ValidationResult setOriginObjectAndDoValidate(Object originObject) {
