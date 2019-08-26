@@ -358,8 +358,9 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 */
 	private void setColumnValidator(Element validatorsElement) {
 		Map<String, ValidatorHandler> validatorHandlerMap = getValidatorHandlerMap(validatorsElement);
+		boolean existsPrimaryKeyHandler = tableMetadata.existsPrimaryKeyHandler();
 		tableMetadata.getDeclareColumns().forEach(column -> {
-			tableMetadata.setValidateColumn(column.setValidatorHandler(getValidatorHandler(column.getName(), validatorHandlerMap)));
+			tableMetadata.setValidateColumn(column.setValidatorHandler(existsPrimaryKeyHandler, getValidatorHandler(column.getName(), validatorHandlerMap)));
 		});
 	}
 	

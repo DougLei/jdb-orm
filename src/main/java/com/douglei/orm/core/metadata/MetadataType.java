@@ -9,6 +9,7 @@ public enum MetadataType {
 	COLUMN,
 	
 	SQL,
+	CONTENT,
 	SQL_CONTENT,
 	SQL_PARAMETER;
 }

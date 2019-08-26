@@ -272,6 +272,9 @@ public class TableMetadata implements Metadata{
 	public PrimaryKeySequence getPrimaryKeySequence() {
 		return primaryKeySequence;
 	}
+	public boolean existsPrimaryKeyHandler() {
+		return primaryKeyHandler != null;
+	}
 
 	// 获取列的code集合
 	public Set<String> getColumnCodes() {

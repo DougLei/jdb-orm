@@ -157,13 +157,14 @@ public class ColumnMetadata implements Metadata{
 	
 	/**
 	 * 设置验证器
+	 * @param existsPrimaryKeyHandler 是否存在主键处理器, 如果存在, 则主键可以为空
 	 * @param validatorHandler
 	 */
-	public ColumnMetadata setValidatorHandler(ValidatorHandler validatorHandler) {
+	public ColumnMetadata setValidatorHandler(boolean existsPrimaryKeyHandler, ValidatorHandler validatorHandler) {
 		if(validate || validatorHandler.byConfig()) {
 			this.validate = true;
 			this.validatorHandler = validatorHandler;
-			this.validatorHandler.setNullableValidator(defaultValue==null?nullable:true);
+			this.validatorHandler.setNullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true));
 			this.validatorHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
 			return this;
 		}

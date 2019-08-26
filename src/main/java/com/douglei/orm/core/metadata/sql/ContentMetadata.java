@@ -59,6 +59,6 @@ public class ContentMetadata implements Metadata{
 	
 	@Override
 	public MetadataType getMetadataType() {
-		return MetadataType.SQL_CONTENT;
+		return MetadataType.CONTENT;
 	}
 }
