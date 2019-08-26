@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -17,32 +14,29 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.exe
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.UpdateExecutionHolder;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class PersistentObject {
-	private static final Logger logger = LoggerFactory.getLogger(PersistentObject.class);
-	
-	private Object originObject;
+public class PersistentObject extends AbstractPersistentObject{
+	private Identity id;
 	private OperationState operationState;
 	
-	private TableMetadata tableMetadata;
-	private Map<String, Object> propertyMap;
-	
 	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
-		this.tableMetadata = tableMetadata;
-		setOriginObject(originObject);
+		super(tableMetadata, originObject);
 		setOperationState(operationState);
 	}
 	
+	public OperationState getOperationState() {
+		return operationState;
+	}
+	public void setOperationState(OperationState operationState) {
+		this.operationState = operationState;
+	}
 	public String getCode() {
 		return tableMetadata.getCode();
 	}
-	
-	private Identity id;
 	public Identity getId() {
 		if(id == null) {
 			if(tableMetadata.existsPrimaryKey()) {
@@ -65,18 +59,11 @@ public class PersistentObject {
 		}
 		return id;
 	}
-	
 	public void setId(Identity identity) {
 		this.id = identity;
 	}
 	
-	@Override
-	public String toString() {
-		return "operationState:" + operationState 
-				+ "\t" 
-				+ originObject.toString();
-	}
-	
+	// 获取执行器实例
 	public ExecutionHolder getExecutionHolder() {
 		switch(operationState) {
 			case CREATE:
@@ -89,61 +76,12 @@ public class PersistentObject {
 		return null;
 	}
 	
-	public OperationState getOperationState() {
-		return operationState;
-	}
-	public void setOperationState(OperationState operationState) {
-		this.operationState = operationState;
-	}
-	
-	public Object getOriginObject() {
-		return originObject;
-	}
-	
-	@SuppressWarnings("unchecked")
+	@Override
 	public void setOriginObject(Object originObject) {
-		if(originObject instanceof Map) {
-			logger.debug("originObject is Map type, 从该map中, 筛选出相关列的数据信息");
-			propertyMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
-		}else {
-			logger.debug("originObject is Object type [{}], 从该object中, 通过java内省机制, 获取相关列的数据信息", originObject.getClass());
-			propertyMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnCodes());
-		}
-		if(propertyMap == null || propertyMap.size() == 0) {
-			throw new NullPointerException("要操作的数据不能为空");
-		}
+		super.setOriginObject(originObject);
 		doValidate();
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取的最终propertyMap为: {}", propertyMap.toString());
-		}
-		this.originObject = originObject;
 	}
-	
-	/**
-	 * 从originPropertyMap集合中, 筛选出相关列的数据信息
-	 * @param tableMetadata
-	 * @param originPropertyMap 
-	 * @return
-	 */
-	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		Set<String> columnMetadataCodes = tableMetadata.getColumnCodes();
-		int columnSize = columnMetadataCodes.size();
-		Map<String, Object> resultPropertyMap = new HashMap<String, Object>(columnSize);
-		
-		int index = 1;
-		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
-		for (String originPMkey : originPropertyMapKeys) {
-			if(tableMetadata.isColumnByCode(originPMkey)) {
-				resultPropertyMap.put(originPMkey, originPropertyMap.get(originPMkey));
-				if(index == columnSize) {
-					break;
-				}
-				index++;
-			}
-		}
-		return resultPropertyMap;
-	}
-	
+
 	// 进行验证
 	private void doValidate() {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && tableMetadata.existsValidateColumns()) {
@@ -157,5 +95,12 @@ public class PersistentObject {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "operationState:" + operationState 
+				+ "\t" 
+				+ originObject.toString();
 	}
 }

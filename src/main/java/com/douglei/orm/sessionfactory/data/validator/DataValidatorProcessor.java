@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
 
 /**
  * 
@@ -16,7 +16,6 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
 public class DataValidatorProcessor {
 	
 	private MappingWrapper mappingWrapper;
-	
 	public DataValidatorProcessor(MappingWrapper mappingWrapper) {
 		this.mappingWrapper = mappingWrapper;
 	}
@@ -37,8 +36,16 @@ public class DataValidatorProcessor {
 	 * @return
 	 */
 	public ValidationResult doValidate(String code, Object object) {
-		return doValidate(mappingWrapper.getMapping(code), object);
+		Mapping mapping = mappingWrapper.getMapping(code);
+		switch(mapping.getMappingType()) {
+			case TABLE:// 验证表数据
+				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), object).doValidate();
+			case SQL:// TODO 怎么验证sql数据
+				break;
+			}
+		return null;
 	}
+	
 	
 	/**
 	 * 
@@ -61,53 +68,26 @@ public class DataValidatorProcessor {
 		
 		byte index = 0;
 		BatchValidationResult bvr = null;
-		for (Object object : objects) {
-			bvr = BatchValidationResult.newInstance(index, doValidate(mapping, object));
-			if(bvr != null) {
-				if(batchValidationResults == null) {
-					batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+		switch(mapping.getMappingType()) {
+			case TABLE:// 验证表数据
+				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata());
+				for (Object object : objects) {
+					persistentObjectValidator.setOriginObject(object);
+					bvr = BatchValidationResult.newInstance(index++, persistentObjectValidator.doValidate());
+					if(bvr != null) {
+						if(batchValidationResults == null) {
+							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+						}
+						batchValidationResults.add(bvr);
+					}
 				}
-				batchValidationResults.add(bvr);
-			}
+				break;
+			case SQL:// TODO 怎么验证sql数据
+				for (Object object : objects) {
+					
+				}
+				break;
 		}
 		return batchValidationResults;
-	}
-	
-	/**
-	 * 
-	 * @param mapping
-	 * @param object
-	 * @return
-	 */
-	private ValidationResult doValidate(Mapping mapping, Object object) {
-		switch(mapping.getMappingType()) {
-			case TABLE:
-				return validateTableMappingData((TableMetadata)mapping.getMetadata(), object);
-			case SQL:
-				return validateSqlMappingData((SqlMetadata)mapping.getMetadata(), object);
-		}
-		return null;
-	}
-
-	/**
-	 * 验证表映射数据
-	 * @param table
-	 * @param object
-	 * @return
-	 */
-	private ValidationResult validateTableMappingData(TableMetadata table, Object object) {
-		// TODO 验证表映射数据
-		return null;
-	}
-
-	/**
-	 * 验证sql映射数据
-	 * @param sql
-	 * @param object
-	 * @return
-	 */
-	private ValidationResult validateSqlMappingData(SqlMetadata sql, Object object) {
-		// TODO 验证sql映射数据
-		return null;
 	}
 }
