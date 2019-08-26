@@ -10,6 +10,7 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.data.validator.sql.SqlParameterValidator;
 import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
 
 /**
  * 
@@ -38,13 +39,24 @@ public class DataValidatorProcessor {
 	 * @return
 	 */
 	public ValidationResult doValidate(String code, Object object) {
+		return doValidate(code, null, object);
+	}
+	
+	/**
+	 * 
+	 * @param code 表映射的tableName/className, sql映射的namespace
+	 * @param name sql映射使用, @see {@link SQLSessionImpl} 类中方法的name参数同理
+	 * @param object
+	 * @return
+	 */
+	public ValidationResult doValidate(String code, String name, Object object) {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), object).doValidate();
 			case SQL:// 验证sql数据
-				return new SqlParameterValidator((SqlMetadata)mapping.getMetadata()).setOriginObjectAndDoValidate(object);
-			}
+				return new SqlParameterValidator((SqlMetadata)mapping.getMetadata(), name).setOriginObjectAndDoValidate(object);
+		}
 		return null;
 	}
 	
@@ -65,6 +77,17 @@ public class DataValidatorProcessor {
 	 * @return
 	 */
 	public List<BatchValidationResult> doValidate(String code, List<Object> objects) {
+		return doValidate(code, null, objects);
+	}
+	
+	/**
+	 * 
+	 * @param code 表映射的tableName/className, sql映射的namespace
+	 * @param name @see {@link DataValidatorProcessor#doValidate(String, String, Object)}
+	 * @param objects
+	 * @return
+	 */
+	public List<BatchValidationResult> doValidate(String code, String name, List<Object> objects) {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		List<BatchValidationResult> batchValidationResults = null;
 		
@@ -85,7 +108,7 @@ public class DataValidatorProcessor {
 				}
 				break;
 			case SQL:// 验证sql数据
-				SqlParameterValidator sqlParameterValidator = new SqlParameterValidator((SqlMetadata) mapping.getMetadata());
+				SqlParameterValidator sqlParameterValidator = new SqlParameterValidator((SqlMetadata) mapping.getMetadata(), name);
 				for (Object object : objects) {
 					bvr = BatchValidationResult.newInstance(index++, sqlParameterValidator.setOriginObjectAndDoValidate(object));
 					if(bvr != null) {

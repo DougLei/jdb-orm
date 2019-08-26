@@ -10,9 +10,11 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
 public class SqlParameterValidator {
 	
 	private SqlMetadata sqlMetadata;
+	private String name;
 	
-	public SqlParameterValidator(SqlMetadata sqlMetadata) {
+	public SqlParameterValidator(SqlMetadata sqlMetadata, String name) {
 		this.sqlMetadata = sqlMetadata;
+		this.name = name;
 	}
 	
 	public ValidationResult setOriginObjectAndDoValidate(Object originObject) {
