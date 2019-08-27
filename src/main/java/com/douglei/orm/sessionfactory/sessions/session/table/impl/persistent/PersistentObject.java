@@ -51,16 +51,12 @@ public class PersistentObject extends AbstractPersistentObject{
 					}
 					id = idMap;
 				}
-				this.id = new Identity(id);
-				this.id.setTableMetadata(tableMetadata);
+				this.id = new Identity(id, tableMetadata);
 			}else {
 				this.id = new Identity(propertyMap);// 不存在主键配置时, 就将整个对象做为id
 			}
 		}
 		return id;
-	}
-	public void setId(Identity identity) {
-		this.id = identity;
 	}
 	
 	// 获取执行器实例

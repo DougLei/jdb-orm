@@ -101,7 +101,7 @@ public class TableMetadata implements Metadata{
 	private void addPrimaryKeyColumns(Collection<ColumnMetadata> pkColumns) {
 		this.primaryKeyColumns_ = new HashMap<String, ColumnMetadata>(pkColumns.size());
 		for (ColumnMetadata pkcolumn : pkColumns) {
-			this.primaryKeyColumns_.put(pkcolumn.getProperty(), pkcolumn);
+			this.primaryKeyColumns_.put(pkcolumn.getCode(), pkcolumn);
 		}
 	}
 	

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -20,22 +21,22 @@ public class Identity {
 	private TableMetadata tableMetadata;
 
 	public Identity(Object id) {
+		this(id, null);
+	}
+	public Identity(Object id, TableMetadata tableMetadata) {
 		this.id = id;
-		if(isNull()) {
+		this.tableMetadata = tableMetadata;
+		if(isNull() && !supportNullId()) {
 			throw new NullPointerException("id不能为空");
 		}
-		if(!isSupportType()) {
+		if(!supportType()) {
 			throw new UnsupportedIdentityDataTypeException("目前id只支持[int][java.lang.Integer类型][java.lang.String类型]或[java.util.Map<String, Object>类型]");
 		}
 		if(logger.isDebugEnabled()) {
-			logger.debug("获取持久化对象id为: {} -- {}", id.getClass().getName(), id.toString());
+			logger.debug("获取持久化对象id为: {} -- {}", this.id.getClass().getName(), this.id.toString());
 		}
 	}
 	
-	public void setTableMetadata(TableMetadata tableMetadata) {
-		this.tableMetadata = tableMetadata;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -106,10 +107,23 @@ public class Identity {
 	}
 	
 	/**
+	 * 是否支持空id
+	 * @return
+	 */
+	private boolean supportNullId() {
+		if(tableMetadata != null && tableMetadata.existsPrimaryKeyHandler()) {
+			this.id = IdentityUtil.getUUID();
+			logger.debug("当有主键处理器的时候, 可以不用传入id值, 框架给予默认的id值=[{}]", id);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * 是否是支持的类型
 	 * @return
 	 */
-	public boolean isSupportType() {
+	public boolean supportType() {
 		if(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map) {
 			return true;
 		}
