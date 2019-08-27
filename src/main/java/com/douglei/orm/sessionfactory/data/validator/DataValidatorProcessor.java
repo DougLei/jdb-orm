@@ -8,7 +8,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.data.validator.sql.SqlParameterValidator;
+import com.douglei.orm.sessionfactory.data.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
 
@@ -53,9 +53,9 @@ public class DataValidatorProcessor {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
-				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), object).doValidate();
+				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
 			case SQL:// 验证sql数据
-				return new SqlParameterValidator((SqlMetadata)mapping.getMetadata(), name).setOriginObjectAndDoValidate(object);
+				return new SqlValidator((SqlMetadata)mapping.getMetadata(), name).doValidate(object);
 		}
 		return null;
 	}
@@ -97,8 +97,7 @@ public class DataValidatorProcessor {
 			case TABLE:// 验证表数据
 				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata());
 				for (Object object : objects) {
-					persistentObjectValidator.setOriginObject(object);
-					bvr = BatchValidationResult.newInstance(index++, persistentObjectValidator.doValidate());
+					bvr = BatchValidationResult.newInstance(index++, persistentObjectValidator.doValidate(object));
 					if(bvr != null) {
 						if(batchValidationResults == null) {
 							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
@@ -108,9 +107,9 @@ public class DataValidatorProcessor {
 				}
 				break;
 			case SQL:// 验证sql数据
-				SqlParameterValidator sqlParameterValidator = new SqlParameterValidator((SqlMetadata) mapping.getMetadata(), name);
+				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);
 				for (Object object : objects) {
-					bvr = BatchValidationResult.newInstance(index++, sqlParameterValidator.setOriginObjectAndDoValidate(object));
+					bvr = BatchValidationResult.newInstance(index++, sqlValidator.doValidate(object));
 					if(bvr != null) {
 						if(batchValidationResults == null) {
 							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());

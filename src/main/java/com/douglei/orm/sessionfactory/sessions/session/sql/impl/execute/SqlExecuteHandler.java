@@ -20,8 +20,8 @@ public class SqlExecuteHandler implements ExecuteHandler{
 
 	public SqlExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
-		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的sql语句");
+		if(contents.size() == 0) {
+			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在任何可以执行的sql语句");
 		}
 		
 		executeSqlCount = (short)contents.size();

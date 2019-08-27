@@ -3,25 +3,24 @@ package com.douglei.orm.sessionfactory.data.validator.table;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.data.validator.DataValidator;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 
 /**
  * 持久化对象验证器
  * @author DougLei
  */
-public class PersistentObjectValidator extends AbstractPersistentObject {
+public class PersistentObjectValidator extends AbstractPersistentObject implements DataValidator{
 	
 	public PersistentObjectValidator(TableMetadata tableMetadata) {
 		super(tableMetadata);
 	}
-	public PersistentObjectValidator(TableMetadata tableMetadata, Object originObject) {
-		super(tableMetadata, originObject);
-	}
-
 
 	// 进行验证
-	public ValidationResult doValidate() {
+	@Override
+	public ValidationResult doValidate(Object originObject) {
 		if(tableMetadata.existsValidateColumns()) {
+			setOriginObject(originObject);
 			Object value = null;
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
