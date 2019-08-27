@@ -5,7 +5,7 @@ import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execution.ExecuteSql;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.ExecuteSql;
 
 /**
  * 

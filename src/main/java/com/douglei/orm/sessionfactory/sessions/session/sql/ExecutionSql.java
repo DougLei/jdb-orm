@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.core.sql.SqlStatement;
-import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
+import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
 /**
  * 
  * @author DougLei
  */
 public class ExecutionSql {
-	private ExecutionHolder executionHolder;
+	private ExecuteHandler executionHolder;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
-	public ExecutionSql(ExecutionHolder executionHolder) {
+	public ExecutionSql(ExecuteHandler executionHolder) {
 		this.executionHolder = executionHolder;
 		this.sql = new SqlStatement(executionHolder.getCurrentSql());
 		this.parameters = executionHolder.getCurrentParameters();

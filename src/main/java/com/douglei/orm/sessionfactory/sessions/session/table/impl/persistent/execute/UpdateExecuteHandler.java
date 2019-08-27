@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,9 +12,9 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class UpdateExecutionHolder extends TableExecutionHolder{
+public class UpdateExecuteHandler extends TableExecuteHandler{
 	
-	public UpdateExecutionHolder(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
 		super(tableMetadata, propertyMap);
 	}
 

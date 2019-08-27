@@ -9,10 +9,10 @@ import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.DeleteExecutionHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.InsertExecutionHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution.UpdateExecutionHolder;
+import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.DeleteExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.InsertExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.UpdateExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 
 /**
@@ -60,14 +60,14 @@ public class PersistentObject extends AbstractPersistentObject{
 	}
 	
 	// 获取执行器实例
-	public ExecutionHolder getExecutionHolder() {
+	public ExecuteHandler getExecuteHandler() {
 		switch(operationState) {
 			case CREATE:
-				return new InsertExecutionHolder(tableMetadata, propertyMap);
+				return new InsertExecuteHandler(tableMetadata, propertyMap);
 			case DELETE:
-				return new DeleteExecutionHolder(tableMetadata, propertyMap);
+				return new DeleteExecuteHandler(tableMetadata, propertyMap);
 			case UPDATE:
-				return new UpdateExecutionHolder(tableMetadata, propertyMap);
+				return new UpdateExecuteHandler(tableMetadata, propertyMap);
 		}
 		return null;
 	}

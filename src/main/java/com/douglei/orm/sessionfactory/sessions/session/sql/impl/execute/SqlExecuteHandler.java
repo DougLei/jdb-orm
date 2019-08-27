@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execution;
+package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,16 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.context.ExecMappingDescriptionContext;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
+import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
 /**
  * 
  * @author DougLei
  */
-public class SqlExecutionHolder implements ExecutionHolder{
-	private static final Logger logger = LoggerFactory.getLogger(SqlExecutionHolder.class);
+public class SqlExecuteHandler implements ExecuteHandler{
+	private static final Logger logger = LoggerFactory.getLogger(SqlExecuteHandler.class);
 
-	public SqlExecutionHolder(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+	public SqlExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
 		if(contents == null || contents.size() == 0) {
 			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的sql语句");

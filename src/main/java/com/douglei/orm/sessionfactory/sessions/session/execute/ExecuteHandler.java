@@ -1,12 +1,12 @@
-package com.douglei.orm.sessionfactory.sessions.session.execution;
+package com.douglei.orm.sessionfactory.sessions.session.execute;
 
 import java.util.List;
 
 /**
- * 执行数据所有器
+ * 
  * @author DougLei
  */
-public interface ExecutionHolder {
+public interface ExecuteHandler {
 	
 	/**
 	 * 要执行的sql语句的数量

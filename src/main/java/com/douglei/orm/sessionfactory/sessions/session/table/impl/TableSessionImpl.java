@@ -19,7 +19,7 @@ import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
-import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
+import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.OperationState;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
@@ -265,17 +265,17 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
-		ExecutionHolder executionHolder = persistentObject.getExecutionHolder();
-		if(executionHolder == null) {
+		ExecuteHandler executeHandler = persistentObject.getExecuteHandler();
+		if(executeHandler == null) {
 			if(logger.isDebugEnabled()) {
-				logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder实例为null", persistentObject.getOperationState(), persistentObject.toString());
+				logger.debug("执行state={}, persistentObject={}, 获取的executeHandler实例为null", persistentObject.getOperationState(), persistentObject.toString());
 			}
 			return;
 		}
 		if(logger.isDebugEnabled()) {
-			logger.debug("执行state={}, persistentObject={}, 获取的ExecutionHolder {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executionHolder.getClass(), executionHolder.toString());
+			logger.debug("执行state={}, persistentObject={}, 获取的executeHandler {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executeHandler.getClass().getName(), executeHandler.toString());
 		}
-		super.executeUpdate(executionHolder.getCurrentSql(), executionHolder.getCurrentParameters());
+		super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override

@@ -1,10 +1,10 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execution;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
 
 import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.execution.ExecutionHolder;
+import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.StringUtil;
 
@@ -12,11 +12,11 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class TableExecutionHolder implements ExecutionHolder {
+public abstract class TableExecuteHandler implements ExecuteHandler {
 	protected TableMetadata tableMetadata;
 	protected Map<String, Object> propertyMap;
 	
-	public TableExecutionHolder(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+	public TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
 		this.tableMetadata = tableMetadata;
 		this.propertyMap = propertyMap;
 		initializeInstance();
