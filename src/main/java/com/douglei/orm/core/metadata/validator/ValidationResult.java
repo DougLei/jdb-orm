@@ -7,7 +7,7 @@ import com.douglei.orm.core.result.Result;
  * @author DougLei
  */
 public abstract class ValidationResult extends Result{
-	public static final String i18nCodePrefix = "jdb.validator.";
+	public static final String i18nCodePrefix = "jdb.data.validator.";
 	private String validateFieldName;
 	
 	public ValidationResult(String validateFieldName) {
