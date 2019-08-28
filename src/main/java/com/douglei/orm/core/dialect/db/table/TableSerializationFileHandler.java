@@ -44,18 +44,13 @@ class TableSerializationFileHandler {
 		return ormSerializationFileRootPath + serializationFileName + SERIALIZATION_FILE_SUFFIX;
 	}
 
-	// 是否启用表的动态更新
-	private boolean getEnableTableDynamicUpdate() {
-		return EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate();
-	}
-	
 	/**
 	 * 创建序列化文件
 	 * @param table
 	 * @param serializeObjectHolders
 	 */
 	public void createSerializationFile(TableMetadata table, List<SerializeObjectHolder> serializeObjectHolders) {
-		if(getEnableTableDynamicUpdate()) {
+		if(EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
 			JdkSerializeProcessor.serialize2File(table, getOrmSerializationFilePath(table.getName()));
 			if(serializeObjectHolders != null) {
 				serializeObjectHolders.add(new SerializeObjectHolder(table, null));
@@ -85,7 +80,7 @@ class TableSerializationFileHandler {
 	 * @param serializeObjectHolders
 	 */
 	public void dropSerializationFile(TableMetadata table, List<SerializeObjectHolder> serializeObjectHolders) {
-		if(getEnableTableDynamicUpdate()) {
+		if(EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
 			File file = new File(getOrmSerializationFilePath(table.getName()));
 			if(file.exists()) {
 				file.delete();
@@ -110,7 +105,7 @@ class TableSerializationFileHandler {
 	 * @param serializeObjectHolders
 	 */
 	public void rollbackSerializationFile(List<SerializeObjectHolder> serializeObjectHolders) {
-		if(getEnableTableDynamicUpdate() && serializeObjectHolders.size() > 0) {
+		if(EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate() && serializeObjectHolders.size() > 0) {
 			logger.debug("开始回滚 序列化文件操作");
 			for (SerializeObjectHolder holder : serializeObjectHolders) {
 				switch(holder.getSerializeOPType()) {

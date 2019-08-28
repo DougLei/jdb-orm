@@ -20,6 +20,8 @@ public interface EnvironmentProperty {
 	
 	public MappingStore getMappingStore();
 	
+	public boolean clearMappingOnStart();
+	
 	public CreateMode getTableCreateMode();
 	
 	public boolean enableDataValidate();

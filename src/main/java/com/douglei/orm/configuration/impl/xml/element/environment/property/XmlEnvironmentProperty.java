@@ -41,6 +41,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private MappingStore mappingStore;
 	
 	@FieldMetaData
+	private boolean clearMappingOnStart;
+	
+	@FieldMetaData
 	private CreateMode tableCreateMode;
 	
 	@FieldMetaData
@@ -145,6 +148,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.mappingStore = new ApplicationMappingStore();
 		}
 	}
+	public void setClearMappingOnStart(String value) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
+			this.clearMappingOnStart = Boolean.parseBoolean(value);
+		}
+	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) {
 			this.tableCreateMode = CreateMode.toValue(value);
@@ -204,6 +212,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public MappingStore getMappingStore() {
 		return mappingStore;
+	}
+	@Override
+	public boolean clearMappingOnStart() {
+		return clearMappingOnStart;
 	}
 	@Override
 	public CreateMode getTableCreateMode() {

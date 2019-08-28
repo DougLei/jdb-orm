@@ -10,6 +10,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
@@ -24,16 +25,24 @@ class RedisMappingStoreHandler extends RedisHandler {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStoreHandler.class);
 
 	public void initializeStore(Jedis connection) {
-		Set<String> keys = connection.keys(getPrefix() + "*");
-		if(Collections.unEmpty(keys)) {
-			removeMapping(keys, connection);
+		if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
+			Set<String> keys = connection.keys(getPrefix() + "*");
+			if(Collections.unEmpty(keys)) {
+				removeMapping(keys, connection);
+			}
 		}
 	}
 	
 	public void addMapping(Mapping mapping, Jedis connection) throws RepeatedMappingException{
 		String code = getCode(mapping.getCode());
 		if(mappingExists(code, connection)) {
-			throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode(), connection));
+			if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
+				throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode(), connection));
+			}
+			if(logger.isDebugEnabled()) {
+				logger.debug("启动时, 已经存在相同code为[{}]的映射对象: ", mapping.getCode(), getMapping(mapping.getCode(), connection));
+			}
+			return;
 		}
 		connection.set(code.getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
 	}
