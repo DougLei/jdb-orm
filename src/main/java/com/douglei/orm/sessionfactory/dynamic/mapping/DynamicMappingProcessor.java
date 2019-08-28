@@ -46,7 +46,10 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * 动态添加映射
+	 * <pre>
+	 * 动态添加映射, 如果存在则覆盖
+	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
+	 * </pre>
 	 * @param entity
 	 */
 	public synchronized void addMapping(DynamicMapping entity) {
@@ -63,7 +66,10 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * 动态批量添加映射
+	 * <pre>
+	 * 动态批量添加映射, 如果存在则覆盖
+	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
+	 * </pre>
 	 * @param entities
 	 */
 	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
@@ -97,7 +103,11 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * 动态覆盖映射
+	 * <pre>
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
 	 * @param entity
 	 */
 	public synchronized void coverMapping(DynamicMapping entity) {
@@ -113,7 +123,11 @@ public class DynamicMappingProcessor {
 	}
 
 	/**
-	 * 动态批量覆盖映射
+	 * <pre>
+	 * 动态批量覆盖映射, 如果不存在添加
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
 	 * @param entities
 	 */
 	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
@@ -131,10 +145,13 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
+	 * <pre>
 	 * 动态删除映射
+	 * 如果是表映射, 则顺便drop表
+	 * </pre>
 	 * @param mappingCode
 	 */
-	public synchronized void removeMapping(String mappingCode) {
+	public synchronized void removeMapping(String mappingCode){
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
@@ -148,10 +165,13 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
+	 * <pre>
 	 * 动态批量删除映射
+	 * 如果是表映射, 则顺便drop表
+	 * </pre>
 	 * @param mappingCodes
 	 */
-	public synchronized void batchRemoveMapping(List<String> mappingCodes) {
+	public synchronized void batchRemoveMapping(List<String> mappingCodes){
 		try {
 			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (String mappingCode : mappingCodes) {
