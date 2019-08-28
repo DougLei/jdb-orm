@@ -65,7 +65,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<BatchValidationResult> doValidate(List<Object> objects) {
+	public List<BatchValidationResult> doValidate(List<? extends Object> objects) {
 		return doValidate(objects.get(0).getClass().getName(), objects);
 	}
 	
@@ -75,7 +75,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<BatchValidationResult> doValidate(String code, List<Object> objects) {
+	public List<BatchValidationResult> doValidate(String code, List<? extends Object> objects) {
 		return doValidate(code, null, objects);
 	}
 	
@@ -86,7 +86,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return 
 	 */
-	public List<BatchValidationResult> doValidate(String code, String name, List<Object> objects) {
+	public List<BatchValidationResult> doValidate(String code, String name, List<? extends Object> objects) {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		List<BatchValidationResult> batchValidationResults = null;
 		
