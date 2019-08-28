@@ -27,7 +27,8 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	
+	private static final long serialVersionUID = 8145656018479802450L;
+
 	private String configText;
 	
 	private String name;// 参数名

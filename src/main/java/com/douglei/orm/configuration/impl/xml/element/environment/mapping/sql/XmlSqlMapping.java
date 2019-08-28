@@ -31,6 +31,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlSqlMapping extends XmlMapping implements SqlMapping{
+	private static final long serialVersionUID = 7603945398456938103L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlSqlMapping.class);
 	private static final XmlSqlMetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
 	private static final XmlContentMetadataValidate contentMetadataValidate = new XmlContentMetadataValidate();

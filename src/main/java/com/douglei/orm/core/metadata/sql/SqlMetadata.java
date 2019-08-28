@@ -13,6 +13,8 @@ import com.douglei.orm.core.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
+	private static final long serialVersionUID = -4661243920938400328L;
+	
 	private String namespace;
 	private List<ContentMetadata> contents;
 	
@@ -82,6 +84,7 @@ public class SqlMetadata implements Metadata{
 	}
 	
 	private class RepeatedContentNameException extends RuntimeException{
+		private static final long serialVersionUID = 4281842020558874332L;
 		public RepeatedContentNameException(String contentName) {
 			super("重复配置了name=["+contentName+"]的<content>元素");
 		}

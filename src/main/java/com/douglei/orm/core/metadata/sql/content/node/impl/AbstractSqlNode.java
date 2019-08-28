@@ -17,6 +17,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
+	private static final long serialVersionUID = 1186918257127689022L;
 
 	protected String content;
 	

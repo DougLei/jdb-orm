@@ -10,6 +10,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
  * @author DougLei
  */
 public class TextSqlNode extends AbstractSqlNode {
+	private static final long serialVersionUID = -9067048247319368173L;
 	public TextSqlNode(String content) {
 		super(content);
 	}

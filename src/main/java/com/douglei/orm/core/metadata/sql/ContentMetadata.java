@@ -14,6 +14,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
+	private static final long serialVersionUID = 6943694902293420095L;
 	protected String name;
 	protected ContentType type;
 	protected DialectType[] dialectTypes;
