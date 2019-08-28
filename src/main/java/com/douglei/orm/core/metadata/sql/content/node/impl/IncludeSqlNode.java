@@ -42,7 +42,7 @@ public class IncludeSqlNode implements SqlNode {
 		if(content.isMatchingDialectType(EnvironmentContext.getEnvironmentProperty().getDialect().getType())) {
 			ValidationResult result = null;
 			for (SqlNode sqlNode : rootSqlNodes) {
-				if(sqlNode.matching(sqlParameter)) {
+				if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
 					if((result = sqlNode.validateParameter(sqlParameter)) != null) {
 						return result;
 					}

@@ -34,6 +34,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		this.close = close==null?" ":" "+close;
 	}
 	
+	// 获取要foreach的集合/数组对象
 	private Object getCollectionObject(Object sqlParameter) {
 		if(sqlParameter != null) {
 			if(sqlParameter instanceof Collection<?> || sqlParameter.getClass().isArray()) {
@@ -65,8 +66,12 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		return true;
 	}
 	
-	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+	/**
+	 * 从参数中获取到要循环的数组, 如果是集合也给它转换成数组
+	 * @param sqlParameter
+	 * @return
+	 */
+	private Object[] getArray(Object sqlParameter) {
 		Object collectionObject = getCollectionObject(sqlParameter);
 		Object[] array = null;
 		if(collectionObject instanceof Collection<?>) {
@@ -97,17 +102,21 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		}else if(collectionObject.getClass().isArray()) {
 			array = (Object[]) collectionObject;
 		}
-		
+		return array;
+	}
+	
+	@Override
+	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+		Object[] array = getArray(sqlParameter);
 		List<String> sqlContentList = null;
 		List<Object> parameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
-		int length = array.length;
-		for(int i=0;i<length;i++) {
+		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], alias)) {
 					if(sqlContentList == null) {
-						sqlContentList = new ArrayList<String>(length*sqlNodes.size()/2);
+						sqlContentList = new ArrayList<String>(10);
 					}
 					
 					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
@@ -125,7 +134,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		if(sqlContentList == null) {
 			return ExecuteSqlNode.emptyExecuteSqlNode();
 		}
-		StringBuilder sqlContent = new StringBuilder();
+		StringBuilder sqlContent = new StringBuilder(100);
 		sqlContent.append(open);
 		
 		short index = 0, lastIndex = (short) (sqlContentList.size()-1);
@@ -144,14 +153,15 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	
 	@Override
 	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+		Object[] array = getArray(sqlParameter);
 		ValidationResult result = null;
-		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
-				return result;
+		for(int i=0;i<array.length;i++) {
+			for (SqlNode sqlNode : sqlNodes) {
+				if(sqlNode.matching(array[i], alias) && (result = sqlNode.validateParameter(array[i], alias)) != null) {
+					return result;
+				}
 			}
 		}
-		
-		
 		return null;
 	}
 	

@@ -89,7 +89,7 @@ public class TrimSqlNode extends AbstractNestingNode {
 	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
+			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
 				return result;
 			}
 		}
