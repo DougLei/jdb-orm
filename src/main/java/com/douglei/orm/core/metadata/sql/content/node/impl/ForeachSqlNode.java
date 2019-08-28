@@ -45,27 +45,6 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		return null;
 	}
 	
-	@Override
-	public boolean matching(Object sqlParameter, String alias) {
-		Object collectionObject = getCollectionObject(sqlParameter);
-		if(collectionObject == null) {
-			return false;
-		}
-		if(collectionObject instanceof Collection<?>) {
-			Collection<?> tc = (Collection<?>) collectionObject;
-			if(tc.isEmpty()) {
-				return false;
-			}
-		}else if(collectionObject.getClass().isArray()) {
-			if(((Object[]) collectionObject).length == 0) {
-				return false;
-			}
-		}else {
-			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
-		}
-		return true;
-	}
-	
 	/**
 	 * 从参数中获取到要循环的数组, 如果是集合也给它转换成数组
 	 * @param sqlParameter
@@ -103,6 +82,27 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			array = (Object[]) collectionObject;
 		}
 		return array;
+	}
+	
+	@Override
+	public boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
+		Object collectionObject = getCollectionObject(sqlParameter);
+		if(collectionObject == null) {
+			return false;
+		}
+		if(collectionObject instanceof Collection<?>) {
+			Collection<?> tc = (Collection<?>) collectionObject;
+			if(tc.isEmpty()) {
+				return false;
+			}
+		}else if(collectionObject.getClass().isArray()) {
+			if(((Object[]) collectionObject).length == 0) {
+				return false;
+			}
+		}else {
+			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
+		}
+		return true;
 	}
 	
 	@Override

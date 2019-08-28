@@ -10,8 +10,13 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public abstract class AbstractNestingNode implements SqlNode{
-	private static final long serialVersionUID = 1196837802103130661L;
-	protected List<SqlNode> sqlNodes;
+	
+	protected List<SqlNode> sqlNodes;// 内部的node集合
+	
+	/**
+	 * 添加内部node
+	 * @param sqlNode
+	 */
 	public void addSqlNode(SqlNode sqlNode) {
 		if(sqlNodes == null) {
 			sqlNodes = new ArrayList<SqlNode>(10);
@@ -19,6 +24,10 @@ public abstract class AbstractNestingNode implements SqlNode{
 		sqlNodes.add(sqlNode);
 	}
 	
+	/**
+	 * 是否存在内部node
+	 * @return
+	 */
 	public boolean existsSqlNode() {
 		return sqlNodes != null;
 	}

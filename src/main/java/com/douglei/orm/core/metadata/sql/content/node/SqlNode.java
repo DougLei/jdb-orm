@@ -28,10 +28,10 @@ public interface SqlNode extends Serializable{
 	/**
 	 * 该node是否满足匹配
 	 * @param sqlParameter
-	 * @param alias
+	 * @param sqlParameterNamePrefix
 	 * @return
 	 */
-	default boolean matching(Object sqlParameter, String alias) {
+	default boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
 		return true;
 	}
 	

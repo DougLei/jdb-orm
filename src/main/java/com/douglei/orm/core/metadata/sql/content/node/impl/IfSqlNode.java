@@ -17,18 +17,18 @@ public class IfSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean matching(Object sqlParameter, String alias) {
-		processExpression(alias);
+	public boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
+		processExpression(sqlParameterNamePrefix);
 		return OgnlHandler.singleInstance().getBooleanValue(expression, sqlParameter);
 	}
 	
 	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认没有处理
-	private void processExpression(String alias) {
+	private void processExpression(String sqlParameterNamePrefix) {
 		if(unProcessExpression) {
 			unProcessExpression = false;
 			
-			if(alias != null && expression.indexOf(alias+".") != -1) {
-				expression = expression.replace(alias+".", "");
+			if(sqlParameterNamePrefix != null && expression.indexOf(sqlParameterNamePrefix+".") != -1) {
+				expression = expression.replace(sqlParameterNamePrefix+".", "");
 			}
 		}
 	}

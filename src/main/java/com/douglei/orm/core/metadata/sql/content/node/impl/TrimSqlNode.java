@@ -48,8 +48,8 @@ public class TrimSqlNode extends AbstractNestingNode {
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameter);
+			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameter, sqlParameterNamePrefix);
 				if(executeSqlNode.existsParameter()) {
 					if(parameters == null) {
 						parameters = new ArrayList<Object>();
