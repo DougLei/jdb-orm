@@ -1,6 +1,9 @@
 package com.douglei.orm.sessionfactory.data.validator.sql;
 
+import java.util.List;
+
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
@@ -9,10 +12,10 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
  */
 class ContentValidator {
 	
-	private ContentMetadata contentMetadata;
+	private List<SqlNode> rootSqlNodes;
 	
 	public ContentValidator(ContentMetadata contentMetadata) {
-		this.contentMetadata = contentMetadata;
+		rootSqlNodes = contentMetadata.getRootSqlNodes();
 	}
 
 	/**
@@ -21,7 +24,15 @@ class ContentValidator {
 	 * @return
 	 */
 	public ValidationResult doValidate(Object sqlParameter) {
-		// TODO Auto-generated method stub
-		return null;
+		ValidationResult result = null;
+		for (SqlNode sqlNode : rootSqlNodes) {
+			if(sqlNode.matching(sqlParameter)) {
+				result = sqlNode.validateParameter(sqlParameter);
+				if(result != null) {
+					break;
+				}
+			}
+		}
+		return result;
 	}
 }

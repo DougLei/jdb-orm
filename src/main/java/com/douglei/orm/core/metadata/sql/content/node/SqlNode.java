@@ -2,12 +2,18 @@ package com.douglei.orm.core.metadata.sql.content.node;
 
 import java.io.Serializable;
 
+import com.douglei.orm.core.metadata.validator.ValidationResult;
+
 /**
  * 
  * @author DougLei
  */
 public interface SqlNode extends Serializable{
 	
+	/**
+	 * 获取sql节点类型
+	 * @return
+	 */
 	SqlNodeType getType();
 	
 	/**
@@ -41,8 +47,25 @@ public interface SqlNode extends Serializable{
 	/**
 	 * 获取可执行的sql node
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix sql参数名前缀 
+	 * @param sqlParameterNamePrefix sql参数名前缀, 即别名alias
 	 * @return
 	 */
 	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix);
+	
+	/**
+	 * 验证参数
+	 * @param sqlParameter
+	 * @return
+	 */
+	default ValidationResult validateParameter(Object sqlParameter) {
+		return validateParameter(sqlParameter, null);
+	}
+	
+	/**
+	 * 验证参数
+	 * @param sqlParameter
+	 * @param sqlParameterNamePrefix
+	 * @return
+	 */
+	ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix);
 }

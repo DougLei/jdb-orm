@@ -11,7 +11,6 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  * @author DougLei
  */
 public class ExecuteSqlNode {
-	
 	private String content;
 	private List<Object> parameters;
 	
