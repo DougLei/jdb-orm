@@ -10,6 +10,7 @@ import java.util.Map;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
@@ -18,7 +19,6 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 6771739195272626919L;
 	private String collection;
 	private String alias;
 	
@@ -123,7 +123,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		}
 		
 		if(sqlContentList == null) {
-			return new ExecuteSqlNode("", parameters);
+			return ExecuteSqlNode.emptyExecuteSqlNode();
 		}
 		StringBuilder sqlContent = new StringBuilder();
 		sqlContent.append(open);
@@ -140,6 +140,19 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		
 		sqlContent.append(close);
 		return new ExecuteSqlNode(sqlContent.toString(), parameters);
+	}
+	
+	@Override
+	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+		ValidationResult result = null;
+		for (SqlNode sqlNode : sqlNodes) {
+			if(sqlNode.matching(sqlParameter) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
+				return result;
+			}
+		}
+		
+		
+		return null;
 	}
 	
 	@Override

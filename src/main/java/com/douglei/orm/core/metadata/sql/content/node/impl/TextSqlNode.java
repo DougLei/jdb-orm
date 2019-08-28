@@ -10,7 +10,6 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
  * @author DougLei
  */
 public class TextSqlNode extends AbstractSqlNode {
-	private static final long serialVersionUID = -1086794160148033426L;
 	public TextSqlNode(String content) {
 		super(content);
 	}
@@ -23,7 +22,7 @@ public class TextSqlNode extends AbstractSqlNode {
 	public String getContent() {
 		return content;
 	}
-	public List<SqlParameterMetadata> getSqlParametersByDefinedOrder(){
-		return sqlParametersByDefinedOrder;
+	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders(){
+		return sqlParameterByDefinedOrders;
 	}
 }

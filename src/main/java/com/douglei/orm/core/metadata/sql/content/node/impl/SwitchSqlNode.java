@@ -3,19 +3,30 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 6500829001502771501L;
+	private static final long serialVersionUID = 7651671570085811552L;
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
 				return sqlNode.getExecuteSqlNode(sqlParameter);
+			}
+		}
+		return ExecuteSqlNode.emptyExecuteSqlNode();
+	}
+	
+	@Override
+	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+		for (SqlNode sqlNode : sqlNodes) {
+			if(sqlNode.matching(sqlParameter)) {
+				return sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix);
 			}
 		}
 		return null;

@@ -6,13 +6,13 @@ import java.util.List;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 5345548518449205053L;
 	private String prefix;
 	private String suffix;
 	
@@ -83,6 +83,17 @@ public class TrimSqlNode extends AbstractNestingNode {
 			sqlContent = prefix + sqlContent + suffix;
 		}
 		return new ExecuteSqlNode(sqlContent, parameters);
+	}
+	
+	@Override
+	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+		ValidationResult result = null;
+		for (SqlNode sqlNode : sqlNodes) {
+			if(sqlNode.matching(sqlParameter) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
+				return result;
+			}
+		}
+		return null;
 	}
 	
 	@Override

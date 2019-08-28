@@ -11,6 +11,7 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  * @author DougLei
  */
 public class ExecuteSqlNode {
+	private static final ExecuteSqlNode EMPTY_EXECUTE_SQL_NODE = new ExecuteSqlNode("", null);
 	private String content;
 	private List<Object> parameters;
 	
@@ -37,6 +38,14 @@ public class ExecuteSqlNode {
 		this.parameters = parameters;
 	}
 
+	/**
+	 * 获取一个空的ExecuteSqlNode实例
+	 * @return
+	 */
+	public static ExecuteSqlNode emptyExecuteSqlNode() {
+		return EMPTY_EXECUTE_SQL_NODE;
+	}
+	
 	public String getContent() {
 		return content;
 	}
