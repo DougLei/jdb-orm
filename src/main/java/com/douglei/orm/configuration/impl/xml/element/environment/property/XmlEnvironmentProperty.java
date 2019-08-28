@@ -41,7 +41,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private MappingStore mappingStore;
 	
 	@FieldMetaData
-	private boolean clearMappingOnStart;
+	private boolean clearMappingOnStart = true;
 	
 	@FieldMetaData
 	private CreateMode tableCreateMode;
