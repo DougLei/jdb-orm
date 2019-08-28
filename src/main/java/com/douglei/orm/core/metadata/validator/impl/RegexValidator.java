@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSONArray;
-import com.douglei.orm.core.metadata.validator.Validator;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.core.metadata.validator.Validator;
 
 /**
  * 正则验证器
@@ -45,7 +45,7 @@ public class RegexValidator extends Validator {
  * @author DougLei
  */
 class RegexEntity implements Serializable{
-	private static final long serialVersionUID = -6411684647723481525L;
+	private static final long serialVersionUID = -3657891122503633498L;
 	private static final String DEFAULT_MESSAGE = "正则表达式匹配失败";
 	private static final String DEFAULT_I18N_CODE = ValidationResult.i18nCodePrefix + "regex.matching.fail";
 	
@@ -67,7 +67,7 @@ class RegexEntity implements Serializable{
 			}
 			
 			@Override
-			protected String getI18nCode() {
+			public String getI18nCode() {
 				return i18nCode;
 			}
 		};

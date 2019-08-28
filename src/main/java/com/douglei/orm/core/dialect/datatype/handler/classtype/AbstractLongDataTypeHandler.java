@@ -52,7 +52,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 			}
 			
 			@Override
-			protected String getI18nCode() {
+			public String getI18nCode() {
 				return i18nCodePrefix + "value.datatype.error.long";
 			}
 		};

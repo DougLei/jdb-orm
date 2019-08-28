@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -1369520687524263957L;
+	private static final long serialVersionUID = 4700387498231968711L;
 
 	@Override
 	public String getCode() {
@@ -51,8 +51,13 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 					}
 					
 					@Override
-					protected String getI18nCode() {
+					public String getI18nCode() {
 						return i18nCodePrefix + "value.digital.range.overflow";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return i18nParams;
 					}
 				};
 			}
@@ -66,9 +71,10 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 			}
 			
 			@Override
-			protected String getI18nCode() {
+			public String getI18nCode() {
 				return i18nCodePrefix + "value.datatype.error.int";
 			}
 		};
 	}
+	private static final Object[] i18nParams = { Integer.MIN_VALUE, Integer.MAX_VALUE }; 
 }

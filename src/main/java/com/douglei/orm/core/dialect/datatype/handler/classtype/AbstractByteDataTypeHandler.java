@@ -9,7 +9,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeHandler{
-	private static final long serialVersionUID = 6313837660106407765L;
+	private static final long serialVersionUID = -1235558610422760425L;
 
 	@Override
 	public String getCode() {
@@ -35,8 +35,13 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 					}
 					
 					@Override
-					protected String getI18nCode() {
+					public String getI18nCode() {
 						return i18nCodePrefix + "value.digital.range.overflow";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return i18nParams;
 					}
 				};
 			}
@@ -50,9 +55,10 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 			}
 			
 			@Override
-			protected String getI18nCode() {
+			public String getI18nCode() {
 				return i18nCodePrefix + "value.datatype.error.byte";
 			}
 		};
 	}
+	private static final Object[] i18nParams = { Byte.MIN_VALUE, Byte.MAX_VALUE }; 
 }

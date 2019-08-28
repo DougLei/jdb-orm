@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 9210555213283448257L;
+	private static final long serialVersionUID = 8673012505155836834L;
 
 	@Override
 	public String getCode() {
@@ -51,8 +51,13 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 					}
 					
 					@Override
-					protected String getI18nCode() {
+					public String getI18nCode() {
 						return i18nCodePrefix + "value.digital.range.overflow";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return i18nParams;
 					}
 				};
 			}
@@ -66,9 +71,10 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 			}
 			
 			@Override
-			protected String getI18nCode() {
+			public String getI18nCode() {
 				return i18nCodePrefix + "value.datatype.error.short";
 			}
 		};
 	}
+	private static final Object[] i18nParams = { Short.MIN_VALUE, Short.MAX_VALUE }; 
 }

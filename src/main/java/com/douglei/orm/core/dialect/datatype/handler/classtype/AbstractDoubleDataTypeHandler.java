@@ -57,7 +57,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				}
 				
 				@Override
-				protected String getI18nCode() {
+				public String getI18nCode() {
 					return i18nCodePrefix + "value.datatype.error.double";
 				}
 			};
@@ -73,8 +73,13 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				}
 				
 				@Override
-				protected String getI18nCode() {
+				public String getI18nCode() {
 					return i18nCodePrefix + "value.digital.length.overdlength";
+				}
+
+				@Override
+				public Object[] getI18nParams() {
+					return new Object[] { length, (string.length() - 1) };
 				}
 			};
 		}
@@ -97,8 +102,13 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 					}
 					
 					@Override
-					protected String getI18nCode() {
+					public String getI18nCode() {
 						return i18nCodePrefix + "value.digital.precision.overdlength";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return new Object[] { precision, apl };
 					}
 				};
 			}

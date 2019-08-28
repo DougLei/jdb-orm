@@ -10,7 +10,6 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.data.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
 
 /**
  * 
@@ -24,7 +23,7 @@ public class DataValidatorProcessor {
 	}
 
 	/**
-	 * 
+	 * 针对表对象的验证, 传入和表映射的类实例
 	 * @param object
 	 * @return
 	 */
@@ -45,7 +44,7 @@ public class DataValidatorProcessor {
 	/**
 	 * 
 	 * @param code 表映射的tableName/className, sql映射的namespace
-	 * @param name sql映射使用, @see {@link SQLSessionImpl} 类中方法的name参数同理
+	 * @param name 针对sql映射, content的name值
 	 * @param object
 	 * @return
 	 */
@@ -62,7 +61,7 @@ public class DataValidatorProcessor {
 	
 	
 	/**
-	 * 
+	 * 针对表对象的验证, 传入和表映射的类实例集合
 	 * @param objects
 	 * @return
 	 */
@@ -83,9 +82,9 @@ public class DataValidatorProcessor {
 	/**
 	 * 
 	 * @param code 表映射的tableName/className, sql映射的namespace
-	 * @param name @see {@link DataValidatorProcessor#doValidate(String, String, Object)}
+	 * @param name 针对sql映射, content的name值
 	 * @param objects
-	 * @return
+	 * @return 
 	 */
 	public List<BatchValidationResult> doValidate(String code, String name, List<Object> objects) {
 		Mapping mapping = mappingWrapper.getMapping(code);

@@ -21,7 +21,7 @@ public class NotBlankValidator extends Validator{
 				}
 				
 				@Override
-				protected String getI18nCode() {
+				public String getI18nCode() {
 					return i18nCodePrefix + "notblank";
 				}
 			};

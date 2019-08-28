@@ -11,7 +11,15 @@ public abstract class Result {
 	 * 返回code, 后续可以集成国际化
 	 * @return
 	 */
-	protected abstract String getI18nCode();
+	public abstract String getI18nCode();
+	
+	/**
+	 * 匹配国际化 {@link Result#getI18nCode()} 对应的message中, 声明的占位符的值数组
+	 * @return
+	 */
+	public Object[] getI18nParams() {
+		return null;
+	}
 	
 	/**
 	 * 返回message
