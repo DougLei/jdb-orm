@@ -31,7 +31,7 @@ public class RedisMappingStore implements MappingStore {
 	@Override
 	public void initializeStore(int size) {
 		try(Jedis connection = redisPool.getResource()){
-			handler.initializeStore(connection);
+			handler.initializeStore(connection, false);
 		}
 	}
 	

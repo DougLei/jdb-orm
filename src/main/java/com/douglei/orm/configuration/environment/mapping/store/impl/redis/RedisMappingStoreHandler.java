@@ -24,8 +24,8 @@ import redis.clients.jedis.Pipeline;
 class RedisMappingStoreHandler extends RedisHandler {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStoreHandler.class);
 
-	public void initializeStore(Jedis connection) {
-		if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
+	public void initializeStore(Jedis connection, boolean clearMappingOnStart) {
+		if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart() || clearMappingOnStart) {
 			Set<String> keys = connection.keys(getPrefix() + "*");
 			if(Collections.unEmpty(keys)) {
 				removeMapping(keys, connection);
@@ -99,6 +99,6 @@ class RedisMappingStoreHandler extends RedisHandler {
 	}
 	
 	public void destroy(Jedis connection) throws DestroyException {
-		initializeStore(connection);
+		initializeStore(connection, true);
 	}
 }
