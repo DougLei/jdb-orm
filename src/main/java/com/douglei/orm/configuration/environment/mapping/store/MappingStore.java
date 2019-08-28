@@ -11,7 +11,7 @@ import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisM
  * @author DougLei
  */
 public interface MappingStore extends SelfProcessing{
-	static final short DEFAULT_STORE_SIZE = 64;
+	static final short DEFAULT_STORE_SIZE = 32;
 	
 	/**
 	 * <pre>
