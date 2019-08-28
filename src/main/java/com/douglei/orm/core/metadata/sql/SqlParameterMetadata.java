@@ -14,8 +14,8 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.DataValidateException;
-import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.StringUtil;
@@ -241,6 +241,25 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	
+	// 获取值
+	private Object getValue_(Object sqlParameter, String sqlParameterNamePrefix) {
+		processNamePrefix(sqlParameterNamePrefix);
+		
+		Object value = null;
+		if(sqlParameter instanceof Map<?, ?> && isSingleName) {
+			value = ((Map<?, ?>)sqlParameter).get(name); 
+		}else if(ConverterUtil.isSimpleType(sqlParameter)){
+			value = sqlParameter;
+		}else {
+			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
+		}
+		
+		if(value == null) {
+			value = DefaultValueHandler.getDefaultValue(defaultValue);
+		}
+		return value;
+	}
+	
 	/**
 	 * 获取值
 	 * @param sqlParameter
@@ -257,20 +276,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter, String sqlParameterNamePrefix) {
-		processNamePrefix(sqlParameterNamePrefix);
-		
-		Object value = null;
-		if(sqlParameter instanceof Map<?, ?> && isSingleName) {
-			value = ((Map<?, ?>)sqlParameter).get(name); 
-		}else if(ConverterUtil.isSimpleType(sqlParameter)){
-			value = sqlParameter;
-		}else {
-			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
-		}
-		
-		if(value == null) {
-			value = DefaultValueHandler.getDefaultValue(defaultValue);
-		}
+		Object value = getValue_(sqlParameter, sqlParameterNamePrefix);
 		doValidate(value);
 		return value;
 	}
@@ -283,6 +289,19 @@ public class SqlParameterMetadata implements Metadata{
 				throw new DataValidateException(descriptionName, name, value, result);
 			}
 		}
+	}
+	
+	/**
+	 * 验证数据
+	 * @param sqlParameter
+	 * @param sqlParameterNamePrefix
+	 * @return
+	 */
+	public ValidationResult doValidate(Object sqlParameter, String sqlParameterNamePrefix) {
+		if(validate) {
+			return validatorHandler.doValidate(getValue_(sqlParameter, sqlParameterNamePrefix));
+		}
+		return null;
 	}
 	
 	@Override

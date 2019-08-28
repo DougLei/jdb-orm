@@ -27,12 +27,11 @@ class ContentValidator {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : rootSqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
-				result = sqlNode.validateParameter(sqlParameter);
-				if(result != null) {
-					break;
+				if((result = sqlNode.validateParameter(sqlParameter)) != null) {
+					return result;
 				}
 			}
 		}
-		return result;
+		return null;
 	}
 }

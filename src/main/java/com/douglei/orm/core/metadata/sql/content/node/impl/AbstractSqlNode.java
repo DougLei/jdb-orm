@@ -9,6 +9,7 @@ import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
+import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -19,7 +20,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 
 	protected String content;
 	
-	protected List<SqlParameterMetadata> sqlParametersByDefinedOrder;// sql参数, 按照配置中定义的顺序记录
+	protected List<SqlParameterMetadata> sqlParameterByDefinedOrders;// sql参数, 按照配置中定义的顺序记录
 	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配#{
 	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
@@ -48,8 +49,8 @@ public abstract class AbstractSqlNode implements SqlNode{
 			}
 		}
 		
-		if(sqlParametersByDefinedOrder != null) {
-			for (SqlParameterMetadata sqlParameter : sqlParametersByDefinedOrder) {
+		if(sqlParameterByDefinedOrders != null) {
+			for (SqlParameterMetadata sqlParameter : sqlParameterByDefinedOrders) {
 				replaceSqlParameterInSqlContent(sqlParameter);
 			}
 		}
@@ -57,10 +58,10 @@ public abstract class AbstractSqlNode implements SqlNode{
 	
 	// 添加 sql parameter
 	private void addSqlParameter(String configText) {
-		if(sqlParametersByDefinedOrder == null) {
-			sqlParametersByDefinedOrder = new ArrayList<SqlParameterMetadata>();
+		if(sqlParameterByDefinedOrders == null) {
+			sqlParameterByDefinedOrders = new ArrayList<SqlParameterMetadata>();
 		}
-		sqlParametersByDefinedOrder.add(new SqlParameterMetadata(configText));
+		sqlParameterByDefinedOrders.add(new SqlParameterMetadata(configText));
 	}
 	
 	// 替换Sql语句内容中的参数
@@ -74,6 +75,19 @@ public abstract class AbstractSqlNode implements SqlNode{
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		return new ExecuteSqlNode(content, sqlParametersByDefinedOrder, sqlParameter, sqlParameterNamePrefix);
+		return new ExecuteSqlNode(content, sqlParameterByDefinedOrders, sqlParameter, sqlParameterNamePrefix);
+	}
+
+	@Override
+	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+		if(sqlParameterByDefinedOrders != null) {
+			ValidationResult result = null;
+			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
+				if((result = parameter.doValidate(sqlParameter, sqlParameterNamePrefix)) != null) {
+					return result;
+				}
+			}
+		}
+		return null;
 	}
 }
