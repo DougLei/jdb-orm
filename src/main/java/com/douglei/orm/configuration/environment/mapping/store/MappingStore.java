@@ -22,7 +22,7 @@ public interface MappingStore extends SelfProcessing{
 	/**
 	 * <pre>
 	 * 	添加映射
-	 * 	如果存在相同code的映射, 会抛出异常
+	 * 	如果存在相同code的映射, 判断 {@link EnvironmentContext#getEnvironmentProperty()#clearMappingOnStart()} 值, 如果为true, 则抛出异常, 如果为false, 则跳过该映射的add
 	 * </pre>
 	 * @param mapping
 	 * @throws RepeatedMappingException
