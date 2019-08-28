@@ -73,7 +73,7 @@ public interface MappingStore extends SelfProcessing{
 	Mapping getMapping(String mappingCode) throws NotExistsMappingException;
 	
 	/**
-	 * mapping是否存在
+	 * 指定code的mapping是否存在
 	 * @param mappingCode
 	 * @return
 	 */

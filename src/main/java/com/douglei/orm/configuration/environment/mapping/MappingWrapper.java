@@ -102,6 +102,15 @@ public abstract class MappingWrapper implements SelfProcessing{
 	}
 	
 	/**
+	 * 是否存在指定code的映射
+	 * @param mappingCode
+	 * @return
+	 */
+	public boolean mappingExists(String mappingCode) {
+		return mappingStore.mappingExists(mappingCode);
+	}
+	
+	/**
 	 * <pre>
 	 * 	动态添加映射, 如果存在则覆盖
 	 * 	如果是表映射, 则顺便根据createMode的配置, 进行相应的操作

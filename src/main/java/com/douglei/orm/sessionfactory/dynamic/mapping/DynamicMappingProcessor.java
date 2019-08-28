@@ -185,4 +185,13 @@ public class DynamicMappingProcessor {
 			MappingXmlConfigContext.destroy();
 		}
 	}
+	
+	/**
+	 * 判断指定code的映射是否存在
+	 * @param mappingCode
+	 * @return
+	 */
+	public boolean mappingExists(String mappingCode) {
+		return mappingWrapper.mappingExists(mappingCode);
+	}
 }
