@@ -244,7 +244,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	// listMap转换为listClass
 	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap, TableMetadata tableMetadata) {
-		if(listMap != null && listMap.size() > 0) {
+		if(listMap.size() > 0) {
 			List<T> listT = new ArrayList<T>(listMap.size());
 			for (Map<String, Object> map : listMap) {
 				listT.add(map2Class(targetClass, map, tableMetadata));
@@ -256,7 +256,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	// 将map转换为类
 	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
-		if(map == null || map.size() == 0) {
+		if(map.size() == 0) {
 			return null;
 		}
 		if(tableMetadata == null || tableMetadata.classNameEmpty()) { // 没有配置映射, 或没有配置映射的类, 则将列名转换为属性名
