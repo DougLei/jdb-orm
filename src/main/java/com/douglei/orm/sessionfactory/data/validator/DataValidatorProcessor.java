@@ -94,7 +94,7 @@ public class DataValidatorProcessor {
 		ValidationResult vr = null;
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
-				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata());
+				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), objects.size());
 				for (Object object : objects) {
 					vr = persistentObjectValidator.doValidate(object);
 					if(vr != null) {
