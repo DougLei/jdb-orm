@@ -111,11 +111,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void saveDiff(List<Object> objects) {
-		objects.forEach(object -> save_(getTableMetadata(object.getClass().getName()), object));
-	}
-	
-	@Override
 	public void save(String code, Map<String, Object> propertyMap) {
 		save_(getTableMetadata(code), propertyMap);
 	}
@@ -178,11 +173,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void updateDiff(List<Object> objects) {
-		objects.forEach(object -> update_(getTableMetadata(object.getClass().getName()), object));
-	}
-	
-	@Override
 	public void update(String code, Map<String, Object> propertyMap) {
 		update_(getTableMetadata(code), propertyMap);
 	}
@@ -242,11 +232,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		objects.forEach(object -> delete_(table, object));
 	}
 	
-	@Override
-	public void deleteDiff(List<Object> objects) {
-		objects.forEach(object -> delete_(getTableMetadata(object.getClass().getName()), object));
-	}
-
 	@Override
 	public void delete(String code, Map<String, Object> propertyMap) {
 		delete_(getTableMetadata(code), propertyMap);

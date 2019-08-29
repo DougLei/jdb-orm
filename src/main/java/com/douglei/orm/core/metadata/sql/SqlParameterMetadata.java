@@ -13,7 +13,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.orm.core.metadata.validator.DataValidateException;
+import com.douglei.orm.core.metadata.validator.DataValidationException;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
@@ -287,7 +287,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
 			ValidationResult result = validatorHandler.doValidate(value);
 			if(result != null) {
-				throw new DataValidateException(descriptionName, name, value, result);
+				throw new DataValidationException(descriptionName, name, value, result);
 			}
 		}
 	}

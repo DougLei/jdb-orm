@@ -7,7 +7,7 @@ import java.util.Set;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.core.metadata.validator.DataValidateException;
+import com.douglei.orm.core.metadata.validator.DataValidationException;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.DeleteExecuteHandler;
@@ -87,7 +87,7 @@ public class PersistentObject extends AbstractPersistentObject{
 				value = propertyMap.get(column.getCode());
 				result = column.getValidatorHandler().doValidate(value);
 				if(result != null) {
-					throw new DataValidateException(column.getDescriptionName(), column.getName(), value, result);
+					throw new DataValidationException(column.getDescriptionName(), column.getName(), value, result);
 				}
 			}
 		}

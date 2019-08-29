@@ -6,13 +6,12 @@ import java.util.List;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.data.validator.DataValidator;
 
 /**
  * sql参数验证器
  * @author DougLei
  */
-public class SqlValidator implements DataValidator{
+public class SqlValidator {
 	
 	List<ContentValidator> contentValidators;
 	
@@ -25,7 +24,6 @@ public class SqlValidator implements DataValidator{
 		contents.forEach(content -> contentValidators.add(new ContentValidator(content)));
 	}
 	
-	@Override
 	public ValidationResult doValidate(Object sqlParameter) {
 		ValidationResult result = null;
 		for (ContentValidator cvalidator : contentValidators) {

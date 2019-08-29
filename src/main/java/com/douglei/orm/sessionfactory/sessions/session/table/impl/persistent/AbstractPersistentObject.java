@@ -32,6 +32,9 @@ public class AbstractPersistentObject {
 	public Object getOriginObject() {
 		return originObject;
 	}
+	public Map<String, Object> getTargetPropertyMap(){
+		return propertyMap;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void setOriginObject(Object originObject) {

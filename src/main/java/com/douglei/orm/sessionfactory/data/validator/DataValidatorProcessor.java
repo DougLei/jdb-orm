@@ -90,7 +90,7 @@ public class DataValidatorProcessor {
 		Mapping mapping = mappingWrapper.getMapping(code);
 		List<ValidationResult> validationResults = null;
 		
-		byte index = 0;
+		short index = 0;
 		ValidationResult vr = null;
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
@@ -106,6 +106,7 @@ public class DataValidatorProcessor {
 					}
 					index++;
 				}
+				// TODO 完成唯一约束的验证
 				break;
 			case SQL:// 验证sql数据
 				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);

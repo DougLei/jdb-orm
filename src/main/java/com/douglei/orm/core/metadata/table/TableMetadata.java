@@ -23,7 +23,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = 4660413514966131688L;
+	private static final long serialVersionUID = -5890977910661797560L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -40,7 +40,8 @@ public class TableMetadata implements Metadata{
 	private PrimaryKeyHandler primaryKeyHandler;
 	private PrimaryKeySequence primaryKeySequence;
 	
-	private List<ColumnMetadata> validateColumns;// 需要验证列
+	private List<ColumnMetadata> validateColumns;// 需要验证的列
+	private List<ColumnMetadata> validateUniqueColumns;// 需要验证唯一约束的列
 	
 	private Map<String, Constraint> constraints;// 约束
 	private Map<String, Index> indexes;// 索引
@@ -115,15 +116,14 @@ public class TableMetadata implements Metadata{
 				validateColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
 			}
 			validateColumns.add(column);
+			
+			if(column.isUnique()) {
+				if(validateUniqueColumns == null) {
+					validateUniqueColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
+				}
+				validateUniqueColumns.add(column);
+			}
 		}
-	}
-	
-	/**
-	 * 是否存在需要验证字段
-	 * @return
-	 */
-	public boolean existsValidateColumns() {
-		return validateColumns != null;
 	}
 	
 	/**
@@ -306,9 +306,21 @@ public class TableMetadata implements Metadata{
 		return primaryKeyColumns_.size();
 	}
 	
+	// 是否存在需要验证的列
+	public boolean existsValidateColumns() {
+		return validateColumns != null;
+	}
 	// 获取要验证的列集合
 	public List<ColumnMetadata> getValidateColumns() {
 		return validateColumns;
+	}
+	// 是否存在需要验证唯一约束的列集合
+	public boolean existsValidateUniqueColumns() {
+		return validateUniqueColumns != null;
+	}
+	// 获取要验证唯一约束的列集合
+	public List<ColumnMetadata> getValidateUniqueColumns(){
+		return validateUniqueColumns;
 	}
 	
 	// 获取按照定义顺序的列集合
