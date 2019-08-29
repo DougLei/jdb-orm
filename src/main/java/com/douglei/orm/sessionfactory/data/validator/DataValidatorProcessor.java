@@ -65,7 +65,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<BatchValidationResult> doValidate(List<? extends Object> objects) {
+	public List<ValidationResult> doValidate(List<? extends Object> objects) {
 		return doValidate(objects.get(0).getClass().getName(), objects);
 	}
 	
@@ -75,7 +75,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<BatchValidationResult> doValidate(String code, List<? extends Object> objects) {
+	public List<ValidationResult> doValidate(String code, List<? extends Object> objects) {
 		return doValidate(code, null, objects);
 	}
 	
@@ -86,38 +86,42 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return 
 	 */
-	public List<BatchValidationResult> doValidate(String code, String name, List<? extends Object> objects) {
+	public List<ValidationResult> doValidate(String code, String name, List<? extends Object> objects) {
 		Mapping mapping = mappingWrapper.getMapping(code);
-		List<BatchValidationResult> batchValidationResults = null;
+		List<ValidationResult> validationResults = null;
 		
 		byte index = 0;
-		BatchValidationResult bvr = null;
+		ValidationResult vr = null;
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata());
 				for (Object object : objects) {
-					bvr = BatchValidationResult.newInstance(index++, persistentObjectValidator.doValidate(object));
-					if(bvr != null) {
-						if(batchValidationResults == null) {
-							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+					vr = persistentObjectValidator.doValidate(object);
+					if(vr != null) {
+						vr.setIndex(index);
+						if(validationResults == null) {
+							validationResults = new ArrayList<ValidationResult>(objects.size());
 						}
-						batchValidationResults.add(bvr);
+						validationResults.add(vr);
 					}
+					index++;
 				}
 				break;
 			case SQL:// 验证sql数据
 				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);
 				for (Object object : objects) {
-					bvr = BatchValidationResult.newInstance(index++, sqlValidator.doValidate(object));
-					if(bvr != null) {
-						if(batchValidationResults == null) {
-							batchValidationResults = new ArrayList<BatchValidationResult>(objects.size());
+					vr = sqlValidator.doValidate(object);
+					if(vr != null) {
+						vr.setIndex(index);
+						if(validationResults == null) {
+							validationResults = new ArrayList<ValidationResult>(objects.size());
 						}
-						batchValidationResults.add(bvr);
+						validationResults.add(vr);
 					}
+					index++;
 				}
 				break;
 		}
-		return batchValidationResults;
+		return validationResults;
 	}
 }

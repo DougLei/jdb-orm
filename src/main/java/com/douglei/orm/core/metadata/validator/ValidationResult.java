@@ -8,6 +8,7 @@ import com.douglei.orm.core.result.Result;
  */
 public abstract class ValidationResult extends Result{
 	public static final String i18nCodePrefix = "jdb.data.validator.";
+	private short index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
 	private String validateFieldName;
 	
 	public ValidationResult(String validateFieldName) {
@@ -16,5 +17,11 @@ public abstract class ValidationResult extends Result{
 	
 	public final String getValidateFieldName() {
 		return validateFieldName;
+	}
+	public short getIndex() {
+		return index;
+	}
+	public void setIndex(short index) {
+		this.index = index;
 	}
 }
