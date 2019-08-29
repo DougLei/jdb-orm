@@ -17,10 +17,15 @@ public interface TableSession {
 	 */
 	void save(Object object);
 	/**
-	 * 保存对象
+	 * 保存对象, 同一个对象的集合
 	 * @param objects
 	 */
 	void save(List<Object> objects);
+	/**
+	 * 保存对象, 不同对象的集合
+	 * @param objects
+	 */
+	void saveDiff(List<Object> objects);
 	/**
 	 * 保存对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
@@ -45,6 +50,11 @@ public interface TableSession {
 	 */
 	void update(List<Object> objects);
 	/**
+	 * 修改对象, 不同对象的集合
+	 * @param objects
+	 */
+	void updateDiff(List<Object> objects);
+	/**
 	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param propertyMap
@@ -67,6 +77,11 @@ public interface TableSession {
 	 * @param objects
 	 */
 	void delete(List<Object> objects);
+	/**
+	 * 删除对象, 不同对象的集合
+	 * @param objects
+	 */
+	void deleteDiff(List<Object> objects);
 	/**
 	 * 删除对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值

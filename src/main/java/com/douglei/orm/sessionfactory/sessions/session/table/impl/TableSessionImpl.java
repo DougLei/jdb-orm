@@ -75,32 +75,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return tm;
 	}
 	
-	private void save_(TableMetadata table, Object object) {
-		PersistentObject persistent = new PersistentObject(table, object, OperationState.CREATE);
-		putInsertPersistentObjectCache(persistent);
-	}
-	
-	@Override
-	public void save(Object object) {
-		save_(getTableMetadata(object.getClass().getName()), object);
-	}
-	
-	@Override
-	public void save(List<Object> objects) {
-		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> save_(table, object));
-	}
-	
-	@Override
-	public void save(String code, Map<String, Object> propertyMap) {
-		save_(getTableMetadata(code), propertyMap);
-	}
-	
-	@Override
-	public void save(String code, List<Map<String, Object>> propertyMaps) {
-		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> save_(table, propertyMap));
-	}
 	
 	/**
 	 * 将要【保存的持久化对象】放到缓存中
@@ -120,32 +94,38 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 	}
 	
-	
-	private void update_(TableMetadata table, Object object) {
-		putUpdatePersistentObjectCache(object, table, getCache(table.getCode()));
+	private void save_(TableMetadata table, Object object) {
+		PersistentObject persistent = new PersistentObject(table, object, OperationState.CREATE);
+		putInsertPersistentObjectCache(persistent);
 	}
 	
 	@Override
-	public void update(Object object) {
-		update_(getTableMetadata(object.getClass().getName()), object);
+	public void save(Object object) {
+		save_(getTableMetadata(object.getClass().getName()), object);
 	}
 	
 	@Override
-	public void update(List<Object> objects) {
+	public void save(List<Object> objects) {
 		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> update_(table, object));
+		objects.forEach(object -> save_(table, object));
 	}
 	
 	@Override
-	public void update(String code, Map<String, Object> propertyMap) {
-		update_(getTableMetadata(code), propertyMap);
+	public void saveDiff(List<Object> objects) {
+		objects.forEach(object -> save_(getTableMetadata(object.getClass().getName()), object));
 	}
 	
 	@Override
-	public void update(String code, List<Map<String, Object>> propertyMaps) {
+	public void save(String code, Map<String, Object> propertyMap) {
+		save_(getTableMetadata(code), propertyMap);
+	}
+	
+	@Override
+	public void save(String code, List<Map<String, Object>> propertyMaps) {
 		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> update_(table, propertyMap));
+		propertyMaps.forEach(propertyMap -> save_(table, propertyMap));
 	}
+	
 	
 	/**
 	 * 将要【修改的持久化对象】放到缓存中
@@ -182,32 +162,37 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 	}
 	
-	
-	private void delete_(TableMetadata table, Object object) {
-		putDeletePersistentObjectCache(object, table, getCache(table.getCode()));
-	}
-
-	@Override
-	public void delete(Object object) {
-		delete_(getTableMetadata(object.getClass().getName()), object);
+	private void update_(TableMetadata table, Object object) {
+		putUpdatePersistentObjectCache(object, table, getCache(table.getCode()));
 	}
 	
 	@Override
-	public void delete(List<Object> objects) {
+	public void update(Object object) {
+		update_(getTableMetadata(object.getClass().getName()), object);
+	}
+	
+	@Override
+	public void update(List<Object> objects) {
 		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> delete_(table, object));
-	}
-
-	@Override
-	public void delete(String code, Map<String, Object> propertyMap) {
-		delete_(getTableMetadata(code), propertyMap);
+		objects.forEach(object -> update_(table, object));
 	}
 	
 	@Override
-	public void delete(String code, List<Map<String, Object>> propertyMaps) {
-		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> delete_(table, propertyMap));
+	public void updateDiff(List<Object> objects) {
+		objects.forEach(object -> update_(getTableMetadata(object.getClass().getName()), object));
 	}
+	
+	@Override
+	public void update(String code, Map<String, Object> propertyMap) {
+		update_(getTableMetadata(code), propertyMap);
+	}
+	
+	@Override
+	public void update(String code, List<Map<String, Object>> propertyMaps) {
+		TableMetadata table = getTableMetadata(code);
+		propertyMaps.forEach(propertyMap -> update_(table, propertyMap));
+	}
+	
 
 	/**
 	 * 将要【删除的持久化对象】放到缓存中
@@ -242,6 +227,37 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 	}
 	
+	private void delete_(TableMetadata table, Object object) {
+		putDeletePersistentObjectCache(object, table, getCache(table.getCode()));
+	}
+
+	@Override
+	public void delete(Object object) {
+		delete_(getTableMetadata(object.getClass().getName()), object);
+	}
+	
+	@Override
+	public void delete(List<Object> objects) {
+		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> delete_(table, object));
+	}
+	
+	@Override
+	public void deleteDiff(List<Object> objects) {
+		objects.forEach(object -> delete_(getTableMetadata(object.getClass().getName()), object));
+	}
+
+	@Override
+	public void delete(String code, Map<String, Object> propertyMap) {
+		delete_(getTableMetadata(code), propertyMap);
+	}
+	
+	@Override
+	public void delete(String code, List<Map<String, Object>> propertyMaps) {
+		TableMetadata table = getTableMetadata(code);
+		propertyMaps.forEach(propertyMap -> delete_(table, propertyMap));
+	}
+
 		
 	private void flushPersistentObjectCache() throws SessionExecutionException {
 		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
