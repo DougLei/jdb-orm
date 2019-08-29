@@ -82,6 +82,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putInsertPersistentObjectCache(PersistentObject persistent) {
 		if(enableTalbeSessionCache) {
+			// TODO 验证一下unique
 			String code = persistent.getCode();
 			Map<Identity, PersistentObject> cache = getCache(code);
 			
@@ -130,6 +131,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
 		if(!tableMetadata.existsPrimaryKey()) {
+			// TODO 验证一下unique
 			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode());
 		}
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);

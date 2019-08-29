@@ -45,7 +45,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlTableMapping extends XmlMapping implements TableMapping{
-	private static final long serialVersionUID = -3966509657251325723L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
 	private static final XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
 	private static final XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
@@ -186,11 +185,12 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 								columnMetadata.set2PrimaryKeyConstraint(true);
 								constraint.addColumn(columnMetadata);
 							}
+							break;
 						case UNIQUE:
 							for(Attribute columnName: columnNames) {
 								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
 								isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-								columnMetadata.set2UniqueConstraint();
+								columnMetadata.set2UniqueConstraint(true);
 								constraint.addColumn(columnMetadata);
 							}
 							break;
@@ -361,7 +361,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		Map<String, ValidatorHandler> validatorHandlerMap = getValidatorHandlerMap(validatorsElement);
 		boolean existsPrimaryKeyHandler = tableMetadata.existsPrimaryKeyHandler();
 		tableMetadata.getDeclareColumns().forEach(column -> {
-			tableMetadata.setValidateColumn(column.setValidatorHandler(existsPrimaryKeyHandler, getValidatorHandler(column.getName(), validatorHandlerMap)));
+			tableMetadata.setValidateColumn(column.setValidatorHandler(existsPrimaryKeyHandler, getValidatorHandler(column.getCode(), validatorHandlerMap)));
 		});
 	}
 	
@@ -380,7 +380,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				ValidatorHandler handler = null;
 				for (Element ve : validatorElements) {
 					handler = getValidatorHandler(ve);
-					validatorMap.put(processValidationColumnName(handler.getName()), handler);
+					validatorMap.put(tableMetadata.validateColumnExistsByName(handler.getName()), handler);
 				}
 				return validatorMap;
 			}
@@ -411,25 +411,19 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		throw new NullPointerException("<validator>元素中的name属性值不能为空");
 	}
 	
-	// 处理要验证的列名
-	private String processValidationColumnName(String columnName) {
-		tableMetadata.validateColumnExistsByName(columnName);
-		return columnName.toUpperCase();
-	}
-	
 	/**
-	 * 获取指定name的ValidatorHandler
-	 * @param name
+	 * 获取指定code的ValidatorHandler
+	 * @param columnCode
 	 * @param validatorHandlerMap
 	 * @return
 	 */
-	private ValidatorHandler getValidatorHandler(String name, Map<String, ValidatorHandler> validatorHandlerMap) {
+	private ValidatorHandler getValidatorHandler(String columnCode, Map<String, ValidatorHandler> validatorHandlerMap) {
 		if(validatorHandlerMap.isEmpty()) {
-			return new ValidatorHandler(name);
+			return new ValidatorHandler(columnCode);
 		}
-		ValidatorHandler handler = validatorHandlerMap.get(name);
+		ValidatorHandler handler = validatorHandlerMap.get(columnCode);
 		if(handler == null) {
-			handler = new ValidatorHandler(name);
+			handler = new ValidatorHandler(columnCode);
 		}
 		return handler;
 	}

@@ -106,7 +106,7 @@ public class DataValidatorProcessor {
 					}
 					index++;
 				}
-				// TODO 完成唯一约束的验证
+				persistentObjectValidator.destroy();
 				break;
 			case SQL:// 验证sql数据
 				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);

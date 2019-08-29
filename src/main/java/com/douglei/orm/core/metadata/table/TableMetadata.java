@@ -23,7 +23,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -5890977910661797560L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -41,7 +40,7 @@ public class TableMetadata implements Metadata{
 	private PrimaryKeySequence primaryKeySequence;
 	
 	private List<ColumnMetadata> validateColumns;// 需要验证的列
-	private List<ColumnMetadata> validateUniqueColumns;// 需要验证唯一约束的列
+	private List<String> validateUniqueColumnCodes;// 需要验证唯一约束的列<code>
 	
 	private Map<String, Constraint> constraints;// 约束
 	private Map<String, Index> indexes;// 索引
@@ -118,10 +117,10 @@ public class TableMetadata implements Metadata{
 			validateColumns.add(column);
 			
 			if(column.isUnique()) {
-				if(validateUniqueColumns == null) {
-					validateUniqueColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
+				if(validateUniqueColumnCodes == null) {
+					validateUniqueColumnCodes = new ArrayList<String>(declareColumns.size());
 				}
-				validateUniqueColumns.add(column);
+				validateUniqueColumnCodes.add(column.getCode());
 			}
 		}
 	}
@@ -314,13 +313,9 @@ public class TableMetadata implements Metadata{
 	public List<ColumnMetadata> getValidateColumns() {
 		return validateColumns;
 	}
-	// 是否存在需要验证唯一约束的列集合
-	public boolean existsValidateUniqueColumns() {
-		return validateUniqueColumns != null;
-	}
-	// 获取要验证唯一约束的列集合
-	public List<ColumnMetadata> getValidateUniqueColumns(){
-		return validateUniqueColumns;
+	// 获取要验证唯一约束的列code集合
+	public List<String> getValidateUniqueColumnCodes(){
+		return validateUniqueColumnCodes;
 	}
 	
 	// 获取按照定义顺序的列集合
@@ -345,11 +340,14 @@ public class TableMetadata implements Metadata{
 	/**
 	 * 根据列名, 验证列是否存在
 	 * @param columnName
+	 * @return 返回列的code值 {@link ColumnMetadata#getCode()}
 	 */
-	public void validateColumnExistsByName(String columnName) {
-		if(!columns.containsKey(columnName)) {
+	public String validateColumnExistsByName(String columnName) {
+		ColumnMetadata column = columns.get(columnName);
+		if(column == null) {
 			throw new NullPointerException("不存在column name=["+columnName+"]的列");
 		}
+		return column.getCode();
 	}
 	
 	@Override

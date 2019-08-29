@@ -26,7 +26,7 @@ public class Identity {
 	public Identity(Object id, TableMetadata tableMetadata) {
 		this.id = id;
 		this.tableMetadata = tableMetadata;
-		if(isNull() && !supportNullId()) {
+		if(isNull() && !allowNullId()) {
 			throw new NullPointerException("id不能为空");
 		}
 		if(!supportType()) {
@@ -107,10 +107,10 @@ public class Identity {
 	}
 	
 	/**
-	 * 是否支持空id
+	 * 是否允许空id
 	 * @return
 	 */
-	private boolean supportNullId() {
+	private boolean allowNullId() {
 		if(tableMetadata != null && tableMetadata.existsPrimaryKeyHandler()) {
 			this.id = IdentityUtil.getUUID();
 			logger.debug("当有主键处理器的时候, 可以不用传入id值, 框架给予默认的id值=[{}]", id);

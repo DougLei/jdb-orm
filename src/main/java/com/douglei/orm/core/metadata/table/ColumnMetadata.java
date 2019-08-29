@@ -17,7 +17,6 @@ import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConv
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = -8811168548476748974L;
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
@@ -47,13 +46,13 @@ public class ColumnMetadata implements Metadata{
 		this.property = StringUtil.isEmpty(property)?null:property;
 		this.descriptionName = StringUtil.isEmpty(descriptionName)?name:descriptionName;
 		this.nullable = nullable;
-		this.unique = unique;
 		this.validate = validate;
 		set2DefaultValue(defaultValue);
 		set2CheckConstraint(check);
 		set2ForeginKeyConstraint(fkTableName, fkColumnName);
 		
 		processDataType(DataType.toValue(dataType), dataType, length, precision);
+		set2UniqueConstraint(unique);
 		set2PrimaryKeyConstraint(primaryKey);
 	}
 	
@@ -91,11 +90,20 @@ public class ColumnMetadata implements Metadata{
 	
 	/**
 	 * 设置为唯一约束
+	 * @param
 	 */
-	public void set2UniqueConstraint() {
-		this.unique = true;
+	public void set2UniqueConstraint(boolean unique) {
+		this.unique = unique;
+		if(unique) {
+			this.nullable = false;// 如果有唯一约束, 则不能为空
+			this.defaultValue = null;// 如果有唯一约束, 则不能有默认值
+		}
 	}
 	
+	/**
+	 * 设置默认值
+	 * @param defaultValue
+	 */
 	public void set2DefaultValue(String defaultValue) {
 		if(StringUtil.notEmpty(defaultValue)) {
 			this.defaultValue = defaultValue;
