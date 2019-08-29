@@ -14,9 +14,8 @@ public abstract class ValidationResult extends Result{
 	public ValidationResult(String validateFieldName) {
 		this.validateFieldName = validateFieldName;
 	}
-	public ValidationResult(short index, String validateFieldName) {
+	public final void setIndex(short index) {
 		this.index = index;
-		this.validateFieldName = validateFieldName;
 	}
 	
 	public final String getValidateFieldName() {
@@ -24,8 +23,5 @@ public abstract class ValidationResult extends Result{
 	}
 	public final short getIndex() {
 		return index;
-	}
-	public final void setIndex(short index) {
-		this.index = index;
 	}
 }
