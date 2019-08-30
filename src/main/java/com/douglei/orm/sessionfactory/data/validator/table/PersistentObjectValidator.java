@@ -16,8 +16,6 @@ import com.douglei.tools.utils.Collections;
 public class PersistentObjectValidator extends AbstractPersistentObject {
 	
 	private short validateDataCount;// 要验证的数据数量, 可以判断出是否是批量验证, 批量验证的时候, 需要验证唯一约束
-	
-	private List<String> uniqueColumnCodes;
 	private List<Object> uniqueValues;// 如果是批量验证, 且有唯一约束, 则记录每个对象中相应的唯一列的值
 	
 	public PersistentObjectValidator(TableMetadata tableMetadata) {
@@ -26,7 +24,6 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount) {
 		super(tableMetadata);
 		this.validateDataCount = (short) validateDataCount;
-		this.uniqueColumnCodes = tableMetadata.getValidateUniqueColumnCodes();
 	}
 
 	// 进行验证
@@ -43,10 +40,10 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			}
 			
 			// 如果还存在唯一约束的列, 则要对集合中的数据也进行验证
-			if(validateDataCount > 1 && uniqueColumnCodes != null) {
+			if(validateDataCount > 1 && existsValidateUniqueColumns()) {
 				if(uniqueValues == null) {
 					uniqueValues = new ArrayList<Object>(validateDataCount);
-					uniqueValues.add(getCurrentPersistentObjectUniqueValue());
+					uniqueValues.add(getPersistentObjectValidateUniqueValue());
 				}else {
 					if((result = validateRepeatedUniqueValue()) != null) {
 						return result;
@@ -58,41 +55,16 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 	}
 	
 	/**
-	 * 获取当前持久化对象的唯一值
-	 * @return
-	 */
-	private Object getCurrentPersistentObjectUniqueValue(){
-		if(uniqueColumnCodes.size() == 1) {
-			return propertyMap.get(uniqueColumnCodes.get(0));
-		}else {
-			List<Object> currentPersistentObjectUniqueValues = new ArrayList<Object>(uniqueColumnCodes.size());
-			uniqueColumnCodes.forEach(ucc -> currentPersistentObjectUniqueValues.add(propertyMap.get(ucc)));
-			return currentPersistentObjectUniqueValues;
-		}
-	}
-	
-	/**
 	 * 验证是否重复的唯一值
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private ValidationResult validateRepeatedUniqueValue() {
-		Object currentPersistentObjectUniqueValue = getCurrentPersistentObjectUniqueValue();
-		if(uniqueColumnCodes.size() == 1) {
+		Object currentPersistentObjectUniqueValue = getPersistentObjectValidateUniqueValue();
+		if(validateUniqueColumnCodes.size() == 1) {
 			for (Object uniqueValue : uniqueValues) {
 				if(currentPersistentObjectUniqueValue.equals(uniqueValue)) {
-					return new UniqueValidationResult(uniqueColumnCodes.get(0)) {
-						
-						@Override
-						public String getMessage() {
-							return "值重复";
-						}
-						
-						@Override
-						public String getI18nCode() {
-							return i18nCodePrefix + "value.violation.unique.constraint";
-						}
-					};
+					return new UniqueValidationResult(validateUniqueColumnCodes.get(0));
 				}
 			}
 		}else {
@@ -101,20 +73,9 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			short index;
 			for (Object uniqueValue : uniqueValues) {
 				beforePersistentObjectUniqueValues = (List<Object>) uniqueValue;
-				for(index=0; index < uniqueColumnCodes.size(); index++) {
+				for(index=0; index < validateUniqueColumnCodes.size(); index++) {
 					if(currentPersistentObjectUniques.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
-						return new UniqueValidationResult(uniqueColumnCodes.get(index)) {
-							
-							@Override
-							public String getMessage() {
-								return "值重复";
-							}
-							
-							@Override
-							public String getI18nCode() {
-								return i18nCodePrefix + "value.violation.unique.constraint";
-							}
-						};
+						return new UniqueValidationResult(validateUniqueColumnCodes.get(index));
 					}
 				}
 			}

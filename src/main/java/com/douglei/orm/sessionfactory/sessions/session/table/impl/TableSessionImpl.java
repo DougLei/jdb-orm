@@ -14,9 +14,11 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.ExecMappingDescriptionContext;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.sessionfactory.data.validator.table.UniqueValidationResult;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
@@ -77,17 +79,72 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	
 	/**
+	 * 验证是否有重复的唯一值
+	 * 需要开启 {enableTableSessionCache=true, enabledDataValidate=true} 这两个配置, 该功能才会启作用
+	 * @param persistent
+	 * @param beforePersistents
+	 */
+	private void validateRepeatedUniqueValue(PersistentObject persistent, Collection<PersistentObject> beforePersistents) {
+		if(persistent.existsValidateUniqueColumns()) {
+			RepeatedUniqueValueColumn repeatedColumn;
+			for (PersistentObject beforePersistent : beforePersistents) {
+				// 第一个判断是因为update时可能会从缓存中取数据再修改, 所以防止同一个对象进行比较
+				if(beforePersistent != persistent && (repeatedColumn = compareUniqueValue(persistent, beforePersistent.getPersistentObjectValidateUniqueValue(), persistent.getPersistentObjectValidateUniqueValue())) != null) { 
+					throw new RepeatedUniqueValueException(repeatedColumn.column.getDescriptionName(), repeatedColumn.column.getName(), repeatedColumn.validateUniqueValue, new UniqueValidationResult(repeatedColumn.column.getCode()));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 比较唯一值
+	 * @param validateUniqueColumnCodes
+	 * @param beforePersistentObjectValidateUniqueValue
+	 * @param persistentObjectValidateUniqueValue
+	 * @return 如果出现重复唯一值, 返回重复了唯一值的列对象, 否则返回null, 表示验证通过
+	 */
+	@SuppressWarnings("unchecked")
+	private RepeatedUniqueValueColumn compareUniqueValue(PersistentObject persistent, Object beforePersistentObjectValidateUniqueValue, Object persistentObjectValidateUniqueValue) {
+		List<String> validateUniqueColumnCodes = persistent.getValidateUniqueColumnCodes();
+		if(validateUniqueColumnCodes.size() == 1 && beforePersistentObjectValidateUniqueValue.equals(persistentObjectValidateUniqueValue)) {
+			return new RepeatedUniqueValueColumn(persistent.getValidateUniqueColumnByCode(validateUniqueColumnCodes.get(0)), beforePersistentObjectValidateUniqueValue);
+		}else {
+			List<Object> beforePersistentObjectValidateUniqueValues = (List<Object>) beforePersistentObjectValidateUniqueValue;
+			List<Object> persistentObjectValidateUniqueValues = (List<Object>) persistentObjectValidateUniqueValue;
+			for(short index=0; index < validateUniqueColumnCodes.size(); index++) {
+				if(beforePersistentObjectValidateUniqueValues.get(index).equals(persistentObjectValidateUniqueValues.get(index))) {
+					return new RepeatedUniqueValueColumn(persistent.getValidateUniqueColumnByCode(validateUniqueColumnCodes.get(index)), beforePersistentObjectValidateUniqueValues.get(index));
+				}
+			}
+		}
+		return null;
+	}
+	
+	// 重复了唯一值的column
+	private class RepeatedUniqueValueColumn{
+		ColumnMetadata column;
+		Object validateUniqueValue;
+		RepeatedUniqueValueColumn(ColumnMetadata column, Object validateUniqueValue) {
+			this.column = column;
+			this.validateUniqueValue = validateUniqueValue;
+		}
+	}
+	
+
+	/**
 	 * 将要【保存的持久化对象】放到缓存中
 	 * @param persistent
 	 */
 	private void putInsertPersistentObjectCache(PersistentObject persistent) {
 		if(enableTalbeSessionCache) {
-			// TODO 验证一下unique
 			String code = persistent.getCode();
 			Map<Identity, PersistentObject> cache = getCache(code);
 			
-			if(cache.containsKey(persistent.getId())) {
-				throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值:" + persistent.getId().toString());
+			if(cache.size() > 0) {
+				if(cache.containsKey(persistent.getId())) {
+					throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
+				}
+				validateRepeatedUniqueValue(persistent, cache.values());
 			}
 			cache.put(persistent.getId(), persistent);
 		}else {
@@ -131,27 +188,28 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
 		if(!tableMetadata.existsPrimaryKey()) {
-			// TODO 验证一下unique
 			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode());
 		}
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE);
 		if(enableTalbeSessionCache) {
-			if(cache.containsKey(persistentObject.getId())) {
+			if(cache.size() > 0 && cache.containsKey(persistentObject.getId())) {
 				logger.debug("缓存中存在要修改的数据持久化对象");
 				persistentObject = cache.get(persistentObject.getId());
 				switch(persistentObject.getOperationState()) {
-				case CREATE:
-				case UPDATE:
-					if(logger.isDebugEnabled()) {
-						logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());
-					}
-					persistentObject.setOriginObject(object);
-					return;
-				case DELETE:
-					throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
+					case CREATE:
+					case UPDATE:
+						if(logger.isDebugEnabled()) {
+							logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());// 如果修改create=>update, 最后发出的sql语句会不同, 试问一个没有create过的数据, 怎么可能执行成功update 
+						}
+						persistentObject.setOriginObject(object);
+						validateRepeatedUniqueValue(persistentObject, cache.values());
+						return;
+					case DELETE:
+						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
 				}
 			}else {
 				logger.debug("缓存中不存在要修改的数据持久化对象");
+				validateRepeatedUniqueValue(persistentObject, cache.values());
 				cache.put(persistentObject.getId(), persistentObject);
 			}
 		}else {
@@ -195,7 +253,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private void putDeletePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE);
 		if(enableTalbeSessionCache) {
-			if(cache.containsKey(persistentObject.getId())) {
+			if(cache.size() > 0 && cache.containsKey(persistentObject.getId())) {
 				logger.debug("缓存中存在要删除的数据持久化对象");
 				persistentObject = cache.get(persistentObject.getId());
 				switch(persistentObject.getOperationState()) {

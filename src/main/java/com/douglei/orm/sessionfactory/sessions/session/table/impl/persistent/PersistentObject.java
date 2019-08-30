@@ -1,6 +1,7 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.
 public class PersistentObject extends AbstractPersistentObject{
 	private Identity id;
 	private OperationState operationState;
+	private Object validateUniqueValue;// 要验证的唯一约束的值
 	
 	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
 		super(tableMetadata, originObject);
@@ -34,9 +36,37 @@ public class PersistentObject extends AbstractPersistentObject{
 	public void setOperationState(OperationState operationState) {
 		this.operationState = operationState;
 	}
-	public String getCode() {
-		return tableMetadata.getCode();
+	
+	/**
+	 * 获取验证的, 有唯一约束的列code集合
+	 * @return
+	 */
+	public List<String> getValidateUniqueColumnCodes() {
+		return validateUniqueColumnCodes;
 	}
+	
+	@Override
+	public boolean existsValidateUniqueColumns() {
+		return EnvironmentContext.getEnvironmentProperty().enableDataValidate() && super.existsValidateUniqueColumns();
+	}
+	
+	/**
+	 * 根据code, 获取要验证唯一约束的列对象
+	 * @param code
+	 * @return
+	 */
+	public ColumnMetadata getValidateUniqueColumnByCode(String code) {
+		return tableMetadata.getColumnByCode(code);
+	}
+
+	@Override
+	public Object getPersistentObjectValidateUniqueValue() {
+		if(validateUniqueValue == null) {
+			validateUniqueValue = super.getPersistentObjectValidateUniqueValue();
+		}
+		return validateUniqueValue;
+	}
+
 	public Identity getId() {
 		if(id == null) {
 			if(tableMetadata.existsPrimaryKey()) {
@@ -76,6 +106,7 @@ public class PersistentObject extends AbstractPersistentObject{
 	public void setOriginObject(Object originObject) {
 		super.setOriginObject(originObject);
 		doValidate();
+		this.validateUniqueValue = null;// 将唯一值置空
 	}
 
 	// 进行验证
@@ -95,7 +126,9 @@ public class PersistentObject extends AbstractPersistentObject{
 	
 	@Override
 	public String toString() {
-		return "operationState:" + operationState 
+		return "id:" + getId().toString() 
+				+ "\t" 
+				+ "operationState:" + operationState 
 				+ "\t" 
 				+ originObject.toString();
 	}
