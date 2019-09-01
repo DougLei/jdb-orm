@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
 import com.douglei.tools.utils.Collections;
 
 /**
@@ -39,13 +41,13 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 				}
 			}
 			
-			// 如果还存在唯一约束的列, 则要对集合中的数据也进行验证
-			if(validateDataCount > 1 && existsValidateUniqueColumns()) {
+			// 如果还存在唯一约束, 则要对集合中的数据也进行验证
+			if(validateDataCount > 1 && existsUniqueConstraint()) {
 				if(uniqueValues == null) {
 					uniqueValues = new ArrayList<Object>(validateDataCount);
-					uniqueValues.add(getPersistentObjectValidateUniqueValue());
+					uniqueValues.add(getPersistentObjectUniqueValue());
 				}else {
-					if((result = validateRepeatedUniqueValue()) != null) {
+					if((result = validateUniqueValue()) != null) {
 						return result;
 					}
 				}
@@ -55,33 +57,42 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 	}
 	
 	/**
-	 * 验证是否重复的唯一值
+	 * 验证唯一值
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private ValidationResult validateRepeatedUniqueValue() {
-		Object currentPersistentObjectUniqueValue = getPersistentObjectValidateUniqueValue();
-		if(validateUniqueColumnCodes.size() == 1) {
-			for (Object uniqueValue : uniqueValues) {
-				if(currentPersistentObjectUniqueValue.equals(uniqueValue)) {
-					return new UniqueValidationResult(validateUniqueColumnCodes.get(0));
+	private ValidationResult validateUniqueValue() {
+		Object currentPersistentObjectUniqueValue = getPersistentObjectUniqueValue();
+		if(uniqueConstraints.size() == 1) {
+			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
+				if(currentPersistentObjectUniqueValue.equals(beforePersistentObjectUniqueValue)) {
+					return uniqueValidationResult((short)0, ((UniqueValue)currentPersistentObjectUniqueValue).getValue());
 				}
 			}
 		}else {
-			List<Object>  currentPersistentObjectUniques = (List<Object>) currentPersistentObjectUniqueValue;
-			List<Object>  beforePersistentObjectUniqueValues = null;
+			List<UniqueValue>  currentPersistentObjectUniqueValues = (List<UniqueValue>) currentPersistentObjectUniqueValue;
+			List<UniqueValue>  beforePersistentObjectUniqueValues = null;
 			short index;
-			for (Object uniqueValue : uniqueValues) {
-				beforePersistentObjectUniqueValues = (List<Object>) uniqueValue;
-				for(index=0; index < validateUniqueColumnCodes.size(); index++) {
-					if(currentPersistentObjectUniques.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
-						return new UniqueValidationResult(validateUniqueColumnCodes.get(index));
+			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
+				beforePersistentObjectUniqueValues = (List<UniqueValue>) beforePersistentObjectUniqueValue;
+				for(index=0; index < uniqueConstraints.size(); index++) {
+					if(currentPersistentObjectUniqueValues.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
+						return uniqueValidationResult(index, currentPersistentObjectUniqueValues.get(index).getValue());
 					}
 				}
 			}
 		}
 		uniqueValues.add(currentPersistentObjectUniqueValue);
 		return null;
+	}
+	
+	// 返回 {@link UniqueValidationResult}
+	private UniqueValidationResult uniqueValidationResult(short index, Object uniqueValue) {
+		UniqueConstraint uc = uniqueConstraints.get(index);
+		if(uc.isMultiColumns()) {
+			return new UniqueValidationResult(uc.getCodes(), uniqueValue);
+		}
+		return new UniqueValidationResult(uc.getCode(), uniqueValue);
 	}
 	
 	/**

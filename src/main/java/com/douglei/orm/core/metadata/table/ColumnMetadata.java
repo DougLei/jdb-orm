@@ -17,7 +17,6 @@ import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConv
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = 5899100185387485584L;
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	

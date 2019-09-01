@@ -45,7 +45,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlTableMapping extends XmlMapping implements TableMapping{
-	private static final long serialVersionUID = -3966509657251325723L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
 	private static final XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
 	private static final XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
@@ -180,23 +179,22 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					constraint = new Constraint(constraintType, tableMetadata.getName());
 					switch(constraintType) {
 						case PRIMARY_KEY:
-							tableMetadata.validatePrimaryKeyColumnExists();
 							for(Attribute columnName: columnNames) {
-								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
+								columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
 								columnMetadata.set2PrimaryKeyConstraint(true);
 								constraint.addColumn(columnMetadata);
 							}
 							break;
 						case UNIQUE:
 							for(Attribute columnName: columnNames) {
-								columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
+								columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
 								isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 								columnMetadata.set2UniqueConstraint(true);
 								constraint.addColumn(columnMetadata);
 							}
 							break;
 						case DEFAULT_VALUE:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+							columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 							columnMetadata.set2DefaultValue(constraintElement.attributeValue("value"));
 							if(columnMetadata.getDefaultValue() == null) {
@@ -205,7 +203,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 							constraint.addColumn(columnMetadata);
 							break;
 						case CHECK:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+							columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 							columnMetadata.set2CheckConstraint(constraintElement.attributeValue("expression"));
 							if(columnMetadata.getCheck() == null) {
@@ -214,7 +212,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 							constraint.addColumn(columnMetadata);
 							break;
 						case FOREIGN_KEY:
-							columnMetadata = (ColumnMetadata) tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+							columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 							columnMetadata.set2ForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
 							if(columnMetadata.getFkTableName() == null) {

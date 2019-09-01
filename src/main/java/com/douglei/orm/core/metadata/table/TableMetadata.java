@@ -23,7 +23,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -2643227717218640001L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -41,9 +40,10 @@ public class TableMetadata implements Metadata{
 	private PrimaryKeySequence primaryKeySequence;
 	
 	private List<ColumnMetadata> validateColumns;// 需要验证的列
-	private List<String> validateUniqueColumnCodes;// 需要验证唯一约束的列<code>
 	
 	private Map<String, Constraint> constraints;// 约束
+	private List<UniqueConstraint> uniqueConstraints;// 唯一约束集合
+	
 	private Map<String, Index> indexes;// 索引
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
@@ -116,31 +116,7 @@ public class TableMetadata implements Metadata{
 				validateColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
 			}
 			validateColumns.add(column);
-			
-			if(column.isUnique()) {
-				if(validateUniqueColumnCodes == null) {
-					validateUniqueColumnCodes = new ArrayList<String>(declareColumns.size());
-				}
-				validateUniqueColumnCodes.add(column.getCode());
-			}
 		}
-	}
-	
-	/**
-	 * 验证主键列是否存在
-	 */
-	public void validatePrimaryKeyColumnExists() {
-		if(existsPrimaryKey()) {
-			throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
-		}
-	}
-	
-	/**
-	 * 是否存在主键
-	 * @return
-	 */
-	public boolean existsPrimaryKey() {
-		return primaryKeyColumns_ != null;
 	}
 	
 	// 通过列, 添加单列约束
@@ -175,6 +151,11 @@ public class TableMetadata implements Metadata{
 		if(constraint.getConstraintType() == ConstraintType.PRIMARY_KEY) {
 			validatePrimaryKeyColumnExists();
 			addPrimaryKeyColumns(constraint.getColumns());
+		}else if(constraint.getConstraintType() == ConstraintType.UNIQUE) {
+			if(uniqueConstraints == null) {
+				uniqueConstraints = new ArrayList<UniqueConstraint>(4);
+			}
+			uniqueConstraints.add(new UniqueConstraint(constraint));
 		}
 		constraints.put(constraint.getName(), constraint);
 	}
@@ -289,6 +270,17 @@ public class TableMetadata implements Metadata{
 		return columns_.containsKey(code);
 	}
 	
+	// 验证主键列是否存在
+	private void validatePrimaryKeyColumnExists() {
+		if(existsPrimaryKey()) {
+			throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
+		}
+	}
+	// 是否存在主键
+	public boolean existsPrimaryKey() {
+		return primaryKeyColumns_ != null;
+	}
+	
 	// 获取主键列的code集合
 	public Set<String> getPrimaryKeyColumnCodes(){
 		return primaryKeyColumns_.keySet();
@@ -314,11 +306,12 @@ public class TableMetadata implements Metadata{
 	public List<ColumnMetadata> getValidateColumns() {
 		return validateColumns;
 	}
-	// 获取要验证唯一约束的列code集合
-	public List<String> getValidateUniqueColumnCodes(){
-		return validateUniqueColumnCodes;
-	}
 	
+	// 获取唯一约束集合
+	public List<UniqueConstraint> getUniqueConstraints() {
+		return uniqueConstraints;
+	}
+
 	// 获取按照定义顺序的列集合
 	public List<ColumnMetadata> getDeclareColumns() {
 		return declareColumns;

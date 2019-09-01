@@ -1,7 +1,6 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.
 public class PersistentObject extends AbstractPersistentObject{
 	private Identity id;
 	private OperationState operationState;
-	private Object validateUniqueValue;// 要验证的唯一约束的值
+	private Object uniqueValue;// 唯一约束的值
 	
 	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
 		super(tableMetadata, originObject);
@@ -37,34 +36,17 @@ public class PersistentObject extends AbstractPersistentObject{
 		this.operationState = operationState;
 	}
 	
-	/**
-	 * 获取验证的, 有唯一约束的列code集合
-	 * @return
-	 */
-	public List<String> getValidateUniqueColumnCodes() {
-		return validateUniqueColumnCodes;
+	@Override
+	public boolean existsUniqueConstraint() {
+		return EnvironmentContext.getEnvironmentProperty().enableDataValidate() && super.existsUniqueConstraint();
 	}
 	
 	@Override
-	public boolean existsValidateUniqueColumns() {
-		return EnvironmentContext.getEnvironmentProperty().enableDataValidate() && super.existsValidateUniqueColumns();
-	}
-	
-	/**
-	 * 根据code, 获取要验证唯一约束的列对象
-	 * @param code
-	 * @return
-	 */
-	public ColumnMetadata getValidateUniqueColumnByCode(String code) {
-		return tableMetadata.getColumnByCode(code);
-	}
-
-	@Override
-	public Object getPersistentObjectValidateUniqueValue() {
-		if(validateUniqueValue == null) {
-			validateUniqueValue = super.getPersistentObjectValidateUniqueValue();
+	public Object getPersistentObjectUniqueValue() {
+		if(uniqueValue == null) {
+			uniqueValue = super.getPersistentObjectUniqueValue();
 		}
-		return validateUniqueValue;
+		return uniqueValue;
 	}
 
 	public Identity getId() {
@@ -106,7 +88,7 @@ public class PersistentObject extends AbstractPersistentObject{
 	public void setOriginObject(Object originObject) {
 		super.setOriginObject(originObject);
 		doValidate();
-		this.validateUniqueValue = null;// 将唯一值置空
+		this.uniqueValue = null;// 将唯一值置空
 	}
 
 	// 进行验证

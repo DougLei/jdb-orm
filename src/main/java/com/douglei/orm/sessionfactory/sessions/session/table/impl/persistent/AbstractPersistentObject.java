@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
@@ -23,11 +24,11 @@ public class AbstractPersistentObject {
 	protected Object originObject;// 要持久化操作的源对象
 	protected Map<String, Object> propertyMap;// 将源对象转换为map集合
 	
-	protected List<String> validateUniqueColumnCodes;// 要验证的, 有唯一约束的列code集合
+	protected List<UniqueConstraint> uniqueConstraints;// 唯一约束集合
 	
 	public AbstractPersistentObject(TableMetadata tableMetadata) {
 		this.tableMetadata = tableMetadata;
-		this.validateUniqueColumnCodes = tableMetadata.getValidateUniqueColumnCodes();
+		this.uniqueConstraints = tableMetadata.getUniqueConstraints();
 	}
 	public AbstractPersistentObject(TableMetadata tableMetadata, Object originObject) {
 		this(tableMetadata);
@@ -43,24 +44,21 @@ public class AbstractPersistentObject {
 	public Map<String, Object> getTargetPropertyMap(){
 		return propertyMap;
 	}
-	/**
-	 * 是否存在要验证的, 有唯一约束的列
-	 * @return
-	 */
-	public boolean existsValidateUniqueColumns() {
-		return validateUniqueColumnCodes != null;
+	// 是否存在唯一约束
+	public boolean existsUniqueConstraint() {
+		return uniqueConstraints != null;
 	}
 	/**
-	 * 调用该方法前, 必须要先使用 {@link AbstractPersistentObject#existsValidateUniqueColumns()} 方法判断一下, 如果返回true才能调用该方法
-	 * 获取持久化对象要验证的唯一值数据, 如果只有一个要验证唯一值的列, 则直接返回该列值, 否则返回List<Object>集合
-	 * @return
+	 * 获取持久化对象的唯一值实例
+	 * 调用该方法前, 必须要先使用 {@link AbstractPersistentObject#existsUniqueColumn()} 方法判断一下, 如果返回true才能调用该方法
+	 * @return {@link UniqueValue} / {@link List<UniqueValue>}
 	 */
-	protected Object getPersistentObjectValidateUniqueValue(){
-		if(validateUniqueColumnCodes.size() == 1) {
-			return propertyMap.get(validateUniqueColumnCodes.get(0));
+	protected Object getPersistentObjectUniqueValue(){
+		if(uniqueConstraints.size() == 1) {
+			return new UniqueValue(propertyMap, uniqueConstraints.get(0));
 		}else {
-			List<Object> currentPersistentObjectUniqueValues = new ArrayList<Object>(validateUniqueColumnCodes.size());
-			validateUniqueColumnCodes.forEach(ucc -> currentPersistentObjectUniqueValues.add(propertyMap.get(ucc)));
+			List<UniqueValue> currentPersistentObjectUniqueValues = new ArrayList<UniqueValue>(uniqueConstraints.size());
+			uniqueConstraints.forEach(uc -> currentPersistentObjectUniqueValues.add(new UniqueValue(propertyMap, uc)));
 			return currentPersistentObjectUniqueValues;
 		}
 	}

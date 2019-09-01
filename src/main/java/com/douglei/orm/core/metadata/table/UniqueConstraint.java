@@ -1,0 +1,40 @@
+package com.douglei.orm.core.metadata.table;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * 
+ * @author DougLei
+ */
+@SuppressWarnings("unchecked")
+public class UniqueConstraint {
+	private byte size=1;
+	private Object code;// 唯一约束的列code, 可能为String(multiColumn=false), 也可能为List<String>(multiColumn=true)
+	
+	public UniqueConstraint(Constraint constraint) {
+		Collection<ColumnMetadata> columns = constraint.getColumns();
+		size = (byte) columns.size();
+		if(size == 1) {
+			code = columns.iterator().next().getCode();
+			return;
+		}
+		List<String> codes = new ArrayList<String>(columns.size());
+		columns.forEach(column -> codes.add(column.getCode()));
+		code = codes;
+	}
+
+	public byte size() {
+		return size;
+	}
+	public boolean isMultiColumns() {
+		return size > 1;
+	}
+	public String getCode() {
+		return code.toString();
+	}
+	public List<String> getCodes(){
+		return (List<String>) code;
+	}
+}

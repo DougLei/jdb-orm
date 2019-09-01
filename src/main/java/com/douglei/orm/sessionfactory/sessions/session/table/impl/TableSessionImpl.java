@@ -79,18 +79,19 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	
 	/**
-	 * 验证是否有重复的唯一值
+	 * 验证唯一值
 	 * 需要开启 {enableTableSessionCache=true, enabledDataValidate=true} 这两个配置, 该功能才会启作用
 	 * @param persistent
-	 * @param beforePersistents
+	 * @param cache
 	 */
-	private void validateRepeatedUniqueValue(PersistentObject persistent, Collection<PersistentObject> beforePersistents) {
-		if(persistent.existsValidateUniqueColumns()) {
+	private void validateUniqueValue(PersistentObject persistent, Map<Identity, PersistentObject> cache) {
+		if(persistent.existsUniqueConstraint()) {
 			RepeatedUniqueValueColumn repeatedColumn;
-			for (PersistentObject beforePersistent : beforePersistents) {
+			for (PersistentObject beforePersistent : cache.values()) {
 				// 第一个判断是因为update时可能会从缓存中取数据再修改, 所以防止同一个对象进行比较
-				if(beforePersistent != persistent && (repeatedColumn = compareUniqueValue(persistent, beforePersistent.getPersistentObjectValidateUniqueValue(), persistent.getPersistentObjectValidateUniqueValue())) != null) { 
-					throw new RepeatedUniqueValueException(repeatedColumn.column.getDescriptionName(), repeatedColumn.column.getName(), repeatedColumn.validateUniqueValue, new UniqueValidationResult(repeatedColumn.column.getCode()));
+				if(beforePersistent != persistent 
+						&& (repeatedColumn = compareUniqueValue(persistent, beforePersistent.getPersistentObjectUniqueValue())) != null) { 
+					throw new RepeatedUniqueValueException(repeatedColumn.column.getDescriptionName(), repeatedColumn.column.getName(), repeatedColumn.validateUniqueValue, new UniqueValidationResult(repeatedColumn.column.getCode(), persistent.getPersistentObjectUniqueValue()));
 				}
 			}
 		}
@@ -100,12 +101,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * 比较唯一值
 	 * @param validateUniqueColumnCodes
 	 * @param beforePersistentObjectValidateUniqueValue
-	 * @param persistentObjectValidateUniqueValue
 	 * @return 如果出现重复唯一值, 返回重复了唯一值的列对象, 否则返回null, 表示验证通过
 	 */
 	@SuppressWarnings("unchecked")
-	private RepeatedUniqueValueColumn compareUniqueValue(PersistentObject persistent, Object beforePersistentObjectValidateUniqueValue, Object persistentObjectValidateUniqueValue) {
+	private RepeatedUniqueValueColumn compareUniqueValue(PersistentObject persistent, Object beforePersistentObjectValidateUniqueValue) {
+		Object persistentObjectValidateUniqueValue = persistent.getPersistentObjectUniqueValue();
+		
 		List<String> validateUniqueColumnCodes = persistent.getValidateUniqueColumnCodes();
+		
+		
+		
 		if(validateUniqueColumnCodes.size() == 1 && beforePersistentObjectValidateUniqueValue.equals(persistentObjectValidateUniqueValue)) {
 			return new RepeatedUniqueValueColumn(persistent.getValidateUniqueColumnByCode(validateUniqueColumnCodes.get(0)), beforePersistentObjectValidateUniqueValue);
 		}else {
@@ -144,7 +149,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 				if(cache.containsKey(persistent.getId())) {
 					throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
 				}
-				validateRepeatedUniqueValue(persistent, cache.values());
+				validateUniqueValue(persistent, cache);
 			}
 			cache.put(persistent.getId(), persistent);
 		}else {
@@ -202,15 +207,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 							logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());// 如果修改create=>update, 最后发出的sql语句会不同, 试问一个没有create过的数据, 怎么可能执行成功update 
 						}
 						persistentObject.setOriginObject(object);
-						validateRepeatedUniqueValue(persistentObject, cache.values());
-						return;
+						break;
 					case DELETE:
 						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
 				}
 			}else {
 				logger.debug("缓存中不存在要修改的数据持久化对象");
-				validateRepeatedUniqueValue(persistentObject, cache.values());
 				cache.put(persistentObject.getId(), persistentObject);
+			}
+			if(cache.size() > 1) {
+				validateUniqueValue(persistentObject, cache);
 			}
 		}else {
 			executePersistentObject(persistentObject);
