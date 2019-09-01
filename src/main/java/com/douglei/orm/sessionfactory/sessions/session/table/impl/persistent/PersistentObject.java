@@ -7,6 +7,7 @@ import java.util.Set;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.metadata.validator.DataValidationException;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
@@ -41,6 +42,29 @@ public class PersistentObject extends AbstractPersistentObject{
 		return EnvironmentContext.getEnvironmentProperty().enableDataValidate() && super.existsUniqueConstraint();
 	}
 	
+	/**
+	 * 获取唯一约束的数量
+	 * @return
+	 */
+	public byte getUniqueConstraintCount() {
+		if(existsUniqueConstraint()) {
+			return (byte) uniqueConstraints.size();
+		}
+		return -1;
+	}
+	
+	/**
+	 * 获取指定下标的唯一约束
+	 * @param index
+	 * @return
+	 */
+	public UniqueConstraint getUniqueConstraint(byte index) {
+		if(existsUniqueConstraint()) {
+			return uniqueConstraints.get(index);
+		}
+		return null;
+	}
+	
 	@Override
 	public Object getPersistentObjectUniqueValue() {
 		if(uniqueValue == null) {
@@ -48,6 +72,14 @@ public class PersistentObject extends AbstractPersistentObject{
 		}
 		return uniqueValue;
 	}
+	
+	public String getColumnNameByCode(String code) {
+		return tableMetadata.getColumnByCode(code).getName();
+	}
+	public String getColumnDescriptionNameByCode(String code) {
+		return tableMetadata.getColumnByCode(code).getDescriptionName();
+	}
+	
 
 	public Identity getId() {
 		if(id == null) {

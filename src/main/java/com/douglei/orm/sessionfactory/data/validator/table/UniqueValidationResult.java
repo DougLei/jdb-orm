@@ -1,7 +1,5 @@
 package com.douglei.orm.sessionfactory.data.validator.table;
 
-import java.util.List;
-
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**
@@ -15,14 +13,10 @@ public class UniqueValidationResult extends ValidationResult {
 		super(validateFieldName);
 		this.uniqueValue = uniqueValue;
 	}
-	public UniqueValidationResult(List<String> validateFieldNames, Object uniqueValue) {
-		super(validateFieldNames);
-		this.uniqueValue = uniqueValue;
-	}
 
 	@Override
 	public String getMessage() {
-		return uniqueValue + " 值不唯一, 和之上提交的数据有重复";
+		return "[" + uniqueValue + "]值不唯一, 已存在相同值的数据";
 	}
 	
 	@Override

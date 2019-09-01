@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
@@ -66,33 +65,24 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		if(uniqueConstraints.size() == 1) {
 			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
 				if(currentPersistentObjectUniqueValue.equals(beforePersistentObjectUniqueValue)) {
-					return uniqueValidationResult((short)0, ((UniqueValue)currentPersistentObjectUniqueValue).getValue());
+					return new UniqueValidationResult(uniqueConstraints.get(0).getAllCode(), ((UniqueValue)currentPersistentObjectUniqueValue).getValue());
 				}
 			}
 		}else {
-			List<UniqueValue>  currentPersistentObjectUniqueValues = (List<UniqueValue>) currentPersistentObjectUniqueValue;
-			List<UniqueValue>  beforePersistentObjectUniqueValues = null;
+			List<UniqueValue> currentPersistentObjectUniqueValues = (List<UniqueValue>) currentPersistentObjectUniqueValue;
+			List<UniqueValue> beforePersistentObjectUniqueValues = null;
 			short index;
 			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
 				beforePersistentObjectUniqueValues = (List<UniqueValue>) beforePersistentObjectUniqueValue;
 				for(index=0; index < uniqueConstraints.size(); index++) {
 					if(currentPersistentObjectUniqueValues.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
-						return uniqueValidationResult(index, currentPersistentObjectUniqueValues.get(index).getValue());
+						return new UniqueValidationResult(uniqueConstraints.get(index).getAllCode(), currentPersistentObjectUniqueValues.get(index).getValue());
 					}
 				}
 			}
 		}
 		uniqueValues.add(currentPersistentObjectUniqueValue);
 		return null;
-	}
-	
-	// 返回 {@link UniqueValidationResult}
-	private UniqueValidationResult uniqueValidationResult(short index, Object uniqueValue) {
-		UniqueConstraint uc = uniqueConstraints.get(index);
-		if(uc.isMultiColumns()) {
-			return new UniqueValidationResult(uc.getCodes(), uniqueValue);
-		}
-		return new UniqueValidationResult(uc.getCode(), uniqueValue);
 	}
 	
 	/**

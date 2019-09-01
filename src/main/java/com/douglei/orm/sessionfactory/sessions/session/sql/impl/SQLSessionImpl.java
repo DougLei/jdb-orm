@@ -33,6 +33,7 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionExce
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.Collections;
 
 /**
  * 
@@ -40,16 +41,22 @@ import com.douglei.tools.utils.CloseUtil;
  */
 public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
+	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
+	
 	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 	}
 	
 	private SqlMetadata getSqlMetadata(String namespace) {
-		Mapping mapping = mappingWrapper.getMapping(namespace);
-		if(mapping.getMappingType() != MappingType.SQL) {
-			throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
+		SqlMetadata sm = null;
+		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
+			Mapping mapping = mappingWrapper.getMapping(namespace);
+			if(mapping.getMappingType() != MappingType.SQL) {
+				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
+			}
+			sm= (SqlMetadata) mapping.getMetadata();
+			sqlMetadataCache.put(namespace, sm);
 		}
-		SqlMetadata sm= (SqlMetadata) mapping.getMetadata();
 		ExecMappingDescriptionContext.setExecMappingDescription(namespace, MappingType.SQL);
 		return sm;
 	}
@@ -262,5 +269,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			}
 		});
 		return executeResult;
+	}
+
+	@Override
+	public void close() {
+		Collections.clear(sqlMetadataCache);
+		super.close();
 	}
 }

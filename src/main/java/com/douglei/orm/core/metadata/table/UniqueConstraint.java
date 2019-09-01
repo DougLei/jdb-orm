@@ -10,7 +10,7 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class UniqueConstraint {
-	private byte size=1;
+	private byte size;
 	private Object code;// 唯一约束的列code, 可能为String(multiColumn=false), 也可能为List<String>(multiColumn=true)
 	
 	public UniqueConstraint(Constraint constraint) {
@@ -18,11 +18,11 @@ public class UniqueConstraint {
 		size = (byte) columns.size();
 		if(size == 1) {
 			code = columns.iterator().next().getCode();
-			return;
+		}else {
+			List<String> codes = new ArrayList<String>(columns.size());
+			columns.forEach(column -> codes.add(column.getCode()));
+			code = codes;
 		}
-		List<String> codes = new ArrayList<String>(columns.size());
-		columns.forEach(column -> codes.add(column.getCode()));
-		code = codes;
 	}
 
 	public byte size() {
@@ -36,5 +36,13 @@ public class UniqueConstraint {
 	}
 	public List<String> getCodes(){
 		return (List<String>) code;
+	}
+	public String getAllCode() {
+		if(isMultiColumns()) {
+			StringBuilder codeString = new StringBuilder(size*16);
+			getCodes().forEach(code -> codeString.append(",").append(code));
+			return codeString.substring(1);
+		}
+		return code.toString();
 	}
 }
