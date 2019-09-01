@@ -30,34 +30,23 @@ public class XmlMappingWrapper extends MappingWrapper{
 	public XmlMappingWrapper(boolean searchAll, List<Attribute> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
 		super(searchAll, environmentProperty.getMappingStore());
 		
-		FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
-		scanMappingFiles(fileScanner, paths);
-		
-		List<String> list = fileScanner.getResult();
-		if(list.size() > 0) {
-			try {
-				EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-				initializeMappingStore(list.size());
-				for (String mappingConfigFilePath : list) {
-					addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
+		if(initialMappingStore(environmentProperty.clearMappingStoreOnStart())) {
+			FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
+			scanMappingFiles(fileScanner, paths);
+			List<String> list = fileScanner.getResult();
+			if(list.size() > 0) {
+				try {
+					EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+					for (String mappingConfigFilePath : list) {
+						addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
+					}
+					MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
+				} catch (Exception e) {
+					throw e;
+				} finally {
+					fileScanner.destroy();
 				}
-				MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
-			} catch (Exception e) {
-				throw e;
-			} finally {
-				fileScanner.destroy();
 			}
-		}else {
-			initializeMappingStore(0);
-		}
-	}
-	private void scanMappingFiles(FileScanner fileScanner, List<Attribute> paths) {
-		if(paths != null) {
-			StringBuilder path = new StringBuilder(paths.size() * 20);
-			paths.forEach(p -> {
-				path.append(",").append(p.getValue());
-			});
-			fileScanner.multiScan(searchAll, path.substring(1).split(","));
 		}
 	}
 	

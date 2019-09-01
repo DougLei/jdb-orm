@@ -4,37 +4,34 @@ import java.util.Collection;
 
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore;
 
 /**
  * 
  * @author DougLei
  */
 public interface MappingStore extends SelfProcessing{
-	static final short DEFAULT_STORE_SIZE = 32;
 	
 	/**
-	 * <pre>
-	 * 初始化存储空间对象
-	 * 如果需要清空数据, 必须根据 {@link EnvironmentContext#getEnvironmentProperty()#clearMappingOnStart()} 的值判断, 是否需要清空之前的映射数据
-	 * 具体可以参考 {@link RedisMappingStore#addMapping(Mapping)}
-	 * </pre>
-	 * @param size 如果size<1, 则使用默认的大小
+	 * 初始化存储容器
 	 */
-	void initializeStore(int size);
-	
+	default void initializeStore() {
+	}
 	/**
-	 * <pre>
-	 * 	添加映射
-	 * 	如果存在相同code的映射, <b>判断 {@link EnvironmentContext#getEnvironmentProperty()#clearMappingOnStart()} 值, 如果为true, 则抛出异常, 如果为false, 则跳过该映射的add</b>
-	 * 具体可以参考 {@link RedisMappingStore#addMapping(Mapping)}
-	 * </pre>
+	 * 清空存储容器
+	 */
+	default void clearStore() {
+	}
+	
+	/** 
+	 * 添加映射, 如果出现相同的code值, 必须抛出 {@link RepeatedMappingException} 
+	 * 该方法目前只在框架启动时使用
 	 * @param mapping
 	 * @throws RepeatedMappingException
 	 */
 	void addMapping(Mapping mapping) throws RepeatedMappingException;
 	/**
-	 * 批量addMapping, 该方法是在回滚的时候使用到
+	 * 批量addMapping, 如果出现相同的code值, 必须抛出 {@link RepeatedMappingException} 
+	 * 该方法是在回滚的时候使用到
 	 * @param mappings
 	 * @throws RepeatedMappingException
 	 */
@@ -58,7 +55,8 @@ public interface MappingStore extends SelfProcessing{
 	 */
 	Mapping removeMapping(String mappingCode) throws NotExistsMappingException;
 	/**
-	 * 批量removeMapping, 该方法是在回滚的时候使用到
+	 * 批量removeMapping
+	 * 该方法是在回滚的时候使用到
 	 * @param mappingCodes
 	 * @throws NotExistsMappingException
 	 */

@@ -29,9 +29,9 @@ public class RedisMappingStore implements MappingStore {
 	}
 
 	@Override
-	public void initializeStore(int size) {
+	public void clearStore() {
 		try(Jedis connection = redisPool.getResource()){
-			handler.initializeStore(connection, false);
+			handler.clearStore(connection);
 		}
 	}
 	
@@ -57,15 +57,6 @@ public class RedisMappingStore implements MappingStore {
 			handler.addOrCoverMapping(mapping, connection);
 		}
 	}
-	
-//	@Override
-//	public void addOrCoverMapping(Collection<Mapping> mappings) {
-//		if(Collections.unEmpty(mappings)) {
-//			try(Jedis connection = redisPool.getResource()){
-//				handler.addOrCoverMapping(mappings, connection);
-//			}
-//		}
-//	}
 	
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {

@@ -6,7 +6,7 @@
 		<!-- <property name="enableTableSessionCache" value="true" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为true  -->
 		
 		<!-- <property name="mappingStore" value="application" /> --><!-- value的值只包括: application, 或在new XmlConfiguration时传入 {@link com.douglei.orm.configuration.environment.mapping.store.MappingStore} 接口的实现类实例 -->
-		<!-- <property name="clearMappingOnStart" value="true" /> --><!-- 是否在启动时清空映射信息, 默认值为true -->
+		<!-- <property name="clearMappingStoreOnStart" value="true" /> --><!-- 是否在启动时清空映射存储器, 即清空所有映射数据, 默认值为true -->
 		
 		
 		<!-- <property name="tableCreateMode" value="none" /> --><!-- value的值包括: none, create, drop_create, dynamic_update, 没有默认值, 可以不配置, 该属性值为全局配置, 如果配置了该属性值, 则所有表映射的createMode属性配置失效 -->

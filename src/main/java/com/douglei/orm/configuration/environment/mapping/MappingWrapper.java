@@ -1,13 +1,16 @@
 package com.douglei.orm.configuration.environment.mapping;
 
+import java.util.List;
+
+import org.dom4j.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
+import com.douglei.tools.instances.scanner.FileScanner;
 
 /**
  * 
@@ -26,17 +29,37 @@ public abstract class MappingWrapper implements SelfProcessing{
 	
 	/**
 	 * 初始化存储空间
-	 * @param size
+	 * @param clearMappingStoreOnStart
+	 * @return 
 	 */
-	protected void initializeMappingStore(int size) {
-		mappingStore.initializeStore(size);
+	protected boolean initialMappingStore(boolean clearMappingStoreOnStart) {
+		if(clearMappingStoreOnStart) {
+			mappingStore.clearStore();
+		}
+		mappingStore.initializeStore();
+		return clearMappingStoreOnStart;
+	}
+	
+	/**
+	 * 扫描映射文件
+	 * @param fileScanner
+	 * @param paths
+	 */
+	protected void scanMappingFiles(FileScanner fileScanner, List<Attribute> paths) {
+		if(paths != null) {
+			StringBuilder path = new StringBuilder(paths.size() * 20);
+			paths.forEach(p -> {
+				path.append(",").append(p.getValue());
+			});
+			fileScanner.multiScan(searchAll, path.substring(1).split(","));
+		}
 	}
 	
 	/**
 	 * <pre>
 	 * 	添加映射
 	 * 	如果是表映射, 则顺便create表
-	 * 	这个方法目前给框架启动时使用, 用来加载已经配置的xml映射
+	 * 	这个方法只在框架启动时使用, 用来加载已经配置的xml映射
 	 * </pre>
 	 * @return mapping的code
 	 */
@@ -46,6 +69,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 		return mapping.getCode();
 	}
 
+	
 	/**
 	 * <pre>
 	 * 	添加/覆盖映射
@@ -94,11 +118,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * @return
 	 */
 	public Mapping getMapping(String mappingCode) {
-		Mapping mapping = mappingStore.getMapping(mappingCode);
-		if(mapping == null) {
-			throw new NullPointerException("不存在code为["+mappingCode+"]的映射");
-		}
-		return mapping;
+		return mappingStore.getMapping(mappingCode);
 	}
 	
 	/**
@@ -109,6 +129,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public boolean mappingExists(String mappingCode) {
 		return mappingStore.mappingExists(mappingCode);
 	}
+	
 	
 	/**
 	 * <pre>
@@ -164,14 +185,11 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	public abstract void dynamicRemoveMapping(String mappingCode) throws DynamicRemoveMappingException;
 	
+	
 	@Override
 	public void destroy() throws DestroyException {
 		logger.debug("{} 开始 destroy", getClass());
 		mappingStore.destroy();
 		logger.debug("{} 结束 destroy", getClass());
-	}
-
-	@Override
-	public void selfChecking() throws SelfCheckingException {
 	}
 }

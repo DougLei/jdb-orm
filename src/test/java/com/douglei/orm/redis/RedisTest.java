@@ -158,7 +158,7 @@ public class RedisTest {
 	@Test
 	public void test7() {
 		RedisMappingStore r = new RedisMappingStore(jedisPool);
-		r.initializeStore(0);
+		r.initializeStore();
 		
 		System.out.println(r.getMapping("com.ibs.demo.entity.SysUser"));;
 		System.out.println(r.mappingExists("ORM:MP:com.ibs.demo.entity.SysUser"));

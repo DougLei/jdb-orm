@@ -24,12 +24,8 @@ public class ApplicationMappingStore implements MappingStore {
 	private Map<String, Mapping> mappings;
 	
 	@Override
-	public void initializeStore(int size) {
-		if(size < 1) {
-			mappings = new HashMap<String, Mapping>(DEFAULT_STORE_SIZE);
-		}else {
-			mappings = new HashMap<String, Mapping>(size);
-		}
+	public void initializeStore() {
+		mappings = new HashMap<String, Mapping>(32);
 	}
 	
 	@Override

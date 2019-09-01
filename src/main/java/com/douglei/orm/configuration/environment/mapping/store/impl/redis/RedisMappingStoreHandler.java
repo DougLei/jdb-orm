@@ -10,7 +10,6 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
@@ -24,33 +23,23 @@ import redis.clients.jedis.Pipeline;
 class RedisMappingStoreHandler extends RedisHandler {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStoreHandler.class);
 
-	public void initializeStore(Jedis connection, boolean clearMappingOnStart) {
-		if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart() || clearMappingOnStart) {
-			Set<String> keys = connection.keys(getPrefix() + "*");
-			if(Collections.unEmpty(keys)) {
-				removeMapping(keys, connection);
-			}
+	public void clearStore(Jedis connection) {
+		Set<String> keys = connection.keys(getPrefix() + "*");
+		if(Collections.unEmpty(keys)) {
+			removeMapping(keys, connection);
 		}
 	}
 	
 	public void addMapping(Mapping mapping, Jedis connection) throws RepeatedMappingException{
 		String code = getCode(mapping.getCode());
 		if(mappingExists(code, connection)) {
-			if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
-				throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode(), connection));
-			}
-			if(logger.isDebugEnabled()) {
-				logger.debug("启动时, 已经存在相同code为[{}]的映射对象: ", mapping.getCode(), getMapping(mapping.getCode(), connection));
-			}
-			return;
+			throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode(), connection));
 		}
 		connection.set(code.getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
 	}
 	
 	public void addMapping(Collection<Mapping> mappings, Jedis connection) throws RepeatedMappingException {
-		Pipeline pipeline = connection.pipelined();
-		mappings.forEach(mapping -> pipeline.set(getCode(mapping.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping)));
-		pipeline.sync();
+		mappings.forEach(mapping -> addMapping(mapping, connection));
 	}
 
 	public void addOrCoverMapping(Mapping mapping, Jedis connection) {
@@ -99,6 +88,6 @@ class RedisMappingStoreHandler extends RedisHandler {
 	}
 	
 	public void destroy(Jedis connection) throws DestroyException {
-		initializeStore(connection, true);
+		clearStore(connection);
 	}
 }
