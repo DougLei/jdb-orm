@@ -9,7 +9,6 @@
 		<content name="" dialect="" type="select"><!-- 如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 			select * from sys_user 
 			
-			<!-- TODO 可以引用sql-content的内容 -->
 			<include ref-name="rs" />
 			
 		<!-- 
