@@ -26,6 +26,8 @@ public class DynamicMappingProcessor {
 		this.mappingWrapper = mappingWrapper;
 	}
 
+	
+	// ----------------------------------------------------------------------------------------------
 	/**
 	 * 动态添加映射
 	 * @param entity
@@ -81,6 +83,29 @@ public class DynamicMappingProcessor {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * 动态批量添加映射, 如果存在则覆盖
+	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
+	 * </pre>
+	 * @param entities
+	 */
+	public synchronized void batchAddMapping(DynamicMapping... entities) {
+		try {
+			for (DynamicMapping entity : entities) {
+				addMapping_(entity);
+			}
+			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+		} catch (Exception e) {
+			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
+		}
+	}
+	
+	
+	// ----------------------------------------------------------------------------------------------
 	/**
 	 * 动态覆盖映射
 	 * @param entity
@@ -138,6 +163,29 @@ public class DynamicMappingProcessor {
 	
 	/**
 	 * <pre>
+	 * 动态批量覆盖映射, 如果不存在添加
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
+	 * @param entities
+	 */
+	public synchronized void batchCoverMapping(DynamicMapping... entities) {
+		try {
+			for (DynamicMapping entity : entities) {
+				coverMapping_(entity);
+			}
+		} catch (Exception e) {
+			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
+		}
+	}
+	
+	
+	// ----------------------------------------------------------------------------------------------
+	/**
+	 * <pre>
 	 * 动态删除映射
 	 * 如果是表映射, 则顺便drop表
 	 * </pre>
@@ -176,6 +224,29 @@ public class DynamicMappingProcessor {
 		}
 	}
 	
+	/**
+	 * <pre>
+	 * 动态批量删除映射
+	 * 如果是表映射, 则顺便drop表
+	 * </pre>
+	 * @param mappingCodes
+	 */
+	public synchronized void batchRemoveMapping(String... mappingCodes){
+		try {
+			for (String mappingCode : mappingCodes) {
+				mappingWrapper.dynamicRemoveMapping(mappingCode);
+			}
+			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
+		} catch (Exception e) {
+			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlConfigContext.destroy();
+		}
+	}
+	
+	
+	// ----------------------------------------------------------------------------------------------
 	/**
 	 * 判断指定code的映射是否存在
 	 * @param mappingCode
