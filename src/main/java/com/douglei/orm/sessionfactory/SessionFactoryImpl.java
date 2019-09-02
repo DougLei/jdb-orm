@@ -7,6 +7,7 @@ import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -72,8 +73,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	@Override
 	public DynamicMappingProcessor getDynamicMappingProcessor() {
 		if(dynamicMappingProcessor == null) {
-			dynamicMappingProcessor = new DynamicMappingProcessor(environment, environmentProperty, mappingWrapper);
+			dynamicMappingProcessor = new DynamicMappingProcessor(environment, mappingWrapper);
 		}
+		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		return dynamicMappingProcessor;
 	}
 	
@@ -82,6 +84,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(dataValidatorProcessor == null) {
 			dataValidatorProcessor = new DataValidatorProcessor(mappingWrapper);
 		}
+		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		return dataValidatorProcessor;
 	}
 

@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -21,12 +19,10 @@ public class DynamicMappingProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMappingProcessor.class);
 	
 	private Environment environment;
-	private EnvironmentProperty environmentProperty;
 	private MappingWrapper mappingWrapper;
 	
-	public DynamicMappingProcessor(Environment environment, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
+	public DynamicMappingProcessor(Environment environment, MappingWrapper mappingWrapper) {
 		this.environment = environment;
-		this.environmentProperty = environmentProperty;
 		this.mappingWrapper = mappingWrapper;
 	}
 
@@ -54,7 +50,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void addMapping(DynamicMapping entity) {
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			addMapping_(entity);
 			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
@@ -74,7 +69,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
@@ -112,7 +106,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void coverMapping(DynamicMapping entity) {
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			coverMapping_(entity);
 		} catch (Exception e) {
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -132,7 +125,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (DynamicMapping entity : entities) {
 				coverMapping_(entity);
 			}
@@ -153,7 +145,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void removeMapping(String mappingCode){
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			mappingWrapper.dynamicRemoveMapping(mappingCode);
 			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
@@ -173,7 +164,6 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void batchRemoveMapping(List<String> mappingCodes){
 		try {
-			EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 			for (String mappingCode : mappingCodes) {
 				mappingWrapper.dynamicRemoveMapping(mappingCode);
 			}
