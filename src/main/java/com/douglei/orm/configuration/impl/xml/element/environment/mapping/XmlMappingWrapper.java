@@ -29,6 +29,7 @@ public class XmlMappingWrapper extends MappingWrapper{
 	}
 	public XmlMappingWrapper(boolean searchAll, List<Attribute> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
 		super(searchAll, environmentProperty.getMappingStore());
+		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		
 		if(initialMappingStore(environmentProperty.clearMappingStoreOnStart())) {
 			FileScanner fileScanner = new FileScanner(MappingType.getMappingFileSuffixArray());
@@ -36,7 +37,6 @@ public class XmlMappingWrapper extends MappingWrapper{
 			List<String> list = fileScanner.getResult();
 			if(list.size() > 0) {
 				try {
-					EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 					for (String mappingConfigFilePath : list) {
 						addMapping(XmlMappingFactory.newMappingInstance(mappingConfigFilePath));
 					}
