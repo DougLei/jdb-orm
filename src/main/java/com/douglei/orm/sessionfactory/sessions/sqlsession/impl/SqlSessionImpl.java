@@ -211,8 +211,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @return
 	 */
 	private long queryCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
-		Object count =  uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0];
-		return Integer.parseInt(count.toString());
+		return Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString());
 	}
 
 	@Override
