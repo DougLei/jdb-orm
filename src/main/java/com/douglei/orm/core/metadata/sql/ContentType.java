@@ -11,7 +11,6 @@ public enum ContentType {
 	SELECT,
 	
 	DECLARE,
-	VIEW,
 	PROCEDURE;
 	
 	public static ContentType toValue(String type) {
