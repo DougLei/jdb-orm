@@ -1,7 +1,7 @@
 package com.douglei.orm.core.metadata.validator.internal;
 
-import com.douglei.orm.core.metadata.validator.Validator;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.core.metadata.validator.Validator;
 
 /**
  * 是否可为空验证器
@@ -27,7 +27,7 @@ public class _NullableValidator extends Validator {
 				
 				@Override
 				public String getI18nCode() {
-					return i18nCodePrefix + "nullable.notnull";
+					return i18nCodePrefix + "notnull";
 				}
 			};
 		}
