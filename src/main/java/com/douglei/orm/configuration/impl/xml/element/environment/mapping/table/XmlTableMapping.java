@@ -315,7 +315,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.getPrimaryKeyCount() > 1) {
 					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
 				}
-				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler, Boolean.parseBoolean(primaryKeyHandlerElement.attributeValue("coverValue")));
+				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				
 				// 如果是序列类型, 则去解析<sequence>元素
 				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) {

@@ -23,7 +23,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -7911661960253274440L;
+	private static final long serialVersionUID = -6582615971070963845L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -36,7 +36,6 @@ public class TableMetadata implements Metadata{
 	
 	private Map<String, ColumnMetadata> primaryKeyColumns_;// 主键列<code: 列>
 	
-	private boolean coverPrimaryKeyValue;
 	private PrimaryKeyHandler primaryKeyHandler;
 	private PrimaryKeySequence primaryKeySequence;
 	
@@ -210,7 +209,7 @@ public class TableMetadata implements Metadata{
 	 */
 	public void setPrimaryKeyValue2EntityMap(Map<String, Object> entityMap) {
 		if(primaryKeyHandler != null) {
-			primaryKeyHandler.setValue2EntityMap(primaryKeyColumns_.keySet(), this, entityMap, coverPrimaryKeyValue, primaryKeySequence);
+			primaryKeyHandler.setValue2EntityMap(primaryKeyColumns_.keySet(), this, entityMap, primaryKeySequence);
 		}
 	}
 	
@@ -244,9 +243,8 @@ public class TableMetadata implements Metadata{
 	public boolean classNameEmpty() {
 		return StringUtil.isEmpty(className);
 	}
-	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler, boolean coverPrimaryKeyValue) {
+	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
 		this.primaryKeyHandler = primaryKeyHandler;
-		this.coverPrimaryKeyValue = coverPrimaryKeyValue;
 	}
 	public void setPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) {
 		this.primaryKeySequence = primaryKeySequence;
