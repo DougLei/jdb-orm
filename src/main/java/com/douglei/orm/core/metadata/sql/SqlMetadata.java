@@ -55,7 +55,19 @@ public class SqlMetadata implements Metadata{
 	}
 	
 	public List<ContentMetadata> getContents(String name) {
-		return name==null?getContentByName(name):getAllContents();
+		return name==null?getAllContents():getContentByName(name);
+	}
+	
+	// 获取所有满足方言的content集合
+	private List<ContentMetadata> getAllContents(){
+		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
+		for (ContentMetadata content : contents) {
+			if(content.isMatchingDialectType(currentDialectType)) {
+				list.add(content);
+			}
+		}
+		return list;
 	}
 	
 	// 获取指定name的content集合
@@ -71,18 +83,6 @@ public class SqlMetadata implements Metadata{
 		return list;
 	}
 
-	// 获取所有满足方言的content集合
-	private List<ContentMetadata> getAllContents(){
-		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
-		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
-		for (ContentMetadata content : contents) {
-			if(content.isMatchingDialectType(currentDialectType)) {
-				list.add(content);
-			}
-		}
-		return list;
-	}
-	
 	private class RepeatedContentNameException extends RuntimeException{
 		private static final long serialVersionUID = 4281842020558874332L;
 		public RepeatedContentNameException(String contentName) {
