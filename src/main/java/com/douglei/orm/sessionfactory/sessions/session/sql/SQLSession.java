@@ -214,7 +214,7 @@ public interface SQLSession {
 	 * @param sqlParameters
 	 * @return
 	 */
-	int executeUpdate(String namespace, String name, List<Object> sqlParameters);
+	int executeUpdates(String namespace, String name, List<Object> sqlParameters);
 	
 	/**
 	 * 执行存储过程
