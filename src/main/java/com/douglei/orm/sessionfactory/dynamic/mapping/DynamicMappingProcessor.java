@@ -248,6 +248,62 @@ public class DynamicMappingProcessor {
 	
 	// ----------------------------------------------------------------------------------------------
 	/**
+	 * <pre>
+	 * 动态删除映射
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
+	 * @param mappingCode
+	 */
+	public synchronized void removeMapping_(String mappingCode){
+		try {
+			mappingWrapper.dynamicRemoveMapping_(mappingCode);
+		} catch (Exception e) {
+			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		}
+	}
+	
+	/**
+	 * <pre>
+	 * 动态批量删除映射
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
+	 * @param mappingCodes
+	 */
+	public synchronized void batchRemoveMapping_(List<String> mappingCodes){
+		try {
+			for (String mappingCode : mappingCodes) {
+				mappingWrapper.dynamicRemoveMapping_(mappingCode);
+			}
+		} catch (Exception e) {
+			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		}
+	}
+	
+	/**
+	 * <pre>
+	 * 动态批量删除映射
+	 * 只对映射操作
+	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * </pre>
+	 * @param mappingCodes
+	 */
+	public synchronized void batchRemoveMapping_(String... mappingCodes){
+		try {
+			for (String mappingCode : mappingCodes) {
+				mappingWrapper.dynamicRemoveMapping_(mappingCode);
+			}
+		} catch (Exception e) {
+			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		}
+	}
+	
+	// ----------------------------------------------------------------------------------------------
+	/**
 	 * 判断指定code的映射是否存在
 	 * @param mappingCode
 	 * @return

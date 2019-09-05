@@ -93,8 +93,17 @@ public class XmlMappingWrapper extends MappingWrapper{
 	@Override
 	public void dynamicRemoveMapping(String mappingCode) throws DynamicRemoveMappingException {
 		try {
-			logger.debug("dynamic remove mapping-mappingCode: {}", mappingCode);
+			logger.debug("dynamic remove mapping: {}", mappingCode);
 			removeMapping(mappingCode);
+		} catch (Exception e) {
+			throw new DynamicRemoveMappingException(e);
+		}
+	}
+	@Override
+	public void dynamicRemoveMapping_(String mappingCode) throws DynamicRemoveMappingException {
+		try {
+			logger.debug("dynamic remove ***simple*** mapping: {}", mappingCode);
+			removeMapping_(mappingCode);
 		} catch (Exception e) {
 			throw new DynamicRemoveMappingException(e);
 		}
