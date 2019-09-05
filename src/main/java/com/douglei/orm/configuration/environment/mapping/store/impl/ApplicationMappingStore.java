@@ -55,15 +55,6 @@ public class ApplicationMappingStore implements MappingStore {
 		mappings.put(code, mapping);
 	}
 	
-//	@Override
-//	public void addOrCoverMapping(Collection<Mapping> mappings) {
-//		if(Collections.unEmpty(mappings)) {
-//			for (Mapping mapping : mappings) {
-//				addOrCoverMapping(mapping);
-//			}
-//		}
-//	}
-
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
 		Mapping mp = mappings.remove(mappingCode);
