@@ -18,14 +18,13 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
-	private static final long serialVersionUID = -1388026110797076724L;
+	private static final long serialVersionUID = -6924155959689840702L;
 
 	private String name;// (前缀+表名+列名)
 	
 	private String tableName;// 表名
 	private ConstraintType constraintType;
 	
-	private ColumnMetadata column;// 记录第一个add的列对象
 	private Map<String, ColumnMetadata> columns;// 相关的列集合
 	
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
@@ -48,7 +47,6 @@ public class Constraint implements Serializable{
 		validateDataType(column.getDataTypeHandler());
 		if(columns == null) {
 			this.columns = new HashMap<String, ColumnMetadata>(constraintType.supportComposite()?4:2);
-			this.column = column;
 		}else if(columns.containsKey(column.getName())) {
 			throw new ConstraintConfigurationException("在同一个["+this.constraintType.name()+"]约束中, 出现重复的列["+column.getName()+"]");
 		}
@@ -110,15 +108,16 @@ public class Constraint implements Serializable{
 				}
 				this.constraintColumnNames = constraintColumnNamesBuilder.toString();
 			}else {
-				this.constraintColumnNames = this.column.getName();
-				nameBuilder.append(this.column.getName());
+				ColumnMetadata column = columns.values().iterator().next();
+				this.constraintColumnNames = column.getName();
+				nameBuilder.append(column.getName());
 				
 				switch(constraintType) {
 					case DEFAULT_VALUE:
 						if(this.defaultValue == null) {
 							throw new NullPointerException("配置的默认值约束, 默认值不能为空");
 						}
-						if(((DBDataTypeFeatures)this.column.getDataTypeHandler()).isCharacterType()) {
+						if(((DBDataTypeFeatures)column.getDataTypeHandler()).isCharacterType()) {
 							this.defaultValue = "'"+this.defaultValue+"'";
 						}
 						break;
