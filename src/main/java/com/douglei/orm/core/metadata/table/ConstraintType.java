@@ -11,31 +11,31 @@ public enum ConstraintType {
 	/**
 	 * 主键约束
 	 */
-	PRIMARY_KEY("PK", "PRIMARY KEY", 4),
+	PRIMARY_KEY("PK", "PRIMARY KEY", true),
 	/**
 	 * 唯一值约束
 	 */
-	UNIQUE("UQ", "UNIQUE", 4),
+	UNIQUE("UQ", "UNIQUE", true),
 	/**
 	 * 默认值约束
 	 */
-	DEFAULT_VALUE("DF", "DEFAULT", 1),
+	DEFAULT_VALUE("DF", "DEFAULT", false),
 	/**
 	 * 检查约束
 	 */
-	CHECK("CK", "CHECK", 1),
+	CHECK("CK", "CHECK", false),
 	/**
 	 * 外键约束
 	 */
-	FOREIGN_KEY("FK", "FOREIGN KEY", 1);
+	FOREIGN_KEY("FK", "FOREIGN KEY", false);
 	
 	private String constraintPrefix;
 	private String sqlStatement;
-	private byte supportColumnCount;// 支持的列数量, 如果大于1, 则是复合约束
-	private ConstraintType(String constraintPrefix, String sqlStatement, int supportColumnCount) {
+	private boolean supportComposite;// 是否支持复合约束
+	private ConstraintType(String constraintPrefix, String sqlStatement, boolean supportComposite) {
 		this.constraintPrefix = constraintPrefix;
 		this.sqlStatement = sqlStatement;
-		this.supportColumnCount = (byte)supportColumnCount;
+		this.supportComposite = supportComposite;
 	}
 	
 	public String getConstraintPrefix() {
@@ -44,8 +44,8 @@ public enum ConstraintType {
 	public String getSqlStatement() {
 		return sqlStatement;
 	}
-	public byte supportColumnCount() {
-		return supportColumnCount;
+	public boolean supportComposite() {
+		return supportComposite;
 	}
 
 	public static ConstraintType toValue(String type) {

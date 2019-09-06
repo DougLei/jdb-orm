@@ -173,8 +173,8 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 					if(constraintType == null) {
 						throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
 					}
-					if(columnNames.size() > 1 && constraintType.supportColumnCount() == 1) {
-						throw new ConstraintConfigurationException("不支持给多个列添加联合["+constraintType.name()+"]约束");
+					if(columnNames.size() > 1 && !constraintType.supportComposite()) {
+						throw new ConstraintConfigurationException("不支持给多个列添加复合["+constraintType.name()+"]约束");
 					}
 					
 					constraint = new Constraint(constraintType, tableMetadata.getName());

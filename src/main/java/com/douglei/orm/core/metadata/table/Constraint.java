@@ -18,13 +18,16 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
-	private static final long serialVersionUID = 8639988230743248353L;
+	private static final long serialVersionUID = -1388026110797076724L;
+
 	private String name;// (前缀+表名+列名)
+	
+	private String tableName;// 表名
+	private ConstraintType constraintType;
+	
 	private ColumnMetadata column;// 记录第一个add的列对象
 	private Map<String, ColumnMetadata> columns;// 相关的列集合
-	private String tableName;// 表名
 	
-	private ConstraintType constraintType;
 	private String constraintColumnNames;// 约束的列名集合, 多个用,分割
 	
 	private String defaultValue;// 默认值
@@ -42,8 +45,9 @@ public class Constraint implements Serializable{
 	 * @param column
 	 */
 	public Constraint addColumn(ColumnMetadata column) {
+		validateDataType(column.getDataTypeHandler());
 		if(columns == null) {
-			columns = new HashMap<String, ColumnMetadata>(constraintType.supportColumnCount());
+			this.columns = new HashMap<String, ColumnMetadata>(constraintType.supportComposite()?4:2);
 			this.column = column;
 		}else if(columns.containsKey(column.getName())) {
 			throw new ConstraintConfigurationException("在同一个["+this.constraintType.name()+"]约束中, 出现重复的列["+column.getName()+"]");
@@ -51,6 +55,13 @@ public class Constraint implements Serializable{
 		columns.put(column.getName(), column);
 		processColumnMetadata(column);
 		return this;
+	}
+	
+	// 验证数据类型是否符合创建约束
+	private void validateDataType(DataTypeHandler dataType) {
+		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
+			throw new ConstraintConfigurationException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
+		}
 	}
 	
 	// 处理列对象的元数据
@@ -72,9 +83,9 @@ public class Constraint implements Serializable{
 		}
 	}
 	
-	private boolean unProcessConstraint=true;// 是否未处理约束
+	private boolean processConstraint;// 是否处理约束
 	private void processConstraint() {
-		if(unProcessConstraint) {
+		if(!processConstraint) {
 			if(columns == null) {
 				throw new NullPointerException("在表["+tableName+"], 名为["+constraintType.name()+"]约束中, 关联的列不能为空");
 			}
@@ -82,14 +93,12 @@ public class Constraint implements Serializable{
 			StringBuilder nameBuilder = new StringBuilder(columns.size()*40);
 			nameBuilder.append(constraintType.getConstraintPrefix()).append("_").append(tableName).append("_");
 			
-			if(constraintType.supportColumnCount() > 1) {
+			if(columns.size() > 1) {
 				Collection<ColumnMetadata> cs = columns.values();
 				int index = 0, lastIndex = cs.size()-1;
 				
 				StringBuilder constraintColumnNamesBuilder = new StringBuilder(cs.size()*20);
 				for (ColumnMetadata column : cs) {
-					validateDataType(column.getDataTypeHandler());
-					
 					constraintColumnNamesBuilder.append(column.getName());
 					nameBuilder.append(column.getName());
 					
@@ -101,7 +110,6 @@ public class Constraint implements Serializable{
 				}
 				this.constraintColumnNames = constraintColumnNamesBuilder.toString();
 			}else {
-				validateDataType(this.column.getDataTypeHandler());
 				this.constraintColumnNames = this.column.getName();
 				nameBuilder.append(this.column.getName());
 				
@@ -133,20 +141,9 @@ public class Constraint implements Serializable{
 						break;
 				}
 			}
-			setName(nameBuilder.toString());
-			unProcessConstraint = false;
+			this.name = EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().fixDBObjectName(nameBuilder.toString());// 设置约束名
+			processConstraint = true;
 		}
-	}
-	
-	// 验证数据类型是否符合创建约束
-	private void validateDataType(DataTypeHandler dataType) {
-		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
-			throw new ConstraintConfigurationException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
-		}
-	}
-	// 设置约束名
-	private void setName(String name) {
-		this.name = EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().fixDBObjectName(name);
 	}
 	
 	Collection<ColumnMetadata> getColumns(){
