@@ -119,11 +119,11 @@ public class Properties implements SelfProcessing{
 	
 	@Override
 	public void destroy() throws DestroyException{
-		logger.debug("{} 开始 destroy", getClass());
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(properties.size() > 0) {
 			properties.clear();
 		}
-		logger.debug("{} 结束 destroy", getClass());
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 
 	@Override

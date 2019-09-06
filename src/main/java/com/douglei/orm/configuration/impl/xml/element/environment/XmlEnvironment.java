@@ -181,7 +181,7 @@ public class XmlEnvironment implements Environment{
 	
 	@Override
 	public void destroy() throws DestroyException{
-		logger.debug("{} 开始 destroy", getClass());
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(remoteDatabase != null) {
 			remoteDatabase.destroy();
 		}
@@ -191,7 +191,7 @@ public class XmlEnvironment implements Environment{
 		if(mappingWrapper != null) {
 			mappingWrapper.destroy();
 		}
-		logger.debug("{} 结束 destroy", getClass());
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 	
 	// -------------------------------------------------------------

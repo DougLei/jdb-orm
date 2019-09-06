@@ -56,42 +56,44 @@ public class ApplicationMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
-		Mapping mp = mappings.remove(mappingCode);
+	public Mapping removeMapping(String code) throws NotExistsMappingException {
+		Mapping mp = mappings.remove(code);
 		if(mp == null) {
-			throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象, 无法删除");
+			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法删除");
 		}
 		return mp;
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
-		if(Collections.unEmpty(mappingCodes)) {
-			for (String mappingCode : mappingCodes) {
-				removeMapping(mappingCode);
+	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+		if(Collections.unEmpty(codes)) {
+			for (String code : codes) {
+				removeMapping(code);
 			}
 		}
 	}
 	
 	@Override
-	public Mapping getMapping(String mappingCode) throws NotExistsMappingException {
-		Mapping mp = mappings.get(mappingCode);
+	public Mapping getMapping(String code) throws NotExistsMappingException {
+		Mapping mp = mappings.get(code);
 		if(mp == null) {
-			throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象");
+			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象");
 		}
 		return mp;
 	}
 	
 	@Override
-	public boolean mappingExists(String mappingCode) {
-		return mappings.containsKey(mappingCode);
+	public boolean mappingExists(String code) {
+		return mappings.containsKey(code);
 	}
 	
 	@Override
 	public void destroy() throws DestroyException {
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(Collections.unEmpty(mappings)) {
 			mappings.clear();
 			mappings = null;
 		}
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

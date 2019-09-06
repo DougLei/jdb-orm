@@ -100,10 +100,12 @@ public abstract class RemoteDatabase implements SelfProcessing{
 
 	@Override
 	public void destroy() throws DestroyException {
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(destroy) {
 			executeDrop();
 		}
 		createSql.clear();
 		dropSql.clear();
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

@@ -28,26 +28,20 @@ public class DynamicMappingProcessor {
 
 	
 	// ----------------------------------------------------------------------------------------------
-	/**
-	 * 动态添加映射
-	 * @param entity
-	 */
 	private void addMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
 			case BY_PATH:
-				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
+				entity.setCode(mappingWrapper.dynamicAddMapping(entity.getMappingConfigurationFilePath()));
 				break;
 			case BY_CONTENT:
-				entity.setMappingCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+				entity.setCode(mappingWrapper.dynamicAddMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
 				break;
 		}
 	}
 	
 	/**
-	 * <pre>
 	 * 动态添加映射, 如果存在则覆盖
 	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
-	 * </pre>
 	 * @param entity
 	 */
 	public synchronized void addMapping(DynamicMapping entity) {
@@ -63,10 +57,8 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量添加映射, 如果存在则覆盖
+	 * 动态添加映射, 如果存在则覆盖
 	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
-	 * </pre>
 	 * @param entities
 	 */
 	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
@@ -84,10 +76,8 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量添加映射, 如果存在则覆盖
+	 * 动态添加映射, 如果存在则覆盖
 	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
-	 * </pre>
 	 * @param entities
 	 */
 	public synchronized void batchAddMapping(DynamicMapping... entities) {
@@ -106,27 +96,20 @@ public class DynamicMappingProcessor {
 	
 	
 	// ----------------------------------------------------------------------------------------------
-	/**
-	 * 动态覆盖映射
-	 * @param entity
-	 */
 	private void coverMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
 			case BY_PATH:
-				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
+				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
 				break;
 			case BY_CONTENT:
-				entity.setMappingCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
 				break;
 		}
 	}
 	
 	/**
-	 * <pre>
 	 * 动态覆盖映射, 如果不存在添加
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param entity
 	 */
 	public synchronized void coverMapping(DynamicMapping entity) {
@@ -141,11 +124,8 @@ public class DynamicMappingProcessor {
 	}
 
 	/**
-	 * <pre>
-	 * 动态批量覆盖映射, 如果不存在添加
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param entities
 	 */
 	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
@@ -162,11 +142,8 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量覆盖映射, 如果不存在添加
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param entities
 	 */
 	public synchronized void batchCoverMapping(DynamicMapping... entities) {
@@ -185,15 +162,13 @@ public class DynamicMappingProcessor {
 	
 	// ----------------------------------------------------------------------------------------------
 	/**
-	 * <pre>
 	 * 动态删除映射
 	 * 如果是表映射, 则顺便drop表
-	 * </pre>
-	 * @param mappingCode
+	 * @param code
 	 */
-	public synchronized void removeMapping(String mappingCode){
+	public synchronized void removeMapping(String code){
 		try {
-			mappingWrapper.dynamicRemoveMapping(mappingCode);
+			mappingWrapper.dynamicRemoveMapping(code);
 			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -204,16 +179,14 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量删除映射
+	 * 动态删除映射
 	 * 如果是表映射, 则顺便drop表
-	 * </pre>
-	 * @param mappingCodes
+	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping(List<String> mappingCodes){
+	public synchronized void batchRemoveMapping(List<String> codes){
 		try {
-			for (String mappingCode : mappingCodes) {
-				mappingWrapper.dynamicRemoveMapping(mappingCode);
+			for (String code : codes) {
+				mappingWrapper.dynamicRemoveMapping(code);
 			}
 			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
@@ -225,16 +198,14 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量删除映射
+	 * 动态删除映射
 	 * 如果是表映射, 则顺便drop表
-	 * </pre>
-	 * @param mappingCodes
+	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping(String... mappingCodes){
+	public synchronized void batchRemoveMapping(String... codes){
 		try {
-			for (String mappingCode : mappingCodes) {
-				mappingWrapper.dynamicRemoveMapping(mappingCode);
+			for (String code : codes) {
+				mappingWrapper.dynamicRemoveMapping(code);
 			}
 			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
 		} catch (Exception e) {
@@ -248,16 +219,13 @@ public class DynamicMappingProcessor {
 	
 	// ----------------------------------------------------------------------------------------------
 	/**
-	 * <pre>
 	 * 动态删除映射
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
-	 * @param mappingCode
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param code
 	 */
-	public synchronized void removeMapping_(String mappingCode){
+	public synchronized void removeMapping_(String code){
 		try {
-			mappingWrapper.dynamicRemoveMapping_(mappingCode);
+			mappingWrapper.dynamicRemoveMapping_(code);
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -265,17 +233,14 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量删除映射
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
-	 * @param mappingCodes
+	 * 动态删除映射
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping_(List<String> mappingCodes){
+	public synchronized void batchRemoveMapping_(List<String> codes){
 		try {
-			for (String mappingCode : mappingCodes) {
-				mappingWrapper.dynamicRemoveMapping_(mappingCode);
+			for (String code : codes) {
+				mappingWrapper.dynamicRemoveMapping_(code);
 			}
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -284,17 +249,14 @@ public class DynamicMappingProcessor {
 	}
 	
 	/**
-	 * <pre>
-	 * 动态批量删除映射
-	 * 只对映射操作
-	 * 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * </pre>
-	 * @param mappingCodes
+	 * 动态删除映射
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping_(String... mappingCodes){
+	public synchronized void batchRemoveMapping_(String... codes){
 		try {
-			for (String mappingCode : mappingCodes) {
-				mappingWrapper.dynamicRemoveMapping_(mappingCode);
+			for (String code : codes) {
+				mappingWrapper.dynamicRemoveMapping_(code);
 			}
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
@@ -305,10 +267,10 @@ public class DynamicMappingProcessor {
 	// ----------------------------------------------------------------------------------------------
 	/**
 	 * 判断指定code的映射是否存在
-	 * @param mappingCode
+	 * @param code
 	 * @return
 	 */
-	public boolean mappingExists(String mappingCode) {
-		return mappingWrapper.mappingExists(mappingCode);
+	public boolean mappingExists(String code) {
+		return mappingWrapper.mappingExists(code);
 	}
 }

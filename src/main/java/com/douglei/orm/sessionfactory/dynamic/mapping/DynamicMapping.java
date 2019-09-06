@@ -3,16 +3,14 @@ package com.douglei.orm.sessionfactory.dynamic.mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 
 /**
- * 动态mapping
+ * 
  * @author DougLei
  */
 public class DynamicMapping {
+	
 	private DynamicMappingType type;
-	
-	private String mappingCode;
-	
+	private String code;
 	private String mappingConfigurationFilePath;
-	
 	private MappingType mappingType;
 	private String mappingConfigurationContent;
 	
@@ -38,12 +36,12 @@ public class DynamicMapping {
 	public String getMappingConfigurationContent() {
 		return mappingConfigurationContent;
 	}
-	public String getMappingCode() {
-		return mappingCode;
+	public String getCode() {
+		return code;
 	}
-	public void setMappingCode(String mappingCode) {
-		if(this.mappingCode == null) {
-			this.mappingCode = mappingCode;
+	public void setCode(String code) {
+		if(this.code == null) {
+			this.code = code;
 		}
 	}
 }

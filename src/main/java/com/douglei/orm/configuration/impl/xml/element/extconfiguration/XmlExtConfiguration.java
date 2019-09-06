@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.configuration.impl.xml.element.extconfiguration.datatypehandler.XmlExtDataTypeHandler;
@@ -62,12 +61,10 @@ public class XmlExtConfiguration implements ExtConfiguration {
 
 	@Override
 	public void destroy() throws DestroyException {
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(extDataTypeHandlerList != null && extDataTypeHandlerList.size() > 0) {
 			extDataTypeHandlerList.clear();
 		}
-	}
-
-	@Override
-	public void selfChecking() throws SelfCheckingException {
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

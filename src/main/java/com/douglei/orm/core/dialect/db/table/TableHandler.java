@@ -527,8 +527,8 @@ public class TableHandler {
 			try {
 				rollback(new TableMappingHolder(null, tableMappingCodes), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (RollbackException e1) {
-				logger.error("create表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				throw e1;
+				logger.error("create表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e1));
+				e.addSuppressed(e1);
 			}
 			throw new CreateTableException("创建表时出现异常", e);
 		} finally {
@@ -753,8 +753,8 @@ public class TableHandler {
 			try {
 				rollback(new TableMappingHolder(tableMappings, null), dbObjectHolders, serializeObjectHolders, connection, tableSqlStatementHandler);
 			} catch (RollbackException e1) {
-				logger.error("drop表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				throw e1;
+				logger.error("drop表时出现异常后回滚, 回滚又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e1));
+				e.addSuppressed(e1);
 			}
 			throw new DropTableException("删除表时出现异常", e);
 		} finally {

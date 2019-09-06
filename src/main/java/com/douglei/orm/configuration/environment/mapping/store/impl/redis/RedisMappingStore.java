@@ -2,6 +2,9 @@ package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
@@ -17,6 +20,7 @@ import redis.clients.jedis.JedisPool;
  * @author DougLei
  */
 public class RedisMappingStore implements MappingStore {
+	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStore.class);
 	private final RedisMappingStoreHandler handler = new RedisMappingStoreHandler();
 	private JedisPool redisPool;
 
@@ -59,37 +63,38 @@ public class RedisMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
+	public Mapping removeMapping(String code) throws NotExistsMappingException {
 		try(Jedis connection = redisPool.getResource()){
-			return handler.removeMapping(mappingCode, connection);
+			return handler.removeMapping(code, connection);
 		}
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
-		if(Collections.unEmpty(mappingCodes)) {
+	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+		if(Collections.unEmpty(codes)) {
 			try(Jedis connection = redisPool.getResource()){
-				handler.removeMapping(mappingCodes, connection);
+				handler.removeMapping(codes, connection);
 			}
 		}
 	}
 	
 	@Override
-	public Mapping getMapping(String mappingCode) throws NotExistsMappingException {
+	public Mapping getMapping(String code) throws NotExistsMappingException {
 		try(Jedis connection = redisPool.getResource()){
-			return handler.getMapping(mappingCode, connection);
+			return handler.getMapping(code, connection);
 		}
 	}
 	
 	@Override
-	public boolean mappingExists(String mappingCode) {
+	public boolean mappingExists(String code) {
 		try(Jedis connection = redisPool.getResource()){
-			return handler.mappingExists(mappingCode, connection);
+			return handler.mappingExists(code, connection);
 		}
 	}
 	
 	@Override
 	public void destroy() throws DestroyException {
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		try(Jedis connection = redisPool.getResource()){
 			handler.destroy(connection);
 		}
@@ -97,5 +102,6 @@ public class RedisMappingStore implements MappingStore {
 			redisPool.destroy();
 			redisPool = null;	
 		}
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -47,7 +46,7 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	
 	@Override
 	public void destroy() throws DestroyException {
-		logger.debug("{} 开始 destroy", getClass().getName());
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(dataSource != null && StringUtil.notEmpty(closeMethodName)) {
 			try {
 				logger.debug("{} {}", closeMethodName, dataSource.getClass().getName());
@@ -56,7 +55,7 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 				throw new DestroyException(closeMethodName+" "+dataSource.getClass().getName()+" 时出现异常", e);
 			}
 		}
-		logger.debug("{} 结束 destroy", getClass().getName());
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}	
 	
 	@Override
@@ -72,9 +71,5 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 	@Override
 	public ConnectionWrapper getConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		return new ConnectionWrapper(dataSource, beginTransaction, transactionIsolationLevel);
-	}
-	
-	@Override
-	public void selfChecking() throws SelfCheckingException {
 	}
 }

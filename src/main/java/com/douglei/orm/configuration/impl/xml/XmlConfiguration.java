@@ -77,9 +77,10 @@ public class XmlConfiguration extends Configuration {
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
-				destroy();
-			} catch (DestroyException e1) {
-				throw e1;
+				destroy_();
+			} catch (Exception e1) {
+				logger.error("jdb-orm框架初始化出现异常后, 进行销毁时又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e1));
+				e.addSuppressed(e1);
 			}
 			throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
 		} finally {
@@ -91,29 +92,28 @@ public class XmlConfiguration extends Configuration {
 		}
 	}
 	
+	// 销毁
+	private void destroy_(){
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
+		if(properties != null) {
+			properties.destroy();
+		}
+		if(extConfiguration != null) {
+			extConfiguration.destroy();
+		}
+		if(environment != null) {
+			environment.destroy();
+		}
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
+	}
+	
 	@Override
 	public void destroy() throws DestroyException{
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} 开始 destroy", getClass().getName());
-		}
-		
 		try {
-			if(properties != null) {
-				properties.destroy();
-			}
-			if(extConfiguration != null) {
-				extConfiguration.destroy();
-			}
-			if(environment != null) {
-				environment.destroy();
-			}
+			destroy_();
 		} catch (Exception e) {
 			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
-		}
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("{} 结束 destroy", getClass().getName());
 		}
 	}
 	

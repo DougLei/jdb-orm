@@ -49,31 +49,31 @@ public interface MappingStore extends SelfProcessing{
 	
 	/**
 	 * 移除映射
-	 * @param mappingCode
+	 * @param code
 	 * @return 返回映射, 如果是表映射, 还可能需要将该表删除
 	 * @throws NotExistsMappingException
 	 */
-	Mapping removeMapping(String mappingCode) throws NotExistsMappingException;
+	Mapping removeMapping(String code) throws NotExistsMappingException;
 	/**
 	 * 批量removeMapping
 	 * 该方法是在回滚的时候使用到
-	 * @param mappingCodes
+	 * @param codes
 	 * @throws NotExistsMappingException
 	 */
-	void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException;
+	void removeMapping(Collection<String> codes) throws NotExistsMappingException;
 	
 	/**
 	 * 获取映射
-	 * @param mappingCode
+	 * @param code
 	 * @return
 	 * @throws NotExistsMappingException
 	 */
-	Mapping getMapping(String mappingCode) throws NotExistsMappingException;
+	Mapping getMapping(String code) throws NotExistsMappingException;
 	
 	/**
 	 * 指定code的mapping是否存在
-	 * @param mappingCode
+	 * @param code
 	 * @return
 	 */
-	boolean mappingExists(String mappingCode);
+	boolean mappingExists(String code);
 }
