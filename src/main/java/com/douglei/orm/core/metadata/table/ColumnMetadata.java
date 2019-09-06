@@ -106,7 +106,7 @@ public class ColumnMetadata implements Metadata{
 	 * @param defaultValue
 	 */
 	public void set2DefaultValue(String defaultValue) {
-		if(StringUtil.notEmpty(defaultValue)) {
+		if(defaultValue != null) {
 			this.defaultValue = defaultValue;
 		}
 	}
