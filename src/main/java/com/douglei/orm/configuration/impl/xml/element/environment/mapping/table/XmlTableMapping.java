@@ -58,7 +58,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		
 		try {
 			Element tableElement = Dom4jElementUtil.validateElementExists("table", rootElement);
-			tableMetadata = (TableMetadata) tableMetadataValidate.doValidate(tableElement);
+			tableMetadata = tableMetadataValidate.doValidate(tableElement);
 			addColumnMetadata(getColumnElements(tableElement));
 			addConstraint(tableElement.element("constraints"));
 			addIndex(tableElement.element("indexes"));
