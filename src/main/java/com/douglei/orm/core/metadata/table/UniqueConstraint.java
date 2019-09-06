@@ -1,5 +1,6 @@
 package com.douglei.orm.core.metadata.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
  * @author DougLei
  */
 @SuppressWarnings("unchecked")
-public class UniqueConstraint {
+public class UniqueConstraint implements Serializable{
+	private static final long serialVersionUID = 1466827271949722121L;
 	private byte size;
 	private Object code;// 唯一约束的列code, 可能为String(multiColumn=false), 也可能为List<String>(multiColumn=true)
 	
