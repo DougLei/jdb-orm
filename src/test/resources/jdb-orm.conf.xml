@@ -53,9 +53,8 @@
 		</mappings>
 	</environment>
 	
-	<!-- TODO 数据库连接信息加密, 主要是对properties文件内容加密 -->
-	<properties placeholderPrefix="${" placeholderSuffix="}" encryption="true">
-		<resource path="jdbc.properties" />
+	<properties placeholderPrefix="${" placeholderSuffix="}">
+		<resource path="jdbc.properties" decodeValue="true"/>
 	</properties>
 	
 	<extConfiguration>

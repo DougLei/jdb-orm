@@ -3,6 +3,7 @@ package com.douglei.orm.configuration.impl.xml.element.properties;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.instances.file.resources.reader.PropertiesReader;
+import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -60,23 +62,38 @@ public class Properties implements SelfProcessing{
 	 */
 	private void readAndSetProperties(List<Element> resourceElements) {
 		if(resourceElements != null) {
-			String path = null;
+			String path;
+			boolean decodeValue;
 			PropertiesReader reader = new PropertiesReader();
 			for (Element element : resourceElements) {
 				path = element.attributeValue("path");
 				if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
 					reader.setPath(path);
 					if(reader.ready()) {
-						reader.entrySet().forEach(entry -> setProperties(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, entry.getValue().toString()));
+						decodeValue = Boolean.parseBoolean(element.attributeValue("decodeValue"));
+						for (Entry<Object, Object> entry : reader.entrySet()) {
+							if(logger.isDebugEnabled()) {
+								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, getValue(entry.getValue(), decodeValue));
+							}
+							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, getValue(entry.getValue(), decodeValue));
+						}
 					}
 				}
 			}
 		}
 	}
-
-	private void setProperties(String key, String value) {
-		logger.debug("setProperties: key={}, value={}", key, value);
-		properties.put(key, value);
+	
+	/**
+	 * 获取value值
+	 * @param value
+	 * @param decodeValue
+	 * @return
+	 */
+	private String getValue(Object value, boolean decodeValue) {
+		if(decodeValue) {
+			return CryptographyUtil.decodeByBASE64(value.toString().substring(20));
+		}
+		return value.toString();
 	}
 	
 	public String getProperties(String key) {
