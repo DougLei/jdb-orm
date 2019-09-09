@@ -178,8 +178,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		}
 	}
 
-	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
+	// resultIsMap 决定查询的结果集是map, 还是数组
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private PageResult pageQuery(boolean resultIsMap, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		if(pageNum < 0) {
 			logger.debug("pageNum实际值={}, pageNum<0, 修正pageNum=1", pageNum);
@@ -192,16 +193,28 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
 		long count = queryCount(pageSqlStatement, parameters);
 		logger.debug("查询到的数据总量为:{}条", count);
-		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String,Object>>(pageNum, pageSize, count);
+		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
 			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
-			List<Map<String, Object>> listMap = query(sql, parameters);
-			pageResult.setResultDatas(listMap);
+			List list = resultIsMap?query(sql, parameters):query_(sql, parameters);
+			pageResult.setResultDatas(list);
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("分页查询的结果: {}", pageResult.toString());
 		}
 		return pageResult;
+	}
+	
+	@Override
+	@SuppressWarnings({ "unchecked" })
+	public PageResult<Object[]> pageQuery_(int pageNum, int pageSize, String sql, List<Object> parameters) {
+		return pageQuery(false, pageNum, pageSize, sql, parameters);
+	}
+	
+	@Override
+	@SuppressWarnings({ "unchecked" })
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
+		return pageQuery(true, pageNum, pageSize, sql, parameters);
 	}
 	
 	/**
@@ -213,7 +226,26 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private long queryCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
 		return Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString());
 	}
-
+	
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
+		return pageQuery(targetClass, pageNum, pageSize, sql, null);
+	}
+	
+	@Override
+	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
+		}
+		PageResult<Map<String, Object>> pageResult = pageQuery(pageNum, pageSize, sql, parameters);
+		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
+		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas(), null));
+		if(logger.isDebugEnabled()) {
+			logger.debug("分页查询的结果: {}", finalPageResult.toString());
+		}
+		return finalPageResult;
+	}
+	
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
 		return procedureExecutor.execute(getConnection());
@@ -277,25 +309,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			targetMap.put(column.getProperty(), map.get(column.getName()));
 		}
 		return targetMap;
-	}
-
-	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
-		return pageQuery(targetClass, pageNum, pageSize, sql, null);
-	}
-
-	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
-		}
-		PageResult<Map<String, Object>> pageResult = pageQuery(pageNum, pageSize, sql, parameters);
-		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
-		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas(), null));
-		if(logger.isDebugEnabled()) {
-			logger.debug("分页查询的结果: {}", finalPageResult.toString());
-		}
-		return finalPageResult;
 	}
 
 	@Override

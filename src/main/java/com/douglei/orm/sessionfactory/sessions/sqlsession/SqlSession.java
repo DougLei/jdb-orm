@@ -115,10 +115,29 @@ public interface SqlSession {
 	 * @param sql
 	 * @return
 	 */
+	default PageResult<Object[]> pageQuery_(int pageNum, int pageSize, String sql) {
+		return pageQuery_(pageNum, pageSize, sql, null);
+	}
+	/**
+	 * 分页查询
+	 * @param pageNum
+	 * @param pageSize
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	PageResult<Object[]> pageQuery_(int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	/**
+	 * 分页查询
+	 * @param pageNum
+	 * @param pageSize
+	 * @param sql
+	 * @return
+	 */
 	default PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql) {
 		return pageQuery(pageNum, pageSize, sql, null);
 	}
-	
 	/**
 	 * 分页查询
 	 * @param pageNum
@@ -138,7 +157,6 @@ public interface SqlSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
-	
 	/**
 	 * 分页查询
 	 * @param targetClass

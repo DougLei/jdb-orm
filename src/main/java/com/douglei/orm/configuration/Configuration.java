@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
-import com.douglei.tools.instances.reader.Reader;
+import com.douglei.tools.instances.file.resources.reader.AbstractResourcesReader;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.StringUtil;
 
@@ -77,7 +77,7 @@ public abstract class Configuration implements SelfProcessing{
 	 */
 	public void setConfigurationInputStream(InputStream configurationInputStream) {
 		closeConfigurationInputStream();
-		this.configurationFile = Reader.DEFAULT_PATH;
+		this.configurationFile = AbstractResourcesReader.DEFAULT_PATH;
 		this.configurationInputStream = configurationInputStream;
 	}
 	
