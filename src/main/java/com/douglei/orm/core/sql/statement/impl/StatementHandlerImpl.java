@@ -30,7 +30,9 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			close();
+			if(enableResultCache) {
+				close();
+			}
 		}
 	}
 	
@@ -45,7 +47,9 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			close();
+			if(enableResultCache) {
+				close();
+			}
 		}
 	}
 	
@@ -60,7 +64,9 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			close();
+			if(enableResultCache) {
+				close();
+			}
 		}
 	}
 
@@ -75,7 +81,9 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			close();
+			if(enableResultCache) {
+				close();
+			}
 		}
 	}
 	

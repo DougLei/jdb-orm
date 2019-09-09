@@ -52,10 +52,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * 记录[标识]该StatementHandler已经执行过
 	 */
 	private void recordStatementHandlerIsExecuted() {
-		if(isExecuted) {
-			currentEecutedIndex++;
-		}else {
-			isExecuted = true;
+		if(enableResultCache) {
+			if(isExecuted) {
+				currentEecutedIndex++;
+			}else {
+				isExecuted = true;
+			}
 		}
 	}
 	

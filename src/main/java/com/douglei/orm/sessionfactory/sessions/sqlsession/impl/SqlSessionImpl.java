@@ -49,7 +49,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		this.enableResultCache = environmentProperty.enableResultCache();
 		logger.debug("是否开启Statement缓存: {}; 是否开启Result缓存: {}", enableStatementCache, enableResultCache);
 	}
-	
+	// TODO 数据库连接信息加密
 	/**
 	 * 获取StatementHandler
 	 * @param sql
@@ -99,7 +99,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableStatementCache || !enableResultCache) {
+			if(!enableStatementCache) {
 				statementHandler.close();
 			}
 		}
@@ -114,7 +114,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableStatementCache || !enableResultCache) {
+			if(!enableStatementCache) {
 				statementHandler.close();
 			}
 		}
@@ -129,7 +129,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableStatementCache || !enableResultCache) {
+			if(!enableStatementCache) {
 				statementHandler.close();
 			}
 		}
@@ -144,7 +144,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableStatementCache || !enableResultCache) {
+			if(!enableStatementCache) {
 				statementHandler.close();
 			}
 		}
