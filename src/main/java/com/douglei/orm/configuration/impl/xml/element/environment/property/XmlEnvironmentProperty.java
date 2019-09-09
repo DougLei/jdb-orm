@@ -32,7 +32,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private Dialect dialect;
 	
 	@FieldMetaData
-	private boolean enableSessionCache = true;
+	private boolean enableStatementCache = true;
 	
 	@FieldMetaData
 	private boolean enableResultCache = true;
@@ -138,7 +138,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	}
 	void setEnableSessionCache(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
-			this.enableSessionCache = Boolean.parseBoolean(value);
+			this.enableStatementCache = Boolean.parseBoolean(value);
 		}
 	}
 	void setEnableResultCache(String value) {
@@ -210,8 +210,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return dialect;
 	}
 	@Override
-	public boolean enableSessionCache() {
-		return enableSessionCache;
+	public boolean enableStatementCache() {
+		return enableStatementCache;
 	}
 	@Override
 	public boolean enableResultCache() {

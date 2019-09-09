@@ -30,6 +30,9 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private boolean isClosed;// 是否关闭
 	private short currentEecutedIndex;// 当前执行的index, 可以理解为当前共执行了多少次, 从0开始
 	
+	// 当没有开启result缓存时, 该属性存储每次查询的结果对象
+	private Object result;
+	
 	// <列名:值>
 	private List<Map<String, Object>> queryUniqueResult;
 	private List<List<Map<String, Object>>> queryResultList;
@@ -87,15 +90,19 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @param resultSet
 	 * @throws SQLException 
 	 */
+	@SuppressWarnings("unchecked")
 	private void setQueryResultList(ResultSet resultSet) throws SQLException {
 		logger.debug("开始设置查询结果集集合");
-		if(queryResultList == null) {
-			queryResultList = new ArrayList<List<Map<String,Object>>>(3);
-		}
 		if(setResutSetColumnNames(resultSet)) {
-			queryResultList.add(ResultSetUtil.getResultSetListMap(resultsetMetadatas, resultSet));
+			result = ResultSetUtil.getResultSetListMap(resultsetMetadatas, resultSet);
 		}else {
-			queryResultList.add(Collections.emptyList());
+			result = Collections.emptyList();
+		}
+		if(enableResultCache) {
+			if(queryResultList == null) {
+				queryResultList = new ArrayList<List<Map<String,Object>>>(3);
+			}
+			queryResultList.add((List<Map<String,Object>>)result);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -108,18 +115,22 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @param resultSet
 	 * @throws SQLException 
 	 */
+	@SuppressWarnings("unchecked")
 	private void setQueryUniqueResult(ResultSet resultSet) throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
-		if(queryUniqueResult == null) {
-			queryUniqueResult = new ArrayList<Map<String,Object>>(3);
-		}
 		if(setResutSetColumnNames(resultSet)) {
-			queryUniqueResult.add(ResultSetUtil.getResultSetMap(resultsetMetadatas, resultSet));
+			result = ResultSetUtil.getResultSetMap(resultsetMetadatas, resultSet);
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult.add(Collections.emptyMap());
+			result = Collections.emptyMap();
+		}
+		if(enableResultCache) {
+			if(queryUniqueResult == null) {
+				queryUniqueResult = new ArrayList<Map<String,Object>>(3);
+			}
+			queryUniqueResult.add((Map<String, Object>)result);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -132,15 +143,19 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @param resultSet
 	 * @throws SQLException 
 	 */
+	@SuppressWarnings("unchecked")
 	private void setQueryResultList_(ResultSet resultSet) throws SQLException {
 		logger.debug("开始设置查询结果集集合");
-		if(queryResultList_ == null) {
-			queryResultList_ = new ArrayList<List<Object[]>>(3);
-		}
 		if(setResutSetColumnNames(resultSet)) {
-			queryResultList_.add(ResultSetUtil.getResultSetListArray(resultsetMetadatas, resultSet));
+			result = ResultSetUtil.getResultSetListArray(resultsetMetadatas, resultSet);
 		}else {
-			queryResultList_.add(Collections.emptyList());
+			result = Collections.emptyList();
+		}
+		if(enableResultCache) {
+			if(queryResultList_ == null) {
+				queryResultList_ = new ArrayList<List<Object[]>>(3);
+			}
+			queryResultList_.add((List<Object[]>)result);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -155,16 +170,19 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	private void setQueryUniqueResult_(ResultSet resultSet) throws SQLException {
 		logger.debug("开始设置查询唯一结果集");
-		if(queryUniqueResult_ == null) {
-			queryUniqueResult_ = new ArrayList<Object[]>(3);
-		}
 		if(setResutSetColumnNames(resultSet)) {
-			queryUniqueResult_.add(ResultSetUtil.getResultSetArray(resultsetMetadatas, resultSet));
+			result = ResultSetUtil.getResultSetArray(resultsetMetadatas, resultSet);
 			if(resultSet.next()) {
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			queryUniqueResult_.add(com.douglei.tools.utils.Collections.emptyArray());
+			result = com.douglei.tools.utils.Collections.emptyArray();
+		}
+		if(enableResultCache) {
+			if(queryUniqueResult_ == null) {
+				queryUniqueResult_ = new ArrayList<Object[]>(3);
+			}
+			queryUniqueResult_.add((Object[])result);
 		}
 		recordStatementHandlerIsExecuted();
 	}
@@ -179,6 +197,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
 	protected List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
 		try {
 			setQueryResultList(resultSet);
@@ -190,6 +214,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
 	protected Map<String, Object> executeUniqueQuery(ResultSet resultSet) throws SQLException {
 		try {
 			setQueryUniqueResult(resultSet);
@@ -201,6 +231,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
 	protected List<Object[]> executeQuery_(ResultSet resultSet) throws SQLException {
 		try {
 			setQueryResultList_(resultSet);
@@ -212,6 +248,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
 	protected Object[] executeUniqueQuery_(ResultSet resultSet) throws SQLException {
 		try {
 			setQueryUniqueResult_(resultSet);
@@ -223,17 +265,55 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		}
 	}
 	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<Map<String, Object>> getQueryResultList(int index) {
-		return queryResultList.get(index);
+		if(enableResultCache) {
+			return queryResultList.get(index);
+		}
+		return (List<Map<String, Object>>) result;
 	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	protected Map<String, Object> getQueryUniqueResult(int index) {
-		return queryUniqueResult.get(index);
+		if(enableResultCache) {
+			return queryUniqueResult.get(index);
+		}
+		return (Map<String, Object>) result;
 	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	protected List<Object[]> getQueryResultList_(int index) {
-		return queryResultList_.get(index);
+		if(enableResultCache) {
+			return queryResultList_.get(index);
+		}
+		return (List<Object[]>) result;
 	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
 	protected Object[] getQueryUniqueResult_(int index) {
-		return queryUniqueResult_.get(index);
+		if(enableResultCache) {
+			return queryUniqueResult_.get(index);
+		}
+		return (Object[]) result;
 	}
 	
 	@Override

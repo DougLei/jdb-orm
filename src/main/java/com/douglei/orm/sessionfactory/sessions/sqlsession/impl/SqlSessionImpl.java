@@ -39,15 +39,15 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	
-	private boolean enableSessionCache;// 是否启用session缓存
-	private boolean enableResultCache;// 是否开启Result缓存, 即对结果集缓存
+	private boolean enableStatementCache;// 是否启用Statement缓存
+	private boolean enableResultCache;// 是否开启Result缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
-		this.enableSessionCache = environmentProperty.enableSessionCache();
+		this.enableStatementCache = environmentProperty.enableStatementCache();
 		this.enableResultCache = environmentProperty.enableResultCache();
-		logger.debug("是否开启Session缓存: {}; 是否开启Result缓存: {}", enableSessionCache, enableResultCache);
+		logger.debug("是否开启Statement缓存: {}; 是否开启Result缓存: {}", enableStatementCache, enableResultCache);
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
 		StatementHandler statementHandler = null;
-		if(enableSessionCache) {
+		if(enableStatementCache) {
 			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
 			String code = CryptographyUtil.encodeMD5(sql);
 			
@@ -99,7 +99,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableSessionCache) {
+			if(!enableStatementCache || !enableResultCache) {
 				statementHandler.close();
 			}
 		}
@@ -114,7 +114,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableSessionCache) {
+			if(!enableStatementCache || !enableResultCache) {
 				statementHandler.close();
 			}
 		}
@@ -129,7 +129,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableSessionCache) {
+			if(!enableStatementCache || !enableResultCache) {
 				statementHandler.close();
 			}
 		}
@@ -144,7 +144,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
-			if(!enableSessionCache) {
+			if(!enableStatementCache || !enableResultCache) {
 				statementHandler.close();
 			}
 		}
@@ -159,7 +159,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("execute update sql时出现异常", e);
 		} finally {
-			if(!enableSessionCache) {
+			if(!enableStatementCache) {
 				statementHandler.close();
 			}
 		}
@@ -171,7 +171,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(logger.isDebugEnabled()) {
 				logger.debug("close {}", getClass().getName());
 			}
-			if(enableSessionCache && Collections.unEmpty(statementHandlerCache)) {
+			if(enableStatementCache && Collections.unEmpty(statementHandlerCache)) {
 				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
 				statementHandlerCache.clear();
 				statementHandlerCache = null;

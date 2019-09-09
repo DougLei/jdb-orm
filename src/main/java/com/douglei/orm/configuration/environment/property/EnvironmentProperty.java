@@ -14,7 +14,7 @@ public interface EnvironmentProperty {
 	
 	public Dialect getDialect();
 	
-	public boolean enableSessionCache();
+	public boolean enableStatementCache();
 	
 	public boolean enableResultCache();
 	
