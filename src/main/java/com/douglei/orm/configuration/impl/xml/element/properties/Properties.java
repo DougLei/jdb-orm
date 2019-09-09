@@ -1,20 +1,17 @@
 package com.douglei.orm.configuration.impl.xml.element.properties;
 
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
-import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.instances.reader.PropertiesReader;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -24,19 +21,10 @@ import com.douglei.tools.utils.StringUtil;
 public class Properties implements SelfProcessing{
 	private static final Logger logger = LoggerFactory.getLogger(Properties.class);
 	
-	private ClassLoader loader;
-	
 	private String placeholderPrefix="${";
 	private String placeholderSuffix="}";
 	
-	private Map<String, String> properties = new HashMap<String, String>();
-	
-	private ClassLoader getLoader() {
-		if(loader == null) {
-			loader = Properties.class.getClassLoader();
-		}
-		return loader;
-	}
+	private Map<String, String> properties = new HashMap<String, String>(8);
 	
 	public Properties(Element propertiesElement) {
 		logger.debug("开始处理<properties>元素");
@@ -73,30 +61,13 @@ public class Properties implements SelfProcessing{
 	private void readAndSetProperties(List<Element> resourceElements) {
 		if(resourceElements != null) {
 			String path = null;
-			InputStream in = null;
-			java.util.Properties juproperties = new java.util.Properties();
-			Set<Object> keys = null;
-			String keyString = null;
-			
+			PropertiesReader reader = new PropertiesReader();
 			for (Element element : resourceElements) {
 				path = element.attributeValue("path");
 				if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
-					try {
-						in = getLoader().getResourceAsStream(path.trim());
-						juproperties.load(in);
-						keys = juproperties.keySet();
-						if(keys != null && keys.size() > 0) {
-							for (Object key : keys) {
-								keyString = key.toString();
-								setProperties(placeholderPrefix + keyString + placeholderSuffix, juproperties.getProperty(keyString));
-							}
-							keys.clear();
-						}
-					} catch (Exception e) {
-						throw new ProcessPropertiesElementException("读取<resource path=\""+path+"\" /> 的properties文件时出现异常/>", e); 
-					} finally {
-						CloseUtil.closeIO(in);
-						juproperties.clear();
+					reader.setPath(path);
+					if(reader.ready()) {
+						reader.entrySet().forEach(entry -> setProperties(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, entry.getValue().toString()));
 					}
 				}
 			}
@@ -124,9 +95,5 @@ public class Properties implements SelfProcessing{
 			properties.clear();
 		}
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
-	}
-
-	@Override
-	public void selfChecking() throws SelfCheckingException {
 	}
 }
