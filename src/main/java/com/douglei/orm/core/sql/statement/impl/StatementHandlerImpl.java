@@ -14,8 +14,8 @@ import com.douglei.orm.core.sql.statement.StatementExecutionException;
  */
 public class StatementHandlerImpl extends AbstractStatementHandler {
 	private Statement statement;
-	public StatementHandlerImpl(Statement statement, String sql) {
-		super(sql);
+	public StatementHandlerImpl(boolean enableResultCache, Statement statement, String sql) {
+		super(enableResultCache, sql);
 		this.statement = statement;
 	}
 

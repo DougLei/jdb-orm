@@ -40,12 +40,14 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	
 	private boolean enableSessionCache;// 是否启用session缓存
+	private boolean enableResultCache;// 是否开启Result缓存, 即对结果集缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 		this.enableSessionCache = environmentProperty.enableSessionCache();
-		logger.debug("是否开启Session缓存: {}", enableSessionCache);
+		this.enableResultCache = environmentProperty.enableResultCache();
+		logger.debug("是否开启Session缓存: {}; 是否开启Result缓存: {}", enableSessionCache, enableResultCache);
 	}
 	
 	/**
@@ -68,7 +70,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			
 			if(statementHandler == null) {
 				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并放到缓存中");
-				statementHandler = connection.createStatementHandler(sql, parameters);
+				statementHandler = connection.createStatementHandler(enableResultCache, sql, parameters);
 				statementHandlerCache.put(code, statementHandler);
 			}else {
 				if(logger.isDebugEnabled()) {
@@ -83,7 +85,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			}
 		}else {
 			logger.debug("没有开启缓存, 创建StatementHandler实例");
-			statementHandler = connection.createStatementHandler(sql, parameters);
+			statementHandler = connection.createStatementHandler(enableResultCache, sql, parameters);
 		}
 		return statementHandler;
 	}

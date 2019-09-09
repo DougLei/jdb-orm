@@ -35,6 +35,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableSessionCache = true;
 	
 	@FieldMetaData
+	private boolean enableResultCache = true;
+	
+	@FieldMetaData
 	private boolean enableTableSessionCache = true;
 	
 	@FieldMetaData
@@ -138,6 +141,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.enableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
+	void setEnableResultCache(String value) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
+			this.enableResultCache = Boolean.parseBoolean(value);
+		}
+	}
 	void setEnableTableSessionCache(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
@@ -204,6 +212,10 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean enableSessionCache() {
 		return enableSessionCache;
+	}
+	@Override
+	public boolean enableResultCache() {
+		return enableResultCache;
 	}
 	@Override
 	public boolean enableTableSessionCache() {

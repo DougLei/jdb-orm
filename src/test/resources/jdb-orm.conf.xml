@@ -3,6 +3,7 @@
 	<environment>
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver, 如果不配置, 则框架会解析jdbc url, 获取对应的方言 -->
 		<!-- <property name="enableSessionCache" value="true" /> --><!-- 是否开启Session缓存, 即对Statement缓存, 默认值为true  -->
+		<!-- <property name="enableResultCache" value="true" /> --><!-- 是否开启Result缓存, 即对结果集缓存, 默认值为true  -->
 		<!-- <property name="enableTableSessionCache" value="true" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为true  -->
 		
 		<!-- <property name="mappingStore" value="application" /> --><!-- value的值只包括: application, 或在new XmlConfiguration时传入 {@link com.douglei.orm.configuration.environment.mapping.store.MappingStore} 接口的实现类实例 -->

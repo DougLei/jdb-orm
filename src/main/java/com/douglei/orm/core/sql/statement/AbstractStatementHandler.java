@@ -24,6 +24,7 @@ import com.douglei.tools.utils.ExceptionUtil;
 public abstract class AbstractStatementHandler implements StatementHandler{
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStatementHandler.class);
 	
+	protected boolean enableResultCache;// 是否开启Result缓存, 即对结果集缓存
 	protected String sql;// 执行的sql语句
 	private boolean isExecuted;// 是否已经执行过
 	private boolean isClosed;// 是否关闭
@@ -39,7 +40,8 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private List<Object[]> queryUniqueResult_;
 	private List<List<Object[]>> queryResultList_;
 	
-	protected AbstractStatementHandler(String sql) {
+	protected AbstractStatementHandler(boolean enableResultCache, String sql) {
+		this.enableResultCache = enableResultCache;
 		this.sql = sql;
 	}
 

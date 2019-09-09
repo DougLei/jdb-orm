@@ -19,8 +19,8 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private PreparedStatement preparedStatement;
 	private List<List<Object>> lastParametersList; // 上一次请求参数
 
-	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
-		super(sql);
+	public PreparedStatementHandlerImpl(boolean enableResultCache, PreparedStatement preparedStatement, String sql) {
+		super(enableResultCache, sql);
 		this.preparedStatement = preparedStatement;
 	}
 	

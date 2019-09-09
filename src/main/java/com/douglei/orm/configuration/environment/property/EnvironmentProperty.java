@@ -16,6 +16,8 @@ public interface EnvironmentProperty {
 	
 	public boolean enableSessionCache();
 	
+	public boolean enableResultCache();
+	
 	public boolean enableTableSessionCache();
 	
 	public MappingStore getMappingStore();
