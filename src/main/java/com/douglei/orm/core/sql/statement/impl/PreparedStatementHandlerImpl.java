@@ -30,27 +30,33 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @return -1表示没有一样的参数
 	 */
 	private int isSameParameters(List<Object> currentParameters) {
-		if(isExecuted()) {
-			int length = lastParametersList.size();
-			for(int i=0;i<length;i++) {
-				if(lastParametersList.get(i).equals(currentParameters)) {
-					return i;
+		if(enableResultCache) {
+			if(isExecuted()) {
+				int length = lastParametersList.size();
+				for(int i=0;i<length;i++) {
+					if(lastParametersList.get(i).equals(currentParameters)) {
+						return i;
+					}
 				}
+			}else {
+				lastParametersList = new ArrayList<List<Object>>(3);
 			}
-		}else {
-			lastParametersList = new ArrayList<List<Object>>(3);
+			lastParametersList.add(currentParameters);
 		}
-		lastParametersList.add(currentParameters);
 		return -1;
 	}
 	
+	/**
+	 * 给 {@link PreparedStatement} 的占位符设置对应的参数值
+	 * @param parameters
+	 * @throws SQLException
+	 */
 	private void setParameters(List<Object> parameters) throws SQLException {
 		if(parameters != null && parameters.size() > 0) {
 			List<InputSqlParameter> actualParameters = turnToParameters(parameters);
 			short index = 1;
 			for (InputSqlParameter parameter : actualParameters) {
-				parameter.setValue(index, preparedStatement);
-				index++;
+				parameter.setValue(index++, preparedStatement);
 			}
 		}
 	}
