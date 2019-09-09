@@ -113,4 +113,26 @@ public class Properties implements SelfProcessing{
 		}
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
+	
+	/**
+	 * 加密value值
+	 * @param value
+	 * @return
+	 */
+	public static String encodeValue(String value) {
+		value = CryptographyUtil.encodeByBASE64(value);
+		
+		
+		return value;
+	}
+	
+	private static final char[] c = {'0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f','g','h','i','g','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','G','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	public static void main(String[] args) {
+		String a = "{";
+		String b = "01234567890abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ";
+		for (int i = 0; i < b.length(); i++) {
+			a += "'" + b.charAt(i) + "',";
+		}
+		System.out.println(a);
+	}
 }
