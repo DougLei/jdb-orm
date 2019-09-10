@@ -136,7 +136,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.dialect = DialectMapping.getDialect(value, databaseMetadata);
 		}
 	}
-	void setEnableSessionCache(String value) {
+	void setEnableStatementCache(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableStatementCache = Boolean.parseBoolean(value);
 		}
