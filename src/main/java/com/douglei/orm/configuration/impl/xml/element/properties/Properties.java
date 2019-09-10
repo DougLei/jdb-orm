@@ -73,9 +73,9 @@ public class Properties implements SelfProcessing{
 						decodeValue = Boolean.parseBoolean(element.attributeValue("decodeValue"));
 						for (Entry<Object, Object> entry : reader.entrySet()) {
 							if(logger.isDebugEnabled()) {
-								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, getValue(entry.getValue(), decodeValue));
+								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decodeValue(entry.getValue(), decodeValue));
 							}
-							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, getValue(entry.getValue(), decodeValue));
+							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decodeValue(entry.getValue(), decodeValue));
 						}
 					}
 				}
@@ -84,14 +84,14 @@ public class Properties implements SelfProcessing{
 	}
 	
 	/**
-	 * 获取value值
+	 * 解密value值
 	 * @param value
 	 * @param decodeValue
 	 * @return
 	 */
-	private String getValue(Object value, boolean decodeValue) {
+	private String decodeValue(Object value, boolean decodeValue) {
 		if(decodeValue) {
-			return CryptographyUtil.decodeByBASE64(value.toString().substring(20));
+			return CryptographyUtil.decode(value.toString());
 		}
 		return value.toString();
 	}
@@ -112,27 +112,5 @@ public class Properties implements SelfProcessing{
 			properties.clear();
 		}
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
-	}
-	
-	/**
-	 * 加密value值
-	 * @param value
-	 * @return
-	 */
-	public static String encodeValue(String value) {
-		value = CryptographyUtil.encodeByBASE64(value);
-		
-		
-		return value;
-	}
-	
-	private static final char[] c = {'0','1','2','3','4','5','6','7','8','9','0','a','b','c','d','e','f','g','h','i','g','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','G','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-	public static void main(String[] args) {
-		String a = "{";
-		String b = "01234567890abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ";
-		for (int i = 0; i < b.length(); i++) {
-			a += "'" + b.charAt(i) + "',";
-		}
-		System.out.println(a);
 	}
 }
