@@ -91,7 +91,7 @@ public class Properties implements SelfProcessing{
 	 */
 	private String decodeValue(Object value, boolean decodeValue) {
 		if(decodeValue) {
-			return CryptographyUtil.decode(value.toString());
+			return CryptographyUtil.decodeByBASE64(value.toString());
 		}
 		return value.toString();
 	}
