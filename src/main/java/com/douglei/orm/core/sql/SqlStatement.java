@@ -9,7 +9,7 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.pagequery.WithClauseException;
 
 /**
- * 
+ * sql解析器
  * @author DougLei
  */
 public class SqlStatement {
