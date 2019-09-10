@@ -180,9 +180,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		}
 	}
 
-	// resultIsMap 决定查询的结果集是map, 还是数组
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PageResult pageQuery(boolean resultIsMap, int pageNum, int pageSize, String sql, List<Object> parameters) {
+	@Override
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		if(pageNum < 0) {
 			logger.debug("pageNum实际值={}, pageNum<0, 修正pageNum=1", pageNum);
@@ -195,28 +194,16 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
 		long count = queryCount(pageSqlStatement, parameters);
 		logger.debug("查询到的数据总量为:{}条", count);
-		PageResult pageResult = new PageResult(pageNum, pageSize, count);
+		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String, Object>>(pageNum, pageSize, count);
 		if(count > 0) {
 			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
-			List list = resultIsMap?query(sql, parameters):query_(sql, parameters);
+			List<Map<String, Object>> list = query(sql, parameters);
 			pageResult.setResultDatas(list);
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("分页查询的结果: {}", pageResult.toString());
 		}
 		return pageResult;
-	}
-	
-	@Override
-	@SuppressWarnings({ "unchecked" })
-	public PageResult<Object[]> pageQuery_(int pageNum, int pageSize, String sql, List<Object> parameters) {
-		return pageQuery(false, pageNum, pageSize, sql, parameters);
-	}
-	
-	@Override
-	@SuppressWarnings({ "unchecked" })
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
-		return pageQuery(true, pageNum, pageSize, sql, parameters);
 	}
 	
 	/**
