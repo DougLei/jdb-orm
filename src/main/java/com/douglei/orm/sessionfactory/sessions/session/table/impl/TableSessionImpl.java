@@ -184,14 +184,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void save(String code, Map<String, Object> propertyMap) {
-		save_(getTableMetadata(code), propertyMap);
+	public void save(String code, Object object) {
+		save_(getTableMetadata(code), object);
 	}
 	
 	@Override
-	public void save(String code, List<Map<String, Object>> propertyMaps) {
+	public void save(String code, List<Object> objects) {
 		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> save_(table, propertyMap));
+		objects.forEach(propertyMap -> save_(table, propertyMap));
 	}
 	
 	
@@ -249,14 +249,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void update(String code, Map<String, Object> propertyMap) {
-		update_(getTableMetadata(code), propertyMap);
+	public void update(String code, Object object) {
+		update_(getTableMetadata(code), object);
 	}
 	
 	@Override
-	public void update(String code, List<Map<String, Object>> propertyMaps) {
+	public void update(String code, List<Object> objects) {
 		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> update_(table, propertyMap));
+		objects.forEach(propertyMap -> update_(table, propertyMap));
 	}
 	
 
@@ -309,14 +309,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void delete(String code, Map<String, Object> propertyMap) {
-		delete_(getTableMetadata(code), propertyMap);
+	public void delete(String code, Object object) {
+		delete_(getTableMetadata(code), object);
 	}
 	
 	@Override
-	public void delete(String code, List<Map<String, Object>> propertyMaps) {
+	public void delete(String code, List<Object> objects) {
 		TableMetadata table = getTableMetadata(code);
-		propertyMaps.forEach(propertyMap -> delete_(table, propertyMap));
+		objects.forEach(propertyMap -> delete_(table, propertyMap));
 	}
 
 		

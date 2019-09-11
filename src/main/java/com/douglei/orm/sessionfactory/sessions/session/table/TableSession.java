@@ -1,7 +1,6 @@
 package com.douglei.orm.sessionfactory.sessions.session.table;
 
 import java.util.List;
-import java.util.Map;
 
 import com.douglei.orm.core.sql.pagequery.PageResult;
 
@@ -24,15 +23,15 @@ public interface TableSession {
 	/**
 	 * 保存对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMap
+	 * @param object
 	 */
-	void save(String code, Map<String, Object> propertyMap);
+	void save(String code, Object object);
 	/**
 	 * 保存对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMaps
+	 * @param objects
 	 */
-	void save(String code, List<Map<String, Object>> propertyMaps);
+	void save(String code, List<Object> objects);
 	
 	/**
 	 * 修改对象
@@ -47,15 +46,15 @@ public interface TableSession {
 	/**
 	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMap
+	 * @param object
 	 */
-	void update(String code, Map<String, Object> propertyMap);
+	void update(String code, Object object);
 	/**
 	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMaps
+	 * @param objects
 	 */
-	void update(String code, List<Map<String, Object>> propertyMaps);
+	void update(String code, List<Object> objects);
 	
 	/**
 	 * 删除对象
@@ -70,15 +69,15 @@ public interface TableSession {
 	/**
 	 * 删除对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMap
+	 * @param object
 	 */
-	void delete(String code, Map<String, Object> propertyMap);
+	void delete(String code, Object object);
 	/**
 	 * 删除对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
-	 * @param propertyMaps
+	 * @param objects
 	 */
-	void delete(String code, List<Map<String, Object>> propertyMaps);
+	void delete(String code, List<Object> objects);
 	
 	/**
 	 * 执行批量查询
