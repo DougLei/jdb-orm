@@ -20,28 +20,28 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 class TableSerializationFileHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableSerializationFileHandler.class);
 	
-	// 根文件夹名称
-	private static final String ROOT_FOLDER_NAME = "orm-serialization-files";
+	// 文件夹名称
+	private static final String FOLDER_NAME = "jdb-orm-serialization-files";
 	
 	// 序列化文件的后缀
 	private static final String SERIALIZATION_FILE_SUFFIX = ".orm";
 	
 	// orm序列化文件的根路径map, key是configuration id, value是对应的路径
-	private static final Map<String, String> ORM_SERIALIZATION_FILE_ROOT_PATH_MAP = new HashMap<String, String>(8);
+	private static final Map<String, String> ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP = new HashMap<String, String>(8);
 	
-	// 获取对应的orm序列化文件路径, 包括文件名
+	// 获取对应的orm序列化文件夹路径, 包括文件名
 	private String getOrmSerializationFilePath(String serializationFileName) {
 		String configurationId = EnvironmentContext.getEnvironmentProperty().getId();
-		String ormSerializationFileRootPath = ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.get(configurationId);
-		if(ormSerializationFileRootPath == null) {
-			ormSerializationFileRootPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separator + ROOT_FOLDER_NAME + File.separator + configurationId + File.separator;
-			File rootFile = new File(ormSerializationFileRootPath);
-			if(!rootFile.exists()) {
-				rootFile.mkdirs();
+		String jdbOrmSerializationFileFolderPath = ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP.get(configurationId);
+		if(jdbOrmSerializationFileFolderPath == null) {
+			jdbOrmSerializationFileFolderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar;
+			File folder = new File(jdbOrmSerializationFileFolderPath);
+			if(!folder.exists()) {
+				folder.mkdirs();
 			}
-			ORM_SERIALIZATION_FILE_ROOT_PATH_MAP.put(configurationId, ormSerializationFileRootPath);
+			ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP.put(configurationId, jdbOrmSerializationFileFolderPath);
 		}
-		return ormSerializationFileRootPath + serializationFileName + SERIALIZATION_FILE_SUFFIX;
+		return jdbOrmSerializationFileFolderPath + serializationFileName + SERIALIZATION_FILE_SUFFIX;
 	}
 
 	/**
