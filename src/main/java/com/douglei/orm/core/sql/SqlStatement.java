@@ -119,7 +119,7 @@ public class SqlStatement {
 	 */
 	private void resolveSql(String sql) {
 		if(sql.charAt(0) == '{') {
-			int i=1, flag = sql.length();
+			short i=1, flag = (short)sql.length();
 			for(;i<flag;i++) {
 				if(sql.charAt(i) == '}') {
 					flag = i;
