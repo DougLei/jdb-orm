@@ -35,7 +35,7 @@ public class SqlHandlerImpl implements SqlHandler{
 	 * 获取最终order by的子句的声明
 	 * 先从definedFinalOrderByClauseStatement参数取
 	 * 如果为null
-	 * 再尝试提取originSql语句中最后的一个order by子句
+	 * 再尝试提取originSql语句中最后的一个order by子句  // 这个功能过于复杂, 目前放弃 2019.09.11
 	 * 如果没有提取到
 	 * 则使用默认的order by
 	 * @param definedFinalOrderByClauseStatement
@@ -46,9 +46,7 @@ public class SqlHandlerImpl implements SqlHandler{
 		if(definedFinalOrderByClauseStatement != null) {
 			return definedFinalOrderByClauseStatement;
 		}
-		// TODO 怎么提取啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
-		
-		
+		// 尝试提取order by子句这个功能过于复杂, 目前放弃 2019.09.11
 		return "current_timestamp";
 	}
 }

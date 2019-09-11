@@ -12,7 +12,7 @@ public class NotBlankValidator extends Validator{
 
 	@Override
 	public ValidationResult doValidate(String validateFieldName, Object value) {
-		if(value.toString().trim().length() == 0) {
+		if(value == null || value.toString().trim().length() == 0) {
 			return new ValidationResult(validateFieldName) {
 				
 				@Override

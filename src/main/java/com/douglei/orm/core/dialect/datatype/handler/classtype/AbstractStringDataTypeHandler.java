@@ -68,7 +68,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 					
 					@Override
 					public String getI18nCode() {
-						return i18nCodePrefix + "value.overdlength";
+						return i18nCodePrefix + "value.overlength";
 					}
 
 					@Override

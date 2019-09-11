@@ -45,15 +45,15 @@ public class RegexValidator extends Validator {
  * @author DougLei
  */
 class RegexEntity implements Serializable{
-	private static final long serialVersionUID = -3657891122503633498L;
-	private static final String DEFAULT_MESSAGE = "正则表达式匹配失败";
+	private static final long serialVersionUID = -3009491675363529302L;
+	private static final String DEFAULT_MESSAGE = "[%s]值匹配正则表达式[%s]失败";
 	private static final String DEFAULT_I18N_CODE = ValidationResult.i18nCodePrefix + "regex.matching.fail";
 	
 	private Pattern pattern;
 	private String express;
 	private boolean multiline;
-	private String message = DEFAULT_MESSAGE;
-	private String i18nCode = DEFAULT_I18N_CODE;
+	private String message;
+	private String i18nCode;
 	
 	public ValidationResult match(String validateFieldName, String value) {
 		if(getPattern().matcher(value).matches()) {
@@ -63,12 +63,12 @@ class RegexEntity implements Serializable{
 			
 			@Override
 			public String getMessage() {
-				return message;
+				return message==null?String.format(DEFAULT_MESSAGE, value, express):message;
 			}
 			
 			@Override
 			public String getI18nCode() {
-				return i18nCode;
+				return i18nCode==null?DEFAULT_I18N_CODE:i18nCode;
 			}
 		};
 	}

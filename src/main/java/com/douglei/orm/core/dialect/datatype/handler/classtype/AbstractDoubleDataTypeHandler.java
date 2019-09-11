@@ -74,7 +74,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				
 				@Override
 				public String getI18nCode() {
-					return i18nCodePrefix + "value.digital.length.overdlength";
+					return i18nCodePrefix + "value.digital.length.overlength";
 				}
 
 				@Override
@@ -103,7 +103,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 					
 					@Override
 					public String getI18nCode() {
-						return i18nCodePrefix + "value.digital.precision.overdlength";
+						return i18nCodePrefix + "value.digital.precision.overlength";
 					}
 
 					@Override
