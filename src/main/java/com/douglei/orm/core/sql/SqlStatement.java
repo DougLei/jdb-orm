@@ -23,6 +23,13 @@ public class SqlStatement {
 	 * 主sql语句
 	 */
 	private String sql;
+	/**
+	 * 最终order by的子句的声明, 使用方式如下
+	 * {name desc, age ...} select * from user ....
+	 * 即使用{}包裹住select语句最终要用来排序的字段信息, 不用写order by关键字
+	 * 注意, sql语句还是该怎么写就怎么写, 这里只是多了一个需要声明的地方
+	 */
+	private String finalOrderByClauseStatement;
 	
 	public SqlStatement() {
 	}
@@ -34,10 +41,10 @@ public class SqlStatement {
 		int withClauseEndIndex = withClauseEndIndex(originSql);
 		if(withClauseEndIndex == -1) {
 			withClause = ""; 
-			sql = originSql;
+			resolveSql(originSql);
 		}else {
 			withClause = originSql.substring(0, withClauseEndIndex);
-			sql = originSql.substring(withClauseEndIndex);
+			resolveSql(originSql.substring(withClauseEndIndex));
 		}
 		
 		if(logger.isDebugEnabled()) {
@@ -71,7 +78,7 @@ public class SqlStatement {
 					}else if(c == ')') {
 						parentheses.pop();
 						if(parentheses.isEmpty()) {
-							index = i++;
+							i++;
 							break;
 						}
 					}
@@ -84,8 +91,8 @@ public class SqlStatement {
 					}else if(c == ')'){
 						throw new WithClauseException("语法错误, with子句语的 [)] 不匹配, 请检查: " + originSql);
 					}else {
-						index = i++;
 						if(c != ',') {
+							index = i++;
 							isContinue = false;
 						}
 						break;
@@ -103,9 +110,34 @@ public class SqlStatement {
 		}
 		return -1;
 	}
+	
+	/**
+	 * 解析sql语句
+	 * 如果语句开头为{, 则证明里面有声明的order by信息, 提取出来, 将提取后的sql语句set给sql属性, 提取出来的order by数据, set给finalOrderByClauseStatement属性
+	 * 否则直接将sql语句set给sql属性
+	 * @param sql
+	 */
+	private void resolveSql(String sql) {
+		if(sql.charAt(0) == '{') {
+			int i=1, flag = sql.length();
+			for(;i<flag;i++) {
+				if(sql.charAt(i) == '}') {
+					flag = i;
+					break;
+				}
+			}
+			this.finalOrderByClauseStatement = sql.substring(1, flag);
+			this.sql = sql.substring(flag+1);
+		}else {
+			this.sql = sql;
+		}
+	}
 
 	public String getWithClause() {
 		return withClause;
+	}
+	public String getFinalOrderByClauseStatement() {
+		return finalOrderByClauseStatement;
 	}
 	public String getSql() {
 		return sql;

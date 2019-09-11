@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 /**
  * 
@@ -13,11 +14,11 @@ public class SqlHandlerImpl implements SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
-	public String installPageQuerySql(int pageNum, int pageSize, String withClause, String sql) {
-		StringBuilder pageQuerySql = new StringBuilder(80 + withClause.length() + sql.length());
-		pageQuerySql.append(withClause);
+	public String installPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
+		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause().length() + statement.getSql().length());
+		pageQuerySql.append(statement.getWithClause());
 		pageQuerySql.append(" select jdb_orm_second_query_.* from (");
-		pageQuerySql.append(sql);
+		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") jdb_orm_second_query_ limit ");
 		pageQuerySql.append((pageNum-1)*pageSize);
 		pageQuerySql.append(",");

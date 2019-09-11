@@ -196,7 +196,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String, Object>>(pageNum, pageSize, count);
 		if(count > 0) {
-			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement.getWithClause(), pageSqlStatement.getSql());
+			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement);
 			List<Map<String, Object>> list = query(sql, parameters);
 			pageResult.setResultDatas(list);
 		}
