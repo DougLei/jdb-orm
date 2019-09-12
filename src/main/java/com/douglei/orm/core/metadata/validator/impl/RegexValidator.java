@@ -45,8 +45,8 @@ public class RegexValidator extends Validator {
  * @author DougLei
  */
 class RegexEntity implements Serializable{
-	private static final long serialVersionUID = -3009491675363529302L;
-	private static final String DEFAULT_MESSAGE = "[%s]值匹配正则表达式[%s]失败";
+	private static final long serialVersionUID = -3657891122503633498L;
+	private static final String DEFAULT_MESSAGE = "匹配正则表达式失败";
 	private static final String DEFAULT_I18N_CODE = ValidationResult.i18nCodePrefix + "regex.matching.fail";
 	
 	private Pattern pattern;
@@ -63,7 +63,7 @@ class RegexEntity implements Serializable{
 			
 			@Override
 			public String getMessage() {
-				return message==null?String.format(DEFAULT_MESSAGE, value, express):message;
+				return message==null?DEFAULT_MESSAGE:message;
 			}
 			
 			@Override
