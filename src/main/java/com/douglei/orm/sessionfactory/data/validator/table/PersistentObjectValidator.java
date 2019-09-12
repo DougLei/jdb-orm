@@ -65,7 +65,7 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		if(uniqueConstraints.size() == 1) {
 			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
 				if(currentPersistentObjectUniqueValue.equals(beforePersistentObjectUniqueValue)) {
-					return new UniqueValidationResult(uniqueConstraints.get(0).getAllCode(), ((UniqueValue)currentPersistentObjectUniqueValue).getValue());
+					return new UniqueValidationResult(uniqueConstraints.get(0).getAllCode());
 				}
 			}
 		}else {
@@ -76,7 +76,7 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 				beforePersistentObjectUniqueValues = (List<UniqueValue>) beforePersistentObjectUniqueValue;
 				for(index=0; index < uniqueConstraints.size(); index++) {
 					if(currentPersistentObjectUniqueValues.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
-						return new UniqueValidationResult(uniqueConstraints.get(index).getAllCode(), currentPersistentObjectUniqueValues.get(index).getValue());
+						return new UniqueValidationResult(uniqueConstraints.get(index).getAllCode());
 					}
 				}
 			}
