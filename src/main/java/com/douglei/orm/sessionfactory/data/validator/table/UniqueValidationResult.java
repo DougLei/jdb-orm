@@ -16,7 +16,7 @@ public class UniqueValidationResult extends ValidationResult {
 
 	@Override
 	public String getMessage() {
-		return "[" + uniqueValue + "]值不唯一, 已存在相同值的数据";
+		return  uniqueValue + " 值不唯一, 已存在相同值的数据";
 	}
 	
 	@Override
