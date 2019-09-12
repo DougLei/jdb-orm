@@ -22,13 +22,14 @@ public class DataValidatorProcessor {
 		this.mappingWrapper = mappingWrapper;
 	}
 
+	// ------------------------------------------------------------------------------------------------------
 	/**
 	 * 针对表对象的验证, 传入和表映射的类实例
 	 * @param object
 	 * @return
 	 */
 	public ValidationResult doValidate(Object object) {
-		return doValidate(object.getClass().getName(), object);
+		return doValidate(object.getClass().getName(), null, object);
 	}
 	
 	/**
@@ -59,14 +60,14 @@ public class DataValidatorProcessor {
 		return null;
 	}
 	
-	
+	// ------------------------------------------------------------------------------------------------------
 	/**
 	 * 针对表对象的验证, 传入和表映射的类实例集合
 	 * @param objects
 	 * @return
 	 */
 	public List<ValidationResult> doValidate(List<? extends Object> objects) {
-		return doValidate(objects.get(0).getClass().getName(), objects);
+		return doValidate(objects.get(0).getClass().getName(), null, objects);
 	}
 	
 	/**

@@ -29,13 +29,15 @@ public abstract class AbstractDataTypeHandlerMapping{
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
-				obj = ConstructorUtil.newSingleInstance(cp, "singleInstance");
-				if(obj instanceof ClassDataTypeHandler) {
-					classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
-				}else if(obj instanceof ResultSetColumnDataTypeHandler) {
-					resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
-				}else if(obj instanceof DBDataTypeHandler) {
-					dbDataTypeHandlerMapping.register((DBDataTypeHandler) obj);
+				if(!cp.endsWith("$1")) { /** 这个判断是处理 {@link NumberDBDataTypeHandler#doValidate(String, Object, short, short)} 方法最后返回的 {@link ValidationResult} 匿名内部类 */
+					obj = ConstructorUtil.newSingleInstance(cp, "singleInstance");
+					if(obj instanceof ClassDataTypeHandler) {
+						classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
+					}else if(obj instanceof ResultSetColumnDataTypeHandler) {
+						resultsetColumnDataTypeHandlerMapping.register((ResultSetColumnDataTypeHandler) obj);
+					}else if(obj instanceof DBDataTypeHandler) {
+						dbDataTypeHandlerMapping.register((DBDataTypeHandler) obj);
+					}
 				}
 			}
 		}

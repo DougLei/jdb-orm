@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -30,7 +31,7 @@ public class Identity {
 			throw new NullPointerException("id不能为空");
 		}
 		if(!supportType()) {
-			throw new UnsupportedIdentityDataTypeException("目前id只支持[int][java.lang.Integer类型][java.lang.String类型]或[java.util.Map<String, Object>类型]");
+			throw new UnsupportedIdentityDataTypeException();
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("获取持久化对象id为: {} -- {}", this.id.getClass().getName(), this.id.toString());
@@ -124,7 +125,7 @@ public class Identity {
 	 * @return
 	 */
 	public boolean supportType() {
-		if(id.getClass() == int.class || id instanceof Integer || id instanceof String || id instanceof Map) {
+		if(id.getClass() == int.class || id instanceof Integer || id.getClass() == long.class || id instanceof Long || id instanceof String || id instanceof Map || id instanceof PrimaryKeySequence) {
 			return true;
 		}
 		return false;
