@@ -33,4 +33,6 @@ public interface EnvironmentProperty {
 	public String getSerializationFileRootPath();
 	
 	public boolean enableColumnDynamicUpdateValidate();
+	
+	public short dynamicMappingOnceMaxCount();
 }

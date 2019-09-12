@@ -14,6 +14,7 @@ import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTy
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.table.CreateMode;
+import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
@@ -24,7 +25,6 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	private Map<String, String> propertyMap;
-	private boolean propertyMapIsEmpty;
 	private String id;
 	private DatabaseMetadata databaseMetadata;
 	
@@ -61,16 +61,20 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@FieldMetaData
 	private boolean enableColumnDynamicUpdateValidate;
 	
+	@FieldMetaData
+	private short dynamicMappingOnceMaxCount=10;
+	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
 		this.propertyMap = propertyMap;
-		this.propertyMapIsEmpty = (propertyMap == null || propertyMap.size() == 0);
 		this.databaseMetadata = databaseMetadata;
 		this.mappingStore = mappingStore;
 		
-		Field[] fields = this.getClass().getDeclaredFields();
-		List<String> fieldNames = doSelfChecking(fields);
-		invokeSetMethodByFieldName(fieldNames);
+		if(Collections.unEmpty(propertyMap)) {
+			Field[] fields = this.getClass().getDeclaredFields();
+			List<String> fieldNames = doSelfChecking(fields);
+			invokeSetMethodByFieldName(fieldNames);
+		}
 		validateFiledValue();
 	}
 	
@@ -83,14 +87,14 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	 * @return 
 	 */
 	private List<String> doSelfChecking(Field[] fields) {
-		int fieldNameIndex = 0;
+		byte fieldNameIndex = 0;
 		List<String> fieldNames = new ArrayList<String>(fields.length);
 		FieldMetaData fieldMetadata = null;
 		for (Field field : fields) {
 			fieldMetadata = field.getAnnotation(FieldMetaData.class);
 			if(fieldMetadata != null) {
 				fieldNames.add(field.getName());
-				if(fieldMetadata.isRequired() && (propertyMapIsEmpty || StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex))))) {
+				if(fieldMetadata.isRequired() && StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex)))) {
 					throw new NullPointerException(fieldMetadata.isnullOfErrorMessage());
 				}
 				fieldNameIndex++;
@@ -110,9 +114,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		try {
 			for (String fieldName : fieldNames) {
 				_fieldName = fieldName;
-				
-				value = propertyMapIsEmpty?null:propertyMap.get(fieldName);
-				clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
+				if((value = propertyMap.get(fieldName)) != null) {
+					clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
+				}
 			}
 		} catch (Exception e) {
 			throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(_fieldName)+"] 时出现异常", e);
@@ -186,6 +190,11 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.enableColumnDynamicUpdateValidate = Boolean.parseBoolean(value);
 		}
 	}
+	void setDynamicMappingOnceMaxCount(String value) {
+		if(VerifyTypeMatchUtil.isLimitShort(value)) {
+			this.dynamicMappingOnceMaxCount = Short.parseShort(value);
+		}
+	}
 
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
@@ -248,5 +257,9 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean enableColumnDynamicUpdateValidate() {
 		return enableColumnDynamicUpdateValidate;
+	}
+	@Override
+	public short dynamicMappingOnceMaxCount() {
+		return dynamicMappingOnceMaxCount;
 	}
 }

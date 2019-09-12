@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
@@ -18,15 +19,16 @@ import com.douglei.tools.utils.ExceptionUtil;
 public class DynamicMappingProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMappingProcessor.class);
 	
-	private Environment environment;
 	private MappingWrapper mappingWrapper;
+	private short dynamicMappingOnceMaxCount;
+	private DataSourceWrapper dataSourceWrapper;
 	
 	public DynamicMappingProcessor(Environment environment, MappingWrapper mappingWrapper) {
-		this.environment = environment;
 		this.mappingWrapper = mappingWrapper;
+		this.dynamicMappingOnceMaxCount = environment.getEnvironmentProperty().dynamicMappingOnceMaxCount();
+		this.dataSourceWrapper = environment.getDataSourceWrapper();
 	}
 
-	
 	// ----------------------------------------------------------------------------------------------
 	private void addMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
@@ -47,7 +49,7 @@ public class DynamicMappingProcessor {
 	public synchronized void addMapping(DynamicMapping entity) {
 		try {
 			addMapping_(entity);
-			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -66,7 +68,7 @@ public class DynamicMappingProcessor {
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
-			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -85,7 +87,7 @@ public class DynamicMappingProcessor {
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
-			MappingXmlConfigContext.executeCreateTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeCreateTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -169,7 +171,7 @@ public class DynamicMappingProcessor {
 	public synchronized void removeMapping(String code){
 		try {
 			mappingWrapper.dynamicRemoveMapping(code);
-			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeDropTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -188,7 +190,7 @@ public class DynamicMappingProcessor {
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
-			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeDropTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -207,7 +209,7 @@ public class DynamicMappingProcessor {
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
-			MappingXmlConfigContext.executeDropTable(environment.getDataSourceWrapper());
+			MappingXmlConfigContext.executeDropTable(dataSourceWrapper);
 		} catch (Exception e) {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
@@ -259,6 +261,7 @@ public class DynamicMappingProcessor {
 				mappingWrapper.dynamicRemoveMapping_(code);
 			}
 		} catch (Exception e) {
+			// TODO 对映射进行回滚操作
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		}
