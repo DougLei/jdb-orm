@@ -6,11 +6,10 @@ package com.douglei.orm.sessionfactory.sessions;
  */
 public class SessionExecutionException extends ExecutionException {
 	private static final long serialVersionUID = 4200592647208025424L;
-	
 	public SessionExecutionException(String message) {
 		super(message);
 	}
-	public SessionExecutionException(String message, Throwable t) {
-		super(message, t);
+	public SessionExecutionException(String exceptionDescription, Throwable t) {
+		super(exceptionDescription + ", " + t.getMessage(), t);
 	}
 }

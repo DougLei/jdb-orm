@@ -18,6 +18,6 @@ public class StatementExecutionException extends Exception{
 		this(sql, null, cause);
 	}
 	public StatementExecutionException(String sql, List<Object> parameters, Throwable cause) {
-		super("在执行sql=["+sql+"]语句" + (Collections.isEmpty(parameters)?"":" ,参数为=["+parameters+"], ") + "时出现异常", cause);
+		super("在执行sql=["+sql+"]语句" + (Collections.isEmpty(parameters)?"":" ,参数为=["+parameters+"], ") + "时出现异常, " + cause.getMessage(), cause);
 	}
 }
