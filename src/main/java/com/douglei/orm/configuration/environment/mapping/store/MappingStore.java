@@ -51,16 +51,14 @@ public interface MappingStore extends SelfProcessing{
 	 * 移除映射
 	 * @param code
 	 * @return 返回映射, 如果是表映射, 还可能需要将该表删除
-	 * @throws NotExistsMappingException
 	 */
-	Mapping removeMapping(String code) throws NotExistsMappingException;
+	Mapping removeMapping(String code);
 	/**
 	 * 批量removeMapping
 	 * 该方法是在回滚的时候使用到
 	 * @param codes
-	 * @throws NotExistsMappingException
 	 */
-	void removeMapping(Collection<String> codes) throws NotExistsMappingException;
+	void removeMapping(Collection<String> codes);
 	
 	/**
 	 * 获取映射

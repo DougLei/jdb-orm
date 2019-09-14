@@ -34,5 +34,5 @@ public interface EnvironmentProperty {
 	
 	public boolean enableColumnDynamicUpdateValidate();
 	
-	public short dynamicMappingOnceMaxCount();
+	public byte dynamicMappingOnceMaxCount();
 }

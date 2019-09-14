@@ -20,7 +20,7 @@ public class DynamicMappingProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMappingProcessor.class);
 	
 	private MappingWrapper mappingWrapper;
-	private short dynamicMappingOnceMaxCount;
+	private byte dynamicMappingOnceMaxCount;
 	private DataSourceWrapper dataSourceWrapper;
 	
 	public DynamicMappingProcessor(Environment environment, MappingWrapper mappingWrapper) {
@@ -29,6 +29,14 @@ public class DynamicMappingProcessor {
 		this.dataSourceWrapper = environment.getDataSourceWrapper();
 	}
 
+	// 验证一次操作的动态映射数量是否数量溢出, 验证通过则返回true
+	private boolean validateCountOverflow(int count) {
+		if(count > dynamicMappingOnceMaxCount) {
+			throw new DynamicMappingOnceMaxCountOverflowException(dynamicMappingOnceMaxCount, (byte)count);
+		}
+		return true;
+	}
+	
 	// ----------------------------------------------------------------------------------------------
 	private void addMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
@@ -64,7 +72,9 @@ public class DynamicMappingProcessor {
 	 * @param entities
 	 */
 	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(entities.size());
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
@@ -73,7 +83,7 @@ public class DynamicMappingProcessor {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlReaderContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -83,7 +93,9 @@ public class DynamicMappingProcessor {
 	 * @param entities
 	 */
 	public synchronized void batchAddMapping(DynamicMapping... entities) {
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(entities.length);
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
@@ -92,10 +104,9 @@ public class DynamicMappingProcessor {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlReaderContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
-	
 	
 	// ----------------------------------------------------------------------------------------------
 	private void coverMapping_(DynamicMapping entity) {
@@ -131,15 +142,22 @@ public class DynamicMappingProcessor {
 	 * @param entities
 	 */
 	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(entities.size());
 			for (DynamicMapping entity : entities) {
 				coverMapping_(entity);
 			}
 		} catch (Exception e) {
+			entities.forEach(entity -> {
+				if(entity.getCode() != null) {
+					removeMapping_(entity.getCode());
+				}
+			});
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlReaderContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -149,15 +167,22 @@ public class DynamicMappingProcessor {
 	 * @param entities
 	 */
 	public synchronized void batchCoverMapping(DynamicMapping... entities) {
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(entities.length);
 			for (DynamicMapping entity : entities) {
 				coverMapping_(entity);
 			}
 		} catch (Exception e) {
+			for (DynamicMapping entity : entities) {
+				if(entity.getCode() != null) {
+					removeMapping_(entity.getCode());
+				}
+			}
 			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlReaderContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -186,7 +211,9 @@ public class DynamicMappingProcessor {
 	 * @param codes
 	 */
 	public synchronized void batchRemoveMapping(List<String> codes){
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(codes.size());
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
@@ -195,17 +222,19 @@ public class DynamicMappingProcessor {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlConfigContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
-	
+
 	/**
 	 * 动态删除映射
 	 * 如果是表映射, 则顺便drop表
 	 * @param codes
 	 */
 	public synchronized void batchRemoveMapping(String... codes){
+		boolean flag = false;
 		try {
+			flag = validateCountOverflow(codes.length);
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
@@ -214,7 +243,7 @@ public class DynamicMappingProcessor {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			MappingXmlConfigContext.destroy();
+			if(flag) MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -226,12 +255,7 @@ public class DynamicMappingProcessor {
 	 * @param code
 	 */
 	public synchronized void removeMapping_(String code){
-		try {
-			mappingWrapper.dynamicRemoveMapping_(code);
-		} catch (Exception e) {
-			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw e;
-		}
+		mappingWrapper.dynamicRemoveMapping_(code);
 	}
 	
 	/**
@@ -241,6 +265,7 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void batchRemoveMapping_(List<String> codes){
 		try {
+			validateCountOverflow(codes.size());
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping_(code);
 			}
@@ -257,11 +282,11 @@ public class DynamicMappingProcessor {
 	 */
 	public synchronized void batchRemoveMapping_(String... codes){
 		try {
+			validateCountOverflow(codes.length);
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping_(code);
 			}
 		} catch (Exception e) {
-			// TODO 对映射进行回滚操作
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		}

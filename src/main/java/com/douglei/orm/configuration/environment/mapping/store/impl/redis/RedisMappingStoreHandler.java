@@ -61,17 +61,17 @@ class RedisMappingStoreHandler extends RedisHandler {
 		pipeline.sync();
 	}
 	
-	public Mapping removeMapping(String code, Jedis connection) throws NotExistsMappingException {
+	public Mapping removeMapping(String code, Jedis connection) {
 		code = getCode(code);
 		if(mappingExists(code, connection)) {
 			Mapping mp = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
 			connection.del(code);
 			return mp;
 		}
-		throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法删除");
+		return null;
 	}
 	
-	public void removeMapping(Collection<String> codes, Jedis connection) throws NotExistsMappingException {
+	public void removeMapping(Collection<String> codes, Jedis connection) {
 		connection.del(getCodeByteArray(codes));
 	}
 	

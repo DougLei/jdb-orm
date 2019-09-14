@@ -63,14 +63,14 @@ public class RedisMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String code) throws NotExistsMappingException {
+	public Mapping removeMapping(String code) {
 		try(Jedis connection = redisPool.getResource()){
 			return handler.removeMapping(code, connection);
 		}
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+	public void removeMapping(Collection<String> codes) {
 		if(Collections.unEmpty(codes)) {
 			try(Jedis connection = redisPool.getResource()){
 				handler.removeMapping(codes, connection);

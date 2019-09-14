@@ -136,14 +136,12 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	 * @throws MetadataValidateException 
 	 */
 	private void addColumnMetadata(List<Element> columnElements) throws MetadataValidateException {
-		boolean classNameEmpty = tableMetadata.classNameEmpty();
 		ColumnMetadata columnMetadata = null;
 		for (Element element : columnElements) {
 			columnMetadata = columnMetadataValidate.doValidate(element);
 			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			}
-			columnMetadata.correctPropertyValue(classNameEmpty);
 			tableMetadata.addColumn(columnMetadata);
 		}
 		tableMetadata.sync();
@@ -312,7 +310,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			// 获取主键处理器
 			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
 			if(primaryKeyHandler != null) {
-				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.getPrimaryKeyCount() > 1) {
+				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.primaryKeyCount() > 1) {
 					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
 				}
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);

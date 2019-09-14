@@ -9,14 +9,13 @@ import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.naming.converter.ConverterUtil;
-import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
 
 /**
  * 列元数据
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
+	private static final long serialVersionUID = 7713395662973764848L;
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
@@ -137,22 +136,6 @@ public class ColumnMetadata implements Metadata{
 	 */
 	public void set2PrimaryKeySequence() {
 		this.isPrimaryKeySequence = true;
-	}
-	
-	/**
-	 * <pre>
-	 * 	修正property的值
-	 * 	如果没有配置类名, 则属性名必须不存在, 如果配置了就置空, 没有配置就不处理
-	 * 	如果配置了类名, 则属性名必须存在, 如果配置了就使用, 没有配置, 就将列名转换为属性名
-	 * </pre>
-	 * @param classNameEmpty
-	 */
-	public void correctPropertyValue(boolean classNameEmpty) {
-		if(classNameEmpty && property != null) {
-			property = null;
-		}else if(!classNameEmpty && property == null){
-			property = ConverterUtil.convert(name, ColumnName2PropertyNameConverter.class);
-		}
 	}
 	
 	/**

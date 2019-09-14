@@ -62,7 +62,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableColumnDynamicUpdateValidate;
 	
 	@FieldMetaData
-	private short dynamicMappingOnceMaxCount=10;
+	private byte dynamicMappingOnceMaxCount=10;
 	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
@@ -191,8 +191,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setDynamicMappingOnceMaxCount(String value) {
-		if(VerifyTypeMatchUtil.isLimitShort(value)) {
-			this.dynamicMappingOnceMaxCount = Short.parseShort(value);
+		if(VerifyTypeMatchUtil.isLimitByte(value)) {
+			this.dynamicMappingOnceMaxCount = Byte.parseByte(value);
 		}
 	}
 
@@ -259,7 +259,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		return enableColumnDynamicUpdateValidate;
 	}
 	@Override
-	public short dynamicMappingOnceMaxCount() {
+	public byte dynamicMappingOnceMaxCount() {
 		return dynamicMappingOnceMaxCount;
 	}
 }

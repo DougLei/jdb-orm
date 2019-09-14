@@ -38,16 +38,6 @@ public enum MappingType {
 	 * @return
 	 */
 	public static String[] getMappingFileSuffixArray() {
-		if(mappingFileSuffixArray == null) {
-			MappingType[] mts = MappingType.values();
-			int length = mts.length;
-			
-			mappingFileSuffixArray = new String[length];
-			for(int i=0;i<length;i++) {
-				mappingFileSuffixArray[i] = mts[i].mappingFileSuffix;
-			}
-		}
-		return mappingFileSuffixArray;
+		return new String[] {TABLE.mappingFileSuffix, SQL.mappingFileSuffix};
 	}
-	private static String[] mappingFileSuffixArray;
 }

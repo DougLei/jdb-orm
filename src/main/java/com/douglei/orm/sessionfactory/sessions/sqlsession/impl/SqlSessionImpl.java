@@ -279,23 +279,23 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(map.size() == 0) {
 			return null;
 		}
-		if(tableMetadata == null || tableMetadata.classNameEmpty()) { // 没有配置映射, 或没有配置映射的类, 则将列名转换为属性名
+		if(tableMetadata == null) { // 没有配置映射, 则将列名转换为属性名, 尝试set
 			return ResultSetMapConvertUtil.toClass(map, targetClass);
 		}else {
-			map = mapKey2MappingPropertyName(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
+			map = mapKey2MappingColumnCode(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
 			return ConverterUtil.mapToClass(map, targetClass);
 		}
 	}
 
-	// 将map的key, 由列名转换成映射的属性名
-	protected Map<String, Object> mapKey2MappingPropertyName(Map<String, Object> map, TableMetadata tableMetadata) {
+	// 将map的key, 由列名转换成映射中的column.code
+	protected Map<String, Object> mapKey2MappingColumnCode(Map<String, Object> map, TableMetadata tableMetadata) {
 		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
 		
 		ColumnMetadata column = null;
 		Set<String> codes = tableMetadata.getColumnCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnByCode(code);
-			targetMap.put(column.getProperty(), map.get(column.getName()));
+			targetMap.put(column.getCode(), map.get(column.getCode()));
 		}
 		return targetMap;
 	}

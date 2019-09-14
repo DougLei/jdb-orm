@@ -23,6 +23,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
+	private static final long serialVersionUID = -6373463215415941467L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -31,8 +32,8 @@ public class TableMetadata implements Metadata{
 	
 	private List<ColumnMetadata> declareColumns;// 按声明顺序的列
 	private Map<String, ColumnMetadata> columns;// 列<列名: 列>
-	private Map<String, ColumnMetadata> columns_;// 列<code: 列>
 	
+	private Map<String, ColumnMetadata> columns_;// 列<code: 列>
 	private Map<String, ColumnMetadata> primaryKeyColumns_;// 主键列<code: 列>
 	
 	private PrimaryKeyHandler primaryKeyHandler;
@@ -63,15 +64,11 @@ public class TableMetadata implements Metadata{
 	}
 	
 	/**
-	 * 同步操作, 将<列名: 列>的集合数据, 同步到<code: 列>的集合中, 以及设置需要验证的列
+	 * 同步操作, 将<列名: 列>的集合数据, 同步到<code: 列>的集合中
 	 */
 	public void sync() {
-		if(classNameEmpty()) {
-			columns_ = columns;
-		}else {
-			columns_ = new HashMap<String, ColumnMetadata>(columns.size());
-			columns.forEach((key, value) -> columns_.put(value.getProperty(), value));
-		}
+		columns_ = new HashMap<String, ColumnMetadata>(columns.size());
+		columns.forEach((key, value) -> columns_.put(value.getCode(), value));
 	}
 
 	/**
@@ -239,9 +236,6 @@ public class TableMetadata implements Metadata{
 	public String getClassName() {
 		return className;
 	}
-	public boolean classNameEmpty() {
-		return StringUtil.isEmpty(className);
-	}
 	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
 		this.primaryKeyHandler = primaryKeyHandler;
 	}
@@ -292,8 +286,8 @@ public class TableMetadata implements Metadata{
 		return primaryKeyColumns_.containsKey(code);
 	}
 	// 获取主键列的数量
-	public int getPrimaryKeyCount() {
-		return primaryKeyColumns_.size();
+	public byte primaryKeyCount() {
+		return (byte) primaryKeyColumns_.size();
 	}
 	
 	// 是否存在需要验证的列

@@ -153,15 +153,10 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 动态删除映射
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param code
-	 * @throws DynamicRemoveMappingException
 	 */
-	public void dynamicRemoveMapping_(String code) throws DynamicRemoveMappingException {
-		try {
-			logger.debug("dynamic remove ***simple*** mapping: {}", code);
-			mappingStore.removeMapping(code);
-		} catch (Exception e) {
-			throw new DynamicRemoveMappingException(e);
-		}
+	public void dynamicRemoveMapping_(String code) {
+		logger.debug("dynamic remove ***simple*** mapping: {}", code);
+		mappingStore.removeMapping(code);
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------

@@ -56,16 +56,12 @@ public class ApplicationMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String code) throws NotExistsMappingException {
-		Mapping mp = mappings.remove(code);
-		if(mp == null) {
-			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法删除");
-		}
-		return mp;
+	public Mapping removeMapping(String code) {
+		return mappings.remove(code);
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+	public void removeMapping(Collection<String> codes) {
 		if(Collections.unEmpty(codes)) {
 			for (String code : codes) {
 				removeMapping(code);
