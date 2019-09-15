@@ -18,7 +18,6 @@ public abstract class ValidationResult extends Result{
 	public final void setIndex(short index) {
 		this.index = index;
 	}
-	
 	public final String getValidateFieldName() {
 		return validateFieldName;
 	}
