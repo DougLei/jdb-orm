@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTy
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.table.CreateMode;
-import com.douglei.tools.utils.Collections;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
@@ -25,6 +24,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	private Map<String, String> propertyMap;
+	private boolean propertyMapEmpty;
 	private String id;
 	private DatabaseMetadata databaseMetadata;
 	
@@ -67,14 +67,13 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
 		this.propertyMap = propertyMap;
+		this.propertyMapEmpty = propertyMap==null || propertyMap.size()==0;
 		this.databaseMetadata = databaseMetadata;
 		this.mappingStore = mappingStore;
 		
-		if(Collections.unEmpty(propertyMap)) {
-			Field[] fields = this.getClass().getDeclaredFields();
-			List<String> fieldNames = doSelfChecking(fields);
-			invokeSetMethodByFieldName(fieldNames);
-		}
+		Field[] fields = this.getClass().getDeclaredFields();
+		List<String> fieldNames = doSelfChecking(fields);
+		invokeSetMethodByFieldName(fieldNames);
 		validateFiledValue();
 	}
 	
@@ -94,7 +93,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			fieldMetadata = field.getAnnotation(FieldMetaData.class);
 			if(fieldMetadata != null) {
 				fieldNames.add(field.getName());
-				if(fieldMetadata.isRequired() && StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex)))) {
+				if(fieldMetadata.isRequired() && (propertyMapEmpty || StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex))))) {
 					throw new NullPointerException(fieldMetadata.isnullOfErrorMessage());
 				}
 				fieldNameIndex++;
@@ -114,9 +113,8 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		try {
 			for (String fieldName : fieldNames) {
 				_fieldName = fieldName;
-				if((value = propertyMap.get(fieldName)) != null) {
-					clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
-				}
+				value = propertyMapEmpty?null:propertyMap.get(fieldName);
+				clz.getDeclaredMethod(fieldNameToSetMethodName(fieldName), String.class).invoke(this, value);
 			}
 		} catch (Exception e) {
 			throw new ReflectInvokeMethodException("反射调用 class=["+clz.toString()+"], methodName=["+fieldNameToSetMethodName(_fieldName)+"] 时出现异常", e);
