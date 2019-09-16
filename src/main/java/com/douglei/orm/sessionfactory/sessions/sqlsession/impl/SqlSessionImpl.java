@@ -295,7 +295,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		Set<String> codes = tableMetadata.getColumnCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnByCode(code);
-			targetMap.put(column.getCode(), map.get(column.getCode()));
+			targetMap.put(column.getCode(), map.get(column.getName()));
 		}
 		return targetMap;
 	}
