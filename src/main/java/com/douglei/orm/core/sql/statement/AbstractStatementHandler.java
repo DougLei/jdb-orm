@@ -178,7 +178,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			result = com.douglei.tools.utils.Collections.emptyArray();
+			result = com.douglei.tools.utils.Collections.emptyObjectArray();
 		}
 		if(enableResultCache) {
 			if(queryUniqueResult_ == null) {
