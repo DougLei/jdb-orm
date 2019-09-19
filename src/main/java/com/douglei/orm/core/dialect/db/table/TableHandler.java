@@ -567,13 +567,10 @@ public class TableHandler {
 	
 	// 是否更新了表
 	private boolean isUpdateTable(TableMetadata table, TableMetadata oldTable) {
-		if(!table.getName().equals(oldTable.getName()) 
+		return !table.getName().equals(oldTable.getName()) 
 				|| isUpdateColumn(table.getDeclareColumns(), oldTable)
 				|| isUpdateConstraint(table.getConstraints(), oldTable)
-				|| isUpdateIndex(table.getIndexes(), oldTable)) {
-			return true;
-		}
-		return false;
+				|| isUpdateIndex(table.getIndexes(), oldTable);
 	}
 	// 是否更新了列
 	private boolean isUpdateColumn(Collection<ColumnMetadata> columns, TableMetadata oldTable) {
