@@ -240,5 +240,5 @@ public interface SQLSession {
 	 * @param sqlParameters
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
-	List<Object> executeProcedure(String namespace, String name, List<Object> sqlParameters);
+	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
 }

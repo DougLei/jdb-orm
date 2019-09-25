@@ -159,7 +159,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public List<Object> executeProcedure(String namespace, String name, List<Object> sqlParameters) {
+	public List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		List<Object> objects = new ArrayList<Object>(sqlParameters.size());
 		sqlParameters.forEach(sqlParameter -> objects.add(executeProcedure_(sqlMetadata, name, sqlParameters)));
