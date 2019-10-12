@@ -11,9 +11,7 @@ import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.XmlEnvironment;
-import com.douglei.orm.configuration.impl.xml.element.extconfiguration.XmlExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
@@ -32,10 +30,6 @@ public class XmlConfiguration extends Configuration {
 	 * 对应<properties>节点
 	 */
 	private Properties properties;
-	/**
-	 * 对应<extConfiguration>节点
-	 */
-	private ExtConfiguration extConfiguration;
 	/**
 	 * 对应<environment>节点
 	 */
@@ -72,8 +66,7 @@ public class XmlConfiguration extends Configuration {
 			Element root = xmlDocument.getRootElement();
 			setId(root.attributeValue("id"));
 			setProperties(new Properties(root.element("properties")));
-			setExtConfiguration(new XmlExtConfiguration(root.element("extConfiguration")));
-			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingStore, extConfiguration));
+			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingStore));
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
@@ -98,9 +91,6 @@ public class XmlConfiguration extends Configuration {
 		if(properties != null) {
 			properties.destroy();
 		}
-		if(extConfiguration != null) {
-			extConfiguration.destroy();
-		}
 		if(environment != null) {
 			environment.destroy();
 		}
@@ -119,9 +109,6 @@ public class XmlConfiguration extends Configuration {
 	
 	private void setProperties(Properties properties) {
 		this.properties = properties;
-	}
-	private void setExtConfiguration(ExtConfiguration extConfiguration) {
-		this.extConfiguration = extConfiguration;
 	}
 	private void setEnvironment(Environment environment) {
 		this.environment = environment;

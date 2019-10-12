@@ -2,7 +2,6 @@ package com.douglei.orm.core.dialect.datatype.handler;
 
 import java.util.List;
 
-import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandlerMapping;
@@ -56,24 +55,6 @@ public abstract class AbstractDataTypeHandlerMapping{
 	}
 	public DBDataTypeHandler getDBDataTypeHandlerByDBTypeName(String typeName) {
 		return dbDataTypeHandlerMapping.getDataTypeHandlerByDBTypeName(typeName);
-	}
-	
-	/**
-	 * 注册扩展的DataTypeHandler
-	 * @param extDataTypeHandler
-	 */
-	public void registerExtDataTypeHandler(ExtDataTypeHandler extDataTypeHandler) {
-		switch(extDataTypeHandler.getType()) {
-			case CLASS:
-				classDataTypeHandlerMapping.register(extDataTypeHandler.getClassDataTypeHandler());
-				return;
-			case RESULTSET_COLUMN:
-				resultsetColumnDataTypeHandlerMapping.register(extDataTypeHandler.getResultsetColumnDataTypeHandler());
-				return;
-			case DB:
-				dbDataTypeHandlerMapping.register(extDataTypeHandler.getDBDataTypeHandler());
-				return;
-		}
 	}
 	
 	/**

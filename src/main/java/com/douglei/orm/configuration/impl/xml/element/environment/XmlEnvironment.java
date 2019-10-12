@@ -21,7 +21,6 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.remote.database.RemoteDatabase;
-import com.douglei.orm.configuration.ext.configuration.ExtConfiguration;
 import com.douglei.orm.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;
@@ -48,7 +47,7 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource dataSource, MappingStore mappingStore, ExtConfiguration extConfiguration) throws Exception {
+	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource dataSource, MappingStore mappingStore) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.properties = properties;
 		
@@ -56,7 +55,7 @@ public class XmlEnvironment implements Environment{
 		
 		setDataSourceWrapper(dataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):dataSource);// 处理配置的数据源
 		
-		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingStore, extConfiguration);// 处理environment下的所有property元素
+		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingStore);// 处理environment下的所有property元素
 		
 		setMappingWrapper(environmentElement.element("mappings"));// 处理配置的映射文件
 		
@@ -141,10 +140,9 @@ public class XmlEnvironment implements Environment{
 	 * @param id
 	 * @param elements
 	 * @param mappingStore
-	 * @param extConfiguration
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(String id, List<Element> elements, MappingStore mappingStore, ExtConfiguration extConfiguration) throws SQLException {
+	private void setEnvironmentProperties(String id, List<Element> elements, MappingStore mappingStore) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
@@ -156,8 +154,6 @@ public class XmlEnvironment implements Environment{
 			}
 			xmlEnvironmentProperty.setDialectByDatabaseMetadata(databaseMetadata);
 		}
-		
-		xmlEnvironmentProperty.setExtDataTypeHandlers(extConfiguration.getExtDataTypeHandlerList());
 		
 		this.environmentProperty = xmlEnvironmentProperty;
 		logger.debug("处理<environment>下的所有property元素结束");

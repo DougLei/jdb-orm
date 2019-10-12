@@ -3,9 +3,9 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
+import com.douglei.orm.core.metadata.sql.SqlParameterDeclareConfiguration;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
@@ -17,13 +17,10 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
-	private static final long serialVersionUID = 1186918257127689022L;
-
-	protected String content;
+	private static final long serialVersionUID = -1464862023103747959L;
 	
+	protected String content;
 	protected List<SqlParameterMetadata> sqlParameterByDefinedOrders;// sql参数, 按照配置中定义的顺序记录
-	private static final Pattern prefixPattern = Pattern.compile("(#\\{)", Pattern.MULTILINE);// 匹配#{
-	private static final Pattern suffixPattern = Pattern.compile("[\\}]", Pattern.MULTILINE);// 匹配}
 	
 	public AbstractSqlNode(String content) {
 		this.content = content.trim();
@@ -37,16 +34,31 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(StringUtil.isEmpty(content)) {
 			return;
 		}
-		Matcher perfixMatcher = prefixPattern.matcher(content);
-		Matcher suffixMatcher = suffixPattern.matcher(content);
+		
 		int startIndex, endIndex;
-		while(perfixMatcher.find()) {
-			startIndex = perfixMatcher.start();
-			if(suffixMatcher.find()) {
-				endIndex = suffixMatcher.start();
-				addSqlParameter(content.substring(startIndex+2, endIndex));
-			}else {
-				throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, [#{ 和 }]标识符不匹配(多一个/少一个), 请检查");
+		Matcher perfixMatcher = SqlParameterDeclareConfiguration.prefixPattern.matcher(content);
+		if(SqlParameterDeclareConfiguration.prefixPattern == SqlParameterDeclareConfiguration.suffixPattern) {
+			// 如果前后缀一样, 则只用前缀去匹配, 获取每个sql参数
+			while(perfixMatcher.find()) {
+				startIndex = perfixMatcher.start();
+				if(perfixMatcher.find()) {
+					endIndex = perfixMatcher.start();
+					addSqlParameter(content.substring(startIndex+SqlParameterDeclareConfiguration.prefixLength, endIndex));
+				}else {
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+SqlParameterDeclareConfiguration.prefix+"]标识符不匹配(多一个/少一个), 请检查");
+				}
+			}
+		}else {
+			// 如果前后缀不一致, 则要分别去匹配, 获取每个sql参数
+			Matcher suffixMatcher = SqlParameterDeclareConfiguration.suffixPattern.matcher(content);
+			while(perfixMatcher.find()) {
+				startIndex = perfixMatcher.start();
+				if(suffixMatcher.find()) {
+					endIndex = suffixMatcher.start();
+					addSqlParameter(content.substring(startIndex+SqlParameterDeclareConfiguration.prefixLength, endIndex));
+				}else {
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+SqlParameterDeclareConfiguration.prefix+"和"+SqlParameterDeclareConfiguration.suffix+"]标识符不匹配(多一个/少一个), 请检查");
+				}
 			}
 		}
 		

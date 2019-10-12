@@ -10,7 +10,6 @@ import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.mapping.store.impl.ApplicationMappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
-import com.douglei.orm.configuration.ext.configuration.datatypehandler.ExtDataTypeHandler;
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.table.CreateMode;
@@ -63,6 +62,13 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	
 	@FieldMetaData
 	private byte dynamicMappingOnceMaxCount=10;
+	
+	
+	@FieldMetaData
+	private String sqlParameterPrefix;// sql参数前缀, 默认为#{
+	
+	@FieldMetaData
+	private String sqlParameterSuffix;// sql参数后缀, 默认为}
 	
 	public XmlEnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
@@ -193,19 +199,16 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 			this.dynamicMappingOnceMaxCount = Byte.parseByte(value);
 		}
 	}
+	public void setSqlParameterPrefix(String sqlParameterPrefix) {
+		
+	}
+	public void setSqlParameterSuffix(String sqlParameterSuffix) {
+		
+	}
 
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
 		this.dialect = DialectMapping.getDialectByDatabaseMetadata(databaseMetadata);
-	}
-	
-	// 设置扩展的数据类型Handler
-	public void setExtDataTypeHandlers(List<ExtDataTypeHandler> extDataTypeHandlerList) {
-		if(extDataTypeHandlerList != null  && extDataTypeHandlerList.size() > 0) {
-			for (ExtDataTypeHandler extDataTypeHandler : extDataTypeHandlerList) {
-				this.dialect.getDataTypeHandlerMapping().registerExtDataTypeHandler(extDataTypeHandler);
-			}
-		}
 	}
 	
 	@Override
