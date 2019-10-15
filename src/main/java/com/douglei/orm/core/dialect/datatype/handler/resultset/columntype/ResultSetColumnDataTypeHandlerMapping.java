@@ -40,7 +40,7 @@ public class ResultSetColumnDataTypeHandlerMapping {
 	public ResultSetColumnDataTypeHandler getDataTypeHandlerByDatabaseColumnType(int columnType, String columnName, String columnTypeName) {
 		ResultSetColumnDataTypeHandler dataTypeHandler = DATATYPE_HANDLER_MAP.get(columnType);
 		if(dataTypeHandler == null) {
-			throw new UnsupportDataTypeHandlerException("目前无法处理columnName=["+columnName+"], columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型");
+			throw new UnsupportDataTypeHandlerException("目前无法处理columnName=["+columnName+"], columnType=["+columnType+"], columnTypeName=["+columnTypeName+"]的数据类型(查询结果集)");
 		}
 		return dataTypeHandler;
 	}

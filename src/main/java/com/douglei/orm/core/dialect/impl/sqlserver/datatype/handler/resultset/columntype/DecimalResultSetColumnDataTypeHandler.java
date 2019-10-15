@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Decimal;
+import com.douglei.orm.core.dialect.impl.sqlserver.datatype.Numeric;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.dbtype.DecimalDBDataTypeHandler;
 
 /**
@@ -20,7 +21,8 @@ public class DecimalResultSetColumnDataTypeHandler extends ResultSetColumnDataTy
 	}
 	
 	private static final int[] supportColumnTypes = {
-			Decimal.singleInstance().getSqlType()	// decimal 
+			Decimal.singleInstance().getSqlType(),	// decimal
+			Numeric.singleInstance().getSqlType()	// numeric
 			};
 	
 	@Override
