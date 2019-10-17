@@ -14,8 +14,8 @@ import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
  * ResultSet工具类
  * <pre>
  * 	注意: 
- * 	 1.参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该类中的工具方法
- * 	 2.参数: resultSet 需要手动关闭, 该类中的工具方法不对ResultSet进行close操作
+ * 	 1.参数: resultSet 需要判断!= null, 同时必须执行过一次next(), 如果返回是false, 则不要调用该类中的任何方法
+ * 	 2.参数: resultSet 需要手动关闭, 该类中的所有方法不对ResultSet参数进行close操作
  * </pre>
  * @author DougLei
  */
@@ -99,7 +99,6 @@ public class ResultSetUtil {
 			}
 			listMap.add(map);
 		}while(resultSet.next());
-		
 		return listMap;
 	}
 	

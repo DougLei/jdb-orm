@@ -61,8 +61,6 @@ public abstract class Configuration implements SelfProcessing{
 		}
 	}
 	
-	protected abstract void setSessionFactory();
-	
 	/**
 	 * 设置配置文件的路径
 	 * @param configurationFile
@@ -94,14 +92,16 @@ public abstract class Configuration implements SelfProcessing{
 	 * 一个configuration也只能有一个sessionFactory实例
 	 * @return
 	 */
-	public SessionFactory buildSessionFactory() {
+	public final SessionFactory buildSessionFactory() {
 		if(sessionFactory == null) {
+			JdbConfigurationBean.initial();
 			setSessionFactory();
 		}
 		return sessionFactory;
 	}
 	
-	@Override
-	public void selfChecking() throws SelfCheckingException {
-	}
+	/**
+	 * 设置sessionFactory, 即进行初始化
+	 */
+	protected abstract void setSessionFactory();
 }

@@ -9,17 +9,20 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class JdbConfigurationBean {
 	private JdbConfigurationBean() {}
-	private static final JdbConfigurationBean bean = new JdbConfigurationBean();
-	static {
-		new PropertiesConfigurationBeanReader("jdb.config.properties", bean);
+	private static JdbConfigurationBean bean;
+	
+	static void initial() {
+		if(bean == null) {
+			bean = new JdbConfigurationBean();
+			new PropertiesConfigurationBeanReader("jdb.config.properties", bean);
+		}
 	}
 	public static final JdbConfigurationBean instance() {
 		return bean;
 	}
 	
-	
-	private String sqlParameterPrefix= "#{";// 声明sql参数的前缀
-	private String sqlParameterSuffix="}";// 声明sql参数的后缀
+	private String sqlParameterPrefix;// 声明sql参数的前缀
+	private String sqlParameterSuffix;// 声明sql参数的后缀
 
 	
 	public String getSqlParameterPrefix() {

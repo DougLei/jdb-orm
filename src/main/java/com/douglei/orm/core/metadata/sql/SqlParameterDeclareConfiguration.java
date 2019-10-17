@@ -15,6 +15,9 @@ public class SqlParameterDeclareConfiguration {
 	public static final String suffix;
 	public static final byte prefixLength;
 	
+	public static final String prefixPatternString;
+	public static final String suffixPatternString;
+	
 	public static final Pattern prefixPattern;
 	public static final Pattern suffixPattern;
 	
@@ -23,16 +26,19 @@ public class SqlParameterDeclareConfiguration {
 		suffix = JdbConfigurationBean.instance().getSqlParameterSuffix();
 		prefixLength = (byte) prefix.length();
 		
-		prefixPattern = patternCompile(prefix);
+		prefixPatternString = toPatternString(prefix);
+		prefixPattern = Pattern.compile(prefixPatternString, Pattern.MULTILINE);
 		if(prefix.equals(suffix)) {
+			suffixPatternString = prefixPatternString;
 			suffixPattern = prefixPattern;
 		}else {
-			suffixPattern = patternCompile(suffix);
+			suffixPatternString = toPatternString(suffix);
+			suffixPattern = Pattern.compile(suffixPatternString, Pattern.MULTILINE);
 		}
 	}
 	
-	// 编译正则表达式, 如果表达式字符串中包含正则表达式的关键字, 则自动追加\进行转义
-	private static Pattern patternCompile(String pattern) {
+	// 获取正则表达式, 如果有正则表达式的关键字, 则追加\进行转义
+	private static String toPatternString(String pattern) {
 		StringBuilder sp = new StringBuilder(pattern.length()*2);
 		char s;
 		for(byte i=0;i<pattern.length();i++) {
@@ -45,6 +51,9 @@ public class SqlParameterDeclareConfiguration {
 			}
 			sp.append(s);
 		}
-		return Pattern.compile(sp.toString(), Pattern.MULTILINE);
+		if(sp.length() == pattern.length()) {
+			return pattern;
+		}
+		return sp.toString();
 	}
 }

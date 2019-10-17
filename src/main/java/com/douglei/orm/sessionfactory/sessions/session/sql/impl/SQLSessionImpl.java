@@ -234,20 +234,20 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 							index++;
 						}
 					}
-					callableStatement.execute();
 					
+					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对procedureSupportDirectlyReturnResultSet=true的数据库有用
 					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						
 						SqlParameterMetadata sqlParameterMetadata = null;
 						for(short i=0;i<outParameterCount;i++) {
-							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]);
+							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]-1);
 							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
 						}
 						
 						if(procedureSupportDirectlyReturnResultSet) {
-							processDirectlyReturnResultSet(outMap, callableStatement);
+							processDirectlyReturnResultSet(outMap, callableStatement, returnResultSet);
 						}
 						return outMap;
 					}
@@ -258,13 +258,23 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			}
 
 			// 处理直接返回 ResultSet
-			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement) throws SQLException {
+			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement, boolean returnResultSet) throws SQLException {
 				byte sequence = 1;
 				ResultSet rs = null;
-				while((rs = callableStatement.getResultSet()) != null && rs.next()) {
-					outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
-					sequence++;
-				}
+				do {
+					if(returnResultSet) {
+						if((rs = callableStatement.getResultSet()) != null && rs.next()) {
+							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
+						}else {
+							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, java.util.Collections.emptyList());
+						}
+						sequence++;
+					}else {
+						if(callableStatement.getUpdateCount() == -1)
+							break;
+					}
+					returnResultSet = callableStatement.getMoreResults();
+				}while(true);
 				CloseUtil.closeDBConn(rs);
 			}
 		});

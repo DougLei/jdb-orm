@@ -17,6 +17,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.utils.ExceptionUtil;
 
 /**
  * 
@@ -77,7 +78,10 @@ public class XmlMappingFactory {
 					return new XmlSqlMapping(mappingConfigurationXmlName, sqlRootElement);
 			}
 			throw new IllegalArgumentException("mappingType 没有匹配");
-		} finally {
+		} catch(Exception e){
+			logger.error("在解析xml文件[{}]时, 出现异常:{}", mappingConfigurationXmlName, ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		}finally {
 			CloseUtil.closeIO(input);
 		}
 	}

@@ -3,6 +3,7 @@ package com.douglei.orm.core.metadata.sql.content.node;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.core.metadata.sql.SqlParameterDeclareConfiguration;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 
@@ -26,7 +27,7 @@ public class ExecuteSqlNode {
 					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataType()));
 				}else {
-					content = content.replaceAll("#\\{"+parameter.getName()+"\\}", parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
+					content = content.replaceAll(SqlParameterDeclareConfiguration.prefixPatternString+parameter.getName()+SqlParameterDeclareConfiguration.suffixPatternString, parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
 				}
 			}
 		}

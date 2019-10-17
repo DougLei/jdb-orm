@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.ReadDataStreamException;
@@ -40,7 +41,7 @@ public class CursorDBDataTypeHandler extends DBDataTypeHandler{
 		try {
 			rs = (ResultSet) callableStatement.getObject(parameterIndex);
 			if(rs == null || !rs.next()) {
-				return null;
+				return Collections.emptyList();
 			}
 			return ResultSetUtil.getResultSetListMap(rs);
 		} catch(SQLException e){

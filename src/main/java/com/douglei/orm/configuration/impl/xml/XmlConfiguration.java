@@ -47,14 +47,6 @@ public class XmlConfiguration extends Configuration {
 	
 	@Override
 	protected void setSessionFactory() {
-		initializeConfiguration();
-		sessionFactory = new SessionFactoryImpl(this, environment);
-	}
-	
-	/**
-	 * 初始化Configuration
-	 */
-	private void initializeConfiguration() {
 		if(logger.isDebugEnabled()) {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
@@ -65,8 +57,9 @@ public class XmlConfiguration extends Configuration {
 			}
 			Element root = xmlDocument.getRootElement();
 			setId(root.attributeValue("id"));
-			setProperties(new Properties(root.element("properties")));
-			setEnvironment(new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingStore));
+			this.properties = new Properties(root.element("properties"));
+			this.environment = new XmlEnvironment(id, Dom4jElementUtil.validateElementExists("environment", root), properties, dataSource, mappingStore);
+			super.sessionFactory = new SessionFactoryImpl(this, environment);
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
@@ -105,12 +98,5 @@ public class XmlConfiguration extends Configuration {
 			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
 		}
-	}
-	
-	private void setProperties(Properties properties) {
-		this.properties = properties;
-	}
-	private void setEnvironment(Environment environment) {
-		this.environment = environment;
 	}
 }
