@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect.datatype.handler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.douglei.orm.core.dialect.datatype.DataType;
@@ -10,7 +11,6 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandlerMap
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
 import com.douglei.tools.instances.scanner.ClassScanner;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
  * 
@@ -21,7 +21,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 	private final ResultSetColumnDataTypeHandlerMapping resultsetColumnDataTypeHandlerMapping = new ResultSetColumnDataTypeHandlerMapping();
 	private final DBDataTypeHandlerMapping dbDataTypeHandlerMapping = new DBDataTypeHandlerMapping();
 	
-	public AbstractDataTypeHandlerMapping() {
+	public AbstractDataTypeHandlerMapping() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
 		ClassScanner cs = new ClassScanner();
 		String basePackage = getClass().getPackage().getName();
 		List<String> classPaths = cs.multiScan(basePackage + ".classtype", basePackage + ".resultset.columntype", basePackage + ".dbtype");
@@ -29,7 +29,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 			Object obj = null;
 			for (String cp : classPaths) {
 				if(!cp.endsWith("$1")) { /** 这个判断是处理 {@link NumberDBDataTypeHandler#doValidate(String, Object, short, short)} 方法最后返回的 {@link ValidationResult} 匿名内部类 */
-					obj = ConstructorUtil.newSingleInstance(cp, "singleInstance");
+					obj = Class.forName(cp).getMethod("singleInstance").invoke(null);
 					if(obj instanceof ClassDataTypeHandler) {
 						classDataTypeHandlerMapping.register((ClassDataTypeHandler) obj);
 					}else if(obj instanceof ResultSetColumnDataTypeHandler) {
@@ -42,7 +42,6 @@ public abstract class AbstractDataTypeHandlerMapping{
 		}
 		cs.destroy();
 	}
-	
 	
 	public ClassDataTypeHandler getDataTypeHandlerByClassType(Object value) {
 		return classDataTypeHandlerMapping.getDataTypeHandlerByClassType(value);
