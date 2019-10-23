@@ -80,7 +80,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 	// 替换Sql语句内容中的参数
 	private void replaceSqlParameterInSqlContent(SqlParameterMetadata sqlParameter) {
 		if(sqlParameter.isUsePlaceholder()) {
-			content = content.replaceAll("#\\{"+sqlParameter.getConfigText()+"\\}", "?");
+			content = content.replaceAll(SqlParameterDeclareConfiguration.prefixPatternString+sqlParameter.getConfigText()+SqlParameterDeclareConfiguration.suffixPatternString, "?");
 		}else{
 			content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
 		}
