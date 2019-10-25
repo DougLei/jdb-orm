@@ -42,8 +42,8 @@ public class MappingXmlConfigContext {
 		return getMappingConfig().getTableMappingConfig();
 	}
 	
-	// 是否注册表映射
-	private static boolean isRegisterTableMapping(Mapping mapping) {
+	// 是否是表映射
+	private static boolean isTableMapping(Mapping mapping) {
 		return mapping.getMappingType() == MappingType.TABLE && ((TableMetadata)mapping.getMetadata()).getCreateMode() != CreateMode.NONE;
 	}
 	
@@ -52,7 +52,7 @@ public class MappingXmlConfigContext {
 	 * @param mapping
 	 */
 	public static void addCreateTableMapping(Mapping mapping) {
-		if(isRegisterTableMapping(mapping)) {
+		if(isTableMapping(mapping)) {
 			getTableMappingConfig().addCreateTableMapping(mapping);
 		}
 	}
@@ -62,7 +62,7 @@ public class MappingXmlConfigContext {
 	 * @param mapping
 	 */
 	public static void addDropTableMapping(Mapping mapping) {
-		if(isRegisterTableMapping(mapping)) {
+		if(isTableMapping(mapping)) {
 			getTableMappingConfig().addDropTableMapping(mapping);
 		}
 	}
