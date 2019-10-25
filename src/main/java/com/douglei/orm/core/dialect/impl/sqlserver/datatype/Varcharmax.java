@@ -7,7 +7,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * @author DougLei
  */
 public class Varcharmax extends DBDataType{
-	private static final long serialVersionUID = -2339956545286966018L;
+	private static final long serialVersionUID = 4046469066355166865L;
 	private static final Varcharmax instance = new Varcharmax();
 	public static final Varcharmax singleInstance() {
 		return instance;
@@ -19,13 +19,8 @@ public class Varcharmax extends DBDataType{
 	
 	@Override
 	public String getTypeName() {
-		if(unProcessTypeName) {
-			typeName = "VARCHAR";
-			unProcessTypeName = false;
-		}
-		return typeName;
+		return "VARCHAR";
 	}
-	private boolean unProcessTypeName=true;
 	
 	@Override
 	public String getDBType4SqlStatement(short length, short precision) {
