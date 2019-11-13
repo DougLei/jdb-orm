@@ -114,7 +114,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public int executeUpdates(String namespace, String name, List<Object> sqlParameters) {
+	public int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters) {
 		SqlMetadata sql = getSqlMetadata(namespace);
 		int updateRowCount = 0;
 		ExecuteHandler executeHandler = null;
