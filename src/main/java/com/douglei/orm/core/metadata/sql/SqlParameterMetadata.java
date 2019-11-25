@@ -18,6 +18,7 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
+import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
@@ -29,7 +30,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 public class SqlParameterMetadata implements Metadata{
 	private static final long serialVersionUID = 8145656018479802450L;
 
-	private String configText;// 该值中如果存在正则表达式的关键字, 则增加\转义
+	private String configText;
 	
 	private String name;// 参数名
 	private String descriptionName;// 描述名
@@ -51,7 +52,8 @@ public class SqlParameterMetadata implements Metadata{
 	private ValidatorHandler validatorHandler;// 验证器
 	
 	public SqlParameterMetadata(String configText) {
-		this.configText = StringUtil.toPatternString(configText);
+		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
+		this.configText = SqlParameterDeclareConfiguration.sqlParameterSplitIncludeRegExKey?RegularExpressionUtil.toRegularExpressionString(configText):configText;
 		
 		Map<String, String> propertyMap = resolvingPropertyMap(configText);
 		setName(propertyMap.get("name"));
