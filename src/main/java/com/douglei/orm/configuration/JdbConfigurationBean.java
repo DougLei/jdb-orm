@@ -28,19 +28,19 @@ public class JdbConfigurationBean {
 	
 	public String getSqlParameterPrefix() {
 		if(sqlParameterPrefix == null) {
-			return "#{";
+			sqlParameterPrefix = "#{";
 		}
 		return sqlParameterPrefix;
 	}
 	public String getSqlParameterSuffix() {
 		if(sqlParameterSuffix == null) {
-			return "}";
+			sqlParameterSuffix = "}";
 		}
 		return sqlParameterSuffix;
 	}
 	public String getSqlParameterSplit() {
 		if(sqlParameterSplit == null) {
-			return ",";
+			sqlParameterSplit = ",";
 		}
 		return sqlParameterSplit;
 	}
