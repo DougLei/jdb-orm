@@ -77,7 +77,7 @@ public class SqlParameterMetadata implements Metadata{
 	
 	// 解析出属性map集合
 	private Map<String, String> resolvingPropertyMap(String configText) {
-		String[] cts = configText.split(",");
+		String[] cts = configText.split(SqlParameterDeclareConfiguration.sqlParameterSplit);
 		int length = cts.length;
 		if(length < 1) {
 			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");

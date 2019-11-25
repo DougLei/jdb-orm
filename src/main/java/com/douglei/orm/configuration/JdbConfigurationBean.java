@@ -23,6 +23,7 @@ public class JdbConfigurationBean {
 	
 	private String sqlParameterPrefix;// 声明sql参数的前缀
 	private String sqlParameterSuffix;// 声明sql参数的后缀
+	private String sqlParameterSplit;// 声明sql参数时, 配置的参数间隔符
 
 	
 	public String getSqlParameterPrefix() {
@@ -37,6 +38,12 @@ public class JdbConfigurationBean {
 		}
 		return sqlParameterSuffix;
 	}
+	public String getSqlParameterSplit() {
+		if(sqlParameterSplit == null) {
+			return ",";
+		}
+		return sqlParameterSplit;
+	}
 	public void setSqlParameterPrefix(String sqlParameterPrefix) {
 		if(StringUtil.notEmpty(sqlParameterPrefix)) {
 			this.sqlParameterPrefix = sqlParameterPrefix.trim();
@@ -45,6 +52,11 @@ public class JdbConfigurationBean {
 	public void setSqlParameterSuffix(String sqlParameterSuffix) {
 		if(StringUtil.notEmpty(sqlParameterSuffix)) {
 			this.sqlParameterSuffix = sqlParameterSuffix.trim();
+		}
+	}
+	public void setSqlParameterSplit(String sqlParameterSplit) {
+		if(StringUtil.notEmpty(sqlParameterSplit)) {
+			this.sqlParameterSplit = sqlParameterSplit.trim();
 		}
 	}
 }

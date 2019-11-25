@@ -21,6 +21,8 @@ public class SqlParameterDeclareConfiguration {
 	public static final Pattern prefixPattern;
 	public static final Pattern suffixPattern;
 	
+	public static final String sqlParameterSplit;
+	
 	static {
 		prefix = JdbConfigurationBean.instance().getSqlParameterPrefix();
 		suffix = JdbConfigurationBean.instance().getSqlParameterSuffix();
@@ -35,6 +37,8 @@ public class SqlParameterDeclareConfiguration {
 			suffixPatternString = toPatternString(suffix);
 			suffixPattern = Pattern.compile(suffixPatternString, Pattern.MULTILINE);
 		}
+		
+		sqlParameterSplit = toPatternString(JdbConfigurationBean.instance().getSqlParameterSplit());
 	}
 	
 	// 获取正则表达式, 如果有正则表达式的关键字, 则追加\进行转义
