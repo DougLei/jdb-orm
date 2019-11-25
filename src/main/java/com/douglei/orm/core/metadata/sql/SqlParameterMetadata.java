@@ -29,7 +29,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 public class SqlParameterMetadata implements Metadata{
 	private static final long serialVersionUID = 8145656018479802450L;
 
-	private String configText;
+	private String configText;// 该值中如果存在正则表达式的关键字, 则增加\转义
 	
 	private String name;// 参数名
 	private String descriptionName;// 描述名
@@ -51,7 +51,7 @@ public class SqlParameterMetadata implements Metadata{
 	private ValidatorHandler validatorHandler;// 验证器
 	
 	public SqlParameterMetadata(String configText) {
-		this.configText = configText;
+		this.configText = StringUtil.toPatternString(configText);
 		
 		Map<String, String> propertyMap = resolvingPropertyMap(configText);
 		setName(propertyMap.get("name"));
