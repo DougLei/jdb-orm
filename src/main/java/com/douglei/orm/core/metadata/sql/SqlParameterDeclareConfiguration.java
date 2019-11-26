@@ -28,17 +28,17 @@ public class SqlParameterDeclareConfiguration {
 		suffix = JdbConfigurationBean.instance().getSqlParameterSuffix();
 		prefixLength = (byte) prefix.length();
 		
-		prefixPatternString = RegularExpressionUtil.toRegularExpressionString(prefix);
+		prefixPatternString = RegularExpressionUtil.transferRegularExpressionKey(prefix);
 		prefixPattern = Pattern.compile(prefixPatternString, Pattern.MULTILINE);
 		if(prefix.equals(suffix)) {
 			suffixPatternString = prefixPatternString;
 			suffixPattern = prefixPattern;
 		}else {
-			suffixPatternString = RegularExpressionUtil.toRegularExpressionString(suffix);
+			suffixPatternString = RegularExpressionUtil.transferRegularExpressionKey(suffix);
 			suffixPattern = Pattern.compile(suffixPatternString, Pattern.MULTILINE);
 		}
 		
-		sqlParameterSplit = RegularExpressionUtil.toRegularExpressionString(JdbConfigurationBean.instance().getSqlParameterSplit());
+		sqlParameterSplit = RegularExpressionUtil.transferRegularExpressionKey(JdbConfigurationBean.instance().getSqlParameterSplit());
 		sqlParameterSplitIncludeRegExKey = RegularExpressionUtil.includeRegularExpressionKey(JdbConfigurationBean.instance().getSqlParameterSplit());
 	}
 }

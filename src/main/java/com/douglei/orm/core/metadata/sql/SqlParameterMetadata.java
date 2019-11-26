@@ -53,7 +53,7 @@ public class SqlParameterMetadata implements Metadata{
 	
 	public SqlParameterMetadata(String configText) {
 		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
-		this.configText = SqlParameterDeclareConfiguration.sqlParameterSplitIncludeRegExKey?RegularExpressionUtil.toRegularExpressionString(configText):configText;
+		this.configText = SqlParameterDeclareConfiguration.sqlParameterSplitIncludeRegExKey?RegularExpressionUtil.transferRegularExpressionKey(configText):configText;
 		
 		Map<String, String> propertyMap = resolvingPropertyMap(configText);
 		setName(propertyMap.get("name"));
