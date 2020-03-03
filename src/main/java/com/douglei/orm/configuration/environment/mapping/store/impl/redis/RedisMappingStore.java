@@ -10,7 +10,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -48,7 +48,7 @@ public class RedisMappingStore implements MappingStore {
 	
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
-		if(Collections.unEmpty(mappings)) {
+		if(CollectionUtil.unEmpty(mappings)) {
 			try(Jedis connection = redisPool.getResource()){
 				handler.addMapping(mappings, connection);
 			}
@@ -71,7 +71,7 @@ public class RedisMappingStore implements MappingStore {
 	
 	@Override
 	public void removeMapping(Collection<String> codes) {
-		if(Collections.unEmpty(codes)) {
+		if(CollectionUtil.unEmpty(codes)) {
 			try(Jedis connection = redisPool.getResource()){
 				handler.removeMapping(codes, connection);
 			}

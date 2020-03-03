@@ -27,7 +27,7 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectIsExistsExcept
 import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectNotExistsException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
@@ -171,7 +171,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(logger.isDebugEnabled()) {
 				logger.debug("close {}", getClass().getName());
 			}
-			if(enableStatementCache && Collections.unEmpty(statementHandlerCache)) {
+			if(enableStatementCache && CollectionUtil.unEmpty(statementHandlerCache)) {
 				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
 				statementHandlerCache.clear();
 				statementHandlerCache = null;

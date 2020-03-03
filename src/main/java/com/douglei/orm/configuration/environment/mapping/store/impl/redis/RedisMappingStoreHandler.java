@@ -10,7 +10,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 import redis.clients.jedis.Jedis;
@@ -25,7 +25,7 @@ class RedisMappingStoreHandler extends RedisHandler {
 
 	public void clearStore(Jedis connection) {
 		Set<String> keys = connection.keys(getPrefix() + "*");
-		if(Collections.unEmpty(keys)) {
+		if(CollectionUtil.unEmpty(keys)) {
 			removeMapping(keys, connection);
 		}
 	}

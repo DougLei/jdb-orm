@@ -29,7 +29,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Rep
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 
@@ -321,7 +321,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 		
 	private void flushPersistentObjectCache() throws SessionExecutionException {
-		Collections.clear(tableMetadataCache);
+		CollectionUtil.clear(tableMetadataCache);
 		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
 			Map<Identity, PersistentObject> map = null;
 			Collection<PersistentObject> persistentObjects = null;

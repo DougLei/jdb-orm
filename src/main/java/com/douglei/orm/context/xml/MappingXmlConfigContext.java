@@ -18,7 +18,7 @@ import com.douglei.orm.core.metadata.sql.ContentType;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidatorHandler;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 
@@ -230,8 +230,8 @@ class TableMappingConfig {
 	}
 	
 	public void destroy() {
-		Collections.clear(createTableMappings);
-		Collections.clear(dropTableMappings);
+		CollectionUtil.clear(createTableMappings);
+		CollectionUtil.clear(dropTableMappings);
 	}
 }
 
@@ -254,7 +254,7 @@ class SqlMappingConfig {
 		return sqlValidatorHandlerMap;
 	}
 	public void setSqlValidatorHandlerMap(Map<String, ValidatorHandler> sqlValidatorHandlerMap) {
-		Collections.clear(this.sqlValidatorHandlerMap);
+		CollectionUtil.clear(this.sqlValidatorHandlerMap);
 		this.sqlValidatorHandlerMap = sqlValidatorHandlerMap;
 	}
 	public void initialSqlContentContainer(Node sqlNode) {
@@ -281,7 +281,7 @@ class SqlMappingConfig {
 	}
 	
 	public void destroy() {
-		Collections.clear(sqlValidatorHandlerMap);
+		CollectionUtil.clear(sqlValidatorHandlerMap);
 		destroySqlContentContainer();
 	}
 	private void destroySqlContentContainer() {
@@ -335,8 +335,8 @@ class SqlContentContainer {
 	}
 	
 	public void destroy() {
-		Collections.clear(sqlContentNodeMap);
-		Collections.clear(sqlContentMap);
+		CollectionUtil.clear(sqlContentNodeMap);
+		CollectionUtil.clear(sqlContentMap);
 	}
 	
 	private class RepeatedSqlContentNameException extends RuntimeException{

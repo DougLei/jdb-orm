@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 
@@ -51,7 +51,7 @@ public class Dom4jElementUtil {
 			return null;
 		}
 		List<Element> elements = root.elements(elementName);
-		if(Collections.isEmpty(elements)) {
+		if(CollectionUtil.isEmpty(elements)) {
 			return null;
 		}
 		return elements;

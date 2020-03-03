@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -57,7 +57,7 @@ public abstract class TableExecuteHandler implements ExecuteHandler {
 	public String toString() {
 		return "\n" + getClass().getName() +
 			   "\n" + (StringUtil.isEmpty(sql)?"sql is null":sql) + 
-			   "\n" + (Collections.isEmpty(parameters)?"parameters is null":parameters.toString()) + 
+			   "\n" + (CollectionUtil.isEmpty(parameters)?"parameters is null":parameters.toString()) + 
 			   "\n";
 	}
 }

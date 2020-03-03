@@ -12,7 +12,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 使用当前系统的内存空间存储映射信息
@@ -33,7 +33,7 @@ public class ApplicationMappingStore implements MappingStore {
 	
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
-		if(Collections.unEmpty(mappings)) {
+		if(CollectionUtil.unEmpty(mappings)) {
 			for (Mapping mapping : mappings) {
 				addMapping(mapping);
 			}
@@ -56,7 +56,7 @@ public class ApplicationMappingStore implements MappingStore {
 	
 	@Override
 	public void removeMapping(Collection<String> codes) {
-		if(Collections.unEmpty(codes)) {
+		if(CollectionUtil.unEmpty(codes)) {
 			for (String code : codes) {
 				removeMapping(code);
 			}
@@ -80,7 +80,7 @@ public class ApplicationMappingStore implements MappingStore {
 	@Override
 	public void destroy() throws DestroyException {
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
-		if(Collections.unEmpty(mappings)) {
+		if(CollectionUtil.unEmpty(mappings)) {
 			mappings.clear();
 			mappings = null;
 		}
