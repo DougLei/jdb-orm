@@ -1,5 +1,7 @@
 package com.douglei.orm.core.metadata.table;
 
+import com.douglei.tools.utils.StringUtil;
+
 /**
  * 表create的模式
  * @author DougLei
@@ -24,11 +26,13 @@ public enum CreateMode {
 	DYNAMIC_UPDATE;
 	
 	public static CreateMode toValue(String mode) {
-		mode = mode.toUpperCase();
-		CreateMode[] cms = CreateMode.values();
-		for (CreateMode cm : cms) {
-			if(cm.name().equals(mode)) {
-				return cm;
+		if(StringUtil.notEmpty(mode)) {
+			mode = mode.toUpperCase();
+			CreateMode[] cms = CreateMode.values();
+			for (CreateMode cm : cms) {
+				if(cm.name().equals(mode)) {
+					return cm;
+				}
 			}
 		}
 		return null;

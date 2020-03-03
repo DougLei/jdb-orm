@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" createMode="create"><!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用 -->
+	<!-- createMode的值包括: none, create, drop_create, dynamic_update, 其中dynamic_update不建议在生产环境中使用, 默认为create -->
+	<!-- forceCreateMode的值同createMode, 表示强制, 没有默认值, 可以不配置, 该值可覆盖全局的tableCreateMode -->
+	<!-- forceCreateMode的优先级高于createMode -->
+	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" createMode="create" forceCreateMode="">
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 可以将所有表中的通用字段导入 -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->

@@ -21,20 +21,23 @@ public class XmlTableMetadataValidate implements MetadataValidate<Element, Table
 			throw new MetadataValidateException("<table>元素的name属性值不能为空");
 		}
 		
-		CreateMode createMode = getCreateMode(element.attributeValue("createMode"));
+		CreateMode createMode = getCreateMode(element.attributeValue("createMode"), element.attributeValue("forceCreateMode"));
 		return new TableMetadata(name, element.attributeValue("oldName"), element.attributeValue("class"), createMode);
 	}
 
-	private CreateMode getCreateMode(String createMode) {
-		CreateMode cm = EnvironmentContext.getEnvironmentProperty().getTableCreateMode();
-		if(cm == null) {
-			if(StringUtil.notEmpty(createMode)) {
+	private CreateMode getCreateMode(String createMode, String forceCreateMode) {
+		CreateMode cm = null;
+		if(StringUtil.isEmpty(forceCreateMode)) {
+			if((cm = EnvironmentContext.getEnvironmentProperty().getTableCreateMode()) == null) {
 				cm = CreateMode.toValue(createMode);
 			}
-			if(cm == null) {
-				cm = CreateMode.defaultCreateMode();
-			}
+		}else {
+			cm = CreateMode.toValue(forceCreateMode);
 		}
+		if(cm == null) {
+			cm = CreateMode.defaultCreateMode();
+		}
+		
 		if(cm == CreateMode.DYNAMIC_UPDATE && !EnvironmentContext.getEnvironmentProperty().enableTableDynamicUpdate()) {
 			cm = CreateMode.defaultCreateMode();
 		}
