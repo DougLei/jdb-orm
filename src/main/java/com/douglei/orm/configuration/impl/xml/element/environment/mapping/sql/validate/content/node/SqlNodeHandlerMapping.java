@@ -15,11 +15,10 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public class SqlNodeHandlerMapping {
-	private static Map<String, SqlNodeHandler> SQL_NODE_HANDLER_MAPPING;
+	private static Map<String, SqlNodeHandler> SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>();
 	static {
 		ClassScanner cs = new ClassScanner();
 		List<String> classes = cs.scan(SqlNodeHandlerMapping.class.getPackage().getName() + ".impl");
-		SQL_NODE_HANDLER_MAPPING = new HashMap<String, SqlNodeHandler>();
 		
 		SqlNodeHandler sqlNodeHandler = null;
 		for (String cp : classes) {
