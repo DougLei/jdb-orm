@@ -7,22 +7,23 @@ import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.Result
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Char;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.NChar;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.NVarchar2;
+import com.douglei.orm.core.dialect.impl.oracle.datatype.Number;
 import com.douglei.orm.core.dialect.impl.oracle.datatype.Varchar2;
-import com.douglei.orm.core.dialect.impl.oracle.datatype.handler.dbtype.Varchar2DBDataTypeHandler;
 
 /**
  * 
  * @author DougLei
  */
-public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
-	private static final long serialVersionUID = 5734543607495918146L;
-	private StringResultSetColumnDataTypeHandler() {}
-	private static final StringResultSetColumnDataTypeHandler instance = new StringResultSetColumnDataTypeHandler();
-	public static final StringResultSetColumnDataTypeHandler singleInstance() {
+public class ObjectResultSetColumnDataTypeHandler extends ResultSetColumnDataTypeHandler{
+	private static final long serialVersionUID = -4850042704924722827L;
+	private ObjectResultSetColumnDataTypeHandler() {}
+	private static final ObjectResultSetColumnDataTypeHandler instance = new ObjectResultSetColumnDataTypeHandler();
+	public static final ObjectResultSetColumnDataTypeHandler singleInstance() {
 		return instance;
 	}
 	
 	private static final int[] supportColumnTypes = {
+			Number.singleInstance().getSqlType(),	// number 
 			Varchar2.singleInstance().getSqlType(), 	// varchar2 
 			NVarchar2.singleInstance().getSqlType(), 	// nvarchar2
 			Char.singleInstance().getSqlType(),		// char
@@ -31,7 +32,7 @@ public class StringResultSetColumnDataTypeHandler extends ResultSetColumnDataTyp
 	
 	@Override
 	public Object getValue(short columnIndex, ResultSet rs) throws SQLException {
-		return Varchar2DBDataTypeHandler.singleInstance().getValue(columnIndex, rs);
+		return rs.getObject(columnIndex);
 	}
 
 	@Override
