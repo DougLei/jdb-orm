@@ -113,10 +113,17 @@ public class JDBCTest {
 		Class.forName(className);
 		Connection conn = DriverManager.getConnection(url, username, pwd);
 		
-		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
-		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
-		System.out.println(conn.getMetaData().getDatabaseProductVersion());
+//		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
+//		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
+//		System.out.println(conn.getMetaData().getDatabaseProductVersion());
+	
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery("select name, age from [User] where name = '啊哈'");
+		if(rs.next()) {
+			System.out.println(rs.getObject("age").getClass());
+		}
 		
+			
 		
 //		Statement st = conn.createStatement();
 //		ResultSet rs = st.executeQuery("select * from sys_user");
