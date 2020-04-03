@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
@@ -64,7 +65,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 		}
 		
 		String string = o.toString();
-		if(string.length() - 1 > length) {
+		if(length != DBDataType.NO_LIMIT && string.length() - 1 > length) {
 			return new ValidationResult(validateFieldName) {
 				
 				@Override
@@ -84,33 +85,35 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 			};
 		}
 		
-		short dotIndex = (short)string.indexOf(".");
-		if(dotIndex != -1) {
-			dotIndex++;
-			short pl = 0;
-			while(dotIndex < string.length()) {
+		if(precision != DBDataType.NO_LIMIT) {
+			short dotIndex = (short)string.indexOf(".");
+			if(dotIndex != -1) {
 				dotIndex++;
-				pl++;
-			}
-			if(pl > precision) {
-				short apl = pl;
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getMessage() {
-						return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
-					}
-					
-					@Override
-					public String getI18nCode() {
-						return i18nCodePrefix + "value.digital.precision.overlength";
-					}
-
-					@Override
-					public Object[] getI18nParams() {
-						return new Object[] { precision, apl };
-					}
-				};
+				short pl = 0;
+				while(dotIndex < string.length()) {
+					dotIndex++;
+					pl++;
+				}
+				if(pl > precision) {
+					short apl = pl;
+					return new ValidationResult(validateFieldName) {
+						
+						@Override
+						public String getMessage() {
+							return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
+						}
+						
+						@Override
+						public String getI18nCode() {
+							return i18nCodePrefix + "value.digital.precision.overlength";
+						}
+						
+						@Override
+						public Object[] getI18nParams() {
+							return new Object[] { precision, apl };
+						}
+					};
+				}
 			}
 		}
 		return null;

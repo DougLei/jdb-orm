@@ -9,7 +9,7 @@ import java.io.Serializable;
 public abstract class DBDataType implements Serializable{
 	private static final long serialVersionUID = -2656288653528204942L;
 
-	protected static final short NO_LIMIT = -1;
+	public static final short NO_LIMIT = -1;
 	
 	protected short sqlType;// @see java.sql.Types
 	protected String typeName;// 类型的名称, 大写

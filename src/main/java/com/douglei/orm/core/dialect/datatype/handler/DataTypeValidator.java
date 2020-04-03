@@ -17,5 +17,7 @@ public interface DataTypeValidator {
 	 * @param precision
 	 * @return 
 	 */
-	ValidationResult doValidate(String validateFieldName, Object value, short length, short precision);
+	default ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
+		return null; // 默认验证通过
+	}
 }

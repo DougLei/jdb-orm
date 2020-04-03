@@ -3,6 +3,7 @@ package com.douglei.orm.core.dialect.datatype.handler.classtype;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
@@ -41,7 +42,26 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	@Override
 	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == long.class || value instanceof Long || VerifyTypeMatchUtil.isInteger(value.toString())) {
-			// long变量的值, 一般不会超过最大值、也不会低于最小值, 用isInteger方法判断即可满足, 所以这里就暂时不做多余的判断, 上面setValue时同理, 也用isInteger方法判断
+			String string = value.toString();
+			if(length != DBDataType.NO_LIMIT && string.length() > length) {
+				return new ValidationResult(validateFieldName) {
+					
+					@Override
+					public String getMessage() {
+						return "数据值长度超长, 设置长度为" + length +", 实际长度为" + string.length();
+					}
+					
+					@Override
+					public String getI18nCode() {
+						return i18nCodePrefix + "value.digital.length.overlength";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return new Object[] { length, string.length() };
+					}
+				};
+			}
 			return null;
 		}
 		return new ValidationResult(validateFieldName) {

@@ -3,6 +3,7 @@ package com.douglei.orm.core.dialect.datatype.handler.classtype;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
@@ -41,7 +42,9 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 	@Override
 	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == short.class || value instanceof Short || VerifyTypeMatchUtil.isInteger(value.toString())) {
-			long l = Long.parseLong(value.toString());
+			String string = value.toString();
+			
+			long l = Long.parseLong(string);
 			if(l > Short.MAX_VALUE || l < Short.MIN_VALUE) {
 				return new ValidationResult(validateFieldName) {
 					
@@ -58,6 +61,26 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 					@Override
 					public Object[] getI18nParams() {
 						return i18nParams;
+					}
+				};
+			}
+			
+			if(length != DBDataType.NO_LIMIT && string.length() > length) {
+				return new ValidationResult(validateFieldName) {
+					
+					@Override
+					public String getMessage() {
+						return "数据值长度超长, 设置长度为" + length +", 实际长度为" + string.length();
+					}
+					
+					@Override
+					public String getI18nCode() {
+						return i18nCodePrefix + "value.digital.length.overlength";
+					}
+
+					@Override
+					public Object[] getI18nParams() {
+						return new Object[] { length, string.length() };
 					}
 				};
 			}
