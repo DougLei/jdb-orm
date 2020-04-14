@@ -32,8 +32,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private int isSameParameters(List<Object> currentParameters) {
 		if(enableResultCache) {
 			if(isExecuted()) {
-				int length = lastParametersList.size();
-				for(int i=0;i<length;i++) {
+				for(int i=0;i<lastParametersList.size();i++) {
 					if(lastParametersList.get(i).equals(currentParameters)) {
 						return i;
 					}
