@@ -195,9 +195,7 @@ public class SqlParameterMetadata implements Metadata{
 		this.precision = this.dbDataType.correctInputPrecision(this.length, this.precision);
 	}
 	private void setNullable(String nullable) {
-		if(VerifyTypeMatchUtil.isBoolean(nullable)) {
-			this.nullable = Boolean.parseBoolean(nullable);
-		}
+		this.nullable = Boolean.parseBoolean(nullable);
 	}
 	private void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;

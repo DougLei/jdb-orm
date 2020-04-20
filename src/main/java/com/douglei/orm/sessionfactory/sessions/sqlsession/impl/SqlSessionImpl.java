@@ -192,7 +192,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			pageSize = 10;
 		}
 		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
-		long count = queryCount(pageSqlStatement, parameters);
+		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String, Object>>(pageNum, pageSize, count);
 		if(count > 0) {
@@ -204,16 +204,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.debug("分页查询的结果: {}", pageResult.toString());
 		}
 		return pageResult;
-	}
-	
-	/**
-	 * 查询总数量
-	 * @param pageSqlStatement
-	 * @param parameters
-	 * @return
-	 */
-	private long queryCount(PageSqlStatement pageSqlStatement, List<Object> parameters) {
-		return Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString());
 	}
 	
 	@Override

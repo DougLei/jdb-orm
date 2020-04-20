@@ -152,7 +152,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return new ExecutionSql(executeHandler);
 	}
 	
-	
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
 		return executeProcedure_(getSqlMetadata(namespace), name, sqlParameter);

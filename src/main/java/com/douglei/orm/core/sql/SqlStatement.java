@@ -24,15 +24,13 @@ public class SqlStatement {
 	 */
 	private String sql;
 	/**
-	 * 最终order by的子句的声明, 使用方式如下
+	 * order by的子句的声明, 使用方式如下
 	 * {name desc, age ...} select * from user ....
 	 * 即使用{}包裹住select语句最终要用来排序的字段信息, 不用写order by关键字
 	 * 注意, sql语句还是该怎么写就怎么写, 这里只是多了一个需要声明的地方
 	 */
-	private String finalOrderByClauseStatement;
+	private String orderByClause;
 	
-	public SqlStatement() {
-	}
 	public SqlStatement(String originSql) {
 		setSql(originSql);
 	}
@@ -126,7 +124,7 @@ public class SqlStatement {
 					break;
 				}
 			}
-			this.finalOrderByClauseStatement = sql.substring(1, flag);
+			this.orderByClause = sql.substring(1, flag);
 			this.sql = sql.substring(flag+1);
 		}else {
 			this.sql = sql;
@@ -136,8 +134,8 @@ public class SqlStatement {
 	public String getWithClause() {
 		return withClause;
 	}
-	public String getFinalOrderByClauseStatement() {
-		return finalOrderByClauseStatement;
+	public String getOrderByClause() {
+		return orderByClause;
 	}
 	public String getSql() {
 		return sql;
