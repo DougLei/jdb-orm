@@ -1,5 +1,6 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,10 +15,10 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.ExecMappingDescriptionContext;
+import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.sql.ConnectionWrapper;
-import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.sessionfactory.data.validator.table.UniqueValidationResult;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
@@ -30,6 +31,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Uni
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CollectionUtil;
+import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -336,7 +338,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 						}
 					}
 				}
-			} finally {
+			} catch(SessionExecutionException see){
+				throw see;
+			}finally {
 				persistentObjectCache.clear();
 			}
 		}
@@ -364,45 +368,50 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			}
 			try {
 				flushPersistentObjectCache();
-			} finally {
+			} catch(SessionExecutionException see){
+				throw see;
+			}finally {
 				super.close();
 			}
 		}
 	}
-
-	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = super.query(sql, parameters);
-		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-		return listMap2listClass(targetClass, listMap, tableMetadata);
-	}
 	
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
-		Map<String, Object> map = super.uniqueQuery(sql, parameters);
-		if(map != null && map.size() > 0) {
-			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-			return map2Class(targetClass, map, tableMetadata);
-		}
-		return null;
-	}
-	
-	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
-		}
-		PageResult<Map<String, Object>> pageResult = super.pageQuery(pageNum, pageSize, sql, parameters);
-		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
-		
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas(), tableMetadata));
-		if(logger.isDebugEnabled()) {
-			logger.debug("分页查询的结果: {}", finalPageResult.toString());
+		List<T> listT = new ArrayList<T>(listMap.size());
+		for (Map<String, Object> map : listMap) {
+			listT.add(map2Class(targetClass, map, tableMetadata));
 		}
-		return finalPageResult;
+		return listT;
 	}
 
+	@Override
+	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
+		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
+		return map2Class(targetClass, map, tableMetadata);
+	}
+	
+	/**
+	 * 将map转换为类 <内部方法>
+	 * @param targetClass
+	 * @param map
+	 * @param tableMetadata
+	 * @return
+	 */
+	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
+		// 将map的key, 由列名转换成映射中的column.code
+		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
+		ColumnMetadata column = null;
+		Set<String> codes = tableMetadata.getColumnCodes();
+		for (String code : codes) {
+			column = tableMetadata.getColumnByCode(code);
+			targetMap.put(column.getCode(), map.get(column.getName()));
+		}
+		return IntrospectorUtil.mapToClass(targetMap, targetClass);
+	}
+
+	
 	@Override
 	public String getColumnNames(String code, String... excludeColumnNames) {
 		TableMetadata tableMetadata = getTableMetadata(code);

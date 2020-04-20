@@ -126,7 +126,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			result = Collections.emptyMap();
+			result = null;
 		}
 		if(enableResultCache) {
 			if(queryUniqueResult == null) {
@@ -178,7 +178,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
 			}
 		}else {
-			result = com.douglei.tools.utils.CollectionUtil.emptyObjectArray();
+			result = null;
 		}
 		if(enableResultCache) {
 			if(queryUniqueResult_ == null) {

@@ -1,10 +1,10 @@
 package com.douglei.orm.sessionfactory.sessions.sqlsession.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +13,6 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
-import com.douglei.orm.core.metadata.table.ColumnMetadata;
-import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
@@ -30,7 +28,6 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -179,25 +176,36 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			isClosed = true;
 		}
 	}
-
-	@Override
-	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
+	
+	/**
+	 * 分页查询 <内部方法, 不考虑泛型>
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private PageResult pageQuery_(Class targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		if(pageNum < 0) {
-			logger.debug("pageNum实际值={}, pageNum<0, 修正pageNum=1", pageNum);
+			logger.debug("pageNum实际值={}, 将值修正为1", pageNum);
 			pageNum = 1;
 		}
 		if(pageSize < 0) {
-			logger.debug("pageSize实际值={}, pageSize<0, 修正pageSize=10", pageNum);
+			logger.debug("pageSize实际值={}, 将值修正为10", pageSize);
 			pageSize = 10;
 		}
 		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
 		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
-		PageResult<Map<String, Object>> pageResult = new PageResult<Map<String, Object>>(pageNum, pageSize, count);
+		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
 			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement);
-			List<Map<String, Object>> list = query(sql, parameters);
+			List list = query(sql, parameters);
+			if(!list.isEmpty() && targetClass != null) 
+				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
 		}
 		if(logger.isDebugEnabled()) {
@@ -207,29 +215,22 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String sql, List<Object> parameters) {
+		return pageQuery_(null, pageNum, pageSize, sql, parameters);
+	}
+	
+	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
 		return pageQuery(targetClass, pageNum, pageSize, sql, null);
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("开始执行分页查询, targetClass={}, pageNum={}, pageSize={}", targetClass.getName(), pageNum, pageSize);
-		}
-		PageResult<Map<String, Object>> pageResult = pageQuery(pageNum, pageSize, sql, parameters);
-		PageResult<T> finalPageResult = new PageResult<T>(pageResult);
-		finalPageResult.setResultDatas(listMap2listClass(targetClass, pageResult.getResultDatas(), null));
-		if(logger.isDebugEnabled()) {
-			logger.debug("分页查询的结果: {}", finalPageResult.toString());
-		}
-		return finalPageResult;
+		return pageQuery_(targetClass, pageNum, pageSize, sql, parameters);
 	}
 	
-	@Override
-	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
-		return procedureExecutor.execute(getConnection());
-	}
-
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql) {
 		return query(targetClass, sql, null);
@@ -238,7 +239,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
-		return listMap2listClass(targetClass, listMap, null);
+		if(listMap.isEmpty())
+			return Collections.emptyList();
+		return listMap2listClass(targetClass, listMap);
 	}
 	
 	@Override
@@ -249,47 +252,41 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
-		return map2Class(targetClass, map, null);
-	}
-	
-	// listMap转换为listClass
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap, TableMetadata tableMetadata) {
-		if(listMap.size() > 0) {
-			List<T> listT = new ArrayList<T>(listMap.size());
-			for (Map<String, Object> map : listMap) {
-				listT.add(map2Class(targetClass, map, tableMetadata));
-			}
-			return listT;
-		}
-		return null;
-	}
-	
-	// 将map转换为类
-	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
-		if(map.size() == 0) {
+		if(map == null)
 			return null;
+		return map2Class(targetClass, map);
+	}
+	
+	/**
+	 * listMap转换为listClass
+	 * @param targetClass
+	 * @param listMap
+	 * @return
+	 */
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
+		List<T> listT = new ArrayList<T>(listMap.size());
+		for (Map<String, Object> map : listMap) {
+			listT.add(map2Class(targetClass, map));
 		}
-		if(tableMetadata == null) { // 没有配置映射, 则将列名转换为属性名, 尝试set
-			return ResultSetMapConvertUtil.toClass(map, targetClass);
-		}else {
-			map = mapKey2MappingColumnCode(map, tableMetadata); // 配置了类映射, 要从映射中获取映射的属性
-			return IntrospectorUtil.mapToClass(map, targetClass);
-		}
+		return listT;
+	}
+	
+	/**
+	 * 将map转换为类
+	 * @param targetClass
+	 * @param map
+	 * @return
+	 */
+	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
+		return ResultSetMapConvertUtil.toClass(map, targetClass);
 	}
 
-	// 将map的key, 由列名转换成映射中的column.code
-	protected Map<String, Object> mapKey2MappingColumnCode(Map<String, Object> map, TableMetadata tableMetadata) {
-		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
-		
-		ColumnMetadata column = null;
-		Set<String> codes = tableMetadata.getColumnCodes();
-		for (String code : codes) {
-			column = tableMetadata.getColumnByCode(code);
-			targetMap.put(column.getCode(), map.get(column.getName()));
-		}
-		return targetMap;
+	
+	@Override
+	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
+		return procedureExecutor.execute(getConnection());
 	}
-
+	
 	@Override
 	public boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName) {
 		List<Object> parameters = new ArrayList<Object>(2);

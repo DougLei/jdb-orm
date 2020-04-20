@@ -34,7 +34,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableStatementCache = true;
 	
 	@FieldMetaData
-	private boolean enableResultCache = true;
+	private boolean enableResultCache;
 	
 	@FieldMetaData
 	private boolean enableTableSessionCache = true;
@@ -150,7 +150,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setEnableResultCache(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(enableStatementCache) {
 			this.enableResultCache = Boolean.parseBoolean(value);
 		}
 	}

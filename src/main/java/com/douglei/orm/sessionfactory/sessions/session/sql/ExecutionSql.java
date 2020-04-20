@@ -11,14 +11,14 @@ import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
  * @author DougLei
  */
 public class ExecutionSql {
-	private ExecuteHandler executionHolder;
+	private ExecuteHandler executionHandler;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
-	public ExecutionSql(ExecuteHandler executionHolder) {
-		this.executionHolder = executionHolder;
-		this.sql = new SqlStatement(executionHolder.getCurrentSql());
-		this.parameters = executionHolder.getCurrentParameters();
+	public ExecutionSql(ExecuteHandler executionHandler) {
+		this.executionHandler = executionHandler;
+		this.sql = new SqlStatement(executionHandler.getCurrentSql());
+		this.parameters = executionHandler.getCurrentParameters();
 	}
 	
 	public String getWithClause() {
@@ -35,14 +35,14 @@ public class ExecutionSql {
 	}
 	
 	public short executeSqlCount() {
-		return executionHolder.executeSqlCount();
+		return executionHandler.executeSqlCount();
 	}
 	
 	public boolean next() {
-		boolean next = this.executionHolder.next();
+		boolean next = this.executionHandler.next();
 		if(next) {
-			this.sql.setSql(executionHolder.getCurrentSql());
-			this.parameters = executionHolder.getCurrentParameters();
+			this.sql.setSql(executionHandler.getCurrentSql());
+			this.parameters = executionHandler.getCurrentParameters();
 		}
 		return next;
 	}

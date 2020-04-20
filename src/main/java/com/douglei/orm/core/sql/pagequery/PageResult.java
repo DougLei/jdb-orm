@@ -34,22 +34,6 @@ public class PageResult<T> {
 	 */
 	private List<T> resultDatas;
 	
-	/**
-	 * 将origin中的基础数据copy到新对象的属性中
-	 * @param origin
-	 */
-	public PageResult(PageResult<? extends Object> origin) {
-		copyBaseData(origin);
-	}
-	
-	// 将参数other中的除resultDatas数据, 都copy到当前对象中
-	private void copyBaseData(PageResult<? extends Object> origin) {
-		this.pageNum = origin.pageNum;
-		this.pageSize = origin.pageSize;
-		this.count = origin.count;
-		this.pageCount = origin.pageCount;
-	}
-	
 	public PageResult(int pageNum, int pageSize, long count) {
 		this.pageNum = pageNum;
 		this.pageSize = pageSize;
