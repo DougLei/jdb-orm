@@ -379,7 +379,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
-		Map<String, Object> map = uniqueQuery(sql, parameters);
+		Map<String, Object> map = super.uniqueQuery(sql, parameters);
 		if(map != null && map.size() > 0) {
 			TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 			return map2Class(targetClass, map, tableMetadata);
@@ -406,20 +406,20 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@Override
 	public String getColumnNames(String code, String... excludeColumnNames) {
 		TableMetadata tableMetadata = getTableMetadata(code);
-		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 30);
+		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 40);
 		tableMetadata.getDeclareColumns().forEach(column -> {
 			if(unExcludeColumnName(column.getName(), excludeColumnNames)) {
 				cns.append(", ").append(column.getName());
 			}
 		});
 		if(cns.length() == 0) {
-			throw new NullPointerException("在code=["+code+"]的表映射中, 没有匹配到任何列名, 请确保没有对过多的列名进行排除 (excludeColumnNames)");
+			throw new NullPointerException("在code=["+code+"]的表映射中, 没有匹配到任何列名, 请确保没有对过多的列名进行排除 ");
 		}
 		logger.debug("得到的列名为 -> {}", cns);
 		return cns.substring(1);
 	}
 	
-	// 不排除指定的列名
+	// 判断指定的columnName是否没有被排除
 	private boolean unExcludeColumnName(String columnName, String[] excludeColumnNames) {
 		if(excludeColumnNames.length > 0) {
 			for (String ecn : excludeColumnNames) {
