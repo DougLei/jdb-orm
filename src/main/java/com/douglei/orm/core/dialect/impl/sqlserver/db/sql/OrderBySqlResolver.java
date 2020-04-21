@@ -19,8 +19,10 @@ class OrderBySqlResolver {
 	// 每次获取的字符
 	private char c;
 
-	private KeyWord kw;
-	private char[] wc;
+	// 记录每次解析出单词的字符数组
+	private char[] wc; 
+	// 记录每次解析出单词后, 转换的关键字实例
+	private KeyWord kw; 
 	
 	/**
 	 * 从分页sql对象中解析出order by信息
@@ -42,16 +44,8 @@ class OrderBySqlResolver {
 							wc[i] = sql.charAt(index+i+1);
 						kw = KeyWord.toValue(wc);
 						
-						if(kw != null) { // 不为null, 证明是关键字, 反之不是关键字, 则直接重置
-							if(kw == KeyWord.BY) { 
-								
-								
-								
-								
-								
-							}else { // 不是by的关键字, 则直接结束, 证明没有order by
-								break;
-							}
+						if(kw != null && !kw.resolvingOrderBy(sql, index, statement)) { // 不是order by关键字, 则直接结束
+							break;
 						}
 					}
 					wordLength = 0;
@@ -81,7 +75,28 @@ class OrderBySqlResolver {
  */
 enum KeyWord {
 	HAVING,
-	BY, // 可以是order by或group by
+	BY{ // 可以是order by或group by
+		
+		@Override
+		public boolean resolvingOrderBy(String sql, int index, PageSqlStatement statement) {
+			boolean isOrderBy = false;
+			char c;
+			for(;index>-1;index--) {
+				c = sql.charAt(index);
+				if(!statement.isBlank(c)) {
+					isOrderBy = (c == 'R' || c == 'r');
+					break;
+				}
+			}
+			
+			if(isOrderBy) {
+				index-=4;
+				statement.updateSql(sql.substring(0, index));
+				statement.setOrderBySql(sql.substring(index));
+			}
+			return isOrderBy;
+		} 
+	}, 
 	WHERE,
 	ON,
 	FROM;
@@ -92,7 +107,7 @@ enum KeyWord {
 		this.a = name().toLowerCase().toCharArray();
 		this.A = name().toCharArray();
 	}
-
+	
 	/**
 	 * 判断长度是否满足上面这些关键字的长度
 	 * @param length
@@ -126,6 +141,17 @@ enum KeyWord {
 			}
 			return true;
 		}
+		return false;
+	}
+	
+	/**
+	 * 解析order by
+	 * @param sql
+	 * @param index
+	 * @param statement
+	 * @return 是否解析成功
+	 */
+	public boolean resolvingOrderBy(String sql, int index, PageSqlStatement statement) {
 		return false;
 	}
 }
