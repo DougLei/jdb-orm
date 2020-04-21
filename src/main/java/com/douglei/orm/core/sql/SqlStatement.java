@@ -33,7 +33,7 @@ public class SqlStatement {
 	 * @param originSql
 	 */
 	public void resetSql(String originSql) {
-		originSql = preProcessing(originSql.trim());
+		originSql = originSql.trim();
 		int withClauseEndIndex = withClauseEndIndex(originSql);
 		if(withClauseEndIndex == -1) {
 			withClause = ""; 
@@ -50,15 +50,6 @@ public class SqlStatement {
 		}
 	}
 	
-	/**
-	 * 针对sql进行前置处理
-	 * @param originSql
-	 * @return
-	 */
-	protected String preProcessing(String originSql) {
-		return originSql;
-	}
-
 	/**
 	 * with子句的结束下标值
 	 * @param originSql

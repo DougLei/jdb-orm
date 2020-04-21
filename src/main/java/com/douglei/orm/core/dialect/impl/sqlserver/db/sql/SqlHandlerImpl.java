@@ -21,7 +21,7 @@ public class SqlHandlerImpl implements SqlHandler{
 		pageQuerySql.append(statement.getWithClause());
 		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select top ");
 		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(" row_number() over(order by ").append(updatePageSqlStatement(statement).getOrderByInfo()).append(") as rn, jdb_orm_second_query_.* from (");
+		pageQuerySql.append(" row_number() over(order by ").append(updatePageSqlStatement(statement).getOrderBySql()).append(") as rn, jdb_orm_second_query_.* from (");
 		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") jdb_orm_second_query_) jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn >");
 		pageQuerySql.append(maxIndex-pageSize);
@@ -40,8 +40,8 @@ public class SqlHandlerImpl implements SqlHandler{
 	 * @return
 	 */
 	private PageSqlStatement updatePageSqlStatement(PageSqlStatement statement) {
-		if(statement.getOrderByInfo() == null && !extractOrderByInfo(statement))
-			statement.setOrderByInfo("current_timestamp");
+		if(!extractOrderByInfo(statement))
+			statement.setOrderBySql("current_timestamp");
 		return statement;
 	}
 	
@@ -54,7 +54,9 @@ public class SqlHandlerImpl implements SqlHandler{
 		// TODO Auto-generated method stub
 		
 		
-		
+		// 从sql最后向前找, 每找到一个单词, 判断是否是select语句中的关键字, 这里的关键字主要是排在order by前的, 例如having, gourp by, where, on, join, from,
+		// 如果在解析出这些关键字的时候, 还未出现order by, 则证明没有order by子句, 停止解析
+		// 解析过程中, 如果
 		
 		
 		
@@ -65,15 +67,24 @@ public class SqlHandlerImpl implements SqlHandler{
 	}
 	
 	// 指定字符是否是英文字母
-	private boolean isEnglishLetters(char c) {
+	private static boolean isEnglishLetters(char c) {
 		return c >= 97 && c <=122 || c >= 65 && c <= 90;
 	}
 	
+	
 	public static void main(String[] args) {
 		String sql = "select * from sys_user where xxx=xxx and xxx = xxx ORDER by \n\t name desc, age \n asc \t ";
-		System.out.println(sql);
 		
-		System.out.println(sql.lastIndexOf("order by"));
 		
+		int charStartIndex, charEndIndex;
+		char c;
+		int index = sql.length()-1;
+		for(;index > -1;index--) {
+			if(isEnglishLetters(c = sql.charAt(index))) {
+				
+			}else {
+				
+			}
+		}
 	}
 }
