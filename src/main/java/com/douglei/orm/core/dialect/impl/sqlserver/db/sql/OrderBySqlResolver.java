@@ -44,7 +44,10 @@ class OrderBySqlResolver {
 							wc[i] = sql.charAt(index+i+1);
 						kw = KeyWord.toValue(wc);
 						
-						if(kw != null && !kw.resolvingOrderBy(sql, index, statement)) { // 不是order by关键字, 则直接结束
+						if(kw != null) { // 不是order by关键字, 则直接结束
+							if(kw.resolvingOrderBy(sql, index, statement)) {
+								return true;
+							}
 							break;
 						}
 					}
@@ -66,6 +69,16 @@ class OrderBySqlResolver {
 		}
 		return false;
 	}
+	
+	public static void main(String[] args) {
+		PageSqlStatement p = new PageSqlStatement("select * from sys_user  d by name desc");
+		System.out.println(new OrderBySqlResolver().resolving(p));
+		
+		System.out.println(p.getWithClause());
+		System.out.println(p.getSql());
+		System.out.println(p.getOrderBySql());
+	}
+	
 }
 
 /**
