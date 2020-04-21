@@ -30,6 +30,14 @@ public class PageSqlStatement extends SqlStatement{
 	}
 	
 	/**
+	 * 修改order by信息
+	 * @param orderByInfo
+	 */
+	public void updateOrderByInfo(String orderByInfo) {
+		this.orderByInfo = orderByInfo;
+	}
+	
+	/**
 	 * 针对sqlserver数据库, 从传来的sql语句前, 解析出排序信息(如果有的化)
 	 */
 	@Override

@@ -94,9 +94,11 @@ public class SqlStatement {
 					if(c == ' ' || c == '\r' || c == '\n' || c == '\t') {
 						continue;
 					}else if(c == ')'){
-						throw new WithClauseException("语法错误, with子句语的 [)] 不匹配, 请检查: " + originSql);
+						throw new WithClauseException("语法错误, with子句的 [)] 不匹配, 请检查: " + originSql);
 					}else {
-						if(c != ',') {
+						if((c == 'a' || c == 'A') && (originSql.charAt(i+1) == 's' || originSql.charAt(i+1) == 'S')) { // 解决with查询中, 别名后用括号指定列名的sql, 例如 with qu(id, name) as (select ...)
+							i+=2;
+						}else if(c != ',') {
 							index = i++;
 							isContinue = false;
 						}

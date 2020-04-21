@@ -148,6 +148,8 @@ public interface SqlSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
+	// TODO 计划这里增加递归查询，以及分页递归查询两个新方法
+	
 	/**
 	 * 执行增删改查操作
 	 * @param sql

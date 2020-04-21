@@ -33,7 +33,7 @@ public class ResultSetUtil {
 		int columnCount = resultSetMetaData.getColumnCount();
 		List<SqlResultsetMetadata> resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
 		for(int i=1;i<=columnCount;i++) {
-			resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
+			resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i).toUpperCase(), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
 		}
 		return resultsetMetadatas;
 	}
@@ -46,16 +46,6 @@ public class ResultSetUtil {
 	 */
 	public static Map<String, Object> getResultSetMap(ResultSet resultSet) throws SQLException {
 		return getResultSetMap(getSqlResultSetMetadata(resultSet), resultSet);
-	}
-	
-	/**
-	 * 获取ResultSet ListMap
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException 
-	 */
-	public static List<Map<String, Object>> getResultSetListMap(ResultSet resultSet) throws SQLException {
-		return getResultSetListMap(getSqlResultSetMetadata(resultSet), resultSet);
 	}
 	
 	/**
@@ -75,6 +65,16 @@ public class ResultSetUtil {
 			map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDataTypeHandler().getValue((short)(i+1), resultSet));
 		}
 		return map;
+	}
+	
+	/**
+	 * 获取ResultSet ListMap
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static List<Map<String, Object>> getResultSetListMap(ResultSet resultSet) throws SQLException {
+		return getResultSetListMap(getSqlResultSetMetadata(resultSet), resultSet);
 	}
 	
 	/**
