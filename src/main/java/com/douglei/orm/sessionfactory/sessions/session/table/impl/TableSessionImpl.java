@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.ExecMappingDescriptionContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.UniqueConstraint;
@@ -82,7 +81,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			tm = (TableMetadata) mapping.getMetadata();
 			tableMetadataCache.put(code, tm);
 		}
-		ExecMappingDescriptionContext.setExecMappingDescription(tm.getCode(), MappingType.TABLE);
 		return tm;
 	}
 	

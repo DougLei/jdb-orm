@@ -21,13 +21,12 @@ public class XmlSqlMetadataValidate implements MetadataValidate<Node, SqlMetadat
 	}
 	
 	private String getNamespace(Node namespaceItem) {
-		if(namespaceItem == null) {
-			throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
+		if(namespaceItem != null) {
+			String namespace = namespaceItem.getNodeValue();
+			if(StringUtil.notEmpty(namespace)) {
+				return namespace;
+			}
 		}
-		String namespace = namespaceItem.getNodeValue();
-		if(StringUtil.isEmpty(namespace)) {
-			throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
-		}
-		return namespace;
+		throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
 	}
 }

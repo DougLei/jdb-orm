@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.ExecMappingDescriptionContext;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
@@ -57,7 +56,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			sm= (SqlMetadata) mapping.getMetadata();
 			sqlMetadataCache.put(namespace, sm);
 		}
-		ExecMappingDescriptionContext.setExecMappingDescription(namespace, MappingType.SQL);
 		return sm;
 	}
 	
@@ -146,11 +144,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	
-	@Override
-	public ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
-		return new ExecutionSql(executeHandler);
-	}
 	
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
@@ -168,7 +161,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
 		if(contents == null || contents.size() == 0) {
-			throw new NullPointerException(ExecMappingDescriptionContext.getExecMappingDescription()+", 不存在可以执行的存储过程");
+			throw new NullPointerException("不存在可以执行的存储过程");
 		}
 		
 		int length = contents.size();
@@ -280,6 +273,13 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return executeResult;
 	}
 
+	
+	@Override
+	public ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return new ExecutionSql(executeHandler);
+	}
+	
 	@Override
 	public void close() {
 		CollectionUtil.clear(sqlMetadataCache);

@@ -13,7 +13,7 @@ import com.douglei.orm.core.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
-	private static final long serialVersionUID = -4661243920938400328L;
+	private static final long serialVersionUID = 1855517217773149671L;
 	
 	private String namespace;
 	private List<ContentMetadata> contents;
@@ -48,10 +48,6 @@ public class SqlMetadata implements Metadata{
 	@Override
 	public MetadataType getMetadataType() {
 		return MetadataType.SQL;
-	}
-	
-	public String getNamespace() {
-		return namespace;
 	}
 	
 	public List<ContentMetadata> getContents(String name) {

@@ -14,8 +14,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<列名:值>的list-map集合
 	 */
 	default List<Map<String, Object>> query(String namespace, String name) {
@@ -24,8 +24,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
@@ -34,8 +34,8 @@ public interface SQLSession {
 	/**
 	 * 执行批量查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<列名:值>的list-map集合
 	 */
 	default <T> List<T> query(Class<T> targetClass, String namespace, String name) {
@@ -44,8 +44,8 @@ public interface SQLSession {
 	/**
 	 * 执行批量查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
@@ -53,8 +53,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<列名:值>的map集合
 	 */
 	default Map<String, Object> uniqueQuery(String namespace, String name) {
@@ -62,8 +62,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -72,8 +72,8 @@ public interface SQLSession {
 	/**
 	 * 执行唯一查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<列名:值>的map集合
 	 */
 	default <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
@@ -82,8 +82,8 @@ public interface SQLSession {
 	/**
 	 * 执行唯一查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -91,8 +91,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<值>的list-数组集合
 	 */
 	default List<Object[]> query_(String namespace, String name) {
@@ -100,8 +100,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<值>的list-数组集合
 	 */
@@ -109,8 +109,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return 返回<值>的数组
 	 */
 	default Object[] uniqueQuery_(String namespace, String name) {
@@ -118,8 +118,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
@@ -129,8 +129,8 @@ public interface SQLSession {
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
 	 */
 	default PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name) {
@@ -140,8 +140,8 @@ public interface SQLSession {
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -152,8 +152,8 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
 	 */
 	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name) {
@@ -164,17 +164,70 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
 	/**
+	 * 执行增删改查操作
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default int executeUpdate(String namespace, String name) {
+		return executeUpdate(namespace, name, null);
+	}
+	/**
+	 * 执行增删改查操作
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	int executeUpdate(String namespace, String name, Object sqlParameter);
+	/**
+	 * 执行增删改查操作
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameters
+	 * @return
+	 */
+	int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters);
+	
+	/**
+	 * 执行存储过程
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 */
+	default Object executeProcedure(String namespace, String name) {
+		return executeProcedure(namespace, name, null);
+	}
+	/**
+	 * 执行存储过程
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 */
+	Object executeProcedure(String namespace, String name, Object sqlParameter);
+	/**
+	 * 执行存储过程
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameters
+	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 */
+	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
+	
+	
+	/**
 	 * 获取要执行的sql
-	 * @param namespace
-	 * @param name
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
 	 */
 	default ExecutionSql getExecuteSql(String namespace, String name) {
@@ -183,62 +236,10 @@ public interface SQLSession {
 	
 	/**
 	 * 获取要执行的sql
-	 * @param namespace
-	 * @param name
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
 	 * @return
 	 */
 	ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @return
-	 */
-	default int executeUpdate(String namespace, String name) {
-		return executeUpdate(namespace, name, null);
-	}
-	/**
-	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameter
-	 * @return
-	 */
-	int executeUpdate(String namespace, String name, Object sqlParameter);
-	/**
-	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 如果没有, 传入null
-	 * @param name <sql>元素中的name属性值, 不能为空
-	 * @param sqlParameters
-	 * @return
-	 */
-	int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters);
-	
-	/**
-	 * 执行存储过程
-	 * @param namespace
-	 * @param name
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
-	 */
-	default Object executeProcedure(String namespace, String name) {
-		return executeProcedure(namespace, name, null);
-	}
-	/**
-	 * 执行存储过程
-	 * @param namespace
-	 * @param name
-	 * @param sqlParameter
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
-	 */
-	Object executeProcedure(String namespace, String name, Object sqlParameter);
-	/**
-	 * 执行存储过程
-	 * @param namespace
-	 * @param name
-	 * @param sqlParameters
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
-	 */
-	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
 }
