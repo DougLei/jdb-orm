@@ -40,7 +40,7 @@ public class SqlHandlerImpl implements SqlHandler{
 	 * @return
 	 */
 	private PageSqlStatement updatePageSqlStatement(PageSqlStatement statement) {
-		if(!extractOrderByInfo(statement))
+		if(!new OrderBySqlResolver().resolving(statement))
 			statement.setOrderBySql("current_timestamp");
 		return statement;
 	}
@@ -54,7 +54,7 @@ public class SqlHandlerImpl implements SqlHandler{
 		// TODO Auto-generated method stub
 		
 		
-		// 从sql最后向前找, 每找到一个单词, 判断是否是select语句中的关键字, 这里的关键字主要是排在order by前的, 例如having, gourp by, where, on, join, from,
+		// 从sql最后向前找, 每找到一个单词, 判断是否是select语句中的关键字, 这里的关键字主要是排在order by前的, 例如having, gourp by, where, on(有on的一定有join, 就不用专门判断join了), from,
 		// 如果在解析出这些关键字的时候, 还未出现order by, 则证明没有order by子句, 停止解析
 		// 解析过程中, 如果
 		
@@ -67,22 +67,35 @@ public class SqlHandlerImpl implements SqlHandler{
 	}
 	
 	// 指定字符是否是英文字母
-	private static boolean isEnglishLetters(char c) {
-		return c >= 97 && c <=122 || c >= 65 && c <= 90;
-	}
+//	private static boolean isEnglishLetters(char c) {
+//		return c >= 97 && c <=122 || c >= 65 && c <= 90;
+//	}
 	
 	
 	public static void main(String[] args) {
 		String sql = "select * from sys_user where xxx=xxx and xxx = xxx ORDER by \n\t name desc, age \n asc \t ";
+		PageSqlStatement statement = new PageSqlStatement(sql);
 		
 		
-		int charStartIndex, charEndIndex;
+		int wordStartIndex=-1, wordEndIndex=-1, wordLength=0;
 		char c;
 		int index = sql.length()-1;
 		for(;index > -1;index--) {
-			if(isEnglishLetters(c = sql.charAt(index))) {
+			c = sql.charAt(index);
+			if(statement.isBlank(c)) {
 				
-			}else {
+				
+				
+				
+				
+				wordStartIndex=-1;
+				wordEndIndex=-1;
+				wordLength=0;
+			} else {
+				if(wordEndIndex == -1)
+					wordEndIndex = index;
+				wordLength++;
+				
 				
 			}
 		}

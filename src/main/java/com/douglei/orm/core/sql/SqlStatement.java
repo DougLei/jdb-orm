@@ -82,7 +82,7 @@ public class SqlStatement {
 				
 				for(;i<length;i++) {
 					c = originSql.charAt(i);
-					if(c == ' ' || c == '\r' || c == '\n' || c == '\t') {
+					if(isBlank(c)) {
 						continue;
 					}else if(c == ')'){
 						throw new WithClauseException("语法错误, with子句的 [)] 不匹配, 请检查: " + originSql);
@@ -107,6 +107,15 @@ public class SqlStatement {
 			return index;
 		}
 		return -1;
+	}
+	
+	/**
+	 * 指定字符是否是空白
+	 * @param c
+	 * @return
+	 */
+	public boolean isBlank(char c) {
+		return c == ' ' || c == '\r' || c == '\n' || c == '\t';
 	}
 	
 	public String getWithClause() {
