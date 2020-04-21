@@ -71,7 +71,7 @@ class OrderBySqlResolver {
 	}
 	
 	public static void main(String[] args) {
-		PageSqlStatement p = new PageSqlStatement("select * from sys_user  d by name desc");
+		PageSqlStatement p = new PageSqlStatement("select * from sys_user    xorder by name desc");
 		System.out.println(new OrderBySqlResolver().resolving(p));
 		
 		System.out.println(p.getWithClause());
