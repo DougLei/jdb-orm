@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
-import com.douglei.orm.core.sql.SqlStatement;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 /**
@@ -42,7 +41,7 @@ public class SqlHandlerImpl implements SqlHandler{
 	 */
 	private PageSqlStatement updatePageSqlStatement(PageSqlStatement statement) {
 		if(statement.getOrderByInfo() == null && !extractOrderByInfo(statement))
-			statement.updateOrderByInfo("current_timestamp");
+			statement.setOrderByInfo("current_timestamp");
 		return statement;
 	}
 	
@@ -53,21 +52,28 @@ public class SqlHandlerImpl implements SqlHandler{
 	 */
 	private boolean extractOrderByInfo(PageSqlStatement statement) {
 		// TODO Auto-generated method stub
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return false;
 	}
-
-	public static void main(String[] args) {
-//		String sql = "select * from sys_user where xxx=xxx and xxx = xxx ORDER by \n\t name desc, age \n asc \t ";
-//		System.out.println(sql);
-//		
-//		System.out.println(sql.lastIndexOf("order by"));
-		
-		
-		
-		SqlStatement s = new SqlStatement("with a(name, id)  aS    (select id, name from b ), c (id,   xx)  AS (select x from xxx)   select * from a");
-		System.out.println(s.getWithClause());
-		System.out.println(s.getSql());
-		
+	
+	// 指定字符是否是英文字母
+	private boolean isEnglishLetters(char c) {
+		return c >= 97 && c <=122 || c >= 65 && c <= 90;
 	}
 	
+	public static void main(String[] args) {
+		String sql = "select * from sys_user where xxx=xxx and xxx = xxx ORDER by \n\t name desc, age \n asc \t ";
+		System.out.println(sql);
+		
+		System.out.println(sql.lastIndexOf("order by"));
+		
+	}
 }

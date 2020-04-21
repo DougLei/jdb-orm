@@ -14,6 +14,8 @@ public class PageSqlStatement extends SqlStatement{
 	 * 这里的设计是在sql的最前面, 加上需要排序的字段, 如下
 	 * {name desc, age ...(排序)} + with子句 + select语句
 	 * 程序会将最前面排序的信息解析出来, 放到over()函数中
+	 * 
+	 * 这个设计是临时的, 后续提取order by的方法完善后, 该设计会被删除 2020.4.21
 	 */
 	private String orderByInfo;
 	
@@ -27,14 +29,6 @@ public class PageSqlStatement extends SqlStatement{
 	 */
 	public void updateSql(String sql) {
 		super.sql = sql;
-	}
-	
-	/**
-	 * 修改order by信息
-	 * @param orderByInfo
-	 */
-	public void updateOrderByInfo(String orderByInfo) {
-		this.orderByInfo = orderByInfo;
 	}
 	
 	/**
@@ -56,11 +50,10 @@ public class PageSqlStatement extends SqlStatement{
 		return originSql;
 	}
 	
-	/**
-	 * 获取order by信息
-	 * @return
-	 */
 	public String getOrderByInfo() {
 		return orderByInfo;
+	}
+	public void setOrderByInfo(String orderByInfo) {
+		this.orderByInfo = orderByInfo;
 	}
 }
