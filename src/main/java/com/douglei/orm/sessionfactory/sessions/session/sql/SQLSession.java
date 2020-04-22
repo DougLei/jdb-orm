@@ -172,6 +172,56 @@ public interface SQLSession {
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
 	/**
+	 * 递归查询
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String namespace, String name){
+		return recursiveQuery(deep, parentColumnName, parentValue, namespace, namespace, null);
+	}
+	/**
+	 * 递归查询
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String namespace, String name){
+		return recursiveQuery(targetClass, deep, parentColumnName, parentValue, namespace, namespace, null);
+	}
+	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter);
+	
+	/**
 	 * 执行增删改查操作
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql

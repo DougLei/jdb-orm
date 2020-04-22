@@ -133,6 +133,29 @@ public interface TableSession {
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
 	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql);
+	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters);
+	
+	/**
 	 * 获取指定类的列名, 多个用, 分割
 	 * @param clz
 	 * @param excludeColumnNames 要排除的列名

@@ -148,22 +148,50 @@ public interface SqlSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
+	/**
+	 * 递归查询
+	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @return
+	 */
+	default List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql){
+		return recursiveQuery(deep, parentColumnName, sql, null);
+	}
+	/**
+	 * 递归查询
+	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters);
 	
-	
-	
-	
-	// TODO 计划这里增加递归查询，以及分页递归查询两个新方法
-	
-//	default List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, String sql){
-//		return recursiveQuery(deep, parentColumnName, sql, null);
-//	}
-//	List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, String sql, List<Object> parameters);
-//	
-//	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, String sql){
-//		return recursiveQuery(targetClass, deep, parentColumnName, sql, null);
-//	}
-//	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, String sql, List<Object> parameters);
-	
+	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql);
+	/**
+	 * 递归查询
+	 * @param targetClass
+	 * @param deep 递归的深度, 小于等于0表示无限递归
+	 * @param parentColumnName 递归语句中, 指定存储父id的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters);
 	
 	
 	

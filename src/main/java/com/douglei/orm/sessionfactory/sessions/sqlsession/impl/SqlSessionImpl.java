@@ -16,6 +16,7 @@ import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
@@ -177,6 +178,32 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		}
 	}
 	
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql) {
+		return query(targetClass, sql, null);
+	}
+
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+		List<Map<String, Object>> listMap = query(sql, parameters);
+		if(listMap.isEmpty())
+			return Collections.emptyList();
+		return listMap2listClass(targetClass, listMap);
+	}
+	
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
+		return uniqueQuery(targetClass, sql, null);
+	}
+
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+		Map<String, Object> map = uniqueQuery(sql, parameters);
+		if(map == null)
+			return null;
+		return map2Class(targetClass, map);
+	}
+	
 	/**
 	 * 分页查询 <内部方法, 不考虑泛型>
 	 * @param targetClass
@@ -221,8 +248,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
-		return pageQuery(targetClass, pageNum, pageSize, sql, null);
+		return pageQuery_(targetClass, pageNum, pageSize, sql, null);
 	}
 	
 	@Override
@@ -231,32 +259,57 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		return pageQuery_(targetClass, pageNum, pageSize, sql, parameters);
 	}
 	
-	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql) {
-		return query(targetClass, sql, null);
-	}
-
-	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = query(sql, parameters);
-		if(listMap.isEmpty())
-			return Collections.emptyList();
-		return listMap2listClass(targetClass, listMap);
+	/**
+	 * 递归查询 <内部方法, 不考虑泛型>
+	 * @param targetClass
+	 * @param deep
+	 * @param parentColumnName
+	 * @param parentValue
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List recursiveQuery_(Class targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
+		logger.debug("开始执行递归查询, deep={}, parentColumnName={}, parentValue={}", deep, parentColumnName, parentValue);
+		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(sql);
+		
+		List list = query(sql, parameters);
+		
+//		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString()); // 查询总数量
+//		logger.debug("查询到的数据总量为:{}条", count);
+//		PageResult pageResult = new PageResult(pageNum, pageSize, count);
+//		if(count > 0) {
+//			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement);
+//			List list = query(sql, parameters);
+//			if(!list.isEmpty() && targetClass != null) 
+//				list = listMap2listClass(targetClass, list);
+//			pageResult.setResultDatas(list);
+//		}
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("分页查询的结果: {}", pageResult.toString());
+//		}
+		return null;
 	}
 	
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
-		return uniqueQuery(targetClass, sql, null);
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
+		return recursiveQuery_(null, deep, parentColumnName, parentValue, sql, parameters);
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
-		Map<String, Object> map = uniqueQuery(sql, parameters);
-		if(map == null)
-			return null;
-		return map2Class(targetClass, map);
+	@SuppressWarnings("unchecked")
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql) {
+		return recursiveQuery_(targetClass, deep, parentColumnName, parentValue, sql, null);
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
+		return recursiveQuery_(targetClass, deep, parentColumnName, parentValue, sql, parameters);
+	}
+
 	/**
 	 * listMap转换为listClass
 	 * @param targetClass

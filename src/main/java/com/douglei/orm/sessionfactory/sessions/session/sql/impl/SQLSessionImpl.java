@@ -118,6 +118,18 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return super.pageQuery(targetClass, pageNum, pageSize, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
+	@Override
+	public List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.recursiveQuery(deep, parentColumnName, parentValue, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.recursiveQuery(targetClass, deep, parentColumnName, parentValue, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
 	// 执行update, 传入的sqlParameter为null或对象
 	private int executeUpdate_(String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
