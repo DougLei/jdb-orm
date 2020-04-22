@@ -177,9 +177,7 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
 	 */
-	default int executeUpdate(String namespace, String name) {
-		return executeUpdate(namespace, name, null);
-	}
+	int executeUpdate(String namespace, String name);
 	/**
 	 * 执行增删改查操作
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空

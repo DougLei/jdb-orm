@@ -118,15 +118,24 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return super.pageQuery(targetClass, pageNum, pageSize, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
-	
-	@Override
-	public int executeUpdate(String namespace, String name, Object sqlParameter) {
+	// 执行update, 传入的sqlParameter为null或对象
+	private int executeUpdate_(String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		int updateRowCount = 0;
 		do {
 			updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 		}while(executeHandler.next());
 		return updateRowCount;
+	}
+	
+	@Override
+	public int executeUpdate(String namespace, String name) {
+		return executeUpdate_(namespace, namespace, null);
+	}
+
+	@Override
+	public int executeUpdate(String namespace, String name, Object sqlParameter) {
+		return executeUpdate_(namespace, namespace, sqlParameter);
 	}
 	
 	@Override

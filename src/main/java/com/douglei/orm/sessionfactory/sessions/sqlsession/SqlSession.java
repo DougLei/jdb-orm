@@ -136,9 +136,7 @@ public interface SqlSession {
 	 * @param sql
 	 * @return
 	 */
-	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
-		return pageQuery(targetClass, pageNum, pageSize, sql, null);
-	}
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
 	/**
 	 * 分页查询
 	 * @param targetClass
