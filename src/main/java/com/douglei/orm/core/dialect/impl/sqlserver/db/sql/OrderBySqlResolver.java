@@ -1,5 +1,8 @@
 package com.douglei.orm.core.dialect.impl.sqlserver.db.sql;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 
@@ -8,6 +11,8 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  * @author DougLei
  */
 class OrderBySqlResolver {
+	private static final Logger logger = LoggerFactory.getLogger(OrderBySqlResolver.class);
+	
 	// 记录解析出的每个单词的长度
 	private int wordLength;
 	// 是否停止解析单词, 在分析出该单词对解析order by语句没有任何帮助的情况下, 使用该参数终止对单词的继续解析
@@ -20,7 +25,7 @@ class OrderBySqlResolver {
 	private char c;
 
 	// 记录每次解析出单词的字符数组
-	private char[] wc; 
+	private char[] cs; 
 	// 记录每次解析出单词后, 转换的关键字实例
 	private KeyWord kw; 
 	
@@ -39,12 +44,13 @@ class OrderBySqlResolver {
 			if(statement.isBlank(c)) {
 				if(wordLength > 0) { // 证明有单词, 要判断它是否关键字
 					if(KeyWord.lengthSatisfied(wordLength)) {
-						wc = new char[wordLength];
+						cs = new char[wordLength];
 						for(int i=0;i<wordLength;i++)
-							wc[i] = sql.charAt(index+i+1);
-						kw = KeyWord.toValue(wc);
+							cs[i] = sql.charAt(index+i+1);
+						kw = KeyWord.toValue(cs);
 						
-						if(kw != null) { // 不是order by关键字, 则直接结束
+						if(kw != null) {
+							logger.debug("找到关键字: {}", kw);
 							if(kw.resolvingOrderBy(sql, index, statement)) {
 								return true;
 							}
@@ -71,7 +77,7 @@ class OrderBySqlResolver {
 	}
 	
 	public static void main(String[] args) {
-		PageSqlStatement p = new PageSqlStatement("select * from sys_user    xorder by name desc");
+		PageSqlStatement p = new PageSqlStatement("select * from sys_user    order by name desc");
 		System.out.println(new OrderBySqlResolver().resolving(p));
 		
 		System.out.println(p.getWithClause());
@@ -87,38 +93,36 @@ class OrderBySqlResolver {
  * @author DougLei
  */
 enum KeyWord {
-	HAVING,
 	BY{ // 可以是order by或group by
 		
 		@Override
 		public boolean resolvingOrderBy(String sql, int index, PageSqlStatement statement) {
-			boolean isOrderBy = false;
 			char c;
 			for(;index>-1;index--) {
 				c = sql.charAt(index);
 				if(!statement.isBlank(c)) {
-					isOrderBy = (c == 'R' || c == 'r');
+					if(c == 'R' || c == 'r') { // order的最后一个字符
+						index-=4;
+						statement.updateSql(sql.substring(0, index));
+						statement.setOrderBySql(sql.substring(index));
+						return true;
+					}
 					break;
 				}
 			}
-			
-			if(isOrderBy) {
-				index-=4;
-				statement.updateSql(sql.substring(0, index));
-				statement.setOrderBySql(sql.substring(index));
-			}
-			return isOrderBy;
+			return false;
 		} 
 	}, 
+	HAVING,
 	WHERE,
 	ON,
 	FROM;
 
-	private char[] a; // 小写的字符数组
-	private char[] A; // 大写的字符数组
+	private char[] lowerCases; // 小写的字符数组
+	private char[] upperCases; // 大写的字符数组
 	private KeyWord() {
-		this.a = name().toLowerCase().toCharArray();
-		this.A = name().toCharArray();
+		this.lowerCases = name().toLowerCase().toCharArray();
+		this.upperCases = name().toCharArray();
 	}
 	
 	/**
@@ -145,10 +149,10 @@ enum KeyWord {
 		return null;
 	}
 	// 根据指定的字符数组, 与当前的关键字进行匹配
-	private boolean matching(char[] wc) {
-		if(wc.length == a.length) {
-			for(int i=0;i<wc.length;i++) {
-				if(wc[i] != a[i] && wc[i] != A[i]) {
+	private boolean matching(char[] cs) {
+		if(cs.length == lowerCases.length) {
+			for(int i=0;i<cs.length;i++) {
+				if(cs[i] != lowerCases[i] && cs[i] != upperCases[i]) {
 					return false;
 				}
 			}
