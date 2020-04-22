@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
-import com.douglei.orm.core.sql.pagequery.WithClauseException;
 
 /**
  * sql解析器
@@ -125,3 +124,15 @@ public class SqlStatement {
 		return sql;
 	}
 }
+
+/**
+ * with子句异常
+ * @author DougLei
+ */
+class WithClauseException extends RuntimeException{
+	private static final long serialVersionUID = -6402147330911654554L;
+	public WithClauseException(String message) {
+		super(message);
+	}
+}
+

@@ -398,14 +398,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
 		// 将map的key, 由列名转换成映射中的column.code
-		Map<String, Object> targetMap = new HashMap<String, Object>(map.size());
 		ColumnMetadata column = null;
 		Set<String> codes = tableMetadata.getColumnCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnByCode(code);
-			targetMap.put(column.getCode(), map.get(column.getName()));
+			map.put(column.getCode(), map.get(column.getName()));
 		}
-		return IntrospectorUtil.mapToClass(targetMap, targetClass);
+		return IntrospectorUtil.mapToClass(map, targetClass);
 	}
 
 	

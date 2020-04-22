@@ -2,14 +2,13 @@ package com.douglei.orm.core.sql.statement.impl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
-import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * java.sql.PreparedStatement的处理器
@@ -17,32 +16,10 @@ import com.douglei.tools.utils.CollectionUtil;
  */
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private PreparedStatement preparedStatement;
-	private List<List<Object>> lastParametersList; // 上一次请求参数
 
-	public PreparedStatementHandlerImpl(boolean enableResultCache, PreparedStatement preparedStatement, String sql) {
-		super(enableResultCache, sql);
+	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
+		super(sql);
 		this.preparedStatement = preparedStatement;
-	}
-	
-	/**
-	 * 判断参数newParameters集合，是否和属性parameters相同
-	 * @param currentParameters
-	 * @return -1表示没有一样的参数
-	 */
-	private int isSameParameters(List<Object> currentParameters) {
-		if(enableResultCache) {
-			if(isExecuted()) {
-				for(int i=0;i<lastParametersList.size();i++) {
-					if(lastParametersList.get(i).equals(currentParameters)) {
-						return i;
-					}
-				}
-			}else {
-				lastParametersList = new ArrayList<List<Object>>(3);
-			}
-			lastParametersList.add(currentParameters);
-		}
-		return -1;
 	}
 	
 	/**
@@ -51,45 +28,25 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 * @throws SQLException
 	 */
 	private void setParameters(List<Object> parameters) throws SQLException {
-		if(parameters != null && parameters.size() > 0) {
-			List<InputSqlParameter> actualParameters = turnToParameters(parameters);
+		if(parameters != null && !parameters.isEmpty()) {
+			InputSqlParameter inputSqlParameter = null;
 			short index = 1;
-			for (InputSqlParameter parameter : actualParameters) {
-				parameter.setValue(index++, preparedStatement);
+			for (Object parameter : parameters) {
+				if(parameter instanceof InputSqlParameter) {
+					((InputSqlParameter)parameter).setValue(index++, preparedStatement);
+				}else {
+					if(inputSqlParameter == null)
+						inputSqlParameter = new InputSqlParameter();
+					inputSqlParameter.update(parameter);
+					inputSqlParameter.setValue(index++, preparedStatement);
+				}
 			}
 		}
 	}
 	
-	/**
-	 * 将List<Object>转换为List<Parameter>集合
-	 * @param parameters
-	 * @return
-	 */
-	private List<InputSqlParameter> turnToParameters(List<Object> parameters){
-		List<InputSqlParameter> actualParameters = new ArrayList<InputSqlParameter>(parameters.size());
-		for (Object object : parameters) {
-			if(object instanceof InputSqlParameter) {
-				actualParameters.add((InputSqlParameter)object);
-			}else {
-				actualParameters.add(new InputSqlParameter(object));
-			}
-		}
-		return actualParameters;
-	}
-	
-	/**
-	 * 获取查询的结果集合
-	 * @param parameters
-	 * @return
-	 * @throws StatementExecutionException 
-	 */
-	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) throws StatementExecutionException {
-		int index = isSameParameters(parameters);
-		if(index > -1) {
-			return getQueryResultList(index);
-		}
+	@Override
+	public List<Map<String, Object>> executeQueryResultList(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
 		} catch (SQLException e) {
@@ -98,13 +55,8 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
-		int index = isSameParameters(parameters);
-		if(index > -1) {
-			return getQueryUniqueResult(index);
-		}
+	public Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeUniqueQuery(preparedStatement.executeQuery());
 		} catch (SQLException e) {
@@ -113,13 +65,8 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
-	public List<Object[]> getQueryResultList_(List<Object> parameters) throws StatementExecutionException {
-		int index = isSameParameters(parameters);
-		if(index > -1) {
-			return getQueryResultList_(index);
-		}
+	public List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeQuery_(preparedStatement.executeQuery());
 		} catch (SQLException e) {
@@ -128,13 +75,8 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
-		int index = isSameParameters(parameters);
-		if(index > -1) {
-			return getQueryUniqueResult_(index);
-		}
+	public Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			setParameters(parameters);
 			return executeUniqueQuery_(preparedStatement.executeQuery());
 		} catch (SQLException e) {
@@ -145,7 +87,6 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	@Override
 	public int executeUpdate(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			setParameters(parameters);
 			return preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -154,15 +95,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 
 	@Override
-	public void close() {
-		if(!isClosed()) {
-			super.close();
-			if(CollectionUtil.unEmpty(lastParametersList)) {
-				lastParametersList.forEach(list -> list.clear());
-				lastParametersList.clear();
-				lastParametersList = null;
-			}
-			closeStatement(preparedStatement);
-		}
+	protected Statement getStatement() {
+		return preparedStatement;
 	}
 }

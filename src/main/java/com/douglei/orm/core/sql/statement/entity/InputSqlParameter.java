@@ -19,16 +19,25 @@ public class InputSqlParameter {
 	private Object value;
 	private DataTypeHandler dataTypeHandler;
 	
+	public InputSqlParameter() {}
 	public InputSqlParameter(Object value) {
-		this.value = value;
-		this.dataTypeHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
-		if(logger.isDebugEnabled()) {
-			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
-		}
+		update(value);
 	}
 	public InputSqlParameter(Object value, DataTypeHandler dataTypeHandler) {
 		this.value = value;
 		this.dataTypeHandler = dataTypeHandler;
+	}
+	
+	/**
+	 * 更新本对象
+	 * @param value
+	 */
+	public void update(Object newValue) {
+		this.value = newValue;
+		this.dataTypeHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
+		if(logger.isDebugEnabled()) {
+			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
+		}
 	}
 
 	public void setValue(short index, PreparedStatement preparedStatement) throws SQLException {

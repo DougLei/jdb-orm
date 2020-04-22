@@ -69,26 +69,25 @@ public class ConnectionWrapper {
 	
 	/**
 	 * 创建StatementHandler实例
-	 * @param enableResultCache 是否开启Result缓存, 即对结果集缓存
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	public StatementHandler createStatementHandler(boolean enableResultCache, String sql, List<Object> parameters) {
+	public StatementHandler createStatementHandler(String sql, List<Object> parameters) {
 		try {
 			if(logger.isDebugEnabled()) {
 				logger.debug("创建StatementHandler实例");
 				logger.debug("sql语句为: {}", sql);
 			}
-			if(parameters==null || parameters.size()==0) {
+			if(parameters==null || parameters.isEmpty()) {
 				logger.debug("没有参数, 创建StatementHandlerImpl实例");
-				return new StatementHandlerImpl(enableResultCache, connection.createStatement(), sql);
+				return new StatementHandlerImpl(connection.createStatement(), sql);
 			}else {
 				if(logger.isDebugEnabled()) {
 					logger.debug("有参数, 创建PreparedStatementHandler实例");
 					logger.debug("参数为: {}", parameters.toString());
 				}
-				return new PreparedStatementHandlerImpl(enableResultCache, connection.prepareStatement(sql), sql);
+				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql), sql);
 			}
 		} catch (SQLException e) {
 			throw new ConnectionWrapperException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);

@@ -38,14 +38,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	
 	private boolean enableStatementCache;// 是否启用Statement缓存
-	private boolean enableResultCache;// 是否开启Result缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
 	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
 		super(connection, environmentProperty, mappingWrapper);
 		this.enableStatementCache = environmentProperty.enableStatementCache();
-		this.enableResultCache = environmentProperty.enableResultCache();
-		logger.debug("是否开启Statement缓存: {}; 是否开启Result缓存: {}", enableStatementCache, enableResultCache);
+		logger.debug("是否开启Statement缓存: {}", enableStatementCache);
 	}
 	
 	/**
@@ -67,23 +65,14 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			}
 			
 			if(statementHandler == null) {
-				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并放到缓存中");
-				statementHandler = connection.createStatementHandler(enableResultCache, sql, parameters);
-				statementHandlerCache.put(code, statementHandler);
-			}else {
-				if(logger.isDebugEnabled()) {
-					logger.debug("缓存中存在{}实例", statementHandler.getClass());
-					logger.debug("sql语句为: {}", sql);
-					if(parameters==null || parameters.size()==0) {
-						logger.debug("本次没有参数");
-					}else {
-						logger.debug("本次参数为: {}", parameters.toString());
-					}
-				}
+				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并尝试放到缓存中");
+				statementHandler = connection.createStatementHandler(sql, parameters);
+				if(statementHandler.canCache())
+					statementHandlerCache.put(code, statementHandler);
 			}
 		}else {
-			logger.debug("没有开启缓存, 创建StatementHandler实例");
-			statementHandler = connection.createStatementHandler(enableResultCache, sql, parameters);
+			logger.debug("没有开启缓存, 只创建StatementHandler实例");
+			statementHandler = connection.createStatementHandler(sql, parameters);
 		}
 		return statementHandler;
 	}
@@ -92,7 +81,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			return statementHandler.getQueryResultList(parameters);
+			return statementHandler.executeQueryResultList(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
@@ -107,7 +96,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			return statementHandler.getQueryUniqueResult(parameters);
+			return statementHandler.executeQueryUniqueResult(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
@@ -122,7 +111,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public List<Object[]> query_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			return statementHandler.getQueryResultList_(parameters);
+			return statementHandler.executeQueryResultList_(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
@@ -137,7 +126,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters);
 		try {
-			return statementHandler.getQueryUniqueResult_(parameters);
+			return statementHandler.executeQueryUniqueResult_(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
@@ -160,21 +149,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(!enableStatementCache) {
 				statementHandler.close();
 			}
-		}
-	}
-	
-	@Override
-	public void close() {
-		if(!isClosed) {
-			if(logger.isDebugEnabled()) {
-				logger.debug("close {}", getClass().getName());
-			}
-			if(enableStatementCache && CollectionUtil.unEmpty(statementHandlerCache)) {
-				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
-				statementHandlerCache.clear();
-				statementHandlerCache = null;
-			}
-			isClosed = true;
 		}
 	}
 	
@@ -371,5 +345,20 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return;
 		}
 		throw new DBObjectNotExistsException(dbObjectType, dbObjectName);
+	}
+	
+	@Override
+	public void close() {
+		if(!isClosed) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("close {}", getClass().getName());
+			}
+			if(enableStatementCache && CollectionUtil.unEmpty(statementHandlerCache)) {
+				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
+				statementHandlerCache.clear();
+				statementHandlerCache = null;
+			}
+			isClosed = true;
+		}
 	}
 }

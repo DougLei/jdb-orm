@@ -14,78 +14,60 @@ import com.douglei.orm.core.sql.statement.StatementExecutionException;
  */
 public class StatementHandlerImpl extends AbstractStatementHandler {
 	private Statement statement;
-	public StatementHandlerImpl(boolean enableResultCache, Statement statement, String sql) {
-		super(enableResultCache, sql);
+	public StatementHandlerImpl(Statement statement, String sql) {
+		super(sql);
 		this.statement = statement;
 	}
-
+	
 	@Override
-	public List<Map<String, Object>> getQueryResultList(List<Object> parameters) throws StatementExecutionException {
-		if(isExecuted()) {
-			return getQueryResultList(0);
-		}
+	protected Statement getStatement() {
+		return statement;
+	}
+	
+	@Override
+	public List<Map<String, Object>> executeQueryResultList(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
 			return executeQuery(statement.executeQuery(sql));
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			if(enableResultCache) {
-				close();
-			}
-		}
-	}
-	
-	@Override
-	public Map<String, Object> getQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
-		if(isExecuted()) {
-			return getQueryUniqueResult(0);
-		}
-		try {
-			validateStatementIsClosed();
-			return executeUniqueQuery(statement.executeQuery(sql));
-		} catch (SQLException e) {
-			throw new StatementExecutionException(sql, e);
-		} finally {
-			if(enableResultCache) {
-				close();
-			}
-		}
-	}
-	
-	@Override
-	public List<Object[]> getQueryResultList_(List<Object> parameters) throws StatementExecutionException {
-		if(isExecuted()) {
-			return getQueryResultList_(0);
-		}
-		try {
-			validateStatementIsClosed();
-			return executeQuery_(statement.executeQuery(sql));
-		} catch (SQLException e) {
-			throw new StatementExecutionException(sql, e);
-		} finally {
-			if(enableResultCache) {
-				close();
-			}
+			close();
 		}
 	}
 
 	@Override
-	public Object[] getQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
-		if(isExecuted()) {
-			return getQueryUniqueResult_(0);
-		}
+	public Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
 		try {
-			validateStatementIsClosed();
+			return executeUniqueQuery(statement.executeQuery(sql));
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
+		}
+	}
+
+	@Override
+	public List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException {
+		try {
+			return executeQuery_(statement.executeQuery(sql));
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
+		}
+	}
+
+	@Override
+	public Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
+		try {
 			return executeUniqueQuery_(statement.executeQuery(sql));
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
-			if(enableResultCache) {
-				close();
-			}
+			close();
 		}
 	}
+	
 	
 	@Override
 	public int executeUpdate(List<Object> parameters) throws StatementExecutionException {
@@ -93,14 +75,13 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			return statement.executeUpdate(sql);
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
 		}
 	}
 	
 	@Override
-	public void close() {
-		if(!isClosed()) {
-			super.close();
-			closeStatement(statement);
-		}
+	public boolean canCache() {
+		return false;
 	}
 }

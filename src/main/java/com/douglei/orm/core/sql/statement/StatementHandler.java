@@ -15,7 +15,7 @@ public interface StatementHandler {
 	 * @return 返回<列名:值>的list-map集合
 	 * @throws StatementExecutionException
 	 */
-	List<Map<String, Object>> getQueryResultList(List<Object> parameters) throws StatementExecutionException;
+	List<Map<String, Object>> executeQueryResultList(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
 	 * 执行查询, 获取唯一结果
@@ -23,7 +23,7 @@ public interface StatementHandler {
 	 * @return 返回<列名:值>的map集合
 	 * @throws StatementExecutionException
 	 */
-	Map<String, Object> getQueryUniqueResult(List<Object> parameters) throws StatementExecutionException;
+	Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
 	 * 执行查询, 获取结果集
@@ -31,7 +31,7 @@ public interface StatementHandler {
 	 * @return 返回<值>的list-数组集合
 	 * @throws StatementExecutionException
 	 */
-	List<Object[]> getQueryResultList_(List<Object> parameters) throws StatementExecutionException;
+	List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
 	 * 执行查询, 获取唯一结果
@@ -39,7 +39,7 @@ public interface StatementHandler {
 	 * @return 返回<值>的数组
 	 * @throws StatementExecutionException
 	 */
-	Object[] getQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException;
+	Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
 	 * 执行增删改操作, 返回操作数据的数量
@@ -50,15 +50,17 @@ public interface StatementHandler {
 	int executeUpdate(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
+	 * 当前StatementHandler是否可以缓存
+	 * @return
+	 */
+	default boolean canCache() {
+		return true;
+	}
+	
+	/**
 	 * 关闭
 	 */
 	void close();
-	
-	/**
-	 * 标识该StatementHandler是否已经执行过一次
-	 * @return
-	 */
-	public boolean isExecuted();
 	
 	/**
 	 * 是否关闭

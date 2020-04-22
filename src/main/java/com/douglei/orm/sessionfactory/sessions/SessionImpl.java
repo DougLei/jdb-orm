@@ -145,14 +145,8 @@ public class SessionImpl implements Session {
 			if(logger.isDebugEnabled()) {
 				logger.debug("close , 将该实例置为null", TableSession.getClass().getName());
 			}
-			
-			try {
-				((Session)TableSession).close();
-			} catch (ExecutionException e) {
-				throw e;
-			} finally {
-				TableSession = null;
-			}
+			((Session)TableSession).close();
+			TableSession = null;
 		}
 	}
 }
