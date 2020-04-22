@@ -137,7 +137,7 @@ public interface TableSession {
 	 * @param targetClass
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param sql
 	 * @param parameters
 	 * @return
@@ -148,7 +148,7 @@ public interface TableSession {
 	 * @param targetClass
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param sql
 	 * @param parameters
 	 * @return

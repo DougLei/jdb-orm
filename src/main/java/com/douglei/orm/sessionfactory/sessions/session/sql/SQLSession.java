@@ -175,7 +175,7 @@ public interface SQLSession {
 	 * 递归查询
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -187,7 +187,7 @@ public interface SQLSession {
 	 * 递归查询
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
@@ -200,7 +200,7 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -213,7 +213,7 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param deep 递归的深度, 小于等于0表示无限递归
 	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
