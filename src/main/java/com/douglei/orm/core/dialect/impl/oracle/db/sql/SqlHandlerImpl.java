@@ -19,11 +19,11 @@ public class SqlHandlerImpl implements SqlHandler{
 		
 		StringBuilder pageQuerySql = new StringBuilder(200 + statement.getWithClause().length() + statement.getSql().length());
 		pageQuerySql.append(statement.getWithClause());
-		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select jdb_orm_second_query_.*, rownum rn from (");
+		pageQuerySql.append(" SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT JDB_ORM_SECOND_QUERY_.*, ROWNUM RN FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") jdb_orm_second_query_ where rownum <= ");
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ WHERE ROWNUM <= ");
 		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(") jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn > ");
+		pageQuerySql.append(") JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN > ");
 		pageQuerySql.append(maxIndex-pageSize);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());

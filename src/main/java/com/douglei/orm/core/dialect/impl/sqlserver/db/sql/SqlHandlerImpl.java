@@ -19,11 +19,11 @@ public class SqlHandlerImpl implements SqlHandler{
 		
 		StringBuilder pageQuerySql = new StringBuilder(240 + statement.getWithClause().length() + statement.getSql().length());
 		pageQuerySql.append(statement.getWithClause());
-		pageQuerySql.append(" select jdb_orm_thrid_query_.* from (select top ");
+		pageQuerySql.append(" SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");
 		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(" row_number() over(").append(updatePageSqlStatement(statement).getOrderBySql()).append(") as rn, jdb_orm_second_query_.* from (");
+		pageQuerySql.append(" ROW_NUMBER() OVER(").append(updatePageSqlStatement(statement).getOrderBySql()).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") jdb_orm_second_query_) jdb_orm_thrid_query_ where jdb_orm_thrid_query_.rn >");
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
 		pageQuerySql.append(maxIndex-pageSize);
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());
@@ -41,7 +41,8 @@ public class SqlHandlerImpl implements SqlHandler{
 	 */
 	private PageSqlStatement updatePageSqlStatement(PageSqlStatement statement) {
 		if(!new OrderBySqlResolver().resolving(statement))
-			statement.setOrderBySql("current_timestamp");
+			statement.setOrderBySql("CURRENT_TIMESTAMP");
+		
 		return statement;
 	}
 }

@@ -17,9 +17,9 @@ public class SqlHandlerImpl implements SqlHandler{
 	public String installPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause().length() + statement.getSql().length());
 		pageQuerySql.append(statement.getWithClause());
-		pageQuerySql.append(" select jdb_orm_second_query_.* from (");
+		pageQuerySql.append(" SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") jdb_orm_second_query_ limit ");
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);
 		pageQuerySql.append(",");
 		pageQuerySql.append(pageSize);
