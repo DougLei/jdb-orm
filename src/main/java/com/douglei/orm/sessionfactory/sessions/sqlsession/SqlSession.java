@@ -136,7 +136,9 @@ public interface SqlSession {
 	 * @param sql
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
+	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
+		return pageQuery(targetClass, pageNum, pageSize, sql, null);
+	}
 	/**
 	 * 分页查询
 	 * @param targetClass
@@ -148,7 +150,24 @@ public interface SqlSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
+	
+	
+	
+	
 	// TODO 计划这里增加递归查询，以及分页递归查询两个新方法
+	
+//	default List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, String sql){
+//		return recursiveQuery(deep, parentColumnName, sql, null);
+//	}
+//	List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, String sql, List<Object> parameters);
+//	
+//	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, String sql){
+//		return recursiveQuery(targetClass, deep, parentColumnName, sql, null);
+//	}
+//	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, String sql, List<Object> parameters);
+	
+	
+	
 	
 	/**
 	 * 执行增删改查操作

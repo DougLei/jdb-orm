@@ -386,8 +386,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	@Override
 	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
-		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-		return map2Class(targetClass, map, tableMetadata);
+		return map2Class(targetClass, map, getTableMetadata(targetClass.getName()));
 	}
 	
 	/**

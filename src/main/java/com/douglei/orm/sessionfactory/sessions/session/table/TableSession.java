@@ -85,9 +85,7 @@ public interface TableSession {
 	 * @param sql
 	 * @return 
 	 */
-	default <T> List<T> query(Class<T> targetClass, String sql) {
-		return query(targetClass, sql, null);
-	}
+	<T> List<T> query(Class<T> targetClass, String sql);
 	/**
 	 * 查询结果集
 	 * @param targetClass
@@ -103,10 +101,7 @@ public interface TableSession {
 	 * @param sql
 	 * @return 
 	 */
-	default <T> T uniqueQuery(Class<T> targetClass, String sql) {
-		return uniqueQuery(targetClass, sql, null);
-	}
-	
+	<T> T uniqueQuery(Class<T> targetClass, String sql);
 	/**
 	 * 查询唯一结果
 	 * @param targetClass
@@ -124,9 +119,7 @@ public interface TableSession {
 	 * @param sql
 	 * @return
 	 */
-	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql) {
-		return pageQuery(targetClass, pageNum, pageSize, sql, null);
-	}
+	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
 	
 	/**
 	 * 分页查询
