@@ -247,21 +247,21 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
-		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, parentPkColumnName, parentValue);
+		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, parentValue);
 		List rootList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, pkColumnName, parentPkColumnName, childNodeName, parameters);
+		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, childNodeName, parameters);
 		recursiveSqlStatement.removeParentValueList(parameters);
 		return rootList;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String pkColumnName, String parentPkColumnName, String childNodeName, List<Object> parameters) {
+	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String childNodeName, List<Object> parameters) {
 		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
-			recursiveSqlStatement.updateParentValueList(parentList, parentPkColumnName);
+			recursiveSqlStatement.updateParentValueList(parentList);
 			List subList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, pkColumnName, parentPkColumnName, childNodeName, parameters);
+			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, childNodeName, parameters);
 			
-			
+			// 将parentList和subList, 使用串起来
 			
 		}
 	}

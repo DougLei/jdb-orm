@@ -12,12 +12,14 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  * @author DougLei
  */
 public class RecursiveSqlStatement extends PageSqlStatement {
+	private String pkColumnName; // 存储主键的列名
 	private String parentPkColumnName; // 存储父级主键的列名
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
 	
-	public RecursiveSqlStatement(SqlHandler sqlHandler, String originSql, String parentPkColumnName, Object parentValue) {
+	public RecursiveSqlStatement(SqlHandler sqlHandler, String originSql, String pkColumnName, String parentPkColumnName, Object parentValue) {
 		super(sqlHandler, originSql);
+		this.pkColumnName = pkColumnName;
 		this.parentPkColumnName = parentPkColumnName;
 		setParentValueList(parentValue);
 	}
@@ -95,9 +97,8 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	/**
 	 * 更新父级主键值集合
 	 * @param parentList 父级数据集合 
-	 * @param pkColumnName 存储主键值的列名
 	 */
-	public void updateParentValueList(List<Map<String, Object>> parentList, String pkColumnName) {
+	public void updateParentValueList(List<Map<String, Object>> parentList) {
 		parentValueList.clear();
 		parentValueExistNull = false;
 		for (Map<String, Object> parent : parentList) {
