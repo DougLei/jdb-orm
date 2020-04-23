@@ -241,7 +241,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List recursiveQuery_(Class targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
 		if(parameters == null)
 			parameters = new ArrayList<Object>();
@@ -250,6 +250,10 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		List rootList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
 		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, parameters);
+		
+		if(!rootList.isEmpty() && targetClass != null) 
+			rootList = listMap2listClass(targetClass, rootList);
+		
 		recursiveSqlStatement.removeParentValueList(parameters);
 		return rootList;
 	}
