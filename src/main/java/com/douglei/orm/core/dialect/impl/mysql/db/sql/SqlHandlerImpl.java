@@ -14,7 +14,7 @@ public class SqlHandlerImpl implements SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
-	public void installPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
+	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause().length() + statement.getSql().length());
 		pageQuerySql.append(statement.getWithClause());
 		pageQuerySql.append(" SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
@@ -26,6 +26,6 @@ public class SqlHandlerImpl implements SqlHandler{
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
 		}
-		statement.updateSql(pageQuerySql.toString());
+		return pageQuerySql.toString();
 	}
 }

@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.sql.SqlStatement;
 
 /**
  *递归查询用的sql语句对象
  * @author DougLei
  */
-public class RecursiveSqlStatement extends PageSqlStatement {
+public class RecursiveSqlStatement extends SqlStatement {
 	private String parentPkColumnName; // 存储父级主键的列名
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
 	
-	public RecursiveSqlStatement(String originSql, String parentPkColumnName, Object parentValue) {
-		super(originSql);
+	public RecursiveSqlStatement(SqlHandler sqlHandler, String originSql, String parentPkColumnName, Object parentValue) {
+		super(sqlHandler, originSql);
 		this.parentPkColumnName = parentPkColumnName;
 		setParentValueList(parentValue);
 	}

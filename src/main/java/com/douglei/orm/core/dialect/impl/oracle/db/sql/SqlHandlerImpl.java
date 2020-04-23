@@ -14,7 +14,7 @@ public class SqlHandlerImpl implements SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
-	public void installPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
+	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		int maxIndex = pageNum*pageSize;
 		
 		StringBuilder pageQuerySql = new StringBuilder(200 + statement.getWithClause().length() + statement.getSql().length());
@@ -28,6 +28,6 @@ public class SqlHandlerImpl implements SqlHandler{
 		if(logger.isDebugEnabled()) {
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());
 		}
-		statement.updateSql(pageQuerySql.toString());
+		return pageQuerySql.toString();
 	}
 }

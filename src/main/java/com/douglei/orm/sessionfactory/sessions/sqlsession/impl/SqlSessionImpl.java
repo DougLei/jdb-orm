@@ -247,7 +247,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
-		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(sql, parentPkColumnName, parentValue);
+		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, parentPkColumnName, parentValue);
 		
 		EnvironmentContext.getDialect().getSqlHandler().installRecursiveQuerySql(recursiveSqlStatement, parameters);
 		List list = query(sql, parameters);
