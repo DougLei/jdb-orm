@@ -199,12 +199,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			pageSize = 10;
 		}
 		
-		PageSqlStatement pageSqlStatement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
-		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getCountSql(), parameters)[0].toString()); // 查询总数量
+		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
+		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			List list = query(pageSqlStatement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
+			List list = query(statement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
 			if(!list.isEmpty() && targetClass != null) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
@@ -247,30 +247,50 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
-		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
-		List rootList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, parameters);
+		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
+		List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+		recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
 		
 		if(!rootList.isEmpty() && targetClass != null) 
 			rootList = listMap2listClass(targetClass, rootList);
 		
-		recursiveSqlStatement.removeParentValueList(parameters);
+		statement.removeParentValueList(parameters);
 		return rootList;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, List<Object> parameters) {
+	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement statement, List parentList, int deep, List<Object> parameters) {
 		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
 			// 更新父级主键值, 并进行下一层的数据查询
-			recursiveSqlStatement.updateParentValueList(parentList);
-			List subList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, parameters);
+			statement.updateParentValueList(parentList);
+			List childrenList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+			recursiveQuery_(targetClass, statement, childrenList, deep-1, parameters);
 			
-			// 将parentList和subList, 使用childNodeName建立父子层级结构
-			
+			// 将subList与对应的parent建立父子层级结构
+			for (Object parent : parentList) {
+				buildingPCStruct(((Map<String, Object>)parent), childrenList, statement.getPkColumnName(), statement.getParentPkColumnName(), statement.getChildNodeName());
+			}
 		}
 	}
-	
+	// 构建父子结构
+	private void buildingPCStruct(Map<String, Object> parent, List<Map<String, Object>> childrenList, String pkColumnName, String parentPkColumnName, String childNodeName) {
+		List<Map<String, Object>> sl = null;
+		if(!childrenList.isEmpty()) {
+			Object pid = parent.get(pkColumnName);
+			for(int i=0;i<childrenList.size();i++) {
+				if(childrenList.get(i).get(parentPkColumnName).equals(pid)) { 
+					if(sl == null)
+						sl = new ArrayList<Map<String, Object>>();
+					sl.add(childrenList.remove(i));
+					i--;
+				}
+			}
+		}
+		
+		if(sl == null)
+			sl = Collections.emptyList();
+		parent.put(childNodeName, sl);
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")

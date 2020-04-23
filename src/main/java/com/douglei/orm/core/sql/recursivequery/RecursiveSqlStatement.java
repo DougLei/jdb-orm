@@ -26,13 +26,18 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 		setParentValueList(parentValue);
 	}
 	
-	/**
-	 * 获取存储父级主键的列名
-	 * @return
-	 */
+	
+	public String getPkColumnName() {
+		return pkColumnName;
+	}
 	public String getParentPkColumnName() {
 		return parentPkColumnName;
 	}
+	public String getChildNodeName() {
+		return childNodeName;
+	}
+	
+	
 	/**
 	 * 父级主键值是否有null
 	 * @return
@@ -47,13 +52,7 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	public int parentValueListSize() {
 		return parentValueList.size();
 	}
-	/**
-	 * 获取父级存储子集的节点名称
-	 * @return
-	 */
-	public String getChildNodeName() {
-		return childNodeName;
-	}
+	
 
 	/**
 	 * 设置父级主键值集合
