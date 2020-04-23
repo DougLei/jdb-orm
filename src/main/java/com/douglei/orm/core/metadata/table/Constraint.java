@@ -140,7 +140,7 @@ public class Constraint implements Serializable{
 						break;
 				}
 			}
-			this.name = EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().fixDBObjectName(nameBuilder.toString());// 设置约束名
+			this.name = EnvironmentContext.getDialect().getDBObjectHandler().fixDBObjectName(nameBuilder.toString());// 设置约束名
 			processConstraint = true;
 		}
 	}

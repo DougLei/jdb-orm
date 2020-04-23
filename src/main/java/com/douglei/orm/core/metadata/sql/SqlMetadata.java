@@ -56,7 +56,7 @@ public class SqlMetadata implements Metadata{
 	
 	// 获取所有满足方言的content集合
 	private List<ContentMetadata> getAllContents(){
-		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		DialectType currentDialectType = EnvironmentContext.getDialect().getType();
 		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
 		for (ContentMetadata content : contents) {
 			if(content.isMatchingDialectType(currentDialectType)) {
@@ -68,7 +68,7 @@ public class SqlMetadata implements Metadata{
 	
 	// 获取指定name的content集合
 	private List<ContentMetadata> getContentByName(String name) {
-		DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
+		DialectType currentDialectType = EnvironmentContext.getDialect().getType();
 		List<ContentMetadata> list = new ArrayList<ContentMetadata>(1);
 		for (ContentMetadata content : contents) {
 			if(content.getName().equals(name) && content.isMatchingDialectType(currentDialectType)) {

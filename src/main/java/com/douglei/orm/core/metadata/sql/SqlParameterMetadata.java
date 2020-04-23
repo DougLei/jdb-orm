@@ -123,7 +123,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	private void setDataType(String dataType) {
 		if(MappingXmlConfigContext.getContentType() != ContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
 				this.dataType = mapping.getDefaultClassDataTypeHandler();
 			}else {
@@ -134,7 +134,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	private void setDBDataType(String typeName) {
 		if(MappingXmlConfigContext.getContentType() == ContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping();
+			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
 				this.dataType = mapping.getDefaultDBDataTypeHandler();
 			}else {

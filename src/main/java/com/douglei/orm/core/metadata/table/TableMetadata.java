@@ -54,7 +54,7 @@ public class TableMetadata implements Metadata{
 	
 	// 设置name的同时, 对name进行验证
 	private void setNameByValidate(String name, String oldName) {
-		EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;

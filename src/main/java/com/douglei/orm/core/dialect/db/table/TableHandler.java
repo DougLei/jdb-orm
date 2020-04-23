@@ -476,7 +476,7 @@ public class TableHandler {
 	 * @param tableMappings
 	 */
 	public void create(DataSourceWrapper dataSourceWrapper, List<Mapping> tableMappings) {
-		TableSqlStatementHandler tableSqlStatementHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getTableSqlStatementHandler();
+		TableSqlStatementHandler tableSqlStatementHandler = EnvironmentContext.getDialect().getTableSqlStatementHandler();
 		List<String> tableMappingCodes = new ArrayList<String>(tableMappings.size());
 		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tableMappings.size()*2);
 		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
@@ -671,8 +671,8 @@ public class TableHandler {
 		if(EnvironmentContext.getEnvironmentProperty().enableColumnDynamicUpdateValidate()) {
 			boolean isModifyColumn = false;
 			if(column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler())) {
-				if(!EnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
-					throw new ColumnModifyException("在数据库["+EnvironmentContext.getEnvironmentProperty().getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
+				if(!EnvironmentContext.getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
+					throw new ColumnModifyException("在数据库["+EnvironmentContext.getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
 				}
 				isModifyColumn = true;
 			}
@@ -719,7 +719,7 @@ public class TableHandler {
 	 * @param tableMappings
 	 */
 	public void drop(DataSourceWrapper dataSourceWrapper, List<Mapping> tableMappings) {
-		TableSqlStatementHandler tableSqlStatementHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getTableSqlStatementHandler();
+		TableSqlStatementHandler tableSqlStatementHandler = EnvironmentContext.getDialect().getTableSqlStatementHandler();
 		List<DBObjectHolder> dbObjectHolders = new ArrayList<DBObjectHolder>(tableMappings.size()*2);
 		List<SerializeObjectHolder> serializeObjectHolders = new ArrayList<SerializeObjectHolder>(tableMappings.size());
 		

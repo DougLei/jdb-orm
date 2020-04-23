@@ -33,9 +33,9 @@ public class Index implements Serializable{
 		return name;
 	}
 	public String getCreateSqlStatement() {
-		return createSqlStatements.get(EnvironmentContext.getEnvironmentProperty().getDialect().getType());
+		return createSqlStatements.get(EnvironmentContext.getDialect().getType());
 	}
 	public String getDropSqlStatement() {
-		return dropSqlStatements.get(EnvironmentContext.getEnvironmentProperty().getDialect().getType());
+		return dropSqlStatements.get(EnvironmentContext.getDialect().getType());
 	}
 }

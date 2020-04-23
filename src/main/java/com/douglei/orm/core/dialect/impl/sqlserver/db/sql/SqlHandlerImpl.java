@@ -14,14 +14,19 @@ public class SqlHandlerImpl implements SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
-	public String installPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
+	public boolean needExtractOrderByClause() {
+		return true;
+	}
+
+	@Override
+	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		int maxIndex = pageNum*pageSize;
 		
 		StringBuilder pageQuerySql = new StringBuilder(240 + statement.getWithClause().length() + statement.getSql().length());
 		pageQuerySql.append(statement.getWithClause());
 		pageQuerySql.append(" SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");
 		pageQuerySql.append(maxIndex);
-		pageQuerySql.append(" ROW_NUMBER() OVER(").append(updatePageSqlStatement(statement).getOrderBySql()).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
+		pageQuerySql.append(" ROW_NUMBER() OVER(").append(statement.getOrderByClause()==null?"ORDER BY CURRENT_TIMESTAMP":statement.getOrderByClause()).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
 		pageQuerySql.append(maxIndex-pageSize);
@@ -29,20 +34,5 @@ public class SqlHandlerImpl implements SqlHandler{
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql.toString());
 		}
 		return pageQuerySql.toString();
-	}
-	
-	/**
-	 * 更新分页查询对象
-	 * 1.从orderByInfo参数取
-	 * 2.如果orderByInfo为null, 再尝试提取originSql语句中最后的一个order by子句的内容, 并将order by子句从originSql中移除
-	 * 3.如果没有提取到, 则使用默认的order by值: current_timestamp
-	 * @param statement
-	 * @return
-	 */
-	private PageSqlStatement updatePageSqlStatement(PageSqlStatement statement) {
-		if(!new OrderBySqlResolver().resolving(statement))
-			statement.setOrderBySql("CURRENT_TIMESTAMP");
-		
-		return statement;
 	}
 }

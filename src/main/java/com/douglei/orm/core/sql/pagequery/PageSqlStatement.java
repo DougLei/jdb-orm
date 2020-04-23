@@ -1,5 +1,6 @@
 package com.douglei.orm.core.sql.pagequery;
 
+import com.douglei.orm.core.dialect.db.sql.SqlHandler;
 import com.douglei.orm.core.sql.SqlStatement;
 
 /**
@@ -7,24 +8,26 @@ import com.douglei.orm.core.sql.SqlStatement;
  * @author DougLei
  */
 public class PageSqlStatement extends SqlStatement{
-	private String orderBySql;
-	
-	public PageSqlStatement(String originSql) {
-		super(originSql);
+
+	public PageSqlStatement(SqlHandler sqlHandler, String originSql) {
+		super(sqlHandler, originSql);
+	}
+
+	/**
+	 * 获取查询总数量的sql语句
+	 * @return
+	 */
+	public final String getCountSql() {
+		return withClause + " SELECT COUNT(1) FROM ("+sql+") JDB_ORM_QC_";
 	}
 	
 	/**
-	 * 修改sql语句
-	 * @param sql
+	 * 获取分页查询的sql语句
+	 * @param pageNum 第几页
+	 * @param pageSize 一页显示的数量
+	 * @return
 	 */
-	public void updateSql(String sql) {
-		super.sql = sql;
-	}
-	
-	public String getOrderBySql() {
-		return orderBySql;
-	}
-	public void setOrderBySql(String orderBySql) {
-		this.orderBySql = orderBySql;
+	public String getPageQuerySql(int pageNum, int pageSize) {
+		return sqlHandler.getPageQuerySql(pageNum, pageSize, this);
 	}
 }

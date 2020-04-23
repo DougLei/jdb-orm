@@ -3,6 +3,7 @@ package com.douglei.orm.sessionfactory.sessions.session.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.sql.SqlStatement;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
@@ -17,7 +18,7 @@ public class ExecutionSql {
 	
 	public ExecutionSql(ExecuteHandler executionHandler) {
 		this.executionHandler = executionHandler;
-		this.sql = new SqlStatement(executionHandler.getCurrentSql());
+		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlHandler(), executionHandler.getCurrentSql());
 		this.parameters = executionHandler.getCurrentParameters();
 	}
 	
@@ -35,6 +36,15 @@ public class ExecutionSql {
 	 */
 	public String getSql() {
 		return sql.getSql();
+	}
+	
+
+	/**
+	 * 获取order by子句, 如果是select类型的sql
+	 * @return
+	 */
+	public String getOrderByClause() {
+		return sql.getOrderByClause();
 	}
 	
 	/**

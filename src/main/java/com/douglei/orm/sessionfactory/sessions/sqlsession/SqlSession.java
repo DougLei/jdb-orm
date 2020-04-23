@@ -151,47 +151,55 @@ public interface SqlSession {
 	/**
 	 * 递归查询
 	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
-	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
+	 * @param pkColumnName 存储主键的列名, 全大写
+	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称, 没有大小写要求
 	 * @param sql
 	 * @return
 	 */
-	default List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql){
-		return recursiveQuery(deep, parentColumnName, sql, null);
+	default List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql){
+		return recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, null);
 	}
 	/**
 	 * 递归查询
 	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
-	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
+	 * @param pkColumnName 存储主键的列名, 全大写
+	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称, 没有大小写要求
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters);
+	List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
 	
 	/**
 	 * 递归查询
 	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示无限递归
-	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
+	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param pkColumnName 存储主键的列名, 全大写
+	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称, 没有大小写要求
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql);
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql);
 	/**
 	 * 递归查询
 	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示无限递归
-	 * @param parentColumnName 递归语句中, 指定存储父id的列名
-	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null或parentColumnName=''(空字符)的数据
+	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param pkColumnName 存储主键的列名, 全大写
+	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称, 没有大小写要求
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters);
+	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
 	
 	/**
 	 * 执行增删改查操作

@@ -1,17 +1,15 @@
-package com.douglei.orm.core.dialect.impl.sqlserver.db.sql;
+package com.douglei.orm.core.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
-
 
 /**
- * order by解析器
+ * order by子句解析器
  * @author DougLei
  */
-class OrderBySqlResolver {
-	private static final Logger logger = LoggerFactory.getLogger(OrderBySqlResolver.class);
+class OrderByClauseResolver{
+	private static final Logger logger = LoggerFactory.getLogger(OrderByClauseResolver.class);
 	
 	// 记录解析出的每个单词的长度
 	private int wordLength;
@@ -29,12 +27,12 @@ class OrderBySqlResolver {
 	// 记录每次解析出单词后, 转换的关键字实例
 	private KeyWord kw; 
 	
+	
 	/**
-	 * 从分页sql对象中解析出order by信息
+	 * 从sql对象中提取order by子句
 	 * @param statement
-	 * @return 是否解析到order by信息
 	 */
-	public boolean resolving(PageSqlStatement statement) {
+	public void extractOrderByClause(SqlStatement statement) {
 		String sql = statement.getSql();
 		index = sql.length()-1;
 		
@@ -51,9 +49,7 @@ class OrderBySqlResolver {
 						
 						if(kw != null) {
 							logger.debug("找到关键字: {}", kw);
-							if(kw.resolvingOrderBy(sql, index, statement)) {
-								return true;
-							}
+							kw.extractOrderBy(sql, index, statement);
 							break;
 						}
 					}
@@ -73,18 +69,7 @@ class OrderBySqlResolver {
 				}
 			}
 		}
-		return false;
 	}
-	
-	public static void main(String[] args) {
-		PageSqlStatement p = new PageSqlStatement("select * from sys_user    order by name desc");
-		System.out.println(new OrderBySqlResolver().resolving(p));
-		
-		System.out.println(p.getWithClause());
-		System.out.println(p.getSql());
-		System.out.println(p.getOrderBySql());
-	}
-	
 }
 
 /**
@@ -96,21 +81,19 @@ enum KeyWord {
 	BY{ // 可以是order by或group by
 		
 		@Override
-		public boolean resolvingOrderBy(String sql, int index, PageSqlStatement statement) {
+		public void extractOrderBy(String sql, int index, SqlStatement statement) {
 			char c;
 			for(;index>-1;index--) {
 				c = sql.charAt(index);
 				if(!statement.isBlank(c)) {
 					if(c == 'R' || c == 'r') { // order的最后一个字符
 						index-=4;
-						statement.updateSql(sql.substring(0, index));
-						statement.setOrderBySql(sql.substring(index));
-						return true;
+						statement.setSql(sql.substring(0, index));
+						statement.setOrderByClause(sql.substring(index));
 					}
 					break;
 				}
 			}
-			return false;
 		} 
 	}, 
 	HAVING,
@@ -162,13 +145,11 @@ enum KeyWord {
 	}
 	
 	/**
-	 * 解析order by
+	 * 提取order by
 	 * @param sql
 	 * @param index
 	 * @param statement
-	 * @return 是否解析成功
 	 */
-	public boolean resolvingOrderBy(String sql, int index, PageSqlStatement statement) {
-		return false;
+	public void extractOrderBy(String sql, int index, SqlStatement statement) {
 	}
 }

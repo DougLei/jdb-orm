@@ -31,7 +31,7 @@ public class IncludeSqlNode implements SqlNode {
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		if(content.isMatchingDialectType(EnvironmentContext.getEnvironmentProperty().getDialect().getType())) {
+		if(content.isMatchingDialectType(EnvironmentContext.getDialect().getType())) {
 			ExecuteSql executeSql = new ExecuteSql(content, sqlParameter);
 			return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters());
 		}
@@ -40,7 +40,7 @@ public class IncludeSqlNode implements SqlNode {
 
 	@Override
 	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
-		if(content.isMatchingDialectType(EnvironmentContext.getEnvironmentProperty().getDialect().getType())) {
+		if(content.isMatchingDialectType(EnvironmentContext.getDialect().getType())) {
 			ValidationResult result = null;
 			for (SqlNode sqlNode : rootSqlNodes) {
 				if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {

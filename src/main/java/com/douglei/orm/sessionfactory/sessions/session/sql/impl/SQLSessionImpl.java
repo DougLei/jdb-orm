@@ -119,15 +119,21 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter) {
+	public List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
-		return super.recursiveQuery(deep, parentColumnName, parentValue, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+		return super.recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
-	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String namespace, String name, Object sqlParameter) {
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, null);
+		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
-		return super.recursiveQuery(targetClass, deep, parentColumnName, parentValue, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	// 执行update, 传入的sqlParameter为null或对象
@@ -248,7 +254,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					
 					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对procedureSupportDirectlyReturnResultSet=true的数据库有用
-					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getEnvironmentProperty().getDialect().getDBFeatures().supportProcedureDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getDBFeatures().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						

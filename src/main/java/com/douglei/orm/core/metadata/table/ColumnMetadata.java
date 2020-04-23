@@ -57,7 +57,7 @@ public class ColumnMetadata implements Metadata{
 	
 	// 设置name的同时, 对name进行验证
 	private void setNameByValidate(String name, String oldName) {
-		EnvironmentContext.getEnvironmentProperty().getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(name);
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;
@@ -68,7 +68,7 @@ public class ColumnMetadata implements Metadata{
 	
 	// 处理数据类型
 	private void processDataType(DataType dataType, String dataType_, short length, short precision) {
-		this.dataTypeHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
+		this.dataTypeHandler = EnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByCode(dataType==null?dataType_:dataType.getName());
 		this.dbDataType = dataTypeHandler.getDBDataType();
 		this.length = dbDataType.correctInputLength(length);
 		this.precision = dbDataType.correctInputPrecision(this.length, precision);

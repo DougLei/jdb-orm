@@ -244,7 +244,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 				String indexName = null;
 				Map<DialectType, String> createSqlStatements = null;
 				Map<DialectType, String> dropSqlStatements = null;
-				DialectType currentDialectType = EnvironmentContext.getEnvironmentProperty().getDialect().getType();
+				DialectType currentDialectType = EnvironmentContext.getDialect().getType();
 				
 				for (Element indexElement : elements) {
 					if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name"))) {

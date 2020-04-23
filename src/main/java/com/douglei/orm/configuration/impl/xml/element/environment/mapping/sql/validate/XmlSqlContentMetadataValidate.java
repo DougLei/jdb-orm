@@ -100,7 +100,7 @@ public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, Sql
 	private DialectType[] getDialectTypes(Node dialect) {
 		String dialectValue = null; 
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			return new DialectType[] { EnvironmentContext.getEnvironmentProperty().getDialect().getType() };
+			return new DialectType[] { EnvironmentContext.getDialect().getType() };
 		}else {
 			String[] dialectValueArray = dialectValue.split(",");
 			DialectType dt = null;

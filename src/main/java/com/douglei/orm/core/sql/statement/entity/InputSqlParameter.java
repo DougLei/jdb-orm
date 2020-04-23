@@ -34,7 +34,7 @@ public class InputSqlParameter {
 	 */
 	public void update(Object newValue) {
 		this.value = newValue;
-		this.dataTypeHandler = EnvironmentContext.getEnvironmentProperty().getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
+		this.dataTypeHandler = EnvironmentContext.getDialect().getDataTypeHandlerMapping().getDataTypeHandlerByClassType(value);
 		if(logger.isDebugEnabled()) {
 			logger.debug("参数值 {} 没有指定DataTypeHandler, 使用系统解析出的数据类型 {}", value, dataTypeHandler.getClass());
 		}

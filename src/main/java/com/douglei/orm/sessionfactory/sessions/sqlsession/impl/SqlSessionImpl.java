@@ -198,20 +198,18 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			logger.debug("pageSize实际值={}, 将值修正为10", pageSize);
 			pageSize = 10;
 		}
-		PageSqlStatement pageSqlStatement = new PageSqlStatement(sql);
-		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString()); // 查询总数量
+		
+		PageSqlStatement pageSqlStatement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
+		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement);
-			List list = query(sql, parameters);
+			List list = query(pageSqlStatement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
 			if(!list.isEmpty() && targetClass != null) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
 		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("分页查询的结果: {}", pageResult.toString());
-		}
+		logger.debug("分页查询的结果: {}", pageResult);
 		return pageResult;
 	}
 	
@@ -244,44 +242,48 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @return
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List recursiveQuery_(Class targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
-		logger.debug("开始执行递归查询, deep={}, parentColumnName={}, parentValue={}", deep, parentColumnName, parentValue);
-		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(sql);
+	private List recursiveQuery_(Class targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		if(parameters == null)
+			parameters = new ArrayList<Object>();
+		pkColumnName = pkColumnName.toUpperCase();
+		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
+		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(sql, parentPkColumnName, parentValue);
 		
+		EnvironmentContext.getDialect().getSqlHandler().installRecursiveQuerySql(recursiveSqlStatement, parameters);
 		List list = query(sql, parameters);
-		
-//		long count = Integer.parseInt(uniqueQuery_(pageSqlStatement.getWithClause() + " select count(1) from ("+pageSqlStatement.getSql()+") jdb_orm_qt_", parameters)[0].toString()); // 查询总数量
-//		logger.debug("查询到的数据总量为:{}条", count);
-//		PageResult pageResult = new PageResult(pageNum, pageSize, count);
-//		if(count > 0) {
-//			sql = EnvironmentContext.getEnvironmentProperty().getDialect().getSqlHandler().installPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize(), pageSqlStatement);
-//			List list = query(sql, parameters);
-//			if(!list.isEmpty() && targetClass != null) 
-//				list = listMap2listClass(targetClass, list);
-//			pageResult.setResultDatas(list);
-//		}
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("分页查询的结果: {}", pageResult.toString());
-//		}
+		recursiveQuery_(targetClass, recursiveSqlStatement, list, deep, pkColumnName, parentPkColumnName, childNodeName, sql, parameters);
+		recursiveSqlStatement.removeParentValueList(parameters);
 		return null;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String pkColumnName, String parentPkColumnName, String childNodeName, String sql, List<Object> parameters) {
+		if(!parentList.isEmpty()) {
+			recursiveSqlStatement.updateParentValueList(parentList, parentPkColumnName);
+			sql = EnvironmentContext.getDialect().getSqlHandler().installRecursiveQuerySql(recursiveSqlStatement, parameters);
+			
+			
+		}
+		return null;
+	}
+	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> recursiveQuery(int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
-		return recursiveQuery_(null, deep, parentColumnName, parentValue, sql, parameters);
+	public List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		return recursiveQuery_(null, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql) {
-		return recursiveQuery_(targetClass, deep, parentColumnName, parentValue, sql, null);
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql) {
+		return recursiveQuery_(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, null);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String parentColumnName, Object parentValue, String sql, List<Object> parameters) {
-		return recursiveQuery_(targetClass, deep, parentColumnName, parentValue, sql, parameters);
+	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		return recursiveQuery_(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
 
 	/**
