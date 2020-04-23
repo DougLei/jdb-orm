@@ -247,21 +247,22 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
-		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, parentValue);
+		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		List rootList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, childNodeName, parameters);
+		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, parameters);
 		recursiveSqlStatement.removeParentValueList(parameters);
 		return rootList;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String childNodeName, List<Object> parameters) {
+	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, List<Object> parameters) {
 		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
+			// 更新父级主键值, 并进行下一层的数据查询
 			recursiveSqlStatement.updateParentValueList(parentList);
 			List subList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
-			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, childNodeName, parameters);
+			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, parameters);
 			
-			// 将parentList和subList, 使用串起来
+			// 将parentList和subList, 使用childNodeName建立父子层级结构
 			
 		}
 	}
