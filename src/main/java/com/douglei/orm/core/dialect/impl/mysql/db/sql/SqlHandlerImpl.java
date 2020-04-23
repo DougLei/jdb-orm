@@ -10,14 +10,15 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  * 
  * @author DougLei
  */
-public class SqlHandlerImpl implements SqlHandler{
+public class SqlHandlerImpl extends SqlHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlHandlerImpl.class);
 	
 	@Override
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause().length() + statement.getSql().length());
-		pageQuerySql.append(statement.getWithClause());
-		pageQuerySql.append(" SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
+		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause()==null?0:statement.getWithClause().length() + statement.getSql().length() + statement.getOrderByClause()==null?0:statement.getOrderByClause().length());
+		if(statement.getWithClause() != null)
+			pageQuerySql.append(statement.getWithClause()).append(' ');
+		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);

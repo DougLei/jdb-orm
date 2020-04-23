@@ -241,30 +241,29 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @param parameters
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings("rawtypes")
 	private List recursiveQuery_(Class targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
 		if(parameters == null)
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		RecursiveSqlStatement recursiveSqlStatement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, parentPkColumnName, parentValue);
-		
-		EnvironmentContext.getDialect().getSqlHandler().installRecursiveQuerySql(recursiveSqlStatement, parameters);
-		List list = query(sql, parameters);
-		recursiveQuery_(targetClass, recursiveSqlStatement, list, deep, pkColumnName, parentPkColumnName, childNodeName, sql, parameters);
+		List rootList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
+		recursiveQuery_(targetClass, recursiveSqlStatement, rootList, deep-1, pkColumnName, parentPkColumnName, childNodeName, parameters);
 		recursiveSqlStatement.removeParentValueList(parameters);
-		return null;
+		return rootList;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String pkColumnName, String parentPkColumnName, String childNodeName, String sql, List<Object> parameters) {
-		if(!parentList.isEmpty()) {
+	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement recursiveSqlStatement, List parentList, int deep, String pkColumnName, String parentPkColumnName, String childNodeName, List<Object> parameters) {
+		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
 			recursiveSqlStatement.updateParentValueList(parentList, parentPkColumnName);
-			sql = EnvironmentContext.getDialect().getSqlHandler().installRecursiveQuerySql(recursiveSqlStatement, parameters);
+			List subList = query(recursiveSqlStatement.getRecursiveSql(), recursiveSqlStatement.appendParameterValues(parameters));
+			recursiveQuery_(targetClass, recursiveSqlStatement, subList, deep-1, pkColumnName, parentPkColumnName, childNodeName, parameters);
+			
 			
 			
 		}
-		return null;
 	}
 	
 

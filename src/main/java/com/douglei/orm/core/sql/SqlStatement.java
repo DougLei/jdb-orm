@@ -57,9 +57,7 @@ public class SqlStatement {
 	 */
 	private void extractWithClause() {
 		int withClauseEndIndex = withClauseEndIndex();
-		if(withClauseEndIndex == -1) {
-			withClause = ""; 
-		}else {
+		if(withClauseEndIndex > -1) {
 			withClause = sql.substring(0, withClauseEndIndex);
 			sql = sql.substring(withClauseEndIndex);
 		}

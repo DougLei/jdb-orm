@@ -150,7 +150,7 @@ public interface SqlSession {
 	
 	/**
 	 * 递归查询
-	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
 	 * @param pkColumnName 存储主键的列名, 全大写
 	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
 	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
@@ -163,7 +163,7 @@ public interface SqlSession {
 	}
 	/**
 	 * 递归查询
-	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
 	 * @param pkColumnName 存储主键的列名, 全大写
 	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
 	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
@@ -177,7 +177,7 @@ public interface SqlSession {
 	/**
 	 * 递归查询
 	 * @param targetClass
-	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
 	 * @param pkColumnName 存储主键的列名, 全大写
 	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
 	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
@@ -190,7 +190,7 @@ public interface SqlSession {
 	/**
 	 * 递归查询
 	 * @param targetClass
-	 * @param deep 递归的深度, -1表示无限递归, 默认值为2
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
 	 * @param pkColumnName 存储主键的列名, 全大写
 	 * @param parentPkColumnName 存储父级主键的列名, 没有大小写要求
 	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
-import com.douglei.orm.core.sql.SqlStatement;
+import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 /**
  *递归查询用的sql语句对象
  * @author DougLei
  */
-public class RecursiveSqlStatement extends SqlStatement {
+public class RecursiveSqlStatement extends PageSqlStatement {
 	private String parentPkColumnName; // 存储父级主键的列名
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
@@ -35,6 +35,13 @@ public class RecursiveSqlStatement extends SqlStatement {
 	 */
 	public boolean parentValueExistNull() {
 		return parentValueExistNull;
+	}
+	/**
+	 * 获取父级主键值集合的长度
+	 * @return
+	 */
+	public int parentValueListSize() {
+		return parentValueList.size();
 	}
 
 	/**
@@ -104,13 +111,15 @@ public class RecursiveSqlStatement extends SqlStatement {
 	/**
 	 * 将父级主键值集合追加到sql参数集合后
 	 * @param parameters
+	 * @return 返回参数parameters
 	 */
-	public void appendParameterValues(List<Object> parameters) {
+	public List<Object> appendParameterValues(List<Object> parameters) {
 		removeParentValueList(parameters);
 		for (Object parentValue : parentValueList) {
 			parameters.add(parentValue);
 			lastParentValueListSize++;
 		}
+		return parameters;
 	}
 	
 	/**
@@ -125,5 +134,28 @@ public class RecursiveSqlStatement extends SqlStatement {
 				lastParentValueListSize--;
 			}
 		}
+	}
+	
+	/**
+	 * 获取递归查询sql
+	 * @return
+	 */
+	public String getRecursiveSql() {
+		return sqlHandler.getRecursiveSql(this);
+	}
+	
+	
+	/**
+	 * 递归查询的sql缓存
+	 */
+	private StringBuilder recursiveQuerySqlCache;
+	private int recursiveQuerySqlEndIndex;
+	public StringBuilder getRecursiveQuerySqlCache() {
+		recursiveQuerySqlCache.setLength(recursiveQuerySqlEndIndex);
+		return recursiveQuerySqlCache;
+	}
+	public void setRecursiveQuerySqlCache(StringBuilder recursiveQuerySql) {
+		this.recursiveQuerySqlCache = recursiveQuerySql;
+		this.recursiveQuerySqlEndIndex = recursiveQuerySql.length();
 	}
 }
