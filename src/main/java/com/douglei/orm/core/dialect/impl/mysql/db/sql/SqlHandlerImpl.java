@@ -15,7 +15,7 @@ public class SqlHandlerImpl extends SqlHandler{
 	
 	@Override
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		StringBuilder pageQuerySql = new StringBuilder(80 + statement.getWithClause()==null?0:statement.getWithClause().length() + statement.getSql().length() + statement.getOrderByClause()==null?0:statement.getOrderByClause().length());
+		StringBuilder pageQuerySql = new StringBuilder(80 + statement.length());
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");

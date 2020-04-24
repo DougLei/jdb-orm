@@ -29,6 +29,8 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.utils.naming.converter.ConverterUtil;
+import com.douglei.tools.utils.naming.converter.impl.PropertyName2ColumnNameConverter;
 
 /**
  * 执行sql语句的session实现类
@@ -246,6 +248,10 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(parameters == null)
 			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
+		parentPkColumnName = parentPkColumnName.toUpperCase();
+		if(targetClass != null)
+			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+		
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
@@ -314,12 +320,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	/**
 	 * listMap转换为listClass
 	 * @param targetClass
-	 * @param listMap
+	 * @param resultListMap
 	 * @return
 	 */
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
-		List<T> listT = new ArrayList<T>(listMap.size());
-		for (Map<String, Object> map : listMap) {
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
+		List<T> listT = new ArrayList<T>(resultListMap.size());
+		for (Map<String, Object> map : resultListMap) {
 			listT.add(map2Class(targetClass, map));
 		}
 		return listT;
@@ -328,11 +334,11 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	/**
 	 * 将map转换为类
 	 * @param targetClass
-	 * @param map
+	 * @param resultMap
 	 * @return
 	 */
-	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
-		return ResultSetMapConvertUtil.toClass(map, targetClass);
+	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
+		return ResultSetMapConvertUtil.toClass(resultMap, targetClass);
 	}
 
 	

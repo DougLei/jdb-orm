@@ -160,7 +160,8 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	private StringBuilder recursiveQuerySqlCache;
 	private int recursiveQuerySqlEndIndex;
 	public StringBuilder getRecursiveQuerySqlCache() {
-		recursiveQuerySqlCache.setLength(recursiveQuerySqlEndIndex);
+		if(recursiveQuerySqlCache != null)
+			recursiveQuerySqlCache.setLength(recursiveQuerySqlEndIndex);
 		return recursiveQuerySqlCache;
 	}
 	public void setRecursiveQuerySqlCache(StringBuilder recursiveQuerySql) {

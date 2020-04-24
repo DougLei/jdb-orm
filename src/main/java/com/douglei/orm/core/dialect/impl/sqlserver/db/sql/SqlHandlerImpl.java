@@ -22,7 +22,7 @@ public class SqlHandlerImpl extends SqlHandler{
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		int maxIndex = pageNum*pageSize;
 		
-		StringBuilder pageQuerySql = new StringBuilder(240 + statement.getWithClause()==null?0:statement.getWithClause().length() + statement.getSql().length() + statement.getOrderByClause()==null?0:statement.getOrderByClause().length());
+		StringBuilder pageQuerySql = new StringBuilder(240 + statement.length());
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		pageQuerySql.append(" SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");

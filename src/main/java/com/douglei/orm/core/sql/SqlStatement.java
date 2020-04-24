@@ -138,6 +138,13 @@ public class SqlStatement {
 		return c == ' ' || c == '\r' || c == '\n' || c == '\t';
 	}
 	
+	/**
+	 * 获取sql语句的总length
+	 * @return
+	 */
+	public int length() {
+		return (withClause==null?0:withClause.length()) + sql.length() + (orderByClause==null?0:orderByClause.length());
+	}
 	public String getWithClause() {
 		return withClause;
 	}

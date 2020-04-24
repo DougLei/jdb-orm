@@ -37,7 +37,7 @@ public abstract class SqlHandler {
 	public String getRecursiveSql(RecursiveSqlStatement statement) {
 		StringBuilder recursiveQuerySql = statement.getRecursiveQuerySqlCache();
 		if(recursiveQuerySql == null) {
-			recursiveQuerySql = new StringBuilder(85 + statement.getWithClause().length() + statement.getSql().length() + statement.getOrderByClause()==null?0:statement.getOrderByClause().length());
+			recursiveQuerySql = new StringBuilder(86 + statement.length());
 			
 			if(statement.getWithClause() != null)
 				recursiveQuerySql.append(statement.getWithClause()).append(' ');
@@ -62,7 +62,7 @@ public abstract class SqlHandler {
 			if(parentValueListSize == 1) {
 				recursiveQuerySql.append("=?");
 			}else {
-				recursiveQuerySql.append("IN (");
+				recursiveQuerySql.append(" IN (");
 				for(int i=0;i<parentValueListSize;i++) {
 					recursiveQuerySql.append('?');
 					if(i < parentValueListSize-1)

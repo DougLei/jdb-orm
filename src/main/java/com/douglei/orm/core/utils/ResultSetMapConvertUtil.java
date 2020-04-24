@@ -1,7 +1,6 @@
 package com.douglei.orm.core.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,28 +18,16 @@ public class ResultSetMapConvertUtil {
 	
 	/**
 	 * 将resultset map的key, 由列名转换成属性名
-	 * @param originResultsetMap
 	 * @return
 	 */
-	private static Map<String, Object> resultsetMapKey2PropertyName_(Map<String, Object> originResultsetMap) {
-		Map<String, Object> targetMap = new HashMap<String, Object>(originResultsetMap.size());
-		Set<String> keys = originResultsetMap.keySet();
+	private static void resultsetMapKey2PropertyName_(Map<String, Object> resultsetMap) {
+		Set<String> keys = resultsetMap.keySet();
 		for (String key : keys) {
-			targetMap.put(ConverterUtil.convert(key, ColumnName2PropertyNameConverter.class), originResultsetMap.get(key));
+			resultsetMap.put(ConverterUtil.convert(key, ColumnName2PropertyNameConverter.class), resultsetMap.get(key));
 		}
-		return targetMap;
-	}
-	
-	/**
-	 * 将resultset map的key, 由列名转换成属性名
-	 * @param originResultsetMap
-	 * @return
-	 */
-	public static Map<String, Object> resultsetMapKey2PropertyName(Map<String, Object> resultsetMap) {
-		if(resultsetMap != null && resultsetMap.size() > 0) {
-			return resultsetMapKey2PropertyName_(resultsetMap);
+		for (String key : keys) {
+			resultsetMap.remove(key);
 		}
-		return null;
 	}
 	
 	/**
@@ -52,7 +39,9 @@ public class ResultSetMapConvertUtil {
 		if(resultsetListMap!= null && resultsetListMap.size()>0) {
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(resultsetListMap.size());
 			for (Map<String, Object> resultsetMap : resultsetListMap) {
-				list.add(resultsetMapKey2PropertyName(resultsetMap));
+				if(resultsetMap != null && !resultsetMap.isEmpty()) 
+					resultsetMapKey2PropertyName_(resultsetMap);
+				list.add(resultsetMap);
 			}
 			return list;
 		}
@@ -68,7 +57,7 @@ public class ResultSetMapConvertUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T toClass(Map<String, Object> resultsetMap, Class<T> targetClass) {
 		if(resultsetMap != null && resultsetMap.size() > 0) {
-			resultsetMap = resultsetMapKey2PropertyName_(resultsetMap);
+			resultsetMapKey2PropertyName_(resultsetMap);
 			return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultsetMap);
 		}
 		return null;

@@ -375,36 +375,36 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-		List<T> listT = new ArrayList<T>(listMap.size());
-		for (Map<String, Object> map : listMap) {
-			listT.add(map2Class(targetClass, map, tableMetadata));
+		List<T> listT = new ArrayList<T>(resultListMap.size());
+		for (Map<String, Object> resultMap : resultListMap) {
+			listT.add(map2Class(targetClass, resultMap, tableMetadata));
 		}
 		return listT;
 	}
 
 	@Override
-	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> map) {
-		return map2Class(targetClass, map, getTableMetadata(targetClass.getName()));
+	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
+		return map2Class(targetClass, resultMap, getTableMetadata(targetClass.getName()));
 	}
 	
 	/**
 	 * 将map转换为类 <内部方法>
 	 * @param targetClass
-	 * @param map
+	 * @param resultMap
 	 * @param tableMetadata
 	 * @return
 	 */
-	private <T> T map2Class(Class<T> targetClass, Map<String, Object> map, TableMetadata tableMetadata) {
+	private <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap, TableMetadata tableMetadata) {
 		// 将map的key, 由列名转换成映射中的column.code
 		ColumnMetadata column = null;
 		Set<String> codes = tableMetadata.getColumnCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnByCode(code);
-			map.put(column.getCode(), map.get(column.getName()));
+			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
 		}
-		return IntrospectorUtil.mapToClass(map, targetClass);
+		return IntrospectorUtil.mapToClass(resultMap, targetClass);
 	}
 
 	
