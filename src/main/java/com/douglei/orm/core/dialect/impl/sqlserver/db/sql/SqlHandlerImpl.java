@@ -30,7 +30,7 @@ public class SqlHandlerImpl extends SqlHandler{
 		pageQuerySql.append(maxIndex);
 		pageQuerySql.append(" ROW_NUMBER() OVER(").append((statement.getOrderByClause()==null?"ORDER BY CURRENT_TIMESTAMP":statement.getOrderByClause())).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ +这里加上递归的条件语句+ ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
 		pageQuerySql.append(maxIndex-pageSize);
 		if(logger.isDebugEnabled()) 
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
@@ -38,8 +38,24 @@ public class SqlHandlerImpl extends SqlHandler{
 	}
 
 	@Override
-	public String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement pageRecursiveSqlStatement) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement statement) {
+		int maxIndex = pageNum*pageSize;
+		
+		StringBuilder pageQuerySql = new StringBuilder(340 + statement.length());
+		if(statement.getWithClause() != null)
+			pageQuerySql.append(statement.getWithClause()).append(' ');
+		pageQuerySql.append("SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");
+		pageQuerySql.append(maxIndex);
+		pageQuerySql.append(" ROW_NUMBER() OVER(").append((statement.getOrderByClause()==null?"ORDER BY CURRENT_TIMESTAMP":statement.getOrderByClause())).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
+		pageQuerySql.append(statement.getSql());
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ WHERE ");
+		
+		appendConditionSql2RecursiveSql(pageQuerySql, statement);
+		
+		pageQuerySql.append(" ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
+		pageQuerySql.append(maxIndex-pageSize);
+		if(logger.isDebugEnabled()) 
+			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
+		return pageQuerySql.toString();
 	}
 }
