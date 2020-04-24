@@ -68,7 +68,7 @@ public abstract class SqlHandler {
 	}
 	
 	/**
-	 * 给递归查询sql语句追加条件
+	 * 给递归查询的sql语句追加条件
 	 * @param recursiveQuerySql
 	 * @param statement
 	 */
