@@ -13,6 +13,16 @@ public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 		super(sqlHandler, originSql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 	}
 	
+	@Override
+	public String getCountSql() {
+		StringBuilder countSql = new StringBuilder(50 + length());
+		if(getWithClause() != null)
+			countSql.append(getWithClause()).append(' ');
+		countSql.append("SELECT COUNT(1) FROM (").append(sql).append(") JDB_ORM_QC_ WHERE ");
+		sqlHandler.appendConditionSql2RecursiveSql(countSql, this);
+		return countSql.toString();
+	}
+	
 	/**
 	 * 获取分页递归查询sql
 	 * @param pageNum
@@ -20,6 +30,6 @@ public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 	 * @return
 	 */
 	public String getPageRecursiveQuerySql(int pageNum, int pageSize) {
-		return sqlHandler.getPageRecursiveQuerySql(pageNum, pageSize, this);
+		return sqlHandler.getPageQuerySql(pageNum, pageSize, this);
 	}
 }

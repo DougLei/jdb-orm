@@ -17,7 +17,7 @@ public class PageSqlStatement extends SqlStatement{
 	 * 获取查询总数量的sql语句
 	 * @return
 	 */
-	public final String getCountSql() {
+	public String getCountSql() {
 		return (withClause==null?"":withClause) + " SELECT COUNT(1) FROM ("+sql+") JDB_ORM_QC_";
 	}
 	

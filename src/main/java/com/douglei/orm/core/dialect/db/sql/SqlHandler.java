@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
-import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 
 /**
@@ -30,15 +29,6 @@ public abstract class SqlHandler {
 	 * @return
 	 */
 	public abstract String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement);
-	
-	/**
-	 * 获取分页递归查询的sql语句
-	 * @param pageNum
-	 * @param pageSize
-	 * @param pageRecursiveSqlStatement
-	 * @return
-	 */
-	public abstract String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement pageRecursiveSqlStatement);
 	
 	/**
 	 * 获取递归查询的sql语句
@@ -72,7 +62,8 @@ public abstract class SqlHandler {
 	 * @param recursiveQuerySql
 	 * @param statement
 	 */
-	protected final void appendConditionSql2RecursiveSql(StringBuilder recursiveQuerySql, RecursiveSqlStatement statement) { 
+	public final void appendConditionSql2RecursiveSql(StringBuilder recursiveQuerySql, RecursiveSqlStatement statement) { 
+		recursiveQuerySql.append('(');
 		int parentValueListSize = statement.parentValueListSize();
 		if(statement.parentValueExistNull()) {
 			recursiveQuerySql.append(statement.getParentPkColumnName()).append(" IS NULL");
@@ -96,5 +87,6 @@ public abstract class SqlHandler {
 				recursiveQuerySql.append(')');
 			}
 		}
+		recursiveQuerySql.append(')');
 	}
 }

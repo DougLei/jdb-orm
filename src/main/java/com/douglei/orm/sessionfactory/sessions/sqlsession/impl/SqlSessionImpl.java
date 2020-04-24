@@ -348,12 +348,11 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
 		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
-		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
-		？？？// 这个也要加上递归查询条件
+		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), statement.appendParameterValues(parameters))[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			List rootList = query(statement.getPageRecursiveQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), statement.appendParameterValues(parameters));
+			List rootList = query(statement.getPageRecursiveQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
 			recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
 			
 			if(targetClass != null && !rootList.isEmpty()) 

@@ -16,31 +16,16 @@ public class SqlHandlerImpl extends SqlHandler{
 	
 	@Override
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		StringBuilder pageQuerySql = new StringBuilder(80 + statement.length());
-		if(statement.getWithClause() != null)
-			pageQuerySql.append(statement.getWithClause()).append(' ');
-		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
-		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ LIMIT ");
-		pageQuerySql.append((pageNum-1)*pageSize);
-		pageQuerySql.append(",");
-		pageQuerySql.append(pageSize);
-		if(logger.isDebugEnabled()) 
-			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
-		return pageQuerySql.toString();
-	}
-
-	@Override
-	public String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement statement) {
 		StringBuilder pageQuerySql = new StringBuilder(180 + statement.length());
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ WHERE ");
-		
-		appendConditionSql2RecursiveSql(pageQuerySql, statement);
-		
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
+		if(statement instanceof PageRecursiveSqlStatement) { // 分页递归查询
+			pageQuerySql.append(" WHERE ");
+			appendConditionSql2RecursiveSql(pageQuerySql, (PageRecursiveSqlStatement)statement);
+		}
 		pageQuerySql.append(" LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);
 		pageQuerySql.append(",");
