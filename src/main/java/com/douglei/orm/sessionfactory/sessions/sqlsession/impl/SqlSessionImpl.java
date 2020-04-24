@@ -195,11 +195,11 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private PageResult pageQuery_(Class targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		if(pageNum < 0) 
 			pageNum = 1;
 		if(pageSize < 0)
 			pageSize = 10;
+		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
 		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
@@ -253,8 +253,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		parentPkColumnName = parentPkColumnName.toUpperCase();
 		if(targetClass != null)
 			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
-		
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
+		
 		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
 		recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
@@ -345,7 +345,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		parentPkColumnName = parentPkColumnName.toUpperCase();
 		if(targetClass != null)
 			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
-		
 		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
 		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
@@ -353,12 +352,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			List rootList = query(statement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
-			
-			
-			List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
-			
-			
+			List rootList = query(statement.getPageRecursiveQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), statement.appendParameterValues(parameters));
+			recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
 			
 			if(targetClass != null && !rootList.isEmpty()) 
 				rootList = listMap2listClass(targetClass, rootList);
@@ -366,7 +361,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		}else {
 			pageResult.setResultDatas(Collections.emptyList());
 		}
-		logger.debug("分页查询的结果: {}", pageResult);
+		statement.removeParentValueList(parameters);
 		return pageResult;
 	}
 	

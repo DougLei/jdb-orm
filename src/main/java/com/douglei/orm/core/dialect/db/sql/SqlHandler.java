@@ -74,12 +74,8 @@ public abstract class SqlHandler {
 		
 		if(statement.getOrderByClause() != null)
 			recursiveQuerySql.append(' ').append(statement.getOrderByClause());
-		if(logger.isDebugEnabled()) {
+		if(logger.isDebugEnabled())
 			logger.debug("{} 进行递归查询的sql语句为: {}", getClass().getName(), recursiveQuerySql);
-		}
 		return recursiveQuerySql.toString();
-		
-		
-		
 	}
 }

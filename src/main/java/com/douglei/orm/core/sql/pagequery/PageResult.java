@@ -53,7 +53,7 @@ public class PageResult<T> {
 			// 判断请求的页数是否大于总页数, 如果大于总页数, 则修正并记录日志
 			if(pageNum > pageCount) {
 				pageNum = pageCount;
-				logger.info("请求的页数溢出, pageCount={}, pageNum={}, 修正pageNum={}", pageCount, pageNum, pageCount);
+				logger.debug("请求的页数溢出, pageCount={}, pageNum={}, 修正pageNum={}", pageCount, pageNum, pageCount);
 			}
 		}
 	}
