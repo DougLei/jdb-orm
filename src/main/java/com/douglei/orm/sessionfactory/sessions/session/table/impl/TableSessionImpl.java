@@ -30,6 +30,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Uni
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CollectionUtil;
+import com.douglei.tools.utils.reflect.ConstructorUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
@@ -379,32 +380,32 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 		List<T> listT = new ArrayList<T>(resultListMap.size());
 		for (Map<String, Object> resultMap : resultListMap) {
-			listT.add(map2Class(targetClass, resultMap, tableMetadata));
+			listT.add(map2Class(tableMetadata, targetClass, resultMap));
 		}
 		return listT;
 	}
 
 	@Override
 	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
-		return map2Class(targetClass, resultMap, getTableMetadata(targetClass.getName()));
+		return map2Class(getTableMetadata(targetClass.getName()), targetClass, resultMap);
 	}
 	
 	/**
 	 * 将map转换为类 <内部方法>
+	 * @param tableMetadata
 	 * @param targetClass
 	 * @param resultMap
-	 * @param tableMetadata
 	 * @return
 	 */
-	private <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap, TableMetadata tableMetadata) {
-		// 将map的key, 由列名转换成映射中的column.code
+	@SuppressWarnings("unchecked")
+	private <T> T map2Class(TableMetadata tableMetadata, Class<T> targetClass, Map<String, Object> resultMap) {
 		ColumnMetadata column = null;
 		Set<String> codes = tableMetadata.getColumnCodes();
 		for (String code : codes) {
 			column = tableMetadata.getColumnByCode(code);
 			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
 		}
-		return IntrospectorUtil.mapToClass(resultMap, targetClass);
+		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
 	}
 
 	

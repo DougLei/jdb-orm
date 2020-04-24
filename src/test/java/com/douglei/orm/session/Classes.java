@@ -32,4 +32,9 @@ public class Classes {
 	public void setSubClasses(List<Classes> subClasses) {
 		this.subClasses = subClasses;
 	}
+	
+	@Override
+	public String toString() {
+		return "Classes [id=" + id + ", pid=" + pid + ", name=" + name + "]";
+	}
 }

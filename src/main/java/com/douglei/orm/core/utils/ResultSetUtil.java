@@ -40,16 +40,6 @@ public class ResultSetUtil {
 	
 	/**
 	 * 获取ResultSet Map
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException 
-	 */
-	public static Map<String, Object> getResultSetMap(ResultSet resultSet) throws SQLException {
-		return getResultSetMap(getSqlResultSetMetadata(resultSet), resultSet);
-	}
-	
-	/**
-	 * 获取ResultSet Map
 	 * @param resultsetMetadatas
 	 * @param resultSet
 	 * @return
@@ -105,16 +95,6 @@ public class ResultSetUtil {
 	
 	/**
 	 * 获取ResultSet Object[]
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException
-	 */
-	public static Object[] getResultSetArray(ResultSet resultSet) throws SQLException {
-		return getResultSetArray(getSqlResultSetMetadata(resultSet), resultSet);
-	}
-	
-	/**
-	 * 获取ResultSet Object[]
 	 * @param resultsetMetadatas
 	 * @param resultSet
 	 * @return
@@ -130,15 +110,6 @@ public class ResultSetUtil {
 		return array;
 	}
 	
-	/**
-	 * 获取ResultSet List Object[]
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException
-	 */
-	public static List<Object[]> getResultSetListArray(ResultSet resultSet) throws SQLException {
-		return getResultSetListArray(getSqlResultSetMetadata(resultSet), resultSet);
-	}
 	
 	/**
 	 * 获取ResultSet List Object[]

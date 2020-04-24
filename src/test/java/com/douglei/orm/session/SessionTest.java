@@ -28,7 +28,7 @@ public class SessionTest {
 	public void testRecursiveQuery2Class() {
 		String sql = "select id, pid, name from classes order by id asc";
 		
-		List<Classes> list = sf.openSession(false).getSqlSession().recursiveQuery(Classes.class, 0, "id", "pid", "2", "subClasses", sql);
+		List<Classes> list = sf.openSession(false).getSqlSession().recursiveQuery(Classes.class, 0, "id", "pid", null, "subClasses", sql);
 		System.out.println("\n\n" + JSONObject.toJSONString(list));
 	}
 }

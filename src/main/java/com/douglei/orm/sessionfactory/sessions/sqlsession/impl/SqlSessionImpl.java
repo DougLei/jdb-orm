@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,6 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
-import com.douglei.orm.core.utils.ResultSetMapConvertUtil;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectIsExistsException;
@@ -30,7 +30,10 @@ import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
+import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
 import com.douglei.tools.utils.naming.converter.impl.PropertyName2ColumnNameConverter;
+import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -207,7 +210,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
 			List list = query(statement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
-			if(!list.isEmpty() && targetClass != null) 
+			if(targetClass != null && !list.isEmpty()) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
 		}
@@ -257,7 +260,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
 		recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
 		
-		if(!rootList.isEmpty() && targetClass != null) 
+		if(targetClass != null && !rootList.isEmpty()) 
 			rootList = listMap2listClass(targetClass, rootList);
 		
 		statement.removeParentValueList(parameters);
@@ -325,8 +328,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
 		List<T> listT = new ArrayList<T>(resultListMap.size());
+		String[] resultMapColumnKeys = getResultMapColumnKeys(resultListMap.get(0));
 		for (Map<String, Object> map : resultListMap) {
-			listT.add(map2Class(targetClass, map));
+			listT.add(map2Class(resultMapColumnKeys, targetClass, map));
 		}
 		return listT;
 	}
@@ -338,9 +342,41 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @return
 	 */
 	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
-		return ResultSetMapConvertUtil.toClass(resultMap, targetClass);
+		String[] resultMapColumnKeys = getResultMapColumnKeys(resultMap);
+		return map2Class(resultMapColumnKeys, targetClass, resultMap);
 	}
-
+	
+	/**
+	 * 获取结果集map的 Column Key值数组
+	 * @param resultMap
+	 * @return
+	 */
+	private String[] getResultMapColumnKeys(Map<String, Object> resultMap) {
+		String[] resultMapColumnKeys = new String[resultMap.size()];
+		short index = 0;
+		
+		Set<String> keys = resultMap.keySet();
+		for (String key : keys) {
+			resultMapColumnKeys[index++] = key;
+		}
+		return resultMapColumnKeys;
+	}
+	
+	/**
+	 * 将resultMap转为指定的targetClass实例
+	 * @param resultMapColumnKeys
+	 * @param targetClass
+	 * @param resultMap
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T map2Class(String[] resultMapColumnKeys, Class<T> targetClass, Map<String, Object> resultMap) {
+		for (String columnKey : resultMapColumnKeys) {
+			resultMap.put(ConverterUtil.convert(columnKey, ColumnName2PropertyNameConverter.class), resultMap.remove(columnKey));
+		}
+		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
+	}
+	
 	
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
