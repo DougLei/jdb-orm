@@ -17,6 +17,7 @@ import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
@@ -195,14 +196,10 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private PageResult pageQuery_(Class targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
-		if(pageNum < 0) {
-			logger.debug("pageNum实际值={}, 将值修正为1", pageNum);
+		if(pageNum < 0) 
 			pageNum = 1;
-		}
-		if(pageSize < 0) {
-			logger.debug("pageSize实际值={}, 将值修正为10", pageSize);
+		if(pageSize < 0)
 			pageSize = 10;
-		}
 		
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
 		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
@@ -213,6 +210,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(targetClass != null && !list.isEmpty()) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
+		}else {
+			pageResult.setResultDatas(Collections.emptyList());
 		}
 		logger.debug("分页查询的结果: {}", pageResult);
 		return pageResult;
@@ -320,39 +319,74 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		return recursiveQuery_(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
 	
-	
-	
-	
-	
-	
-
-	
+	/**
+	 * 分页递归查询 <内部方法, 不考虑泛型>
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param deep
+	 * @param pkColumnName
+	 * @param parentPkColumnName
+	 * @param parentValue
+	 * @param childNodeName
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private PageResult pageRecursiveQuery_(Class targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		if(pageNum < 0) 
+			pageNum = 1;
+		if(pageSize < 0)
+			pageSize = 10;
+		if(parameters == null)
+			parameters = new ArrayList<Object>();
+		pkColumnName = pkColumnName.toUpperCase();
+		parentPkColumnName = parentPkColumnName.toUpperCase();
+		if(targetClass != null)
+			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+		
+		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
+		
+		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
+		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
+		logger.debug("查询到的数据总量为:{}条", count);
+		PageResult pageResult = new PageResult(pageNum, pageSize, count);
+		if(count > 0) {
+			List rootList = query(statement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
+			
+			
+			List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+			
+			
+			
+			if(targetClass != null && !rootList.isEmpty()) 
+				rootList = listMap2listClass(targetClass, rootList);
+			pageResult.setResultDatas(rootList);
+		}else {
+			pageResult.setResultDatas(Collections.emptyList());
+		}
+		logger.debug("分页查询的结果: {}", pageResult);
+		return pageResult;
+	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+		return pageRecursiveQuery_(null, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql) {
-		// TODO Auto-generated method stub
-		return null;
+		return pageRecursiveQuery_(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, null);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+		return pageRecursiveQuery_(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * listMap转换为listClass

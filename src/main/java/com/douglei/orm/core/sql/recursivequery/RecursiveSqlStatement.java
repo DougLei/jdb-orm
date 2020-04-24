@@ -12,9 +12,9 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  * @author DougLei
  */
 public class RecursiveSqlStatement extends PageSqlStatement {
-	private String pkColumnName; // 存储主键的列名
-	private String parentPkColumnName; // 存储父级主键的列名
-	private String childNodeName; // 父级存储子集的节点名称
+	protected String pkColumnName; // 存储主键的列名
+	protected String parentPkColumnName; // 存储父级主键的列名
+	protected String childNodeName; // 父级存储子集的节点名称
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
 	
