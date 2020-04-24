@@ -21,13 +21,12 @@ public class SqlHandlerImpl extends SqlHandler{
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
-		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ LIMIT ");
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ +这里加上递归的条件语句+ LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);
 		pageQuerySql.append(",");
 		pageQuerySql.append(pageSize);
-		if(logger.isDebugEnabled()) {
+		if(logger.isDebugEnabled()) 
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
-		}
 		return pageQuerySql.toString();
 	}
 

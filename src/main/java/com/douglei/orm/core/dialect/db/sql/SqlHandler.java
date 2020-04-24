@@ -58,7 +58,21 @@ public abstract class SqlHandler {
 			
 			statement.setRecursiveQuerySqlCache(recursiveQuerySql);
 		}
-			
+		appendConditionSql2RecursiveSql(recursiveQuerySql, statement);	
+		
+		if(statement.getOrderByClause() != null)
+			recursiveQuerySql.append(' ').append(statement.getOrderByClause());
+		if(logger.isDebugEnabled())
+			logger.debug("{} 进行递归查询的sql语句为: {}", getClass().getName(), recursiveQuerySql);
+		return recursiveQuerySql.toString();
+	}
+	
+	/**
+	 * 给递归查询sql语句追加条件
+	 * @param recursiveQuerySql
+	 * @param statement
+	 */
+	protected final void appendConditionSql2RecursiveSql(StringBuilder recursiveQuerySql, RecursiveSqlStatement statement) { 
 		int parentValueListSize = statement.parentValueListSize();
 		if(statement.parentValueExistNull()) {
 			recursiveQuerySql.append(statement.getParentPkColumnName()).append(" IS NULL");
@@ -82,11 +96,5 @@ public abstract class SqlHandler {
 				recursiveQuerySql.append(')');
 			}
 		}
-		
-		if(statement.getOrderByClause() != null)
-			recursiveQuerySql.append(' ').append(statement.getOrderByClause());
-		if(logger.isDebugEnabled())
-			logger.debug("{} 进行递归查询的sql语句为: {}", getClass().getName(), recursiveQuerySql);
-		return recursiveQuerySql.toString();
 	}
 }
