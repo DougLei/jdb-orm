@@ -268,20 +268,21 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			
 			// 将subList与对应的parent建立父子层级结构
 			for (Object parent : parentList) {
-				buildingPCStruct(((Map<String, Object>)parent), childrenList, statement.getPkColumnName(), statement.getParentPkColumnName(), statement.getChildNodeName());
+				buildingPCStruct(targetClass, ((Map<String, Object>)parent), childrenList, statement);
 			}
 		}
 	}
 	// 构建父子结构
-	private void buildingPCStruct(Map<String, Object> parent, List<Map<String, Object>> childrenList, String pkColumnName, String parentPkColumnName, String childNodeName) {
-		List<Map<String, Object>> sl = null;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void buildingPCStruct(Class targetClass, Map<String, Object> parent, List<Map<String, Object>> childrenList, RecursiveSqlStatement statement) {
+		List sl = null;
 		if(!childrenList.isEmpty()) {
-			Object pid = parent.get(pkColumnName);
+			Object pid = parent.get(statement.getPkColumnName());
 			for(int i=0;i<childrenList.size();i++) {
-				if(childrenList.get(i).get(parentPkColumnName).equals(pid)) { 
+				if(childrenList.get(i).get(statement.getParentPkColumnName()).equals(pid)) { 
 					if(sl == null)
-						sl = new ArrayList<Map<String, Object>>();
-					sl.add(childrenList.remove(i));
+						sl = new ArrayList();
+					sl.add(targetClass==null?childrenList.remove(i):map2Class(targetClass, childrenList.remove(i)));
 					i--;
 				}
 			}
@@ -289,7 +290,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		
 		if(sl == null)
 			sl = Collections.emptyList();
-		parent.put(childNodeName, sl);
+		parent.put(statement.getChildNodeName(), sl);
 	}
 
 	@Override
