@@ -125,15 +125,21 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, null);
-		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
-	}
-
-	@Override
 	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+	
+	@Override
+	public PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	// 执行update, 传入的sqlParameter为null或对象

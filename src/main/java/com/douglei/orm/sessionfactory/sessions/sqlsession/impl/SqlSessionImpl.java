@@ -319,6 +319,40 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
 		return recursiveQuery_(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, parameters);
 	}
+	
+	
+	
+	
+	
+	
+
+	
+	
+	@Override
+	public PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * listMap转换为listClass

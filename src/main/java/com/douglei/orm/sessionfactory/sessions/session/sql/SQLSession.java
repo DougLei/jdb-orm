@@ -211,7 +211,9 @@ public interface SQLSession {
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
 	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name);
+	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
+		return recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, namespace, null);
+	}
 	/**
 	 * 递归查询
 	 * @param targetClass
@@ -226,6 +228,75 @@ public interface SQLSession {
 	 * @return
 	 */
 	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
+	 * @param pageNum
+	 * @param pageSize
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
+	 * @param pkColumnName 存储主键的列名
+	 * @param parentPkColumnName 存储父级主键的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
+		return pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
+	}
+	/**
+	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
+	 * @param pageNum
+	 * @param pageSize
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
+	 * @param pkColumnName 存储主键的列名
+	 * @param parentPkColumnName 存储父级主键的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
+	 * @param pkColumnName 存储主键的列名
+	 * @param parentPkColumnName 存储父级主键的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
+		return pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, namespace, null);
+	}
+	/**
+	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
+	 * @param targetClass
+	 * @param pageNum
+	 * @param pageSize
+	 * @param deep 递归的深度, 小于等于0表示为无限递归
+	 * @param pkColumnName 存储主键的列名
+	 * @param parentPkColumnName 存储父级主键的列名
+	 * @param parentValue 递归语句中, 父id的(起始)值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentColumnName is null的数据
+	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
+	
+	
+	
 	
 	/**
 	 * 执行增删改查操作
