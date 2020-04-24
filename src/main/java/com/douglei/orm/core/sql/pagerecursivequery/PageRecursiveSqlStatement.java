@@ -20,7 +20,6 @@ public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 	 * @return
 	 */
 	public String getPageRecursiveQuerySql(int pageNum, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlHandler.getPageRecursiveQuerySql(pageNum, pageSize, this);
 	}
 }

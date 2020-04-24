@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 
 /**
@@ -22,19 +23,29 @@ public abstract class SqlHandler {
 	}
 	
 	/**
-	 * 获取成分页查询的sql语句
+	 * 获取分页查询的sql语句
 	 * @param pageNum 
 	 * @param pageSize 
 	 * @param statement
+	 * @return
 	 */
 	public abstract String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement);
+	
+	/**
+	 * 获取分页递归查询的sql语句
+	 * @param pageNum
+	 * @param pageSize
+	 * @param pageRecursiveSqlStatement
+	 * @return
+	 */
+	public abstract String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement pageRecursiveSqlStatement);
 	
 	/**
 	 * 获取递归查询的sql语句
 	 * @param statement
 	 * @return
 	 */
-	public String getRecursiveSql(RecursiveSqlStatement statement) {
+	public final String getRecursiveSql(RecursiveSqlStatement statement) {
 		StringBuilder recursiveQuerySql = statement.getRecursiveQuerySqlCache();
 		if(recursiveQuerySql == null) {
 			recursiveQuerySql = new StringBuilder(86 + statement.length());

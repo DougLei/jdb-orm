@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.dialect.db.sql.SqlHandler;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 
 /**
  * 
@@ -30,5 +31,11 @@ public class SqlHandlerImpl extends SqlHandler{
 			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
 		}
 		return pageQuerySql.toString();
+	}
+
+	@Override
+	public String getPageRecursiveQuerySql(int pageNum, int pageSize, PageRecursiveSqlStatement pageRecursiveSqlStatement) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
