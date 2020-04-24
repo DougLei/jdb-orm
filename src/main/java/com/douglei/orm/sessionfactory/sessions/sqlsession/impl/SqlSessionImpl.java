@@ -349,6 +349,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		
 		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
+		？？？// 这个也要加上递归查询条件
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
