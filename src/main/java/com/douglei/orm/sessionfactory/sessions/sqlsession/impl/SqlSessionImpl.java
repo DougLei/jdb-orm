@@ -268,16 +268,19 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement statement, List parentList, int deep, List<Object> parameters) {
+		List childrenList = null;
 		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
 			// 更新父级主键值, 并进行下一层的数据查询
 			statement.updateParentValueList(parentList);
-			List childrenList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+			childrenList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
 			recursiveQuery_(targetClass, statement, childrenList, deep-1, parameters);
-			
-			// 将subList与对应的parent建立父子层级结构
-			for (Object parent : parentList) {
-				buildingPCStruct(targetClass, ((Map<String, Object>)parent), childrenList, statement);
-			}
+		}
+		if(childrenList == null)
+			childrenList = Collections.emptyList();
+		
+		// 将subList与对应的parent建立父子层级结构
+		for (Object parent : parentList) {
+			buildingPCStruct(targetClass, ((Map<String, Object>)parent), childrenList, statement);
 		}
 	}
 	// 构建父子结构

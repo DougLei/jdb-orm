@@ -37,7 +37,7 @@ public class SessionTest {
 	
 	@Test
 	public void testPageRecursiveQuery2Class() {
-		PageResult<Classes> list = sf.openSession(false).getSqlSession().pageRecursiveQuery(Classes.class, 2, 2, 0, "id", "pid", null, "subClasses", sql);
+		PageResult<Classes> list = sf.openSession(false).getSqlSession().pageRecursiveQuery(Classes.class, 2, 2, 3, "id", "pid", null, "subClasses", sql);
 		System.out.println("\n\n" + JSONObject.toJSONString(list));
 	}
 }
