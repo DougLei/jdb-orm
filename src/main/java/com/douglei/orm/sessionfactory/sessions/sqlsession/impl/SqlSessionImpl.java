@@ -184,6 +184,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		return map2Class(targetClass, map);
 	}
 	
+	@Override
+	public long countQuery(String sql, List<Object> parameters) {
+		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
+		return Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString());
+	}
+
 	/**
 	 * 分页查询 <内部方法, 不考虑泛型>
 	 * @param targetClass
@@ -202,7 +208,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
-		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
+		long count = Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {

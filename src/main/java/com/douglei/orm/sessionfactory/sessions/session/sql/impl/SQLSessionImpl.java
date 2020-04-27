@@ -107,6 +107,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
+	public long countQuery(String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.countQuery(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		return super.pageQuery(pageNum, pageSize, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());

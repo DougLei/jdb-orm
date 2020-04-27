@@ -18,7 +18,12 @@ public class PageSqlStatement extends SqlStatement{
 	 * @return
 	 */
 	public String getCountSql() {
-		return (withClause==null?"":withClause) + " SELECT COUNT(1) FROM ("+sql+") JDB_ORM_QC_";
+		StringBuilder countSql = new StringBuilder(50 + length());
+		if(getWithClause() != null)
+			countSql.append(getWithClause()).append(' ');
+		countSql.append("SELECT COUNT(1) FROM (").append(sql).append(") JDB_ORM_QC_");
+		return countSql.toString();
+		
 	}
 	
 	/**

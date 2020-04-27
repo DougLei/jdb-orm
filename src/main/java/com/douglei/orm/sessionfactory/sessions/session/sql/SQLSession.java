@@ -126,6 +126,25 @@ public interface SQLSession {
 	Object[] uniqueQuery_(String namespace, String name, Object sqlParameter);
 	
 	/**
+	 * 查询结果数据总数量
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @return
+	 */
+	default long countQuery(String namespace, String name) {
+		return countQuery(namespace, name, null);
+	}
+	
+	/**
+	 * 查询结果数据总数量
+	 * @param namespace <sql>元素中的namespace属性值, 不能为空
+	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param sqlParameter
+	 * @return
+	 */
+	long countQuery(String namespace, String name, Object sqlParameter);
+	
+	/**
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize

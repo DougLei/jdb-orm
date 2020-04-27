@@ -109,6 +109,23 @@ public interface SqlSession {
 	Object[] uniqueQuery_(String sql, List<Object> parameters);
 	
 	/**
+	 * 查询结果数据总数量
+	 * @param sql
+	 * @return
+	 */
+	default long countQuery(String sql) {
+		return countQuery(sql, null);
+	}
+	
+	/**
+	 * 查询结果数据总数量
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	long countQuery(String sql, List<Object> parameters);
+	
+	/**
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
