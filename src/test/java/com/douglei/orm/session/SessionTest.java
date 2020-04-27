@@ -40,4 +40,10 @@ public class SessionTest {
 		PageResult<Classes> list = sf.openSession(false).getSqlSession().pageRecursiveQuery(Classes.class, 2, 2, 3, "id", "pid", null, "subClasses", sql);
 		System.out.println("\n\n" + JSONObject.toJSONString(list));
 	}
+	
+	@Test
+	public void testCountQuery() {
+		long count = sf.openSession(false).getSqlSession().countQuery(sql);
+		System.out.println(count);
+	}
 }
