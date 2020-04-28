@@ -160,12 +160,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	@Override
 	public int executeUpdate(String namespace, String name) {
-		return executeUpdate_(namespace, namespace, null);
+		return executeUpdate_(namespace, name, null);
 	}
 
 	@Override
 	public int executeUpdate(String namespace, String name, Object sqlParameter) {
-		return executeUpdate_(namespace, namespace, sqlParameter);
+		return executeUpdate_(namespace, name, sqlParameter);
 	}
 	
 	@Override
