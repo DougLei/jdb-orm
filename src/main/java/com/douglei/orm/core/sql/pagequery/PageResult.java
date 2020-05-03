@@ -91,6 +91,14 @@ public class PageResult<T> {
 	public boolean isLastPage() {
 		return pageNum == pageCount;
 	}
+	
+	/**
+	 * 是否有下一页
+	 * @return
+	 */
+	public boolean hasNextPage() {
+		return pageNum < pageCount;
+	}
 
 	@Override
 	public String toString() {
