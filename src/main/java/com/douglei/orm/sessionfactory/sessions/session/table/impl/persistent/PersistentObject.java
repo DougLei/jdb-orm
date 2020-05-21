@@ -24,17 +24,20 @@ public class PersistentObject extends AbstractPersistentObject{
 	private Identity id;
 	private OperationState operationState;
 	private Object uniqueValue;// 唯一约束的值
+	private boolean updateNullValue; // 修改时使用
 	
-	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState) {
+	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState, boolean updateNullValue) {
 		super(tableMetadata, originObject);
-		setOperationState(operationState);
+		setOperationState(operationState, updateNullValue);
 	}
 	
 	public OperationState getOperationState() {
 		return operationState;
 	}
-	public void setOperationState(OperationState operationState) {
+	public void setOperationState(OperationState operationState, boolean updateNullValue) {
 		this.operationState = operationState;
+		if(operationState == OperationState.UPDATE)
+			this.updateNullValue = updateNullValue;
 	}
 	
 	@Override
@@ -111,7 +114,7 @@ public class PersistentObject extends AbstractPersistentObject{
 			case DELETE:
 				return new DeleteExecuteHandler(tableMetadata, propertyMap);
 			case UPDATE:
-				return new UpdateExecuteHandler(tableMetadata, propertyMap);
+				return new UpdateExecuteHandler(tableMetadata, propertyMap, updateNullValue);
 		}
 		return null;
 	}

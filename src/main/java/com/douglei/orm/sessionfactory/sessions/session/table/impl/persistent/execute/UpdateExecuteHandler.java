@@ -13,9 +13,11 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  * @author DougLei
  */
 public class UpdateExecuteHandler extends TableExecuteHandler{
+	private boolean updateNullValue;
 	
-	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap, boolean updateNullValue) {
 		super(tableMetadata, propertyMap);
+		this.updateNullValue = updateNullValue;
 	}
 
 	@Override
@@ -32,15 +34,22 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 		for (String code : propertyMap.keySet()) {
 			if(!tableMetadata.isPrimaryKeyColumnByCode(code)) {
 				value = propertyMap.get(code);
-				if(value != null) {// 只修改不为空的值
+				if(updateNullValue || value != null) {
 					if(isFirst) {
 						isFirst = false;
 					}else {
 						updateSql.append(", ");
 					}
+					
 					columnMetadata = tableMetadata.getColumnByCode(code);
-					updateSql.append(columnMetadata.getName()).append("=?");
-					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+					updateSql.append(columnMetadata.getName()).append('=');
+					
+					if(value == null) {
+						updateSql.append("null");
+					}else {
+						updateSql.append('?');
+						parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+					}
 				}
 			}
 		}

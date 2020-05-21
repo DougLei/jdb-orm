@@ -37,24 +37,60 @@ public interface TableSession {
 	 * 修改对象
 	 * @param object
 	 */
-	void update(Object object);
+	default void update(Object object) {
+		update(object, false);
+	}
 	/**
 	 * 修改对象
 	 * @param objects
 	 */
-	void update(List<Object> objects);
+	default void update(List<Object> objects) {
+		update(objects, false);
+	}
 	/**
 	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param object
 	 */
-	void update(String code, Object object);
+	default void update(String code, Object object) {
+		update(code, object, false);
+	}
 	/**
 	 * 修改对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param objects
 	 */
-	void update(String code, List<Object> objects);
+	default void update(String code, List<Object> objects) {
+		update(code, objects, false);
+	}
+	
+	/**
+	 * 修改对象
+	 * @param object
+	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
+	 */
+	void update(Object object, boolean updateNullValue);
+	/**
+	 * 修改对象
+	 * @param objects
+	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
+	 */
+	void update(List<Object> objects, boolean updateNullValue);
+	/**
+	 * 修改对象
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param object
+	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
+	 */
+	void update(String code, Object object, boolean updateNullValue);
+	/**
+	 * 修改对象
+	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param objects
+	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
+	 */
+	void update(String code, List<Object> objects, boolean updateNullValue);
+	
 	
 	/**
 	 * 删除对象
