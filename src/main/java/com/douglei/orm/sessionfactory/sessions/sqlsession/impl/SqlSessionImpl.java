@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,6 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectNotExistsExcep
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CollectionUtil;
-import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -62,7 +62,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		StatementHandler statementHandler = null;
 		if(enableStatementCache) {
 			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
-			String code = CryptographyUtil.encodeMD5(sql);
+			String code = DigestUtils.md5Hex(sql);
 			
 			if(statementHandlerCache == null) {
 				statementHandlerCache = new HashMap<String, StatementHandler>(8);

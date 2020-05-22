@@ -17,6 +17,6 @@
 	</environment>
 	
 	<properties placeholderPrefix="${" placeholderSuffix="}">
-		<resource path="jdbc.properties" /><!-- decodeValue标识是否对配置文件中的数据进行解密, 再使用, 默认值为false  -->
+		<resource path="jdbc.properties" />
 	</properties>
 </configuration>

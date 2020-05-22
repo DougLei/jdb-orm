@@ -63,19 +63,19 @@ public class Properties implements SelfProcessing{
 	private void readAndSetProperties(List<Element> resourceElements) {
 		if(resourceElements != null) {
 			String path;
-			boolean decodeValue;
+			boolean decryptValue;
 			PropertiesReader reader = new PropertiesReader();
 			for (Element element : resourceElements) {
 				path = element.attributeValue("path");
 				if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
 					reader.setPath(path);
 					if(reader.ready()) {
-						decodeValue = Boolean.parseBoolean(element.attributeValue("decodeValue"));
+						decryptValue = Boolean.parseBoolean(element.attributeValue("decryptValue"));
 						for (Entry<Object, Object> entry : reader.entrySet()) {
 							if(logger.isDebugEnabled()) {
 								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decodeValue(entry.getValue(), decodeValue));
 							}
-							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decodeValue(entry.getValue(), decodeValue));
+							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decryptValue(entry.getValue(), decryptValue));
 						}
 					}
 				}
@@ -86,12 +86,12 @@ public class Properties implements SelfProcessing{
 	/**
 	 * 解密value值
 	 * @param value
-	 * @param decodeValue
+	 * @param decryptValue
 	 * @return
 	 */
-	private String decodeValue(Object value, boolean decodeValue) {
-		if(decodeValue) {
-			return CryptographyUtil.decodeWithBASE64(value.toString());
+	private String decryptValue(Object value, boolean decryptValue) {
+		if(decryptValue) {
+			return CryptographyUtil.decryptByWithBASE64(value.toString());
 		}
 		return value.toString();
 	}
