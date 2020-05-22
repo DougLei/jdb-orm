@@ -16,16 +16,17 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 	private boolean updateNullValue;
 	
 	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap, boolean updateNullValue) {
-		super(tableMetadata, propertyMap);
+		setBaseInfo(tableMetadata, propertyMap);
 		this.updateNullValue = updateNullValue;
+		initial();
 	}
 
 	@Override
-	protected void initializeInstance() {
+	protected void initial() {
 		StringBuilder updateSql = new StringBuilder(300);
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
-		parameters = new ArrayList<Object>(propertyMap.size());// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(propertyMap.size());
 		
 		// 处理update set
 		boolean isFirst = true;

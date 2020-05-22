@@ -16,16 +16,26 @@ public abstract class TableExecuteHandler implements ExecuteHandler {
 	protected TableMetadata tableMetadata;
 	protected Map<String, Object> propertyMap;
 	
-	public TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+	protected TableExecuteHandler() {}
+	protected TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+		setBaseInfo(tableMetadata, propertyMap);
+		initial();
+	}
+	
+	/**
+	 * 设置基础信息
+	 * @param tableMetadata
+	 * @param propertyMap
+	 */
+	protected void setBaseInfo(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
 		this.tableMetadata = tableMetadata;
 		this.propertyMap = propertyMap;
-		initializeInstance();
 	}
-
+	
 	/**
-	 * 初始化实例
+	 * 初始化
 	 */
-	protected abstract void initializeInstance();
+	protected abstract void initial();
 	
 	
 	protected String sql;

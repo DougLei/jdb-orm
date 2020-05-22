@@ -1,7 +1,6 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -219,6 +218,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 							logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());// 如果修改create=>update, 最后发出的sql语句会不同, 试问一个没有create过的数据, 怎么可能执行成功update 
 						}
 						persistentObject.setOriginObject(object);
+						persistentObject.setUpdateNullValue(updateNullValue);
 						break;
 					case DELETE:
 						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
@@ -282,7 +282,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 						return;
 					case UPDATE:
 						logger.debug("将update状态的数据, 改成delete状态, 完成delete");
-						persistentObject.setOperationState(OperationState.DELETE, false);
+						persistentObject.setOperationState(OperationState.DELETE);
 						return;
 					case DELETE:
 						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
@@ -327,14 +327,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		CollectionUtil.clear(tableMetadataCache);
 		if(enableTalbeSessionCache && !persistentObjectCache.isEmpty()) {
 			Map<Identity, PersistentObject> map = null;
-			Collection<PersistentObject> persistentObjects = null;
 			Set<String> codes = persistentObjectCache.keySet();
 			try {
 				for (String code : codes) {
 					map = persistentObjectCache.get(code);
-					if(map.size() > 0) {
-						persistentObjects = map.values();
-						for(PersistentObject persistentObject: persistentObjects) {
+					if(!map.isEmpty()) {
+						for(PersistentObject persistentObject: map.values()) {
 							executePersistentObject(persistentObject);
 						}
 					}

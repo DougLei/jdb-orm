@@ -19,7 +19,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 	}
 
 	@Override
-	protected void initializeInstance() {
+	protected void initial() {
 		StringBuilder deleteSql = new StringBuilder(200);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
@@ -36,7 +36,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
 		byte size = (byte)primaryKeyColumnMetadataCodes.size();
 		
-		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(size);
 		
 		ColumnMetadata primaryKeyColumnMetadata = null;
 		byte index = 1;
@@ -56,7 +56,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 	// 当不存在primaryKey时, set对应的sql语句
 	private void setSqlWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
 		short size = (short) propertyMap.size();
-		parameters = new ArrayList<Object>(size);// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(size);
 		
 		int index = 1;
 		Object value = null;

@@ -20,7 +20,7 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 	}
 	
 	@Override
-	protected void initializeInstance() {
+	protected void initial() {
 		StringBuilder insertSql = new StringBuilder(300);
 		insertSql.append("insert into ").append(tableMetadata.getName()).append("(");
 		
@@ -28,7 +28,7 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 		values.append(" values(");
 		
 		tableMetadata.setPrimaryKeyValue2EntityMap(propertyMap);
-		parameters = new ArrayList<Object>(propertyMap.size());// 使用TableExecutionHolder.parameters属性
+		parameters = new ArrayList<Object>(propertyMap.size());
 		
 		boolean isFirst = true;
 		Object value = null;
@@ -36,7 +36,7 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 		Set<String> codes = propertyMap.keySet();
 		for (String code : codes) {
 			value = propertyMap.get(code);
-			if(value != null) {// 只保存不为空的值
+			if(value != null) {// 只保存不为空的值, 空值不需要处理
 				if(isFirst) {
 					isFirst = false;
 				}else {

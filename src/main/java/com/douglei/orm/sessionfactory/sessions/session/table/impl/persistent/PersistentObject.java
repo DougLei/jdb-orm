@@ -23,23 +23,26 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.
 public class PersistentObject extends AbstractPersistentObject{
 	private Identity id;
 	private OperationState operationState;
-	private Object uniqueValue;// 唯一约束的值
 	private boolean updateNullValue; // 修改时使用
+	private Object uniqueValue;// 唯一约束的值
 	
 	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState, boolean updateNullValue) {
 		super(tableMetadata, originObject);
-		setOperationState(operationState, updateNullValue);
+		setOperationState(operationState);
+		setUpdateNullValue(updateNullValue);
 	}
 	
 	public OperationState getOperationState() {
 		return operationState;
 	}
-	public void setOperationState(OperationState operationState, boolean updateNullValue) {
+	public void setOperationState(OperationState operationState) {
 		this.operationState = operationState;
+	}
+	public void setUpdateNullValue(boolean updateNullValue) {
 		if(operationState == OperationState.UPDATE)
 			this.updateNullValue = updateNullValue;
 	}
-	
+
 	@Override
 	public boolean existsUniqueConstraint() {
 		return EnvironmentContext.getEnvironmentProperty().enableDataValidate() && super.existsUniqueConstraint();
