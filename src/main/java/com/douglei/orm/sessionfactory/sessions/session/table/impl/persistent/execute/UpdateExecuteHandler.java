@@ -42,14 +42,8 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 					}
 					
 					columnMetadata = tableMetadata.getColumnByCode(code);
-					updateSql.append(columnMetadata.getName()).append('=');
-					
-					if(value == null) {
-						updateSql.append("null");
-					}else {
-						updateSql.append('?');
-						parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
-					}
+					updateSql.append(columnMetadata.getName()).append("=?");
+					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
 				}
 			}
 		}
