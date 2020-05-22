@@ -73,7 +73,7 @@ public class Properties implements SelfProcessing{
 						decryptValue = Boolean.parseBoolean(element.attributeValue("decryptValue"));
 						for (Entry<Object, Object> entry : reader.entrySet()) {
 							if(logger.isDebugEnabled()) {
-								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decodeValue(entry.getValue(), decodeValue));
+								logger.debug("setProperties: key={}, value={}", placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decryptValue(entry.getValue(), decryptValue));
 							}
 							properties.put(placeholderPrefix + entry.getKey().toString() + placeholderSuffix, decryptValue(entry.getValue(), decryptValue));
 						}
@@ -90,9 +90,8 @@ public class Properties implements SelfProcessing{
 	 * @return
 	 */
 	private String decryptValue(Object value, boolean decryptValue) {
-		if(decryptValue) {
-			return CryptographyUtil.decryptByWithBASE64(value.toString());
-		}
+		if(decryptValue)
+			return CryptographyUtil.decodeWithBASE64(value.toString());
 		return value.toString();
 	}
 	
