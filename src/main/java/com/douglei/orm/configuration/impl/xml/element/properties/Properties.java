@@ -9,11 +9,11 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.mini.app.crypto.ValueDecryptor;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.tools.instances.file.resources.reader.PropertiesReader;
-import com.douglei.tools.utils.CryptographyUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -83,6 +83,8 @@ public class Properties implements SelfProcessing{
 		}
 	}
 	
+	private ValueDecryptor valueDecryptor;
+	
 	/**
 	 * 解密value值
 	 * @param value
@@ -90,8 +92,12 @@ public class Properties implements SelfProcessing{
 	 * @return
 	 */
 	private String decryptValue(Object value, boolean decryptValue) {
-		if(decryptValue)
-			return CryptographyUtil.decodeWithBASE64(value.toString());
+		if(decryptValue) {
+			if(valueDecryptor == null) {
+				valueDecryptor = new ValueDecryptor();
+			}
+			return valueDecryptor.decrypt(value.toString());
+		}
 		return value.toString();
 	}
 	

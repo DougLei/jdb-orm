@@ -20,6 +20,11 @@
 			<artifactId>jtools</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.douglei</groupId>
+			<artifactId>jmini-app-crypto</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	
 		<dependency>
 		    <groupId>dom4j</groupId>
