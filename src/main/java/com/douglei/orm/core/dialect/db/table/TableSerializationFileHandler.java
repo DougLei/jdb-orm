@@ -21,7 +21,7 @@ class TableSerializationFileHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableSerializationFileHandler.class);
 	
 	// 文件夹名称
-	private static final String FOLDER_NAME = ".jdb-orm";
+	private static final String FOLDER_NAME = "jdb-orm";
 	
 	// 序列化文件的后缀
 	private static final String SERIALIZATION_FILE_SUFFIX = ".orm";
