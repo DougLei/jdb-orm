@@ -4,8 +4,6 @@ import java.io.InputStream;
 
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
-import com.douglei.tools.instances.file.resources.reader.AbstractResourcesReader;
-import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -44,23 +42,6 @@ public abstract class Configuration implements SelfProcessing{
 		this.id = id;
 	}
 	
-	protected InputStream getConfigurationInputStream() {
-		if(configurationInputStream == null) {
-			if(StringUtil.isEmpty(configurationFile)) {
-				throw new NullPointerException("buildSessionFactory时, 必须指定configurationFile或configurationInputStream");
-			}
-			configurationInputStream = Configuration.class.getClassLoader().getResourceAsStream(configurationFile);
-		}
-		return configurationInputStream;
-	}
-	
-	protected void closeConfigurationInputStream() {
-		if(configurationInputStream != null) {
-			CloseUtil.closeIO(configurationInputStream);
-			configurationInputStream = null;
-		}
-	}
-	
 	/**
 	 * 设置配置文件的路径
 	 * @param configurationFile
@@ -69,16 +50,6 @@ public abstract class Configuration implements SelfProcessing{
 		this.configurationFile = configurationFile;
 	}
 
-	/**
-	 * 设置配置信息的InputStream
-	 * @param configurationInputStream
-	 */
-	protected void setConfigurationInputStream(InputStream configurationInputStream) {
-		closeConfigurationInputStream();
-		this.configurationFile = AbstractResourcesReader.DEFAULT_PATH;
-		this.configurationInputStream = configurationInputStream;
-	}
-	
 	public void setExternalDataSource(ExternalDataSource exDataSource) {
 		this.exDataSource = exDataSource;
 	}
