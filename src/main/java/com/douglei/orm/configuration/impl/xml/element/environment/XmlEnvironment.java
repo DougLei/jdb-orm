@@ -43,11 +43,11 @@ public class XmlEnvironment implements Environment{
 	
 	public XmlEnvironment() {
 	}
-	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource dataSource, MappingStore mappingStore) throws Exception {
+	public XmlEnvironment(String id, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingStore mappingStore) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.properties = properties;
 		
-		setDataSourceWrapper(dataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):dataSource);// 处理配置的数据源
+		setDataSourceWrapper(exDataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):exDataSource);// 处理配置的数据源
 		
 		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingStore);// 处理environment下的所有property元素
 		

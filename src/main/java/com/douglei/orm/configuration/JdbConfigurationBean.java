@@ -4,7 +4,7 @@ import com.douglei.tools.instances.file.resources.reader.PropertiesConfiguration
 import com.douglei.tools.utils.StringUtil;
 
 /**
- * 
+ * 框架的一些配置信息对应的类
  * @author DougLei
  */
 public class JdbConfigurationBean {

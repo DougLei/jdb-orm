@@ -20,7 +20,7 @@ public abstract class Configuration implements SelfProcessing{
 	protected InputStream configurationInputStream;
 	
 	protected String id;
-	protected ExternalDataSource dataSource;
+	protected ExternalDataSource exDataSource;
 	protected MappingStore mappingStore;
 	
 	protected SessionFactory sessionFactory;
@@ -65,7 +65,7 @@ public abstract class Configuration implements SelfProcessing{
 	 * 设置配置文件的路径
 	 * @param configurationFile
 	 */
-	public void setConfigurationFile(String configurationFile) {
+	protected void setConfigurationFile(String configurationFile) {
 		this.configurationFile = configurationFile;
 	}
 
@@ -73,14 +73,14 @@ public abstract class Configuration implements SelfProcessing{
 	 * 设置配置信息的InputStream
 	 * @param configurationInputStream
 	 */
-	public void setConfigurationInputStream(InputStream configurationInputStream) {
+	protected void setConfigurationInputStream(InputStream configurationInputStream) {
 		closeConfigurationInputStream();
 		this.configurationFile = AbstractResourcesReader.DEFAULT_PATH;
 		this.configurationInputStream = configurationInputStream;
 	}
 	
-	public void setExternalDataSource(ExternalDataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setExternalDataSource(ExternalDataSource exDataSource) {
+		this.exDataSource = exDataSource;
 	}
 	
 	public void setMappingStore(MappingStore mappingStore) {
