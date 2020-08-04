@@ -110,7 +110,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	 * @param fieldNames
 	 */
 	private void invokeSetMethodByFieldName(List<String> fieldNames) {
-		Class<?> clz = getClass();
+		Class<?> clz = this.getClass();
 		String value = null;
 		String _fieldName = null;
 		try {
@@ -152,44 +152,36 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		}
 	}
 	void setMappingStore(String value) {
-		if(this.mappingStore == null) {
+		if(this.mappingStore == null) 
 			this.mappingStore = new ApplicationMappingStore();
-		}
 	}
 	public void setClearMappingStoreOnStart(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value))
 			this.clearMappingStoreOnStart = Boolean.parseBoolean(value);
-		}
 	}
 	void setTableCreateMode(String value) {
-		if(StringUtil.notEmpty(value)) {
+		if(StringUtil.notEmpty(value)) 
 			this.tableCreateMode = CreateMode.toValue(value);
-		}
 	}
 	void setEnableDataValidate(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableDataValidate = Boolean.parseBoolean(value);
-		}
 	}
 	void setEnableTableDynamicUpdate(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableTableDynamicUpdate = Boolean.parseBoolean(value);
-		}
 	}
 	void setSerializationFileRootPath(String value) {
-		if(StringUtil.notEmpty(value)) {
+		if(StringUtil.notEmpty(value)) 
 			this.serializationFileRootPath = value;
-		}
 	}
 	void setEnableColumnDynamicUpdateValidate(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableColumnDynamicUpdateValidate = Boolean.parseBoolean(value);
-		}
 	}
 	void setDynamicMappingOnceMaxCount(String value) {
-		if(VerifyTypeMatchUtil.isLimitByte(value)) {
+		if(VerifyTypeMatchUtil.isLimitByte(value)) 
 			this.dynamicMappingOnceMaxCount = Byte.parseByte(value);
-		}
 	}
 	public void setSqlParameterPrefix(String sqlParameterPrefix) {
 		

@@ -32,7 +32,8 @@ public class XmlDataSourceWrapper implements DataSourceWrapper{
 		this.dataSource = dataSource;
 		this.closeMethodName = closeMethodName;
 		this.propertyMap = propertyMap;
-		invokeSetMethod();
+		if(propertyMap != null)
+			invokeSetMethod();
 	}
 	
 	/**
