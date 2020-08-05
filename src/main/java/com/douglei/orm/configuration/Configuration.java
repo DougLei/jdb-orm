@@ -1,7 +1,5 @@
 package com.douglei.orm.configuration;
 
-import java.io.InputStream;
-
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.utils.StringUtil;
@@ -12,11 +10,9 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class Configuration implements SelfProcessing{
-	public static final String DEFAULT_CONF_FILE = "jdb-orm.conf.xml";
+	public static final String DEFAULT_CONFIGURATION_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径
 	
-	protected String configurationFile;
-	protected InputStream configurationInputStream;
-	
+	protected String configurationFilePath; // 配置文件路径
 	protected String id;
 	protected ExternalDataSource exDataSource;
 	protected MappingStore mappingStore;
@@ -44,10 +40,10 @@ public abstract class Configuration implements SelfProcessing{
 	
 	/**
 	 * 设置配置文件的路径
-	 * @param configurationFile
+	 * @param configurationFilePath
 	 */
-	protected void setConfigurationFile(String configurationFile) {
-		this.configurationFile = configurationFile;
+	protected void setConfigurationFilePath(String configurationFilePath) {
+		this.configurationFilePath = configurationFilePath;
 	}
 
 	public void setExternalDataSource(ExternalDataSource exDataSource) {
@@ -59,8 +55,8 @@ public abstract class Configuration implements SelfProcessing{
 	}
 	
 	/**
-	 * build SessionFactory
-	 * 一个configuration也只能有一个sessionFactory实例
+	 * 构建 SessionFactory 实例
+	 * 一个{@link Configuration} 也只能生成一个{@link SessionFactory}实例
 	 * @return
 	 */
 	public final SessionFactory buildSessionFactory() {

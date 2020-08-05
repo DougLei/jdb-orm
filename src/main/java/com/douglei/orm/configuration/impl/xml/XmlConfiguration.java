@@ -33,10 +33,10 @@ public class XmlConfiguration extends Configuration {
 	private Environment environment;
 	
 	public XmlConfiguration() throws ConfigurationInitializeException, DestroyException{
-		setConfigurationFile(DEFAULT_CONF_FILE);
+		setConfigurationFilePath(DEFAULT_CONFIGURATION_FILE_PATH);
 	}
-	public XmlConfiguration(String configurationFile) throws ConfigurationInitializeException, DestroyException{
-		setConfigurationFile(configurationFile);
+	public XmlConfiguration(String configurationFilePath) throws ConfigurationInitializeException, DestroyException{
+		setConfigurationFilePath(configurationFilePath);
 	}
 	
 	@Override
@@ -45,7 +45,7 @@ public class XmlConfiguration extends Configuration {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
 		try {
-			Document xmlDocument = MappingXmlReaderContext.getConfigurationSAXReader().read(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFile));
+			Document xmlDocument = MappingXmlReaderContext.getConfigurationSAXReader().read(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFilePath));
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
