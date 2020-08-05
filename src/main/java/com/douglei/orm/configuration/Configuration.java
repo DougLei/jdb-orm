@@ -1,5 +1,7 @@
 package com.douglei.orm.configuration;
 
+import java.io.InputStream;
+
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.utils.StringUtil;
@@ -12,7 +14,7 @@ import com.douglei.tools.utils.StringUtil;
 public abstract class Configuration implements SelfProcessing{
 	public static final String DEFAULT_CONFIGURATION_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径
 	
-	protected String configurationFilePath; // 配置文件路径
+	protected InputStream configurationInputStream; // 配置文件的流对象
 	protected String id;
 	protected ExternalDataSource exDataSource;
 	protected MappingStore mappingStore;
@@ -39,17 +41,25 @@ public abstract class Configuration implements SelfProcessing{
 	}
 	
 	/**
-	 * 设置配置文件的路径
-	 * @param configurationFilePath
+	 * 设置配置文件的流
+	 * @param configurationInputStream
 	 */
-	protected void setConfigurationFilePath(String configurationFilePath) {
-		this.configurationFilePath = configurationFilePath;
+	protected void setConfigurationInputStream(InputStream configurationInputStream) {
+		this.configurationInputStream = configurationInputStream;
 	}
 
+	/**
+	 * 设置外部的数据源
+	 * @param exDataSource
+	 */
 	public void setExternalDataSource(ExternalDataSource exDataSource) {
 		this.exDataSource = exDataSource;
 	}
 	
+	/**
+	 * 设置映射的存储器
+	 * @param mappingStore
+	 */
 	public void setMappingStore(MappingStore mappingStore) {
 		this.mappingStore = mappingStore;
 	}

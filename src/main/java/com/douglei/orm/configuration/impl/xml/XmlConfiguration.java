@@ -1,5 +1,7 @@
 package com.douglei.orm.configuration.impl.xml;
 
+import java.io.InputStream;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -33,10 +35,13 @@ public class XmlConfiguration extends Configuration {
 	private Environment environment;
 	
 	public XmlConfiguration() throws ConfigurationInitializeException, DestroyException{
-		setConfigurationFilePath(DEFAULT_CONFIGURATION_FILE_PATH);
+		setConfigurationInputStream(XmlConfiguration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH));
 	}
 	public XmlConfiguration(String configurationFilePath) throws ConfigurationInitializeException, DestroyException{
-		setConfigurationFilePath(configurationFilePath);
+		setConfigurationInputStream(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFilePath));
+	}
+	public XmlConfiguration(InputStream configurationInputStream) throws ConfigurationInitializeException, DestroyException{
+		setConfigurationInputStream(configurationInputStream);
 	}
 	
 	@Override
@@ -45,7 +50,7 @@ public class XmlConfiguration extends Configuration {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
 		try {
-			Document xmlDocument = MappingXmlReaderContext.getConfigurationSAXReader().read(XmlConfiguration.class.getClassLoader().getResourceAsStream(configurationFilePath));
+			Document xmlDocument = MappingXmlReaderContext.getConfigurationSAXReader().read(configurationInputStream);
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
