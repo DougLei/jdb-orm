@@ -33,11 +33,12 @@ public abstract class Configuration implements SelfProcessing{
 	 * 设置id
 	 * @param id
 	 */
-	protected void setId(String id) {
-		if(StringUtil.isEmpty(id)) {
-			throw new NullPointerException("["+getClass().getName() + "]的id属性值不能为空");
+	public void setId(String id) {
+		if(this.id == null) {
+			if(StringUtil.isEmpty(id)) 
+				throw new NullPointerException("["+getClass().getName() + "]的id属性值不能为空");
+			this.id = id;
 		}
-		this.id = id;
 	}
 	
 	/**
