@@ -4,7 +4,7 @@
 	<!-- forceCreateMode的值同createMode, 表示强制, 没有默认值, 可以不配置, 该值可覆盖全局的tableCreateMode -->
 	<!-- forceCreateMode的优先级高于createMode -->
 	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" createMode="create" forceCreateMode="">
-		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 可以将所有表中的通用字段导入 -->
+		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 可以将所有表中的通用字段导入, 具体这个文件中怎么写, 看本文件最下面的注释内容 -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
 			<!-- nullable默认值为true, validate默认值为false -->
@@ -33,6 +33,7 @@
 			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
 			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
 			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop, 其余时候, 不会有任何处理 -->
+			<!-- 主要针对oracle数据库, 可以自定义创建和删除序列的sql语句 -->
 			<sequence name="">
 				<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
 				<dropSql></dropSql><!-- 如果不配置, 则使用系统默认的删除语句 -->
@@ -48,3 +49,24 @@
 		</validators>
 	</table>
 </mapping-configuration>
+
+<!-- 
+	-- 导入列的文件配置内容
+	
+	<?xml version="1.0" encoding="UTF-8"?>
+	<columns>
+		<column name="id" property="id" dataType="integer" primaryKey="true" length="20" validate="true" />
+				
+		<column name="project_id" property="projectId" dataType="string" length="36" nullable="false" />
+		<column name="table_index" property="tableIndex" dataType="short" length="3" nullable="false" />
+		<column name="table_state" property="tableState" dataType="byte" length="1" nullable="false" />
+		
+		<column name="create_user_id" property="createUserId" dataType="string" length="36" nullable="false" />
+		<column name="create_user_name" property="createUserName" dataType="nstring" length="50" nullable="false" />
+		<column name="create_date" property="createDate" dataType="date" nullable="false" />
+		
+		<column name="destroy_user_id" property="destroyUserId" dataType="string" length="36" />
+		<column name="destroy_user_name" property="destroyUserName" dataType="nstring" length="50" />
+		<column name="destroy_date" property="destroyDate" dataType="date" />
+	</columns>
+ -->
