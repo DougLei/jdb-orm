@@ -22,7 +22,7 @@ public abstract class Result {
 	}
 	
 	/**
-	 * 返回message
+	 * 获取原生的消息
 	 * @return
 	 */
 	public abstract String getMessage();
