@@ -27,14 +27,4 @@ public class SqlServerPrimaryKeySequence extends PrimaryKeySequence{
 	protected String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		return null;
 	}
-
-	@Override
-	public String getNextvalSql() {
-		return null;
-	}
-	
-	@Override
-	public String getCurrvalSql() {
-		return null;
-	}
 }

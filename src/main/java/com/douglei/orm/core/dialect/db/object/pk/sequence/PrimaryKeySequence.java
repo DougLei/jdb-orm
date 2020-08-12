@@ -87,11 +87,15 @@ public abstract class PrimaryKeySequence implements Serializable{
 	 * 获取下一个序列值的sql语句
 	 * @return
 	 */
-	public abstract String getNextvalSql();
+	public String getNextvalSql() {
+		return null;
+	}
 	
 	/**
 	 * 获取当前序列值的sql语句
 	 * @return
 	 */
-	public abstract String getCurrvalSql();
+	public String getCurrvalSql() {
+		return null;
+	}
 }
