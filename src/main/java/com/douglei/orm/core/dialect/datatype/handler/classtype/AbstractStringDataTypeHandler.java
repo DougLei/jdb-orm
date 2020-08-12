@@ -64,17 +64,17 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 					return new ValidationResult(validateFieldName) {
 						
 						@Override
-						public String getMessage() {
+						public String getOriginMessage() {
 							return "数据值长度超长, 设置长度为" + length +", 实际长度为" + actualLength;
 						}
 						
 						@Override
-						public String getI18nCode() {
+						public String getCode() {
 							return i18nCodePrefix + "value.overlength";
 						}
 
 						@Override
-						public Object[] getI18nParams() {
+						public Object[] getParams() {
 							return new Object[] { length, actualLength };
 						}
 					};
@@ -85,12 +85,12 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 		return new ValidationResult(validateFieldName) {
 			
 			@Override
-			public String getMessage() {
+			public String getOriginMessage() {
 				return "数据值类型错误, 应为字符类型";
 			}
 			
 			@Override
-			public String getI18nCode() {
+			public String getCode() {
 				return i18nCodePrefix + "value.datatype.error.string";
 			}
 		};

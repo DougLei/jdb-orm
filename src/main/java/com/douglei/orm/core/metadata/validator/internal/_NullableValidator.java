@@ -21,12 +21,12 @@ public class _NullableValidator extends Validator {
 			return new ValidationResult(validateFieldName) {
 				
 				@Override
-				public String getMessage() {
+				public String getOriginMessage() {
 					return "不能为空";
 				}
 				
 				@Override
-				public String getI18nCode() {
+				public String getCode() {
 					return i18nCodePrefix + "notnull";
 				}
 			};

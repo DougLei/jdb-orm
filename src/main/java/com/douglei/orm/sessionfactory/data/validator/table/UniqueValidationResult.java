@@ -13,12 +13,12 @@ public class UniqueValidationResult extends ValidationResult {
 	}
 
 	@Override
-	public String getMessage() {
+	public String getOriginMessage() {
 		return  "值不唯一, 已存在相同值的数据";
 	}
 	
 	@Override
-	public String getI18nCode() {
+	public String getCode() {
 		return i18nCodePrefix + "value.violation.unique.constraint";
 	}
 }

@@ -81,12 +81,12 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		return new ValidationResult(validateFieldName) {
 			
 			@Override
-			public String getMessage() {
+			public String getOriginMessage() {
 				return "数据值类型错误, 应为数字类型";
 			}
 			
 			@Override
-			public String getI18nCode() {
+			public String getCode() {
 				return i18nCodePrefix + "value.datatype.error.number";
 			}
 		};

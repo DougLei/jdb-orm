@@ -16,12 +16,12 @@ public class NotBlankValidator extends Validator{
 			return new ValidationResult(validateFieldName) {
 				
 				@Override
-				public String getMessage() {
+				public String getOriginMessage() {
 					return "不能为空字符串";
 				}
 				
 				@Override
-				public String getI18nCode() {
+				public String getCode() {
 					return i18nCodePrefix + "notblank";
 				}
 			};

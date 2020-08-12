@@ -53,12 +53,12 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 			return new ValidationResult(validateFieldName) {
 				
 				@Override
-				public String getMessage() {
+				public String getOriginMessage() {
 					return "数据值类型错误, 应为浮点型(double)";
 				}
 				
 				@Override
-				public String getI18nCode() {
+				public String getCode() {
 					return i18nCodePrefix + "value.datatype.error.double";
 				}
 			};
@@ -69,17 +69,17 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 			return new ValidationResult(validateFieldName) {
 				
 				@Override
-				public String getMessage() {
+				public String getOriginMessage() {
 					return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
 				}
 				
 				@Override
-				public String getI18nCode() {
+				public String getCode() {
 					return i18nCodePrefix + "value.digital.length.overlength";
 				}
 
 				@Override
-				public Object[] getI18nParams() {
+				public Object[] getParams() {
 					return new Object[] { length, (string.length() - 1) };
 				}
 			};
@@ -99,17 +99,17 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 					return new ValidationResult(validateFieldName) {
 						
 						@Override
-						public String getMessage() {
+						public String getOriginMessage() {
 							return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
 						}
 						
 						@Override
-						public String getI18nCode() {
+						public String getCode() {
 							return i18nCodePrefix + "value.digital.precision.overlength";
 						}
 						
 						@Override
-						public Object[] getI18nParams() {
+						public Object[] getParams() {
 							return new Object[] { precision, apl };
 						}
 					};

@@ -62,12 +62,12 @@ class RegexEntity implements Serializable{
 		return new ValidationResult(validateFieldName) {
 			
 			@Override
-			public String getMessage() {
+			public String getOriginMessage() {
 				return message==null?DEFAULT_MESSAGE:message;
 			}
 			
 			@Override
-			public String getI18nCode() {
+			public String getCode() {
 				return i18nCode==null?DEFAULT_I18N_CODE:i18nCode;
 			}
 		};
