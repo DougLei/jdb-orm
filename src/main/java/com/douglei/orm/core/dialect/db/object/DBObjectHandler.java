@@ -34,7 +34,7 @@ public abstract class DBObjectHandler {
 	 */
 	public void validateDBObjectName(String dbObjectName) throws DBObjectNameException {
 		if(validateDBObjectNameIsOverLength(dbObjectName)) {
-			throw new DBObjectNameException(EnvironmentContext.getDialect().getType().name() + "数据库的[表/列]名称["+dbObjectName+"]长度不能超过"+nameMaxLength()+"个字符");
+			throw new DBObjectNameException(EnvironmentContext.getDialect().getType().name() + "数据库的资源命名名称["+dbObjectName+"]长度不能超过"+nameMaxLength()+"个字符");
 		}
 	}
 	
