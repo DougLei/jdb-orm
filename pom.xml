@@ -25,6 +25,11 @@
 			<artifactId>jmini-app-crypto</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.douglei</groupId>
+			<artifactId>ji18n</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>	
 	
 		<dependency>
 		    <groupId>dom4j</groupId>
