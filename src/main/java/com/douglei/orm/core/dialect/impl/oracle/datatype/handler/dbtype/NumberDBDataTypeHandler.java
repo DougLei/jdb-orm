@@ -87,7 +87,7 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 			
 			@Override
 			public String getCode() {
-				return i18nCodePrefix + "value.datatype.error.number";
+				return codePrefix + "value.datatype.error.number";
 			}
 		};
 	}

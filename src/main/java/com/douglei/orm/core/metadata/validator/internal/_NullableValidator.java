@@ -27,7 +27,7 @@ public class _NullableValidator extends Validator {
 				
 				@Override
 				public String getCode() {
-					return i18nCodePrefix + "notnull";
+					return codePrefix + "notnull";
 				}
 			};
 		}

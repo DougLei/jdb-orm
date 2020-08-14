@@ -65,12 +65,12 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 						
 						@Override
 						public String getOriginMessage() {
-							return "数据值长度超长, 设置长度为" + length +", 实际长度为" + actualLength;
+							return "数据值长度超长, 设置长度为%d, 实际长度为%d";
 						}
 						
 						@Override
 						public String getCode() {
-							return i18nCodePrefix + "value.overlength";
+							return codePrefix + "value.overlength";
 						}
 
 						@Override
@@ -91,7 +91,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 			
 			@Override
 			public String getCode() {
-				return i18nCodePrefix + "value.datatype.error.string";
+				return codePrefix + "value.datatype.error.string";
 			}
 		};
 	}

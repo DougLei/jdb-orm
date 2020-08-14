@@ -19,6 +19,6 @@ public class UniqueValidationResult extends ValidationResult {
 	
 	@Override
 	public String getCode() {
-		return i18nCodePrefix + "value.violation.unique.constraint";
+		return codePrefix + "value.violation.unique.constraint";
 	}
 }

@@ -59,7 +59,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				
 				@Override
 				public String getCode() {
-					return i18nCodePrefix + "value.datatype.error.double";
+					return codePrefix + "value.datatype.error.double";
 				}
 			};
 		}
@@ -70,12 +70,12 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				
 				@Override
 				public String getOriginMessage() {
-					return "数据值长度超长, 设置长度为" + length +", 实际长度为" + (string.length() - 1);
+					return "数据值长度超长, 设置长度为%d, 实际长度为%d";
 				}
 				
 				@Override
 				public String getCode() {
-					return i18nCodePrefix + "value.digital.length.overlength";
+					return codePrefix + "value.digital.length.overlength";
 				}
 
 				@Override
@@ -100,12 +100,12 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 						
 						@Override
 						public String getOriginMessage() {
-							return "数据值精度超长, 设置精度为" + precision +", 实际精度为" + apl;
+							return "数据值精度超长, 设置精度为%d, 实际精度为%d";
 						}
 						
 						@Override
 						public String getCode() {
-							return i18nCodePrefix + "value.digital.precision.overlength";
+							return codePrefix + "value.digital.precision.overlength";
 						}
 						
 						@Override

@@ -49,7 +49,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 			
 			@Override
 			public String getCode() {
-				return i18nCodePrefix + "value.datatype.error.date";
+				return codePrefix + "value.datatype.error.date";
 			}
 		};
 	}
