@@ -27,7 +27,7 @@ public class _NullableValidator extends Validator {
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "notnull";
+					return "jdb.data.validator.notnull";
 				}
 			};
 		}

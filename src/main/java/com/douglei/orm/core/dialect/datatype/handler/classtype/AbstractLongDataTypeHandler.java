@@ -53,7 +53,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 					
 					@Override
 					public String getCode() {
-						return codePrefix + "value.digital.length.overlength";
+						return "jdb.data.validator.value.digital.length.overlength";
 					}
 
 					@Override
@@ -73,7 +73,7 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 			
 			@Override
 			public String getCode() {
-				return codePrefix + "value.datatype.error.long";
+				return "jdb.data.validator.value.datatype.error.long";
 			}
 		};
 	}

@@ -49,7 +49,7 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 			
 			@Override
 			public String getCode() {
-				return codePrefix + "value.datatype.error.date";
+				return "jdb.data.validator.value.datatype.error.date";
 			}
 		};
 	}

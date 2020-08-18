@@ -56,7 +56,7 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "value.datatype.error.float";
+					return "jdb.data.validator.value.datatype.error.float";
 				}
 			};
 		}
@@ -72,7 +72,7 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "value.digital.length.overlength";
+					return "jdb.data.validator.value.digital.length.overlength";
 				}
 
 				@Override
@@ -102,7 +102,7 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 						
 						@Override
 						public String getCode() {
-							return codePrefix + "value.digital.precision.overlength";
+							return "jdb.data.validator.value.digital.precision.overlength";
 						}
 						
 						@Override

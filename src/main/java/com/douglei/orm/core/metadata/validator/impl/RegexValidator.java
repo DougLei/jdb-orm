@@ -47,7 +47,7 @@ public class RegexValidator extends Validator {
 class RegexEntity implements Serializable{
 	private static final long serialVersionUID = -3657891122503633498L;
 	private static final String DEFAULT_MESSAGE = "匹配正则表达式失败";
-	private static final String DEFAULT_I18N_CODE = ValidationResult.codePrefix + "regex.matching.fail";
+	private static final String DEFAULT_I18N_CODE = "jdb.data.validator.regex.matching.fail";
 	
 	private Pattern pattern;
 	private String express;

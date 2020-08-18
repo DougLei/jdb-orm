@@ -19,6 +19,6 @@ public class UniqueValidationResult extends ValidationResult {
 	
 	@Override
 	public String getCode() {
-		return codePrefix + "value.violation.unique.constraint";
+		return "jdb.data.validator.value.violation.unique.constraint";
 	}
 }

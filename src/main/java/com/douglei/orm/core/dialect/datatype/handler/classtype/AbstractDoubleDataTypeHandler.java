@@ -59,7 +59,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "value.datatype.error.double";
+					return "jdb.data.validator.value.datatype.error.double";
 				}
 			};
 		}
@@ -75,7 +75,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "value.digital.length.overlength";
+					return "jdb.data.validator.value.digital.length.overlength";
 				}
 
 				@Override
@@ -105,7 +105,7 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 						
 						@Override
 						public String getCode() {
-							return codePrefix + "value.digital.precision.overlength";
+							return "jdb.data.validator.value.digital.precision.overlength";
 						}
 						
 						@Override

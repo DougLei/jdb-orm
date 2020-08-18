@@ -22,7 +22,7 @@ public class NotBlankValidator extends Validator{
 				
 				@Override
 				public String getCode() {
-					return codePrefix + "notblank";
+					return "jdb.data.validator.notblank";
 				}
 			};
 		}

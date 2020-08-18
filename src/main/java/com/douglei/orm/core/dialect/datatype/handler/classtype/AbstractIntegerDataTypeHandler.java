@@ -55,7 +55,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 					
 					@Override
 					public String getCode() {
-						return codePrefix + "value.digital.range.overflow";
+						return "jdb.data.validator.value.digital.range.overflow";
 					}
 
 					@Override
@@ -75,7 +75,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 					
 					@Override
 					public String getCode() {
-						return codePrefix + "value.digital.length.overlength";
+						return "jdb.data.validator.value.digital.length.overlength";
 					}
 
 					@Override
@@ -95,7 +95,7 @@ public abstract class AbstractIntegerDataTypeHandler extends ClassDataTypeHandle
 			
 			@Override
 			public String getCode() {
-				return codePrefix + "value.datatype.error.int";
+				return "jdb.data.validator.value.datatype.error.int";
 			}
 		};
 	}

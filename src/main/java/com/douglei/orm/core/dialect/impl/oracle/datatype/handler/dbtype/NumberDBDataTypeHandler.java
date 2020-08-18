@@ -87,7 +87,7 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 			
 			@Override
 			public String getCode() {
-				return codePrefix + "value.datatype.error.number";
+				return "jdb.data.validator.value.datatype.error.number";
 			}
 		};
 	}

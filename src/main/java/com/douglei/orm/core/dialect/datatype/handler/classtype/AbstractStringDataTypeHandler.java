@@ -70,7 +70,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 						
 						@Override
 						public String getCode() {
-							return codePrefix + "value.overlength";
+							return "jdb.data.validator.value.overlength";
 						}
 
 						@Override
@@ -91,7 +91,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 			
 			@Override
 			public String getCode() {
-				return codePrefix + "value.datatype.error.string";
+				return "jdb.data.validator.value.datatype.error.string";
 			}
 		};
 	}

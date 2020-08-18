@@ -7,22 +7,20 @@ import com.douglei.i18n.Result;
  * @author DougLei
  */
 public abstract class ValidationResult extends Result{
-	public static String codePrefix = "jdb.data.validator.";
 	private short index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
-	private String validateFieldName;
+	private String fieldName; // 记录验证失败的属性名
 	
-	public ValidationResult() {}
-	public ValidationResult(String validateFieldName) {
-		this.validateFieldName = validateFieldName;
+	public ValidationResult(String fieldName) {
+		this.fieldName = fieldName;
 	}
 	
-	public final void setIndex(short index) {
-		this.index = index;
-	}
-	public String getValidateFieldName() {
-		return validateFieldName;
+	public String getFieldName() {
+		return fieldName;
 	}
 	public final short getIndex() {
 		return index;
+	}
+	public final void setIndex(short index) {
+		this.index = index;
 	}
 }
