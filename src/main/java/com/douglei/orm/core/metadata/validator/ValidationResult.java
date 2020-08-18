@@ -7,11 +7,11 @@ import com.douglei.i18n.Result;
  * @author DougLei
  */
 public abstract class ValidationResult extends Result{
+	public static String codePrefix = "jdb.data.validator.";
 	private short index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
 	private String validateFieldName;
 	
-	public static String codePrefix = "jdb.data.validator.";
-	
+	public ValidationResult() {}
 	public ValidationResult(String validateFieldName) {
 		this.validateFieldName = validateFieldName;
 	}
