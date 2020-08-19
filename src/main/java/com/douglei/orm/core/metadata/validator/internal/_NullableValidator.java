@@ -17,20 +17,8 @@ public class _NullableValidator extends Validator {
 	
 	@Override
 	public ValidationResult doValidate(String validateFieldName, Object value) {
-		if(!nullable && value == null) {
-			return new ValidationResult(validateFieldName) {
-				
-				@Override
-				public String getOriginMessage() {
-					return "不能为空";
-				}
-				
-				@Override
-				public String getCode() {
-					return "jdb.data.validator.notnull";
-				}
-			};
-		}
+		if(!nullable && value == null) 
+			return new ValidationResult(validateFieldName, "不能为空", "jdb.data.validator.notnull");
 		return null;
 	}
 }

@@ -45,7 +45,7 @@ public class RegexValidator extends Validator {
  * @author DougLei
  */
 class RegexEntity implements Serializable{
-	private static final long serialVersionUID = -3657891122503633498L;
+	private static final long serialVersionUID = -5532890074831604734L;
 	private static final String DEFAULT_MESSAGE = "匹配正则表达式失败";
 	private static final String DEFAULT_I18N_CODE = "jdb.data.validator.regex.matching.fail";
 	
@@ -56,21 +56,9 @@ class RegexEntity implements Serializable{
 	private String i18nCode;
 	
 	public ValidationResult match(String validateFieldName, String value) {
-		if(getPattern().matcher(value).matches()) {
+		if(getPattern().matcher(value).matches()) 
 			return null;
-		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return message==null?DEFAULT_MESSAGE:message;
-			}
-			
-			@Override
-			public String getCode() {
-				return i18nCode==null?DEFAULT_I18N_CODE:i18nCode;
-			}
-		};
+		return new ValidationResult(validateFieldName, message==null?DEFAULT_MESSAGE:message, i18nCode==null?DEFAULT_I18N_CODE:i18nCode);
 	}
 	
 	private Pattern getPattern() {

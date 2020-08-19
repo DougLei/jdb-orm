@@ -12,7 +12,7 @@ import com.douglei.orm.core.dialect.datatype.handler.wrapper.Blob;
  * @author DougLei
  */
 public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -8727135589495660366L;
+	private static final long serialVersionUID = 2863641750405602113L;
 
 	@Override
 	public String getCode() {
@@ -21,9 +21,8 @@ public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {Blob.class};
 	}
-	private static final Class<?>[] supportClasses = {Blob.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {

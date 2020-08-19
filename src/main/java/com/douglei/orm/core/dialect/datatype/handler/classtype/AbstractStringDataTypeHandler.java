@@ -17,7 +17,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -5546733496863017903L;
+	private static final long serialVersionUID = -3104635197948557154L;
 
 	@Override
 	public String getCode() {
@@ -31,9 +31,8 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {String.class, NString.class, Char.class, NChar.class, char.class, Character.class};
 	}
-	private static final Class<?>[] supportClasses = {String.class, NString.class, Char.class, NChar.class, char.class, Character.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -60,39 +59,11 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof StringWrapper) {
 			if(length != DBDataType.NO_LIMIT) {
 				int actualLength = StringUtil.computeStringLength(value.toString());
-				if(actualLength > length) {
-					return new ValidationResult(validateFieldName) {
-						
-						@Override
-						public String getOriginMessage() {
-							return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-						}
-						
-						@Override
-						public String getCode() {
-							return "jdb.data.validator.value.overlength";
-						}
-
-						@Override
-						public Object[] getParams() {
-							return new Object[] { length, actualLength };
-						}
-					};
-				}
+				if(actualLength > length) 
+					return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.overlength", length, actualLength);
 			}
 			return null;
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为字符类型";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.string";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为字符类型", "jdb.data.validator.value.datatype.error.string");
 	}
 }

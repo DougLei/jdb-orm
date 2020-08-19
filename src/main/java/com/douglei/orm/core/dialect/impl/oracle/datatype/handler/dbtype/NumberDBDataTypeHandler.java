@@ -78,17 +78,6 @@ public class NumberDBDataTypeHandler extends DBDataTypeHandler{
 		}else if(VerifyTypeMatchUtil.isDouble(valueString)) {
 			return DoubleDataTypeHandler.singleInstance().doValidate(validateFieldName, valueString, length, precision);
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为数字类型";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.number";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为数字类型", "jdb.data.validator.value.datatype.error.number");
 	}
 }

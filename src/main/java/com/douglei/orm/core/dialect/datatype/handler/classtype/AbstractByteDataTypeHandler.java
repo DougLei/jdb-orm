@@ -10,7 +10,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeHandler{
-	private static final long serialVersionUID = -1235558610422760425L;
+	private static final long serialVersionUID = -5522645400402393337L;
 
 	@Override
 	public String getCode() {
@@ -19,9 +19,8 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {byte.class, Byte.class};
 	}
-	private static final Class<?>[] supportClasses = {byte.class, Byte.class};
 	
 	@Override
 	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
@@ -29,58 +28,14 @@ public abstract class AbstractByteDataTypeHandler extends AbstractShortDataTypeH
 			String string = value.toString();
 			
 			long l = Long.parseLong(string);
-			if(l > Byte.MAX_VALUE || l < Byte.MIN_VALUE) {
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getOriginMessage() {
-						return "数据值大小异常, 应在%d至%d范围内";
-					}
-					
-					@Override
-					public String getCode() {
-						return "jdb.data.validator.value.digital.range.overflow";
-					}
-
-					@Override
-					public Object[] getParams() {
-						return new Object[]{ Byte.MIN_VALUE, Byte.MAX_VALUE };
-					}
-				};
-			}
+			if(l > Byte.MAX_VALUE || l < Byte.MIN_VALUE) 
+				return new ValidationResult(validateFieldName, "数据值大小异常, 应在%d至%d范围内", "jdb.data.validator.value.digital.range.overflow", Byte.MIN_VALUE, Byte.MAX_VALUE);
 			
-			if(length != DBDataType.NO_LIMIT && string.length() > length) {
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getOriginMessage() {
-						return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-					}
-					
-					@Override
-					public String getCode() {
-						return "jdb.data.validator.value.digital.length.overlength";
-					}
-
-					@Override
-					public Object[] getParams() {
-						return new Object[] { length, string.length() };
-					}
-				};
-			}
+			if(length != DBDataType.NO_LIMIT && string.length() > length) 
+				return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, string.length());
+			
 			return null;
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为字节型(byte)";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.byte";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为字节型(byte)", "jdb.data.validator.value.datatype.error.byte");
 	}
 }

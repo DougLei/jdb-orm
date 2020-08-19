@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -9096009894440617770L;
+	private static final long serialVersionUID = -3700441946650313358L;
 
 	@Override
 	public String getCode() {
@@ -22,9 +22,8 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {float.class, Float.class};
 	}
-	private static final Class<?>[] supportClasses = {float.class, Float.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -47,40 +46,12 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 		} else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Float.parseFloat(value.toString());
 		}else {
-			return new ValidationResult(validateFieldName) {
-				
-				@Override
-				public String getOriginMessage() {
-					return "数据值类型错误, 应为浮点型(float)";
-				}
-				
-				@Override
-				public String getCode() {
-					return "jdb.data.validator.value.datatype.error.float";
-				}
-			};
+			return new ValidationResult(validateFieldName, "数据值类型错误, 应为浮点型(float)", "jdb.data.validator.value.datatype.error.float");
 		}
 		
 		String string = o.toString();
-		if(length != DBDataType.NO_LIMIT && string.length() - 1 > length) {// -1是减去小数点的长度
-			return new ValidationResult(validateFieldName) {
-				
-				@Override
-				public String getOriginMessage() {
-					return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-				}
-				
-				@Override
-				public String getCode() {
-					return "jdb.data.validator.value.digital.length.overlength";
-				}
-
-				@Override
-				public Object[] getParams() {
-					return new Object[] { length, (string.length() - 1) };
-				}
-			};
-		}
+		if(length != DBDataType.NO_LIMIT && string.length() - 1 > length) // -1是减去小数点的长度
+			return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, (string.length() - 1));
 		
 		if(precision != DBDataType.NO_LIMIT) {
 			short dotIndex = (short)string.indexOf(".");
@@ -91,26 +62,8 @@ public abstract class AbstractFloatDataTypeHandler extends ClassDataTypeHandler{
 					dotIndex++;
 					pl++;
 				}
-				if(pl > precision) {
-					short apl = pl;
-					return new ValidationResult(validateFieldName) {
-						
-						@Override
-						public String getOriginMessage() {
-							return "数据值精度超长, 设置精度为%d, 实际精度为%d";
-						}
-						
-						@Override
-						public String getCode() {
-							return "jdb.data.validator.value.digital.precision.overlength";
-						}
-						
-						@Override
-						public Object[] getParams() {
-							return new Object[] { precision, apl };
-						}
-					};
-				}
+				if(pl > precision) 
+					return new ValidationResult(validateFieldName, "数据值精度超长, 设置精度为%d, 实际精度为%d", "jdb.data.validator.value.digital.precision.overlength", precision, pl);
 			}
 		}
 		return null;

@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -7544715947166673733L;
+	private static final long serialVersionUID = -6024285035307877367L;
 
 	@Override
 	public String getCode() {
@@ -22,9 +22,8 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {long.class, Long.class};
 	}
-	private static final Class<?>[] supportClasses = {long.class, Long.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -43,38 +42,10 @@ public abstract class AbstractLongDataTypeHandler extends ClassDataTypeHandler{
 	public ValidationResult doValidate(String validateFieldName, Object value, short length, short precision) {
 		if(value.getClass() == long.class || value instanceof Long || VerifyTypeMatchUtil.isInteger(value.toString())) {
 			String string = value.toString();
-			if(length != DBDataType.NO_LIMIT && string.length() > length) {
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getOriginMessage() {
-						return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-					}
-					
-					@Override
-					public String getCode() {
-						return "jdb.data.validator.value.digital.length.overlength";
-					}
-
-					@Override
-					public Object[] getParams() {
-						return new Object[] { length, string.length() };
-					}
-				};
-			}
+			if(length != DBDataType.NO_LIMIT && string.length() > length) 
+				return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, string.length());
 			return null;
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为长整型(long)";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.long";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为长整型(long)", "jdb.data.validator.value.datatype.error");
 	}
 }

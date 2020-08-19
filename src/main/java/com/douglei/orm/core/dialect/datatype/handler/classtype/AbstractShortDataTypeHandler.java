@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 8673012505155836834L;
+	private static final long serialVersionUID = 6652217805128180607L;
 
 	@Override
 	public String getCode() {
@@ -22,9 +22,8 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {short.class, Short.class};
 	}
-	private static final Class<?>[] supportClasses = {short.class, Short.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -45,58 +44,14 @@ public abstract class AbstractShortDataTypeHandler extends ClassDataTypeHandler{
 			String string = value.toString();
 			
 			long l = Long.parseLong(string);
-			if(l > Short.MAX_VALUE || l < Short.MIN_VALUE) {
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getOriginMessage() {
-						return "数据值大小异常, 应在%d至%d范围内";
-					}
-					
-					@Override
-					public String getCode() {
-						return "jdb.data.validator.value.digital.range.overflow";
-					}
-
-					@Override
-					public Object[] getParams() {
-						return new Object[]{ Short.MIN_VALUE, Short.MAX_VALUE };
-					}
-				};
-			}
+			if(l > Short.MAX_VALUE || l < Short.MIN_VALUE) 
+				return new ValidationResult(validateFieldName, "数据值大小异常, 应在%d至%d范围内", "jdb.data.validator.value.digital.range.overflow", Short.MIN_VALUE, Short.MAX_VALUE);
 			
-			if(length != DBDataType.NO_LIMIT && string.length() > length) {
-				return new ValidationResult(validateFieldName) {
-					
-					@Override
-					public String getOriginMessage() {
-						return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-					}
-					
-					@Override
-					public String getCode() {
-						return "jdb.data.validator.value.digital.length.overlength";
-					}
-
-					@Override
-					public Object[] getParams() {
-						return new Object[] { length, string.length() };
-					}
-				};
-			}
+			if(length != DBDataType.NO_LIMIT && string.length() > length) 
+				return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, string.length());
+			
 			return null;
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为短整型(short)";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.short";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为短整型(short)", "jdb.data.validator.value.datatype.error.short");
 	}
 }

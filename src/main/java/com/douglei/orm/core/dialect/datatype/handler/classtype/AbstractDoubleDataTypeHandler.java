@@ -14,7 +14,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 5390641481543718833L;
+	private static final long serialVersionUID = -6271435058160379467L;
 
 	@Override
 	public String getCode() {
@@ -23,9 +23,8 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {double.class, Double.class, BigDecimal.class};
 	}
-	private static final Class<?>[] supportClasses = {double.class, Double.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -50,40 +49,12 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 		}else if(VerifyTypeMatchUtil.isDouble(value.toString())) {
 			o = Double.parseDouble(value.toString());
 		}else {
-			return new ValidationResult(validateFieldName) {
-				
-				@Override
-				public String getOriginMessage() {
-					return "数据值类型错误, 应为浮点型(double)";
-				}
-				
-				@Override
-				public String getCode() {
-					return "jdb.data.validator.value.datatype.error.double";
-				}
-			};
+			return new ValidationResult(validateFieldName, "数据值类型错误, 应为浮点型(double)", "jdb.data.validator.value.datatype.error.double");
 		}
 		
 		String string = o.toString();
-		if(length != DBDataType.NO_LIMIT && string.length() - 1 > length) {
-			return new ValidationResult(validateFieldName) {
-				
-				@Override
-				public String getOriginMessage() {
-					return "数据值长度超长, 设置长度为%d, 实际长度为%d";
-				}
-				
-				@Override
-				public String getCode() {
-					return "jdb.data.validator.value.digital.length.overlength";
-				}
-
-				@Override
-				public Object[] getParams() {
-					return new Object[] { length, (string.length() - 1) };
-				}
-			};
-		}
+		if(length != DBDataType.NO_LIMIT && string.length() - 1 > length) 
+			return new ValidationResult(validateFieldName, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, (string.length() - 1));
 		
 		if(precision != DBDataType.NO_LIMIT) {
 			short dotIndex = (short)string.indexOf(".");
@@ -94,26 +65,8 @@ public abstract class AbstractDoubleDataTypeHandler extends ClassDataTypeHandler
 					dotIndex++;
 					pl++;
 				}
-				if(pl > precision) {
-					short apl = pl;
-					return new ValidationResult(validateFieldName) {
-						
-						@Override
-						public String getOriginMessage() {
-							return "数据值精度超长, 设置精度为%d, 实际精度为%d";
-						}
-						
-						@Override
-						public String getCode() {
-							return "jdb.data.validator.value.digital.precision.overlength";
-						}
-						
-						@Override
-						public Object[] getParams() {
-							return new Object[] { precision, apl };
-						}
-					};
-				}
+				if(pl > precision) 
+					return new ValidationResult(validateFieldName, "数据值精度超长, 设置精度为%d, 实际精度为%d", "jdb.data.validator.value.digital.precision.overlength", precision, pl);
 			}
 		}
 		return null;

@@ -9,16 +9,6 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
 public class UniqueValidationResult extends ValidationResult {
 	
 	public UniqueValidationResult(String validateFieldName) {
-		super(validateFieldName);
-	}
-
-	@Override
-	public String getOriginMessage() {
-		return  "值不唯一, 已存在相同值的数据";
-	}
-	
-	@Override
-	public String getCode() {
-		return "jdb.data.validator.value.violation.unique.constraint";
+		super(validateFieldName, "值不唯一, 已存在相同值的数据", "jdb.data.validator.value.violation.unique.constraint");
 	}
 }

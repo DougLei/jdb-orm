@@ -13,7 +13,7 @@ import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
  * @author DougLei
  */
 public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = -7253480282861333667L;
+	private static final long serialVersionUID = -2598112756930712297L;
 
 	@Override
 	public String getCode() {
@@ -22,9 +22,8 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {Date.class};
 	}
-	private static final Class<?>[] supportClasses = {Date.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
@@ -40,17 +39,6 @@ public abstract class AbstractDateDataTypeHandler extends ClassDataTypeHandler{
 		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) {
 			return null;
 		}
-		return new ValidationResult(validateFieldName) {
-			
-			@Override
-			public String getOriginMessage() {
-				return "数据值类型错误, 应为日期类型";
-			}
-			
-			@Override
-			public String getCode() {
-				return "jdb.data.validator.value.datatype.error.date";
-			}
-		};
+		return new ValidationResult(validateFieldName, "数据值类型错误, 应为日期类型", "jdb.data.validator.value.datatype.error.date");
 	}
 }

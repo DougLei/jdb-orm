@@ -13,7 +13,7 @@ import com.douglei.orm.core.dialect.datatype.handler.wrapper.StringWrapper;
  * @author DougLei
  */
 public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
-	private static final long serialVersionUID = 8388373350531988363L;
+	private static final long serialVersionUID = 5503263981279184374L;
 
 	@Override
 	public String getCode() {
@@ -22,9 +22,8 @@ public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return supportClasses;
+		return new Class<?>[] {Clob.class};
 	}
-	private static final Class<?>[] supportClasses = {Clob.class};
 
 	@Override
 	public void setValue(PreparedStatement preparedStatement, short parameterIndex, Object value) throws SQLException {
