@@ -15,8 +15,8 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 public class UpdateExecuteHandler extends TableExecuteHandler{
 	private boolean updateNullValue;
 	
-	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap, boolean updateNullValue) {
-		setBaseInfo(tableMetadata, propertyMap);
+	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
+		setBaseInfo(tableMetadata, objectMap);
 		this.updateNullValue = updateNullValue;
 		initial();
 	}
@@ -26,15 +26,15 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 		StringBuilder updateSql = new StringBuilder(300);
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
-		parameters = new ArrayList<Object>(propertyMap.size());
+		parameters = new ArrayList<Object>(objectMap.size());
 		
 		// 处理update set
 		boolean isFirst = true;
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
-		for (String code : propertyMap.keySet()) {
+		for (String code : objectMap.keySet()) {
 			if(!tableMetadata.isPrimaryKeyColumnByCode(code)) {
-				value = propertyMap.get(code);
+				value = objectMap.get(code);
 				if(updateNullValue || value != null) {
 					if(isFirst) {
 						isFirst = false;
@@ -63,7 +63,7 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 			columnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), columnMetadata.getDataTypeHandler()));
+			parameters.add(new InputSqlParameter(objectMap.get(pkCode), columnMetadata.getDataTypeHandler()));
 			
 			if(index < size) {
 				updateSql.append(" and ");

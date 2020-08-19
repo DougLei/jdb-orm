@@ -23,7 +23,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -6373463215415941467L;
+	private static final long serialVersionUID = -7003748045936176394L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -200,16 +200,6 @@ public class TableMetadata implements Metadata{
 	}
 
 	/**
-	 * 给实体map设置主键值
-	 * @param entityMap
-	 */
-	public void setPrimaryKeyValue2EntityMap(Map<String, Object> entityMap) {
-		if(primaryKeyHandler != null) {
-			primaryKeyHandler.setValue2EntityMap(primaryKeyColumns_.keySet(), this, entityMap, primaryKeySequence);
-		}
-	}
-	
-	/**
 	 * <pre>
 	 * 	如果指定了className, 则返回className
 	 * 	否则返回name, 即表名
@@ -236,8 +226,12 @@ public class TableMetadata implements Metadata{
 	public String getClassName() {
 		return className;
 	}
+	
 	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {
 		this.primaryKeyHandler = primaryKeyHandler;
+	}
+	public boolean existsPrimaryKeyHandler() {
+		return primaryKeyHandler != null;
 	}
 	public void setPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) {
 		this.primaryKeySequence = primaryKeySequence;
@@ -245,8 +239,14 @@ public class TableMetadata implements Metadata{
 	public PrimaryKeySequence getPrimaryKeySequence() {
 		return primaryKeySequence;
 	}
-	public boolean existsPrimaryKeyHandler() {
-		return primaryKeyHandler != null;
+	/**
+	 * 给实体map设置主键值
+	 * @param objectMap 实体map
+	 * @param originObject 源实体, 如果可以将生成的id值, 也保存到源实例中, 通过引用传递, 返回给调用者, 例如uuid32, uuid36这种主键生成器
+	 */
+	public void setPrimaryKeyValue2ObjectMap(Map<String, Object> objectMap, Object originObject) {
+		if(primaryKeyHandler != null) 
+			primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, originObject, primaryKeySequence);
 	}
 
 	// 获取列的code集合

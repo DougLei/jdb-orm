@@ -14,9 +14,12 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  * @author DougLei
  */
 public class InsertExecuteHandler extends TableExecuteHandler{
+	private Object originObject;
 	
-	public InsertExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
-		super(tableMetadata, propertyMap);
+	public InsertExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap, Object originObject) {
+		setBaseInfo(tableMetadata, objectMap);
+		this.originObject = originObject;
+		initial();
 	}
 	
 	@Override
@@ -27,15 +30,15 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 		StringBuilder values = new StringBuilder();
 		values.append(" values(");
 		
-		tableMetadata.setPrimaryKeyValue2EntityMap(propertyMap);
-		parameters = new ArrayList<Object>(propertyMap.size());
+		tableMetadata.setPrimaryKeyValue2ObjectMap(objectMap, originObject);
+		parameters = new ArrayList<Object>(objectMap.size());
 		
 		boolean isFirst = true;
 		Object value = null;
 		ColumnMetadata column = null;
-		Set<String> codes = propertyMap.keySet();
+		Set<String> codes = objectMap.keySet();
 		for (String code : codes) {
-			value = propertyMap.get(code);
+			value = objectMap.get(code);
 			if(value != null) {// 只保存不为空的值, 空值不需要处理
 				if(isFirst) {
 					isFirst = false;

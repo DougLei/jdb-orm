@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration>
+	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" forceCreateMode="create">
+		<columns>
+			<column name="id" property="id" dataType="string" primaryKey="true" length="50" />
+			<column name="name" property="name" dataType="string" length="30" />
+			<column name="age" property="age" dataType="integer" />
+			<column name="sex" property="sex" dataType="string" />
+		</columns>
+		<primaryKeyHandler type="uuid32"></primaryKeyHandler>
+	</table>
+</mapping-configuration>

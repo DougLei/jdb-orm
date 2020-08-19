@@ -93,17 +93,17 @@ public class PersistentObject extends AbstractPersistentObject{
 				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
 				Object id;
 				if(primaryKeyColumnMetadataCodes.size() == 1) {
-					id = propertyMap.get(primaryKeyColumnMetadataCodes.iterator().next());
+					id = objectMap.get(primaryKeyColumnMetadataCodes.iterator().next());
 				}else {
 					Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumnMetadataCodes.size());
 					for (String pkCode : primaryKeyColumnMetadataCodes) {
-						idMap.put(pkCode, propertyMap.get(pkCode));
+						idMap.put(pkCode, objectMap.get(pkCode));
 					}
 					id = idMap;
 				}
 				this.id = new Identity(id, tableMetadata);
 			}else {
-				this.id = new Identity(propertyMap);// 不存在主键配置时, 就将整个对象做为id
+				this.id = new Identity(objectMap);// 不存在主键配置时, 就将整个对象做为id
 			}
 		}
 		return id;
@@ -113,11 +113,11 @@ public class PersistentObject extends AbstractPersistentObject{
 	public ExecuteHandler getExecuteHandler() {
 		switch(operationState) {
 			case CREATE:
-				return new InsertExecuteHandler(tableMetadata, propertyMap);
+				return new InsertExecuteHandler(tableMetadata, objectMap, originObject);
 			case DELETE:
-				return new DeleteExecuteHandler(tableMetadata, propertyMap);
+				return new DeleteExecuteHandler(tableMetadata, objectMap);
 			case UPDATE:
-				return new UpdateExecuteHandler(tableMetadata, propertyMap, updateNullValue);
+				return new UpdateExecuteHandler(tableMetadata, objectMap, updateNullValue);
 		}
 		return null;
 	}
@@ -135,7 +135,7 @@ public class PersistentObject extends AbstractPersistentObject{
 			Object value = null;
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
-				value = propertyMap.get(column.getCode());
+				value = objectMap.get(column.getCode());
 				result = column.getValidatorHandler().doValidate(value);
 				if(result != null) {
 					throw new DataValidationException(column.getDescriptionName(), column.getName(), value, result);
@@ -143,13 +143,9 @@ public class PersistentObject extends AbstractPersistentObject{
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
-		return "id:" + getId().toString() 
-				+ "\t" 
-				+ "operationState:" + operationState 
-				+ "\t" 
-				+ originObject.toString();
+		return "PersistentObject [id=" + id + ", operationState=" + operationState + ", originObject=" + originObject + "]";
 	}
 }

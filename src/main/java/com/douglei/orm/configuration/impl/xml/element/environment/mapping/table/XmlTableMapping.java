@@ -47,8 +47,8 @@ import com.douglei.tools.utils.StringUtil;
 public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private static final long serialVersionUID = -3966509657251325723L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
-	private static final XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
-	private static final XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
+	private static XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
+	private static XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
 	
 	private TableMetadata tableMetadata;
 	
@@ -311,7 +311,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
 			if(primaryKeyHandler != null) {
 				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.primaryKeyCount() > 1) {
-					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
+					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getClass().getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
 				}
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				

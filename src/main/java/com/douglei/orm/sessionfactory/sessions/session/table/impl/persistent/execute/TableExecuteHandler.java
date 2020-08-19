@@ -14,22 +14,22 @@ import com.douglei.tools.utils.StringUtil;
  */
 public abstract class TableExecuteHandler implements ExecuteHandler {
 	protected TableMetadata tableMetadata;
-	protected Map<String, Object> propertyMap;
+	protected Map<String, Object> objectMap;
 	
 	protected TableExecuteHandler() {}
-	protected TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
-		setBaseInfo(tableMetadata, propertyMap);
+	protected TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+		setBaseInfo(tableMetadata, objectMap);
 		initial();
 	}
 	
 	/**
 	 * 设置基础信息
 	 * @param tableMetadata
-	 * @param propertyMap
+	 * @param objectMap
 	 */
-	protected void setBaseInfo(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
+	protected void setBaseInfo(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		this.tableMetadata = tableMetadata;
-		this.propertyMap = propertyMap;
+		this.objectMap = objectMap;
 	}
 	
 	/**
@@ -51,23 +51,8 @@ public abstract class TableExecuteHandler implements ExecuteHandler {
 		return parameters;
 	}
 	
-	@Deprecated
-	@Override
-	public short executeSqlCount() {
-		return 1;
-	}
-
-	@Deprecated
-	@Override
-	public boolean next() {
-		return false;
-	}
-	
 	@Override
 	public String toString() {
-		return "\n" + getClass().getName() +
-			   "\n" + (StringUtil.isEmpty(sql)?"sql is null":sql) + 
-			   "\n" + (CollectionUtil.isEmpty(parameters)?"parameters is null":parameters.toString()) + 
-			   "\n";
+		return "TableExecuteHandler [sql=" + (StringUtil.isEmpty(sql)?"sql is null":sql) + ", parameters=" + (CollectionUtil.isEmpty(parameters)?"parameters is null":parameters.toString()) + "]";
 	}
 }

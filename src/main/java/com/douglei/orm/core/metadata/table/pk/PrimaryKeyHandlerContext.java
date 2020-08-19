@@ -14,15 +14,11 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public class PrimaryKeyHandlerContext {
-	private static final Map<String, PrimaryKeyHandler> handlers = new HashMap<String, PrimaryKeyHandler>(4);
+	private static Map<String, PrimaryKeyHandler> handlers = new HashMap<String, PrimaryKeyHandler>(8);
 	static {
-		registerHandler(new UUID32PrimaryKeyHandler());
-		registerHandler(new UUID36PrimaryKeyHandler());
-		registerHandler(new SequencePrimaryKeyHandler());
-	}
-	
-	private static void registerHandler(PrimaryKeyHandler handler) {
-		handlers.put(handler.getName(), handler);
+		handlers.put("uuid32", new UUID32PrimaryKeyHandler());
+		handlers.put("uuid36", new UUID36PrimaryKeyHandler());
+		handlers.put("sequence", new SequencePrimaryKeyHandler());
 	}
 	
 	/**
@@ -37,7 +33,7 @@ public class PrimaryKeyHandlerContext {
 		PrimaryKeyHandler handler = handlers.get(primaryKeyHandler);
 		if(handler == null) {
 			handler = (PrimaryKeyHandler) ConstructorUtil.newInstance(primaryKeyHandler);
-			registerHandler(handler);
+			handlers.put(primaryKeyHandler, handler);
 		}
 		return handler;
 	}

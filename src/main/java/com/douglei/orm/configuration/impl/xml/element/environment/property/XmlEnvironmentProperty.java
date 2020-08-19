@@ -34,7 +34,7 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableStatementCache = true;
 	
 	@FieldMetaData
-	private boolean enableTableSessionCache = true;
+	private boolean enableTableSessionCache;
 	
 	@FieldMetaData
 	private MappingStore mappingStore;

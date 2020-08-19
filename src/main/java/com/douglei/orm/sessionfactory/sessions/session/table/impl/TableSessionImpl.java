@@ -348,14 +348,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
 		ExecuteHandler executeHandler = persistentObject.getExecuteHandler();
 		if(executeHandler == null) {
-			if(logger.isDebugEnabled()) {
+			if(logger.isDebugEnabled())
 				logger.debug("执行state={}, persistentObject={}, 获取的executeHandler实例为null", persistentObject.getOperationState(), persistentObject.toString());
-			}
 			return;
 		}
-		if(logger.isDebugEnabled()) {
+		if(logger.isDebugEnabled()) 
 			logger.debug("执行state={}, persistentObject={}, 获取的executeHandler {} = {}", persistentObject.getOperationState(), persistentObject.toString(), executeHandler.getClass().getName(), executeHandler.toString());
-		}
 		super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	

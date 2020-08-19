@@ -4,15 +4,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
-import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 
 /**
  * 
  * @author DougLei
  */
-public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
-	private static final long serialVersionUID = 8613215141130789619L;
+public class SequencePrimaryKeyHandler implements PrimaryKeyHandler{
+	private static final long serialVersionUID = -7813495058756356276L;
 
 	@Override
 	public boolean supportProcessMultiPKColumns() {
@@ -20,12 +19,7 @@ public class SequencePrimaryKeyHandler extends PrimaryKeyHandler{
 	}
 	
 	@Override
-	public void setValue2EntityMap(Set<String> primaryKeyColumnCodes, TableMetadata table, Map<String, Object> entityMap, PrimaryKeySequence primaryKeySequence) {
-		entityMap.put(primaryKeyColumnCodes.iterator().next(), primaryKeySequence.unuse()?null:primaryKeySequence);
-	}
-	
-	@Override
-	public String getName() {
-		return "sequence";
+	public void setValue2ObjectMap(Set<String> primaryKeyColumnCodes, Map<String, Object> objectMap, Object originObject, PrimaryKeySequence primaryKeySequence) {
+		objectMap.put(primaryKeyColumnCodes.iterator().next(), primaryKeySequence.unuse()?null:primaryKeySequence);
 	}
 }

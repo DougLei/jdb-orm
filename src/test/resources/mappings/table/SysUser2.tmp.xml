@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration>
+	<table name="SYS_USER2" forceCreateMode="create">
+		<columns>
+			<column name="dd" dataType="string" primaryKey="true" length="50" />
+			<column name="name" dataType="string" length="30" />
+			<column name="age" dataType="integer" />
+			<column name="sex" dataType="string" />
+		</columns>
+		<primaryKeyHandler type="uuid32"></primaryKeyHandler>
+	</table>
+</mapping-configuration>

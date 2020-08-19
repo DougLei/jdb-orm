@@ -28,7 +28,7 @@
 			</index>
 		</indexes>
 		
-		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, sequence, 或自定义的类(继承 {@link PrimaryKeyHandler}) -->
+		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid32, uuid36, sequence, 或自定义的类(实现 {@link PrimaryKeyHandler} 接口), 并在这里配置实现类的全路径 -->
 		<primaryKeyHandler type="sequence">
 			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
 			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->

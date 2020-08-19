@@ -1,8 +1,6 @@
 package com.douglei.orm.session;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SysUser implements Serializable{
 	private static final long serialVersionUID = 8240817972018054005L;
@@ -11,8 +9,7 @@ public class SysUser implements Serializable{
 	private int age;
 	private String sex;
 	
-	public SysUser() {
-	}
+	public SysUser() {}
 	public SysUser(String id, String name, int age, String sex) {
 		this.id = id;
 		this.name = name;
@@ -44,19 +41,8 @@ public class SysUser implements Serializable{
 		this.sex = sex;
 	}
 	
-	
-	private static List<SysUser> list = new ArrayList<SysUser>();
-	static {
-		list.add(new SysUser("1", "石磊石磊石磊石磊石磊石磊石磊", 28, "男"));
-		list.add(new SysUser("2", "DougLei", 27, "女"));
-	}
-	
-	public static List<SysUser> getList(){
-		return list;
-	}
-	
-	@Override
-	public String toString() {
-		return "SysUser [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + "]";
-	}
+//	@Override
+//	public String toString() {
+//		return "SysUser [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + "]";
+//	}
 }

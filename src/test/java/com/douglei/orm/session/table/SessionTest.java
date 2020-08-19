@@ -1,6 +1,8 @@
 package com.douglei.orm.session.table;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,7 +37,16 @@ public class SessionTest {
 	
 	@Test
 	public void saveTest() {
-		session.getTableSession().save(SysUser.getList().get(0));
+		SysUser user = new SysUser(null, "石磊", 28, "男");
+		session.getTableSession().save(user);
+		System.out.println(user.getId());
+		
+		Map<String, Object> user2 = new HashMap<String, Object>();
+		user2.put("NAME", "成荣");
+		user2.put("AGE", 25);
+		user2.put("SEX", "女");
+		session.getTableSession().save("SYS_USER2", user2);
+		System.out.println(user2.get("DD"));
 	}
 	
 	// --------------------------------------------------------------------------------------

@@ -12,13 +12,17 @@ public interface ExecuteHandler {
 	 * 要执行的sql语句的数量
 	 * @return
 	 */
-	short executeSqlCount();
+	default short executeSqlCount() {
+		return 1;
+	}
 	
 	/**
 	 * 移动到下一个sql语句和parameters
 	 * @return 如果next后还有要执行的sql, 返回true, 否则返回false
 	 */
-	boolean next();
+	default boolean next() {
+		return false;
+	}
 	
 	/**
 	 * 获取当前要执行的sql语句

@@ -14,8 +14,8 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
  */
 public class DeleteExecuteHandler extends TableExecuteHandler{
 	
-	public DeleteExecuteHandler(TableMetadata tableMetadata, Map<String, Object> propertyMap) {
-		super(tableMetadata, propertyMap);
+	public DeleteExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+		super(tableMetadata, objectMap);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(propertyMap.get(pkCode), primaryKeyColumnMetadata.getDataTypeHandler()));
+			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDataTypeHandler()));
 			
 			if(index < size) {
 				deleteSql.append(" and ");
@@ -55,15 +55,15 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 	
 	// 当不存在primaryKey时, set对应的sql语句
 	private void setSqlWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
-		short size = (short) propertyMap.size();
+		int size = objectMap.size();
 		parameters = new ArrayList<Object>(size);
 		
 		int index = 1;
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
-		for (String code : propertyMap.keySet()) {
+		for (String code : objectMap.keySet()) {
 			columnMetadata = tableMetadata.getColumnByCode(code);
-			value = propertyMap.get(code);
+			value = objectMap.get(code);
 			
 			if(value == null) {
 				deleteSql.append(columnMetadata.getName()).append(" is null");
