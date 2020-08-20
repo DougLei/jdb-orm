@@ -353,7 +353,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			// 如果是保存表数据, 且使用了序列作为主键值
 			TableMetadata tableMetadata = persistentObject.getTableMetadata();
 			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
-			// 将执行后的序列值, 赋值给源实例
+			// 将执行insert语句后生成的序列值, 赋给源实例
 			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumnCodes().iterator().next(), result.getId());
 		}else {
 			super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
