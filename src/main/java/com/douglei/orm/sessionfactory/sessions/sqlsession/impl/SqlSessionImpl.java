@@ -146,36 +146,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters, returnID);
-		try {
-			return statementHandler.executeInsert(parameters);
-		} catch (StatementExecutionException e) {
-			logger.error("execute insert sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new SessionExecutionException("execute insert sql时出现异常", e);
-		} finally {
-			if(!enableStatementCache) {
-				statementHandler.close();
-			}
-		}
-	}
-	
-	@Override
-	public int executeUpdate(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
-		try {
-			return statementHandler.executeUpdate(parameters);
-		} catch (StatementExecutionException e) {
-			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new SessionExecutionException("execute update sql时出现异常", e);
-		} finally {
-			if(!enableStatementCache) {
-				statementHandler.close();
-			}
-		}
-	}
-	
-	@Override
 	public <T> List<T> query(Class<T> targetClass, String sql) {
 		return query(targetClass, sql, null);
 	}
@@ -466,6 +436,35 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
 	}
 	
+	@Override
+	public InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID) {
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, returnID);
+		try {
+			return statementHandler.executeInsert(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("execute insert sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("execute insert sql时出现异常", e);
+		} finally {
+			if(!enableStatementCache) {
+				statementHandler.close();
+			}
+		}
+	}
+	
+	@Override
+	public int executeUpdate(String sql, List<Object> parameters) {
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
+		try {
+			return statementHandler.executeUpdate(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("execute update sql时出现异常", e);
+		} finally {
+			if(!enableStatementCache) {
+				statementHandler.close();
+			}
+		}
+	}
 	
 	@Override
 	public Object executeProcedure(ProcedureExecutor procedureExecutor) {
