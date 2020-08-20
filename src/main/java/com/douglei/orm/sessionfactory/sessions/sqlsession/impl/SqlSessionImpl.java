@@ -146,8 +146,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public InsertResult executeInsert(String sql, List<Object> parameters, String oracleSeqCurrvalSQL) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters, new ReturnID(oracleSeqCurrvalSQL));
+	public InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID) {
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, returnID);
 		try {
 			return statementHandler.executeInsert(parameters);
 		} catch (StatementExecutionException e) {

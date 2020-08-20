@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
+import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.statement.InsertResult;
 
@@ -282,20 +283,20 @@ public interface SqlSession {
 	/**
 	 * 执行插入操作
 	 * @param sql
-	 * @param seqCurrvalSQL @see ReturnID
+	 * @param returnID 可传入null
 	 * @return 
 	 */
-	default InsertResult executeInsert(String sql, String seqCurrvalSQL) {
-		return executeInsert(sql, null, seqCurrvalSQL);
+	default InsertResult executeInsert(String sql, ReturnID returnID) {
+		return executeInsert(sql, null, returnID);
 	}
 	/**
 	 * 执行插入操作
 	 * @param sql
 	 * @param parameters
-	 * @param oracleSeqCurrvalSQL @see ReturnID
+	 * @param returnID 可传入null
 	 * @return 
 	 */
-	InsertResult executeInsert(String sql, List<Object> parameters, String oracleSeqCurrvalSQL);
+	InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID);
 	
 	/**
 	 * 执行增删改查操作
