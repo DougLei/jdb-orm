@@ -1,7 +1,8 @@
-package com.douglei.orm.sqlsession;
+package com.douglei.orm.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -69,38 +70,19 @@ public class JDBCTest {
 	
 	@Test
 	public void oracle() throws Exception {
-//		String className = "oracle.jdbc.driver.OracleDriver";
 		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
 		String username = "douglei";
 		String pwd = "root";
 		
-//		Class.forName(className);
-//		System.out.println(DriverManager.getConnection(url, username, pwd).getMetaData().getURL());
-		
 		Connection connection = DriverManager.getConnection(url, username, pwd);
-//		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
-//		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
-//		System.out.println(conn.getMetaData().getDatabaseProductVersion());
-		
-		
 		Statement st = connection.createStatement();
-		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from I18N_MESSAGE_1");
-		
-		System.out.println(rs.getMetaData().getColumnName(1));
-		System.out.println(rs.getMetaData().getColumnType(1));
-		System.out.println(rs.getMetaData().getColumnTypeName(1));
-		
-//		conn.setAutoCommit(true);
-//		PreparedStatement pst = conn.prepareCall("insert into sys_user(id) values(?)");
-//		pst.setString(1, "isAutoCommit");
-//		System.out.println(pst.executeUpdate());
-//		
-//		
-//		conn.setAutoCommit(false);
-//		pst.setString(1, "notAutoCommit");
-//		System.out.println(pst.executeUpdate());
-		
-//		conn.commit();
+		ResultSet rs = st.executeQuery("select test_seq.nextval from dual");
+		rs.next();
+		System.out.println("next value is " + rs.getInt(1));
+		rs = st.executeQuery("select test_seq.currval from dual");
+		rs.next();
+		System.out.println("current value is " + rs.getInt(1));
+		System.out.println(rs.getObject(1).getClass());
 	}
 	
 	@Test
@@ -111,37 +93,33 @@ public class JDBCTest {
 		String pwd = "root";
 		
 		Class.forName(className);
-		Connection conn = DriverManager.getConnection(url, username, pwd);
-		
-//		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
-//		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
-//		System.out.println(conn.getMetaData().getDatabaseProductVersion());
-	
-		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("select name, age from [User] where name = '啊哈'");
-		if(rs.next()) {
-			System.out.println(rs.getObject("age").getClass());
-		}
-		
-			
-		
-//		Statement st = conn.createStatement();
-//		ResultSet rs = st.executeQuery("select * from sys_user");
+		Connection connection = DriverManager.getConnection(url, username, pwd);
+//		Statement statement = connection.createStatement();
+//		ResultSet rs = statement.executeQuery("select * from sys_user");
+//		while(rs.next()) {
+//			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
+//		}
 //		
-//		
-//		ResultSetMetaData metadata = rs.getMetaData();
-//		int count = metadata.getColumnCount();
-//		for (int i = 0; i <count; i++) {
-//			System.out.println(metadata.getColumnType(i+1));
-//			System.out.println(metadata.getColumnTypeName(i+1));
-//			System.out.println("---------------------------------------");
+//		connection = statement.getConnection();
+//		statement = connection.createStatement();
+//		rs = statement.executeQuery("select * from sys_user");
+//		while(rs.next()) {
+//			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
 //		}
 		
+		PreparedStatement statement = connection.prepareStatement("select * from sys_user");
+		ResultSet rs = statement.executeQuery();
+		while(rs.next()) {
+			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
+		}
 		
-//		PreparedStatement pst = conn.prepareCall("delete sys_user where id = ? "
-//				+ "delete sys_user where id = ?");
-//		pst.setString(1, "1");
-//		pst.setString(2, "2");
-//		pst.executeUpdate();
+		Connection c = statement.getConnection();
+		System.out.println(c == connection);
+		statement = connection.prepareStatement("select * from sys_user");
+		rs = statement.executeQuery();
+		while(rs.next()) {
+			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
+		}
+		
 	}
 }

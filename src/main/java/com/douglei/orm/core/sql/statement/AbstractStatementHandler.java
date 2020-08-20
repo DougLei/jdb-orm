@@ -1,6 +1,5 @@
 package com.douglei.orm.core.sql.statement;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
@@ -25,12 +25,14 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStatementHandler.class);
 	
 	protected String sql;// 执行的sql语句
+	protected ReturnID returnID;
 	private boolean isClosed;// 是否关闭
 	
 	private List<SqlResultsetMetadata> resultsetMetadatas; // 结果集的元数据
 	
-	protected AbstractStatementHandler(String sql) {
+	protected AbstractStatementHandler(String sql, ReturnID returnID) {
 		this.sql = sql;
+		this.returnID = returnID;
 	}
 	
 	/**
@@ -153,23 +155,34 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	public void close() {
 		if(!isClosed) {
 			isClosed = true;
-			if(CollectionUtil.unEmpty(resultsetMetadatas)) {
+			if(CollectionUtil.unEmpty(resultsetMetadatas)) 
 				resultsetMetadatas.clear();
+			
+			Statement statement = getStatement();
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				logger.error("关闭[{}]时出现异常: {}", statement.getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
+				throw new CloseStatementException(statement, e);
 			}
-			closeStatement(getStatement());
 		}
 	}
 	
 	/**
-	 * 关闭 {@link Statement} or {@link PreparedStatement}
-	 * @param statement
+	 * 获取oracle数据库的序列值
+	 * @param statement 执行对象
+	 * @return
+	 * @throws SQLException 
 	 */
-	protected void closeStatement(Statement statement) {
-		try {
+	protected int getOracleSeqCurval(Statement statement) throws SQLException {
+		int seqVal = -1;
+		ResultSet rs = statement.executeQuery("select " + returnID.getOracleSeqCurrvalSQL() + " from dual");
+		if(rs.next())
+			seqVal = rs.getInt(1);
+		
+		rs.close();
+		if(statement != getStatement())
 			statement.close();
-		} catch (SQLException e) {
-			logger.error("关闭[{}]时出现异常: {}", statement.getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
-			throw new CloseStatementException(statement, e);
-		}
+		return seqVal;
 	}
 }

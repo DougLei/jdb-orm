@@ -16,6 +16,7 @@ import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
+import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -245,8 +246,13 @@ public class TableMetadata implements Metadata{
 	 * @param originObject 源实体, 如果可以将生成的id值, 也保存到源实例中, 通过引用传递, 返回给调用者, 例如uuid32, uuid36这种主键生成器
 	 */
 	public void setPrimaryKeyValue2ObjectMap(Map<String, Object> objectMap, Object originObject) {
-		if(primaryKeyHandler != null) 
-			primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, originObject, primaryKeySequence);
+		if(primaryKeyHandler != null) {
+			if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) {
+				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, primaryKeySequence);
+			}else {
+				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, originObject);
+			}
+		}
 	}
 
 	// 获取列的code集合

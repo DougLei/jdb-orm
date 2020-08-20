@@ -16,10 +16,12 @@ import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.ConnectionWrapper;
+import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
+import com.douglei.orm.core.sql.statement.InsertResult;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
@@ -56,12 +58,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * 获取StatementHandler
 	 * @param sql
 	 * @param parameters
+	 * @param returnID
 	 * @return
 	 */
-	private StatementHandler getStatementHandler(String sql, List<Object> parameters){
+	private StatementHandler getStatementHandler(String sql, List<Object> parameters, ReturnID returnID){
 		StatementHandler statementHandler = null;
 		if(enableStatementCache) {
-			logger.debug("缓存开启, 从缓存中获取StatementHandler实例");
 			String code = DigestUtils.md5Hex(sql);
 			
 			if(statementHandlerCache == null) {
@@ -72,20 +74,20 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			
 			if(statementHandler == null) {
 				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并尝试放到缓存中");
-				statementHandler = connection.createStatementHandler(sql, parameters);
-				if(statementHandler.canCache())
+				statementHandler = connection.createStatementHandler(sql, parameters, returnID);
+				if(statementHandler.supportCache())
 					statementHandlerCache.put(code, statementHandler);
 			}
 		}else {
 			logger.debug("没有开启缓存, 只创建StatementHandler实例");
-			statementHandler = connection.createStatementHandler(sql, parameters);
+			statementHandler = connection.createStatementHandler(sql, parameters, returnID);
 		}
 		return statementHandler;
 	}
 	
 	@Override
 	public List<Map<String, Object>> query(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters);
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeQueryResultList(parameters);
 		} catch (StatementExecutionException e) {
@@ -100,7 +102,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters);
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeQueryUniqueResult(parameters);
 		} catch (StatementExecutionException e) {
@@ -115,7 +117,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public List<Object[]> query_(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters);
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeQueryResultList_(parameters);
 		} catch (StatementExecutionException e) {
@@ -130,7 +132,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters);
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeQueryUniqueResult_(parameters);
 		} catch (StatementExecutionException e) {
@@ -144,8 +146,23 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
+	public InsertResult executeInsert(String sql, List<Object> parameters, String oracleSeqCurrvalSQL) {
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, new ReturnID(oracleSeqCurrvalSQL));
+		try {
+			return statementHandler.executeInsert(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("execute insert sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("execute insert sql时出现异常", e);
+		} finally {
+			if(!enableStatementCache) {
+				statementHandler.close();
+			}
+		}
+	}
+	
+	@Override
 	public int executeUpdate(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters);
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeUpdate(parameters);
 		} catch (StatementExecutionException e) {

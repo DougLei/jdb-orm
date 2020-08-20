@@ -3,7 +3,7 @@
 	<environment>
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver, 如果不配置, 则框架会解析jdbc url, 获取对应的方言 -->
 		<!-- <property name="enableStatementCache" value="true" /> --><!-- 是否开启Statement缓存, 即对执行对象缓存, 默认值为true  -->
-		<!-- <property name="enableTableSessionCache" value="false" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为false  -->
+		<!-- <property name="enableTableSessionCache" value="false" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为false, 如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存  -->
 		
 		<!-- <property name="mappingStore" value="application" /> --><!-- value的值只包括: application, 或在new XmlConfiguration时传入 {@link com.douglei.orm.configuration.environment.mapping.store.MappingStore} 接口的实现类实例 -->
 		<!-- <property name="clearMappingStoreOnStart" value="true" /> --><!-- 是否在启动时清空映射存储器, 即清空所有映射数据, 默认值为true -->

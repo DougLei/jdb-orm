@@ -1,4 +1,4 @@
-package com.douglei.orm.sqlsession;
+package com.douglei.orm.jdbc;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -42,18 +42,26 @@ public interface StatementHandler {
 	Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
-	 * 执行增删改操作, 返回操作数据的数量
+	 * 执行新增操作
 	 * @param parameters
-	 * @return
+	 * @return 
+	 * @throws StatementExecutionException
+	 */
+	InsertResult executeInsert(List<Object> parameters) throws StatementExecutionException;
+	
+	/**
+	 * 执行增删改操作
+	 * @param parameters
+	 * @return 影响的行数
 	 * @throws StatementExecutionException
 	 */
 	int executeUpdate(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
-	 * 当前StatementHandler是否可以缓存
+	 * 当前StatementHandler是否支持缓存
 	 * @return
 	 */
-	default boolean canCache() {
+	default boolean supportCache() {
 		return true;
 	}
 	

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.core.sql.statement.InsertResult;
 
 /**
  * 和数据库交互的sql session接口
@@ -279,9 +280,27 @@ public interface SqlSession {
 	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
 	
 	/**
+	 * 执行插入操作
+	 * @param sql
+	 * @param seqCurrvalSQL @see ReturnID
+	 * @return 
+	 */
+	default InsertResult executeInsert(String sql, String seqCurrvalSQL) {
+		return executeInsert(sql, null, seqCurrvalSQL);
+	}
+	/**
+	 * 执行插入操作
+	 * @param sql
+	 * @param parameters
+	 * @param oracleSeqCurrvalSQL @see ReturnID
+	 * @return 
+	 */
+	InsertResult executeInsert(String sql, List<Object> parameters, String oracleSeqCurrvalSQL);
+	
+	/**
 	 * 执行增删改查操作
 	 * @param sql
-	 * @return
+	 * @return 返回影响的行数
 	 */
 	default int executeUpdate(String sql) {
 		return executeUpdate(sql, null);
@@ -290,7 +309,7 @@ public interface SqlSession {
 	 * 执行增删改查操作
 	 * @param sql
 	 * @param parameters
-	 * @return
+	 * @return 返回影响的行数
 	 */
 	int executeUpdate(String sql, List<Object> parameters);
 	

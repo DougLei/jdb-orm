@@ -1,12 +1,16 @@
 package com.douglei.orm.core.sql.statement.impl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.statement.AbstractStatementHandler;
+import com.douglei.orm.core.sql.statement.InsertResult;
 import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 
@@ -17,9 +21,9 @@ import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private PreparedStatement preparedStatement;
 
-	public PreparedStatementHandlerImpl(PreparedStatement preparedStatement, String sql) {
-		super(sql);
-		this.preparedStatement = preparedStatement;
+	public PreparedStatementHandlerImpl(Connection connection, String sql, ReturnID returnID) throws SQLException {
+		super(sql, returnID);
+		this.preparedStatement = (returnID != null && returnID.getOracleSeqCurrvalSQL() == null) ? connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) : connection.prepareStatement(sql) ;
 	}
 	
 	/**
@@ -82,6 +86,28 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
+	}
+	
+	@Override
+	public InsertResult executeInsert(List<Object> parameters) throws StatementExecutionException {
+		try {
+			InsertResult result = new InsertResult();
+			setParameters(parameters);
+			result.setRow(preparedStatement.executeUpdate());
+			
+			if(returnID.getOracleSeqCurrvalSQL() == null) {
+				ResultSet id = preparedStatement.getGeneratedKeys();
+				if(id.next())
+					result.setId(id.getInt(1));
+			}else {
+				result.setId(getOracleSeqCurval(preparedStatement.getConnection().createStatement()));
+			}
+			return result;
+		} catch (SQLException e) {
+			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
+		}
 	}
 	
 	@Override

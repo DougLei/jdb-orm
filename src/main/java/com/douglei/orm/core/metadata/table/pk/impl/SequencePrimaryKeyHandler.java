@@ -11,7 +11,7 @@ import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
  * @author DougLei
  */
 public class SequencePrimaryKeyHandler implements PrimaryKeyHandler{
-	private static final long serialVersionUID = -7813495058756356276L;
+	private static final long serialVersionUID = 7575709557481341033L;
 
 	@Override
 	public boolean supportProcessMultiPKColumns() {
@@ -19,7 +19,8 @@ public class SequencePrimaryKeyHandler implements PrimaryKeyHandler{
 	}
 	
 	@Override
-	public void setValue2ObjectMap(Set<String> primaryKeyColumnCodes, Map<String, Object> objectMap, Object originObject, PrimaryKeySequence primaryKeySequence) {
+	public void setValue2ObjectMap(Set<String> primaryKeyColumnCodes, Map<String, Object> objectMap, Object originObject) {
+		PrimaryKeySequence primaryKeySequence = (PrimaryKeySequence) originObject;
 		objectMap.put(primaryKeyColumnCodes.iterator().next(), primaryKeySequence.unuse()?null:primaryKeySequence);
 	}
 }

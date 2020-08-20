@@ -71,23 +71,17 @@ public class ConnectionWrapper {
 	 * 创建StatementHandler实例
 	 * @param sql
 	 * @param parameters
+	 * @param returnID 是否需要返回自增的主键值, 适用于insert语句, 传入null, 则表示不需要
 	 * @return
 	 */
-	public StatementHandler createStatementHandler(String sql, List<Object> parameters) {
+	public StatementHandler createStatementHandler(String sql, List<Object> parameters, ReturnID returnID) {
 		try {
-			if(logger.isDebugEnabled()) {
-				logger.debug("创建StatementHandler实例");
-				logger.debug("sql语句为: {}", sql);
-			}
 			if(parameters==null || parameters.isEmpty()) {
 				logger.debug("没有参数, 创建StatementHandlerImpl实例");
-				return new StatementHandlerImpl(connection.createStatement(), sql);
+				return new StatementHandlerImpl(connection, sql, returnID);
 			}else {
-				if(logger.isDebugEnabled()) {
-					logger.debug("有参数, 创建PreparedStatementHandler实例");
-					logger.debug("参数为: {}", parameters.toString());
-				}
-				return new PreparedStatementHandlerImpl(connection.prepareStatement(sql), sql);
+				logger.debug("有参数, 创建PreparedStatementHandler实例");
+				return new PreparedStatementHandlerImpl(connection, sql, returnID);
 			}
 		} catch (SQLException e) {
 			throw new ConnectionWrapperException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);
