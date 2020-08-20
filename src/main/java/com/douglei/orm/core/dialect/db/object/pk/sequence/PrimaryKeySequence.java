@@ -11,7 +11,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class PrimaryKeySequence implements Serializable{
-	private static final long serialVersionUID = 3023593096916572732L;
+	private static final long serialVersionUID = 8319486112052490770L;
 	private String name;// 序列名
 	private String createSql;
 	private String dropSql;
@@ -57,11 +57,11 @@ public abstract class PrimaryKeySequence implements Serializable{
 		return dropSql;
 	}
 	
-	public boolean use() {
-		return false;
-	}
-	
-	public boolean unuse() {
+	/**
+	 * 序列是否需要执行sql语句(创建与删除序列的sql语句)
+	 * @return
+	 */
+	public boolean executeSqlStatement() {
 		return true;
 	}
 	

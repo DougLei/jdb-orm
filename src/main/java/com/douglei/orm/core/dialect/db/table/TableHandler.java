@@ -36,11 +36,11 @@ import com.douglei.tools.utils.ExceptionUtil;
  */
 public class TableHandler {
 	private static final Logger logger = LoggerFactory.getLogger(TableHandler.class);
-	private static final TableSerializationFileHandler tableSerializationFileHandler = new TableSerializationFileHandler();
+	private static TableSerializationFileHandler tableSerializationFileHandler = new TableSerializationFileHandler();
 	
 	private TableHandler() {}
-	private static final TableHandler instance = new TableHandler();
-	public static final TableHandler singleInstance() {
+	private static TableHandler instance = new TableHandler();
+	public static TableHandler singleInstance() {
 		return instance;
 	}
 	
@@ -328,7 +328,7 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		if(primaryKeySequence != null && primaryKeySequence.use()) {
+		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
 			executeDDLSQL(primaryKeySequence.getCreateSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.CREATE));
@@ -344,7 +344,7 @@ public class TableHandler {
 	 * @throws SQLException 
 	 */
 	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence, Connection connection, List<DBObjectHolder> dbObjectHolders) throws SQLException {
-		if(primaryKeySequence != null && primaryKeySequence.use()) {
+		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
 			executeDDLSQL(primaryKeySequence.getDropSql(), connection);
 			if(dbObjectHolders != null) {
 				dbObjectHolders.add(new DBObjectHolder(primaryKeySequence, DBObjectType.PRIMARY_KEY_SEQUENCE, DBObjectOPType.DROP));

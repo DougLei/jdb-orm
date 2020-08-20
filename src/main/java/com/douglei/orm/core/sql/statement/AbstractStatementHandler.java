@@ -175,8 +175,11 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @throws SQLException 
 	 */
 	protected int getOracleSeqCurval(Statement statement) throws SQLException {
+		if(logger.isDebugEnabled())
+			logger.debug("查询ORACLE序列值SQL = select {}.currval from dual", returnID.getOracleSequenceName());
+		
 		int seqVal = -1;
-		ResultSet rs = statement.executeQuery("select " + returnID.getOracleSeqCurrvalSQL() + " from dual");
+		ResultSet rs = statement.executeQuery("select " + returnID.getOracleSequenceName() + ".currval from dual");
 		if(rs.next())
 			seqVal = rs.getInt(1);
 		

@@ -23,7 +23,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 
 	public PreparedStatementHandlerImpl(Connection connection, String sql, ReturnID returnID) throws SQLException {
 		super(sql, returnID);
-		this.preparedStatement = (returnID != null && returnID.getOracleSeqCurrvalSQL() == null) ? connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) : connection.prepareStatement(sql) ;
+		this.preparedStatement = (returnID != null && returnID.getOracleSequenceName() == null) ? connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) : connection.prepareStatement(sql) ;
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			result.setRow(preparedStatement.executeUpdate());
 			
-			if(returnID.getOracleSeqCurrvalSQL() == null) {
+			if(returnID.getOracleSequenceName() == null) {
 				ResultSet id = preparedStatement.getGeneratedKeys();
 				if(id.next())
 					result.setId(id.getInt(1));

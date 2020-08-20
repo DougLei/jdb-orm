@@ -8,7 +8,7 @@ import com.douglei.orm.core.metadata.table.ColumnMetadata;
  * @author DougLei
  */
 public class SqlServerPrimaryKeySequence extends PrimaryKeySequence{
-	private static final long serialVersionUID = 1654980884354188374L;
+	private static final long serialVersionUID = 7767671473668198045L;
 	private static final SqlServerPrimaryKeySequence instance = new SqlServerPrimaryKeySequence();
 	public static PrimaryKeySequence singleInstance() {
 		return instance;
@@ -26,5 +26,10 @@ public class SqlServerPrimaryKeySequence extends PrimaryKeySequence{
 	@Override
 	protected String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		return null;
+	}
+	
+	@Override
+	public boolean executeSqlStatement() {
+		return false;
 	}
 }

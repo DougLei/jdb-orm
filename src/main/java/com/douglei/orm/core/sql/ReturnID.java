@@ -5,16 +5,16 @@ package com.douglei.orm.core.sql;
  * @author DougLei
  */
 public class ReturnID {
-	/**
-	 * 可为空, 针对oracle数据库, 传入 (序列名.currval) 的sql语句
-	 * 例如: sys_user_seq.currval, 底层会拼接成 select sys_user_seq.currval from dual来获取当前的序列值
-	 */
-	private String oracleSeqCurrvalSQL;
+	private String oracleSequenceName;
 
-	public ReturnID(String oracleSeqCurrvalSQL) {
-		this.oracleSeqCurrvalSQL = oracleSeqCurrvalSQL;
+	/**
+	 * 
+	 * @param oracleSequenceName 可为空, 针对oracle数据库, 传入序列名
+	 */
+	public ReturnID(String oracleSequenceName) {
+		this.oracleSequenceName = oracleSequenceName;
 	}
-	public String getOracleSeqCurrvalSQL() {
-		return oracleSeqCurrvalSQL;
+	public String getOracleSequenceName() {
+		return oracleSequenceName;
 	}
 }

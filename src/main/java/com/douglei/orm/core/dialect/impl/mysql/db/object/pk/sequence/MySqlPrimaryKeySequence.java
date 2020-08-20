@@ -8,10 +8,10 @@ import com.douglei.orm.core.metadata.table.ColumnMetadata;
  * @author DougLei
  */
 public class MySqlPrimaryKeySequence extends PrimaryKeySequence{
-	private static final long serialVersionUID = -247637571749932683L;
+	private static final long serialVersionUID = 2470452265441588094L;
 
 	public MySqlPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		super(false, name, createSql, dropSql, tableName, primaryKeyColumn);
+		super(false, null, null, null, tableName, primaryKeyColumn);
 	}
 	
 	@Override

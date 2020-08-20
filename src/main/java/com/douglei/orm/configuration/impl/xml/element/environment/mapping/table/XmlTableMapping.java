@@ -333,11 +333,11 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		primaryKeyColumn.set2PrimaryKeySequence();
 		
 		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
-		String primaryKeySequenceName = null;
+		String sequenceName = null;
 		String createSqlStatement = null;
 		String dropSqlStatement = null;
 		if(sequenceElement != null) {
-			primaryKeySequenceName = sequenceElement.attributeValue("name");
+			sequenceName = sequenceElement.attributeValue("name");
 			
 			Element elem = sequenceElement.element("createSql");
 			createSqlStatement = elem==null?null:elem.getTextTrim();
@@ -347,7 +347,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		}
 		PrimaryKeySequence primaryKeySequence = 
 				EnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(
-						primaryKeySequenceName, createSqlStatement, dropSqlStatement, tableMetadata.getName(), primaryKeyColumn);
+						sequenceName, createSqlStatement, dropSqlStatement, tableMetadata.getName(), primaryKeyColumn);
 		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
 	}
 	

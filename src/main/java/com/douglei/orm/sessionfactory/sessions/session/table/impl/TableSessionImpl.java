@@ -17,6 +17,8 @@ import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.sql.ConnectionWrapper;
+import com.douglei.orm.core.sql.ReturnID;
+import com.douglei.orm.core.sql.statement.InsertResult;
 import com.douglei.orm.sessionfactory.data.validator.table.UniqueValidationResult;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
@@ -347,10 +349,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
 		ExecuteHandler executeHandler = persistentObject.getExecuteHandler();
-		if(persistentObject.getOperationState() == OperationState.CREATE) {
-			
-			
-			
+		if(persistentObject.getOperationState() == OperationState.CREATE && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
+			// 如果是保存表数据, 且使用了序列作为主键值
+			TableMetadata tableMetadata = persistentObject.getTableMetadata();
+			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
+			// 将执行后的序列值, 赋值给源实例
+			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumnCodes().iterator().next(), result.getId());
 		}else {
 			super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 		}

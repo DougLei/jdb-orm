@@ -76,7 +76,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public InsertResult executeInsert(List<Object> parameters) throws StatementExecutionException {
 		InsertResult result = new InsertResult();
 		try {
-			if(returnID.getOracleSeqCurrvalSQL() == null) {
+			if(returnID.getOracleSequenceName() == null) {
 				result.setRow(statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS));
 				ResultSet id = statement.getGeneratedKeys();
 				if(id.next())

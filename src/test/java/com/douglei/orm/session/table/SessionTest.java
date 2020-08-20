@@ -37,12 +37,12 @@ public class SessionTest {
 	
 	@Test
 	public void saveTest() {
-		SysUser user = new SysUser(null, "石磊", 28, "男");
+		SysUser user = new SysUser(null, "石磊2", 28, "男");
 		session.getTableSession().save(user);
 		System.out.println(user.getId());
 		
 		Map<String, Object> user2 = new HashMap<String, Object>();
-		user2.put("NAME", "成荣");
+		user2.put("NAME", "成荣2");
 		user2.put("AGE", 25);
 		user2.put("SEX", "女");
 		session.getTableSession().save("SYS_USER2", user2);

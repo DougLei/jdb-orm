@@ -38,6 +38,9 @@ public class AbstractPersistentObject {
 	public String getCode() {
 		return tableMetadata.getCode();
 	}
+	public TableMetadata getTableMetadata() {
+		return tableMetadata;
+	}
 	public Object getOriginObject() {
 		return originObject;
 	}
