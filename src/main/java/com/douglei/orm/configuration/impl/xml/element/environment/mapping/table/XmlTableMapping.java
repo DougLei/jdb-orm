@@ -373,7 +373,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		if(validatorsElement != null) {
 			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
 			if(com.douglei.tools.utils.CollectionUtil.unEmpty(validatorElements)) {
-				Map<String, ValidatorHandler> validatorMap = new HashMap<String, ValidatorHandler>(validatorElements.size());
+				Map<String, ValidatorHandler> validatorMap = new HashMap<String, ValidatorHandler>();
 				
 				ValidatorHandler handler = null;
 				for (Element ve : validatorElements) {
