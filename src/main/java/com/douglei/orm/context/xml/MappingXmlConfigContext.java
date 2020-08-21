@@ -294,13 +294,13 @@ class SqlMappingConfig {
  * @author DougLei
  */
 class SqlContentContainer {
-	private static final XmlSqlContentMetadataValidator sqlContentMetadataValidate = new XmlSqlContentMetadataValidator();
+	private static XmlSqlContentMetadataValidator sqlContentMetadataValidator = new XmlSqlContentMetadataValidator();
 	
 	private Map<String, Node> sqlContentNodeMap;// 记录sql-content node map集合
 	private Map<String, SqlContentMetadata> sqlContentMap;// 记录sqlContent map集合
 	
 	public void put(Node sqlContentNode) {
-		String name = sqlContentMetadataValidate.getName(sqlContentNode.getAttributes().getNamedItem("name"));
+		String name = sqlContentMetadataValidator.getName(sqlContentNode.getAttributes().getNamedItem("name"));
 		if(sqlContentNodeMap == null) {
 			sqlContentNodeMap = new HashMap<String, Node>(8);
 		}else if(sqlContentNodeMap.containsKey(name)) {
@@ -323,7 +323,7 @@ class SqlContentContainer {
 				sqlContentMetadata = sqlContentMap.get(sqlContentName);
 			}
 			if(sqlContentMetadata == null) {
-				sqlContentMetadata = sqlContentMetadataValidate.doValidate(sqlContentNodeMap.get(sqlContentName));
+				sqlContentMetadata = sqlContentMetadataValidator.doValidate(sqlContentNodeMap.get(sqlContentName));
 				if(sqlContentMap == null) {
 					sqlContentMap = new HashMap<String, SqlContentMetadata>(8);
 				}

@@ -7,9 +7,11 @@
 		</sql-content>
 	
 		<!-- dialect如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
-		<!-- returnID只有在type=insert, 且插入数据的表的主键为自增列时有效, 表示是否返回生成的id, 默认为false -->
-		<!-- sequence配置序列名, 依赖returnID=true时有效, 针对oracle的自增序列, 如果是oracle数据库, 则必须配置 -->
-		<content name="" dialect="" type="select"  returnID="false" sequence="">
+		<!-- 
+			当type=insert
+		
+		 -->
+		<content name="" dialect="" type="select" key="id" returnID="false" sequence="">
 			select * from sys_user 
 			
 			<include ref-name="rs" />
