@@ -101,7 +101,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 				return false;
 			}
 		}else {
-			throw new UnsupportCollectionTypeException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
+			throw new IllegalArgumentException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
 		}
 		return true;
 	}
@@ -169,16 +169,5 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.FOREACH;
-	}
-}
-
-/**
- * 不支持的collection类型异常
- * @author DougLei
- */
-class UnsupportCollectionTypeException extends RuntimeException{
-	private static final long serialVersionUID = -7853124286489644740L;
-	public UnsupportCollectionTypeException(String message) {
-		super(message);
 	}
 }

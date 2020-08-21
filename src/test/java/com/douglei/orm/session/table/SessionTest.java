@@ -47,7 +47,7 @@ public class SessionTest {
 		user2.put("AGE", 25);
 		user2.put("SEX", "女");
 		session.getTableSession().save("SYS_USER2", user2);
-		System.out.println(user2.get("ID"));
+		System.out.println(user2);
 	}
 	
 	

@@ -32,7 +32,7 @@ public class SqlNodeHandlerMapping {
 		if(node.getNodeType() != Node.COMMENT_NODE) {
 			SqlNodeHandler sqlNodeHandler = SQL_NODE_HANDLER_MAPPING.get(node.getNodeName());
 			if(sqlNodeHandler == null) {
-				throw new NullPointerException("目前系统不支持nodeName=["+node.getNodeName()+"]的元素");
+				throw new IllegalArgumentException("目前系统不支持nodeName=["+node.getNodeName()+"]的元素");
 			}
 			return (SqlNode) sqlNodeHandler.doHandler(node);
 		}

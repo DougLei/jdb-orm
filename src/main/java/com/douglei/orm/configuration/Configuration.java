@@ -72,7 +72,6 @@ public abstract class Configuration implements SelfProcessing{
 	 */
 	public final SessionFactory buildSessionFactory() {
 		if(sessionFactory == null) {
-			JdbConfigurationBean.initial();
 			setSessionFactory();
 		}
 		return sessionFactory;

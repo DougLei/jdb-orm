@@ -8,7 +8,7 @@ import com.douglei.orm.core.dialect.Dialect;
  * @author DougLei
  */
 public class EnvironmentContext {
-	private static final ThreadLocal<EnvironmentProperty> ENVIRONMENT_PROPERTY = new ThreadLocal<EnvironmentProperty>();
+	private static ThreadLocal<EnvironmentProperty> ENVIRONMENT_PROPERTY = new ThreadLocal<EnvironmentProperty>();
 	
 	/**
 	 * 设置配置的环境全局属性

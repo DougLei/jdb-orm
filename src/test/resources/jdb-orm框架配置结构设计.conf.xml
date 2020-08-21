@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration id="default">
+<configuration id="default" resource="jdb.config.properties">
 	<environment>
 		<!-- <property name="dialect" value="mysql" /> --><!-- value的值包括: mysql, oracle, sqlserver, 如果不配置, 则框架会解析jdbc url, 获取对应的方言 -->
 		<!-- <property name="enableStatementCache" value="true" /> --><!-- 是否开启Statement缓存, 即对执行对象缓存, 默认值为true  -->
 		<!-- <property name="enableTableSessionCache" value="false" /> --><!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为false, 如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存  -->
 		
-		<!-- <property name="mappingStore" value="application" /> --><!-- value的值只包括: application, 或在new XmlConfiguration时传入 {@link com.douglei.orm.configuration.environment.mapping.store.MappingStore} 接口的实现类实例 -->
 		<!-- <property name="clearMappingStoreOnStart" value="true" /> --><!-- 是否在启动时清空映射存储器, 即清空所有映射数据, 默认值为true -->
 		
 		<!-- <property name="tableCreateMode" value="none" /> --><!-- value的值包括: none, create, drop_create, dynamic_update, 没有默认值, 可以不配置, 该属性值为全局配置, 如果配置了该属性值, 则所有表映射的createMode属性配置失效(之所以这样设计的原因, 是因为在开发阶段可能对表统一进行dynamic_update的配置, 后期上生产环境可以直接通过全局配置, 直接切换所有表的createMode); 如果需要使用dynamic_update模式, 则enableTableDynamicUpdate必须配置为true, 否则createMode=create -->
@@ -16,6 +15,11 @@
 		<!-- <property name="dynamicMappingOnceMaxCount" value="10" /> --><!-- 动态映射一次最多操作的数量, 默认值为10 -->
 		
 		<!-- <property name="enableDataValidate" value="false" /> --><!-- 是否开启数据验证, 即对提交的数据的验证, 默认值为false  -->
+		
+		<!-- <property name="sqlParameterPrefix" value="#{" /> --><!-- sql语句中, 声明参数时的前缀, 默认为#{ -->
+		<!-- <property name="sqlParameterSuffix" value="#" /> --><!-- sql语句中, 声明参数时的后缀, 默认为} -->
+		<!-- <property name="sqlParameterSplit" value="," /> --><!-- sql语句中, 参数中各个配置的分隔符, 默认为, -->
+		<!-- <property name="sqlParameterDefaultValueHandler" value="com.douglei.orm.core.metadata.sql.DefaultValueHandlerImpl" /> --><!-- sql语句中, 参数defaultValue配置的处理器, 默认为com.douglei.orm.core.metadata.sql.DefaultValueHandlerImpl, 可以继承com.douglei.orm.core.metadata.sql.DefaultValueHandler并重写其getDefaultValue()方法, 并在这里配置实现类的全路径 -->
 		
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
 			<property name="driverClassName" value="${jdbc.driver.class}"/>

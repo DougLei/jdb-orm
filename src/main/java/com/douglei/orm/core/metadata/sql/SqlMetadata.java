@@ -14,7 +14,6 @@ import com.douglei.orm.core.metadata.MetadataType;
  */
 public class SqlMetadata implements Metadata{
 	private static final long serialVersionUID = 1855517217773149671L;
-	
 	private String namespace;
 	private List<ContentMetadata> contents;
 	
@@ -28,7 +27,7 @@ public class SqlMetadata implements Metadata{
 	 */
 	public void addContentMetadata(ContentMetadata contentMetadata) {
 		if(contents == null) {
-			contents = new ArrayList<ContentMetadata>(10);
+			contents = new ArrayList<ContentMetadata>();
 		}else {
 			String contentName = contentMetadata.getName();
 			contents.forEach(content -> {

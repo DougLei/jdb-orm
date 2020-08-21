@@ -28,7 +28,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 8145656018479802450L;
+	private static final long serialVersionUID = -8055924587467209948L;
 
 	private String configText;
 	
@@ -51,40 +51,44 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private ValidatorHandler validatorHandler;// 验证器
 	
-	public SqlParameterMetadata(String configText) {
+	private DefaultValueHandler defaultValueHandler;
+	
+	public SqlParameterMetadata(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
 		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
-		this.configText = SqlParameterDeclareConfiguration.sqlParameterSplitIncludeRegExKey?RegularExpressionUtil.transferRegularExpressionKey(configText):configText;
-		
-		Map<String, String> propertyMap = resolvingPropertyMap(configText);
+		this.configText = sqlParameterConfigHolder.splitIncludeRegExKey()?RegularExpressionUtil.transferRegularExpressionKey(configText):configText;
+
+		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
 		setName(propertyMap.get("name"));
-		setDescriptionName(propertyMap.get("descriptionName"));
+		setDescriptionName(propertyMap.get("descriptionname"));
 		setDataType(propertyMap.get("datatype"));
 		setDBDataType(propertyMap.get("dbType"));
 		setMode(propertyMap.get("mode"));
 		
 		setUsePlaceholder(propertyMap.get("useplaceholder"));
 		if(!this.usePlaceholder) {
-			setValuePrefix(propertyMap.get("valuePrefix"));
-			setValueSuffix(propertyMap.get("valueSuffix"));
+			setValuePrefix(propertyMap.get("valueprefix"));
+			setValueSuffix(propertyMap.get("valuesuffix"));
 		}
 		setLength(propertyMap.get("length"));
 		setPrecision(propertyMap.get("precision"));
 		setNullable(propertyMap.get("nullable"));
-		setDefaultValue(propertyMap.get("defaultValue"));
+		setDefaultValue(propertyMap.get("defaultvalue"));
 		setValidate(propertyMap.get("validate"));
 		
 		setValidatorHandler();
 		propertyMap.clear();
+		
+		this.defaultValueHandler = sqlParameterConfigHolder.getDefaultValueHandler();
 	}
 	
 	// 解析出属性map集合
-	private Map<String, String> resolvingPropertyMap(String configText) {
-		String[] cts = configText.split(SqlParameterDeclareConfiguration.sqlParameterSplit);
+	private Map<String, String> resolvingPropertyMap(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
+		String[] cts = configText.split(sqlParameterConfigHolder.getSplit());
 		int length = cts.length;
 		if(length < 1) {
 			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");
 		}
-		Map<String, String> propertyMap = new HashMap<String, String>(length);
+		Map<String, String> propertyMap = new HashMap<String, String>();
 		propertyMap.put("name", cts[0].trim());
 		
 		if(length > 1) {
@@ -256,7 +260,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 		
 		if(value == null) {
-			value = DefaultValueHandler.getDefaultValue(defaultValue);
+			value = defaultValueHandler.getDefaultValue(defaultValue);
 		}
 		return value;
 	}
@@ -351,5 +355,10 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	public boolean isValidate() {
 		return validate;
+	}
+
+	@Override
+	public String toString() {
+		return "SqlParameterMetadata [name=" + name + "]";
 	}
 }

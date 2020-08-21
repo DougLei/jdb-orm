@@ -3,7 +3,8 @@ package com.douglei.orm.core.metadata.sql.content.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.SqlParameterDeclareConfiguration;
+import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.core.metadata.sql.SqlParameterConfigHolder;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 
@@ -18,6 +19,7 @@ public class ExecuteSqlNode {
 	
 	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
 		if(sqlParameterByDefinedOrders != null) {
+			SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getEnvironmentProperty().getSqlParameterConfigHolder();
 			Object parameterValue = null;
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
 				parameterValue = parameter.getValue(sqlParameter, sqlParameterNamePrefix);
@@ -27,7 +29,7 @@ public class ExecuteSqlNode {
 					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDataType()));
 				}else {
-					content = content.replaceAll(SqlParameterDeclareConfiguration.prefixPatternString+parameter.getName()+SqlParameterDeclareConfiguration.suffixPatternString, parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
+					content = content.replaceAll(sqlParameterConfigHolder.getPrefix()+parameter.getName()+sqlParameterConfigHolder.getSuffix(), parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
 				}
 			}
 		}

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
-import com.douglei.orm.core.metadata.sql.SqlParameterDeclareConfiguration;
+import com.douglei.orm.core.metadata.sql.SqlParameterConfigHolder;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
@@ -18,7 +19,6 @@ import com.douglei.tools.utils.StringUtil;
  */
 public abstract class AbstractSqlNode implements SqlNode{
 	private static final long serialVersionUID = -1464862023103747959L;
-	
 	protected String content;
 	protected List<SqlParameterMetadata> sqlParameterByDefinedOrders;// sql参数, 按照配置中定义的顺序记录
 	
@@ -34,56 +34,50 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(StringUtil.isEmpty(content)) {
 			return;
 		}
-		
+		SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getEnvironmentProperty().getSqlParameterConfigHolder();
 		int startIndex, endIndex;
-		Matcher perfixMatcher = SqlParameterDeclareConfiguration.prefixPattern.matcher(content);
-		if(SqlParameterDeclareConfiguration.prefixPattern == SqlParameterDeclareConfiguration.suffixPattern) {
+		Matcher perfixMatcher = sqlParameterConfigHolder.getPrefixPattern().matcher(content);
+		if(sqlParameterConfigHolder.getPrefixPattern() == sqlParameterConfigHolder.getSuffixPattern()) {
 			// 如果前后缀一样, 则只用前缀去匹配, 获取每个sql参数
 			while(perfixMatcher.find()) {
 				startIndex = perfixMatcher.start();
 				if(perfixMatcher.find()) {
 					endIndex = perfixMatcher.start();
-					addSqlParameter(content.substring(startIndex+SqlParameterDeclareConfiguration.prefixLength, endIndex));
+					addSqlParameter(content.substring(startIndex+sqlParameterConfigHolder.getPrefixLength(), endIndex), sqlParameterConfigHolder);
 				}else {
-					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+SqlParameterDeclareConfiguration.prefix+"]标识符不匹配(多一个/少一个), 请检查");
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(多一个/少一个), 请检查");
 				}
 			}
 		}else {
 			// 如果前后缀不一致, 则要分别去匹配, 获取每个sql参数
-			Matcher suffixMatcher = SqlParameterDeclareConfiguration.suffixPattern.matcher(content);
+			Matcher suffixMatcher = sqlParameterConfigHolder.getSuffixPattern().matcher(content);
 			while(perfixMatcher.find()) {
 				startIndex = perfixMatcher.start();
 				if(suffixMatcher.find()) {
 					endIndex = suffixMatcher.start();
-					addSqlParameter(content.substring(startIndex+SqlParameterDeclareConfiguration.prefixLength, endIndex));
+					addSqlParameter(content.substring(startIndex + sqlParameterConfigHolder.getPrefixLength(), endIndex), sqlParameterConfigHolder);
 				}else {
-					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+SqlParameterDeclareConfiguration.prefix+"和"+SqlParameterDeclareConfiguration.suffix+"]标识符不匹配(多一个/少一个), 请检查");
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(多一个/少一个), 请检查");
 				}
 			}
 		}
 		
 		if(sqlParameterByDefinedOrders != null) {
 			for (SqlParameterMetadata sqlParameter : sqlParameterByDefinedOrders) {
-				replaceSqlParameterInSqlContent(sqlParameter);
+				if(sqlParameter.isUsePlaceholder()) {
+					content = content.replaceAll(sqlParameterConfigHolder.getPrefix()+sqlParameter.getConfigText()+sqlParameterConfigHolder.getSuffix(), "?");
+				}else{
+					content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
+				}
 			}
 		}
 	}
 	
 	// 添加 sql parameter
-	private void addSqlParameter(String configText) {
-		if(sqlParameterByDefinedOrders == null) {
+	private void addSqlParameter(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
+		if(sqlParameterByDefinedOrders == null) 
 			sqlParameterByDefinedOrders = new ArrayList<SqlParameterMetadata>();
-		}
-		sqlParameterByDefinedOrders.add(new SqlParameterMetadata(configText));
-	}
-	
-	// 替换Sql语句内容中的参数
-	private void replaceSqlParameterInSqlContent(SqlParameterMetadata sqlParameter) {
-		if(sqlParameter.isUsePlaceholder()) {
-			content = content.replaceAll(SqlParameterDeclareConfiguration.prefixPatternString+sqlParameter.getConfigText()+SqlParameterDeclareConfiguration.suffixPatternString, "?");
-		}else{
-			content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
-		}
+		sqlParameterByDefinedOrders.add(new SqlParameterMetadata(configText, sqlParameterConfigHolder));
 	}
 	
 	@Override

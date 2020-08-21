@@ -7,8 +7,8 @@
 		</content>
 		
 		<content name="insertSysUser2" type="insert">
-			insert into sys_user(id, name, age, sex) 
-				values(#{id}, #{name}, #{age, dataType=integer}, #{sex} )
+			insert into sys_user2(id, name, age, sex) 
+				values(#{id, defaultValue=_uuid32}, #{name}, #{age, dataType=integer}, #{sex} )
 		</content>
 	</sql>
 </mapping-configuration>
