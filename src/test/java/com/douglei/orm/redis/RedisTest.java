@@ -48,7 +48,7 @@ public class RedisTest {
 	@Test
 	public void testObject() {
 		Jedis jedis = jedisPool.getResource();
-		SysUser user = new SysUser(null, "哈哈", 12, "男");
+		SysUser user = new SysUser();
 		System.out.println(user);
 		jedis.set("user".getBytes(), JdkSerializeProcessor.serialize2ByteArray(user));
 		SysUser user2 = JdkSerializeProcessor.deserializeFromByteArray(SysUser.class, jedis.get("user".getBytes()));

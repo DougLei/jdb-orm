@@ -11,15 +11,9 @@ import com.douglei.orm.sessionfactory.sessions.Session;
 public class SessionTest {
 	
 	@Test
-	public void queryTest() {
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("PID", "A3F056DE-365C-4AB0-A85F-BCCDD34C427D");
-////		map.put("op", "");
-//		Object obj = session.getSQLSession().executeProcedure("test", null, map);
-//		System.out.println(JSONObject.toJSONString(obj));
+	public void insertTest() {
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser", "1");
 		
-		
-		session.getSQLSession().executeUpdate("deleteCOLUMN", null, "1");
 		
 		
 	}

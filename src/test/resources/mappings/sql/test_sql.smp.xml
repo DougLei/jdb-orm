@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration>
+	<sql namespace="com.test">
+		<content name="insertSysUser" type="insert" >
+			insert into sys_user(name, age, sex) 
+				values( #{name}, #{age, dataType=integer}, #{sex} )
+		</content>
+		
+		<content name="insertSysUser2" type="insert">
+			insert into sys_user(id, name, age, sex) 
+				values(#{id}, #{name}, #{age, dataType=integer}, #{sex} )
+		</content>
+	</sql>
+</mapping-configuration>

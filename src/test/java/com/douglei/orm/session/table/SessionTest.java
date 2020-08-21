@@ -12,6 +12,7 @@ import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.session.SysUser;
+import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.sessions.Session;
 
 public class SessionTest {
@@ -37,16 +38,44 @@ public class SessionTest {
 	
 	@Test
 	public void saveTest() {
-		SysUser user = new SysUser(null, "石磊2", 28, "男");
+		SysUser user = new SysUser(0, "石磊", 28, "男");
 		session.getTableSession().save(user);
-		System.out.println(user.getId());
+		System.out.println("==============>" + user);
 		
 		Map<String, Object> user2 = new HashMap<String, Object>();
 		user2.put("NAME", "成荣2");
 		user2.put("AGE", 25);
 		user2.put("SEX", "女");
 		session.getTableSession().save("SYS_USER2", user2);
-		System.out.println(user2.get("DD"));
+		System.out.println(user2.get("ID"));
+	}
+	
+	
+	public static void main(String[] args) {
+		Configuration conf = new XmlConfiguration();
+		SessionFactory sf = conf.buildSessionFactory();
+		System.out.println("start");
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SysUser user = new SysUser(0, "石磊33333", 28, "男");
+				Session session = sf.openSession();
+				session.getTableSession().save(user);
+				session.close();
+				System.out.println(Thread.currentThread().getName() + "==============>" + user);
+			}
+		}).start();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SysUser user = new SysUser(0, "成荣3333", 25, "女");
+				Session session = sf.openSession();
+				session.getTableSession().save(user);
+				session.close();
+				System.out.println(Thread.currentThread().getName() + "==============>" + user);
+			}
+		}).start();
+		System.out.println("end");
 	}
 	
 	// --------------------------------------------------------------------------------------

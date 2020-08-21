@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.core.dialect.impl.oracle.db.object.pk.sequence.OraclePrimaryKeySequence;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
@@ -49,8 +49,8 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 				column = tableMetadata.getColumnByCode(code);
 
 				insertSql.append(column.getName());
-				if(value instanceof PrimaryKeySequence) {
-					values.append(((PrimaryKeySequence)value).getNextvalSql());
+				if(value instanceof OraclePrimaryKeySequence) {
+					values.append(((OraclePrimaryKeySequence)value).getNextvalSql());
 				}else {
 					values.append("?");
 					parameters.add(new InputSqlParameter(value, column.getDataTypeHandler()));

@@ -9,7 +9,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class OraclePrimaryKeySequence extends PrimaryKeySequence{
-	private static final long serialVersionUID = -7741465855053611421L;
+	private static final long serialVersionUID = 6945818563370013043L;
 
 	public OraclePrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		super(true, name, createSql, dropSql, tableName, primaryKeyColumn);
@@ -25,13 +25,11 @@ public class OraclePrimaryKeySequence extends PrimaryKeySequence{
 		return StringUtil.isEmpty(dropSql)?"drop sequence " + getName():dropSql;
 	}
 
-	@Override
+	/**
+	 * 获取下一个序列值的sql语句
+	 * @return
+	 */
 	public String getNextvalSql() {
 		return getName() + ".nextval";
-	}
-	
-	@Override
-	public String getCurrvalSql() {
-		return getName() + ".currval";
 	}
 }

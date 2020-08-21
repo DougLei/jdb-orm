@@ -4,22 +4,22 @@ import java.io.Serializable;
 
 public class SysUser implements Serializable{
 	private static final long serialVersionUID = 8240817972018054005L;
-	private String id;
+	private int id;
 	private String name;
 	private int age;
 	private String sex;
 	
 	public SysUser() {}
-	public SysUser(String id, String name, int age, String sex) {
+	public SysUser(int id, String name, int age, String sex) {
 		this.id = id;
 		this.name = name;
 		this.age = age;
 		this.sex = sex;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -41,8 +41,8 @@ public class SysUser implements Serializable{
 		this.sex = sex;
 	}
 	
-//	@Override
-//	public String toString() {
-//		return "SysUser [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + "]";
-//	}
+	@Override
+	public String toString() {
+		return "SysUser [id=" + id + ", name=" + name + ", age=" + age + ", sex=" + sex + "]";
+	}
 }
