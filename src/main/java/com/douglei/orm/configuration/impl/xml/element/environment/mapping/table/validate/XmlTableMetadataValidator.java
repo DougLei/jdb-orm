@@ -3,7 +3,7 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 import org.dom4j.Element;
 
 import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.core.metadata.MetadataValidate;
+import com.douglei.orm.core.metadata.MetadataValidator;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -13,7 +13,7 @@ import com.douglei.tools.utils.StringUtil;
  * 表元数据验证
  * @author DougLei
  */
-public class XmlTableMetadataValidate implements MetadataValidate<Element, TableMetadata>{
+public class XmlTableMetadataValidator implements MetadataValidator<Element, TableMetadata>{
 
 	public TableMetadata doValidate(Element element) throws MetadataValidateException{
 		String name = element.attributeValue("name");

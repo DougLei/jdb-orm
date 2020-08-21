@@ -2,7 +2,7 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.table
 
 import org.dom4j.Element;
 
-import com.douglei.orm.core.metadata.MetadataValidate;
+import com.douglei.orm.core.metadata.MetadataValidator;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
@@ -12,7 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * 列元数据验证
  * @author DougLei
  */
-public class XmlColumnMetadataValidate implements MetadataValidate<Element, ColumnMetadata>{
+public class XmlColumnMetadataValidator implements MetadataValidator<Element, ColumnMetadata>{
 	
 	public ColumnMetadata doValidate(Element element) throws MetadataValidateException{
 		String name = element.attributeValue("name");

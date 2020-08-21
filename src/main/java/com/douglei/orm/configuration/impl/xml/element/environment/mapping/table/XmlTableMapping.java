@@ -20,8 +20,8 @@ import com.douglei.orm.configuration.environment.mapping.table.PrimaryKeyHandler
 import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.environment.mapping.table.TableMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidate;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidate;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlColumnMetadataValidator;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.table.validate.XmlTableMetadataValidator;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.ImportDataContext;
@@ -47,8 +47,8 @@ import com.douglei.tools.utils.StringUtil;
 public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private static final long serialVersionUID = -3966509657251325723L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlTableMapping.class);
-	private static XmlTableMetadataValidate tableMetadataValidate = new XmlTableMetadataValidate();
-	private static XmlColumnMetadataValidate columnMetadataValidate = new XmlColumnMetadataValidate();
+	private static XmlTableMetadataValidator tableMetadataValidator = new XmlTableMetadataValidator();
+	private static XmlColumnMetadataValidator columnMetadataValidator = new XmlColumnMetadataValidator();
 	
 	private TableMetadata tableMetadata;
 	
@@ -58,7 +58,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 		
 		try {
 			Element tableElement = Dom4jElementUtil.validateElementExists("table", rootElement);
-			tableMetadata = tableMetadataValidate.doValidate(tableElement);
+			tableMetadata = tableMetadataValidator.doValidate(tableElement);
 			addColumnMetadata(getColumnElements(tableElement));
 			addConstraint(tableElement.element("constraints"));
 			addIndex(tableElement.element("indexes"));
@@ -138,7 +138,7 @@ public class XmlTableMapping extends XmlMapping implements TableMapping{
 	private void addColumnMetadata(List<Element> columnElements) throws MetadataValidateException {
 		ColumnMetadata columnMetadata = null;
 		for (Element element : columnElements) {
-			columnMetadata = columnMetadataValidate.doValidate(element);
+			columnMetadata = columnMetadataValidator.doValidate(element);
 			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			}

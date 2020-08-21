@@ -3,7 +3,7 @@ package com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.v
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.douglei.orm.core.metadata.MetadataValidate;
+import com.douglei.orm.core.metadata.MetadataValidator;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.tools.utils.StringUtil;
@@ -12,7 +12,7 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class XmlSqlMetadataValidate implements MetadataValidate<Node, SqlMetadata> {
+public class XmlSqlMetadataValidator implements MetadataValidator<Node, SqlMetadata> {
 
 	@Override
 	public SqlMetadata doValidate(Node sqlNode) throws MetadataValidateException {

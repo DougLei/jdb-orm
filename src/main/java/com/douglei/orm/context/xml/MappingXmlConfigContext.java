@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidate;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlContentMetadataValidator;
 import com.douglei.orm.core.dialect.db.table.TableHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.ContentType;
@@ -294,7 +294,7 @@ class SqlMappingConfig {
  * @author DougLei
  */
 class SqlContentContainer {
-	private static final XmlSqlContentMetadataValidate sqlContentMetadataValidate = new XmlSqlContentMetadataValidate();
+	private static final XmlSqlContentMetadataValidator sqlContentMetadataValidate = new XmlSqlContentMetadataValidator();
 	
 	private Map<String, Node> sqlContentNodeMap;// 记录sql-content node map集合
 	private Map<String, SqlContentMetadata> sqlContentMap;// 记录sqlContent map集合

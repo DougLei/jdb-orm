@@ -14,7 +14,7 @@ import com.douglei.orm.core.metadata.sql.ContentType;
  * <content>
  * @author DougLei
  */
-public class XmlContentMetadataValidate extends XmlSqlContentMetadataValidate {
+public class XmlContentMetadataValidator extends XmlSqlContentMetadataValidator {
 	private static final String nodeName = "<content>";
 	
 	@Override

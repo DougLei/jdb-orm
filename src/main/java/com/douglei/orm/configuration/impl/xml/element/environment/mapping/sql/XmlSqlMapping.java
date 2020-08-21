@@ -14,8 +14,8 @@ import org.w3c.dom.NodeList;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.sql.SqlMapping;
 import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMapping;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlContentMetadataValidate;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidate;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlContentMetadataValidator;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.validate.XmlSqlMetadataValidator;
 import com.douglei.orm.configuration.impl.xml.util.NotExistsElementException;
 import com.douglei.orm.configuration.impl.xml.util.RepeatedElementException;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
@@ -33,8 +33,8 @@ import com.douglei.tools.utils.StringUtil;
 public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 	private static final long serialVersionUID = 7603945398456938103L;
 	private static final Logger logger = LoggerFactory.getLogger(XmlSqlMapping.class);
-	private static XmlSqlMetadataValidate sqlMetadataValidate = new XmlSqlMetadataValidate();
-	private static XmlContentMetadataValidate contentMetadataValidate = new XmlContentMetadataValidate();
+	private static XmlSqlMetadataValidator sqlMetadataValidator = new XmlSqlMetadataValidator();
+	private static XmlContentMetadataValidator contentMetadataValidator = new XmlContentMetadataValidator();
 	
 	private SqlMetadata sqlMetadata;
 	
@@ -44,12 +44,12 @@ public class XmlSqlMapping extends XmlMapping implements SqlMapping{
 		
 		try {
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
-			sqlMetadata = sqlMetadataValidate.doValidate(sqlNode);
+			sqlMetadata = sqlMetadataValidator.doValidate(sqlNode);
 			setParameterValidator(sqlNode);
 			MappingXmlConfigContext.initialSqlContentContainer(sqlNode);
 			NodeList contentNodeList = getContents(sqlNode);
 			for (int i=0;i<contentNodeList.getLength();i++) {
-				sqlMetadata.addContentMetadata(contentMetadataValidate.doValidate(contentNodeList.item(i)));
+				sqlMetadata.addContentMetadata(contentMetadataValidator.doValidate(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
 			throw new MetadataValidateException("在文件"+configFileName+"中, "+ e.getMessage());

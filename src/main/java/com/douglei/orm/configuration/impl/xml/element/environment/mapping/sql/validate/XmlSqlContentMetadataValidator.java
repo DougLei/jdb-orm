@@ -12,7 +12,7 @@ import com.douglei.orm.configuration.impl.xml.element.environment.mapping.sql.va
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.core.dialect.DialectType;
-import com.douglei.orm.core.metadata.MetadataValidate;
+import com.douglei.orm.core.metadata.MetadataValidator;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.ContentType;
@@ -23,7 +23,7 @@ import com.douglei.tools.utils.StringUtil;
  * <sql-content>
  * @author DougLei
  */
-public class XmlSqlContentMetadataValidate implements MetadataValidate<Node, SqlContentMetadata> {
+public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, SqlContentMetadata> {
 	private static final String nodeName = "<sql-content>";
 	
 	@Override
