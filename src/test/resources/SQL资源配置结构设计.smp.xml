@@ -8,7 +8,7 @@
 	
 		<!-- dialect如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
 		<!-- 
-			当type=insert
+			当type=insert时, 可以指定
 		
 		 -->
 		<content name="" dialect="" type="select" key="id" returnID="false" sequence="">

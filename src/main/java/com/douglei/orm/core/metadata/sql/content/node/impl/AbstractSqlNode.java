@@ -35,29 +35,52 @@ public abstract class AbstractSqlNode implements SqlNode{
 			return;
 		}
 		SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getEnvironmentProperty().getSqlParameterConfigHolder();
-		int startIndex, endIndex;
 		Matcher perfixMatcher = sqlParameterConfigHolder.getPrefixPattern().matcher(content);
-		if(sqlParameterConfigHolder.getPrefixPattern() == sqlParameterConfigHolder.getSuffixPattern()) {
-			// 如果前后缀一样, 则只用前缀去匹配, 获取每个sql参数
+		if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.SAME) {
+			int startIndex;
 			while(perfixMatcher.find()) {
 				startIndex = perfixMatcher.start();
 				if(perfixMatcher.find()) {
-					endIndex = perfixMatcher.start();
-					addSqlParameter(content.substring(startIndex+sqlParameterConfigHolder.getPrefixLength(), endIndex), sqlParameterConfigHolder);
+					addSqlParameter(content.substring(startIndex + sqlParameterConfigHolder.getPrefixLength(), perfixMatcher.start()), sqlParameterConfigHolder);
 				}else {
-					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(多一个/少一个), 请检查");
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(少一个), 请检查");
 				}
 			}
+			if(perfixMatcher.find())
+				throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(多一个), 请检查");
 		}else {
-			// 如果前后缀不一致, 则要分别去匹配, 获取每个sql参数
 			Matcher suffixMatcher = sqlParameterConfigHolder.getSuffixPattern().matcher(content);
-			while(perfixMatcher.find()) {
-				startIndex = perfixMatcher.start();
-				if(suffixMatcher.find()) {
-					endIndex = suffixMatcher.start();
-					addSqlParameter(content.substring(startIndex + sqlParameterConfigHolder.getPrefixLength(), endIndex), sqlParameterConfigHolder);
-				}else {
-					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(多一个/少一个), 请检查");
+			if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.DIFFERENT){
+				while(perfixMatcher.find()) {
+					if(suffixMatcher.find()) {
+						addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+					}else {
+						throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+					}
+				}
+				if(suffixMatcher.find())
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+			}else if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.SUFFIX_IN_PREFIX){
+				while(perfixMatcher.find()) {
+					if(suffixMatcher.find() && suffixMatcher.find()) {
+						addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+					}else {
+						throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+					}
+				}
+				if(suffixMatcher.find())
+					throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+			}else if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.PREFIX_IN_SUFFIX){
+				if(perfixMatcher.find()) {
+					do {
+						if(suffixMatcher.find()) {
+							addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+						}else {
+							throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+						}
+					} while(perfixMatcher.find() && perfixMatcher.find());
+					if(suffixMatcher.find())
+						throw new MatchingSqlParameterException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
 				}
 			}
 		}
@@ -65,7 +88,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(sqlParameterByDefinedOrders != null) {
 			for (SqlParameterMetadata sqlParameter : sqlParameterByDefinedOrders) {
 				if(sqlParameter.isUsePlaceholder()) {
-					content = content.replaceAll(sqlParameterConfigHolder.getPrefix()+sqlParameter.getConfigText()+sqlParameterConfigHolder.getSuffix(), "?");
+					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + sqlParameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
 				}else{
 					content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
 				}

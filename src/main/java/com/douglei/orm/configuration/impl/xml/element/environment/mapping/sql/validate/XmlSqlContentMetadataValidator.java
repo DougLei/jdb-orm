@@ -24,7 +24,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, SqlContentMetadata> {
-	private static final String nodeName = "<sql-content>";
+	private static String nodeName = "<sql-content>";
 	
 	@Override
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {

@@ -28,7 +28,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = -8055924587467209948L;
+	private static final long serialVersionUID = 2345880487673330267L;
 
 	private String configText;
 	
@@ -51,7 +51,7 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private ValidatorHandler validatorHandler;// 验证器
 	
-	private DefaultValueHandler defaultValueHandler;
+	private SqlParameterConfigHolder configHolder;
 	
 	public SqlParameterMetadata(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
 		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
@@ -77,8 +77,7 @@ public class SqlParameterMetadata implements Metadata{
 		
 		setValidatorHandler();
 		propertyMap.clear();
-		
-		this.defaultValueHandler = sqlParameterConfigHolder.getDefaultValueHandler();
+		this.configHolder = sqlParameterConfigHolder;
 	}
 	
 	// 解析出属性map集合
@@ -260,7 +259,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 		
 		if(value == null) {
-			value = defaultValueHandler.getDefaultValue(defaultValue);
+			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
 		}
 		return value;
 	}
@@ -356,7 +355,10 @@ public class SqlParameterMetadata implements Metadata{
 	public boolean isValidate() {
 		return validate;
 	}
-
+	public SqlParameterConfigHolder getConfigHolder() {
+		return configHolder;
+	}
+	
 	@Override
 	public String toString() {
 		return "SqlParameterMetadata [name=" + name + "]";

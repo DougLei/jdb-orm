@@ -9,6 +9,31 @@ import com.douglei.tools.utils.RegularExpressionUtil;
  * @author DougLei
  */
 public class SqlParameterConfigHolder {
+	/**
+	 * 前后缀一样
+	 */
+	public static final byte SAME = 1;
+	/**
+	 * 前后缀不一样
+	 */
+	public static final byte DIFFERENT = 2;
+	/**
+	 * 前缀中包含后缀
+	 */
+	public static final byte SUFFIX_IN_PREFIX = 3;
+	/**
+	 * 后缀中包含前缀
+	 */
+	public static final byte PREFIX_IN_SUFFIX = 4;
+	
+	/**
+	 * 前后缀的关系
+	 * @see SqlParameterConfigHolder#SAME
+	 * @see SqlParameterConfigHolder#DIFFERENT
+	 * @see SqlParameterConfigHolder#SUFFIX_IN_PREFIX
+	 * @see SqlParameterConfigHolder#PREFIX_IN_SUFFIX
+	 */
+	private byte psRelation;
 	private int prefixLength;
 	
 	private String prefix;
@@ -29,18 +54,28 @@ public class SqlParameterConfigHolder {
 		if(prefix.equals(suffix)) {
 			this.suffix = this.prefix;
 			this.suffixPattern = this.prefixPattern;
+			this.psRelation = SAME;
 		}else {
 			this.suffix = RegularExpressionUtil.transferRegularExpressionKey(suffix);
 			this.suffixPattern = Pattern.compile(this.suffix, Pattern.MULTILINE);
+			this.psRelation = DIFFERENT;
+			if(prefix.indexOf(suffix) != -1) {
+				this.psRelation = SUFFIX_IN_PREFIX;
+			}else if(suffix.indexOf(prefix) != -1) {
+				this.psRelation = PREFIX_IN_SUFFIX;
+			}
 		}
 		
 		this.split = RegularExpressionUtil.transferRegularExpressionKey(split);
 		this.splitIncludeRegExKey = this.split != split;
 		this.defaultValueHandler = defaultValueHandler;
 	}
-
+	
 	public int getPrefixLength() {
 		return prefixLength;
+	}
+	public byte getPsRelation() {
+		return psRelation;
 	}
 	public String getPrefix() {
 		return prefix;
