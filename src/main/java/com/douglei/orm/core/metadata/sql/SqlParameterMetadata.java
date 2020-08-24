@@ -22,13 +22,13 @@ import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
+import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * sql参数元数据
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 2345880487673330267L;
 
 	private String configText;
 	
@@ -260,6 +260,8 @@ public class SqlParameterMetadata implements Metadata{
 		
 		if(value == null) {
 			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
+			if(value != null) 
+				IntrospectorUtil.setProperyValue(sqlParameter, name, value);
 		}
 		return value;
 	}

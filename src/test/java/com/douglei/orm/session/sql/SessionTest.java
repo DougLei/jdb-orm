@@ -27,8 +27,8 @@ public class SessionTest {
 		user2.put("name", "张亮2");
 		user2.put("age", 25);
 		user2.put("sex", "男");
-//		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
-//		System.out.println("==============>" + user2);
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
+		System.out.println("==============>" + user2);
 	}
 	
 	// --------------------------------------------------------------------------------------

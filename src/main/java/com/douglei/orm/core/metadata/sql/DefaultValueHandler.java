@@ -7,11 +7,11 @@ package com.douglei.orm.core.metadata.sql;
 public class DefaultValueHandler {
 	
 	/**
-	 * 获取默认值
-	 * @param defaultValue
+	 * 转换默认值
+	 * @param value
 	 * @return
 	 */
-	public Object getDefaultValue(String defaultValue) {
-		return defaultValue;
+	public Object getDefaultValue(String value) {
+		return value;
 	}
 }

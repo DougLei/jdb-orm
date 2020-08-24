@@ -14,7 +14,7 @@
 		
 		<!-- <property name="dynamicMappingOnceMaxCount" value="10" /> --><!-- 动态映射一次最多操作的数量, 默认值为10 -->
 		
-		<!-- <property name="enableDataValidate" value="false" /> --><!-- 是否开启数据验证, 即对提交的数据的验证, 默认值为false  -->
+		<!-- <property name="enableDataValidate" value="false" /> --><!-- 是否开启数据验证, 即对提交的数据的验证, 默认值为false, 如果开启数据验证, 对于验证不通过的情况, 框架会抛出异常  -->
 		
 		<!-- <property name="sqlParameterPrefix" value="#{" /> --><!-- sql语句中, 声明参数时的前缀, 默认为#{ -->
 		<!-- <property name="sqlParameterSuffix" value="#" /> --><!-- sql语句中, 声明参数时的后缀, 默认为} -->
