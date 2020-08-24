@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 
@@ -14,6 +15,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 public class ExecuteSql {
 	private String content;
 	private List<Object> parameters;
+	private IncrementIdValueConfig incrementIdValueConfig;
 	
 	public ExecuteSql(ContentMetadata contentMetadata, Object sqlParameter) {
 		StringBuilder sqlContent = new StringBuilder();
@@ -36,6 +38,7 @@ public class ExecuteSql {
 		
 		// 记录sql语句
 		this.content = sqlContent.toString();
+		this.incrementIdValueConfig = contentMetadata.getIncrementIdValueConfig();
 	}
 	
 	public String getContent() {
@@ -43,5 +46,8 @@ public class ExecuteSql {
 	}
 	public List<Object> getParameters() {
 		return parameters;
+	}
+	public IncrementIdValueConfig getIncrementIdValueConfig() {
+		return incrementIdValueConfig;
 	}
 }

@@ -8,10 +8,10 @@ import com.douglei.orm.core.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlContentMetadata extends ContentMetadata{
-	private static final long serialVersionUID = -4872042176126975925L;
+	private static final long serialVersionUID = -7456834976072388088L;
 
-	public SqlContentMetadata(String name, DialectType[] dialectTypes) {
-		super(name, dialectTypes);
+	public SqlContentMetadata(String name, DialectType[] dialectTypes, IncrementIdValueConfig incrementIdValueConfig) {
+		super(name, dialectTypes, incrementIdValueConfig);
 	}
 	
 	@Override

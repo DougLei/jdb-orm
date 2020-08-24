@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
@@ -60,5 +61,13 @@ public class SqlExecuteHandler implements ExecuteHandler{
 			logger.debug("获取第{}个 parameters", executeSqlIndex+1);
 		}
 		return executeSqls.get(executeSqlIndex).getParameters();
+	}
+	
+	/**
+	 * 获取当前sql自增主键值的配置
+	 * @return
+	 */
+	public IncrementIdValueConfig getCurrentIncrementIdValueConfig() {
+		return executeSqls.get(executeSqlIndex).getIncrementIdValueConfig();
 	}
 }

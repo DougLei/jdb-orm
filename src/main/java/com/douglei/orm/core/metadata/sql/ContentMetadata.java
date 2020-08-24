@@ -14,19 +14,21 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
-	private static final long serialVersionUID = 6943694902293420095L;
+	private static final long serialVersionUID = -8187127309286994470L;
 	protected String name;
-	protected ContentType type;
 	protected DialectType[] dialectTypes;
+	protected ContentType type;
+	private IncrementIdValueConfig incrementIdValueConfig;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public ContentMetadata(String name, DialectType[] dialectTypes) {
+	public ContentMetadata(String name, DialectType[] dialectTypes, IncrementIdValueConfig incrementIdValueConfig) {
 		this.name = name;
-		this.type = MappingXmlConfigContext.getContentType();
 		this.dialectTypes = dialectTypes;
+		this.incrementIdValueConfig = incrementIdValueConfig;
+		this.type = MappingXmlConfigContext.getContentType();
 	}
-	
+
 	public void addRootSqlNode(SqlNode rootSqlNode) {
 		if(rootSqlNodes == null) {
 			rootSqlNodes = new ArrayList<SqlNode>();
@@ -50,6 +52,9 @@ public class ContentMetadata implements Metadata{
 	}
 	public List<SqlNode> getRootSqlNodes() {
 		return rootSqlNodes;
+	}
+	public IncrementIdValueConfig getIncrementIdValueConfig() {
+		return incrementIdValueConfig;
 	}
 	
 	@Deprecated

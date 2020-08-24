@@ -15,13 +15,16 @@ import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.SqlParameterMode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.orm.core.sql.ConnectionWrapper;
+import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.core.sql.statement.InsertResult;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
@@ -33,6 +36,7 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.CollectionUtil;
+import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -60,13 +64,13 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	// 获取ExecuteHandler
-	private ExecuteHandler getExecuteHandler(String namespace, String name, Object sqlParameter) {
+	private SqlExecuteHandler getExecuteHandler(String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		return getExecuteHandler(sqlMetadata, name, sqlParameter);
 	}
 	
 	// 获取ExecuteHandler
-	private ExecuteHandler getExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+	private SqlExecuteHandler getExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		return new SqlExecuteHandler(sqlMetadata, name, sqlParameter);
 	}
 
@@ -150,10 +154,19 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 	// 执行update, 传入的sqlParameter为null或对象
 	private int executeUpdate_(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		IncrementIdValueConfig incrementIdValueConfig;
+		InsertResult insertResult;
+		
+		SqlExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		int updateRowCount = 0;
 		do {
-			updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+			if((incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) == null) {
+				updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+			}else {
+				insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
+				updateRowCount += insertResult.getRow();
+				IntrospectorUtil.setProperyValue(sqlParameter, incrementIdValueConfig.getKey(), insertResult.getId());
+			}
 		}while(executeHandler.next());
 		return updateRowCount;
 	}
@@ -170,13 +183,22 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	@Override
 	public int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters) {
+		IncrementIdValueConfig incrementIdValueConfig;
+		InsertResult insertResult;
+		
 		SqlMetadata sql = getSqlMetadata(namespace);
 		int updateRowCount = 0;
-		ExecuteHandler executeHandler = null;
+		SqlExecuteHandler executeHandler = null;
 		for (Object sqlParameter : sqlParameters) {
 			executeHandler = getExecuteHandler(sql, name, sqlParameter);
 			do {
-				updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+				if((incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) == null) {
+					updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+				}else {
+					insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
+					updateRowCount += insertResult.getRow();
+					IntrospectorUtil.setProperyValue(sqlParameter, incrementIdValueConfig.getKey(), insertResult.getId());
+				}
 			}while(executeHandler.next());
 		}
 		return updateRowCount;

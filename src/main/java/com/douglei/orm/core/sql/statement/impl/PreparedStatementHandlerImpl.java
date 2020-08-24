@@ -105,8 +105,6 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			return result;
 		} catch (SQLException e) {
 			throw new StatementExecutionException(sql, e);
-		} finally {
-			close();
 		}
 	}
 	

@@ -16,6 +16,7 @@ import com.douglei.orm.core.metadata.MetadataValidator;
 import com.douglei.orm.core.metadata.MetadataValidateException;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.ContentType;
+import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.tools.utils.StringUtil;
 
@@ -30,7 +31,8 @@ public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, S
 	public SqlContentMetadata doValidate(Node contentNode) throws MetadataValidateException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		String contentName = getName(attributeMap.getNamedItem("name"));
-		if(getContentType(attributeMap) == null && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
+		ContentType contentType = getContentType(attributeMap);
+		if(contentType == null && MappingXmlConfigContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则再向下解析
 			return MappingXmlConfigContext.getSqlContent(contentName);
 		}
 		
@@ -38,7 +40,8 @@ public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, S
 		int length = doValidateContent(children);
 		
 		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialectTypes);
+		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(contentType, attributeMap);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialectTypes, incrementIdValueConfig);
 		SqlNode sqlNode = null;
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeHandlerMapping.doHandler(children.item(i));
@@ -97,6 +100,7 @@ public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, S
 	protected void doValidateProcedureContent(int childrenLength, NodeList children) {
 	}
 	
+	// 获取配置的dialect
 	private DialectType[] getDialectTypes(Node dialect) {
 		String dialectValue = null; 
 		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
@@ -122,5 +126,31 @@ public class XmlSqlContentMetadataValidator implements MetadataValidator<Node, S
 			}
 			return dts.toArray(new DialectType[dts.size()]);
 		}
+	}
+	
+	/**
+	 * 获取自增主键值的配置
+	 * @param contentType
+	 * @param attributeMap
+	 * @return
+	 */
+	private IncrementIdValueConfig getIncrementIdValueConfig(ContentType contentType, NamedNodeMap attributeMap) {
+		if (contentType == ContentType.INSERT) {
+			Node keyAttr = attributeMap.getNamedItem("key");
+			String key;
+			if(keyAttr != null && StringUtil.notEmpty(key = keyAttr.getNodeValue())) {
+				IncrementIdValueConfig config = new IncrementIdValueConfig(key);
+				
+				if(EnvironmentContext.getDialect().getType() == DialectType.ORACLE) {
+					Node oracleSequenceNameAttr = attributeMap.getNamedItem("oracleSequenceName");
+					String oracleSequenceName = null;
+					if(oracleSequenceNameAttr == null || StringUtil.isEmpty(oracleSequenceName = oracleSequenceNameAttr.getNodeValue()))
+						throw new MetadataValidateException("在oracle数据库中, 执行insert类型的sql, 并期待返回自增主键值时, 必须配置oracleSequenceName");
+					config.setOracleSequenceName(oracleSequenceName);
+				}
+				return config;
+			}
+		}
+		return null;
 	}
 }

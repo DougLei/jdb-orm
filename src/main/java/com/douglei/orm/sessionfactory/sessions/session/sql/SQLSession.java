@@ -315,13 +315,11 @@ public interface SQLSession {
 	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
 	
 	
-	
-	
 	/**
 	 * 执行增删改查操作
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
-	 * @return
+	 * @return 影响的行数
 	 */
 	int executeUpdate(String namespace, String name);
 	/**
@@ -329,7 +327,7 @@ public interface SQLSession {
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
-	 * @return
+	 * @return 影响的行数
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
 	/**
@@ -337,7 +335,7 @@ public interface SQLSession {
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameters
-	 * @return
+	 * @return 影响的行数
 	 */
 	int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters);
 	

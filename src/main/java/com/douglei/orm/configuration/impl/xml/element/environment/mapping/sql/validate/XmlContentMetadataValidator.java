@@ -15,7 +15,7 @@ import com.douglei.orm.core.metadata.sql.ContentType;
  * @author DougLei
  */
 public class XmlContentMetadataValidator extends XmlSqlContentMetadataValidator {
-	private static final String nodeName = "<content>";
+	private static String nodeName = "<content>";
 	
 	@Override
 	protected String getNodeName() {

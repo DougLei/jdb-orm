@@ -18,14 +18,15 @@ public class SessionTest {
 	public void insertTest() {
 		SysUser user = new SysUser(0, "石磊333", 28, "男");
 		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user);
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser", new SysUser(0, "成荣", 25, "女"));
 		System.out.println("==============>" + user);
 		
 		Map<String, Object> user2 = new HashMap<String, Object>();
 		user2.put("name", "张亮2");
 		user2.put("age", 25);
 		user2.put("sex", "男");
-		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
-		System.out.println(user2);
+//		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
+//		System.out.println("==============>" + user2);
 	}
 	
 	// --------------------------------------------------------------------------------------
