@@ -16,10 +16,12 @@ public class SessionTest {
 	
 	@Test
 	public void insertTest() {
-		SysUser user = new SysUser(0, "石磊333", 28, "男");
+		SysUser user = new SysUser(0, "石磊1", 28, "男");
 		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user);
-		session.getSQLSession().executeUpdate("com.test", "insertSysUser", new SysUser(0, "成荣", 25, "女"));
+		SysUser user_ = new SysUser(0, "成荣2", 25, "女");
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user_);
 		System.out.println("==============>" + user);
+		System.out.println("==============>" + user_);
 		
 		Map<String, Object> user2 = new HashMap<String, Object>();
 		user2.put("name", "张亮2");
