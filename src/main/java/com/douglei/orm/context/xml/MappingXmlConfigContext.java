@@ -35,7 +35,6 @@ public class MappingXmlConfigContext {
 		return mc;
 	}
 
-	
 	// -----------------------------------------------------------------------------------------
 	// 获取表映射配置对象
 	private static TableMappingConfig getTableMappingConfig() {
@@ -73,7 +72,7 @@ public class MappingXmlConfigContext {
 	 */
 	public static void executeCreateTable(DataSourceWrapper dataSourceWrapper) {
 		if(getMappingConfig().existsTableMappingConfig() && getTableMappingConfig().existsCreateTable()) {
-			TableHandler.singleInstance().create(dataSourceWrapper, getTableMappingConfig().getCreateTables());
+			TableHandler.instance().create(dataSourceWrapper, getTableMappingConfig().getCreateTables());
 		}
 	}
 	
@@ -83,7 +82,7 @@ public class MappingXmlConfigContext {
 	 */
 	public static void executeDropTable(DataSourceWrapper dataSourceWrapper) {
 		if(getMappingConfig().existsTableMappingConfig() && getTableMappingConfig().existsDropTable()) {
-			TableHandler.singleInstance().drop(dataSourceWrapper, getTableMappingConfig().getDropTables());
+			TableHandler.instance().drop(dataSourceWrapper, getTableMappingConfig().getDropTables());
 		}
 	}
 	

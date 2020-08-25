@@ -40,7 +40,7 @@ public class TableHandler {
 	
 	private TableHandler() {}
 	private static TableHandler instance = new TableHandler();
-	public static TableHandler singleInstance() {
+	public static TableHandler instance() {
 		return instance;
 	}
 	
@@ -352,8 +352,6 @@ public class TableHandler {
 		}
 	}
 	
-	
-	
 	/**
 	 * 回滚
 	 * @param tableMappingHolder
@@ -373,6 +371,10 @@ public class TableHandler {
 		}
 	}
 	
+	/**
+	 * 回滚表映射
+	 * @param tableMappingHolder
+	 */
 	private void rollbackTableMapping(TableMappingHolder tableMappingHolder) {
 		MappingStore mcs = EnvironmentContext.getEnvironmentProperty().getMappingStore();
 		switch(tableMappingHolder.getTableMappingOPType()) {
@@ -386,7 +388,7 @@ public class TableHandler {
 	}
 
 	/**
-	 * 
+	 * 回滚ddl语句
 	 * @param dbObjectHolders
 	 * @param connection
 	 * @param tableSqlStatementHandler

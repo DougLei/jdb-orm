@@ -42,7 +42,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * <pre>
 	 * 	添加映射
 	 * 	如果是表映射, 则顺便create表
-	 * 	这个方法只在框架启动时使用, 用来加载已经配置的xml映射
+	 * 	这个方法只在框架启动时使用, 用来加载resource中xml映射文件
 	 * </pre>
 	 * @return mapping的code
 	 */
@@ -54,9 +54,16 @@ public abstract class MappingWrapper implements SelfProcessing{
 
 	
 	// --------------------------------------------------------------------------------------------------------------
-	private String addOrCoverMapping(Mapping mapping) {
+	/**
+	 * 添加或覆盖映射
+	 * @param mapping
+	 * @param operTableEntity 是否操作表实体, 如果传入true, 则会去操作数据库中的表结构
+	 * @return
+	 */
+	private String addOrCoverMapping(Mapping mapping, boolean operTableEntity) {
 		mappingStore.addOrCoverMapping(mapping);
-		MappingXmlConfigContext.addCreateTableMapping(mapping);
+		if(operTableEntity)
+			MappingXmlConfigContext.addCreateTableMapping(mapping);
 		return mapping.getCode();
 	}
 	
@@ -70,7 +77,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public String dynamicAddMapping(String mappingConfigurationFilePath) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationFilePath);
-			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
+			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath), true);
 		} catch (Exception e) {
 			throw new DynamicAddMappingException(e);
 		}
@@ -87,18 +94,13 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public String dynamicAddMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicAddMappingException {
 		try {
 			logger.debug("dynamic add or cover mapping: {}", mappingConfigurationContent);
-			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
+			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent), true);
 		} catch (Exception e) {
 			throw new DynamicAddMappingException(e);
 		}
 	}
 	
 	// --------------------------------------------------------------------------------------------------------------
-	private String addOrCoverMapping_simple(Mapping mapping) {
-		mappingStore.addOrCoverMapping(mapping);
-		return mapping.getCode();
-	}
-	
 	/**
 	 * 动态覆盖映射, 如果不存在添加
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
@@ -109,7 +111,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicCoverMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationFilePath);
-			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath));
+			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingConfigurationFilePath), false);
 		} catch (Exception e) {
 			throw new DynamicCoverMappingException(e);
 		}
@@ -126,7 +128,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicCoverMappingException {
 		try {
 			logger.debug("dynamic add or cover ***simple*** mapping: {}", mappingConfigurationContent);
-			return addOrCoverMapping_simple(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent));
+			return addOrCoverMapping(XmlMappingFactory.newMappingInstance(mappingType, mappingConfigurationContent), false);
 		} catch (Exception e) {
 			throw new DynamicCoverMappingException(e);
 		}

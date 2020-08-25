@@ -20,7 +20,7 @@ import com.douglei.tools.utils.CollectionUtil;
  */
 public class ApplicationMappingStore implements MappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingStore.class);
-	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(32);
+	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
 	
 	@Override
 	public void addMapping(Mapping mapping) throws RepeatedMappingException{
