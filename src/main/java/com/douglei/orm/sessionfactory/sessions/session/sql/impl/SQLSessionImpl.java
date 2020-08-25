@@ -165,7 +165,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			}else {
 				insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
 				updateRowCount += insertResult.getRow();
-				IntrospectorUtil.setProperyValue(sqlParameter, incrementIdValueConfig.getKey(), insertResult.getId());
+				IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
 			}
 		}while(executeHandler.next());
 		return updateRowCount;
@@ -197,7 +197,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				}else {
 					insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
 					updateRowCount += insertResult.getRow();
-					IntrospectorUtil.setProperyValue(sqlParameter, incrementIdValueConfig.getKey(), insertResult.getId());
+					IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
 				}
 			}while(executeHandler.next());
 		}

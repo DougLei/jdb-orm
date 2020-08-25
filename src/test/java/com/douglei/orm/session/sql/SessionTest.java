@@ -10,12 +10,13 @@ import org.junit.Test;
 import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
 import com.douglei.orm.session.SysUser;
+import com.douglei.orm.session.UserP;
 import com.douglei.orm.sessionfactory.sessions.Session;
 
 public class SessionTest {
 	
 	@Test
-	public void insertTest() {
+	public void insertTest12() {
 		SysUser user = new SysUser(0, "石磊1", 28, "男");
 		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user);
 		SysUser user_ = new SysUser(0, "成荣2", 25, "女");
@@ -24,11 +25,32 @@ public class SessionTest {
 		System.out.println("==============>" + user_);
 		
 		Map<String, Object> user2 = new HashMap<String, Object>();
-		user2.put("name", "张亮2");
+		user2.put("name", "douglei");
 		user2.put("age", 25);
 		user2.put("sex", "男");
 		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
 		System.out.println("==============>" + user2);
+	}
+	
+	@Test
+	public void insertTest3() {
+		UserP user = new UserP(new SysUser(0, "石磊", 28, "男"));
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser3", user);
+		System.out.println("==============>" + user);
+	}
+	
+	@Test
+	public void insertTest4() {
+		Map<String, Object> user = new HashMap<String, Object>();
+		
+		Map<String, Object> user2 = new HashMap<String, Object>();
+		user2.put("name", "张亮2");
+		user2.put("age", 25);
+		user2.put("sex", "男");
+		user.put("user", user2);
+		
+		session.getSQLSession().executeUpdate("com.test", "insertSysUser4", user);
+		System.out.println("==============>" + user);
 	}
 	
 	// --------------------------------------------------------------------------------------

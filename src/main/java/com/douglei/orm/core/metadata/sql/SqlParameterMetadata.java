@@ -29,6 +29,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
+	private static final long serialVersionUID = 2345880487673330267L;
 
 	private String configText;
 	
@@ -260,8 +261,14 @@ public class SqlParameterMetadata implements Metadata{
 		
 		if(value == null) {
 			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
-			if(value != null) 
-				IntrospectorUtil.setProperyValue(sqlParameter, name, value);
+			if(value != null) {
+				if(isSingleName) {
+					IntrospectorUtil.setProperyValue(sqlParameter, name, value);
+				}else {
+					int dot = name.lastIndexOf(".");
+					IntrospectorUtil.setProperyValue(OgnlHandler.singleInstance().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
+				}
+			}
 		}
 		return value;
 	}

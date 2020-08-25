@@ -8,7 +8,17 @@
 		
 		<content name="insertSysUser2" type="insert">
 			insert into sys_user2(id, name, age, sex) 
-				values(#{id, defaultValue=_uuid32}, #{name}, #{age, dataType=integer}, #{sex} )
+				values(#{id, defaultValue=douglei}, #{name}, #{age, dataType=integer}, #{sex} )
+		</content>
+		
+		<content name="insertSysUser3" type="insert" key="user.id" oracleSequenceName="PKSEQ_SYS_USER">
+			insert into sys_user(name, age, sex) 
+				values( #{user.name}, #{user.age, dataType=integer}, #{user.sex} )
+		</content>
+		
+		<content name="insertSysUser4" type="insert">
+			insert into sys_user2(id, name, age, sex) 
+				values(#{user.id, defaultValue=xxx}, #{user.name}, #{user.age, dataType=integer}, #{user.sex} )
 		</content>
 	</sql>
 </mapping-configuration>
