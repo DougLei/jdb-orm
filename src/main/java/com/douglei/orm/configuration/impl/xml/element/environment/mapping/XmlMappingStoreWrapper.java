@@ -6,7 +6,7 @@ import org.dom4j.Attribute;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
@@ -16,13 +16,13 @@ import com.douglei.tools.instances.scanner.FileScanner;
  * 
  * @author DougLei
  */
-public class XmlMappingWrapper extends MappingWrapper{
+public class XmlMappingStoreWrapper extends MappingStoreWrapper{
 	
-	public XmlMappingWrapper(EnvironmentProperty environmentProperty) {
+	public XmlMappingStoreWrapper(EnvironmentProperty environmentProperty) {
 		super(false, environmentProperty.getMappingStore());
 	}
 	
-	public XmlMappingWrapper(boolean searchAll, List<Attribute> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
+	public XmlMappingStoreWrapper(boolean searchAll, List<Attribute> paths, DataSourceWrapper dataSourceWrapper, EnvironmentProperty environmentProperty) throws Exception {
 		super(searchAll, environmentProperty.getMappingStore());
 		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		

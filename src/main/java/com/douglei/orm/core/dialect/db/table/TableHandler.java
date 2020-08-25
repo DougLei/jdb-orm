@@ -376,13 +376,13 @@ public class TableHandler {
 	 * @param tableMappingHolder
 	 */
 	private void rollbackTableMapping(TableMappingHolder tableMappingHolder) {
-		MappingStore mcs = EnvironmentContext.getEnvironmentProperty().getMappingStore();
+		MappingStore mappingStore = EnvironmentContext.getEnvironmentProperty().getMappingStore();
 		switch(tableMappingHolder.getTableMappingOPType()) {
 			case CREATE:
-				mcs.addMapping(tableMappingHolder.getTableMappings());
+				mappingStore.addMapping(tableMappingHolder.getTableMappings());
 				break;
 			case DROP:
-				mcs.removeMapping(tableMappingHolder.getTableMappingCodes());
+				mappingStore.removeMapping(tableMappingHolder.getTableMappingCodes());
 				break;
 		}
 	}

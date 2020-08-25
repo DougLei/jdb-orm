@@ -11,7 +11,7 @@ import java.util.Map;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
@@ -46,14 +46,14 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
 	
-	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
-		super(connection, environmentProperty, mappingWrapper);
+	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingStoreWrapper mappingStore) {
+		super(connection, environmentProperty, mappingStore);
 	}
 	
 	private SqlMetadata getSqlMetadata(String namespace) {
 		SqlMetadata sm = null;
 		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
-			Mapping mapping = mappingWrapper.getMapping(namespace);
+			Mapping mapping = mappingStore.getMapping(namespace);
 			if(mapping.getMappingType() != MappingType.SQL) {
 				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 			}

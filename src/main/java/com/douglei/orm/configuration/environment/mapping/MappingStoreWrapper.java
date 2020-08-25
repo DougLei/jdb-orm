@@ -13,12 +13,12 @@ import com.douglei.orm.context.xml.MappingXmlConfigContext;
  * 
  * @author DougLei
  */
-public abstract class MappingWrapper implements SelfProcessing{
-	private static final Logger logger = LoggerFactory.getLogger(MappingWrapper.class);
+public abstract class MappingStoreWrapper implements SelfProcessing{
+	private static final Logger logger = LoggerFactory.getLogger(MappingStoreWrapper.class);
 	
 	protected boolean searchAll;
 	private MappingStore mappingStore;
-	public MappingWrapper(boolean searchAll, MappingStore mappingStore) {
+	public MappingStoreWrapper(boolean searchAll, MappingStore mappingStore) {
 		this.searchAll = searchAll;
 		this.mappingStore = mappingStore;
 		logger.debug("searchAll value = {}", searchAll);
@@ -62,8 +62,9 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 */
 	private String addOrCoverMapping(Mapping mapping, boolean operTableEntity) {
 		mappingStore.addOrCoverMapping(mapping);
-		if(operTableEntity)
+		if(operTableEntity) {
 			MappingXmlConfigContext.addCreateTableMapping(mapping);
+		}
 		return mapping.getCode();
 	}
 	
@@ -105,7 +106,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 动态覆盖映射, 如果不存在添加
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param mappingConfigurationFilePath
-	 * @return
+	 * @return 返回映射的code
 	 * @throws DynamicCoverMappingException
 	 */
 	public String dynamicCoverMapping(String mappingConfigurationFilePath) throws DynamicCoverMappingException {
@@ -122,7 +123,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param mappingType
 	 * @param mappingConfigurationContent
-	 * @return
+	 * @return 返回映射的code
 	 * @throws DynamicCoverMappingException
 	 */
 	public String dynamicCoverMapping(MappingType mappingType, String mappingConfigurationContent) throws DynamicCoverMappingException {
@@ -144,8 +145,7 @@ public abstract class MappingWrapper implements SelfProcessing{
 	public void dynamicRemoveMapping(String code) throws DynamicRemoveMappingException {
 		try {
 			logger.debug("dynamic remove mapping: {}", code);
-			Mapping mapping = mappingStore.removeMapping(code);
-			MappingXmlConfigContext.addDropTableMapping(mapping);
+			MappingXmlConfigContext.addDropTableMapping(mappingStore.removeMapping(code));
 		} catch (Exception e) {
 			throw new DynamicRemoveMappingException(e);
 		}

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.context.xml.MappingXmlConfigContext;
 import com.douglei.orm.context.xml.MappingXmlReaderContext;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -19,24 +19,14 @@ import com.douglei.tools.utils.ExceptionUtil;
 public class DynamicMappingProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DynamicMappingProcessor.class);
 	
-	private MappingWrapper mappingWrapper;
-	private byte dynamicMappingOnceMaxCount;
+	private MappingStoreWrapper mappingWrapper;
 	private DataSourceWrapper dataSourceWrapper;
 	
-	public DynamicMappingProcessor(Environment environment, MappingWrapper mappingWrapper) {
+	public DynamicMappingProcessor(Environment environment, MappingStoreWrapper mappingWrapper) {
 		this.mappingWrapper = mappingWrapper;
-		this.dynamicMappingOnceMaxCount = environment.getEnvironmentProperty().dynamicMappingOnceMaxCount();
 		this.dataSourceWrapper = environment.getDataSourceWrapper();
 	}
 
-	// 验证一次操作的动态映射数量是否数量溢出, 验证通过则返回true
-	private boolean validateCountOverflow(int count) {
-		if(count > dynamicMappingOnceMaxCount) {
-			throw new DynamicMappingOnceMaxCountOverflowException(dynamicMappingOnceMaxCount, (byte)count);
-		}
-		return true;
-	}
-	
 	// ----------------------------------------------------------------------------------------------
 	private void addMapping_(DynamicMapping entity) {
 		switch(entity.getType()) {
@@ -71,10 +61,8 @@ public class DynamicMappingProcessor {
 	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * @param entities
 	 */
-	public synchronized void batchAddMapping(List<DynamicMapping> entities) {
-		boolean flag = false;
+	public synchronized void addMapping(List<DynamicMapping> entities) {
 		try {
-			flag = validateCountOverflow(entities.size());
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
@@ -83,7 +71,7 @@ public class DynamicMappingProcessor {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
+			MappingXmlReaderContext.destroy();
 		}
 	}
 	
@@ -92,10 +80,8 @@ public class DynamicMappingProcessor {
 	 * 如果是表映射, 则顺便根据createMode的配置, 进行相应的操作
 	 * @param entities
 	 */
-	public synchronized void batchAddMapping(DynamicMapping... entities) {
-		boolean flag = false;
+	public synchronized void addMapping(DynamicMapping... entities) {
 		try {
-			flag = validateCountOverflow(entities.length);
 			for (DynamicMapping entity : entities) {
 				addMapping_(entity);
 			}
@@ -104,88 +90,9 @@ public class DynamicMappingProcessor {
 			logger.error("动态添加映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
-		}
-	}
-	
-	// ----------------------------------------------------------------------------------------------
-	private void coverMapping_(DynamicMapping entity) {
-		switch(entity.getType()) {
-			case BY_PATH:
-				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
-				break;
-			case BY_CONTENT:
-				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
-				break;
-		}
-	}
-	
-	/**
-	 * 动态覆盖映射, 如果不存在添加
-	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * @param entity
-	 */
-	public synchronized void coverMapping(DynamicMapping entity) {
-		try {
-			coverMapping_(entity);
-		} catch (Exception e) {
-			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw e;
-		} finally {
 			MappingXmlReaderContext.destroy();
 		}
 	}
-
-	/**
-	 * 动态覆盖映射, 如果不存在添加
-	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * @param entities
-	 */
-	public synchronized void batchCoverMapping(List<DynamicMapping> entities) {
-		boolean flag = false;
-		try {
-			flag = validateCountOverflow(entities.size());
-			for (DynamicMapping entity : entities) {
-				coverMapping_(entity);
-			}
-		} catch (Exception e) {
-			entities.forEach(entity -> {
-				if(entity.getCode() != null) {
-					removeMapping_(entity.getCode());
-				}
-			});
-			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw e;
-		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
-		}
-	}
-	
-	/**
-	 * 动态覆盖映射, 如果不存在添加
-	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
-	 * @param entities
-	 */
-	public synchronized void batchCoverMapping(DynamicMapping... entities) {
-		boolean flag = false;
-		try {
-			flag = validateCountOverflow(entities.length);
-			for (DynamicMapping entity : entities) {
-				coverMapping_(entity);
-			}
-		} catch (Exception e) {
-			for (DynamicMapping entity : entities) {
-				if(entity.getCode() != null) {
-					removeMapping_(entity.getCode());
-				}
-			}
-			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw e;
-		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
-		}
-	}
-	
 	
 	// ----------------------------------------------------------------------------------------------
 	/**
@@ -210,10 +117,8 @@ public class DynamicMappingProcessor {
 	 * 如果是表映射, 则顺便drop表
 	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping(List<String> codes){
-		boolean flag = false;
+	public synchronized void removeMapping(List<String> codes){
 		try {
-			flag = validateCountOverflow(codes.size());
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
@@ -222,7 +127,7 @@ public class DynamicMappingProcessor {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
+			MappingXmlReaderContext.destroy();
 		}
 	}
 
@@ -231,10 +136,8 @@ public class DynamicMappingProcessor {
 	 * 如果是表映射, 则顺便drop表
 	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping(String... codes){
-		boolean flag = false;
+	public synchronized void removeMapping(String... codes){
 		try {
-			flag = validateCountOverflow(codes.length);
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping(code);
 			}
@@ -243,10 +146,84 @@ public class DynamicMappingProcessor {
 			logger.error("动态删除映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			throw e;
 		} finally {
-			if(flag) MappingXmlReaderContext.destroy();
+			MappingXmlReaderContext.destroy();
 		}
 	}
 	
+	
+	// ----------------------------------------------------------------------------------------------
+	private void onlyAddMapping_(DynamicMapping entity) {
+		switch(entity.getType()) {
+			case BY_PATH:
+				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingConfigurationFilePath()));
+				break;
+			case BY_CONTENT:
+				entity.setCode(mappingWrapper.dynamicCoverMapping(entity.getMappingType(), entity.getMappingConfigurationContent()));
+				break;
+		}
+	}
+	
+	/**
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param entity
+	 */
+	public synchronized void onlyAddMapping(DynamicMapping entity) {
+		try {
+			onlyAddMapping_(entity);
+		} catch (Exception e) {
+			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
+		}
+	}
+
+	/**
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param entities
+	 */
+	public synchronized void onlyAddMapping(List<DynamicMapping> entities) {
+		try {
+			for (DynamicMapping entity : entities) {
+				onlyAddMapping_(entity);
+			}
+		} catch (Exception e) {
+			entities.forEach(entity -> {
+				if(entity.getCode() != null) {
+					onlyRemoveMapping(entity.getCode());
+				}
+			});
+			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
+		}
+	}
+	
+	/**
+	 * 动态覆盖映射, 如果不存在添加
+	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
+	 * @param entities
+	 */
+	public synchronized void onlyAddMapping(DynamicMapping... entities) {
+		try {
+			for (DynamicMapping entity : entities) {
+				onlyAddMapping_(entity);
+			}
+		} catch (Exception e) {
+			for (DynamicMapping entity : entities) {
+				if(entity.getCode() != null) {
+					onlyRemoveMapping(entity.getCode());
+				}
+			}
+			logger.error("动态覆盖映射时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw e;
+		} finally {
+			MappingXmlReaderContext.destroy();
+		}
+	}
 	
 	// ----------------------------------------------------------------------------------------------
 	/**
@@ -254,7 +231,7 @@ public class DynamicMappingProcessor {
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param code
 	 */
-	public synchronized void removeMapping_(String code){
+	public synchronized void onlyRemoveMapping(String code){
 		mappingWrapper.dynamicRemoveMapping_(code);
 	}
 	
@@ -263,9 +240,8 @@ public class DynamicMappingProcessor {
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping_(List<String> codes){
+	public synchronized void onlyRemoveMapping(List<String> codes){
 		try {
-			validateCountOverflow(codes.size());
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping_(code);
 			}
@@ -280,9 +256,8 @@ public class DynamicMappingProcessor {
 	 * 只对映射操作, 不对实体进行任何操作, 主要是不会对表进行相关的操作
 	 * @param codes
 	 */
-	public synchronized void batchRemoveMapping_(String... codes){
+	public synchronized void onlyRemoveMapping(String... codes){
 		try {
-			validateCountOverflow(codes.length);
 			for (String code : codes) {
 				mappingWrapper.dynamicRemoveMapping_(code);
 			}

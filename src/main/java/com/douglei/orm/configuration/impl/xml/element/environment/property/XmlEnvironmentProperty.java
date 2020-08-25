@@ -61,9 +61,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	private boolean enableColumnDynamicUpdateValidate;
 	
 	@FieldMetaData
-	private byte dynamicMappingOnceMaxCount=10;
-	
-	@FieldMetaData
 	private String sqlParameterPrefix="#{";
 	@FieldMetaData
 	private String sqlParameterSuffix="}";
@@ -180,10 +177,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableColumnDynamicUpdateValidate = Boolean.parseBoolean(value);
 	}
-	void setDynamicMappingOnceMaxCount(String value) {
-		if(VerifyTypeMatchUtil.isLimitByte(value)) 
-			this.dynamicMappingOnceMaxCount = Byte.parseByte(value);
-	}
 	void setSqlParameterPrefix(String value) {
 		if(StringUtil.notEmpty(value))
 			this.sqlParameterPrefix = value;
@@ -251,10 +244,6 @@ public class XmlEnvironmentProperty implements EnvironmentProperty{
 	@Override
 	public boolean enableColumnDynamicUpdateValidate() {
 		return enableColumnDynamicUpdateValidate;
-	}
-	@Override
-	public byte dynamicMappingOnceMaxCount() {
-		return dynamicMappingOnceMaxCount;
 	}
 	@Override
 	public SqlParameterConfigHolder getSqlParameterConfigHolder() {

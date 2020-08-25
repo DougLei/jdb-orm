@@ -33,7 +33,5 @@ public interface EnvironmentProperty {
 	
 	public boolean enableColumnDynamicUpdateValidate();
 	
-	public byte dynamicMappingOnceMaxCount();
-	
 	public SqlParameterConfigHolder getSqlParameterConfigHolder();
 }

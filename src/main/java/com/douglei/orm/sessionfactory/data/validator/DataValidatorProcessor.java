@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
@@ -17,8 +17,8 @@ import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValid
  */
 public class DataValidatorProcessor {
 	
-	private MappingWrapper mappingWrapper;
-	public DataValidatorProcessor(MappingWrapper mappingWrapper) {
+	private MappingStoreWrapper mappingWrapper;
+	public DataValidatorProcessor(MappingStoreWrapper mappingWrapper) {
 		this.mappingWrapper = mappingWrapper;
 	}
 

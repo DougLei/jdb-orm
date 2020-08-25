@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
@@ -26,7 +26,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	private Configuration configuration;
 	private Environment environment;
 	private EnvironmentProperty environmentProperty;
-	private MappingWrapper mappingWrapper;
+	private MappingStoreWrapper mappingWrapper;
 	
 	private DynamicMappingProcessor dynamicMappingProcessor;
 	private DataValidatorProcessor dataValidatorProcessor;

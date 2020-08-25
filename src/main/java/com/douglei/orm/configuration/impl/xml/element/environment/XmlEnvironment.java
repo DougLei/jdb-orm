@@ -17,11 +17,11 @@ import com.douglei.orm.configuration.SelfCheckingException;
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.impl.xml.element.environment.datasource.XmlDataSourceWrapper;
-import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMappingWrapper;
+import com.douglei.orm.configuration.impl.xml.element.environment.mapping.XmlMappingStoreWrapper;
 import com.douglei.orm.configuration.impl.xml.element.environment.property.XmlEnvironmentProperty;
 import com.douglei.orm.configuration.impl.xml.element.properties.Properties;
 import com.douglei.orm.configuration.impl.xml.util.Dom4jElementUtil;
@@ -39,7 +39,7 @@ public class XmlEnvironment implements Environment{
 	
 	private DataSourceWrapper dataSourceWrapper;
 	
-	private MappingWrapper mappingWrapper;
+	private MappingStoreWrapper mappingWrapper;
 	
 	public XmlEnvironment() {
 	}
@@ -151,9 +151,9 @@ public class XmlEnvironment implements Environment{
 	private void setMappingWrapper(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		if(element != null) {
-			mappingWrapper = new XmlMappingWrapper("true".equalsIgnoreCase(element.attributeValue("searchAll")), element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
+			mappingWrapper = new XmlMappingStoreWrapper("true".equalsIgnoreCase(element.attributeValue("searchAll")), element.selectNodes("mapping/@path"), dataSourceWrapper, environmentProperty);
 		}else {
-			mappingWrapper = new XmlMappingWrapper(environmentProperty);
+			mappingWrapper = new XmlMappingStoreWrapper(environmentProperty);
 		}
 		logger.debug("处理<environment>下的<mappings>元素结束");
 	}
@@ -180,7 +180,7 @@ public class XmlEnvironment implements Environment{
 		return dataSourceWrapper;
 	}
 	@Override
-	public MappingWrapper getMappingWrapper() {
+	public MappingStoreWrapper getMappingWrapper() {
 		return mappingWrapper;
 	}
 

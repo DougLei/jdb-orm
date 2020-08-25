@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -45,8 +45,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private final Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
 	
-	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingWrapper mappingWrapper) {
-		super(connection, environmentProperty, mappingWrapper);
+	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingStoreWrapper mappingStore) {
+		super(connection, environmentProperty, mappingStore);
 		this.enableTalbeSessionCache = environmentProperty.enableTableSessionCache();
 		logger.debug("是否开启TableSession缓存: {}", enableTalbeSessionCache);
 		if(enableTalbeSessionCache) {
@@ -76,7 +76,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private TableMetadata getTableMetadata(String code) {
 		TableMetadata tm = null;
 		if(tableMetadataCache.isEmpty() || (tm = tableMetadataCache.get(code)) == null) {
-			Mapping mapping = mappingWrapper.getMapping(code);
+			Mapping mapping = mappingStore.getMapping(code);
 			if(mapping.getMappingType() != MappingType.TABLE) {
 				throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
 			}

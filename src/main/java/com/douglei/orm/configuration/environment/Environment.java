@@ -2,7 +2,7 @@ package com.douglei.orm.configuration.environment;
 
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 
 /**
@@ -15,5 +15,5 @@ public interface Environment extends SelfProcessing{
 	
 	public DataSourceWrapper getDataSourceWrapper();
 	
-	public MappingWrapper getMappingWrapper();
+	public MappingStoreWrapper getMappingWrapper();
 }
