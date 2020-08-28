@@ -14,22 +14,27 @@ import com.douglei.orm.session.UserP;
 import com.douglei.orm.sessionfactory.sessions.Session;
 
 public class SessionTest {
+	private boolean exception;
 	
 	@Test
 	public void insertTest12() {
-		SysUser user = new SysUser(0, "石磊1", 28, "男");
-		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user);
-		SysUser user_ = new SysUser(0, "成荣2", 25, "女");
-		session.getSQLSession().executeUpdate("com.test", "insertSysUser", user_);
-		System.out.println("==============>" + user);
-		System.out.println("==============>" + user_);
-		
-		Map<String, Object> user2 = new HashMap<String, Object>();
-		user2.put("name", "douglei");
-		user2.put("age", 25);
-		user2.put("sex", "男");
-		session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
-		System.out.println("==============>" + user2);
+		try {
+			SysUser user = new SysUser(0, "石磊1", 28, "男");
+			session.getSQLSession().executeUpdate("com.test", "insertSysUser", user);
+			SysUser user_ = new SysUser(0, "成荣2", 25, "女");
+			session.getSQLSession().executeUpdate("com.test", "insertSysUser", user_);
+			System.out.println("==============>" + user);
+			System.out.println("==============>" + user_);
+			
+			Map<String, Object> user2 = new HashMap<String, Object>();
+			user2.put("name", "douglei");
+			user2.put("age", 25);
+			user2.put("sex", "男");
+			session.getSQLSession().executeUpdate("com.test", "insertSysUser2", user2);
+			System.out.println("==============>" + user2);
+		} catch (Exception e) {
+			exception = true;
+		}
 	}
 	
 	@Test
@@ -65,6 +70,8 @@ public class SessionTest {
 	}
 	@After
 	public void end() {
+		if(exception)
+			session.rollback();
 		session.close();
 	}
 }
