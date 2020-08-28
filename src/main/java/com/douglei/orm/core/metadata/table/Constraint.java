@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ConstraintConfigurationException;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;

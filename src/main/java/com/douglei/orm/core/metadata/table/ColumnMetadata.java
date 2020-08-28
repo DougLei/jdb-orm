@@ -1,12 +1,12 @@
 package com.douglei.orm.core.metadata.table;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
 
@@ -15,7 +15,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = 7713395662973764848L;
+	private static final long serialVersionUID = 7381874865514310482L;
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
@@ -37,7 +37,7 @@ public class ColumnMetadata implements Metadata{
 	
 	private boolean isPrimaryKeySequence;// 是否是主键序列
 	
-	private ValidatorHandler validatorHandler;// 验证器
+	private ValidateHandler validateHandler;// 验证器
 	
 	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullable, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
 		setNameByValidate(name, oldName);
@@ -149,14 +149,14 @@ public class ColumnMetadata implements Metadata{
 	/**
 	 * 设置验证器
 	 * @param existsPrimaryKeyHandler 是否存在主键处理器, 如果存在, 则主键可以为空
-	 * @param validatorHandler
+	 * @param validateHandler
 	 */
-	public ColumnMetadata setValidatorHandler(boolean existsPrimaryKeyHandler, ValidatorHandler validatorHandler) {
-		if(validate || validatorHandler.byConfig()) {
+	public ColumnMetadata setValidateHandler(boolean existsPrimaryKeyHandler, ValidateHandler validateHandler) {
+		if(validate || validateHandler.byConfig()) {
 			this.validate = true;
-			this.validatorHandler = validatorHandler;
-			this.validatorHandler.setNullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true));
-			this.validatorHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
+			this.validateHandler = validateHandler;
+			this.validateHandler.setNullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true));
+			this.validateHandler.addValidator(new _DataTypeValidator(getDataTypeHandler(), length, precision));
 			return this;
 		}
 		return null;
@@ -229,8 +229,8 @@ public class ColumnMetadata implements Metadata{
 	public boolean isPrimaryKeySequence() {
 		return isPrimaryKeySequence;
 	}
-	public ValidatorHandler getValidatorHandler() {
-		return validatorHandler;
+	public ValidateHandler getValidateHandler() {
+		return validateHandler;
 	}
 
 	@Override

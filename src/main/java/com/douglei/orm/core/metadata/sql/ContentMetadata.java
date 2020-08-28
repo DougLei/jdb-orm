@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.context.xml.MappingXmlConfigContext;
+import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -26,7 +26,7 @@ public class ContentMetadata implements Metadata{
 		this.name = name;
 		this.dialectTypes = dialectTypes;
 		this.incrementIdValueConfig = incrementIdValueConfig;
-		this.type = MappingXmlConfigContext.getContentType();
+		this.type = MappingResolverContext.getCurrentSqlType();
 	}
 
 	public void addRootSqlNode(SqlNode rootSqlNode) {

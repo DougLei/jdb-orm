@@ -2,7 +2,7 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 
 import java.util.List;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;

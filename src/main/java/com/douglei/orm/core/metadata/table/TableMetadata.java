@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.configuration.environment.mapping.table.ColumnConfigurationException;
-import com.douglei.orm.configuration.environment.mapping.table.ConstraintConfigurationException;
-import com.douglei.orm.configuration.environment.mapping.table.IndexConfigurationException;
-import com.douglei.orm.configuration.environment.mapping.table.RepeatedPrimaryKeyException;
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ColumnConfigurationException;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ConstraintConfigurationException;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.IndexConfigurationException;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
@@ -318,7 +318,7 @@ public class TableMetadata implements Metadata{
 	/**
 	 * 根据列名获取列对象
 	 * @param columnName
-	 * @param validateColumnExists 验证列是否存在, 如果为true, 且列不存在则会抛出异常
+	 * @param validateColumnExists 验证列是否存在, 如果为true, 且列不存在时, 会抛出异常
 	 * @return
 	 */
 	public ColumnMetadata getColumnByName(String columnName, boolean validateColumnExists) {

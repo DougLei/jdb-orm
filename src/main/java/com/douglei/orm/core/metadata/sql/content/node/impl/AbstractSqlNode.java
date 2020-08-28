@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.MatchingSqlParameterException;
 import com.douglei.orm.core.metadata.sql.SqlParameterConfigHolder;
 import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;

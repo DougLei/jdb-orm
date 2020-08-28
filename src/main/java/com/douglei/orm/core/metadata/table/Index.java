@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.table;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.dialect.DialectType;
 
 /**

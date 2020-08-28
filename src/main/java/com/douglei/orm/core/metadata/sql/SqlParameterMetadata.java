@@ -3,8 +3,8 @@ package com.douglei.orm.core.metadata.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.context.EnvironmentContext;
-import com.douglei.orm.context.xml.MappingXmlConfigContext;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
@@ -14,8 +14,8 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.DataValidationException;
+import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
-import com.douglei.orm.core.metadata.validator.ValidatorHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.RegularExpressionUtil;
@@ -29,7 +29,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 2345880487673330267L;
+	private static final long serialVersionUID = 5195042106101022700L;
 
 	private String configText;
 	
@@ -50,7 +50,7 @@ public class SqlParameterMetadata implements Metadata{
 	private String defaultValue;// 默认值
 	private boolean validate;// 是否验证
 	
-	private ValidatorHandler validatorHandler;// 验证器
+	private ValidateHandler validateHandler;// 验证器
 	
 	private SqlParameterConfigHolder configHolder;
 	
@@ -76,7 +76,7 @@ public class SqlParameterMetadata implements Metadata{
 		setDefaultValue(propertyMap.get("defaultvalue"));
 		setValidate(propertyMap.get("validate"));
 		
-		setValidatorHandler();
+		setValidateHandler();
 		propertyMap.clear();
 		this.configHolder = sqlParameterConfigHolder;
 	}
@@ -126,7 +126,7 @@ public class SqlParameterMetadata implements Metadata{
 		this.descriptionName = descriptionName;
 	}
 	private void setDataType(String dataType) {
-		if(MappingXmlConfigContext.getContentType() != ContentType.PROCEDURE) {
+		if(MappingResolverContext.getCurrentSqlType() != ContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(dataType)) {
 				this.dataType = mapping.getDefaultClassDataTypeHandler();
@@ -137,7 +137,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	private void setDBDataType(String typeName) {
-		if(MappingXmlConfigContext.getContentType() == ContentType.PROCEDURE) {
+		if(MappingResolverContext.getCurrentSqlType() == ContentType.PROCEDURE) {
 			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
 			if(StringUtil.isEmpty(typeName)) {
 				this.dataType = mapping.getDefaultDBDataTypeHandler();
@@ -148,7 +148,7 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 	private void setMode(String mode) {
-		if(MappingXmlConfigContext.getContentType() == ContentType.PROCEDURE) {
+		if(MappingResolverContext.getCurrentSqlType() == ContentType.PROCEDURE) {
 			if(StringUtil.notEmpty(mode)) {
 				this.mode = SqlParameterMode.toValue(mode);
 			}
@@ -208,17 +208,17 @@ public class SqlParameterMetadata implements Metadata{
 		this.validate = Boolean.parseBoolean(validate);
 	}
 	
-	private void setValidatorHandler() {
-		ValidatorHandler validatorHandler = MappingXmlConfigContext.getSqlValidatorHandlerMap().get(name);
-		if(validatorHandler == null && validate) {
-			validatorHandler = new ValidatorHandler(name);
+	private void setValidateHandler() {
+		ValidateHandler validateHandler = MappingResolverContext.getSqlValidateHandlers().get(name);
+		if(validateHandler == null && validate) {
+			validateHandler = new ValidateHandler(name);
 		}
-		if(validatorHandler != null) {
+		if(validateHandler != null) {
 			this.validate = true;
-			this.validatorHandler = validatorHandler;
-			if(validatorHandler.unexistsNullableValidator()) {
-				this.validatorHandler.setNullableValidator(defaultValue==null?nullable:true);
-				this.validatorHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
+			this.validateHandler = validateHandler;
+			if(validateHandler.unexistsNullableValidator()) {
+				this.validateHandler.setNullableValidator(defaultValue==null?nullable:true);
+				this.validateHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
 			}
 		}
 	}
@@ -297,7 +297,7 @@ public class SqlParameterMetadata implements Metadata{
 	// 验证数据
 	private void doValidate(Object value) {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
-			ValidationResult result = validatorHandler.doValidate(value);
+			ValidationResult result = validateHandler.doValidate(value);
 			if(result != null) {
 				throw new DataValidationException(descriptionName, name, value, result);
 			}
@@ -312,7 +312,7 @@ public class SqlParameterMetadata implements Metadata{
 	 */
 	public ValidationResult doValidate(Object sqlParameter, String sqlParameterNamePrefix) {
 		if(validate) {
-			return validatorHandler.doValidate(getValue_(sqlParameter, sqlParameterNamePrefix));
+			return validateHandler.doValidate(getValue_(sqlParameter, sqlParameterNamePrefix));
 		}
 		return null;
 	}

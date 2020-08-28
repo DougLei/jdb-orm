@@ -2,7 +2,7 @@ package com.douglei.orm.core.dialect.db.object.pk.sequence;
 
 import java.io.Serializable;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
 
