@@ -38,4 +38,9 @@ public abstract class MappingEntity {
 	public Mapping getMapping() {
 		return mapping;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getName() + " [code=" + code + ", type=" + type + ", op=" + getOp() + "]";
+	}
 }

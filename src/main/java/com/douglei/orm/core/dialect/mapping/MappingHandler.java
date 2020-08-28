@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
@@ -19,6 +22,7 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * @author DougLei
  */
 public class MappingHandler {
+	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
 	private MappingStore mappingStore;
 	private TableStructHandler tableStructHandler;
 	
@@ -30,6 +34,7 @@ public class MappingHandler {
 	// 解析映射实体
 	private void parseMappingEntities(Collection<MappingEntity> mappingEntities) throws ParseMappingException {
 		for (MappingEntity mappingEntity : mappingEntities) {
+			logger.debug("解析: {}", mappingEntity);
 			if(mappingEntity.parseMapping() == null) 
 				mappingEntity.setMapping(mappingStore.getMapping(mappingEntity.getCode()));
 		}
@@ -41,9 +46,12 @@ public class MappingHandler {
 	 * @throws MappingExecuteException 
 	 */
 	public void execute(Collection<MappingEntity> mappingEntities) throws MappingExecuteException {
+		logger.debug("操作映射开始");
 		try {
 			parseMappingEntities(mappingEntities);
 			for (MappingEntity mappingEntity : mappingEntities) {
+				logger.debug("操作: {}", mappingEntity);
+				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
 						if(mappingEntity.getType() == MappingType.TABLE)
@@ -59,15 +67,18 @@ public class MappingHandler {
 			}
 		} catch (Exception executeException) {
 			try {
+				logger.debug("操作映射时出现异常, 开始回滚: {}", executeException);
 				rollback();
 			} catch (Exception rollbackException) {
+				logger.debug("回滚时出现异常, 很绝望: {}", rollbackException);
 				executeException.addSuppressed(rollbackException);
 			}
-			throw new MappingExecuteException("在操作mapping时出现异常", executeException);
+			throw new MappingExecuteException("在操作映射时出现异常", executeException);
 		} finally {
 			RollbackRecorder.clear();
 			tableStructHandler.resetting();
 			MappingResolverContext.destroy();
+			logger.debug("操作映射结束");
 		}
 	}
 	
