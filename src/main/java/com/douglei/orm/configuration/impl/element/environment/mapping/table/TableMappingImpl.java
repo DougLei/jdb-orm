@@ -21,8 +21,8 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.table.exce
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.IndexConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.PrimaryKeyHandlerConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
-import com.douglei.orm.configuration.impl.element.environment.mapping.table.validator.ColumnMetadataResolver;
-import com.douglei.orm.configuration.impl.element.environment.mapping.table.validator.TableMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.ColumnMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.TableMetadataResolver;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
