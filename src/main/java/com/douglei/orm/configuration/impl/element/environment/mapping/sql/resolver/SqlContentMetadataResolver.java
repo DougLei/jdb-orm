@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.SqlNodeHandlerMapping;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeHandlerMapping;
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataResolver;
 import com.douglei.orm.core.metadata.MetadataValidateException;

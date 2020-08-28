@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

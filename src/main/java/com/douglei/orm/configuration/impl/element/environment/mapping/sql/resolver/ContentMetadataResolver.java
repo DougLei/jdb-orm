@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
 
 import java.util.Arrays;
 

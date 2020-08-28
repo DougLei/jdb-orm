@@ -1,12 +1,12 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.impl;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.impl;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.SqlNodeHandler;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.SqlNodeHandlerMapping;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.SqlNodeUnmatchingException;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeHandler;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeHandlerMapping;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeUnmatchingException;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
 import com.douglei.orm.core.metadata.sql.content.node.impl.TrimSqlNode;

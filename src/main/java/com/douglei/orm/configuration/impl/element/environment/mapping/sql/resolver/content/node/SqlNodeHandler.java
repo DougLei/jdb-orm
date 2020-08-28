@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node;
 
 import org.w3c.dom.Node;
 

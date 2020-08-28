@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.table.validator;
+package com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver;
 
 import org.dom4j.Element;
 

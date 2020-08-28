@@ -1,9 +1,9 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.impl;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.impl;
 
 import org.w3c.dom.Node;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.content.node.SqlNodeHandler;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeHandler;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.IncludeSqlNode;

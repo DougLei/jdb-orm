@@ -15,7 +15,7 @@ import org.dom4j.io.SAXReader;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.validator.SqlContentMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlContentMetadataResolver;
 import com.douglei.orm.core.metadata.sql.ContentType;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
