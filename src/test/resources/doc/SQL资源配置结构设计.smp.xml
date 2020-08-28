@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration>
+	<sql namespace="com.test">
+		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->
+		<sql-content name="rs" dialect="">
+			select * from test
+			<include ref-name="xx" />
+		</sql-content>
+	
+		<!-- type值包括: insert, delete, update, select, declare, procedure -->
+		<!-- dialect如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
+		<!-- 
+			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
+			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id
+			oracleSequenceName: 当数据库是oracle时, 必须要配置序列名, 反之配置了序列名也不会有任何问题, 框架在执行时不会使用, 也不会出现异常
+			其中key的优先级高于sequence, 即配置了sequence而没有配置key, 则配置也是无效的
+			如果不配置, 则不会返回自增主键值
+		 -->
+		<content name="" dialect="" type="select" key="id" oracleSequenceName="">
+			select * from sys_user 
+			
+			<include ref-name="rs" />
+			
+		<!-- 
+			<where>
+				<if test="age != null and age == 23">
+					and name = #{name, descriptionName=姓名, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
+				</if>
+				<if test="age != null">
+					and name = 'DougLei'
+				</if>
+			</where>
+		-->	
+			
+		 <!-- 
+			<set>
+				<if test="age != null and age == 23">
+					name = #{name},
+				</if>
+				<if test="age == null">
+					name = 'DougLei',
+				</if>
+				<if test="age == null">
+					name = 'DougLei222',
+				</if>
+			</set>
+		-->	
+		
+		<!-- 	
+			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
+				<if test="name == '哈哈'">
+					b
+				</if>
+			</trim> 
+		-->
+		
+		<!-- 
+			<switch>
+				<if test="age == null">
+					name = 'age is null',
+				</if>
+				<if test="age == null">
+					name = 'age not null',
+				</if>
+				<else>
+					and else 
+				</else>
+			</switch>
+		-->
+		
+		<!-- 
+			<foreach collection="users" alias="user" open="where id in (" separator="," close=")">
+				<if test="user.id == 1">
+					#{user.id, dataType=string}
+				</if>
+			</foreach>
+		-->	
+		
+			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
+				<if test="userId == 1">
+					#{userId, dataType=string}
+				</if>
+			</foreach>
+			
+		
+		</content>
+	<!-- 	
+		<content name="execProcedure" type="procedure">
+			{call test_procedure (
+				#{id, dbType=VARCHAR, mode=in},
+				#{name, dbType=VARCHAR, mode=out}
+			)}
+		</content>
+	-->	
+	
+		<!-- 验证器配置 -->
+		<validators>
+			<!-- name 参数名 -->
+			<!-- regex 正则表达式 -->
+			<!-- notblank 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置 -->
+			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'','message':'','i18nCode':''}" notBlank="true" />
+		</validators>
+	</sql>
+</mapping-configuration>
