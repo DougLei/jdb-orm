@@ -16,7 +16,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.core.metadata.validator.ValidatorHandler;
+import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.tools.utils.StringUtil;
 
 public class DocumentReader {
@@ -63,7 +63,7 @@ public class DocumentReader {
 			attributes = validators.item(i).getAttributes();
 			String name = attributes.getNamedItem("name").getNodeValue();
 			if(StringUtil.notEmpty(name)) {
-				ValidatorHandler handler = new ValidatorHandler(name, true);
+				ValidateHandler handler = new ValidateHandler(name, true);
 				if(attributes.getLength() > 1) {
 					for(int j=0;j<attributes.getLength();j++) {
 						attribute = attributes.item(j);

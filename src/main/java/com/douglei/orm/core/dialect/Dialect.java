@@ -15,8 +15,11 @@ public interface Dialect {
 	AbstractDataTypeHandlerMapping getDataTypeHandlerMapping();
 	
 	SqlHandler getSqlHandler();
+	
 	DBObjectHandler getDBObjectHandler();
+	
 	DBFeatures getDBFeatures();
+	
 	TableSqlStatementHandler getTableSqlStatementHandler();
 	
 	DialectType getType();

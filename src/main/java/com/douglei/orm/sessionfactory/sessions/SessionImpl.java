@@ -5,9 +5,9 @@ import java.sql.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
@@ -31,12 +31,12 @@ public class SessionImpl implements Session {
 	protected boolean isClosed;
 	protected ConnectionWrapper connection;
 	protected EnvironmentProperty environmentProperty;
-	protected MappingStoreWrapper mappingStore;
+	protected MappingStore mappingStore;
 	
-	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingStoreWrapper mappingStore) {
+	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
-		this.mappingStore = mappingStore;
+		this.mappingStore = environmentProperty.getMappingStore();
 		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 	}
 	
@@ -51,7 +51,7 @@ public class SessionImpl implements Session {
 	public SqlSession getSqlSession() {
 		validateSessionIsClosed();
 		if(SqlSession == null) {
-			SqlSession = new SqlSessionImpl(connection, environmentProperty, mappingStore);
+			SqlSession = new SqlSessionImpl(connection, environmentProperty);
 		}
 		return SqlSession;
 	}
@@ -60,7 +60,7 @@ public class SessionImpl implements Session {
 	public TableSession getTableSession() {
 		validateSessionIsClosed();
 		if(TableSession == null) {
-			TableSession = new TableSessionImpl(connection, environmentProperty, mappingStore);
+			TableSession = new TableSessionImpl(connection, environmentProperty);
 		}
 		return TableSession;
 	}
@@ -69,7 +69,7 @@ public class SessionImpl implements Session {
 	public SQLSession getSQLSession() {
 		validateSessionIsClosed();
 		if(SQLSession == null) {
-			SQLSession = new SQLSessionImpl(connection, environmentProperty, mappingStore);
+			SQLSession = new SQLSessionImpl(connection, environmentProperty);
 		}
 		return SQLSession;
 	}

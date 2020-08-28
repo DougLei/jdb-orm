@@ -1,6 +1,5 @@
 package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -8,13 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
-import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
 import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 /**
  * 
@@ -23,45 +19,24 @@ import redis.clients.jedis.Pipeline;
 class RedisMappingStoreHandler extends RedisHandler {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStoreHandler.class);
 
-	public void clearStore(Jedis connection) {
-		Set<String> keys = connection.keys(getPrefix() + "*");
-		if(CollectionUtil.unEmpty(keys)) {
-			removeMapping(keys, connection);
+	public void clear(Jedis connection) {
+		Set<String> codes = connection.keys(getPrefix() + "*");
+		if(CollectionUtil.unEmpty(codes)) {
+			connection.del(getCodeByteArray(codes));
 		}
 	}
 	
-	public void addMapping(Mapping mapping, Jedis connection) throws RepeatedMappingException{
+	public Mapping addMapping(Mapping mapping, Jedis connection) {
 		String code = getCode(mapping.getCode());
-		if(mappingExists(code, connection)) {
-			throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode(), connection));
-		}
-		connection.set(code.getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
-	}
-	
-	public void addMapping(Collection<Mapping> mappings, Jedis connection) throws RepeatedMappingException {
-		mappings.forEach(mapping -> addMapping(mapping, connection));
-	}
-
-	public void addOrCoverMapping(Mapping mapping, Jedis connection) {
-		String code = getCode(mapping.getCode());
-		if(logger.isDebugEnabled() && mappingExists(code, connection)) {
+		Mapping exMapping = getMapping(code, connection);
+		if(logger.isDebugEnabled() && exMapping != null) {
 			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode(), connection));
 		}
 		connection.set(code.getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
+		return exMapping;
 	}
 	
-	public void addOrCoverMapping(Collection<Mapping> mappings, Jedis connection) {
-		Pipeline pipeline = connection.pipelined();
-		mappings.forEach(mapping -> {
-			if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()), connection)) {
-				logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode(), connection));
-			}
-			pipeline.set(getCode(mapping.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
-		});
-		pipeline.sync();
-	}
-	
-	public Mapping removeMapping(String code, Jedis connection) {
+	public Mapping deleteMapping(String code, Jedis connection) {
 		code = getCode(code);
 		if(mappingExists(code, connection)) {
 			Mapping mp = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
@@ -71,15 +46,10 @@ class RedisMappingStoreHandler extends RedisHandler {
 		return null;
 	}
 	
-	public void removeMapping(Collection<String> codes, Jedis connection) {
-		connection.del(getCodeByteArray(codes));
-	}
-	
-	public Mapping getMapping(String code, Jedis connection) throws NotExistsMappingException {
+	public Mapping getMapping(String code, Jedis connection) {
 		byte[] mpbyte = connection.get(getCode(code).getBytes());
-		if(mpbyte == null || mpbyte.length == 0) {
-			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象");
-		}
+		if(mpbyte == null || mpbyte.length == 0) 
+			return null;
 		return JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, mpbyte);
 	}
 	
@@ -88,6 +58,6 @@ class RedisMappingStoreHandler extends RedisHandler {
 	}
 	
 	public void destroy(Jedis connection) throws DestroyException {
-		clearStore(connection);
+		clear(connection);
 	}
 }

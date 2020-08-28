@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import com.alibaba.fastjson.JSONObject;
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
+import com.douglei.orm.configuration.impl.ConfigurationImpl;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 public class SessionTest {
 	String sql = "select id, pid, name from classes order by id asc";
 	
-	Configuration configuration = new XmlConfiguration("jdb-orm.test.conf.xml");
+	Configuration configuration = new ConfigurationImpl("jdb-orm.test.conf.xml");
 	SessionFactory sf = configuration.buildSessionFactory();
 	
 	@Test

@@ -35,7 +35,6 @@ public class Dom4jReader {
 //		List<Attribute> attributes = doc.getRootElement().element("table").element("validators").element("validator").attributes();
 //		Map<String, String> propertyMap = new HashMap<String, String>();
 //		attributes.forEach(attribute -> propertyMap.put(attribute.getName(), attribute.getValue()));
-//		ValidatorHandler vc = (ValidatorHandler) IntrospectorUtil.setProperyValues(new ValidatorHandler(), propertyMap);
 //		System.out.println(vc);
 		
 		List<Element> elems = doc.getRootElement().element("table").element("validators").selectNodes("validator[@name]");

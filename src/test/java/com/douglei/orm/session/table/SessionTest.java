@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
+import com.douglei.orm.configuration.impl.ConfigurationImpl;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.session.SysUser;
 import com.douglei.orm.sessionfactory.SessionFactory;
@@ -52,7 +52,7 @@ public class SessionTest {
 	
 	
 	public static void main(String[] args) {
-		Configuration conf = new XmlConfiguration();
+		Configuration conf = new ConfigurationImpl();
 		SessionFactory sf = conf.buildSessionFactory();
 		System.out.println("start");
 		new Thread(new Runnable() {
@@ -85,7 +85,7 @@ public class SessionTest {
 	
 	@Before
 	public void before() {
-		conf = new XmlConfiguration();
+		conf = new ConfigurationImpl();
 		session = conf.buildSessionFactory().openSession();
 	}
 	@After

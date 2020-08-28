@@ -27,11 +27,9 @@ public interface EnvironmentProperty {
 	
 	public boolean enableDataValidate();
 	
-	public boolean enableTableDynamicUpdate();
-	
 	public String getSerializationFileRootPath();
 	
-	public boolean enableColumnDynamicUpdateValidate();
+	public boolean enableColumnStructUpdateValidate();
 	
 	public SqlParameterConfigHolder getSqlParameterConfigHolder();
 }

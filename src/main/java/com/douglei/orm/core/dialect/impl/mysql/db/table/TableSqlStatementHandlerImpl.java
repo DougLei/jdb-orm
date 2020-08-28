@@ -14,7 +14,7 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 	// table
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String tableExistsQueryPreparedSqlStatement() {
+	public String queryTableExistsSql() {
 		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ?";
 	}
 	

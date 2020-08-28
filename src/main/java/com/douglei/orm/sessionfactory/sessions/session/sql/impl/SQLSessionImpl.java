@@ -9,11 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
@@ -43,11 +42,10 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
-	
 	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
 	
-	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingStoreWrapper mappingStore) {
-		super(connection, environmentProperty, mappingStore);
+	public SQLSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
+		super(connection, environmentProperty);
 	}
 	
 	private SqlMetadata getSqlMetadata(String namespace) {

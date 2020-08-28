@@ -1,7 +1,5 @@
 package com.douglei.orm.configuration.environment.mapping.store;
 
-import java.util.Collection;
-
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 
@@ -12,64 +10,34 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 public interface MappingStore extends SelfProcessing{
 	
 	/**
-	 * 初始化存储容器
-	 */
-	default void initializeStore() {
-	}
-	/**
 	 * 清空存储容器
 	 */
-	default void clearStore() {
+	default void clear() {
 	}
 	
-	/** 
-	 * 添加映射, 如果出现相同的code值, 必须抛出 {@link RepeatedMappingException} 
-	 * 该方法目前只在框架启动时使用
-	 * @param mapping
-	 * @throws RepeatedMappingException
-	 */
-	void addMapping(Mapping mapping) throws RepeatedMappingException;
 	/**
-	 * 批量addMapping, 如果出现相同的code值, 必须抛出 {@link RepeatedMappingException} 
-	 * 该方法是在回滚的时候使用到
-	 * @param mappings
-	 * @throws RepeatedMappingException
+	 * 添加映射, 如果存在相同code的映射, 将其cover; 如果不存在相同code的映射, 将其add
+	 * @param mapping
+	 * @return 如果存在相同code的映射, 返回被覆盖的映射实例, 否则返回null
 	 */
-	void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException;
+	Mapping addMapping(Mapping mapping);
 	
 	/**
-	 * <pre>
-	 * 	添加/覆盖映射
-	 * 	如果存在相同code的映射, 将其cover
-	 * 	如果不存在相同code的映射, 将其add
-	 * </pre>
-	 * @param mapping
-	 */
-	void addOrCoverMapping(Mapping mapping);
-	
-	/**
-	 * 移除映射
+	 * 删除映射
 	 * @param code
-	 * @return 返回映射, 如果是表映射, 还可能需要将该表删除
+	 * @return 返回被删除的映射实例, 如果没有映射, 返回null
 	 */
-	Mapping removeMapping(String code);
-	/**
-	 * 批量removeMapping
-	 * 该方法是在回滚的时候使用到
-	 * @param codes
-	 */
-	void removeMapping(Collection<String> codes);
+	Mapping deleteMapping(String code);
 	
 	/**
 	 * 获取映射
 	 * @param code
-	 * @return
-	 * @throws NotExistsMappingException
+	 * @return 如果没有查询到, 返回null
 	 */
-	Mapping getMapping(String code) throws NotExistsMappingException;
+	Mapping getMapping(String code);
 	
 	/**
-	 * 指定code的mapping是否存在
+	 * 指定code的映射是否存在
 	 * @param code
 	 * @return
 	 */

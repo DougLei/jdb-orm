@@ -1,9 +1,8 @@
 package com.douglei.orm.sessionfactory;
 
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.sessionfactory.data.validator.DataValidatorProcessor;
-import com.douglei.orm.sessionfactory.dynamic.mapping.DynamicMappingProcessor;
+import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
 import com.douglei.orm.sessionfactory.sessions.Session;
 
 /**
@@ -47,18 +46,10 @@ public interface SessionFactory {
 	Session openSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
 	
 	/**
-	 * 获取表sql语句处理器
+	 * 获取映射处理器
 	 * @return
 	 */
-	default TableSqlStatementHandler getTableSqlStatementHandler() {
-		return null;
-	}
-	
-	/**
-	 * 获取动态映射处理器
-	 * @return
-	 */
-	default DynamicMappingProcessor getDynamicMappingProcessor() {
+	default MappingProcessor getMappingProcessor() {
 		return null;
 	}
 	

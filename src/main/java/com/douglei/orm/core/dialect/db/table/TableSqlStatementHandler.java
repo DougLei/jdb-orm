@@ -22,7 +22,7 @@ public abstract class TableSqlStatementHandler {
 	 * </pre>
 	 * @return 
 	 */
-	public abstract String tableExistsQueryPreparedSqlStatement();
+	public abstract String queryTableExistsSql();
 	
 	/**
 	 * 获取create table的sql语句

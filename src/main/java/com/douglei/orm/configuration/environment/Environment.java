@@ -2,18 +2,30 @@ package com.douglei.orm.configuration.environment;
 
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.core.dialect.mapping.MappingHandler;
 
 /**
  * 
  * @author DougLei
  */
 public interface Environment extends SelfProcessing{
+
+	/**
+	 * 获取数据源包装类
+	 * @return
+	 */
+	DataSourceWrapper getDataSourceWrapper();
 	
-	public EnvironmentProperty getEnvironmentProperty();
+	/**
+	 * 获取环境属性实例
+	 * @return
+	 */
+	EnvironmentProperty getEnvironmentProperty();
 	
-	public DataSourceWrapper getDataSourceWrapper();
-	
-	public MappingStoreWrapper getMappingWrapper();
+	/**
+	 * 获取映射处理器
+	 * @return
+	 */
+	MappingHandler getMappingHandler();
 }

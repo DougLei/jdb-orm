@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
@@ -16,10 +16,10 @@ import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValid
  * @author DougLei
  */
 public class DataValidatorProcessor {
+	private MappingStore mappingStore;
 	
-	private MappingStoreWrapper mappingWrapper;
-	public DataValidatorProcessor(MappingStoreWrapper mappingWrapper) {
-		this.mappingWrapper = mappingWrapper;
+	public DataValidatorProcessor(MappingStore mappingStore) {
+		this.mappingStore = mappingStore;
 	}
 
 	// ------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ public class DataValidatorProcessor {
 	 * @return
 	 */
 	public ValidationResult doValidate(String code, String name, Object object) {
-		Mapping mapping = mappingWrapper.getMapping(code);
+		Mapping mapping = mappingStore.getMapping(code);
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
@@ -88,7 +88,7 @@ public class DataValidatorProcessor {
 	 * @return 
 	 */
 	public List<ValidationResult> doValidate(String code, String name, List<? extends Object> objects) {
-		Mapping mapping = mappingWrapper.getMapping(code);
+		Mapping mapping = mappingStore.getMapping(code);
 		List<ValidationResult> validationResults = null;
 		
 		short index = 0;

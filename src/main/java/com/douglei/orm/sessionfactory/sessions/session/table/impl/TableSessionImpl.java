@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -45,8 +44,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private final Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
 	
-	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty, MappingStoreWrapper mappingStore) {
-		super(connection, environmentProperty, mappingStore);
+	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
+		super(connection, environmentProperty);
 		this.enableTalbeSessionCache = environmentProperty.enableTableSessionCache();
 		logger.debug("是否开启TableSession缓存: {}", enableTalbeSessionCache);
 		if(enableTalbeSessionCache) {

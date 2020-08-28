@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.xml.XmlConfiguration;
+import com.douglei.orm.configuration.impl.ConfigurationImpl;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 public class SessionFactoryTest {
@@ -39,7 +39,7 @@ public class SessionFactoryTest {
 	
 	@Before
 	public void before() {
-		conf = new XmlConfiguration();
+		conf = new ConfigurationImpl();
 		sessionFactory = conf.buildSessionFactory();
 	}
 }

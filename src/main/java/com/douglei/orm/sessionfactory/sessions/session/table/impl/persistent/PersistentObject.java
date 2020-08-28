@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.table.UniqueConstraint;
@@ -136,7 +136,7 @@ public class PersistentObject extends AbstractPersistentObject{
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
 				value = objectMap.get(column.getCode());
-				result = column.getValidatorHandler().doValidate(value);
+				result = column.getValidateHandler().doValidate(value);
 				if(result != null) {
 					throw new DataValidationException(column.getDescriptionName(), column.getName(), value, result);
 				}

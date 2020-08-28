@@ -4,15 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.mapping.MappingStoreWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.data.validator.DataValidatorProcessor;
-import com.douglei.orm.sessionfactory.dynamic.mapping.DynamicMappingProcessor;
+import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 
@@ -26,16 +24,14 @@ public class SessionFactoryImpl implements SessionFactory {
 	private Configuration configuration;
 	private Environment environment;
 	private EnvironmentProperty environmentProperty;
-	private MappingStoreWrapper mappingWrapper;
 	
-	private DynamicMappingProcessor dynamicMappingProcessor;
+	private MappingProcessor mappingProcessor;
 	private DataValidatorProcessor dataValidatorProcessor;
 	
 	public SessionFactoryImpl(Configuration configuration, Environment environment) {
 		this.configuration = configuration;
 		this.environment = environment;
 		this.environmentProperty = environment.getEnvironmentProperty();
-		this.mappingWrapper = environment.getMappingWrapper();
 	}
 	
 	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
@@ -62,27 +58,22 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(logger.isDebugEnabled()) {
 			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty, mappingWrapper);
+		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty);
 	}
 	
 	@Override
-	public TableSqlStatementHandler getTableSqlStatementHandler() {
-		return environmentProperty.getDialect().getTableSqlStatementHandler();
-	}
-	
-	@Override
-	public DynamicMappingProcessor getDynamicMappingProcessor() {
-		if(dynamicMappingProcessor == null) {
-			dynamicMappingProcessor = new DynamicMappingProcessor(environment, mappingWrapper);
+	public MappingProcessor getMappingProcessor() {
+		if(mappingProcessor == null) {
+			mappingProcessor = new MappingProcessor(environment.getMappingHandler());
 		}
 		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
-		return dynamicMappingProcessor;
+		return mappingProcessor;
 	}
 	
 	@Override
 	public DataValidatorProcessor getDataValidatorProcessor() {
 		if(dataValidatorProcessor == null) {
-			dataValidatorProcessor = new DataValidatorProcessor(mappingWrapper);
+			dataValidatorProcessor = new DataValidatorProcessor(environmentProperty.getMappingStore());
 		}
 		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		return dataValidatorProcessor;
@@ -90,7 +81,7 @@ public class SessionFactoryImpl implements SessionFactory {
 
 	@Override
 	public void destroy() {
-		dynamicMappingProcessor = null;
+		mappingProcessor = null;
 		dataValidatorProcessor = null;
 		configuration.destroy();
 		configuration = null;

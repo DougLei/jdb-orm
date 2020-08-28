@@ -1,6 +1,6 @@
 package com.douglei.orm.core.sql.statement.entity;
 
-import com.douglei.orm.context.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.handler.DataTypeHandler;
 
 /**
