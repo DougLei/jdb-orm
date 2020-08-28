@@ -52,9 +52,16 @@
 		
 		<!-- 验证器配置 -->
 		<validators>
-			<!-- name 列名 -->
-			<!-- regex 正则表达式 -->
-			<!-- notblank 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置 -->
+			<!--
+				配置结构描述: 
+				1.name: 列名, 指定给哪个列添加验证器, 且该列必须配置validate=true才会生效
+				2.
+				
+				目前提供的验证器
+				regex: 正则表达式
+				notblank: 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置
+				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在《jdb-orm框架配置结构设计.conf.xml》中配置
+			 -->
 			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'','message':'','i18nCode':''}" notBlank="true" />
 		</validators>
 	</table>

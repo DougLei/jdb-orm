@@ -77,9 +77,8 @@ public class ConfigurationImpl extends Configuration {
 	// 销毁
 	private void destroy_(){
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
-		if(environment != null) {
+		if(environment != null)
 			environment.destroy();
-		}
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 	

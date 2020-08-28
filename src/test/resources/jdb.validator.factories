@@ -1,2 +1,2 @@
-# 配置自定义的验证器, 实现了接口 com.douglei.orm.core.metadata.validator.Validator
+# 配置自定义的验证器, 继承 com.douglei.orm.core.metadata.validator.Validator
 # 配置内容结构为: 验证器名称=实现类的全路径

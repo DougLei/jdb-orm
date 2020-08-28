@@ -44,7 +44,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMappingImpl extends MappingImpl {
-	private static final long serialVersionUID = -2964393562259915504L;
 	private static final Logger logger = LoggerFactory.getLogger(TableMappingImpl.class);
 	private static TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
 	private static ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
@@ -227,9 +226,8 @@ public class TableMappingImpl extends MappingImpl {
 	
 	// 验证指定列是否已经存在主键约束
 	private void isAlreadyExistsPrimaryKeyConstraint(ColumnMetadata column, ConstraintType ct) {
-		if(column.isPrimaryKey()) {
+		if(column.isPrimaryKey()) 
 			throw new ConstraintConfigurationException("列["+column.getName()+"]为主键列, 禁止配置["+ct.name()+"]约束");
-		}
 	}
 	
 	/**
@@ -371,7 +369,7 @@ public class TableMappingImpl extends MappingImpl {
 	private Map<String, ValidateHandler> getValidateHandlerMap(Element validatorsElement) {
 		if(validatorsElement != null) {
 			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
-			if(com.douglei.tools.utils.CollectionUtil.unEmpty(validatorElements)) {
+			if(validatorElements != null && !validatorElements.isEmpty()) {
 				Map<String, ValidateHandler> validatorMap = new HashMap<String, ValidateHandler>();
 				
 				ValidateHandler handler = null;
