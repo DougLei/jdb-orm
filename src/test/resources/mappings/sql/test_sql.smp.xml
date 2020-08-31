@@ -8,7 +8,7 @@
 		
 		<content name="insertSysUser2" type="insert">
 			insert into sys_user2(id, name, age, sex) 
-				values(#{id, defaultValue=douglei23}, #{name}, #{age, dataType=integer}, #{sex} )
+				values(#{id, defaultValue=douglei23f}, #{name}, #{age, dataType=integer}, #{sex} )
 		</content>
 		
 		<content name="insertSysUser3" type="insert" key="user.id" oracleSequenceName="PKSEQ_SYS_USER">
