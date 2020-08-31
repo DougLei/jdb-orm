@@ -1,4 +1,4 @@
 内置的验证器命名规范
 1.必须以Validator结尾, 如果是辅助类, 则禁止使用Validator结尾
-2.Validator前对应配置文件中的属性名, 类名按照java规范命名, 属性名为首字母小写, 例如NotBlankValidator验证器, 其属性名为notBlank
-3.验证器类名不要使用任何特殊字符, 比如_, $
+2.Validator前的类名, 为验证器属性名, 类名按照java规范命名, 属性名为首字母小写, 例如NotBlankValidator验证器, 其属性名为notBlank
+3.验证器类名禁止使用任何特殊字符, 比如_, $

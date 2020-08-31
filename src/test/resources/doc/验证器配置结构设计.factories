@@ -1,0 +1,6 @@
+# 该配置文件的文件名必须为: jdb.validator.factories, 且只能放在resources目录下
+
+# 配置自定义的验证器, 继承 com.douglei.orm.core.metadata.validator.Validator
+# 配置内容结构为: 验证器名称=实现类的全路径
+# 例子如下: 
+# regex = com.douglei.orm.core.metadata.validator.impl.RegexValidator

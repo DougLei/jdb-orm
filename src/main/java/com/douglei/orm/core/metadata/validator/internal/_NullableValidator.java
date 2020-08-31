@@ -8,7 +8,6 @@ import com.douglei.orm.core.metadata.validator.Validator;
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
-	private static final long serialVersionUID = -631515537317711665L;
 	private boolean nullable;
 	
 	public _NullableValidator(boolean nullable) {
@@ -16,9 +15,9 @@ public class _NullableValidator extends Validator {
 	}
 	
 	@Override
-	public ValidationResult doValidate(String validateFieldName, Object value) {
+	public ValidationResult validate(String fieldName, Object value) {
 		if(!nullable && value == null) 
-			return new ValidationResult(validateFieldName, "不能为空", "jdb.data.validator.notnull");
+			return new ValidationResult(fieldName, "不能为空", "jdb.data.validator.notnull");
 		return null;
 	}
 }

@@ -1,3 +1,0 @@
-1.主要就是优化验证器的验证代码
-2.将自定义验证器增加getName, 不要通过截取类名来做为验证器的名称
-3.取消jdb.validator.factories配置文件, 将这个文件中的内容放到jdb-orm框架配置结构设计.conf.xml中

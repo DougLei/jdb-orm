@@ -24,7 +24,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -7003748045936176394L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -270,9 +269,8 @@ public class TableMetadata implements Metadata{
 	
 	// 验证主键列是否存在
 	private void validatePrimaryKeyColumnExists() {
-		if(existsPrimaryKey()) {
+		if(existsPrimaryKey()) 
 			throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
-		}
 	}
 	// 是否存在主键
 	public boolean existsPrimaryKey() {
@@ -327,19 +325,6 @@ public class TableMetadata implements Metadata{
 			throw new NullPointerException("不存在column name=["+columnName+"]的列");
 		}
 		return column;
-	}
-	
-	/**
-	 * 根据列名, 验证列是否存在
-	 * @param columnName
-	 * @return 返回列的code值 {@link ColumnMetadata#getCode()}
-	 */
-	public String validateColumnExistsByName(String columnName) {
-		ColumnMetadata column = columns.get(columnName);
-		if(column == null) {
-			throw new NullPointerException("不存在column name=["+columnName+"]的列");
-		}
-		return column.getCode();
 	}
 	
 	@Override

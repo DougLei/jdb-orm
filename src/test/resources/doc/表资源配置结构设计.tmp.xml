@@ -27,13 +27,13 @@
 		<constraints>
 			<!-- type = PRIMARY_KEY, UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
 			<constraint type="" value="" expression="" fkTableName="" fkColumnName="">
-				<column name="" />
+				<column name="" /><!-- 注意: 这里配置的是列名, 不配置属性名, 因为是给列加约束 -->
 			</constraint>
 		</constraints>
 		
 		<indexes>
-			<index name="">
-				<createSql dialect=""></createSql>
+			<index name=""><!-- 这个名字配置索引名, 必须配置, 应该与下面createSql和dropSql中索引名一致; 这个地方配置索引名只是在框架中做一个key标识, 与发出的sql语句没有实质关系 -->
+				<createSql dialect=""></createSql><!-- dialect标识该语句属于哪种数据库, 如果不配置, 则默认是当前SessionFactory的dialect; 可以配置多个值, 用[,]分割开; 目前可以配置的值包括: oracle, mysql, sqlserver, 不区分大小写 -->
 				<dropSql dialect=""></dropSql>
 			</index>
 		</indexes>
@@ -54,15 +54,16 @@
 		<validators>
 			<!--
 				配置结构描述: 
-				1.name: 列名, 指定给哪个列添加验证器, 且该列必须配置validate=true才会生效
-				2.
+				1.code: 参数编码, 指定给哪个参数编码添加验证器, 如果该参数的validate为false, 又这里配置了验证器, 框架会自动将该参数的validate值改为true
+				                  如果是列, 有property时配置property值(属性名), 否则配置name值(列名), 如果是sql参数, 则配置sql参数名即可, 这里要注意大小写和你定义时写的大小写必须一致
+				2.验证器名称=验证器配置值, 可以配置多个验证器
 				
 				目前提供的验证器
-				regex: 正则表达式
-				notblank: 不能为空字符串, 只要配置了该验证器, 则该列的值一定不能为空字符串, 和后面的true值无关系, 如果不需要验证则不要配置
-				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在《jdb-orm框架配置结构设计.conf.xml》中配置
+				regex: 正则表达式, 可以配置json数组或json对象
+				notblank: 不能为空字符串
+				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在resources中的jdb.validator.factories文件中配置
 			 -->
-			<validator name="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'','message':'','i18nCode':''}" notBlank="true" />
+			<validator code="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" notBlank="true" />
 		</validators>
 	</table>
 </mapping-configuration>

@@ -28,8 +28,8 @@ public class DataValidatorProcessor {
 	 * @param object
 	 * @return
 	 */
-	public ValidationResult doValidate(Object object) {
-		return doValidate(object.getClass().getName(), null, object);
+	public ValidationResult validate(Object object) {
+		return validate(object.getClass().getName(), null, object);
 	}
 	
 	/**
@@ -38,24 +38,24 @@ public class DataValidatorProcessor {
 	 * @param object
 	 * @return
 	 */
-	public ValidationResult doValidate(String code, Object object) {
-		return doValidate(code, null, object);
+	public ValidationResult validate(String code, Object object) {
+		return validate(code, null, object);
 	}
 	
 	/**
 	 * 
 	 * @param code 表映射的tableName/className, sql映射的namespace
-	 * @param name 针对sql映射, content的name值
+	 * @param name 针对sql映射, content的name值, 如果验证表则该参数传入null即可
 	 * @param object
 	 * @return
 	 */
-	public ValidationResult doValidate(String code, String name, Object object) {
+	public ValidationResult validate(String code, String name, Object object) {
 		Mapping mapping = mappingStore.getMapping(code);
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
 			case SQL:// 验证sql数据
-				return new SqlValidator((SqlMetadata)mapping.getMetadata(), name).doValidate(object);
+				return new SqlValidator((SqlMetadata)mapping.getMetadata(), name).validate(object);
 		}
 		return null;
 	}
@@ -66,8 +66,8 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> doValidate(List<? extends Object> objects) {
-		return doValidate(objects.get(0).getClass().getName(), null, objects);
+	public List<ValidationResult> validate(List<? extends Object> objects) {
+		return validate(objects.get(0).getClass().getName(), null, objects);
 	}
 	
 	/**
@@ -76,8 +76,8 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> doValidate(String code, List<? extends Object> objects) {
-		return doValidate(code, null, objects);
+	public List<ValidationResult> validate(String code, List<? extends Object> objects) {
+		return validate(code, null, objects);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class DataValidatorProcessor {
 	 * @param objects
 	 * @return 
 	 */
-	public List<ValidationResult> doValidate(String code, String name, List<? extends Object> objects) {
+	public List<ValidationResult> validate(String code, String name, List<? extends Object> objects) {
 		Mapping mapping = mappingStore.getMapping(code);
 		List<ValidationResult> validationResults = null;
 		
@@ -112,7 +112,7 @@ public class DataValidatorProcessor {
 			case SQL:// 验证sql数据
 				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);
 				for (Object object : objects) {
-					vr = sqlValidator.doValidate(object);
+					vr = sqlValidator.validate(object);
 					if(vr != null) {
 						vr.setIndex(index);
 						if(validationResults == null) {

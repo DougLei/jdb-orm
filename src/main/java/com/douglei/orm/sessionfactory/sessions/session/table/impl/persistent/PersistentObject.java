@@ -136,7 +136,7 @@ public class PersistentObject extends AbstractPersistentObject{
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
 				value = objectMap.get(column.getCode());
-				result = column.getValidateHandler().doValidate(value);
+				result = column.getValidateHandler().validate(value);
 				if(result != null) {
 					throw new DataValidationException(column.getDescriptionName(), column.getName(), value, result);
 				}

@@ -36,9 +36,9 @@ public class SqlContentMetadataResolver implements MetadataResolver<Node, SqlCon
 		}
 		
 		ContentType contentType = getContentType(attributeMap);
-		DialectType[] dialectTypes = getDialectTypes(attributeMap.getNamedItem("dialect"));
+		DialectType[] dialects = getDialects(attributeMap.getNamedItem("dialect"));
 		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(contentType, attributeMap);
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialectTypes, incrementIdValueConfig);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialects, incrementIdValueConfig);
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
@@ -109,31 +109,26 @@ public class SqlContentMetadataResolver implements MetadataResolver<Node, SqlCon
 	}
 	
 	// 获取配置的dialect
-	private DialectType[] getDialectTypes(Node dialect) {
+	private DialectType[] getDialects(Node dialect) {
 		String dialectValue = null; 
-		if(dialect == null || StringUtil.isEmpty(dialectValue = dialect.getNodeValue())) {
-			return new DialectType[] { EnvironmentContext.getDialect().getType() };
-		}else {
-			String[] dialectValueArray = dialectValue.split(",");
-			DialectType dt = null;
-			List<DialectType> dts = null;
+		if(dialect != null && StringUtil.notEmpty(dialectValue = dialect.getNodeValue())) {
+			String[] dialectValues = dialectValue.split(",");
+			List<DialectType> dts = new ArrayList<DialectType>(dialectValues.length);
 			
-			for(String _dialect: dialectValueArray) {
-				dt = DialectType.toValue(_dialect.toUpperCase());
-				if(dt == null) {
-					throw new MetadataValidateException(getNodeName() + "元素中的dialect属性值错误:["+dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
-				}
-				if(dt == DialectType.ALL) {
-					return DialectType.values_();
-				}else {
-					if(dts == null) {
-						dts = new ArrayList<DialectType>(dialectValueArray.length);
-					}
-					dts.add(dt);
+			DialectType dt = null;
+			for (String dv : dialectValues) {
+				if(StringUtil.notEmpty(dv)) {
+					dt = DialectType.toValue(dv.trim().toUpperCase());
+					if(dt == null) 
+						throw new MetadataValidateException(getNodeName() + "元素中的dialect属性值错误:["+dv+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
+					if(dts.isEmpty() || !dts.contains(dt))
+						dts.add(dt);
 				}
 			}
-			return dts.toArray(new DialectType[dts.size()]);
+			if(!dts.isEmpty())
+				return dts.toArray(new DialectType[dts.size()]);
 		}
+		return new DialectType[] { EnvironmentContext.getDialect().getType() };
 	}
 	
 	/**

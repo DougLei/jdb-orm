@@ -24,10 +24,10 @@ public class SqlValidator {
 		contents.forEach(content -> contentValidators.add(new ContentValidator(content)));
 	}
 	
-	public ValidationResult doValidate(Object sqlParameter) {
+	public ValidationResult validate(Object sqlParameter) {
 		ValidationResult result = null;
 		for (ContentValidator cvalidator : contentValidators) {
-			result = cvalidator.doValidate(sqlParameter);
+			result = cvalidator.validate(sqlParameter);
 			if(result != null) {
 				break;
 			}

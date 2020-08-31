@@ -51,7 +51,7 @@ public class Dom4jElementUtil {
 			return null;
 		}
 		List<Element> elements = root.elements(elementName);
-		if(CollectionUtil.isEmpty(elements)) {
+		if(elements == null || elements.isEmpty()) {
 			return null;
 		}
 		return elements;

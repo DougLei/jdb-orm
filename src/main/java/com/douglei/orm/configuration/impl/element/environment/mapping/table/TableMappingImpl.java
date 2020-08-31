@@ -15,16 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImportDataContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImpl;
+import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImportDataContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ConstraintConfigurationException;
-import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.IndexConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.PrimaryKeyHandlerConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.ColumnMetadataResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.TableMetadataResolver;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataValidateException;
@@ -236,66 +234,35 @@ public class TableMappingImpl extends MappingImpl {
 	 */
 	private void addIndex(Element indexesElement) {
 		if(indexesElement != null) {
-			List<Element> elements = Dom4jElementUtil.elements("index", indexesElement);
-			if(elements != null) {
-				String indexName = null;
-				Map<DialectType, String> createSqlStatements = null;
-				Map<DialectType, String> dropSqlStatements = null;
-				DialectType currentDialectType = EnvironmentContext.getDialect().getType();
+			List<Element> indexElements = Dom4jElementUtil.elements("index", indexesElement);
+			if(indexElements != null) {
+				String indexName, createSqlStatement, dropSqlStatement;
+				String currentDialect = EnvironmentContext.getDialect().getType().name();
 				
-				for (Element indexElement : elements) {
-					if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name"))) {
+				for (Element indexElement : indexElements) {
+					if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name")))
 						throw new NullPointerException("索引名不能为空");
-					}
 					
-					createSqlStatements = getIndexSqlStatementMap("create", indexName, currentDialectType, Dom4jElementUtil.elements("createSql", indexElement));
-					dropSqlStatements = getIndexSqlStatementMap("drop", indexName, currentDialectType, Dom4jElementUtil.elements("dropSql", indexElement));
-					if(!createSqlStatements.keySet().equals(dropSqlStatements.keySet())) {
-						throw new IndexConfigurationException("索引[" + indexName + "]的create sql语句["+createSqlStatements.size()+"个]["+createSqlStatements.keySet()+"]和drop sql语句["+dropSqlStatements.size()+"个]["+dropSqlStatements.keySet()+"]不匹配");
-					}
-					
-					tableMetadata.addIndex(new Index(tableMetadata.getName(), indexName, createSqlStatements, dropSqlStatements));
+					createSqlStatement = getIndexSqlStatement("create", indexElement, currentDialect, indexName);
+					dropSqlStatement = getIndexSqlStatement("drop", indexElement, currentDialect, indexName);
+					tableMetadata.addIndex(new Index(tableMetadata.getName(), indexName, createSqlStatement, dropSqlStatement));
 				}
 			}
 		}
 	}
 	
-	// 获取索引sql语句map
-	private Map<DialectType, String> getIndexSqlStatementMap(String description, String indexName, DialectType currentDialectType, List<Element> sqlElements) {
-		if(sqlElements == null) {
-			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
-		}
-		Map<DialectType, String> sqlStatements = new HashMap<DialectType, String>(sqlElements.size());
-		for (Element se : sqlElements) {
-			putIndexSqlStatement(description, indexName, se.attributeValue("dialect"), se.getTextTrim(), currentDialectType, sqlStatements);
-		}
-		return sqlStatements;
-	}
-	
-	// 将对应的索引sql语句put到map集合中
-	private void putIndexSqlStatement(String description, String indexName, String dialect, String sqlStatement, DialectType currentDialectType, Map<DialectType, String> sqlStatements) {
-		if(StringUtil.isEmpty(sqlStatement)) {
-			throw new NullPointerException(description + "索引[" + indexName + "]的sql语句不能为空");
-		}
-		if(StringUtil.isEmpty(dialect)) {
-			sqlStatements.put(currentDialectType, sqlStatement);
-		} else {
-			DialectType dt = null;
-			for(String _dialect : dialect.split(",")) {
-				dt = DialectType.toValue(_dialect.toUpperCase());
-				if(dt == null) {
-					throw new NullPointerException("<indexes> -> <index> -> <"+description+"Sql>元素中的dialect属性值错误:["+_dialect+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
-				}
-				if(dt == DialectType.ALL) {
-					for(DialectType _dt: DialectType.values_()) {
-						sqlStatements.put(_dt, sqlStatement);
-					}
-					break;
-				}else {
-					sqlStatements.put(dt, sqlStatement);
-				}
+	// 获取索引指定key的sql语句
+	private String getIndexSqlStatement(String key, Element indexElement, String currentDialect, String indexName) {
+		List<Element> sqlElements = Dom4jElementUtil.elements(key + "Sql", indexElement);
+		if(sqlElements != null) {
+			String tmp;
+			for (Element sqlElement : sqlElements) {
+				tmp = sqlElement.attributeValue("dialect");
+				if((StringUtil.isEmpty(tmp) || tmp.toUpperCase().indexOf(currentDialect) > -1) && StringUtil.notEmpty(tmp = sqlElement.getTextTrim()))
+					return tmp;
 			}
 		}
+		throw new NullPointerException("索引" + indexName + "的 "+key+"Sql语句不能为空");
 	}
 	
 	/**
@@ -375,7 +342,7 @@ public class TableMappingImpl extends MappingImpl {
 				ValidateHandler handler = null;
 				for (Element ve : validatorElements) {
 					handler = getValidateHandler(ve);
-					validatorMap.put(tableMetadata.validateColumnExistsByName(handler.getName()), handler);
+					validatorMap.put(handler.getCode(), handler);
 				}
 				return validatorMap;
 			}
@@ -390,20 +357,22 @@ public class TableMappingImpl extends MappingImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private ValidateHandler getValidateHandler(Element validatorElement) {
-		String name = validatorElement.attributeValue("name");
-		if(StringUtil.notEmpty(name)) {
-			ValidateHandler handler = new ValidateHandler(name, true);
+		String code = validatorElement.attributeValue("code");
+		if(StringUtil.notEmpty(code)) {
+			if(tableMetadata.getColumnByCode(code) == null)
+				throw new NullPointerException("配置验证器时, 不存在code="+code+"的列");
+			
+			ValidateHandler handler = new ValidateHandler(code, true);
 			List<Attribute> attributes = validatorElement.attributes();
 			if(attributes.size() > 1) {
 				attributes.forEach(attribute -> {
-					if(!"name".equals(attribute.getName())) {
+					if(!"code".equals(attribute.getName())) 
 						handler.addValidator(attribute.getName(), attribute.getValue());
-					}
 				});
 			}
 			return handler;
 		}
-		throw new NullPointerException("<validator>元素中的name属性值不能为空");
+		throw new NullPointerException("<validator>元素中的code属性值不能为空");
 	}
 	
 	/**

@@ -56,19 +56,13 @@ class ValidatorContext {
 	/**
 	 * 获取验证器实例
 	 * @param validatorName
-	 * @param validatorConfigValue
+	 * @param configValue
 	 * @return
 	 */
-	public static Validator getValidatorInstance(String validatorName, String validatorConfigValue) {
+	public static Validator getValidatorInstance(String validatorName, String configValue) {
 		Class<? extends Validator> vc = validators.get(validatorName);
-		if(vc == null) {
-			try {
-				vc = ClassLoadUtil.loadClassWithStatic(validatorName);
-				registerValidator(validatorName, vc);
-			} catch (Exception e) {
-				throw new UnsupportValidatorException(validatorName);
-			}
-		}
-		return ((Validator) ConstructorUtil.newInstance(vc)).initialValidator(validatorConfigValue);
+		if(vc == null) 
+			throw new NullPointerException("不存在名为"+validatorName+"的验证器");
+		return ((Validator) ConstructorUtil.newInstance(vc)).initialValidator(configValue);
 	}
 }

@@ -83,30 +83,28 @@ public class SqlMappingImpl extends MappingImpl {
 		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
 			validateHandlerMap =new HashMap<String, ValidateHandler>(validatorNodeList.getLength());
 			NamedNodeMap attributes = null;
-			String name = null;
+			String code = null;
 			Node attribute = null;
 			for(int i=0;i<validatorNodeList.getLength();i++) {
 				attributes = validatorNodeList.item(i).getAttributes();
-				name = attributes.getNamedItem("name").getNodeValue();
-				if(StringUtil.notEmpty(name)) {
-					ValidateHandler handler = new ValidateHandler(name, true);
+				code = attributes.getNamedItem("code").getNodeValue();
+				if(StringUtil.notEmpty(code)) {
+					ValidateHandler handler = new ValidateHandler(code, true);
 					if(attributes.getLength() > 1) {
 						for(int j=0;j<attributes.getLength();j++) {
 							attribute = attributes.item(j);
-							if(!"name".equals(attribute.getNodeName())) {
+							if(!"code".equals(attribute.getNodeName()))
 								handler.addValidator(attribute.getNodeName(), attribute.getNodeValue());
-							}
 						}
 					}
-					validateHandlerMap.put(handler.getName(), handler);
+					validateHandlerMap.put(handler.getCode(), handler);
 					continue;
 				}
-				throw new NullPointerException("<validator>元素中的name属性值不能为空");
+				throw new NullPointerException("<validator>元素中的code属性值不能为空");
 			}
 		}
-		if(validateHandlerMap == null) {
+		if(validateHandlerMap == null) 
 			validateHandlerMap = Collections.emptyMap();
-		}
 		MappingResolverContext.setSqlValidateHandlers(validateHandlerMap);
 	}
 

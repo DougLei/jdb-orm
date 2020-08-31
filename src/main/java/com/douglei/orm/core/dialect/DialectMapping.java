@@ -1,5 +1,6 @@
 package com.douglei.orm.core.dialect;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,15 +41,15 @@ public class DialectMapping {
 	 */
 	private static Dialect validateDialect(String databaseCode, DatabaseMetadata databaseMetadata) {
 		DialectType dt = DialectType.toValue(databaseCode);
-		if(dt == null || dt == DialectType.ALL) {
-			throw new UnsupportDialectException("系统目前不支持["+databaseCode+"], 目前支持的数据库dialect值包括:"+DialectType.supportDatabase());
-		}
+		if(dt == null) 
+			throw new UnsupportDialectException("系统目前不支持["+databaseCode+"], 目前支持的数据库包括:" + Arrays.toString(DialectType.values()));
+		
 		for(int supportMajorVersion : dt.supportMajorVersions()) {
 			if(supportMajorVersion == databaseMetadata.getDatabaseMajorVersion()) {
 				return dt.getDialectInstance();
 			}
 		}
-		throw new UnsupportDialectException("系统目前不支持["+databaseCode+"], 主版本为["+databaseMetadata.getDatabaseMajorVersion()+"], 目前支持的数据库dialect值包括:"+DialectType.supportDatabase());
+		throw new UnsupportDialectException("系统目前不支持["+databaseCode+"], 主版本为["+databaseMetadata.getDatabaseMajorVersion()+"], 目前支持的数据库包括:" + Arrays.toString(DialectType.values()));
 	}
 	
 	/**
@@ -80,9 +81,9 @@ public class DialectMapping {
 	private static DialectType getDialectTypeByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
 		String databaseProductName = extractDatabaseProductName(databaseMetadata.getJDBCUrl());
 		DialectType dt = DialectType.toValue(databaseProductName.toUpperCase());
-		if(dt == null || dt == DialectType.ALL) {
-			throw new UnsupportDialectException("系统目前不支持["+databaseProductName+"], 目前支持的数据库dialect包括:"+DialectType.supportDatabase());
-		}
+		if(dt == null)
+			throw new UnsupportDialectException("系统目前不支持["+databaseProductName+"], 目前支持的数据库包括:" + Arrays.toString(DialectType.values()));
+		
 		return dt;
 	}
 	

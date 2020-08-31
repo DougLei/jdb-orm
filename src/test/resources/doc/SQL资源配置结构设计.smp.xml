@@ -8,7 +8,7 @@
 		</sql-content>
 	
 		<!-- type值包括: insert, delete, update, select, declare, procedure -->
-		<!-- dialect如果不写, 默认是当前系统的dialect; 多种dialect, 用,分割; all表示所有类型的dialect -->
+		<!-- dialect的配置方式, 参考《表资源配置结构设计.tmp.xml》中, 配置索引index中createSql和dropSql的dialect -->
 		<!-- 
 			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
 			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id

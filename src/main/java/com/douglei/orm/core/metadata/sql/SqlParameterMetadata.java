@@ -29,7 +29,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 5195042106101022700L;
 
 	private String configText;
 	
@@ -216,10 +215,8 @@ public class SqlParameterMetadata implements Metadata{
 		if(validateHandler != null) {
 			this.validate = true;
 			this.validateHandler = validateHandler;
-			if(validateHandler.unexistsNullableValidator()) {
-				this.validateHandler.setNullableValidator(defaultValue==null?nullable:true);
-				this.validateHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
-			}
+			this.validateHandler.setNullableValidator(defaultValue==null?nullable:true);
+			this.validateHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
 		}
 	}
 
@@ -290,14 +287,14 @@ public class SqlParameterMetadata implements Metadata{
 	 */
 	public Object getValue(Object sqlParameter, String sqlParameterNamePrefix) {
 		Object value = getValue_(sqlParameter, sqlParameterNamePrefix);
-		doValidate(value);
+		validate(value);
 		return value;
 	}
 	
 	// 验证数据
-	private void doValidate(Object value) {
+	private void validate(Object value) {
 		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
-			ValidationResult result = validateHandler.doValidate(value);
+			ValidationResult result = validateHandler.validate(value);
 			if(result != null) {
 				throw new DataValidationException(descriptionName, name, value, result);
 			}
@@ -310,9 +307,9 @@ public class SqlParameterMetadata implements Metadata{
 	 * @param sqlParameterNamePrefix
 	 * @return
 	 */
-	public ValidationResult doValidate(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validate(Object sqlParameter, String sqlParameterNamePrefix) {
 		if(validate) {
-			return validateHandler.doValidate(getValue_(sqlParameter, sqlParameterNamePrefix));
+			return validateHandler.validate(getValue_(sqlParameter, sqlParameterNamePrefix));
 		}
 		return null;
 	}

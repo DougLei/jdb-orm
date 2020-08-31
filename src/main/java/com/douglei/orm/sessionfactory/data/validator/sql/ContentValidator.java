@@ -23,7 +23,7 @@ class ContentValidator {
 	 * @param sqlParameter
 	 * @return
 	 */
-	public ValidationResult doValidate(Object sqlParameter) {
+	public ValidationResult validate(Object sqlParameter) {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : rootSqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
