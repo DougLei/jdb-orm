@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
@@ -14,17 +13,15 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
-	private static final long serialVersionUID = -8187127309286994470L;
+	private static final long serialVersionUID = 7588553524532501585L;
 	protected String name;
-	protected DialectType[] dialectTypes;
 	protected ContentType type;
 	private IncrementIdValueConfig incrementIdValueConfig;
 	
 	private List<SqlNode> rootSqlNodes;
 	
-	public ContentMetadata(String name, DialectType[] dialectTypes, IncrementIdValueConfig incrementIdValueConfig) {
+	public ContentMetadata(String name, IncrementIdValueConfig incrementIdValueConfig) {
 		this.name = name;
-		this.dialectTypes = dialectTypes;
 		this.incrementIdValueConfig = incrementIdValueConfig;
 		this.type = MappingResolverContext.getCurrentSqlType();
 	}
@@ -36,14 +33,6 @@ public class ContentMetadata implements Metadata{
 		rootSqlNodes.add(rootSqlNode);
 	}
 	
-	public boolean isMatchingDialectType(DialectType currentDialectType) {
-		for (DialectType dt : dialectTypes) {
-			if(dt == currentDialectType) {
-				return true;
-			}
-		}
-		return false;
-	}
 	public String getName() {
 		return name;
 	}

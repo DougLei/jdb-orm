@@ -1,6 +1,5 @@
 package com.douglei.orm.core.metadata.sql;
 
-import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataType;
 
 /**
@@ -8,10 +7,10 @@ import com.douglei.orm.core.metadata.MetadataType;
  * @author DougLei
  */
 public class SqlContentMetadata extends ContentMetadata{
-	private static final long serialVersionUID = -7456834976072388088L;
+	private static final long serialVersionUID = 2620136088145724869L;
 
-	public SqlContentMetadata(String name, DialectType[] dialectTypes, IncrementIdValueConfig incrementIdValueConfig) {
-		super(name, dialectTypes, incrementIdValueConfig);
+	public SqlContentMetadata(String name, IncrementIdValueConfig incrementIdValueConfig) {
+		super(name, incrementIdValueConfig);
 	}
 	
 	@Override

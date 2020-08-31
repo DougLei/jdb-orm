@@ -2,7 +2,6 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 
 import java.util.List;
 
-import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
@@ -31,22 +30,17 @@ public class IncludeSqlNode implements SqlNode {
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		if(content.isMatchingDialectType(EnvironmentContext.getDialect().getType())) {
-			ExecuteSql executeSql = new ExecuteSql(content, sqlParameter);
-			return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters());
-		}
-		return ExecuteSqlNode.emptyExecuteSqlNode();
+		ExecuteSql executeSql = new ExecuteSql(content, sqlParameter);
+		return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters());
 	}
 
 	@Override
 	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
-		if(content.isMatchingDialectType(EnvironmentContext.getDialect().getType())) {
-			ValidationResult result = null;
-			for (SqlNode sqlNode : rootSqlNodes) {
-				if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
-					if((result = sqlNode.validateParameter(sqlParameter)) != null) {
-						return result;
-					}
+		ValidationResult result = null;
+		for (SqlNode sqlNode : rootSqlNodes) {
+			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
+				if((result = sqlNode.validateParameter(sqlParameter)) != null) {
+					return result;
 				}
 			}
 		}

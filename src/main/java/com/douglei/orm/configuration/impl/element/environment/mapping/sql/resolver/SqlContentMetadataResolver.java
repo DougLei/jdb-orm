@@ -1,9 +1,5 @@
 package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -36,9 +32,8 @@ public class SqlContentMetadataResolver implements MetadataResolver<Node, SqlCon
 		}
 		
 		ContentType contentType = getContentType(attributeMap);
-		DialectType[] dialects = getDialects(attributeMap.getNamedItem("dialect"));
 		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(contentType, attributeMap);
-		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, dialects, incrementIdValueConfig);
+		SqlContentMetadata sqlContentMetadata = new SqlContentMetadata(contentName, incrementIdValueConfig);
 		
 		NodeList children = contentNode.getChildNodes();
 		int length = doValidateContent(children);
@@ -106,29 +101,6 @@ public class SqlContentMetadataResolver implements MetadataResolver<Node, SqlCon
 	 * @param children
 	 */
 	protected void doValidateProcedureContent(int childrenLength, NodeList children) {
-	}
-	
-	// 获取配置的dialect
-	private DialectType[] getDialects(Node dialect) {
-		String dialectValue = null; 
-		if(dialect != null && StringUtil.notEmpty(dialectValue = dialect.getNodeValue())) {
-			String[] dialectValues = dialectValue.split(",");
-			List<DialectType> dts = new ArrayList<DialectType>(dialectValues.length);
-			
-			DialectType dt = null;
-			for (String dv : dialectValues) {
-				if(StringUtil.notEmpty(dv)) {
-					dt = DialectType.toValue(dv.trim().toUpperCase());
-					if(dt == null) 
-						throw new MetadataValidateException(getNodeName() + "元素中的dialect属性值错误:["+dv+"], 目前支持的值包括: " + Arrays.toString(DialectType.values()));
-					if(dts.isEmpty() || !dts.contains(dt))
-						dts.add(dt);
-				}
-			}
-			if(!dts.isEmpty())
-				return dts.toArray(new DialectType[dts.size()]);
-		}
-		return new DialectType[] { EnvironmentContext.getDialect().getType() };
 	}
 	
 	/**

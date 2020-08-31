@@ -1,10 +1,9 @@
 package com.douglei.orm.core.metadata.sql;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataType;
 
@@ -49,39 +48,24 @@ public class SqlMetadata implements Metadata{
 		return MetadataType.SQL;
 	}
 	
+	/**
+	 * 获取指定name的sql content, 如果name=null, 则返回所有sql content
+	 * @param name
+	 * @return 非null的list
+	 */
 	public List<ContentMetadata> getContents(String name) {
-		return name==null?getAllContents():getContentByName(name);
-	}
-	
-	// 获取所有满足方言的content集合
-	private List<ContentMetadata> getAllContents(){
-		DialectType currentDialectType = EnvironmentContext.getDialect().getType();
-		List<ContentMetadata> list = new ArrayList<ContentMetadata>(contents.size());
-		for (ContentMetadata content : contents) {
-			if(content.isMatchingDialectType(currentDialectType)) {
-				list.add(content);
-			}
-		}
-		return list;
+		return name==null?contents:getContentByName(name);
 	}
 	
 	// 获取指定name的content集合
 	private List<ContentMetadata> getContentByName(String name) {
-		DialectType currentDialectType = EnvironmentContext.getDialect().getType();
-		List<ContentMetadata> list = new ArrayList<ContentMetadata>(1);
 		for (ContentMetadata content : contents) {
-			if(content.getName().equals(name) && content.isMatchingDialectType(currentDialectType)) {
+			if(content.getName().equals(name)) {
+				List<ContentMetadata> list = new ArrayList<ContentMetadata>(1);
 				list.add(content);
-				break;
+				return list;
 			}
 		}
-		return list;
-	}
-
-	private class RepeatedContentNameException extends RuntimeException{
-		private static final long serialVersionUID = 4281842020558874332L;
-		public RepeatedContentNameException(String contentName) {
-			super("重复配置了name=["+contentName+"]的<content>元素");
-		}
+		return Collections.emptyList();
 	}
 }

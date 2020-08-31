@@ -2,13 +2,12 @@
 <mapping-configuration>
 	<sql namespace="com.test">
 		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->
-		<sql-content name="rs" dialect="">
+		<sql-content name="rs">
 			select * from test
 			<include ref-name="xx" />
 		</sql-content>
-	
+		
 		<!-- type值包括: insert, delete, update, select, declare, procedure -->
-		<!-- dialect的配置方式, 参考《表资源配置结构设计.tmp.xml》中, 配置索引index中createSql和dropSql的dialect -->
 		<!-- 
 			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
 			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id
@@ -16,7 +15,7 @@
 			其中key的优先级高于sequence, 即配置了sequence而没有配置key, 则配置也是无效的
 			如果不配置, 则不会返回自增主键值
 		 -->
-		<content name="" dialect="" type="select" key="id" oracleSequenceName="">
+		<content name="" type="select" key="id" oracleSequenceName="">
 			select * from sys_user 
 			
 			<include ref-name="rs" />
