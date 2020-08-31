@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author DougLei
  */
 public class Index implements Serializable{
-
+	private static final long serialVersionUID = -8135002878968842086L;
 	private String tableName;// 表名
 	private String name;// 索引名
 	

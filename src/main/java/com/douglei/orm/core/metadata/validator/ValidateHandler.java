@@ -11,6 +11,7 @@ import com.douglei.orm.core.metadata.validator.internal._NullableValidator;
  * @author DougLei
  */
 public class ValidateHandler implements Serializable{
+	private static final long serialVersionUID = -1004970601367813054L;
 	private String code;
 	private boolean byConfig;// 是否使用配置validators验证器的方式, 创建的ValidateHandler实例
 	private _NullableValidator _nullableValidator;// 必须先验证非空, 然后再进行其他验证, 如果可为空, 且值为空, 则不用进行其他验证, 所以该验证器必须配置

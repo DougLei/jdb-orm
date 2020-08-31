@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-import com.douglei.tools.utils.CollectionUtil;
-
 /**
  * 
  * @author DougLei

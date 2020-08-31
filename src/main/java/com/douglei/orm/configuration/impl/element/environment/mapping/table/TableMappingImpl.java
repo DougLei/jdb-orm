@@ -42,6 +42,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMappingImpl extends MappingImpl {
+	private static final long serialVersionUID = -2964393562259915504L;
 	private static final Logger logger = LoggerFactory.getLogger(TableMappingImpl.class);
 	private static TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
 	private static ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
