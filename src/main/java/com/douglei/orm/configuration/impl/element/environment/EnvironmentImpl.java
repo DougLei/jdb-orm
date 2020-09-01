@@ -135,6 +135,7 @@ public class EnvironmentImpl implements Environment{
 		}
 		
 		this.environmentProperty = environmentProperty;
+		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 		logger.debug("处理<environment>下的所有property元素结束");
 	}
 	
@@ -166,8 +167,6 @@ public class EnvironmentImpl implements Environment{
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 
 						mappingEntities.add(new AddOrCoverMappingEntity(file));
-					
-					EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
 					this.mappingHandler.execute(mappingEntities);
 				}
 			}
