@@ -27,7 +27,7 @@
 		<!-- <property name="sqlParameterSuffix" value="#" /> -->
 		<!-- sql语句中, 参数中各个配置的分隔符, 默认为, -->
 		<!-- <property name="sqlParameterSplit" value="," /> -->
-		<!-- sql语句中, 参数defaultValue配置的处理器, 默认为com.douglei.orm.core.metadata.sql.DefaultValueHandlerImpl, 可以继承com.douglei.orm.core.metadata.sql.DefaultValueHandler并重写其getDefaultValue()方法, 并在这里配置实现类的全路径 -->
+		<!-- sql语句中, 参数defaultValue配置的处理器, 默认为com.douglei.orm.core.metadata.sql.DefaultValueHandlerImpl, 可以继承com.douglei.orm.core.metadata.sql.DefaultValueHandler并重写其getDefaultValue()方法, 并在这里配置实现类的全路径即可; 注意, 实现类最好生成serialVersionUID值 -->
 		<!-- <property name="sqlParameterDefaultValueHandler" value="com.douglei.orm.core.metadata.sql.DefaultValueHandlerImpl" /> -->
 		
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
