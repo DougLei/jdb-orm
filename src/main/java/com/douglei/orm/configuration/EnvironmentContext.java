@@ -14,7 +14,7 @@ public class EnvironmentContext {
 	 * 设置配置的环境全局属性
 	 * @param environmentProperty
 	 */
-	public static void setConfigurationEnvironmentProperty(EnvironmentProperty environmentProperty) {
+	public static void setEnvironmentProperty(EnvironmentProperty environmentProperty) {
 		ENVIRONMENT_PROPERTY.set(environmentProperty);
 	}
 	

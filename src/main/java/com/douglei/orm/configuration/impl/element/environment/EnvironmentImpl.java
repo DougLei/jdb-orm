@@ -135,7 +135,7 @@ public class EnvironmentImpl implements Environment{
 		}
 		
 		this.environmentProperty = environmentProperty;
-		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 		logger.debug("处理<environment>下的所有property元素结束");
 	}
 	

@@ -66,7 +66,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(mappingProcessor == null) {
 			mappingProcessor = new MappingProcessor(environment.getMappingHandler());
 		}
-		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 		return mappingProcessor;
 	}
 	
@@ -75,7 +75,7 @@ public class SessionFactoryImpl implements SessionFactory {
 		if(dataValidatorProcessor == null) {
 			dataValidatorProcessor = new DataValidatorProcessor(environmentProperty.getMappingStore());
 		}
-		EnvironmentContext.setConfigurationEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 		return dataValidatorProcessor;
 	}
 
