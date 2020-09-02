@@ -43,7 +43,7 @@ class TableSerializationHandler {
 		if(folders.length > 1) {
 			for (String folder : folders) {
 				if(!folder.equals(VERSION)) {
-					IOUtil.deleteFolder(new File(parentFolder.getAbsolutePath() + File.separatorChar + folder));
+					IOUtil.delete(new File(parentFolder.getAbsolutePath() + File.separatorChar + folder));
 				}
 			}
 		}
