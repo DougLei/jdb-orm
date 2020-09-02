@@ -71,14 +71,13 @@ public abstract class Configuration implements SelfProcessing{
 	 * @return
 	 */
 	public final SessionFactory buildSessionFactory() {
-		if(sessionFactory == null) {
-			setSessionFactory();
-		}
+		if(sessionFactory == null)
+			initialSessionFactory();
 		return sessionFactory;
 	}
 	
 	/**
-	 * 设置sessionFactory, 即进行初始化
+	 * 初始化sessionFactory
 	 */
-	protected abstract void setSessionFactory();
+	protected abstract void initialSessionFactory();
 }

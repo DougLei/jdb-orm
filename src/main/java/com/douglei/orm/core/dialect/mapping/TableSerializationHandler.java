@@ -13,8 +13,9 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * @author DougLei
  */
 class TableSerializationHandler {
+	private static final String VERSION = "v202009021"; // 序列化版本; 每次修改了映射相关的类的serialVersionUID值时, 都必须更新该值后, 再发布新版本; 版本值使用 "v+年月日+序列值" 来定义, 其中序列值每日从1开始, 同一日时递增
 	private static final String FOLDER_NAME = ".orm"; // 文件夹名称
-	private static final String SERIALIZATION_FILE_SUFFIX = FOLDER_NAME; // 序列化文件的后缀
+	private static final String SERIALIZATION_FILE_SUFFIX = FOLDER_NAME; // 序列化文件的后缀, 和文件夹名称一致
 	private static final Map<String, String> ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP = new HashMap<String, String>(8); // orm序列化文件的根路径map, key是configuration id, value是对应的路径
 	
 	// 获取对应的orm序列化文件夹路径, 包括文件名
@@ -22,11 +23,10 @@ class TableSerializationHandler {
 		String configurationId = EnvironmentContext.getEnvironmentProperty().getId();
 		String jdbOrmSerializationFileFolderPath = ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP.get(configurationId);
 		if(jdbOrmSerializationFileFolderPath == null) {
-			jdbOrmSerializationFileFolderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar;
+			jdbOrmSerializationFileFolderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.pathSeparatorChar;
 			File folder = new File(jdbOrmSerializationFileFolderPath);
-			if(!folder.exists()) {
+			if(!folder.exists()) 
 				folder.mkdirs();
-			}
 			ORM_SERIALIZATION_FILE_FOLDER_PATH_MAP.put(configurationId, jdbOrmSerializationFileFolderPath);
 		}
 		return jdbOrmSerializationFileFolderPath + serializationFileName + SERIALIZATION_FILE_SUFFIX;
@@ -40,7 +40,7 @@ class TableSerializationHandler {
 		String filePath = getOrmSerializationFilePath(table.getName());
 		if(table.getName() == table.getOldName()) { // 没有改表名
 			if(new File(filePath).exists()) { // 判断之前是否有同名文件存在
-				TableMetadata oldTableMetadata = deserialize_(filePath);
+				TableMetadata oldTableMetadata = JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, filePath);
 				JdkSerializeProcessor.serialize2File(table, filePath);
 				RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldTableMetadata);
 				return;
@@ -60,7 +60,7 @@ class TableSerializationHandler {
 		String filePath = getOrmSerializationFilePath(tableName);
 		File file = new File(filePath);
 		if(file.exists()) {
-			TableMetadata oldTableMetadata = deserialize_(filePath);
+			TableMetadata oldTableMetadata = JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, filePath);
 			file.delete();
 			RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldTableMetadata);
 		}
@@ -72,17 +72,8 @@ class TableSerializationHandler {
 	 * @return
 	 */
 	public TableMetadata deserialize(String tableName) {
-		return deserialize_(getOrmSerializationFilePath(tableName));
+		return JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, getOrmSerializationFilePath(tableName));
 	}
-	/**
-	 * 反序列化获取TableMetadata对象
-	 * @param filePath
-	 * @return
-	 */
-	private TableMetadata deserialize_(String filePath) {
-		return JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, filePath);
-	}
-	
 	
 	// -------------------------------------------------------------------------------------------------------------------------
 	/**

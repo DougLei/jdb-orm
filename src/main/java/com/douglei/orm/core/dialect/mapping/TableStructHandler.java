@@ -117,6 +117,9 @@ class TableStructHandler {
 	// 更新表, 返回是否更新了表结构
 	private boolean updateTable(TableMetadata newTable) throws Exception {
 		TableMetadata oldTable = tableSerializationHandler.deserialize(newTable.getOldName());
+		if(oldTable == null) // 该判断, 目前处理更新序列化版本后启动框架时, 框架会从新的路径加载序列化文件, 必然是加载不到的, 然后根据返回的false值, 调用方会创建一个新的序列化文件; 这也是一种变相的修改了表信息
+			return true;
+		
 		if(isUpdateTable(newTable, oldTable)) {
 			// 删除旧表的约束和索引
 			dropConstraints(oldTable.getConstraints());

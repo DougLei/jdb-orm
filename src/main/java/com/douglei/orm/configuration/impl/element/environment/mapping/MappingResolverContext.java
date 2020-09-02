@@ -34,6 +34,15 @@ public class MappingResolverContext {
 		return reader;
 	}
 	
+	
+	/**
+	 * 获取框架配置映射的读取器
+	 * @return
+	 */
+	public static SAXReader getConfigurationReader() {
+		return getTableMappingReader();
+	}
+	
 	// -----------------------------------------------------------------------------
 	// 表资源的处理
 	// -----------------------------------------------------------------------------
