@@ -83,7 +83,9 @@ public class SessionFactoryImpl implements SessionFactory {
 	public void destroy() {
 		mappingProcessor = null;
 		dataValidatorProcessor = null;
-		configuration.destroy();
-		configuration = null;
+		if(configuration != null) {
+			configuration.destroy();
+			configuration = null;
+		}
 	}
 }
