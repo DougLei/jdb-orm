@@ -9,7 +9,12 @@ import javax.sql.DataSource;
 public class ExternalDataSource {
 	private DataSource dataSource;
 	private String closeMethodName;
+
 	
+	public ExternalDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
 	/**
 	 * 
 	 * @param dataSource
