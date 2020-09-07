@@ -54,12 +54,12 @@ public class MappingHandler {
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.getType() == MappingType.TABLE)
+						if(mappingEntity.getType() == MappingType.TABLE && mappingEntity.opStruct())
 							tableStructHandler.createTable((TableMetadata)mappingEntity.getMapping().getMetadata());
 						addMapping(mappingEntity.getMapping());
 						break;
 					case DELETE: 
-						if(mappingEntity.getType() == MappingType.TABLE) 
+						if(mappingEntity.getType() == MappingType.TABLE && mappingEntity.opStruct()) 
 							tableStructHandler.deleteTable((TableMetadata)mappingEntity.getMapping().getMetadata());
 						deleteMapping(mappingEntity.getCode());
 						break;
@@ -115,5 +115,15 @@ public class MappingHandler {
 			for(int i=list.size()-1;i>=0;i--) 
 				list.get(i).executeRollback(tableStructHandler, mappingStore);
 		}
+	}
+	
+	
+	/**
+	 * 判断是否存在指定code的映射
+	 * @param code
+	 * @return
+	 */
+	public boolean exists(String code) {
+		return mappingStore.exists(code);
 	}
 }

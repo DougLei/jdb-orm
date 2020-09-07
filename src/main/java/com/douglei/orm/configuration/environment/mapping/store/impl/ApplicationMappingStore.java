@@ -41,7 +41,7 @@ public class ApplicationMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public boolean mappingExists(String code) {
+	public boolean exists(String code) {
 		return mappings.containsKey(code);
 	}
 	

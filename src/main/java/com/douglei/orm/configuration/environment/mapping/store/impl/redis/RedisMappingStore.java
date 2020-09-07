@@ -56,9 +56,9 @@ public class RedisMappingStore implements MappingStore {
 	}
 	
 	@Override
-	public boolean mappingExists(String code) {
+	public boolean exists(String code) {
 		try(Jedis connection = redisPool.getResource()){
-			return handler.mappingExists(code, connection);
+			return handler.exists(code, connection);
 		}
 	}
 	

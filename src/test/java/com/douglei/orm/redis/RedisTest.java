@@ -160,7 +160,7 @@ public class RedisTest {
 		RedisMappingStore r = new RedisMappingStore(jedisPool);
 		
 		System.out.println(r.getMapping("com.ibs.demo.entity.SysUser"));;
-		System.out.println(r.mappingExists("ORM:MP:com.ibs.demo.entity.SysUser"));
+		System.out.println(r.exists("ORM:MP:com.ibs.demo.entity.SysUser"));
 //		System.out.println("删除------------->" + r.removeMapping("queryUser"));;
 	}
 }

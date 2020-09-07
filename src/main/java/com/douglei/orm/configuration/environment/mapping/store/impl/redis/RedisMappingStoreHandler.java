@@ -38,7 +38,7 @@ class RedisMappingStoreHandler extends RedisHandler {
 	
 	public Mapping deleteMapping(String code, Jedis connection) {
 		code = getCode(code);
-		if(mappingExists(code, connection)) {
+		if(exists(code, connection)) {
 			Mapping mp = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
 			connection.del(code);
 			return mp;
@@ -53,7 +53,7 @@ class RedisMappingStoreHandler extends RedisHandler {
 		return JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, mpbyte);
 	}
 	
-	public boolean mappingExists(String code, Jedis connection) {
+	public boolean exists(String code, Jedis connection) {
 		return connection.exists(code);
 	}
 	

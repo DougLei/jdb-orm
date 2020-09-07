@@ -41,5 +41,5 @@ public interface MappingStore extends SelfProcessing{
 	 * @param code
 	 * @return
 	 */
-	boolean mappingExists(String code);
+	boolean exists(String code);
 }

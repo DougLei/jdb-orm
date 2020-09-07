@@ -35,4 +35,13 @@ public class MappingProcessor {
 	public synchronized void execute(List<MappingEntity> entities) throws MappingExecuteException {
 		mappingHandler.execute(entities);
 	}
+	
+	/**
+	 * 判断是否存在指定code的映射
+	 * @param code
+	 * @return
+	 */
+	public boolean exists(String code) {
+		return mappingHandler.exists(code);
+	}
 }

@@ -29,12 +29,20 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	private String content; // 从内容获取映射
 	
 	public AddOrCoverMappingEntity(String filepath) throws ParseMappingException {
-		this.filepath = filepath;
-		super.type = MappingType.toValueByFile(filepath);
+		this(filepath, true);
 	}
 	public AddOrCoverMappingEntity(String content, MappingType type) throws ParseMappingException {
+		this(content, type, true);
+	}
+	public AddOrCoverMappingEntity(String filepath, boolean opStruct) throws ParseMappingException {
+		this.filepath = filepath;
+		super.type = MappingType.toValueByFile(filepath);
+		super.opStruct = opStruct;
+	}
+	public AddOrCoverMappingEntity(String content, MappingType type, boolean opStruct) throws ParseMappingException {
 		this.content = content;
 		super.type = type;
+		super.opStruct = opStruct;
 	}
 	
 	@Override

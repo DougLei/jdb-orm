@@ -12,7 +12,11 @@ import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
 public class DeleteMappingEntity extends MappingEntity{
 	
 	public DeleteMappingEntity(String code) {
+		this(code, true);
+	}
+	public DeleteMappingEntity(String code, boolean opStruct) {
 		super.code = code;
+		super.opStruct = opStruct;
 	}
 	
 	@Override
