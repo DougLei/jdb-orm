@@ -228,7 +228,7 @@ public interface TableSession {
 	/**
 	 * 获取指定类的列名, 多个用, 分割
 	 * @param clz
-	 * @param excludeColumnNames 要排除的列名
+	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
 	 * @return
 	 */
 	default String getColumnNames(Class<?> clz, String... excludeColumnNames) {
@@ -238,7 +238,7 @@ public interface TableSession {
 	/**
 	 * 获取指定code的列名, 多个用, 分割
 	 * @param code
-	 * @param excludeColumnNames 要排除的列名
+	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
 	 * @return
 	 */
 	String getColumnNames(String code, String... excludeColumnNames);

@@ -413,8 +413,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	public String getColumnNames(String code, String... excludeColumnNames) {
 		TableMetadata tableMetadata = getTableMetadata(code);
 		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 40);
+		boolean excludeColumnNamesIsEmpty = toUpperCase(excludeColumnNames); 
 		tableMetadata.getDeclareColumns().forEach(column -> {
-			if(unExcludeColumnName(column.getName(), excludeColumnNames)) {
+			if(excludeColumnNamesIsEmpty || !excludeColumnName(column.getName(), excludeColumnNames)) {
 				cns.append(", ").append(column.getName());
 			}
 		});
@@ -425,15 +426,22 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return cns.substring(1);
 	}
 	
-	// 判断指定的columnName是否没有被排除
-	private boolean unExcludeColumnName(String columnName, String[] excludeColumnNames) {
-		if(excludeColumnNames.length > 0) {
-			for (String ecn : excludeColumnNames) {
-				if(columnName.equalsIgnoreCase(ecn)) {
-					return false;
-				}
+	// 将要排除的列名全部都转大写, 返回传入的数组是否为空
+	private boolean toUpperCase(String... excludeColumnNames) {
+		if(excludeColumnNames.length == 0)
+			return true;
+		for (int i = 0; i < excludeColumnNames.length; i++) 
+			excludeColumnNames[i] = excludeColumnNames[i].toUpperCase();
+		return false;
+	}
+	
+	// 判断指定的columnName是否被排除
+	private boolean excludeColumnName(String columnName, String... excludeColumnNames) {
+		for (String ecn : excludeColumnNames) {
+			if(columnName.equalsIgnoreCase(ecn)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 }
