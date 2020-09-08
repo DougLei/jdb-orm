@@ -23,5 +23,5 @@ public @interface FieldMetaData {
 	 * 为空时，提示的信息
 	 * @return
 	 */
-	String isnullOfErrorMessage() default "不能为空";
+	String nullOfErrorMessage() default "不能为空";
 }

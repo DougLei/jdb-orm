@@ -15,6 +15,7 @@ import com.douglei.orm.core.dialect.DialectMapping;
 import com.douglei.orm.core.metadata.sql.DefaultValueHandler;
 import com.douglei.orm.core.metadata.sql.SqlParameterConfigHolder;
 import com.douglei.orm.core.metadata.table.CreateMode;
+import com.douglei.orm.core.sql.statement.entity.ColumnNameConverter;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
@@ -68,6 +69,9 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 
 	private SqlParameterConfigHolder sqlParameterConfigHolder;
 	
+	@FieldMetaData
+	private ColumnNameConverter columnNameConverter;
+	
 	public EnvironmentPropertyImpl(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
 		this.id = id;
 		this.propertyMap = propertyMap;
@@ -78,7 +82,7 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
 		setFieldValues(fieldNames);
-		checkFiledValues();
+		postProcessingFiledValues();
 	}
 	
 	/**
@@ -97,7 +101,7 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 			fieldMetadata = field.getAnnotation(FieldMetaData.class);
 			if(fieldMetadata != null) {
 				if(fieldMetadata.isRequired() && (propertyMapEmpty || StringUtil.isEmpty(propertyMap.get(fieldNames.get(fieldNameIndex))))) {
-					throw new NullPointerException(fieldMetadata.isnullOfErrorMessage());
+					throw new NullPointerException(fieldMetadata.nullOfErrorMessage());
 				}
 				fieldNames.add(field.getName());
 				fieldNameIndex++;
@@ -124,9 +128,9 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	}
 	
 	/**
-	 * 校验属性值
+	 * 后置处理属性值
 	 */
-	private void checkFiledValues() {
+	private void postProcessingFiledValues() {
 		if(serializationFileRootPath == null) 
 			setSerializationFileRootPath(System.getProperty("user.home"));
 		sqlParameterConfigHolder = new SqlParameterConfigHolder(sqlParameterPrefix, sqlParameterSuffix, sqlParameterSplit, sqlParameterDefaultValueHandler);
@@ -188,6 +192,12 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 		else
 			this.sqlParameterDefaultValueHandler = (DefaultValueHandler) ConstructorUtil.newInstance(value);
 	}
+	void setColumnNameConverter(String value) {
+		if(StringUtil.isEmpty(value))
+			this.columnNameConverter = new ColumnNameConverter();
+		else
+			this.columnNameConverter = (ColumnNameConverter) ConstructorUtil.newInstance(value);
+	}
 
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
@@ -237,5 +247,9 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	@Override
 	public SqlParameterConfigHolder getSqlParameterConfigHolder() {
 		return sqlParameterConfigHolder;
+	}
+	@Override
+	public ColumnNameConverter getColumnNameConverter() {
+		return columnNameConverter;
 	}
 }

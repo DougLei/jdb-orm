@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.core.sql.statement.entity.ColumnNameConverter;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 
 /**
@@ -30,10 +32,11 @@ public class ResultSetUtil {
 	public static List<SqlResultsetMetadata> getSqlResultSetMetadata(ResultSet resultSet) throws SQLException{
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 		
+		ColumnNameConverter columnNameConverter = EnvironmentContext.getEnvironmentProperty().getColumnNameConverter();
 		int columnCount = resultSetMetaData.getColumnCount();
 		List<SqlResultsetMetadata> resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
 		for(int i=1;i<=columnCount;i++) {
-			resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i).toUpperCase(), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
+			resultsetMetadatas.add(new SqlResultsetMetadata(columnNameConverter.convert(resultSetMetaData.getColumnName(i)), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
 		}
 		return resultsetMetadatas;
 	}
