@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.environment.mapping.store;
+package com.douglei.orm.configuration.environment.mapping.container;
 
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
@@ -7,7 +7,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
  * 
  * @author DougLei
  */
-public interface MappingStore extends SelfProcessing{
+public interface MappingContainer extends SelfProcessing{
 	
 	/**
 	 * 清空存储容器

@@ -1,11 +1,11 @@
-package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
+package com.douglei.orm.configuration.environment.mapping.container.impl.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -14,15 +14,15 @@ import redis.clients.jedis.JedisPool;
  * 
  * @author DougLei
  */
-public class RedisMappingStore implements MappingStore {
-	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStore.class);
-	private final RedisMappingStoreHandler handler = new RedisMappingStoreHandler();
+public class RedisMappingContainer implements MappingContainer {
+	private static final Logger logger = LoggerFactory.getLogger(RedisMappingContainer.class);
+	private final RedisMappingContainerHandler handler = new RedisMappingContainerHandler();
 	private JedisPool redisPool;
 
-	public RedisMappingStore(JedisPool redisPool) {
+	public RedisMappingContainer(JedisPool redisPool) {
 		this.redisPool = redisPool;
 	}
-	public RedisMappingStore(JedisPool redisPool, boolean storeMultiDataSource) {
+	public RedisMappingContainer(JedisPool redisPool, boolean storeMultiDataSource) {
 		this.redisPool = redisPool;
 		handler.setStoreMultiDataSource(storeMultiDataSource);
 	}

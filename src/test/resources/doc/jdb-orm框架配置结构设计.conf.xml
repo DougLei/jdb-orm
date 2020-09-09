@@ -8,8 +8,8 @@
 		<!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为false, 如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存  -->
 		<!-- <property name="enableTableSessionCache" value="false" /> -->
 		
-		<!-- 是否在启动时清空映射存储器, 即清空所有映射数据, 默认值为true -->
-		<!-- <property name="clearMappingStoreOnStart" value="true" /> -->
+		<!-- 是否在启动时清空映射容器, 默认值为true -->
+		<!-- <property name="clearMappingContainerOnStart" value="true" /> -->
 		
 		<!-- 没有默认值, 可以不配置, 具体参考《表资源配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有表映射的createMode配置值 -->
 		<!-- <property name="tableCreateMode" value="" /> -->

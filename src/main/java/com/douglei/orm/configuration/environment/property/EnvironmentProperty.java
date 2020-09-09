@@ -1,6 +1,6 @@
 package com.douglei.orm.configuration.environment.property;
 
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.metadata.sql.SqlParameterConfigHolder;
 import com.douglei.orm.core.metadata.table.CreateMode;
@@ -24,9 +24,9 @@ public interface EnvironmentProperty {
 	
 	public boolean enableTableSessionCache();
 	
-	public MappingStore getMappingStore();
+	public MappingContainer getMappingContainer();
 	
-	public boolean clearMappingStoreOnStart();
+	public boolean clearMappingContainerOnStart();
 	
 	public CreateMode getTableCreateMode();
 	

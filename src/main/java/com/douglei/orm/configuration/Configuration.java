@@ -2,7 +2,7 @@ package com.douglei.orm.configuration;
 
 import java.io.InputStream;
 
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.utils.StringUtil;
 
@@ -17,7 +17,7 @@ public abstract class Configuration implements SelfProcessing{
 	protected InputStream configurationInputStream; // 配置文件的流对象
 	protected String id;
 	protected ExternalDataSource exDataSource;
-	protected MappingStore mappingStore;
+	protected MappingContainer mappingContainer;
 	
 	protected SessionFactory sessionFactory;
 	
@@ -58,11 +58,11 @@ public abstract class Configuration implements SelfProcessing{
 	}
 	
 	/**
-	 * 设置映射的存储器
-	 * @param mappingStore
+	 * 设置映射的存储容器
+	 * @param mappingContainer
 	 */
-	public void setMappingStore(MappingStore mappingStore) {
-		this.mappingStore = mappingStore;
+	public void setMappingContainer(MappingContainer mappingContainer) {
+		this.mappingContainer = mappingContainer;
 	}
 	
 	/**

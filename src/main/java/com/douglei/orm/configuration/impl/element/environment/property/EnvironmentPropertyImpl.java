@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.configuration.environment.mapping.store.impl.ApplicationMappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
+import com.douglei.orm.configuration.environment.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
 import com.douglei.orm.core.dialect.Dialect;
@@ -41,10 +41,10 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	private boolean enableTableSessionCache;
 	
 	@FieldMetaData
-	private MappingStore mappingStore;
+	private MappingContainer mappingContainer;
 	
 	@FieldMetaData
-	private boolean clearMappingStoreOnStart = true;
+	private boolean clearMappingContainerOnStart = true;
 	
 	@FieldMetaData
 	private CreateMode tableCreateMode;
@@ -72,12 +72,12 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	@FieldMetaData
 	private ColumnNameConverter columnNameConverter;
 	
-	public EnvironmentPropertyImpl(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingStore mappingStore) {
+	public EnvironmentPropertyImpl(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingContainer mappingContainer) {
 		this.id = id;
 		this.propertyMap = propertyMap;
 		this.propertyMapEmpty = propertyMap==null || propertyMap.isEmpty();
 		this.databaseMetadata = databaseMetadata;
-		this.mappingStore = mappingStore;
+		this.mappingContainer = mappingContainer;
 		
 		Field[] fields = this.getClass().getDeclaredFields();
 		List<String> fieldNames = doSelfChecking(fields);
@@ -150,13 +150,13 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
-	void setMappingStore(String value) {
-		if(this.mappingStore == null) 
-			this.mappingStore = new ApplicationMappingStore();
+	void setMappingContainer(String value) {
+		if(this.mappingContainer == null) 
+			this.mappingContainer = new ApplicationMappingContainer();
 	}
-	public void setClearMappingStoreOnStart(String value) {
+	public void setClearMappingContainerOnStart(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value))
-			this.clearMappingStoreOnStart = Boolean.parseBoolean(value);
+			this.clearMappingContainerOnStart = Boolean.parseBoolean(value);
 	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) 
@@ -221,12 +221,12 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 		return enableTableSessionCache;
 	}
 	@Override
-	public MappingStore getMappingStore() {
-		return mappingStore;
+	public MappingContainer getMappingContainer() {
+		return mappingContainer;
 	}
 	@Override
-	public boolean clearMappingStoreOnStart() {
-		return clearMappingStoreOnStart;
+	public boolean clearMappingContainerOnStart() {
+		return clearMappingContainerOnStart;
 	}
 	@Override
 	public CreateMode getTableCreateMode() {

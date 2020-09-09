@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
@@ -31,12 +31,12 @@ public class SessionImpl implements Session {
 	protected boolean isClosed;
 	protected ConnectionWrapper connection;
 	protected EnvironmentProperty environmentProperty;
-	protected MappingStore mappingStore;
+	protected MappingContainer mappingContainer;
 	
 	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
-		this.mappingStore = environmentProperty.getMappingStore();
+		this.mappingContainer = environmentProperty.getMappingContainer();
 		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 	}
 	

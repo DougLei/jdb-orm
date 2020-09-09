@@ -51,7 +51,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private SqlMetadata getSqlMetadata(String namespace) {
 		SqlMetadata sm = null;
 		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
-			Mapping mapping = mappingStore.getMapping(namespace);
+			Mapping mapping = mappingContainer.getMapping(namespace);
 			if(mapping.getMappingType() != MappingType.SQL) {
 				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
 			}

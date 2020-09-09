@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.impl.redis.RedisMappingContainer;
 import com.douglei.orm.session.SysUser;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
@@ -157,7 +157,7 @@ public class RedisTest {
 	
 	@Test
 	public void test7() {
-		RedisMappingStore r = new RedisMappingStore(jedisPool);
+		RedisMappingContainer r = new RedisMappingContainer(jedisPool);
 		
 		System.out.println(r.getMapping("com.ibs.demo.entity.SysUser"));;
 		System.out.println(r.exists("ORM:MP:com.ibs.demo.entity.SysUser"));

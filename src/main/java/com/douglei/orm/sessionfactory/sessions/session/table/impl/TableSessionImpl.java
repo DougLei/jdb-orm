@@ -75,7 +75,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private TableMetadata getTableMetadata(String code) {
 		TableMetadata tm = null;
 		if(tableMetadataCache.isEmpty() || (tm = tableMetadataCache.get(code)) == null) {
-			Mapping mapping = mappingStore.getMapping(code);
+			Mapping mapping = mappingContainer.getMapping(code);
 			if(mapping.getMappingType() != MappingType.TABLE) {
 				throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
 			}

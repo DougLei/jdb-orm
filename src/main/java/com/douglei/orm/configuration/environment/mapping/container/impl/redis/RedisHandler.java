@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
+package com.douglei.orm.configuration.environment.mapping.container.impl.redis;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;

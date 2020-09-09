@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.environment.mapping.store.impl.redis;
+package com.douglei.orm.configuration.environment.mapping.container.impl.redis;
 
 import java.util.Set;
 
@@ -16,8 +16,8 @@ import redis.clients.jedis.Jedis;
  * 
  * @author DougLei
  */
-class RedisMappingStoreHandler extends RedisHandler {
-	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStoreHandler.class);
+class RedisMappingContainerHandler extends RedisHandler {
+	private static final Logger logger = LoggerFactory.getLogger(RedisMappingContainerHandler.class);
 
 	public void clear(Jedis connection) {
 		Set<String> codes = connection.keys(getPrefix() + "*");

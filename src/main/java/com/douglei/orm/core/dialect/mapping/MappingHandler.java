@@ -12,7 +12,7 @@ import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.metadata.table.TableMetadata;
@@ -23,11 +23,11 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  */
 public class MappingHandler {
 	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
-	private MappingStore mappingStore;
+	private MappingContainer mappingContainer;
 	private TableStructHandler tableStructHandler;
 	
-	public MappingHandler(MappingStore mappingStore, DataSourceWrapper dataSourceWrapper, TableSqlStatementHandler tableSqlStatementHandler) {
-		this.mappingStore = mappingStore;
+	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper, TableSqlStatementHandler tableSqlStatementHandler) {
+		this.mappingContainer = mappingContainer;
 		this.tableStructHandler = new TableStructHandler(dataSourceWrapper, tableSqlStatementHandler);
 	}
 
@@ -36,7 +36,7 @@ public class MappingHandler {
 		for (MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
 			if(mappingEntity.parseMapping() == null) 
-				mappingEntity.setMapping(mappingStore.getMapping(mappingEntity.getCode()));
+				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class MappingHandler {
 	 * @param mapping
 	 */
 	private void addMapping(Mapping mapping) {
-		Mapping exMapping = mappingStore.addMapping(mapping);
+		Mapping exMapping = mappingContainer.addMapping(mapping);
 		if (exMapping == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode());
 		}else {
@@ -100,7 +100,7 @@ public class MappingHandler {
 	 * @param mappingCode
 	 */
 	private void deleteMapping(String mappingCode) {
-		Mapping exMapping = mappingStore.deleteMapping(mappingCode);
+		Mapping exMapping = mappingContainer.deleteMapping(mappingCode);
 		if(exMapping != null) 
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping);
 	}
@@ -113,7 +113,7 @@ public class MappingHandler {
 		List<RollbackExecutor> list = RollbackRecorder.getRollbackExecutorList();
 		if(list != null) {
 			for(int i=list.size()-1;i>=0;i--) 
-				list.get(i).executeRollback(tableStructHandler, mappingStore);
+				list.get(i).executeRollback(tableStructHandler, mappingContainer);
 		}
 	}
 	
@@ -124,6 +124,6 @@ public class MappingHandler {
 	 * @return
 	 */
 	public boolean exists(String code) {
-		return mappingStore.exists(code);
+		return mappingContainer.exists(code);
 	}
 }

@@ -21,7 +21,7 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.impl.element.environment.datasource.DataSourceWrapperImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.AddOrCoverMappingEntity;
@@ -43,11 +43,11 @@ public class EnvironmentImpl implements Environment{
 	private EnvironmentProperty environmentProperty;
 	private MappingHandler mappingHandler;
 	
-	public EnvironmentImpl(String id, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingStore mappingStore) throws Exception {
+	public EnvironmentImpl(String id, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.properties = properties;
 		setDataSourceWrapper(exDataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):exDataSource);// 处理配置的数据源
-		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingStore);// 处理environment下的所有property元素
+		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingContainer);// 处理environment下的所有property元素
 		addMapping(environmentElement.element("mappings"));// 处理配置的映射文件
 		logger.debug("处理<environment>元素结束");
 	}
@@ -118,15 +118,15 @@ public class EnvironmentImpl implements Environment{
 	 * 处理environment下的所有property元素
 	 * @param id
 	 * @param elements
-	 * @param mappingStore
+	 * @param mappingContainer
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(String id, List<Element> elements, MappingStore mappingStore) throws SQLException {
+	private void setEnvironmentProperties(String id, List<Element> elements, MappingContainer mappingContainer) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
 		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
-		EnvironmentPropertyImpl environmentProperty = new EnvironmentPropertyImpl(id, propertyMap, databaseMetadata, mappingStore);
+		EnvironmentPropertyImpl environmentProperty = new EnvironmentPropertyImpl(id, propertyMap, databaseMetadata, mappingContainer);
 		if(environmentProperty.getDialect() == null) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);
@@ -147,10 +147,10 @@ public class EnvironmentImpl implements Environment{
 	@SuppressWarnings("unchecked")
 	private void addMapping(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
-		this.mappingHandler = new MappingHandler(environmentProperty.getMappingStore(), dataSourceWrapper, environmentProperty.getDialect().getTableSqlStatementHandler());
+		this.mappingHandler = new MappingHandler(environmentProperty.getMappingContainer(), dataSourceWrapper, environmentProperty.getDialect().getTableSqlStatementHandler());
 		
-		if(environmentProperty.clearMappingStoreOnStart())
-			environmentProperty.getMappingStore().clear();
+		if(environmentProperty.clearMappingContainerOnStart())
+			environmentProperty.getMappingContainer().clear();
 		
 		if(element != null) {
 			List<Attribute> paths = element.selectNodes("mapping/@path");
@@ -180,8 +180,8 @@ public class EnvironmentImpl implements Environment{
 		if(dataSourceWrapper != null) {
 			dataSourceWrapper.destroy();
 		}
-		if(environmentProperty != null && environmentProperty.getMappingStore() != null) {
-			environmentProperty.getMappingStore().destroy();
+		if(environmentProperty != null && environmentProperty.getMappingContainer() != null) {
+			environmentProperty.getMappingContainer().destroy();
 		}
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
