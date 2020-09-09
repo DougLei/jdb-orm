@@ -26,12 +26,12 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	private static MappingResolver geResolver() {
-		MappingResolver reader = resolverContext.get();
-		if(reader == null) {
-			reader = new MappingResolver();
-			resolverContext.set(reader);
+		MappingResolver resolver = resolverContext.get();
+		if(resolver == null) {
+			resolver = new MappingResolver();
+			resolverContext.set(resolver);
 		}
-		return reader;
+		return resolver;
 	}
 	
 	// -----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static SAXReader getTableMappingReader() {
-		return geResolver().getTableMappingReader();
+		return geResolver().getTableMappingResolver();
 	}
 	
 	// -----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ public class MappingResolverContext {
 	 * @throws ParserConfigurationException 
 	 */
 	public static DocumentBuilder getSqlMappingReader() throws ParserConfigurationException {
-		return geResolver().getSqlMappingReader();
+		return geResolver().getSqlMappingResolver().getSqlMappingReader();
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 */
 	public static NodeList getValidatorNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getValidatorNodeList(sqlNode);
+		return geResolver().getSqlMappingResolver().getValidatorNodeList(sqlNode);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 */
 	public static NodeList getContentNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getContentNodeList(sqlNode);
+		return geResolver().getSqlMappingResolver().getContentNodeList(sqlNode);
 	}
 	
 	
@@ -83,14 +83,14 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static ContentType getCurrentSqlType() {
-		return geResolver().getCurrentSqlType();
+		return geResolver().getSqlMappingResolver().getCurrentSqlType();
 	}
 	/**
 	 * 解析sql映射时, 记录当前解析的sql的类型
 	 * @param type
 	 */
 	public static void setCurrentSqlType(ContentType type) {
-		geResolver().setCurrentSqlType(type);
+		geResolver().getSqlMappingResolver().setCurrentSqlType(type);
 	}
 	
 	
@@ -99,14 +99,14 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static Map<String, ValidateHandler> getSqlValidateHandlers() {
-		return geResolver().getSqlValidateHandlers();
+		return geResolver().getSqlMappingResolver().getSqlValidateHandlers();
 	}
 	/**
 	 * 解析sql映射时, 记录配置的验证器集合
 	 * @param sqlValidateHandlers
 	 */
 	public static void setSqlValidateHandlers(Map<String, ValidateHandler> sqlValidateHandlers) {
-		geResolver().setSqlValidateHandlers(sqlValidateHandlers);
+		geResolver().getSqlMappingResolver().setSqlValidateHandlers(sqlValidateHandlers);
 	}
 	
 	
@@ -116,7 +116,7 @@ public class MappingResolverContext {
 	 * @return 
 	 */
 	public static SqlContentMetadata getSqlContent(String sqlContentName) {
-		return geResolver().getSqlContent(sqlContentName);
+		return geResolver().getSqlMappingResolver().getSqlContent(sqlContentName);
 	}
 	/**
 	 * 解析sql映射时, 记录配置的sql-content集合
@@ -125,7 +125,7 @@ public class MappingResolverContext {
 	 * @throws RepeatedSqlContentNameException 
 	 */
 	public static void setSqlContents(Node sqlNode) throws XPathExpressionException, RepeatedSqlContentNameException {
-		geResolver().setSqlContents(sqlNode);
+		geResolver().getSqlMappingResolver().setSqlContents(sqlNode);
 	}
 	/**
 	 * 解析sql映射时, 判断是否存在指定name的sql-content的metadata实例
@@ -133,7 +133,7 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static boolean existsSqlContent(String sqlContentName) {
-		return geResolver().existsSqlContent(sqlContentName);
+		return geResolver().getSqlMappingResolver().existsSqlContent(sqlContentName);
 	}
 	
 	// -----------------------------------------------------------------------------

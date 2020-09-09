@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,6 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.impl.element.environment.EnvironmentImpl;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.orm.configuration.impl.util.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
@@ -50,7 +50,7 @@ public class ConfigurationImpl extends Configuration {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
 		try {
-			Document xmlDocument = XmlReaderContext.getXmlReader().read(configurationInputStream);
+			Document xmlDocument = new SAXReader().read(configurationInputStream);
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
@@ -68,9 +68,7 @@ public class ConfigurationImpl extends Configuration {
 				e.addSuppressed(e1);
 			}
 			throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
-		} finally {
-			XmlReaderContext.destroy();
-		}
+		} 
 		if(logger.isDebugEnabled()) {
 			logger.debug("结束初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
