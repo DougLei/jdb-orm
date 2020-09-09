@@ -17,4 +17,11 @@ public class XmlReaderContext {
 	public static SAXReader getXmlReader() {
 		return MappingResolverContext.getTableMappingReader();
 	}
+	
+	/**
+	 * 销毁
+	 */
+	public static void destroy() {
+		MappingResolverContext.destroy();
+	}
 }

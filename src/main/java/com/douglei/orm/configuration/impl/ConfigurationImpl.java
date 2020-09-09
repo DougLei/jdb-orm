@@ -68,6 +68,8 @@ public class ConfigurationImpl extends Configuration {
 				e.addSuppressed(e1);
 			}
 			throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
+		} finally {
+			XmlReaderContext.destroy();
 		}
 		if(logger.isDebugEnabled()) {
 			logger.debug("结束初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
