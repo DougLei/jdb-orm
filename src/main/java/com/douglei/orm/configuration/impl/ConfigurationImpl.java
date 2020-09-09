@@ -12,9 +12,9 @@ import com.douglei.orm.configuration.ConfigurationInitializeException;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.impl.element.environment.EnvironmentImpl;
-import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
+import com.douglei.orm.configuration.impl.util.XmlReaderContext;
 import com.douglei.orm.sessionfactory.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
@@ -50,7 +50,7 @@ public class ConfigurationImpl extends Configuration {
 			logger.debug("开始初始化jdb-orm框架的配置信息, 完成{}实例的创建", Configuration.class.getName());
 		}
 		try {
-			Document xmlDocument = MappingResolverContext.getConfigurationReader().read(configurationInputStream);
+			Document xmlDocument = XmlReaderContext.getXmlReader().read(configurationInputStream);
 			if(logger.isDebugEnabled()) {
 				logger.debug("初始化的xml配置内容为: {}", xmlDocument.asXML());
 			}
