@@ -13,7 +13,7 @@ import com.douglei.mini.app.crypto.Decryptor;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.tools.instances.file.resource.reader.PropertiesReader;
+import com.douglei.tools.instances.file.reader.PropertiesReader;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -64,11 +64,11 @@ public class Properties implements SelfProcessing{
 		if(resourceElements != null) {
 			String path;
 			boolean decryptValue;
-			PropertiesReader reader = new PropertiesReader();
+			PropertiesReader reader;;
 			for (Element element : resourceElements) {
 				path = element.attributeValue("path");
 				if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
-					reader.setPath(path);
+					reader = new PropertiesReader(path);
 					if(reader.ready()) {
 						decryptValue = Boolean.parseBoolean(element.attributeValue("decryptValue"));
 						for (Entry<Object, Object> entry : reader.entrySet()) {

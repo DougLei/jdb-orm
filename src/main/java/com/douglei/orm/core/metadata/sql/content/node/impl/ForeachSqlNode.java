@@ -41,7 +41,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			if(sqlParameter instanceof Collection<?> || sqlParameter.getClass().isArray()) {
 				return sqlParameter;
 			}
-			return OgnlHandler.singleInstance().getObjectValue(collection, sqlParameter);
+			return OgnlHandler.getSingleton().getObjectValue(collection, sqlParameter);
 		}
 		return null;
 	}

@@ -37,9 +37,8 @@ public class IncrementIdValueConfig {
 	 * @return
 	 */
 	public Object getTargetObject(Object sqlParameter) {
-		if(prefix == null) {
+		if(prefix == null) 
 			return sqlParameter;
-		}
-		return OgnlHandler.singleInstance().getObjectValue(prefix, sqlParameter);
+		return OgnlHandler.getSingleton().getObjectValue(prefix, sqlParameter);
 	}
 }

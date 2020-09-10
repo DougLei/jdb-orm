@@ -254,7 +254,7 @@ public class SqlParameterMetadata implements Metadata{
 		}else if(ConverterUtil.isSimpleType(sqlParameter)){
 			value = sqlParameter;
 		}else {
-			value = OgnlHandler.singleInstance().getObjectValue(name, sqlParameter);
+			value = OgnlHandler.getSingleton().getObjectValue(name, sqlParameter);
 		}
 		
 		if(value == null) {
@@ -264,7 +264,7 @@ public class SqlParameterMetadata implements Metadata{
 					IntrospectorUtil.setProperyValue(sqlParameter, name, value);
 				}else {
 					int dot = name.lastIndexOf(".");
-					IntrospectorUtil.setProperyValue(OgnlHandler.singleInstance().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
+					IntrospectorUtil.setProperyValue(OgnlHandler.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
 				}
 			}
 		}

@@ -19,7 +19,7 @@ public class IfSqlNode extends AbstractSqlNode {
 	@Override
 	public boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
 		processExpression(sqlParameterNamePrefix);
-		return OgnlHandler.singleInstance().getBooleanValue(expression, sqlParameter);
+		return OgnlHandler.getSingleton().getBooleanValue(expression, sqlParameter);
 	}
 	
 	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认没有处理
