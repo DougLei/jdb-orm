@@ -13,7 +13,7 @@ import com.douglei.mini.app.crypto.Decryptor;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.tools.instances.file.resources.reader.PropertiesReader;
+import com.douglei.tools.instances.file.resource.reader.PropertiesReader;
 import com.douglei.tools.utils.StringUtil;
 
 /**
