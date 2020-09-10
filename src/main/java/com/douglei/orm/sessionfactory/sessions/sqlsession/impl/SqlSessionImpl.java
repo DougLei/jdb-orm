@@ -25,8 +25,6 @@ import com.douglei.orm.core.sql.statement.StatementExecutionException;
 import com.douglei.orm.core.sql.statement.StatementHandler;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectIsExistsException;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.DBObjectNotExistsException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 import com.douglei.tools.utils.CollectionUtil;
@@ -485,22 +483,18 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	public void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride) {
 		environmentProperty.getDialect().getDBObjectHandler().validateDBObjectName(dbObjectName);
 		if(dbObjectExists(dbObjectType, dbObjectName)) {
-			if(isOverride) {
-				executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
-			}else {
-				throw new DBObjectIsExistsException(dbObjectType, dbObjectName);
-			}
+			if(!isOverride) 
+				throw new RuntimeException("已经存在名为[" + dbObjectName + "]的["+dbObjectType.name()+"]");
+			executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
 		}
 		executeUpdate(createSqlStatement);
 	}
 
 	@Override
 	public void dbObjectDrop(DBObjectType dbObjectType, String dbObjectName) {
-		if(dbObjectExists(dbObjectType, dbObjectName)) {
-			executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
-			return;
-		}
-		throw new DBObjectNotExistsException(dbObjectType, dbObjectName);
+		if(!dbObjectExists(dbObjectType, dbObjectName)) 
+			throw new NullPointerException("不存在名为[" + dbObjectName + "]的["+dbObjectType.name()+"]");
+		executeUpdate(environmentProperty.getDialect().getDBObjectHandler().getDropDBObjectSqlStatement(dbObjectType, dbObjectName));
 	}
 	
 	@Override
