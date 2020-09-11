@@ -68,9 +68,8 @@ public class SqlStatement {
 	 * @return
 	 */
 	private int withClauseEndIndex() {
-		boolean includeWithStatement = sql.substring(0, 4).equalsIgnoreCase("with");
-		if(includeWithStatement) {
-			Stack<Character> parentheses = new Stack<Character>();
+		if(sql.substring(0, 4).equalsIgnoreCase("with")) { // 判断是否包含with子句
+			Stack<Character> parentheses = new Stack<Character>(); // 存储括号
 			parentheses.push('(');
 			
 			int index = sql.indexOf("(")+1;
