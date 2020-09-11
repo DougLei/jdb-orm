@@ -1,6 +1,6 @@
 package com.douglei.orm.core.sql;
 
-import java.util.Stack;
+import java.util.LinkedList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +69,8 @@ public class SqlStatement {
 	 */
 	private int withClauseEndIndex() {
 		if(sql.substring(0, 4).equalsIgnoreCase("with")) { // 判断是否包含with子句
-			Stack<Character> parentheses = new Stack<Character>(); // 存储括号
-			parentheses.push('(');
+			LinkedList<Character> parentheses = new LinkedList<Character>(); // 存储括号
+			parentheses.add('(');
 			
 			int index = sql.indexOf("(")+1;
 			int length = sql.length();
@@ -81,9 +81,9 @@ public class SqlStatement {
 				for(;i<length;i++) {
 					c = sql.charAt(i);
 					if(c == '(') {
-						parentheses.push(c);
+						parentheses.add(c);
 					}else if(c == ')') {
-						parentheses.pop();
+						parentheses.removeLast();
 						if(parentheses.isEmpty()) {
 							i++;
 							break;
