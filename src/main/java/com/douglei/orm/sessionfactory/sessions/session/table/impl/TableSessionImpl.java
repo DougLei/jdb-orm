@@ -391,7 +391,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	/**
-	 * 将map转换为类 <内部方法>
+	 * 将map转换为类
 	 * @param tableMetadata
 	 * @param targetClass
 	 * @param resultMap

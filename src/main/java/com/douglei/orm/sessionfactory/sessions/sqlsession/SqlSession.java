@@ -47,6 +47,22 @@ public interface SqlSession {
 	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
+	 * 执行批量查询
+	 * @param sql
+	 * @return 返回<值>的list-数组集合
+	 */
+	default List<Object[]> query_(String sql) {
+		return query_(sql, null);
+	}
+	/**
+	 * 执行批量查询
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 返回<值>的list-数组集合
+	 */
+	List<Object[]> query_(String sql, List<Object> parameters);
+	
+	/**
 	 * 执行唯一查询
 	 * @param sql
 	 * @return 返回<列名:值>的map集合
@@ -79,22 +95,6 @@ public interface SqlSession {
 	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
-	 * 执行批量查询
-	 * @param sql
-	 * @return 返回<值>的list-数组集合
-	 */
-	default List<Object[]> query_(String sql) {
-		return query_(sql, null);
-	}
-	/**
-	 * 执行批量查询
-	 * @param sql
-	 * @param parameters 传入的参数
-	 * @return 返回<值>的list-数组集合
-	 */
-	List<Object[]> query_(String sql, List<Object> parameters);
-	
-	/**
 	 * 执行唯一查询
 	 * @param sql
 	 * @return 返回<值>的数组
@@ -109,6 +109,64 @@ public interface SqlSession {
 	 * @return 返回<值>的数组
 	 */
 	Object[] uniqueQuery_(String sql, List<Object> parameters);
+	
+	/**
+	 * 查询第一条数据
+	 * @param sql
+	 * @return 返回<列名:值>的map集合
+	 */
+	default Map<String, Object> queryFirst(String sql) {
+		return queryFirst(sql, null);
+	}
+	/**
+	 * 查询第一条数据
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 返回<列名:值>的map集合
+	 */
+	default Map<String, Object> queryFirst(String sql, List<Object> parameters){
+		List<Map<String, Object>> list = query(sql, parameters);
+		if(list.isEmpty())
+			return null;
+		return list.get(0);
+	}
+	
+	/**
+	 * 查询第一条数据
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> T queryFirst(Class<T> targetClass, String sql);
+	/**
+	 * 查询第一条数据
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 
+	 */
+	<T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters);
+	
+	/**
+	 * 查询第一条数据
+	 * @param sql
+	 * @return 返回<值>的数组
+	 */
+	default Object[] queryFirst_(String sql) {
+		return queryFirst_(sql, null);
+	}
+	/**
+	 * 查询第一条数据
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 返回<值>的数组
+	 */
+	default Object[] queryFirst_(String sql, List<Object> parameters) {
+		List<Object[]> list = query_(sql, parameters);
+		if(list.isEmpty())
+			return null;
+		return list.get(0);
+	}
 	
 	/**
 	 * 查询结果数据总数量

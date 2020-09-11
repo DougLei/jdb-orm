@@ -98,18 +98,16 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
-		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
-		try {
-			return statementHandler.executeQueryUniqueResult(parameters);
-		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
-		} finally {
-			if(!enableStatementCache) {
-				statementHandler.close();
-			}
-		}
+	public <T> List<T> query(Class<T> targetClass, String sql) {
+		return query(targetClass, sql, null);
+	}
+
+	@Override
+	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+		List<Map<String, Object>> listMap = query(sql, parameters);
+		if(listMap.isEmpty())
+			return Collections.emptyList();
+		return listMap2listClass(targetClass, listMap);
 	}
 	
 	@Override
@@ -126,7 +124,35 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			}
 		}
 	}
+	
+	@Override
+	public Map<String, Object> uniqueQuery(String sql, List<Object> parameters) {
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
+		try {
+			return statementHandler.executeQueryUniqueResult(parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
+		} finally {
+			if(!enableStatementCache) {
+				statementHandler.close();
+			}
+		}
+	}
+	
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
+		return uniqueQuery(targetClass, sql, null);
+	}
 
+	@Override
+	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+		Map<String, Object> map = uniqueQuery(sql, parameters);
+		if(map == null)
+			return null;
+		return map2Class(targetClass, map);
+	}
+	
 	@Override
 	public Object[] uniqueQuery_(String sql, List<Object> parameters) {
 		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
@@ -143,31 +169,18 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql) {
-		return query(targetClass, sql, null);
+	public <T> T queryFirst(Class<T> targetClass, String sql) {
+		return queryFirst(targetClass, sql, null);
 	}
 
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
-		List<Map<String, Object>> listMap = query(sql, parameters);
-		if(listMap.isEmpty())
-			return Collections.emptyList();
-		return listMap2listClass(targetClass, listMap);
-	}
-	
-	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
-		return uniqueQuery(targetClass, sql, null);
-	}
-
-	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
-		Map<String, Object> map = uniqueQuery(sql, parameters);
-		if(map == null)
+	public <T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters) {
+		List<T> list = query(targetClass, sql, parameters);
+		if(list.isEmpty())
 			return null;
-		return map2Class(targetClass, map);
+		return list.get(0);
 	}
-	
+
 	@Override
 	public long countQuery(String sql, List<Object> parameters) {
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);

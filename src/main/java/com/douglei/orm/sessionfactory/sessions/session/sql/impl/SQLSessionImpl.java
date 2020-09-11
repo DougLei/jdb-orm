@@ -107,6 +107,24 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		return super.uniqueQuery_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
+	
+	@Override
+	public Map<String, Object> queryFirst(String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.queryFirst(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
+	public <T> T queryFirst(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.queryFirst(targetClass, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
+
+	@Override
+	public Object[] queryFirst_(String namespace, String name, Object sqlParameter) {
+		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		return super.queryFirst_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+	}
 
 	@Override
 	public long countQuery(String namespace, String name, Object sqlParameter) {

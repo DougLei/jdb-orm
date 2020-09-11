@@ -148,6 +148,22 @@ public interface TableSession {
 	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
+	 * 查询第一条数据
+	 * @param targetClass
+	 * @param sql
+	 * @return 
+	 */
+	<T> T queryFirst(Class<T> targetClass, String sql);
+	/**
+	 * 查询第一条数据
+	 * @param targetClass
+	 * @param sql
+	 * @param parameters 传入的参数
+	 * @return 
+	 */
+	<T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters);
+	
+	/**
 	 * 分页查询
 	 * @param targetClass
 	 * @param pageNum
