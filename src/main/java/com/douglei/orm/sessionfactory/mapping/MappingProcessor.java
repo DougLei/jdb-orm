@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
-import com.douglei.orm.core.dialect.mapping.MappingExecuteException;
-import com.douglei.orm.core.dialect.mapping.MappingHandler;
+import com.douglei.orm.core.mapping.MappingExecuteException;
+import com.douglei.orm.core.mapping.MappingHandler;
 
 /**
  * 映射处理器

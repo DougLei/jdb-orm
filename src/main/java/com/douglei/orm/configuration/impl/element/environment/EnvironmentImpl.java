@@ -28,7 +28,7 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.AddOrCover
 import com.douglei.orm.configuration.impl.element.environment.property.EnvironmentPropertyImpl;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.orm.core.dialect.mapping.MappingHandler;
+import com.douglei.orm.core.mapping.MappingHandler;
 import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.StringUtil;
 

@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.mapping;
+package com.douglei.orm.core.mapping;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

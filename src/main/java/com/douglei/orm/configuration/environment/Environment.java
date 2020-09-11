@@ -3,7 +3,7 @@ package com.douglei.orm.configuration.environment;
 import com.douglei.orm.configuration.SelfProcessing;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.core.dialect.mapping.MappingHandler;
+import com.douglei.orm.core.mapping.MappingHandler;
 
 /**
  * 
