@@ -10,6 +10,8 @@ public class ValidationResult extends Result{
 	private short index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
 	private String fieldName; // 记录验证失败的属性名
 	
+	
+	public ValidationResult() {}
 	public ValidationResult(String fieldName, String originMessage, String code, Object... params) {
 		super(originMessage, code, params);
 		this.fieldName = fieldName;
