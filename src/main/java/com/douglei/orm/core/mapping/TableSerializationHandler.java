@@ -24,7 +24,7 @@ class TableSerializationHandler {
 		String configurationId = EnvironmentContext.getEnvironmentProperty().getId();
 		String folderPath = FOLDER_PATH_MAP.get(configurationId);
 		if(folderPath == null) {
-			folderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.pathSeparatorChar;
+			folderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.separatorChar;
 			File folder = new File(folderPath);
 			if(!folder.exists()) 
 				folder.mkdirs();
