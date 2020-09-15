@@ -16,7 +16,7 @@ public interface EnvironmentProperty {
 	 * - 以下具体的功能, 参考《jdb-orm框架配置结构设计.conf.xml》文件中, property的配置
 	 */
 	
-	public String getId();
+	public String getConfigurationId();
 	
 	public Dialect getDialect();
 	

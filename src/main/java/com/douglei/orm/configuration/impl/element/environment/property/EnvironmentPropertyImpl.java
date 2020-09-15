@@ -28,7 +28,7 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	
 	private Map<String, String> propertyMap;
 	private boolean propertyMapEmpty;
-	private String id;
+	private String configurationId;
 	private DatabaseMetadata databaseMetadata;
 	
 	@FieldMetaData
@@ -72,8 +72,8 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	@FieldMetaData
 	private ColumnNameConverter columnNameConverter;
 	
-	public EnvironmentPropertyImpl(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingContainer mappingContainer) {
-		this.id = id;
+	public EnvironmentPropertyImpl(String configurationId, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingContainer mappingContainer) {
+		this.configurationId = configurationId;
 		this.propertyMap = propertyMap;
 		this.propertyMapEmpty = propertyMap==null || propertyMap.isEmpty();
 		this.databaseMetadata = databaseMetadata;
@@ -205,8 +205,8 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	}
 	
 	@Override
-	public String getId() {
-		return id;
+	public String getConfigurationId() {
+		return configurationId;
 	}
 	@Override
 	public Dialect getDialect() {

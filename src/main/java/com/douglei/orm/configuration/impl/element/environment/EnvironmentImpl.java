@@ -43,11 +43,11 @@ public class EnvironmentImpl implements Environment{
 	private EnvironmentProperty environmentProperty;
 	private MappingHandler mappingHandler;
 	
-	public EnvironmentImpl(String id, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
+	public EnvironmentImpl(String configurationId, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.properties = properties;
 		setDataSourceWrapper(exDataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):exDataSource);// 处理配置的数据源
-		setEnvironmentProperties(id, Dom4jElementUtil.elements("property", environmentElement), mappingContainer);// 处理environment下的所有property元素
+		setEnvironmentProperties(configurationId, Dom4jElementUtil.elements("property", environmentElement), mappingContainer);// 处理environment下的所有property元素
 		addMapping(environmentElement.element("mappings"));// 处理配置的映射文件
 		logger.debug("处理<environment>元素结束");
 	}
@@ -121,12 +121,12 @@ public class EnvironmentImpl implements Environment{
 	 * @param mappingContainer
 	 * @throws SQLException 
 	 */
-	private void setEnvironmentProperties(String id, List<Element> elements, MappingContainer mappingContainer) throws SQLException {
+	private void setEnvironmentProperties(String configurationId, List<Element> elements, MappingContainer mappingContainer) throws SQLException {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		
 		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
-		EnvironmentPropertyImpl environmentProperty = new EnvironmentPropertyImpl(id, propertyMap, databaseMetadata, mappingContainer);
+		EnvironmentPropertyImpl environmentProperty = new EnvironmentPropertyImpl(configurationId, propertyMap, databaseMetadata, mappingContainer);
 		if(environmentProperty.getDialect() == null) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);

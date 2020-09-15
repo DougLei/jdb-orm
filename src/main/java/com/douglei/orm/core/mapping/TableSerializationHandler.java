@@ -1,12 +1,9 @@
 package com.douglei.orm.core.mapping;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.tools.utils.IOUtil;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 /**
@@ -14,39 +11,14 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * @author DougLei
  */
 class TableSerializationHandler {
-	private static final String VERSION = "v202009101"; // 序列化版本; 每次修改了映射相关的类的serialVersionUID值时, 都必须更新该值后, 再发布新版本; 版本值使用 "v+年月日+序列值" 来定义, 其中序列值每日从1开始, 同一日时递增
-	private static final String FOLDER_NAME = ".orm"; // 文件夹名称
-	private static final String FILE_SUFFIX = FOLDER_NAME; // 序列化文件的后缀, 和文件夹名称一致
-	private static final Map<String, String> FOLDER_PATH_MAP = new HashMap<String, String>(8); // orm序列化文件的根路径map, key是configuration id, value是对应的路径
-	
-	// 获取对应的orm序列化文件夹路径, 包括文件名
-	private String getOrmFilePath(String filename) {
-		String configurationId = EnvironmentContext.getEnvironmentProperty().getId();
-		String folderPath = FOLDER_PATH_MAP.get(configurationId);
-		if(folderPath == null) {
-			folderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.separatorChar;
-			File folder = new File(folderPath);
-			if(!folder.exists()) 
-				folder.mkdirs();
-			deletePreviousVersionOfFolder(folder.getParentFile());
-			FOLDER_PATH_MAP.put(configurationId, folderPath);
-		}
-		return folderPath + filename + FILE_SUFFIX;
-	}
 	
 	/**
-	 * 删除之前版本的文件夹; 在更新序列化版本后, 将之前版本创建的文件夹删除掉
-	 * @param parentFolder
+	 * 获取对应的orm序列化文件全路径
+	 * @param filename
+	 * @return
 	 */
-	private void deletePreviousVersionOfFolder(File parentFolder) {
-		String[] folders = parentFolder.list();
-		if(folders.length > 1) {
-			for (String folder : folders) {
-				if(!folder.equals(VERSION)) {
-					IOUtil.delete(new File(parentFolder.getAbsolutePath() + File.separatorChar + folder));
-				}
-			}
-		}
+	private String getOrmFilePath(String filename) {
+		return TableSerializationFolderContainer.getFolder(EnvironmentContext.getEnvironmentProperty().getConfigurationId()) + filename;
 	}
 	
 	/**

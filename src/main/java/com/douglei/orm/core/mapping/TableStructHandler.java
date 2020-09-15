@@ -18,8 +18,8 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * @author DougLei
  */
 class TableStructHandler {
-	private static final TableSerializationHandler tableSerializationHandler = new TableSerializationHandler();
 	private static final ThreadLocal<TableStructConnection> tableStructConnection = new ThreadLocal<TableStructConnection>();
+	private static final TableSerializationHandler tableSerializationHandler = new TableSerializationHandler();
 	private DataSourceWrapper dataSourceWrapper;
 	private TableSqlStatementHandler tableSqlStatementHandler;
 	
@@ -50,7 +50,7 @@ class TableStructHandler {
 	}
 	
 	/**
-	 * 表序列化处理器
+	 * 获取表序列化处理器
 	 * @return
 	 */
 	public TableSerializationHandler getTableserializationhandler() {

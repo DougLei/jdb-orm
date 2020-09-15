@@ -1,5 +1,6 @@
 package com.douglei.orm.sessionfactory;
 
+import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.sessionfactory.data.validator.DataValidatorProcessor;
 import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
@@ -12,7 +13,7 @@ import com.douglei.orm.sessionfactory.sessions.Session;
 public interface SessionFactory {
 	
 	/**
-	 * 
+	 * 返回id值, 即 {@link Configuration}的id值
 	 * @return
 	 */
 	String getId();

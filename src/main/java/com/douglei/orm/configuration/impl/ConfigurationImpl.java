@@ -15,6 +15,7 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.impl.element.environment.EnvironmentImpl;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
+import com.douglei.orm.core.mapping.TableSerializationFolderContainer;
 import com.douglei.orm.sessionfactory.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
@@ -59,6 +60,7 @@ public class ConfigurationImpl extends Configuration {
 			this.properties = new Properties(root.element("properties"));
 			this.environment = new EnvironmentImpl(id, Dom4jElementUtil.validateElementExists("environment", root), properties, exDataSource, mappingContainer);
 			super.sessionFactory = new SessionFactoryImpl(this, environment);
+			TableSerializationFolderContainer.createFolder(environment.getEnvironmentProperty().getSerializationFileRootPath(), this.id);
 		} catch (Exception e) {
 			logger.error("jdb-orm框架初始化时出现异常, 开始进行销毁: {}", ExceptionUtil.getExceptionDetailMessage(e));
 			try {
@@ -79,6 +81,7 @@ public class ConfigurationImpl extends Configuration {
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(environment != null)
 			environment.destroy();
+		TableSerializationFolderContainer.deleteFolder(this.id);
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 	
