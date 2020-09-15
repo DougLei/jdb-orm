@@ -15,21 +15,6 @@ public class TableSerializationFolderContainer {
 	private static final String FOLDER_NAME = ".orm"; // 文件夹名称
 	private static final Map<String, String> FOLDER_MAP = new HashMap<String, String>(8); // orm序列化文件的根路径map, key是configuration id, value是对应的路径
 	
-	// 获取对应的orm序列化文件夹路径, 包括文件名
-//		private String getOrmFilePath(String filename) {
-//			String configurationId = EnvironmentContext.getEnvironmentProperty().getConfigurationId();
-//			String folderPath = FOLDER_PATH_MAP.get(configurationId);
-//			if(folderPath == null) {
-//				folderPath = EnvironmentContext.getEnvironmentProperty().getSerializationFileRootPath() + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.separatorChar;
-//				File folder = new File(folderPath);
-//				if(!folder.exists()) 
-//					folder.mkdirs();
-//				deletePreviousVersionOfFolder(folder.getParentFile());
-//				FOLDER_PATH_MAP.put(configurationId, folderPath);
-//			}
-//			return folderPath + filename + FILE_SUFFIX;
-//		}
-	
 	/**
 	 * 创建文件夹
 	 * @param serializationFileRootPath
