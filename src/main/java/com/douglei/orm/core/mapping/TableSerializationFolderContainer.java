@@ -12,7 +12,6 @@ import com.douglei.tools.utils.IOUtil;
  */
 public class TableSerializationFolderContainer {
 	private static final String VERSION = "v202009151"; // 序列化版本; 每次修改了映射相关的类的serialVersionUID值时, 都必须更新该值后, 再发布新版本; 版本值使用 "v+年月日+序列值" 来定义, 其中序列值每日从1开始, 同一日时递增
-	private static final String FOLDER_NAME = ".orm"; // 文件夹名称
 	private static final Map<String, String> FOLDER_MAP = new HashMap<String, String>(8); // orm序列化文件的根路径map, key是configuration id, value是对应的路径
 	
 	/**
@@ -22,7 +21,7 @@ public class TableSerializationFolderContainer {
 	 */
 	public static synchronized void createFolder(String serializationFileRootPath, String configurationId) {
 		if(!FOLDER_MAP.containsKey(configurationId)) {
-			String folderPath = serializationFileRootPath + File.separatorChar + FOLDER_NAME + File.separatorChar + configurationId + File.separatorChar + VERSION + File.separatorChar;
+			String folderPath = serializationFileRootPath + File.separatorChar + ".orm" + File.separatorChar + configurationId + File.separatorChar + VERSION + File.separatorChar;
 			FOLDER_MAP.put(configurationId, folderPath);
 			
 			File folder = new File(folderPath);
