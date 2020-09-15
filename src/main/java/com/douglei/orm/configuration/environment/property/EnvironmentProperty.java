@@ -32,8 +32,6 @@ public interface EnvironmentProperty {
 	
 	public boolean enableDataValidate();
 	
-	public String getSerializationFileRootPath();
-	
 	public boolean enableColumnStructUpdateValidate();
 	
 	public SqlParameterConfigHolder getSqlParameterConfigHolder();

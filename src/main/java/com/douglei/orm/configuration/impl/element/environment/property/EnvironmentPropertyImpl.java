@@ -53,9 +53,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	private boolean enableDataValidate;
 	
 	@FieldMetaData
-	private String serializationFileRootPath;
-	
-	@FieldMetaData
 	private boolean enableColumnStructUpdateValidate;
 	
 	@FieldMetaData
@@ -131,8 +128,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	 * 后置处理属性值
 	 */
 	private void postProcessingFiledValues() {
-		if(serializationFileRootPath == null) 
-			setSerializationFileRootPath(System.getProperty("user.home"));
 		sqlParameterConfigHolder = new SqlParameterConfigHolder(sqlParameterPrefix, sqlParameterSuffix, sqlParameterSplit, sqlParameterDefaultValueHandler);
 	}
 
@@ -165,10 +160,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	void setEnableDataValidate(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableDataValidate = Boolean.parseBoolean(value);
-	}
-	void setSerializationFileRootPath(String value) {
-		if(StringUtil.notEmpty(value)) 
-			this.serializationFileRootPath = value;
 	}
 	void setEnableColumnStructUpdateValidate(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) 
@@ -235,10 +226,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	@Override
 	public boolean enableDataValidate() {
 		return enableDataValidate;
-	}
-	@Override
-	public String getSerializationFileRootPath() {
-		return serializationFileRootPath;
 	}
 	@Override
 	public boolean enableColumnStructUpdateValidate() {
