@@ -7,7 +7,7 @@ import java.util.Map;
 import com.douglei.tools.utils.IOUtil;
 
 /**
- * 表序列化的文件夹容器, 使用Map实现, key为Configuration的id, value为对应的文件夹路径
+ * 
  * @author DougLei
  */
 public class TableSerializationFolderContainer {
