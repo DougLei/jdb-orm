@@ -12,11 +12,7 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  */
 class TableSerializationHandler {
 	
-	/**
-	 * 获取对应的orm序列化文件全路径
-	 * @param filename
-	 * @return
-	 */
+	// 获取对应的orm序列化文件全路径
 	private String getOrmFilePath(String filename) {
 		return TableSerializationFolderContainer.getFolder(EnvironmentContext.getEnvironmentProperty().getConfigurationId()) + filename;
 	}
