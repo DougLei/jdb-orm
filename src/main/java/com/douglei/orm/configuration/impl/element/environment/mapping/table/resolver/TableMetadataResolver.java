@@ -10,7 +10,7 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.StringUtil;
 
 /**
- * 表元数据验证
+ * 表元数据解析
  * @author DougLei
  */
 public class TableMetadataResolver implements MetadataResolver<Element, TableMetadata>{

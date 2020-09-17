@@ -9,7 +9,7 @@ import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 
 /**
- * 列元数据验证
+ * 列元数据解析
  * @author DougLei
  */
 public class ColumnMetadataResolver implements MetadataResolver<Element, ColumnMetadata>{
