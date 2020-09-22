@@ -213,8 +213,6 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(targetClass != null && !list.isEmpty()) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);
-		}else {
-			pageResult.setResultDatas(Collections.emptyList());
 		}
 		logger.debug("分页查询的结果: {}", pageResult);
 		return pageResult;
@@ -250,41 +248,39 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List recursiveQuery_(Class targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
-		if(parameters == null)
-			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		parentPkColumnName = parentPkColumnName.toUpperCase();
+		if(deep <= 0)
+			deep = -1;
 		if(targetClass != null)
 			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+		if(parameters == null)
+			parameters = new ArrayList<Object>();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
 		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
-		List rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+		List<Map<String, Object>> rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
 		recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
+		statement.removeParentValueList(parameters);
 		
 		if(targetClass != null && !rootList.isEmpty()) 
 			rootList = listMap2listClass(targetClass, rootList);
-		
-		statement.removeParentValueList(parameters);
 		return rootList;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement statement, List parentList, int deep, List<Object> parameters) {
-		List childrenList = null;
-		if((deep < 0 && !parentList.isEmpty()) || deep > 0) {
-			// 更新父级主键值, 并进行下一层的数据查询
-			statement.updateParentValueList(parentList);
-			childrenList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
-			recursiveQuery_(targetClass, statement, childrenList, deep-1, parameters);
-		}
-		if(childrenList == null)
-			childrenList = Collections.emptyList();
+	@SuppressWarnings("rawtypes")
+	private void recursiveQuery_(Class targetClass, RecursiveSqlStatement statement, List<Map<String, Object>> parentList, int deep, List<Object> parameters) {
+		if((deep < -1 && parentList.isEmpty()) || deep == 0)
+			return;
+		
+		// 更新父级主键值, 并进行下一层的数据查询
+		statement.updateParentValueList(parentList);
+		List<Map<String, Object>> childrenList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
+		recursiveQuery_(targetClass, statement, childrenList, deep-1, parameters);
 		
 		// 将subList与对应的parent建立父子层级结构
-		for (Object parent : parentList) {
-			buildingPCStruct(targetClass, ((Map<String, Object>)parent), childrenList, statement);
-		}
+		for (Map<String, Object> parent : parentList) 
+			buildingPCStruct(targetClass, parent, childrenList, statement);
 	}
 	// 构建父子结构
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -296,12 +292,10 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 				if(childrenList.get(i).get(statement.getParentPkColumnName()).equals(pid)) { 
 					if(sl == null)
 						sl = new ArrayList();
-					sl.add(targetClass==null?childrenList.remove(i):map2Class(targetClass, childrenList.remove(i)));
-					i--;
+					sl.add(targetClass==null?childrenList.remove(i--):map2Class(targetClass, childrenList.remove(i--)));
 				}
 			}
 		}
-		
 		if(sl == null)
 			sl = Collections.emptyList();
 		parent.put(statement.getChildNodeName(), sl);
@@ -343,14 +337,16 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private PageResult pageRecursiveQuery_(Class targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
 		if(pageNum < 0) 
 			pageNum = 1;
-		if(pageSize < 0)
+		if(pageSize < 0) 
 			pageSize = 10;
-		if(parameters == null)
-			parameters = new ArrayList<Object>();
 		pkColumnName = pkColumnName.toUpperCase();
 		parentPkColumnName = parentPkColumnName.toUpperCase();
+		if(deep <= 0)
+			deep = -1;
 		if(targetClass != null)
 			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+		if(parameters == null)
+			parameters = new ArrayList<Object>();
 		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
 		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
@@ -358,16 +354,14 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			List rootList = query(statement.getPageRecursiveQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
+			List<Map<String, Object>> rootList = query(statement.getPageRecursiveQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
 			recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
+			statement.removeParentValueList(parameters);
 			
 			if(targetClass != null && !rootList.isEmpty()) 
 				rootList = listMap2listClass(targetClass, rootList);
 			pageResult.setResultDatas(rootList);
-		}else {
-			pageResult.setResultDatas(Collections.emptyList());
 		}
-		statement.removeParentValueList(parameters);
 		return pageResult;
 	}
 	
@@ -392,13 +386,13 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	/**
 	 * listMap转换为listClass
 	 * @param targetClass
-	 * @param resultListMap
+	 * @param listMap
 	 * @return
 	 */
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
-		List<T> listT = new ArrayList<T>(resultListMap.size());
-		String[] resultMapColumnKeys = getResultMapColumnKeys(resultListMap.get(0));
-		for (Map<String, Object> map : resultListMap) {
+	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
+		List<T> listT = new ArrayList<T>(listMap.size());
+		String[] resultMapColumnKeys = getResultMapColumnKeys(listMap.get(0));
+		for (Map<String, Object> map : listMap) {
 			listT.add(map2Class(resultMapColumnKeys, targetClass, map));
 		}
 		return listT;
@@ -435,15 +429,15 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * 将resultMap转为指定的targetClass实例
 	 * @param resultMapColumnKeys
 	 * @param targetClass
-	 * @param resultMap
+	 * @param map
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T map2Class(String[] resultMapColumnKeys, Class<T> targetClass, Map<String, Object> resultMap) {
+	private <T> T map2Class(String[] resultMapColumnKeys, Class<T> targetClass, Map<String, Object> map) {
 		for (String columnKey : resultMapColumnKeys) {
-			resultMap.put(ConverterUtil.convert(columnKey, ColumnName2PropertyNameConverter.class), resultMap.remove(columnKey));
+			map.put(ConverterUtil.convert(columnKey, ColumnName2PropertyNameConverter.class), map.remove(columnKey));
 		}
-		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
+		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
 	}
 	
 	@Override

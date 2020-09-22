@@ -1,5 +1,6 @@
 package com.douglei.orm.core.sql.pagequery;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -71,6 +72,8 @@ public class PageResult<T> {
 		return pageCount;
 	}
 	public List<T> getResultDatas() {
+		if(resultDatas == null)
+			return Collections.emptyList();
 		return resultDatas;
 	}
 	public void setResultDatas(List<T> resultDatas) {

@@ -1,6 +1,7 @@
 package com.douglei.orm.core.sql.recursivequery;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +13,8 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  * @author DougLei
  */
 public class RecursiveSqlStatement extends PageSqlStatement {
-	protected String pkColumnName; // 存储主键的列名
-	protected String parentPkColumnName; // 存储父级主键的列名
+	protected String pkColumnName; // 主键列名
+	protected String parentPkColumnName; // 存储父级主键列名
 	protected String childNodeName; // 父级存储子集的节点名称
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
@@ -26,7 +27,6 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 		setParentValueList(parentValue);
 	}
 	
-	
 	public String getPkColumnName() {
 		return pkColumnName;
 	}
@@ -36,7 +36,6 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	public String getChildNodeName() {
 		return childNodeName;
 	}
-	
 	
 	/**
 	 * 父级主键值是否有null
@@ -61,31 +60,31 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<Object> setParentValueList(Object parentValue) {
-		if(parentValue instanceof List) {
-			List<Object> pvs = (List<Object>)parentValue;
-			if(pvs.isEmpty()) {
-				parentValue = null;
-			}else {
-				parentValueList = new ArrayList<Object>(pvs.size());
-				for (Object pv : pvs) {
-					addParentValue(pv);
+		if(parentValue != null) {
+			if(parentValue instanceof Collection) {
+				Collection<Object> pvs = (Collection<Object>)parentValue;
+				if(pvs.isEmpty()) {
+					parentValue = null;
+				}else {
+					parentValueList = new ArrayList<Object>(pvs.size());
+					for (Object pv : pvs) 
+						addParentValue(pv);
+				}
+			}else if(parentValue.getClass().isArray()) {
+				Object[] pvs = (Object[]) parentValue;
+				if(pvs.length == 0) {
+					parentValue = null;
+				}else {
+					parentValueList = new ArrayList<Object>(pvs.length);
+					for (Object pv : pvs) 
+						addParentValue(pv);
 				}
 			}
-		}else if(parentValue != null && parentValue.getClass().isArray()) {
-			Object[] pvs = (Object[]) parentValue;
-			if(pvs.length == 0) {
-				parentValue = null;
-			}else {
-				parentValueList = new ArrayList<Object>(pvs.length);
-				for (Object pv : pvs) {
-					addParentValue(pv);
-				}
+			
+			if(parentValueList == null) {
+				parentValueList = new ArrayList<Object>();
+				addParentValue(parentValue);
 			}
-		}
-		
-		if(parentValueList == null) {
-			parentValueList = new ArrayList<Object>();
-			addParentValue(parentValue);
 		}
 		return parentValueList;
 	}

@@ -253,7 +253,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -267,7 +267,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
@@ -282,7 +282,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -297,7 +297,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
@@ -313,7 +313,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -329,7 +329,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
@@ -346,7 +346,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @return
@@ -363,7 +363,7 @@ public interface SQLSession {
 	 * @param pkColumnName 存储主键的列名
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 如果返回的是map, 则没有大小写要求(调用者自行决定); 如果需要返回指定class, 则写为对应class中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
+	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
 	 * @param namespace <sql>元素中的namespace属性值, 不能为空
 	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
 	 * @param sqlParameter
