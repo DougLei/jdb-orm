@@ -51,6 +51,9 @@ public class DataValidatorProcessor {
 	 */
 	public ValidationResult validate(String code, String name, Object object) {
 		Mapping mapping = mappingContainer.getMapping(code);
+		if(mapping == null)
+			throw new NullPointerException("不存在code为"+code+"的映射信息");
+		
 		switch(mapping.getMappingType()) {
 			case TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
@@ -89,6 +92,8 @@ public class DataValidatorProcessor {
 	 */
 	public List<ValidationResult> validate(String code, String name, List<? extends Object> objects) {
 		Mapping mapping = mappingContainer.getMapping(code);
+		if(mapping == null)
+			throw new NullPointerException("不存在code为"+code+"的映射信息");
 		List<ValidationResult> validationResults = null;
 		
 		short index = 0;

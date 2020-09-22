@@ -52,9 +52,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		SqlMetadata sm = null;
 		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
 			Mapping mapping = mappingContainer.getMapping(namespace);
-			if(mapping.getMappingType() != MappingType.SQL) {
+			if(mapping == null)
+				throw new NullPointerException("不存在code为"+namespace+"的映射信息");
+			if(mapping.getMappingType() != MappingType.SQL) 
 				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
-			}
 			sm= (SqlMetadata) mapping.getMetadata();
 			sqlMetadataCache.put(namespace, sm);
 		}
