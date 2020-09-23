@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlContentMetadataResolver;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.sql.ContentType;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
@@ -125,7 +126,7 @@ class SqlMappingResolver {
 	 * @throws XPathExpressionException 
 	 * @throws RepeatedSqlContentNameException 
 	 */
-	public void setSqlContents(Node sqlNode) throws XPathExpressionException, RepeatedSqlContentNameException {
+	public void setSqlContents(Node sqlNode) throws XPathExpressionException {
 		if(sqlContentNodeExpression == null)
 			sqlContentNodeExpression = XPathFactory.newInstance().newXPath().compile("sql-content[@name!='']");
 		if(sqlContents != null)
@@ -142,7 +143,7 @@ class SqlMappingResolver {
 				node = sqlContentNodeList.item(i);
 				name = sqlContentMetadataResolver.getName(node.getAttributes().getNamedItem("name"));
 				if(sqlContents.containsKey(name))
-					throw new RepeatedSqlContentNameException(name);
+					throw new MetadataResolvingException("重复配置了name为"+name+"的<sql-content>元素");
 				sqlContents.put(name, node);
 			}
 			

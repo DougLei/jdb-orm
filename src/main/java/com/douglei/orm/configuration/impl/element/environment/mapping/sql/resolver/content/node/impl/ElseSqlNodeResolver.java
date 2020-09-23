@@ -15,7 +15,7 @@ import com.douglei.tools.utils.StringUtil;
 public class ElseSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode resolving(Node node) {
+	public SqlNode resolving(Node node) throws SqlNodeResolvingException {
 		String content = node.getTextContent();
 		if(StringUtil.isEmpty(content)) {
 			throw new SqlNodeResolvingException("<else>元素中的内容不能为空");

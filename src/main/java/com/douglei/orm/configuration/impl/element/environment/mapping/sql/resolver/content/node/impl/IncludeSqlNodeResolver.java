@@ -17,7 +17,7 @@ import com.douglei.tools.utils.StringUtil;
 public class IncludeSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode resolving(Node node) {
+	public SqlNode resolving(Node node) throws SqlNodeResolvingException {
 		String refName = getAttributeValue(node.getAttributes().getNamedItem("ref-name"));
 		if(refName == null || StringUtil.isEmpty(refName)) {
 			throw new SqlNodeResolvingException("<include>元素必须配置ref-name属性值");

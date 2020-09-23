@@ -17,7 +17,7 @@ import com.douglei.orm.core.metadata.sql.content.node.impl.SwitchSqlNode;
 public class SwitchSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode resolving(Node node) {
+	public SqlNode resolving(Node node) throws SqlNodeResolvingException {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
 		if(cl == 0) {

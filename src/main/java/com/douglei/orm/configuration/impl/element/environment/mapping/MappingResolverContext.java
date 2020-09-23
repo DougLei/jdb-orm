@@ -124,7 +124,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 * @throws RepeatedSqlContentNameException 
 	 */
-	public static void setSqlContents(Node sqlNode) throws XPathExpressionException, RepeatedSqlContentNameException {
+	public static void setSqlContents(Node sqlNode) throws XPathExpressionException {
 		geResolver().getSqlMappingResolver().setSqlContents(sqlNode);
 	}
 	/**

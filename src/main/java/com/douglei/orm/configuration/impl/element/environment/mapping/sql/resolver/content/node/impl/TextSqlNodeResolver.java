@@ -3,6 +3,7 @@ package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resol
 import org.w3c.dom.Node;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolvingException;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
 import com.douglei.tools.utils.StringUtil;
@@ -14,7 +15,7 @@ import com.douglei.tools.utils.StringUtil;
 public class TextSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode resolving(Node node) {
+	public SqlNode resolving(Node node) throws SqlNodeResolvingException {
 		String content = node.getNodeValue();
 		if(StringUtil.isEmpty(content)) {
 			return null;

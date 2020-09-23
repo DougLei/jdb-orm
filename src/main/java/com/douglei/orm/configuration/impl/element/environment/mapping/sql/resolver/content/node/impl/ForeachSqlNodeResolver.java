@@ -18,7 +18,7 @@ import com.douglei.tools.utils.StringUtil;
 public class ForeachSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode resolving(Node node) {
+	public SqlNode resolving(Node node) throws SqlNodeResolvingException {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
 		if(cl == 0) {

@@ -14,8 +14,9 @@ public interface SqlNodeResolver {
 	 * 
 	 * @param node
 	 * @return
+	 * @throws SqlNodeResolvingException
 	 */
-	SqlNode resolving(Node node);
+	SqlNode resolving(Node node) throws SqlNodeResolvingException;
 	
 	/**
 	 * 当前解析器可以解析的xml节点名
