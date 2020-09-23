@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.table.exce
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.tools.utils.StringUtil;
@@ -24,7 +23,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMetadata implements Metadata{
-	private static final long serialVersionUID = -4171791700386752042L;
 	private String name;// 表名
 	private String className;// 映射的代码类名
 	
@@ -326,10 +324,5 @@ public class TableMetadata implements Metadata{
 			throw new NullPointerException("不存在column name=["+columnName+"]的列");
 		}
 		return column;
-	}
-	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.TABLE;
 	}
 }

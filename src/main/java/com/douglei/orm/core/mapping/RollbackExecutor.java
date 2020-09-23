@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
+import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 
 /**

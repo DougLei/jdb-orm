@@ -3,7 +3,8 @@ package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resol
 import org.w3c.dom.Node;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeHandler;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolvingException;
 import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.IncludeSqlNode;
@@ -13,18 +14,18 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class IncludeSqlNodeHandler implements SqlNodeHandler {
+public class IncludeSqlNodeResolver implements SqlNodeResolver {
 
 	@Override
-	public SqlNode doHandler(Node node) {
+	public SqlNode resolving(Node node) {
 		String refName = getAttributeValue(node.getAttributes().getNamedItem("ref-name"));
 		if(refName == null || StringUtil.isEmpty(refName)) {
-			throw new NullPointerException("<include>元素必须配置ref-name属性值");
+			throw new SqlNodeResolvingException("<include>元素必须配置ref-name属性值");
 		}
 		
 		SqlContentMetadata sqlContent = MappingResolverContext.getSqlContent(refName);
 		if(sqlContent == null) {
-			throw new NullPointerException("不存在name=["+refName+"]的<sql-content>元素");
+			throw new SqlNodeResolvingException("不存在name为"+refName+"的<sql-content>元素");
 		}
 		return new IncludeSqlNode(sqlContent);
 	}

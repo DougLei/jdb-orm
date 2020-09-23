@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingOP;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
@@ -28,25 +27,25 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	private String filepath; // 从文件获取映射
 	private String content; // 从内容获取映射
 	
-	public AddOrCoverMappingEntity(String filepath) throws ParseMappingException {
+	public AddOrCoverMappingEntity(String filepath) {
 		this(filepath, true);
 	}
-	public AddOrCoverMappingEntity(String content, MappingType type) throws ParseMappingException {
+	public AddOrCoverMappingEntity(String content, MappingType type) {
 		this(content, type, true);
 	}
-	public AddOrCoverMappingEntity(String filepath, boolean opStruct) throws ParseMappingException {
+	public AddOrCoverMappingEntity(String filepath, boolean opStruct) {
 		this.filepath = filepath;
 		super.type = MappingType.toValueByFile(filepath);
 		super.opStruct = opStruct;
 	}
-	public AddOrCoverMappingEntity(String content, MappingType type, boolean opStruct) throws ParseMappingException {
+	public AddOrCoverMappingEntity(String content, MappingType type, boolean opStruct) {
 		this.content = content;
 		super.type = type;
 		super.opStruct = opStruct;
 	}
 	
 	@Override
-	public Mapping parseMapping() throws ParseMappingException {
+	public boolean parseMapping() throws ParseMappingException {
 		String configDescription = filepath != null ? filepath : content;
 		InputStream input = filepath != null ? FileScanner.readByScanPath(filepath) : new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 		try {
@@ -63,17 +62,13 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 					break;
 			}
 			super.code = super.mapping.getCode();
-			return super.mapping;
+			return true;
 		} catch(Exception e){
 			logger.error("在解析映射xml[{}]时, 出现异常:{}", configDescription, ExceptionUtil.getExceptionDetailMessage(e));
 			throw new ParseMappingException("在解析映射xml["+configDescription+"]时, 出现异常", e);
 		}finally {
 			CloseUtil.closeIO(input);
 		}
-	}
-	
-	@Override
-	public void setMapping(Mapping mapping) { // 解析获取即可, 不需要外部设置, 所以不实现该方法
 	}
 	
 	@Override

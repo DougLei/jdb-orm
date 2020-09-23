@@ -18,17 +18,18 @@ public abstract class MappingEntity {
 	
 	/**
 	 * 解析出mapping实例
-	 * @return 返回解析出的mapping实例
+	 * @return 解析是否成功
 	 * @throws ParseMappingException
 	 */
-	public abstract Mapping parseMapping() throws ParseMappingException;
+	public boolean parseMapping() throws ParseMappingException {
+		return false;
+	}
 	
 	/**
 	 * 将外部的mapping实例set进来
 	 * @param mapping
 	 */
-	public abstract void setMapping(Mapping mapping);
-	
+	public void setMapping(Mapping mapping) {}
 	
 	public String getCode() {
 		return code;

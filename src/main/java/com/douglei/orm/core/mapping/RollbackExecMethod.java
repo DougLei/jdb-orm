@@ -4,7 +4,7 @@ package com.douglei.orm.core.mapping;
  * 回滚的执行方式
  * @author DougLei
  */
-enum RollbackExecMethod {
+public enum RollbackExecMethod {
 	EXEC_DDL_SQL, // 执行DDL SQL语句
 	EXEC_ADD_MAPPING, // 执行添加映射
 	EXEC_DELETE_MAPPING, // 执行删除映射

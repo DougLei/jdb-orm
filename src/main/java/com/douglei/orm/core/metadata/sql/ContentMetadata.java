@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 
 /**
@@ -13,7 +12,6 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
-	private static final long serialVersionUID = 7588553524532501585L;
 	protected String name;
 	protected ContentType type;
 	private IncrementIdValueConfig incrementIdValueConfig;
@@ -46,14 +44,12 @@ public class ContentMetadata implements Metadata{
 		return incrementIdValueConfig;
 	}
 	
+	/**
+	 * 不需要唯一编码值
+	 */
 	@Deprecated
 	@Override
 	public String getCode() {
-		return null;
-	}
-	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.CONTENT;
+		return name;
 	}
 }

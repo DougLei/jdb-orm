@@ -3,7 +3,7 @@ package com.douglei.orm.configuration.impl.element.environment.mapping.table.res
 import org.dom4j.Element;
 
 import com.douglei.orm.core.metadata.MetadataResolver;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
@@ -14,10 +14,10 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  */
 public class ColumnMetadataResolver implements MetadataResolver<Element, ColumnMetadata>{
 	
-	public ColumnMetadata resolving(Element element) throws MetadataValidateException{
+	public ColumnMetadata resolving(Element element) throws MetadataResolvingException{
 		String name = element.attributeValue("name");
 		if(StringUtil.isEmpty(name)) {
-			throw new MetadataValidateException("<column>元素的name属性值不能为空");
+			throw new MetadataResolvingException("<column>元素的name属性值不能为空");
 		}
 		
 		String value = element.attributeValue("length");

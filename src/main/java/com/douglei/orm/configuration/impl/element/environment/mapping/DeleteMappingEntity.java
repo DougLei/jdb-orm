@@ -3,7 +3,6 @@ package com.douglei.orm.configuration.impl.element.environment.mapping;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingOP;
-import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
 
 /**
  * 
@@ -17,11 +16,6 @@ public class DeleteMappingEntity extends MappingEntity{
 	public DeleteMappingEntity(String code, boolean opStruct) {
 		super.code = code;
 		super.opStruct = opStruct;
-	}
-	
-	@Override
-	public Mapping parseMapping() throws ParseMappingException { // 只能通过外部传入mapping, 所以不实现该方法
-		return null;
 	}
 	
 	@Override

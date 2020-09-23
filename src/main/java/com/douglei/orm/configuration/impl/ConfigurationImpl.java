@@ -15,7 +15,7 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.impl.element.environment.EnvironmentImpl;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
-import com.douglei.orm.core.mapping.TableSerializationFolderContainer;
+import com.douglei.orm.core.mapping.serialization.FolderContainer;
 import com.douglei.orm.sessionfactory.SessionFactoryImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
@@ -57,7 +57,7 @@ public class ConfigurationImpl extends Configuration {
 			}
 			Element root = xmlDocument.getRootElement();
 			setId(root.attributeValue("id"));
-			TableSerializationFolderContainer.createFolder(this.id);
+			FolderContainer.createFolder(this.id);
 			this.properties = new Properties(root.element("properties"));
 			this.environment = new EnvironmentImpl(id, Dom4jElementUtil.validateElementExists("environment", root), properties, exDataSource, mappingContainer);
 			super.sessionFactory = new SessionFactoryImpl(this, environment);
@@ -81,7 +81,7 @@ public class ConfigurationImpl extends Configuration {
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		if(environment != null)
 			environment.destroy();
-		TableSerializationFolderContainer.deleteFolder(this.id);
+		FolderContainer.deleteFolder(this.id);
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 	

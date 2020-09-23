@@ -7,7 +7,7 @@ import java.util.List;
  * 回滚信息记录器
  * @author DougLei
  */
-class RollbackRecorder {
+public class RollbackRecorder {
 	private static final ThreadLocal<List<RollbackExecutor>> recorder = new ThreadLocal<List<RollbackExecutor>>();
 
 	/**

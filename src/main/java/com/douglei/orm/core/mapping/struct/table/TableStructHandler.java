@@ -1,4 +1,4 @@
-package com.douglei.orm.core.mapping;
+package com.douglei.orm.core.mapping.struct.table;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -7,6 +7,10 @@ import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.mapping.RollbackExecMethod;
+import com.douglei.orm.core.mapping.RollbackRecorder;
+import com.douglei.orm.core.mapping.serialization.SerializationHandler;
+import com.douglei.orm.core.mapping.struct.StructConnection;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.orm.core.metadata.table.CreateMode;
@@ -17,22 +21,20 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * 表结构处理器
  * @author DougLei
  */
-class TableStructHandler {
-	private static final ThreadLocal<TableStructConnection> tableStructConnection = new ThreadLocal<TableStructConnection>();
-	private static final TableSerializationHandler tableSerializationHandler = new TableSerializationHandler();
-	private DataSourceWrapper dataSourceWrapper;
+public class TableStructHandler {
+	private static final ThreadLocal<StructConnection> tableStructConnection = new ThreadLocal<StructConnection>();
+	private static final SerializationHandler tableSerializationHandler = new SerializationHandler();
 	private TableSqlStatementHandler tableSqlStatementHandler;
 	
 	public TableStructHandler(DataSourceWrapper dataSourceWrapper, TableSqlStatementHandler tableSqlStatementHandler) {
-		this.dataSourceWrapper = dataSourceWrapper;
 		this.tableSqlStatementHandler = tableSqlStatementHandler;
 	}
 
 	// 获取操作表结构的数据库连接
-	private TableStructConnection getTableStructConnection() throws SQLException {
-		TableStructConnection tsConnection = tableStructConnection.get();
+	private StructConnection getTableStructConnection() throws SQLException {
+		StructConnection tsConnection = tableStructConnection.get();
 		if(tsConnection == null) {
-			tsConnection = new TableStructConnection(dataSourceWrapper, tableSqlStatementHandler.queryTableExistsSql());
+			tsConnection = new StructConnection(dataSourceWrapper, tableSqlStatementHandler.queryTableExistsSql());
 			tableStructConnection.set(tsConnection);
 		}
 		return tsConnection;
@@ -42,7 +44,7 @@ class TableStructHandler {
 	 * 重置处理器, 主要就是处理连接
 	 */
 	public void resetting() {
-		TableStructConnection connection = tableStructConnection.get();
+		StructConnection connection = tableStructConnection.get();
 		if(connection != null) {
 			tableStructConnection.remove();
 			connection.close();
@@ -53,7 +55,7 @@ class TableStructHandler {
 	 * 获取表序列化处理器
 	 * @return
 	 */
-	public TableSerializationHandler getTableserializationhandler() {
+	public SerializationHandler getTableserializationhandler() {
 		return tableSerializationHandler;
 	}
 

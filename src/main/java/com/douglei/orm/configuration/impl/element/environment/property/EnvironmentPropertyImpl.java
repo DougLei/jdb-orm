@@ -50,9 +50,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	private CreateMode tableCreateMode;
 	
 	@FieldMetaData
-	private boolean enableDataValidate;
-	
-	@FieldMetaData
 	private boolean enableColumnStructUpdateValidate;
 	
 	@FieldMetaData
@@ -157,10 +154,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 		if(StringUtil.notEmpty(value)) 
 			this.tableCreateMode = CreateMode.toValue(value);
 	}
-	void setEnableDataValidate(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) 
-			this.enableDataValidate = Boolean.parseBoolean(value);
-	}
 	void setEnableColumnStructUpdateValidate(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) 
 			this.enableColumnStructUpdateValidate = Boolean.parseBoolean(value);
@@ -222,10 +215,6 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 	@Override
 	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
-	}
-	@Override
-	public boolean enableDataValidate() {
-		return enableDataValidate;
 	}
 	@Override
 	public boolean enableColumnStructUpdateValidate() {

@@ -1,7 +1,10 @@
 package com.douglei.orm.core.mapping;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,8 +16,11 @@ import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
+import com.douglei.orm.configuration.impl.element.environment.mapping.AddOrCoverMappingEntity;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.mapping.struct.sql.SqlStructHandler;
+import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 
 /**
@@ -25,19 +31,36 @@ public class MappingHandler {
 	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
 	private MappingContainer mappingContainer;
 	private TableStructHandler tableStructHandler;
+	private SqlStructHandler sqlStructHandler;
 	
 	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper, TableSqlStatementHandler tableSqlStatementHandler) {
 		this.mappingContainer = mappingContainer;
 		this.tableStructHandler = new TableStructHandler(dataSourceWrapper, tableSqlStatementHandler);
+		this.sqlStructHandler = new SqlStructHandler();
 	}
 
+	// 在一次操作多个映射时, 需要对其进行排序, 具体的排序规则为, 先操作table, 再操作sql, 因为sql中配置的<db-object>, 可能依赖于本次操作的table映射
+	private static final Comparator<MappingEntity> comparator = new Comparator<MappingEntity>() {
+		@Override
+		public int compare(MappingEntity o1, MappingEntity o2) {
+			if(o1.getType() == o2.getType())
+				return 0;
+			if(o1.getType() == MappingType.TABLE && o2.getType() == MappingType.SQL)
+				return -1;
+			return 0;
+		}
+	};
+	
 	// 解析映射实体
-	private void parseMappingEntities(Collection<MappingEntity> mappingEntities) throws ParseMappingException {
+	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
 		for (MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
-			if(mappingEntity.parseMapping() == null) 
+			if(!mappingEntity.parseMapping()) 
 				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 		}
+		
+		if(mappingEntities.size() > 1)
+			Collections.sort(mappingEntities, comparator);
 	}
 	
 	/**
@@ -45,7 +68,7 @@ public class MappingHandler {
 	 * @param mappingEntities
 	 * @throws MappingExecuteException 
 	 */
-	public void execute(Collection<MappingEntity> mappingEntities) throws MappingExecuteException {
+	public void execute(List<MappingEntity> mappingEntities) throws MappingExecuteException {
 		logger.debug("操作映射开始");
 		try {
 			parseMappingEntities(mappingEntities);
@@ -54,13 +77,21 @@ public class MappingHandler {
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.getType() == MappingType.TABLE && mappingEntity.opStruct())
-							tableStructHandler.createTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+						if(mappingEntity.opStruct()) {
+							if(mappingEntity.getType() == MappingType.TABLE)
+								tableStructHandler.createTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+							else 
+								sqlStructHandler.createObject((TableMetadata)mappingEntity.getMapping().getMetadata());
+						}
 						addMapping(mappingEntity.getMapping());
 						break;
 					case DELETE: 
-						if(mappingEntity.getType() == MappingType.TABLE && mappingEntity.opStruct()) 
-							tableStructHandler.deleteTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+						if(mappingEntity.opStruct()) {
+							if(mappingEntity.getType() == MappingType.TABLE) 
+								tableStructHandler.deleteTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+							else
+								sqlStructHandler.delete((TableMetadata)mappingEntity.getMapping().getMetadata());
+						}
 						deleteMapping(mappingEntity.getCode());
 						break;
 				}

@@ -13,6 +13,4 @@ public interface Metadata extends Serializable{
 	 * @return
 	 */
 	String getCode();
-	
-	MetadataType getMetadataType();
 }

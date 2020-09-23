@@ -4,7 +4,7 @@ import org.dom4j.Element;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.metadata.MetadataResolver;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.StringUtil;
@@ -15,10 +15,10 @@ import com.douglei.tools.utils.StringUtil;
  */
 public class TableMetadataResolver implements MetadataResolver<Element, TableMetadata>{
 
-	public TableMetadata resolving(Element element) throws MetadataValidateException{
+	public TableMetadata resolving(Element element) throws MetadataResolvingException{
 		String name = element.attributeValue("name");
 		if(StringUtil.isEmpty(name)) {
-			throw new MetadataValidateException("<table>元素的name属性值不能为空");
+			throw new MetadataResolvingException("<table>元素的name属性值不能为空");
 		}
 		
 		CreateMode createMode = getCreateMode(element.attributeValue("createMode"), element.attributeValue("forceCreateMode"));

@@ -8,17 +8,17 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * 
  * @author DougLei
  */
-public interface SqlNodeHandler {
+public interface SqlNodeResolver {
 	
 	/**
 	 * 
 	 * @param node
 	 * @return
 	 */
-	SqlNode doHandler(Node node);
+	SqlNode resolving(Node node);
 	
 	/**
-	 * @see org.w3c.dom.Node.getNodeName()
+	 * 当前解析器可以解析的xml节点名
 	 * @return
 	 */
 	String getNodeName();

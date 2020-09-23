@@ -87,65 +87,65 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	
-	/**
-	 * 验证唯一值
-	 * 需要开启 {enableTableSessionCache=true, enabledDataValidate=true} 这两个配置, 该功能才会启作用
-	 * @param currentPersistent
-	 * @param cache
-	 */
-	private void validateUniqueValue(PersistentObject currentPersistent, Map<Identity, PersistentObject> cache) {
-		if(currentPersistent.existsUniqueConstraint()) {
-			for (PersistentObject beforePersistent : cache.values()) {
-				// 这个判断是因为update时可能会从缓存中取数据再修改, 所以防止同一个对象进行比较
-				if(beforePersistent != currentPersistent) {
-					doCompareUniqueValue(currentPersistent, beforePersistent.getPersistentObjectUniqueValue());
-				}
-			}
-		}
-	}
+//	/**
+//	 * 验证唯一值
+//	 * 需要开启 {enableTableSessionCache=true, enabledDataValidate=true} 这两个配置, 该功能才会启作用
+//	 * @param currentPersistent
+//	 * @param cache
+//	 */
+//	private void validateUniqueValue(PersistentObject currentPersistent, Map<Identity, PersistentObject> cache) {
+//		if(currentPersistent.existsUniqueConstraint()) {
+//			for (PersistentObject beforePersistent : cache.values()) {
+//				// 这个判断是因为update时可能会从缓存中取数据再修改, 所以防止同一个对象进行比较
+//				if(beforePersistent != currentPersistent) {
+//					doCompareUniqueValue(currentPersistent, beforePersistent.getPersistentObjectUniqueValue());
+//				}
+//			}
+//		}
+//	}
 	
-	/**
-	 * 比较唯一值
-	 * @param currentPersistent
-	 * @param beforePersistentObjectValidateUniqueValue
-	 */
-	@SuppressWarnings("unchecked")
-	private void doCompareUniqueValue(PersistentObject currentPersistent, Object beforePersistentObjectValidateUniqueValue) {
-		Object currentPersistentObjectValidateUniqueValue = currentPersistent.getPersistentObjectUniqueValue();
-		if((currentPersistentObjectValidateUniqueValue instanceof UniqueValue) && currentPersistentObjectValidateUniqueValue.equals(beforePersistentObjectValidateUniqueValue)) {
-			UniqueConstraint uc = currentPersistent.getUniqueConstraint((byte)0);
-			throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
-		}else if(currentPersistentObjectValidateUniqueValue instanceof List) {
-			List<UniqueValue> currentPersistentObjectValidateUniqueValues = (List<UniqueValue>) currentPersistentObjectValidateUniqueValue;
-			List<UniqueValue> beforePersistentObjectValidateUniqueValues = (List<UniqueValue>) beforePersistentObjectValidateUniqueValue;
-			byte index=0, count = currentPersistent.getUniqueConstraintCount();
-			for(; index<count; index++) {
-				if(currentPersistentObjectValidateUniqueValues.get(index).equals(beforePersistentObjectValidateUniqueValues.get(index))) {
-					UniqueConstraint uc = currentPersistent.getUniqueConstraint(index);
-					throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
-				}
-			}
-		}
-	}
+//	/**
+//	 * 比较唯一值
+//	 * @param currentPersistent
+//	 * @param beforePersistentObjectValidateUniqueValue
+//	 */
+//	@SuppressWarnings("unchecked")
+//	private void doCompareUniqueValue(PersistentObject currentPersistent, Object beforePersistentObjectValidateUniqueValue) {
+//		Object currentPersistentObjectValidateUniqueValue = currentPersistent.getPersistentObjectUniqueValue();
+//		if((currentPersistentObjectValidateUniqueValue instanceof UniqueValue) && currentPersistentObjectValidateUniqueValue.equals(beforePersistentObjectValidateUniqueValue)) {
+//			UniqueConstraint uc = currentPersistent.getUniqueConstraint((byte)0);
+//			throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
+//		}else if(currentPersistentObjectValidateUniqueValue instanceof List) {
+//			List<UniqueValue> currentPersistentObjectValidateUniqueValues = (List<UniqueValue>) currentPersistentObjectValidateUniqueValue;
+//			List<UniqueValue> beforePersistentObjectValidateUniqueValues = (List<UniqueValue>) beforePersistentObjectValidateUniqueValue;
+//			byte index=0, count = currentPersistent.getUniqueConstraintCount();
+//			for(; index<count; index++) {
+//				if(currentPersistentObjectValidateUniqueValues.get(index).equals(beforePersistentObjectValidateUniqueValues.get(index))) {
+//					UniqueConstraint uc = currentPersistent.getUniqueConstraint(index);
+//					throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
+//				}
+//			}
+//		}
+//	}
 	
-	// 获取列的description name
-	private String getColumnDescriptionNames(UniqueConstraint uc, PersistentObject currentPersistent) {
-		if(uc.isMultiColumns()) {
-			StringBuilder sb = new StringBuilder(uc.size()*16);
-			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnDescriptionNameByCode(code)));
-			return sb.substring(1);
-		}
-		return currentPersistent.getColumnDescriptionNameByCode(uc.getCode());
-	}
-	// 获取列的name
-	private String getColumnNames(UniqueConstraint uc, PersistentObject currentPersistent) {
-		if(uc.isMultiColumns()) {
-			StringBuilder sb = new StringBuilder(uc.size()*16);
-			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnNameByCode(code)));
-			return sb.substring(1);
-		}
-		return currentPersistent.getColumnNameByCode(uc.getCode());
-	}
+//	// 获取列的description name
+//	private String getColumnDescriptionNames(UniqueConstraint uc, PersistentObject currentPersistent) {
+//		if(uc.isMultiColumns()) {
+//			StringBuilder sb = new StringBuilder(uc.size()*16);
+//			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnDescriptionNameByCode(code)));
+//			return sb.substring(1);
+//		}
+//		return currentPersistent.getColumnDescriptionNameByCode(uc.getCode());
+//	}
+//	// 获取列的name
+//	private String getColumnNames(UniqueConstraint uc, PersistentObject currentPersistent) {
+//		if(uc.isMultiColumns()) {
+//			StringBuilder sb = new StringBuilder(uc.size()*16);
+//			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnNameByCode(code)));
+//			return sb.substring(1);
+//		}
+//		return currentPersistent.getColumnNameByCode(uc.getCode());
+//	}
 	
 
 	/**
@@ -158,10 +158,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			Map<Identity, PersistentObject> cache = getCache(code);
 			
 			if(!cache.isEmpty()) {
-				if(cache.containsKey(persistent.getId())) {
+				if(cache.containsKey(persistent.getId())) 
 					throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
-				}
-				validateUniqueValue(persistent, cache);
 			}
 			cache.put(persistent.getId(), persistent);
 		}else {
@@ -228,9 +226,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			}else {
 				logger.debug("缓存中不存在要修改的数据持久化对象");
 				cache.put(persistentObject.getId(), persistentObject);
-			}
-			if(cache.size() > 1) {
-				validateUniqueValue(persistentObject, cache);
 			}
 		}else {
 			executePersistentObject(persistentObject);

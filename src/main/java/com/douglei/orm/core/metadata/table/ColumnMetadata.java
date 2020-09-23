@@ -5,7 +5,6 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataType;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
@@ -15,7 +14,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata implements Metadata{
-	private static final long serialVersionUID = 7381874865514310482L;
 	private String name;// 列名
 	private String property;// 映射的代码类中的属性名
 	
@@ -231,10 +229,5 @@ public class ColumnMetadata implements Metadata{
 	}
 	public ValidateHandler getValidateHandler() {
 		return validateHandler;
-	}
-
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.COLUMN;
 	}
 }

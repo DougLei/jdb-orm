@@ -10,7 +10,7 @@ public interface MetadataResolver<P, R extends Metadata> {
 	 * 对metadata解析，如果解析成功，则返回对应的Metadata实例
 	 * @param p
 	 * @return
-	 * @throws MetadataValidateException
+	 * @throws MetadataResolvingException
 	 */
-	R resolving(P p) throws MetadataValidateException;
+	R resolving(P p) throws MetadataResolvingException;
 }

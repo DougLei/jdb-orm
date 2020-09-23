@@ -12,8 +12,6 @@ import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHand
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataType;
-import com.douglei.orm.core.metadata.validator.DataValidationException;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
@@ -29,8 +27,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 3107760956690978471L;
-
 	private String configText;
 	
 	private String name;// 参数名
@@ -221,6 +217,9 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 
+	/**
+	 * 不需要唯一编码值
+	 */
 	@Deprecated
 	@Override
 	public String getCode() {
@@ -277,7 +276,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter) {
-		return getValue(sqlParameter, null);
+		return getValue_(sqlParameter, null);
 	}
 	
 	/**
@@ -287,19 +286,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter, String sqlParameterNamePrefix) {
-		Object value = getValue_(sqlParameter, sqlParameterNamePrefix);
-		validate(value);
-		return value;
-	}
-	
-	// 验证数据
-	private void validate(Object value) {
-		if(EnvironmentContext.getEnvironmentProperty().enableDataValidate() && validate) {
-			ValidationResult result = validateHandler.validate(value);
-			if(result != null) {
-				throw new DataValidationException(descriptionName, name, value, result);
-			}
-		}
+		return getValue_(sqlParameter, sqlParameterNamePrefix);
 	}
 	
 	/**
@@ -309,15 +296,9 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public ValidationResult validate(Object sqlParameter, String sqlParameterNamePrefix) {
-		if(validate) {
+		if(validate) 
 			return validateHandler.validate(getValue_(sqlParameter, sqlParameterNamePrefix));
-		}
 		return null;
-	}
-	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.SQL_PARAMETER;
 	}
 	
 	public String getConfigText() {

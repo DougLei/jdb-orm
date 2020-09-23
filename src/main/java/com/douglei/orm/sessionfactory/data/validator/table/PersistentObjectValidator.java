@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
@@ -15,22 +16,25 @@ import com.douglei.tools.utils.CollectionUtil;
  * @author DougLei
  */
 public class PersistentObjectValidator extends AbstractPersistentObject {
+	private int validateDataCount;// 要验证的数据数量, 可以判断出是否是批量验证, 批量验证的时候, 需要验证唯一约束
 	
-	private short validateDataCount;// 要验证的数据数量, 可以判断出是否是批量验证, 批量验证的时候, 需要验证唯一约束
+	private List<UniqueConstraint> uniqueConstraints;// 唯一约束集合
 	private List<Object> uniqueValues;// 如果是批量验证, 且有唯一约束, 则记录每个对象中相应的唯一列的值
 	
 	public PersistentObjectValidator(TableMetadata tableMetadata) {
-		super(tableMetadata);
+		this(tableMetadata, 1);
 	}
 	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount) {
 		super(tableMetadata);
-		this.validateDataCount = (short) validateDataCount;
+		if((this.validateDataCount = validateDataCount) > 1)
+			this.uniqueConstraints = tableMetadata.getUniqueConstraints();
 	}
 
 	// 进行验证
 	public ValidationResult doValidate(Object originObject) {
 		if(tableMetadata.existsValidateColumns()) {
 			setOriginObject(originObject);
+			
 			Object value = null;
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
@@ -41,7 +45,7 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			}
 			
 			// 如果还存在唯一约束, 则要对集合中的数据也进行验证
-			if(validateDataCount > 1 && existsUniqueConstraint()) {
+			if(uniqueConstraints != null) {
 				if(uniqueValues == null) {
 					uniqueValues = new ArrayList<Object>(validateDataCount);
 					uniqueValues.add(getPersistentObjectUniqueValue());
@@ -53,6 +57,21 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 获取持久化对象的唯一值实例
+	 * 调用该方法前, 必须要先使用 {@link AbstractPersistentObject#existsUniqueColumn()} 方法判断一下, 如果返回true才能调用该方法
+	 * @return {@link UniqueValue} / {@link List<UniqueValue>}
+	 */
+	private Object getPersistentObjectUniqueValue(){
+		if(uniqueConstraints.size() == 1) {
+			return new UniqueValue(objectMap, uniqueConstraints.get(0));
+		}else {
+			List<UniqueValue> currentPersistentObjectUniqueValues = new ArrayList<UniqueValue>(uniqueConstraints.size());
+			uniqueConstraints.forEach(uc -> currentPersistentObjectUniqueValues.add(new UniqueValue(objectMap, uc)));
+			return currentPersistentObjectUniqueValues;
+		}
 	}
 	
 	/**

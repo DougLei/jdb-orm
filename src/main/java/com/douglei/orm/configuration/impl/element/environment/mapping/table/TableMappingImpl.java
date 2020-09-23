@@ -25,7 +25,7 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.table.reso
 import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.orm.core.metadata.table.ConstraintType;
@@ -42,10 +42,9 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMappingImpl extends MappingImpl {
-	private static final long serialVersionUID = -2964393562259915504L;
 	private static final Logger logger = LoggerFactory.getLogger(TableMappingImpl.class);
-	private static TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
-	private static ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
+	private static final TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
+	private static final ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
 	
 	private TableMetadata tableMetadata;
 	
@@ -62,7 +61,7 @@ public class TableMappingImpl extends MappingImpl {
 			setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 			setColumnValidator(tableElement.element("validators"));
 		} catch (Exception e) {
-			throw new MetadataValidateException("在"+configDescription+"中, 解析出现异常", e);
+			throw new MetadataResolvingException("在"+configDescription+"中, 解析出现异常", e);
 		}
 		logger.debug("结束解析table类型的映射");
 	}
@@ -130,9 +129,9 @@ public class TableMappingImpl extends MappingImpl {
 	/**
 	 * 添加列元数据
 	 * @param columnsElement
-	 * @throws MetadataValidateException 
+	 * @throws MetadataResolvingException 
 	 */
-	private void addColumnMetadata(List<Element> columnElements) throws MetadataValidateException {
+	private void addColumnMetadata(List<Element> columnElements) throws MetadataResolvingException {
 		ColumnMetadata columnMetadata = null;
 		for (Element element : columnElements) {
 			columnMetadata = columnMetadataResolver.resolving(element);

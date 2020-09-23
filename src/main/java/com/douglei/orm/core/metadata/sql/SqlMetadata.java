@@ -5,14 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataType;
 
 /**
  * sql元数据
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
-	private static final long serialVersionUID = 1855517217773149671L;
 	private String namespace;
 	private List<ContentMetadata> contents;
 	
@@ -41,11 +39,6 @@ public class SqlMetadata implements Metadata{
 	@Override
 	public String getCode() {
 		return namespace;
-	}
-	
-	@Override
-	public MetadataType getMetadataType() {
-		return MetadataType.SQL;
 	}
 	
 	/**

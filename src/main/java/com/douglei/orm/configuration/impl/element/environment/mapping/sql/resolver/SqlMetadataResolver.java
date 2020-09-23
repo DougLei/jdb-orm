@@ -4,7 +4,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.douglei.orm.core.metadata.MetadataResolver;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.tools.utils.StringUtil;
 
@@ -15,7 +15,7 @@ import com.douglei.tools.utils.StringUtil;
 public class SqlMetadataResolver implements MetadataResolver<Node, SqlMetadata> {
 
 	@Override
-	public SqlMetadata resolving(Node sqlNode) throws MetadataValidateException {
+	public SqlMetadata resolving(Node sqlNode) throws MetadataResolvingException {
 		NamedNodeMap attributeMap = sqlNode.getAttributes();
 		return new SqlMetadata(getNamespace(attributeMap.getNamedItem("namespace")));
 	}
@@ -27,6 +27,6 @@ public class SqlMetadataResolver implements MetadataResolver<Node, SqlMetadata> 
 				return namespace;
 			}
 		}
-		throw new MetadataValidateException("<sql>元素的namespace属性值不能为空");
+		throw new MetadataResolvingException("<sql>元素的namespace属性值不能为空");
 	}
 }

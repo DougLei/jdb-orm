@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.sql.ContentType;
 
 /**
@@ -31,11 +31,11 @@ public class ContentMetadataResolver extends SqlContentMetadataResolver {
 	protected ContentType getContentType(NamedNodeMap attributeMap) {
 		Node type = attributeMap.getNamedItem("type");
 		if(type  == null) {
-			throw new MetadataValidateException("<content>元素的type属性值不能为空");
+			throw new MetadataResolvingException("<content>元素的type属性值不能为空");
 		}else {
 			ContentType sqlContentType = ContentType.toValue(type.getNodeValue());
 			if(sqlContentType == null) {
-				throw new MetadataValidateException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(ContentType.values()));
+				throw new MetadataResolvingException("<content>元素中的type属性值错误:["+type+"], 目前支持的值包括: " + Arrays.toString(ContentType.values()));
 			}
 			MappingResolverContext.setCurrentSqlType(sqlContentType);
 			return sqlContentType;
@@ -57,7 +57,7 @@ public class ContentMetadataResolver extends SqlContentMetadataResolver {
 				}
 			}
 			if(textNodeCount == 0 || otherNodeCount > 0) {
-				throw new MetadataValidateException("<content type='procedure'>时, 其中必须配置, 且只能配置sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
+				throw new MetadataResolvingException("<content type='procedure'>时, 其中必须配置, 且只能配置sql文本内容 {call procedure_name([parameter...])}, 不能配置其他元素内容");
 			}
 		}
 	}

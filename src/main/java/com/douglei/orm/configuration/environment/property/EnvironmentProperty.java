@@ -30,8 +30,6 @@ public interface EnvironmentProperty {
 	
 	public CreateMode getTableCreateMode();
 	
-	public boolean enableDataValidate();
-	
 	public boolean enableColumnStructUpdateValidate();
 	
 	public SqlParameterConfigHolder getSqlParameterConfigHolder();

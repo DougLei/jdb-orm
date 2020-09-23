@@ -1,8 +1,10 @@
-package com.douglei.orm.core.mapping;
+package com.douglei.orm.core.mapping.serialization;
 
 import java.io.File;
 
 import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.core.mapping.RollbackExecMethod;
+import com.douglei.orm.core.mapping.RollbackRecorder;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
@@ -10,11 +12,11 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * 表序列化处理器
  * @author DougLei
  */
-class TableSerializationHandler {
+public class SerializationHandler {
 	
 	// 获取对应的orm序列化文件全路径
 	private String getOrmFilePath(String filename) {
-		return TableSerializationFolderContainer.getFolder(EnvironmentContext.getEnvironmentProperty().getConfigurationId()) + filename;
+		return FolderContainer.getFolder(EnvironmentContext.getEnvironmentProperty().getConfigurationId()) + filename;
 	}
 	
 	/**

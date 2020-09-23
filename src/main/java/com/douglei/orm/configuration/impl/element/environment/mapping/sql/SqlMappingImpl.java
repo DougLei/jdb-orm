@@ -17,11 +17,10 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.ContentMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.ObjectMetadataResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlMetadataResolver;
-import com.douglei.orm.configuration.impl.util.NotExistsElementException;
-import com.douglei.orm.configuration.impl.util.RepeatedElementException;
 import com.douglei.orm.core.metadata.Metadata;
-import com.douglei.orm.core.metadata.MetadataValidateException;
+import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.tools.utils.StringUtil;
@@ -31,10 +30,10 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class SqlMappingImpl extends MappingImpl {
-	private static final long serialVersionUID = 6760754323246837440L;
 	private static final Logger logger = LoggerFactory.getLogger(SqlMappingImpl.class);
-	private static SqlMetadataResolver sqlMetadataResolver = new SqlMetadataResolver();
-	private static ContentMetadataResolver contentMetadataResolver = new ContentMetadataResolver();
+	private static final SqlMetadataResolver sqlMetadataResolver = new SqlMetadataResolver();
+	private static final ContentMetadataResolver contentMetadataResolver = new ContentMetadataResolver();
+	private static final ObjectMetadataResolver objectMetadataResolver = new ObjectMetadataResolver();
 	
 	private SqlMetadata sqlMetadata;
 	
@@ -52,7 +51,7 @@ public class SqlMappingImpl extends MappingImpl {
 				sqlMetadata.addContentMetadata(contentMetadataResolver.resolving(contentNodeList.item(i)));
 			}
 		} catch (Exception e) {
-			throw new MetadataValidateException("在"+configDescription+"中, 解析出现异常", e);
+			throw new MetadataResolvingException("在"+configDescription+"中, 解析出现异常", e);
 		}
 		logger.debug("结束解析sql类型的映射");
 	}
@@ -63,12 +62,10 @@ public class SqlMappingImpl extends MappingImpl {
 	 * @return
 	 */
 	private Node getSqlNode(NodeList sqlNodeList) {
-		if(sqlNodeList == null || sqlNodeList.getLength() == 0) {
-			throw new NotExistsElementException("没有配置<sql>元素");
-		}
-		if(sqlNodeList.getLength() > 1) {
-			throw new RepeatedElementException("<sql>元素最多只能配置一个");
-		}
+		if(sqlNodeList == null || sqlNodeList.getLength() == 0) 
+			throw new MetadataResolvingException("没有配置<sql>元素");
+		if(sqlNodeList.getLength() > 1) 
+			throw new MetadataResolvingException("<sql>元素最多只能配置一个");
 		return sqlNodeList.item(0);
 	}
 	
@@ -100,7 +97,7 @@ public class SqlMappingImpl extends MappingImpl {
 					validateHandlerMap.put(handler.getCode(), handler);
 					continue;
 				}
-				throw new NullPointerException("<validator>元素中的code属性值不能为空");
+				throw new MetadataResolvingException("<validator>元素中的code属性值不能为空");
 			}
 		}
 		if(validateHandlerMap == null) 
@@ -117,7 +114,7 @@ public class SqlMappingImpl extends MappingImpl {
 	private NodeList getContents(Node sqlNode) throws Exception {
 		NodeList contentNodeList = MappingResolverContext.getContentNodeList(sqlNode);
 		if(contentNodeList == null || contentNodeList.getLength() == 0) {
-			throw new MetadataValidateException("至少有一个<content>元素");
+			throw new MetadataResolvingException("至少有一个<content>元素");
 		}
 		return contentNodeList;
 	}

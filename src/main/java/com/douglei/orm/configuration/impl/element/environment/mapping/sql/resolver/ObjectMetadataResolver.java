@@ -20,16 +20,15 @@ import com.douglei.tools.utils.StringUtil;
  * <sql-content>
  * @author DougLei
  */
-public class SqlContentMetadataResolver implements MetadataResolver<Node, SqlContentMetadata> {
+public class ObjectMetadataResolver implements MetadataResolver<Node, SqlContentMetadata> {
 	private String nodeName = "<sql-content>";
 	
 	@Override
 	public SqlContentMetadata resolving(Node contentNode) throws MetadataResolvingException {
 		NamedNodeMap attributeMap = contentNode.getAttributes();
 		String contentName = getName(attributeMap.getNamedItem("name"));
-		if(isSqlContentNode() && MappingResolverContext.existsSqlContent(contentName)) {// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则就向下进行解析
+		if(isSqlContentNode() && MappingResolverContext.existsSqlContent(contentName)) // 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则就向下进行解析
 			return MappingResolverContext.getSqlContent(contentName);
-		}
 		
 		ContentType contentType = getContentType(attributeMap);
 		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(contentType, attributeMap);

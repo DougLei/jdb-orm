@@ -13,11 +13,6 @@
 		
 		<!-- 没有默认值, 可以不配置, 具体参考《表资源配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有表映射的createMode配置值 -->
 		<!-- <property name="tableCreateMode" value="" /> -->
-		<!-- 是否开启列的结构更新验证, 列的结构更新验证功能为, 修改列的数据类型,长度,精度,是否可为空时, 判断是否可以进行修改, 如果不能修改, 则抛出异常信息, 默认值为false  -->
-		<!-- <property name="enableColumnStructUpdateValidate" value="false" /> -->
-		
-		<!-- 是否开启数据验证, 即是否对调用映射时传入的参数进行验证, 默认为false, 如果为true且验证失败, 则框架会抛出异常; 该配置不会影响数据验证接口(DataValidatorProcessor)提供的验证功能  -->
-		<!-- <property name="enableDataValidate" value="false" /> -->
 		
 		<!-- sql语句中, 声明参数时的前缀, 默认为#{ -->
 		<!-- <property name="sqlParameterPrefix" value="#{" /> -->

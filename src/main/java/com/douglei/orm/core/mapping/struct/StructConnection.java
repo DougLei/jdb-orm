@@ -1,4 +1,4 @@
-package com.douglei.orm.core.mapping;
+package com.douglei.orm.core.mapping.struct;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,22 +16,22 @@ import com.douglei.tools.utils.CloseUtil;
  * 
  * @author DougLei
  */
-class TableStructConnection {
-	private static final Logger logger = LoggerFactory.getLogger(TableStructConnection.class);
+public class StructConnection {
+	private static final Logger logger = LoggerFactory.getLogger(StructConnection.class);
 	
 	private Connection connection;
-	private PreparedStatement preparedStatement;
+	private PreparedStatement queryTableExistsPreparedStatement; // 查询表是否存在的PreparedStatement
 	
-	public TableStructConnection(DataSourceWrapper dataSourceWrapper, String queryTableExistsSql) throws SQLException {
+	public StructConnection(DataSourceWrapper dataSourceWrapper, String queryTableExistsSql) throws SQLException {
 		logger.debug("查询表是否存在的sql语句为: {}", queryTableExistsSql);
 		this.connection = dataSourceWrapper.getConnection(false).getConnection();
-		this.preparedStatement = connection.prepareStatement(queryTableExistsSql);
+		this.queryTableExistsPreparedStatement = connection.prepareStatement(queryTableExistsSql);
 	}
 
 	// 查询判断表是否存在
 	public boolean tableExists(String tableName) throws SQLException {
-		preparedStatement.setString(1, tableName);
-		ResultSet resultSet = preparedStatement.executeQuery();
+		queryTableExistsPreparedStatement.setString(1, tableName);
+		ResultSet resultSet = queryTableExistsPreparedStatement.executeQuery();
 		if(resultSet.next())
 			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
 		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据, 请检查查询表是否存在的sql语句是否正确");
@@ -47,6 +47,6 @@ class TableStructConnection {
 	
 	// 关闭
 	public void close() {
-		CloseUtil.closeDBConn(preparedStatement, connection);
+		CloseUtil.closeDBConn(queryTableExistsPreparedStatement, connection);
 	}
 }
