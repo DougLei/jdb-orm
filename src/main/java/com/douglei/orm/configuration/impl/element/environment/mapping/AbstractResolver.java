@@ -25,7 +25,7 @@ public abstract class AbstractResolver {
 			return createMode;
 		}
 		
-		CreateMode createMode = EnvironmentContext.getEnvironmentProperty().getTableCreateMode();
+		CreateMode createMode = EnvironmentContext.getProperty().getTableCreateMode();
 		if(createMode == null) {
 			createMode = CreateMode.toValue(element.attributeValue("createMode"));
 			

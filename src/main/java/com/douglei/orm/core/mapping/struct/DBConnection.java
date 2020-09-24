@@ -16,18 +16,23 @@ import com.douglei.tools.utils.CloseUtil;
  * 
  * @author DougLei
  */
-public class StructConnection {
-	private static final Logger logger = LoggerFactory.getLogger(StructConnection.class);
+public class DBConnection {
+	private static final Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
 	private Connection connection;
-	private PreparedStatement queryTableExistsPreparedStatement; // 查询表是否存在的PreparedStatement
 	
-	public StructConnection(DataSourceWrapper dataSourceWrapper, String queryTableExistsSql) throws SQLException {
-		logger.debug("查询表是否存在的sql语句为: {}", queryTableExistsSql);
+	public DBConnection(DataSourceWrapper dataSourceWrapper){
 		this.connection = dataSourceWrapper.getConnection(false).getConnection();
-		this.queryTableExistsPreparedStatement = connection.prepareStatement(queryTableExistsSql);
 	}
 
+	// -------------------------------------------------------------------------------------
+	private PreparedStatement queryTableExistsPreparedStatement;
+	
+	// 为表结构处理器初始化
+	public void init4TableStructHandler(String queryTableExistsSql) throws SQLException {
+		queryTableExistsPreparedStatement = connection.prepareStatement(queryTableExistsSql);
+	}
+	
 	// 查询判断表是否存在
 	public boolean tableExists(String tableName) throws SQLException {
 		queryTableExistsPreparedStatement.setString(1, tableName);
@@ -37,6 +42,7 @@ public class StructConnection {
 		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据, 请检查查询表是否存在的sql语句是否正确");
 	}
 	
+	// -------------------------------------------------------------------------------------
 	//执行SQL语句
 	public void executeSql(String sql) throws SQLException {
 		logger.debug("执行的SQL语句为: {}", sql);

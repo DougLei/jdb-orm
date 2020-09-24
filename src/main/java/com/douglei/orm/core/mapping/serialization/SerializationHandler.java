@@ -3,9 +3,9 @@ package com.douglei.orm.core.mapping.serialization;
 import java.io.File;
 
 import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.core.mapping.RollbackExecMethod;
-import com.douglei.orm.core.mapping.RollbackRecorder;
-import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.mapping.rollback.RollbackExecMethod;
+import com.douglei.orm.core.mapping.rollback.RollbackRecorder;
+import com.douglei.orm.core.metadata.AbstractMetadata;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 /**
@@ -13,70 +13,80 @@ import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
  * @author DougLei
  */
 public class SerializationHandler {
+	private SerializationHandler() {}
+	private static final SerializationHandler singleton = new SerializationHandler();
+	public static SerializationHandler getSingleton() {
+		return singleton;
+	}
+	
 	
 	// 获取对应的orm序列化文件全路径
 	private String getOrmFilePath(String filename) {
-		return FolderContainer.getFolder(EnvironmentContext.getEnvironmentProperty().getConfigurationId()) + filename;
+		return FolderContainer.getFolder(EnvironmentContext.getProperty().getConfigurationId()) + filename;
 	}
 	
 	/**
 	 * 创建序列化文件
-	 * @param table
+	 * @param metadata
+	 * @param clazz
 	 */
-	public void createFile(TableMetadata table) {
-		String filePath = getOrmFilePath(table.getName());
-		if(table.getName() == table.getOldName()) { // 没有改表名
+	public void createFile(AbstractMetadata metadata, Class<? extends AbstractMetadata> clazz) {
+		String filePath = getOrmFilePath(metadata.getName());
+		if(metadata.getName() == metadata.getOldName()) { // 没有改表名
 			if(new File(filePath).exists()) { // 判断之前是否有同名文件存在
-				TableMetadata oldTableMetadata = JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, filePath);
-				JdkSerializeProcessor.serialize2File(table, filePath);
-				RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldTableMetadata);
+				AbstractMetadata oldMetadata = JdkSerializeProcessor.deserializeFromFile(clazz, filePath);
+				JdkSerializeProcessor.serialize2File(metadata, filePath);
+				RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldMetadata, null);
 				return;
 			}
 		}else {
-			deleteFile(table.getOldName());
+			deleteFile(metadata.getOldName(), clazz);
 		}
-		JdkSerializeProcessor.serialize2File(table, filePath);
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_SERIALIZATION_FILE, table.getName());
+		JdkSerializeProcessor.serialize2File(metadata, filePath);
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_SERIALIZATION_FILE, metadata.getName(), null);
 	}
 
 	/**
 	 * 删除序列化文件
-	 * @param tableName
+	 * @param name
+	 * @param clazz
 	 */
-	public void deleteFile(String tableName) {
-		String filePath = getOrmFilePath(tableName);
+	public void deleteFile(String name, Class<? extends AbstractMetadata> clazz) {
+		String filePath = getOrmFilePath(name);
 		File file = new File(filePath);
 		if(file.exists()) {
-			TableMetadata oldTableMetadata = JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, filePath);
+			AbstractMetadata oldMetadata = JdkSerializeProcessor.deserializeFromFile(clazz, filePath);
 			file.delete();
-			RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldTableMetadata);
+			RollbackRecorder.record(RollbackExecMethod.EXEC_CREATE_SERIALIZATION_FILE, oldMetadata, null);
 		}
 	}
 	
 	/**
-	 * 反序列化获取TableMetadata对象
-	 * @param tableName
+	 * 反序列化获取AbstractMetadata对象
+	 * @param name
+	 * @param clazz
 	 * @return
 	 */
-	public TableMetadata deserialize(String tableName) {
-		return JdkSerializeProcessor.deserializeFromFile(TableMetadata.class, getOrmFilePath(tableName));
+	public AbstractMetadata deserialize(String name, Class<? extends AbstractMetadata> clazz) {
+		return JdkSerializeProcessor.deserializeFromFile(clazz, getOrmFilePath(name));
 	}
+	
 	
 	// -------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 回滚时创建序列化文件
-	 * @param table
+	 * @param metadata
 	 */
-	public void rollbackCreateFile(TableMetadata table) {
-		JdkSerializeProcessor.serialize2File(table, getOrmFilePath(table.getName()));
+	public void rollbackCreateFile(AbstractMetadata metadata) {
+		JdkSerializeProcessor.serialize2File(metadata, getOrmFilePath(metadata.getName()));
 	}
 	
 	/**
 	 * 回滚时删除序列化文件
-	 * @param tableName
+	 * @param name
 	 */
-	public void rollbackDeleteFile(String tableName) {
-		File file = new File(getOrmFilePath(tableName));
+	public void rollbackDeleteFile(String name) {
+		File file = new File(getOrmFilePath(name));
 		if(file.exists()) 
 			file.delete();
 	}

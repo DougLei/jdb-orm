@@ -35,7 +35,7 @@ public abstract class RedisHandler{
 	
 	protected String getPrefix() {
 		if(storeMultiDataSource) {
-			return prefix + EnvironmentContext.getEnvironmentProperty().getConfigurationId() + ":";
+			return prefix + EnvironmentContext.getProperty().getConfigurationId() + ":";
 		}
 		return prefix;
 	}

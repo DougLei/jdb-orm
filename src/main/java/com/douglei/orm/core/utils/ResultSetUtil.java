@@ -32,7 +32,7 @@ public class ResultSetUtil {
 	public static List<SqlResultsetMetadata> getSqlResultSetMetadata(ResultSet resultSet) throws SQLException{
 		ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
 		
-		ColumnNameConverter columnNameConverter = EnvironmentContext.getEnvironmentProperty().getColumnNameConverter();
+		ColumnNameConverter columnNameConverter = EnvironmentContext.getProperty().getColumnNameConverter();
 		int columnCount = resultSetMetaData.getColumnCount();
 		List<SqlResultsetMetadata> resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
 		for(int i=1;i<=columnCount;i++) {

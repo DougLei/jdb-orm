@@ -1,4 +1,4 @@
-package com.douglei.orm.core.mapping;
+package com.douglei.orm.core.mapping.rollback;
 
 /**
  * 回滚的执行方式

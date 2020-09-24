@@ -1,35 +1,38 @@
-package com.douglei.orm.core.mapping;
+package com.douglei.orm.core.mapping.rollback;
 
 import java.sql.SQLException;
 
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
-import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
-import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.mapping.serialization.SerializationHandler;
+import com.douglei.orm.core.mapping.struct.DBConnection;
+import com.douglei.orm.core.metadata.AbstractMetadata;
 
 /**
  * 回滚的执行者
  * @author DougLei
  */
-class RollbackExecutor {
+public class RollbackExecutor {
 	private Object object; // 回滚时的执行对象
 	private RollbackExecMethod method;
-
-	public RollbackExecutor(RollbackExecMethod method, Object object) {
+	
+	private DBConnection connection;
+	
+	public RollbackExecutor(RollbackExecMethod method, Object object, DBConnection connection) {
 		this.method = method;
 		this.object = object;
+		this.connection = connection;
 	}
 	
 	/**
 	 * 执行回滚
-	 * @param tableStructHandler
 	 * @param mappingContainer
 	 * @throws SQLException 
 	 */
-	public void executeRollback(TableStructHandler tableStructHandler, MappingContainer mappingContainer) throws SQLException {
+	public void executeRollback(MappingContainer mappingContainer) throws SQLException {
 		switch(method) {
 			case EXEC_DDL_SQL:
-				tableStructHandler.executeSql(object.toString());
+				connection.executeSql(object.toString());
 				break;
 			case EXEC_ADD_MAPPING:
 				mappingContainer.addMapping((Mapping)object);
@@ -38,10 +41,10 @@ class RollbackExecutor {
 				mappingContainer.deleteMapping(object.toString());
 				break;
 			case EXEC_CREATE_SERIALIZATION_FILE:
-				tableStructHandler.getTableserializationhandler().rollbackCreateFile((TableMetadata)object);
+				SerializationHandler.getSingleton().rollbackCreateFile((AbstractMetadata)object);
 				break;
 			case EXEC_DELETE_SERIALIZATION_FILE:
-				tableStructHandler.getTableserializationhandler().rollbackDeleteFile(object.toString());
+				SerializationHandler.getSingleton().rollbackDeleteFile(object.toString());
 				break;
 		}
 	}

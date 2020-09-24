@@ -37,7 +37,7 @@ public class SessionImpl implements Session {
 		this.connection = connection;
 		this.environmentProperty = environmentProperty;
 		this.mappingContainer = environmentProperty.getMappingContainer();
-		EnvironmentContext.setEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setProperty(environmentProperty);
 	}
 	
 	// 验证session是否被关闭

@@ -135,7 +135,7 @@ public class EnvironmentImpl implements Environment{
 		}
 		
 		this.environmentProperty = environmentProperty;
-		EnvironmentContext.setEnvironmentProperty(environmentProperty);
+		EnvironmentContext.setProperty(environmentProperty);
 		logger.debug("处理<environment>下的所有property元素结束");
 	}
 	
@@ -147,7 +147,7 @@ public class EnvironmentImpl implements Environment{
 	@SuppressWarnings("unchecked")
 	private void addMapping(Element element) throws Exception {
 		logger.debug("开始处理<environment>下的<mappings>元素");
-		this.mappingHandler = new MappingHandler(environmentProperty.getMappingContainer(), dataSourceWrapper, environmentProperty.getDialect().getTableSqlStatementHandler());
+		this.mappingHandler = new MappingHandler(environmentProperty.getMappingContainer(), dataSourceWrapper);
 		
 		if(environmentProperty.clearMappingContainerOnStart())
 			environmentProperty.getMappingContainer().clear();

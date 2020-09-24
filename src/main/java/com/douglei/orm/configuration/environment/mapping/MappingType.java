@@ -5,17 +5,19 @@ package com.douglei.orm.configuration.environment.mapping;
  * @author DougLei
  */
 public enum MappingType {
-	TABLE(".tmp.xml", 10),
-	VIEW(".vmp.xml", 20),
-	PROC(".pmp.xml", 30),
-	SQL(".smp.xml", 40);
+	TABLE(".tmp.xml", 10, true),
+	VIEW(".vmp.xml", 20, false),
+	PROC(".pmp.xml", 30, false),
+	SQL(".smp.xml", 40, true);
 	
 	private int priority; // 优先级, 越低越优先
 	private String fileSuffix;
 	private String name; 
-	private MappingType(String fileSuffix, int priority) {
+	private boolean supportOpMapping; // 是否支持操作映射
+	private MappingType(String fileSuffix, int priority, boolean supportOpMapping) {
 		this.fileSuffix = fileSuffix;
 		this.priority = priority;
+		this.supportOpMapping = supportOpMapping;
 		this.name = name().toLowerCase();
 	}
 
@@ -52,6 +54,14 @@ public enum MappingType {
 		return priority;
 	}
 
+	/**
+	 * 是否支持操作映射
+	 * @return
+	 */
+	public boolean supportOpMapping() {
+		return supportOpMapping;
+	}
+	
 	/**
 	 * 获取name
 	 * @return

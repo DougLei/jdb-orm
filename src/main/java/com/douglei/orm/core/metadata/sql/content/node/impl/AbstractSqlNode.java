@@ -32,7 +32,7 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(StringUtil.isEmpty(content)) 
 			return;
 		
-		SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getEnvironmentProperty().getSqlParameterConfigHolder();
+		SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getProperty().getSqlParameterConfigHolder();
 		Matcher perfixMatcher = sqlParameterConfigHolder.getPrefixPattern().matcher(content);
 		if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.SAME) {
 			int startIndex;
