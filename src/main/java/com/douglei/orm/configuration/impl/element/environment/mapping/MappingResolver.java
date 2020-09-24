@@ -1,5 +1,9 @@
 package com.douglei.orm.configuration.impl.element.environment.mapping;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.dom4j.io.SAXReader;
 
 /**
@@ -7,26 +11,39 @@ import org.dom4j.io.SAXReader;
  * @author DougLei
  */
 class MappingResolver {
-	private SAXReader tableMappingResolver; // 表映射处理器, 表资源就只需要阅读器即可
-	private MappingResolver4Sql sqlMappingResolver; // sql映射处理器
+	private SAXReader saxReader; // SAXReader
+	private DocumentBuilder documentBuilder; // DocumentBuilder
+	
+	private MappingResolver4Sql mappingResolver4Sql; // sql映射专用处理器
 	
 	/**
-	 * @see MappingResolverContext#getTableMappingReader()
+	 * @see MappingResolverContext#getSAXReader()
 	 * @return
 	 */
-	public SAXReader getTableMappingResolver() {
-		if(tableMappingResolver == null)
-			tableMappingResolver = new SAXReader();
-		return tableMappingResolver;
+	public SAXReader getSAXReader() {
+		if(saxReader == null)
+			saxReader = new SAXReader();
+		return saxReader;
 	}
 	
 	/**
-	 * 获取sql映射处理器
+	 * @see MappingResolverContext#getDocumentBuilder()
+	 * @return
+	 * @throws ParserConfigurationException 
+	 */
+	public DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+		if(documentBuilder == null)
+			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		return documentBuilder;
+	}
+	
+	/**
+	 * 获取sql映射专用处理器
 	 * @return
 	 */
-	public MappingResolver4Sql getSqlMappingResolver() {
-		if(sqlMappingResolver == null)
-			sqlMappingResolver = new MappingResolver4Sql();
-		return sqlMappingResolver;
+	public MappingResolver4Sql getMappingResolver4Sql() {
+		if(mappingResolver4Sql == null)
+			mappingResolver4Sql = new MappingResolver4Sql();
+		return mappingResolver4Sql;
 	}
 }

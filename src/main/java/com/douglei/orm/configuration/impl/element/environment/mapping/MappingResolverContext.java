@@ -35,28 +35,29 @@ public class MappingResolverContext {
 	}
 	
 	// -----------------------------------------------------------------------------
-	// 表资源的处理
+	// 获取xml阅读器实例
 	// -----------------------------------------------------------------------------
 	/**
-	 * 获取表映射的读取器
+	 * 获取SAXReader实例
 	 * @return
 	 */
-	public static SAXReader getTableMappingReader() {
-		return geResolver().getTableMappingResolver();
+	public static SAXReader getSAXReader() {
+		return geResolver().getSAXReader();
 	}
+	
+	/**
+	 * 获取DocumentBuilder实例
+	 * @return
+	 * @throws ParserConfigurationException 
+	 */
+	public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+		return geResolver().getDocumentBuilder();
+	}
+	
 	
 	// -----------------------------------------------------------------------------
 	// SQL资源的处理
 	// -----------------------------------------------------------------------------
-	/**
-	 * 获取SQL映射的读取器
-	 * @return
-	 * @throws ParserConfigurationException 
-	 */
-	public static DocumentBuilder getSqlMappingReader() throws ParserConfigurationException {
-		return geResolver().getSqlMappingResolver().getSqlMappingReader();
-	}
-	
 	/**
 	 * 读取sql映射时, 获取<validators>节点下<validator>子节点的集合
 	 * @param sqlNode
@@ -64,7 +65,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 */
 	public static NodeList getValidatorNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getSqlMappingResolver().getValidatorNodeList(sqlNode);
+		return geResolver().getMappingResolver4Sql().getValidatorNodeList(sqlNode);
 	}
 	
 	/**
@@ -74,7 +75,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 */
 	public static NodeList getContentNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getSqlMappingResolver().getContentNodeList(sqlNode);
+		return geResolver().getMappingResolver4Sql().getContentNodeList(sqlNode);
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public class MappingResolverContext {
 	 * @throws XPathExpressionException 
 	 */
 	public static NodeList getObjectNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getSqlMappingResolver().getObjectNodeList(sqlNode);
+		return geResolver().getMappingResolver4Sql().getObjectNodeList(sqlNode);
 	}
 	
 	
@@ -93,14 +94,14 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static ContentType getCurrentSqlType() {
-		return geResolver().getSqlMappingResolver().getCurrentSqlType();
+		return geResolver().getMappingResolver4Sql().getCurrentSqlType();
 	}
 	/**
 	 * 解析sql映射时, 记录当前解析的sql的类型
 	 * @param type
 	 */
 	public static void setCurrentSqlType(ContentType type) {
-		geResolver().getSqlMappingResolver().setCurrentSqlType(type);
+		geResolver().getMappingResolver4Sql().setCurrentSqlType(type);
 	}
 	
 	
@@ -109,14 +110,14 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static Map<String, ValidateHandler> getSqlValidateHandlers() {
-		return geResolver().getSqlMappingResolver().getSqlValidateHandlers();
+		return geResolver().getMappingResolver4Sql().getSqlValidateHandlers();
 	}
 	/**
 	 * 解析sql映射时, 记录配置的验证器集合
 	 * @param sqlValidateHandlers
 	 */
 	public static void setSqlValidateHandlers(Map<String, ValidateHandler> sqlValidateHandlers) {
-		geResolver().getSqlMappingResolver().setSqlValidateHandlers(sqlValidateHandlers);
+		geResolver().getMappingResolver4Sql().setSqlValidateHandlers(sqlValidateHandlers);
 	}
 	
 	
@@ -126,7 +127,7 @@ public class MappingResolverContext {
 	 * @return 
 	 */
 	public static SqlContentMetadata getSqlContent(String sqlContentName) {
-		return geResolver().getSqlMappingResolver().getSqlContent(sqlContentName);
+		return geResolver().getMappingResolver4Sql().getSqlContent(sqlContentName);
 	}
 	/**
 	 * 解析sql映射时, 记录配置的sql-content集合
@@ -135,7 +136,7 @@ public class MappingResolverContext {
 	 * @throws RepeatedSqlContentNameException 
 	 */
 	public static void setSqlContents(Node sqlNode) throws XPathExpressionException {
-		geResolver().getSqlMappingResolver().setSqlContents(sqlNode);
+		geResolver().getMappingResolver4Sql().setSqlContents(sqlNode);
 	}
 	/**
 	 * 解析sql映射时, 判断是否存在指定name的sql-content的metadata实例
@@ -143,7 +144,7 @@ public class MappingResolverContext {
 	 * @return
 	 */
 	public static boolean existsSqlContent(String sqlContentName) {
-		return geResolver().getSqlMappingResolver().existsSqlContent(sqlContentName);
+		return geResolver().getMappingResolver4Sql().existsSqlContent(sqlContentName);
 	}
 	
 	// -----------------------------------------------------------------------------

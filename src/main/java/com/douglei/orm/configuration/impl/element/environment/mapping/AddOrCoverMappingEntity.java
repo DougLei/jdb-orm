@@ -51,12 +51,12 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 		try {
 			switch(type) {
 				case TABLE:
-					org.dom4j.Document tableDocument = MappingResolverContext.getTableMappingReader().read(input);
+					org.dom4j.Document tableDocument = MappingResolverContext.getSAXReader().read(input);
 					org.dom4j.Element tableRootElement = tableDocument.getRootElement();
 					super.mapping = new TableMappingImpl(configDescription, tableRootElement);
 					break;
 				case SQL:
-					org.w3c.dom.Document sqlDocument = MappingResolverContext.getSqlMappingReader().parse(input);
+					org.w3c.dom.Document sqlDocument = MappingResolverContext.getDocumentBuilder().parse(input);
 					org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
 					super.mapping = new SqlMappingImpl(configDescription, sqlRootElement);
 					break;

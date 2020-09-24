@@ -63,18 +63,18 @@ public class SessionFactoryImpl implements SessionFactory {
 	
 	@Override
 	public MappingProcessor getMappingProcessor() {
-		if(mappingProcessor == null) {
+		if(mappingProcessor == null) 
 			mappingProcessor = new MappingProcessor(environment.getMappingHandler());
-		}
+		
 		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 		return mappingProcessor;
 	}
 	
 	@Override
 	public DataValidatorProcessor getDataValidatorProcessor() {
-		if(dataValidatorProcessor == null) {
+		if(dataValidatorProcessor == null) 
 			dataValidatorProcessor = new DataValidatorProcessor(environmentProperty.getMappingContainer());
-		}
+
 		EnvironmentContext.setEnvironmentProperty(environmentProperty);
 		return dataValidatorProcessor;
 	}

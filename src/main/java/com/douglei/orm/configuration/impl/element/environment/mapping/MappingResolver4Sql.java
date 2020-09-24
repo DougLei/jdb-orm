@@ -3,9 +3,6 @@ package com.douglei.orm.configuration.impl.element.environment.mapping;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -25,7 +22,6 @@ import com.douglei.orm.core.metadata.validator.ValidateHandler;
  * @author DougLei
  */
 class MappingResolver4Sql {
-	private DocumentBuilder sqlMappingReader; // SQL映射读取器
 	private XPathExpression validatorNodeExpression;// 读取sql映射时, 用来获取<validators>节点下<validator>子节点的表达式
 	private XPathExpression sqlContentNodeExpression;// 读取sql映射时, 用来获取<sql-content>节点的表达式
 	private XPathExpression contentNodeExpression;// 读取sql映射时, 用来获取<content>节点的表达式
@@ -36,17 +32,7 @@ class MappingResolver4Sql {
 	private static SqlContentMetadataResolver sqlContentMetadataResolver = new SqlContentMetadataResolver(); // sql-content的解析器
 	private Map<String, Object> sqlContents;// 解析sql映射时, 记录配置的<sql-content>集合, value为Node或SqlContentMetadata, 一开始为Node, 在第一次获取时进行解析, 并将解析的结果SqlContentMetadata替换Node
 	
-	/**
-	 * @see MappingResolverContext#getSqlMappingReader()
-	 * @return
-	 * @throws ParserConfigurationException
-	 */
-	public DocumentBuilder getSqlMappingReader() throws ParserConfigurationException {
-		if(sqlMappingReader == null)
-			sqlMappingReader = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		return sqlMappingReader;
-	}
-
+	
 	/**
 	 * @see MappingResolverContext#getValidatorNodeList(Node)
 	 * @param sqlNode
