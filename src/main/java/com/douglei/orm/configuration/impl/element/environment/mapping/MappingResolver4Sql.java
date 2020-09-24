@@ -14,21 +14,22 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlContentMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.SqlContentMetadataResolver;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
-import com.douglei.orm.core.metadata.sql.ContentType;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentType;
+import com.douglei.orm.core.metadata.sql.content.SqlContentMetadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 
 /**
  * sql映射解析器
  * @author DougLei
  */
-class SqlMappingResolver {
+class MappingResolver4Sql {
 	private DocumentBuilder sqlMappingReader; // SQL映射读取器
 	private XPathExpression validatorNodeExpression;// 读取sql映射时, 用来获取<validators>节点下<validator>子节点的表达式
 	private XPathExpression sqlContentNodeExpression;// 读取sql映射时, 用来获取<sql-content>节点的表达式
 	private XPathExpression contentNodeExpression;// 读取sql映射时, 用来获取<content>节点的表达式
+	private XPathExpression objectNodeExpression;// 读取sql映射时, 用来获取<object>节点的表达式
 	
 	private ContentType currentSqlType; // 解析sql映射时, 记录当前解析的sql的类型
 	private Map<String, ValidateHandler> sqlValidateHandlers;// 解析sql映射时, 记录配置的验证器集合
@@ -54,7 +55,7 @@ class SqlMappingResolver {
 	 */
 	public NodeList getValidatorNodeList(Node sqlNode) throws XPathExpressionException {
 		if(validatorNodeExpression == null)
-			validatorNodeExpression = XPathFactory.newInstance().newXPath().compile("validators/validator[@name!='']");
+			validatorNodeExpression = XPathFactory.newInstance().newXPath().compile("validators/validator[@code!='']");
 		return (NodeList) validatorNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
 	}
 
@@ -69,7 +70,18 @@ class SqlMappingResolver {
 			contentNodeExpression = XPathFactory.newInstance().newXPath().compile("content");
 		return (NodeList) contentNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
 	}
-
+	
+	/**
+	 * @see MappingResolverContext#getObjectNodeList(Node)
+	 * @param sqlNode
+	 * @return
+	 * @throws XPathExpressionException 
+	 */
+	public NodeList getObjectNodeList(Node sqlNode) throws XPathExpressionException {
+		if(objectNodeExpression == null)
+			objectNodeExpression = XPathFactory.newInstance().newXPath().compile("objects/object[@type!='' and @name!='']");
+		return (NodeList) objectNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
+	}
 	
 	/**
 	 * @see MappingResolverContext#getCurrentSqlType()

@@ -3,7 +3,7 @@ package com.douglei.orm.core.metadata.sql.content.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
+import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMetadata;
 import com.douglei.orm.core.sql.statement.entity.InputSqlParameter;
 
 /**

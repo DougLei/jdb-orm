@@ -16,9 +16,8 @@ import org.w3c.dom.NodeList;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.ContentMetadataResolver;
-import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.ObjectMetadataResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlMetadataResolver;
+import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.ContentMetadataResolver;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
@@ -33,7 +32,6 @@ public class SqlMappingImpl extends MappingImpl {
 	private static final Logger logger = LoggerFactory.getLogger(SqlMappingImpl.class);
 	private static final SqlMetadataResolver sqlMetadataResolver = new SqlMetadataResolver();
 	private static final ContentMetadataResolver contentMetadataResolver = new ContentMetadataResolver();
-	private static final ObjectMetadataResolver objectMetadataResolver = new ObjectMetadataResolver();
 	
 	private SqlMetadata sqlMetadata;
 	
@@ -44,12 +42,11 @@ public class SqlMappingImpl extends MappingImpl {
 		try {
 			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
 			sqlMetadata = sqlMetadataResolver.resolving(sqlNode);
+			
 			setParameterValidator(sqlNode);
 			MappingResolverContext.setSqlContents(sqlNode);
-			NodeList contentNodeList = getContents(sqlNode);
-			for (int i=0;i<contentNodeList.getLength();i++) {
-				sqlMetadata.addContentMetadata(contentMetadataResolver.resolving(contentNodeList.item(i)));
-			}
+			
+			resolvingContents(sqlNode);
 		} catch (Exception e) {
 			throw new MetadataResolvingException("在"+configDescription+"中, 解析出现异常", e);
 		}
@@ -78,14 +75,17 @@ public class SqlMappingImpl extends MappingImpl {
 		Map<String, ValidateHandler> validateHandlerMap = null;
 		NodeList validatorNodeList = MappingResolverContext.getValidatorNodeList(sqlNode);
 		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
-			validateHandlerMap =new HashMap<String, ValidateHandler>(validatorNodeList.getLength());
 			NamedNodeMap attributes = null;
 			String code = null;
 			Node attribute = null;
 			for(int i=0;i<validatorNodeList.getLength();i++) {
 				attributes = validatorNodeList.item(i).getAttributes();
+				
 				code = attributes.getNamedItem("code").getNodeValue();
 				if(StringUtil.notEmpty(code)) {
+					if(validateHandlerMap == null)
+						validateHandlerMap = new HashMap<String, ValidateHandler>(validatorNodeList.getLength());
+					
 					ValidateHandler handler = new ValidateHandler(code, true);
 					if(attributes.getLength() > 1) {
 						for(int j=0;j<attributes.getLength();j++) {
@@ -106,27 +106,27 @@ public class SqlMappingImpl extends MappingImpl {
 	}
 
 	/**
-	 * 获取<content>元素集合
+	 * 解析配置的 content
 	 * @param sqlNode
-	 * @return
-	 * @throws Exception 
+	 * @throws XPathExpressionException 
 	 */
-	private NodeList getContents(Node sqlNode) throws Exception {
+	private void resolvingContents(Node sqlNode) throws XPathExpressionException {
 		NodeList contentNodeList = MappingResolverContext.getContentNodeList(sqlNode);
-		if(contentNodeList == null || contentNodeList.getLength() == 0) {
-			throw new MetadataResolvingException("至少有一个<content>元素");
-		}
-		return contentNodeList;
+		if(contentNodeList == null || contentNodeList.getLength() == 0) 
+			throw new MetadataResolvingException("至少要配置一个<content>元素");
+		
+		for (int i=0;i<contentNodeList.getLength();i++) 
+			sqlMetadata.addContentMetadata(contentMetadataResolver.resolving(contentNodeList.item(i)));
 	}
-
-	@Override
-	public MappingType getMappingType() {
-		return MappingType.SQL;
-	}
-
+	
 	@Override
 	public String getCode() {
 		return sqlMetadata.getCode();
+	}
+	
+	@Override
+	public MappingType getMappingType() {
+		return MappingType.SQL;
 	}
 
 	@Override

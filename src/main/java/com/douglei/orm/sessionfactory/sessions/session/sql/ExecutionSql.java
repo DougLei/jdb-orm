@@ -62,7 +62,7 @@ public class ExecutionSql {
 	 * 获取要执行的sql数量
 	 * @return
 	 */
-	public short executeSqlCount() {
+	public int executeSqlCount() {
 		return executionHandler.executeSqlCount();
 	}
 	

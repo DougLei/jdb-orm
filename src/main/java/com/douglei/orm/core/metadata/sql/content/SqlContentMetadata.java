@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.sql;
+package com.douglei.orm.core.metadata.sql.content;
 
 /**
  * sql-content元数据

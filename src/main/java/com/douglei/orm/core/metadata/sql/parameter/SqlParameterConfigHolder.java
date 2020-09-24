@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.sql;
+package com.douglei.orm.core.metadata.sql.parameter;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
@@ -10,7 +10,6 @@ import com.douglei.tools.utils.RegularExpressionUtil;
  * @author DougLei
  */
 public class SqlParameterConfigHolder implements Serializable{
-	private static final long serialVersionUID = -6262158067939400945L;
 	
 	/**
 	 * 前后缀一样

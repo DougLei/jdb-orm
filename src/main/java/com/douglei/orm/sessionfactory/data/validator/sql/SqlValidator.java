@@ -3,8 +3,8 @@ package com.douglei.orm.sessionfactory.data.validator.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 
 /**

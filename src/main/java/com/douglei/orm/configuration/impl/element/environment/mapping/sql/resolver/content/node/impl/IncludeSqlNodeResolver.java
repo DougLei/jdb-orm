@@ -5,7 +5,7 @@ import org.w3c.dom.Node;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.node.SqlNodeResolvingException;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.IncludeSqlNode;
 import com.douglei.tools.utils.StringUtil;

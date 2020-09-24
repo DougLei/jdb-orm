@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content;
 
 import java.util.Arrays;
 
@@ -8,7 +8,7 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
-import com.douglei.orm.core.metadata.sql.ContentType;
+import com.douglei.orm.core.metadata.sql.content.ContentType;
 
 /**
  * <content>

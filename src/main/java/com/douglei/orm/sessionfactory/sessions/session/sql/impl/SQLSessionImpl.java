@@ -13,13 +13,13 @@ import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.core.metadata.sql.ContentMetadata;
-import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
-import com.douglei.orm.core.metadata.sql.SqlParameterMode;
+import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
+import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMetadata;
+import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMode;
 import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.pagequery.PageResult;
@@ -256,8 +256,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			for(SqlNode sn: sqlNodes) {
 				textSqlNode = (TextSqlNode) sn;
 				sqlContent.append(textSqlNode.getContent()).append(" ");
-				if(textSqlNode.getSqlParameterByDefinedOrders() != null) {
-					sqlParameters.addAll(textSqlNode.getSqlParameterByDefinedOrders());
+				if(textSqlNode.getSqlParameters() != null) {
+					sqlParameters.addAll(textSqlNode.getSqlParameters());
 				}
 			}
 			

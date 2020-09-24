@@ -1,4 +1,4 @@
-package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver;
+package com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -10,9 +10,9 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolv
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.metadata.MetadataResolver;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
-import com.douglei.orm.core.metadata.sql.ContentType;
-import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentType;
+import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
+import com.douglei.orm.core.metadata.sql.content.SqlContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.tools.utils.StringUtil;
 

@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.sql;
+package com.douglei.orm.core.metadata.sql.parameter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHand
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.metadata.Metadata;
+import com.douglei.orm.core.metadata.sql.content.ContentType;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
@@ -81,9 +82,9 @@ public class SqlParameterMetadata implements Metadata{
 	private Map<String, String> resolvingPropertyMap(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
 		String[] cts = configText.split(sqlParameterConfigHolder.getSplit());
 		int length = cts.length;
-		if(length < 1) {
-			throw new MatchingSqlParameterException("sql参数, 必须配置参数名");
-		}
+		if(length < 1) 
+			throw new NullPointerException("sql参数, 必须配置参数名");
+		
 		Map<String, String> propertyMap = new HashMap<String, String>();
 		propertyMap.put("name", cts[0].trim());
 		

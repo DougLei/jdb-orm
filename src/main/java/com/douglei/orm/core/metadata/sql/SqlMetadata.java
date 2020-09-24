@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.douglei.orm.core.metadata.Metadata;
+import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
 
 /**
  * sql元数据
@@ -28,9 +29,8 @@ public class SqlMetadata implements Metadata{
 		}else {
 			String contentName = contentMetadata.getName();
 			contents.forEach(content -> {
-				if(content.getName().equals(contentName)) {
+				if(content.getName().equals(contentName)) 
 					throw new RepeatedContentNameException(contentName);
-				}
 			});
 		}
 		contents.add(contentMetadata);
@@ -60,5 +60,13 @@ public class SqlMetadata implements Metadata{
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/**
+	 * 获取数据库对象集合, 如果没有则返回null
+	 * @return
+	 */
+	public List<ContentMetadata> getContents() {
+		return contents;
 	}
 }

@@ -2,7 +2,7 @@ package com.douglei.orm.sessionfactory.data.validator.sql;
 
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 

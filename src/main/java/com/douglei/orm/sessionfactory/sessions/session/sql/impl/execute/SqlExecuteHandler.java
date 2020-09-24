@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.core.metadata.sql.ContentMetadata;
-import com.douglei.orm.core.metadata.sql.IncrementIdValueConfig;
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
 /**
@@ -18,8 +18,8 @@ import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 public class SqlExecuteHandler implements ExecuteHandler{
 	private static final Logger logger = LoggerFactory.getLogger(SqlExecuteHandler.class);
 
-	private short executeSqlCount; // 要执行的sql的数量
-	private short executeSqlIndex; // 执行的sql的下标, 从0开始
+	private int executeSqlCount; // 要执行的sql的数量
+	private int executeSqlIndex; // 执行的sql的下标, 从0开始
 	private List<ExecuteSql> executeSqls;
 	
 	public SqlExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
@@ -28,7 +28,7 @@ public class SqlExecuteHandler implements ExecuteHandler{
 			throw new NullPointerException("不存在任何可以执行的sql语句");
 		}
 		
-		executeSqlCount = (short)contents.size();
+		executeSqlCount = contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
 		for (ContentMetadata content : contents) {
@@ -37,7 +37,7 @@ public class SqlExecuteHandler implements ExecuteHandler{
 	}
 	
 	@Override
-	public short executeSqlCount() {
+	public int executeSqlCount() {
 		return executeSqlCount;
 	}
 

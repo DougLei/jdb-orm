@@ -94,14 +94,5 @@
 	
 		<!-- 验证器配置, 参考《表资源配置结构设计.tmp.xml》中的验证器配置结构 -->
 		<validators></validators>
-		
-		
-		<!-- 通过<objects>, 在操作当前sql映射时, 对数据库对象进行相应的创建或删除; 目前可以处理的数据库对象有: 存储过程和视图 -->
-		<objects>
-			<!-- type为类型, 必填项, 目前包括的值有: procdure/view; name为对应的名称, 必填项, 即存储过程名/视图名; 因为框架不会去解析具体数据库对象的内容, 所以type和name为必填项 -->
-			<object type="" name="">
-				<!-- 具体的创建语句, 例如创建存储过程的语句, 创建视图的语句 -->
-			</object>
-		</objects>
 	</sql>
 </mapping-configuration>

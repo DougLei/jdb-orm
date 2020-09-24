@@ -2,15 +2,15 @@ package com.douglei.orm.core.metadata.sql.content.node.impl;
 
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.SqlParameterMetadata;
 import com.douglei.orm.core.metadata.sql.content.node.SqlNodeType;
+import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMetadata;
 
 /**
  * 
  * @author DougLei
  */
 public class TextSqlNode extends AbstractSqlNode {
-	private static final long serialVersionUID = -9067048247319368173L;
+	
 	public TextSqlNode(String content) {
 		super(content);
 	}
@@ -23,7 +23,12 @@ public class TextSqlNode extends AbstractSqlNode {
 	public String getContent() {
 		return content;
 	}
-	public List<SqlParameterMetadata> getSqlParameterByDefinedOrders(){
-		return sqlParameterByDefinedOrders;
+	
+	/**
+	 * 获取sql参数, 按照配置中定义的顺序记录
+	 * @return
+	 */
+	public List<SqlParameterMetadata> getSqlParameters(){
+		return sqlParameters;
 	}
 }

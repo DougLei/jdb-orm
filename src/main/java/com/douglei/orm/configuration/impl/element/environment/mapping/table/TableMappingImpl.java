@@ -393,13 +393,13 @@ public class TableMappingImpl extends MappingImpl {
 	}
 	
 	@Override
-	public MappingType getMappingType() {
-		return MappingType.TABLE;
-	}
-
-	@Override
 	public String getCode() {
 		return tableMetadata.getCode();
+	}
+	
+	@Override
+	public MappingType getMappingType() {
+		return MappingType.TABLE;
 	}
 
 	@Override

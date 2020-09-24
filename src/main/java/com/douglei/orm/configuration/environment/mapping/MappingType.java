@@ -6,7 +6,8 @@ package com.douglei.orm.configuration.environment.mapping;
  */
 public enum MappingType {
 	TABLE(".tmp.xml"),
-	SQL(".smp.xml");
+	SQL(".smp.xml"),
+	DB_OBJECT(".domp.xml");
 	
 	private String mappingFileSuffix;
 	private MappingType(String mappingFileSuffix) {
@@ -35,11 +36,12 @@ public enum MappingType {
 	 * @return
 	 */
 	public static MappingType toValueByFile(String file) {
-		if(file.endsWith(TABLE.mappingFileSuffix)) {
+		if(file.endsWith(TABLE.mappingFileSuffix)) 
 			return TABLE;
-		}else if(file.endsWith(SQL.mappingFileSuffix)) {
+		if(file.endsWith(SQL.mappingFileSuffix)) 
 			return SQL;
-		}
+		if(file.endsWith(DB_OBJECT.mappingFileSuffix))
+			return DB_OBJECT;
 		throw new NullPointerException("传入的" + file + ", 没有匹配到对应的MappingType");
 	}
 	
@@ -48,6 +50,6 @@ public enum MappingType {
 	 * @return
 	 */
 	public static String[] getMappingFileSuffixs() {
-		return new String[] {TABLE.mappingFileSuffix, SQL.mappingFileSuffix};
+		return new String[] {TABLE.mappingFileSuffix, SQL.mappingFileSuffix, DB_OBJECT.mappingFileSuffix};
 	}
 }

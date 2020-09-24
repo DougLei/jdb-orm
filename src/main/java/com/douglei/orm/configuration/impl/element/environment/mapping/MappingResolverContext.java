@@ -10,8 +10,8 @@ import org.dom4j.io.SAXReader;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.core.metadata.sql.ContentType;
-import com.douglei.orm.core.metadata.sql.SqlContentMetadata;
+import com.douglei.orm.core.metadata.sql.content.ContentType;
+import com.douglei.orm.core.metadata.sql.content.SqlContentMetadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 
 /**
@@ -75,6 +75,16 @@ public class MappingResolverContext {
 	 */
 	public static NodeList getContentNodeList(Node sqlNode) throws XPathExpressionException {
 		return geResolver().getSqlMappingResolver().getContentNodeList(sqlNode);
+	}
+	
+	/**
+	 * 读取sql映射时, 获取<object>节点的集合
+	 * @param sqlNode
+	 * @return
+	 * @throws XPathExpressionException 
+	 */
+	public static NodeList getObjectNodeList(Node sqlNode) throws XPathExpressionException {
+		return geResolver().getSqlMappingResolver().getObjectNodeList(sqlNode);
 	}
 	
 	

@@ -12,7 +12,7 @@ public interface ExecuteHandler {
 	 * 要执行的sql语句的数量
 	 * @return
 	 */
-	default short executeSqlCount() {
+	default int executeSqlCount() {
 		return 1;
 	}
 	
