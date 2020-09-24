@@ -27,7 +27,7 @@ import com.douglei.orm.configuration.impl.element.environment.datasource.DataSou
 import com.douglei.orm.configuration.impl.element.environment.mapping.AddOrCoverMappingEntity;
 import com.douglei.orm.configuration.impl.element.environment.property.EnvironmentPropertyImpl;
 import com.douglei.orm.configuration.impl.element.properties.Properties;
-import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
+import com.douglei.orm.configuration.impl.util.Dom4jUtil;
 import com.douglei.orm.core.mapping.MappingHandler;
 import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.StringUtil;
@@ -46,8 +46,8 @@ public class EnvironmentImpl implements Environment{
 	public EnvironmentImpl(String configurationId, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
 		logger.debug("开始处理<environment>元素");
 		this.properties = properties;
-		setDataSourceWrapper(exDataSource==null?Dom4jElementUtil.validateElementExists("datasource", environmentElement):exDataSource);// 处理配置的数据源
-		setEnvironmentProperties(configurationId, Dom4jElementUtil.elements("property", environmentElement), mappingContainer);// 处理environment下的所有property元素
+		setDataSourceWrapper(exDataSource==null?Dom4jUtil.validateElementExists("datasource", environmentElement):exDataSource);// 处理配置的数据源
+		setEnvironmentProperties(configurationId, Dom4jUtil.elements("property", environmentElement), mappingContainer);// 处理environment下的所有property元素
 		addMapping(environmentElement.element("mappings"));// 处理配置的映射文件
 		logger.debug("处理<environment>元素结束");
 	}
@@ -102,7 +102,7 @@ public class EnvironmentImpl implements Environment{
 			
 			closeMethod = datasourceElement.attributeValue("closeMethod");
 			
-			propertyMap = elementListToPropertyMap(Dom4jElementUtil.elements("property", datasourceElement));
+			propertyMap = elementListToPropertyMap(Dom4jUtil.elements("property", datasourceElement));
 			if(propertyMap == null || propertyMap.size() == 0) {
 				throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
 			}

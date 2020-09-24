@@ -8,10 +8,10 @@ import org.dom4j.Element;
  * 
  * @author DougLei
  */
-public class Dom4jElementUtil {
+public class Dom4jUtil {
 	
 	/**
-	 * 验证元素是否存在
+	 * 验证元素是否存在, 如果存在, 则返回被验证的元素实例
 	 * @param elementName
 	 * @param element
 	 * @return

@@ -2,8 +2,8 @@ package com.douglei.orm.configuration.environment.property;
 
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.core.dialect.Dialect;
+import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.sql.parameter.SqlParameterConfigHolder;
-import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.sql.statement.entity.ColumnNameConverter;
 
 /**

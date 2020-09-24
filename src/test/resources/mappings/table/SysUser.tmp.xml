@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" forceCreateMode="create">
+	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" strict="create">
 		<columns>
 			<column name="id" property="id" dataType="integer" primaryKey="true" length="20" />
 			<column name="name" property="name" dataType="string" length="30" />

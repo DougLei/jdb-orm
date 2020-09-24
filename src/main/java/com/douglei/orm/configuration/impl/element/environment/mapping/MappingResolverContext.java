@@ -78,17 +78,7 @@ public class MappingResolverContext {
 		return geResolver().getMappingResolver4Sql().getContentNodeList(sqlNode);
 	}
 	
-	/**
-	 * 读取sql映射时, 获取<object>节点的集合
-	 * @param sqlNode
-	 * @return
-	 * @throws XPathExpressionException 
-	 */
-	public static NodeList getObjectNodeList(Node sqlNode) throws XPathExpressionException {
-		return geResolver().getMappingResolver4Sql().getObjectNodeList(sqlNode);
-	}
-	
-	
+
 	/**
 	 * 解析sql映射时, 获取当前解析的sql的类型
 	 * @return

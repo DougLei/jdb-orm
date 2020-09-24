@@ -14,15 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImportDataContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ConstraintConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.PrimaryKeyHandlerConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.ColumnMetadataResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.resolver.TableMetadataResolver;
-import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
+import com.douglei.orm.configuration.impl.util.Dom4jUtil;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
@@ -41,29 +41,22 @@ import com.douglei.tools.utils.StringUtil;
  * table 映射
  * @author DougLei
  */
-public class TableMappingImpl extends MappingImpl {
+public class TableMappingImpl implements Mapping {
 	private static final Logger logger = LoggerFactory.getLogger(TableMappingImpl.class);
 	private static final TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
 	private static final ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
 	
 	private TableMetadata tableMetadata;
 	
-	public TableMappingImpl(String configDescription, Element rootElement) {
-		super(configDescription);
-		logger.debug("开始解析table类型的映射: {}", configDescription);
+	public TableMappingImpl(Element rootElement) throws MetadataResolvingException, DocumentException {
+		Element tableElement = Dom4jUtil.validateElementExists(getMappingType().getName(), rootElement);
+		tableMetadata = tableMetadataResolver.resolving(tableElement);
 		
-		try {
-			Element tableElement = Dom4jElementUtil.validateElementExists("table", rootElement);
-			tableMetadata = tableMetadataResolver.resolving(tableElement);
-			addColumnMetadata(getColumnElements(tableElement));
-			addConstraint(tableElement.element("constraints"));
-			addIndex(tableElement.element("indexes"));
-			setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
-			setColumnValidator(tableElement.element("validators"));
-		} catch (Exception e) {
-			throw new MetadataResolvingException("在"+configDescription+"中, 解析出现异常", e);
-		}
-		logger.debug("结束解析table类型的映射");
+		addColumnMetadata(getColumnElements(tableElement));
+		addConstraint(tableElement.element("constraints"));
+		addIndex(tableElement.element("indexes"));
+		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
+		setColumnValidator(tableElement.element("validators"));
 	}
 
 	/**
@@ -77,7 +70,7 @@ public class TableMappingImpl extends MappingImpl {
 		List<Element> columnElements = null;
 		
 		// 解析<columns>
-		List<Element> localColumnElements = Dom4jElementUtil.elements("column", tableElement.element("columns"));
+		List<Element> localColumnElements = Dom4jUtil.elements("column", tableElement.element("columns"));
 		
 		// 解析<import-columns>
 		Element importColumnsElement = tableElement.element("import-columns");
@@ -150,7 +143,7 @@ public class TableMappingImpl extends MappingImpl {
 	@SuppressWarnings("unchecked")
 	private void addConstraint(Element constraintsElement) {
 		if(constraintsElement != null) {
-			List<Element> elements = Dom4jElementUtil.elements("constraint", constraintsElement);
+			List<Element> elements = Dom4jUtil.elements("constraint", constraintsElement);
 			if(elements != null) {
 				ConstraintType constraintType = null;
 				List<Attribute> columnNames = null;
@@ -234,7 +227,7 @@ public class TableMappingImpl extends MappingImpl {
 	 */
 	private void addIndex(Element indexesElement) {
 		if(indexesElement != null) {
-			List<Element> indexElements = Dom4jElementUtil.elements("index", indexesElement);
+			List<Element> indexElements = Dom4jUtil.elements("index", indexesElement);
 			if(indexElements != null) {
 				String indexName, createSqlStatement, dropSqlStatement;
 				String currentDialect = EnvironmentContext.getDialect().getType().name();
@@ -253,7 +246,7 @@ public class TableMappingImpl extends MappingImpl {
 	
 	// 获取索引指定key的sql语句
 	private String getIndexSqlStatement(String key, Element indexElement, String currentDialect, String indexName) {
-		List<Element> sqlElements = Dom4jElementUtil.elements(key + "Sql", indexElement);
+		List<Element> sqlElements = Dom4jUtil.elements(key + "Sql", indexElement);
 		if(sqlElements != null) {
 			String tmp;
 			for (Element sqlElement : sqlElements) {

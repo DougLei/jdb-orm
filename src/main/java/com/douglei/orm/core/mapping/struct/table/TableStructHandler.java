@@ -11,9 +11,9 @@ import com.douglei.orm.core.mapping.RollbackExecMethod;
 import com.douglei.orm.core.mapping.RollbackRecorder;
 import com.douglei.orm.core.mapping.serialization.SerializationHandler;
 import com.douglei.orm.core.mapping.struct.StructConnection;
+import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.table.ColumnMetadata;
 import com.douglei.orm.core.metadata.table.Constraint;
-import com.douglei.orm.core.metadata.table.CreateMode;
 import com.douglei.orm.core.metadata.table.Index;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 

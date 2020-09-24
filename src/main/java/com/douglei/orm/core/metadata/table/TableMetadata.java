@@ -7,27 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ColumnConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.ConstraintConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.IndexConfigurationException;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.core.metadata.AbstractMetadata;
+import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 表元数据
  * @author DougLei
  */
-public class TableMetadata implements Metadata{
-	private String name;// 表名
+public class TableMetadata extends AbstractMetadata implements Metadata{
 	private String className;// 映射的代码类名
-	
-	private String oldName;// 旧表名
-	private CreateMode createMode;// 表create的模式
 	
 	private List<ColumnMetadata> declareColumns;// 按声明顺序的列
 	private Map<String, ColumnMetadata> columns;// 列<列名: 列>
@@ -46,20 +42,8 @@ public class TableMetadata implements Metadata{
 	private Map<String, Index> indexes;// 索引
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
-		setNameByValidate(name, oldName);
+		super(className, oldName, createMode);
 		this.className = className;
-		this.createMode = createMode;
-	}
-	
-	// 设置name的同时, 对name进行验证
-	private void setNameByValidate(String name, String oldName) {
-		EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(name);
-		this.name = name.toUpperCase();
-		if(StringUtil.isEmpty(oldName)) {
-			this.oldName = this.name;
-		}else {
-			this.oldName = oldName.toUpperCase();
-		}
 	}
 	
 	/**
@@ -212,15 +196,6 @@ public class TableMetadata implements Metadata{
 		}else {
 			return className;
 		}
-	}
-	public String getName() {
-		return name;
-	}
-	public String getOldName() {
-		return oldName;
-	}
-	public CreateMode getCreateMode() {
-		return createMode;
 	}
 	public String getClassName() {
 		return className;

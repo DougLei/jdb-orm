@@ -35,7 +35,7 @@ class ValidatorContext {
 	 * 加载配置文件并注册Validator
 	 */
 	private static void loadAndRegisterValidators() {
-		PropertiesReader reader = new PropertiesReader("jdb.validator.factories");
+		PropertiesReader reader = new PropertiesReader("jdb.validator.properties");
 		if(reader.ready()) {
 			reader.entrySet().forEach(validatorConfig -> {
 				registerValidator(validatorConfig.getKey().toString(), ClassLoadUtil.loadClassWithStatic(validatorConfig.getValue().toString()));

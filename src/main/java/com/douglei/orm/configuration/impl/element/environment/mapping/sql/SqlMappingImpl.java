@@ -6,15 +6,13 @@ import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.impl.element.environment.mapping.MappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.SqlMetadataResolver;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.resolver.content.ContentMetadataResolver;
@@ -28,29 +26,20 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class SqlMappingImpl extends MappingImpl {
-	private static final Logger logger = LoggerFactory.getLogger(SqlMappingImpl.class);
+public class SqlMappingImpl implements Mapping {
 	private static final SqlMetadataResolver sqlMetadataResolver = new SqlMetadataResolver();
 	private static final ContentMetadataResolver contentMetadataResolver = new ContentMetadataResolver();
 	
 	private SqlMetadata sqlMetadata;
 	
-	public SqlMappingImpl(String configDescription, Element rootElement) {
-		super(configDescription);
-		logger.debug("开始解析sql类型的映射: {}", configDescription);
+	public SqlMappingImpl(Element rootElement) throws XPathExpressionException {
+		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(getMappingType().getName()));
+		sqlMetadata = sqlMetadataResolver.resolving(sqlNode);
 		
-		try {
-			Node sqlNode = getSqlNode(rootElement.getElementsByTagName("sql"));
-			sqlMetadata = sqlMetadataResolver.resolving(sqlNode);
-			
-			setParameterValidator(sqlNode);
-			MappingResolverContext.setSqlContents(sqlNode);
-			
-			resolvingContents(sqlNode);
-		} catch (Exception e) {
-			throw new MetadataResolvingException("在"+configDescription+"中, 解析出现异常", e);
-		}
-		logger.debug("结束解析sql类型的映射");
+		setParameterValidator(sqlNode);
+		MappingResolverContext.setSqlContents(sqlNode);
+		
+		resolvingContents(sqlNode);
 	}
 	
 	/**

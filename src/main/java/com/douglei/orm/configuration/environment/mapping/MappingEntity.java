@@ -29,7 +29,8 @@ public abstract class MappingEntity {
 	 * 将外部的mapping实例set进来
 	 * @param mapping
 	 */
-	public void setMapping(Mapping mapping) {}
+	public void setMapping(Mapping mapping) {
+	}
 	
 	public String getCode() {
 		return code;

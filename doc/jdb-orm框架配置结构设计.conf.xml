@@ -11,7 +11,7 @@
 		<!-- 是否在启动时清空映射容器, 默认值为true -->
 		<!-- <property name="clearMappingContainerOnStart" value="true" /> -->
 		
-		<!-- 没有默认值, 可以不配置, 具体参考《表资源配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有表映射的createMode配置值 -->
+		<!-- 没有默认值, 可以不配置, 具体参考《table映射配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有表映射的createMode配置值 -->
 		<!-- <property name="tableCreateMode" value="" /> -->
 		
 		<!-- sql语句中, 声明参数时的前缀, 默认为#{ -->

@@ -9,11 +9,11 @@
 		如果一开始就使用的是dynamic_update模式, 后续可以改成任何模式值, 但是要注意的是, 不要通过drop_create的模式来修改表结构, 只能使用dynamic_update的模式来修改表结构
 		如果一开始使用的不是dynamic_update模式, 后续就绝对不要使用dynamic_update模式, 这时就可以使用drop_create的模式来修改表结构
 		
-		jdb-orm框架配置中全局的tableCreateMode, 以及forceCreateMode同理
+		jdb-orm框架配置中全局的tableCreateMode同理
 	-->
-	<!-- forceCreateMode的值同createMode, 表示强制, 没有默认值, 可以不配置, 该值可覆盖全局的tableCreateMode -->
-	<!-- 优先级: forceCreateMode 大于 tableCreateMode 大于 createMode -->
-	<table name="SYS_USER" oldName="" class="com.douglei.orm.session.SysUser" createMode="create" forceCreateMode="">
+	<!-- strict的值应为true/false, 默认值为false; 它用来标识是否对本映射的createMode值进行强控制, 如果进行强控制, 则本映射的createMode值可以覆盖全局的tableCreateMode -->
+	<!-- 如果strict的值配置了true, 而没有配置createMode, 则就使用createMode的默认值create -->
+	<table name="SYS_USER" oldName="" class="com.douglei.orm.session.SysUser" createMode="create" strict="false">
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 可以将所有表中的通用字段导入, 具体这个文件中怎么写, 看本文件最下面的注释内容 -->
 		<columns>
 			<!-- dataType的值包括: string, nstring, char, nchar, byte, short, integer, long, float, double, date, clob, blob, 默认值为string -->
@@ -61,7 +61,7 @@
 				目前提供的验证器
 				regex: 正则表达式, 可以配置json数组或json对象
 				notblank: 不能为空字符串
-				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在resources中的jdb.validator.factories文件中配置
+				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在resources中的jdb.validator.properties文件中配置
 			 -->
 			<validator code="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" notBlank="true" />
 		</validators>

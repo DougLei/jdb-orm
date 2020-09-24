@@ -11,8 +11,10 @@ import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingOP;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
+import com.douglei.orm.configuration.impl.element.environment.mapping.proc.ProcMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.SqlMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.TableMappingImpl;
+import com.douglei.orm.configuration.impl.element.environment.mapping.view.ViewMappingImpl;
 import com.douglei.tools.instances.scanner.FileScanner;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -46,26 +48,31 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	
 	@Override
 	public boolean parseMapping() throws ParseMappingException {
-		String configDescription = filepath != null ? filepath : content;
+		logger.debug("开始解析{}类型的映射xml", type.getName());
 		InputStream input = filepath != null ? FileScanner.readByScanPath(filepath) : new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 		try {
-			switch(type) {
-				case TABLE:
-					org.dom4j.Document tableDocument = MappingResolverContext.getSAXReader().read(input);
-					org.dom4j.Element tableRootElement = tableDocument.getRootElement();
-					super.mapping = new TableMappingImpl(configDescription, tableRootElement);
-					break;
-				case SQL:
-					org.w3c.dom.Document sqlDocument = MappingResolverContext.getDocumentBuilder().parse(input);
-					org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
-					super.mapping = new SqlMappingImpl(configDescription, sqlRootElement);
-					break;
+			if(type == MappingType.SQL) {
+				org.w3c.dom.Document sqlDocument = MappingResolverContext.getDocumentBuilder().parse(input);
+				org.w3c.dom.Element sqlRootElement = sqlDocument.getDocumentElement();
+				super.mapping = new SqlMappingImpl(sqlRootElement);
+			} else {
+				org.dom4j.Document document = MappingResolverContext.getSAXReader().read(input);
+				org.dom4j.Element rootElement = document.getRootElement();
+				
+				if(type == MappingType.TABLE) {
+					super.mapping = new TableMappingImpl(rootElement);
+				}else if(type == MappingType.VIEW) {
+					super.mapping = new ViewMappingImpl(rootElement);
+				}else if(type == MappingType.PROC) {
+					super.mapping = new ProcMappingImpl(rootElement);
+				}
 			}
 			super.code = super.mapping.getCode();
+			logger.debug("结束解析{}类型的映射xml", type.getName());
 			return true;
 		} catch(Exception e){
-			logger.error("在解析映射xml[{}]时, 出现异常:{}", configDescription, ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ParseMappingException("在解析映射xml["+configDescription+"]时, 出现异常", e);
+			logger.error("解析映射xml[{}]时, 出现异常: {}", (filepath != null ? filepath : content), ExceptionUtil.getExceptionDetailMessage(e));
+			throw new ParseMappingException("在解析映射xml时, 出现异常", e);
 		}finally {
 			CloseUtil.closeIO(input);
 		}

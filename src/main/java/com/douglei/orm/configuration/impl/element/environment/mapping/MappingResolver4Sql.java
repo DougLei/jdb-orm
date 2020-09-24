@@ -25,7 +25,6 @@ class MappingResolver4Sql {
 	private XPathExpression validatorNodeExpression;// 读取sql映射时, 用来获取<validators>节点下<validator>子节点的表达式
 	private XPathExpression sqlContentNodeExpression;// 读取sql映射时, 用来获取<sql-content>节点的表达式
 	private XPathExpression contentNodeExpression;// 读取sql映射时, 用来获取<content>节点的表达式
-	private XPathExpression objectNodeExpression;// 读取sql映射时, 用来获取<object>节点的表达式
 	
 	private ContentType currentSqlType; // 解析sql映射时, 记录当前解析的sql的类型
 	private Map<String, ValidateHandler> sqlValidateHandlers;// 解析sql映射时, 记录配置的验证器集合
@@ -55,18 +54,6 @@ class MappingResolver4Sql {
 		if(contentNodeExpression == null)
 			contentNodeExpression = XPathFactory.newInstance().newXPath().compile("content");
 		return (NodeList) contentNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
-	}
-	
-	/**
-	 * @see MappingResolverContext#getObjectNodeList(Node)
-	 * @param sqlNode
-	 * @return
-	 * @throws XPathExpressionException 
-	 */
-	public NodeList getObjectNodeList(Node sqlNode) throws XPathExpressionException {
-		if(objectNodeExpression == null)
-			objectNodeExpression = XPathFactory.newInstance().newXPath().compile("objects/object[@type!='' and @name!='']");
-		return (NodeList) objectNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
 	}
 	
 	/**

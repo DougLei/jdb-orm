@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.mini.app.crypto.Decryptor;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.SelfProcessing;
-import com.douglei.orm.configuration.impl.util.Dom4jElementUtil;
+import com.douglei.orm.configuration.impl.util.Dom4jUtil;
 import com.douglei.tools.instances.file.reader.PropertiesReader;
 import com.douglei.tools.utils.StringUtil;
 
@@ -32,7 +32,7 @@ public class Properties implements SelfProcessing{
 		logger.debug("开始处理<properties>元素");
 		if(propertiesElement != null) {
 			processPlaceholderCharacter(propertiesElement);// 处理占位符前后缀字符
-			readAndSetProperties(Dom4jElementUtil.elements("resource", propertiesElement));// 读取并set
+			readAndSetProperties(Dom4jUtil.elements("resource", propertiesElement));// 读取并set
 		}
 		logger.debug("处理<properties>元素结束");
 	}

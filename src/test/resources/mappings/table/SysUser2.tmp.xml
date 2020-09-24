@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER2" forceCreateMode="create">
+	<table name="SYS_USER2" strict="create">
 		<columns>
 			<column name="id" dataType="string" primaryKey="true" length="50" />
 			<column name="name" dataType="string" length="30" />

@@ -33,24 +33,24 @@ public class MappingHandler {
 	private TableStructHandler tableStructHandler;
 	private SqlStructHandler sqlStructHandler;
 	
+	// 在一次操作多个映射时, 需要对其进行优先级排序, 从优先级高的执行到优先级低的
+	private static final Comparator<MappingEntity> priorityComparator = new Comparator<MappingEntity>() {
+		@Override
+		public int compare(MappingEntity o1, MappingEntity o2) {
+			if(o1.getType().getPriority() == o2.getType().getPriority())
+				return 0;
+			if(o1.getType().getPriority() < o2.getType().getPriority())
+				return -1;
+			return 0;
+		}
+	};
+	
 	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper, TableSqlStatementHandler tableSqlStatementHandler) {
 		this.mappingContainer = mappingContainer;
 		this.tableStructHandler = new TableStructHandler(dataSourceWrapper, tableSqlStatementHandler);
 		this.sqlStructHandler = new SqlStructHandler();
 	}
 
-	// 在一次操作多个映射时, 需要对其进行排序, 具体的排序规则为, 先操作table, 再操作sql, 因为sql中配置的<db-object>, 可能依赖于本次操作的table映射
-	private static final Comparator<MappingEntity> comparator = new Comparator<MappingEntity>() {
-		@Override
-		public int compare(MappingEntity o1, MappingEntity o2) {
-			if(o1.getType() == o2.getType())
-				return 0;
-			if(o1.getType() == MappingType.TABLE && o2.getType() == MappingType.SQL)
-				return -1;
-			return 0;
-		}
-	};
-	
 	// 解析映射实体
 	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
 		for (MappingEntity mappingEntity : mappingEntities) {
@@ -60,7 +60,7 @@ public class MappingHandler {
 		}
 		
 		if(mappingEntities.size() > 1)
-			Collections.sort(mappingEntities, comparator);
+			Collections.sort(mappingEntities, priorityComparator);
 	}
 	
 	/**

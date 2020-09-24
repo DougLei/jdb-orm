@@ -92,7 +92,7 @@
 		</content>
 	-->	
 	
-		<!-- 验证器配置, 参考《表资源配置结构设计.tmp.xml》中的验证器配置结构 -->
+		<!-- 验证器配置, 参考《table映射配置结构设计.tmp.xml》中的验证器配置结构 -->
 		<validators></validators>
 	</sql>
 </mapping-configuration>

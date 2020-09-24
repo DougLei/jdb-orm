@@ -1,4 +1,4 @@
-package com.douglei.orm.core.metadata.table;
+package com.douglei.orm.core.metadata;
 
 import com.douglei.tools.utils.StringUtil;
 
@@ -24,12 +24,17 @@ public enum CreateMode {
 	 */
 	DYNAMIC_UPDATE;
 	
-	public static CreateMode toValue(String mode) {
-		if(StringUtil.notEmpty(mode)) {
-			mode = mode.toUpperCase();
+	/**
+	 * 根据字符串值, 获取对应的创建模式
+	 * @param value
+	 * @return
+	 */
+	public static CreateMode toValue(String value) {
+		if(StringUtil.notEmpty(value)) {
+			value = value.toUpperCase();
 			CreateMode[] cms = CreateMode.values();
 			for (CreateMode cm : cms) {
-				if(cm.name().equals(mode)) {
+				if(cm.name().equals(value)) {
 					return cm;
 				}
 			}
@@ -37,6 +42,10 @@ public enum CreateMode {
 		return null;
 	}
 	
+	/**
+	 * 获取默认的创建模式
+	 * @return
+	 */
 	public static CreateMode defaultCreateMode() {
 		return CREATE;
 	}
