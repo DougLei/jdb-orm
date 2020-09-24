@@ -17,6 +17,14 @@ public abstract class MappingEntity {
 	public abstract MappingOP getOp();
 	
 	/**
+	 * 映射实例是否是必须的, 默认为true; 如果是必须的, 则必须进行parseMapping或setMapping
+	 * @return
+	 */
+	public boolean mappingIsRequired() {
+		return true;
+	}
+	
+	/**
 	 * 解析出mapping实例
 	 * @return 解析是否成功
 	 * @throws ParseMappingException
@@ -52,6 +60,6 @@ public abstract class MappingEntity {
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " [code=" + code + ", type=" + type + ", op=" + getOp() + "]";
+		return getClass().getName() + " [mappingIsRequired="+mappingIsRequired()+", code=" + code + ", type=" + type + ", op=" + getOp() + "]";
 	}
 }

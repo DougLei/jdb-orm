@@ -3,13 +3,12 @@ package com.douglei.orm.core.mapping.struct;
 import java.sql.SQLException;
 
 import com.douglei.orm.core.mapping.serialization.SerializationHandler;
-import com.douglei.orm.core.metadata.Metadata;
 
 /**
  * 结构处理器
  * @author DougLei
  */
-public class StructHandler {
+public abstract class StructHandler<C, D> {
 	protected SerializationHandler serializationHandler = SerializationHandler.getSingleton();
 	protected DBConnection connection;
 	
@@ -26,14 +25,17 @@ public class StructHandler {
 		connection.executeSql(sql);
 	}
 
-	public void create(Metadata metadata) {
-		// TODO Auto-generated method stub
-		
-	}
+	/**
+	 * 创建, 根据createMode决定如何同步
+	 * @param createParameter
+	 * @throws Exception 
+	 */
+	public abstract void create(C createParameter) throws Exception;
 
-	public void delete(Metadata metadata) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	/**
+	 * 删除
+	 * @param deleteParameter
+	 * @throws SQLException
+	 */
+	public abstract void delete(D deleteParameter) throws SQLException;
 }

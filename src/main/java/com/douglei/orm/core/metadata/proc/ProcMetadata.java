@@ -12,5 +12,4 @@ public class ProcMetadata extends ViewMetadata{
 	public ProcMetadata(String name, String oldName, CreateMode createMode, String content) {
 		super(name, oldName, createMode, content);
 	}
-
 }

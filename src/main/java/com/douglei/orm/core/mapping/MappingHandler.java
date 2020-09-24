@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
+import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;
@@ -19,7 +20,9 @@ import com.douglei.orm.core.mapping.rollback.RollbackExecMethod;
 import com.douglei.orm.core.mapping.rollback.RollbackExecutor;
 import com.douglei.orm.core.mapping.rollback.RollbackRecorder;
 import com.douglei.orm.core.mapping.struct.StructHandlerPackageContext;
+import com.douglei.orm.core.metadata.proc.ProcMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.core.metadata.view.ViewMetadata;
 
 /**
  * 映射处理器
@@ -51,7 +54,8 @@ public class MappingHandler {
 	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
 		for (MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
-			if(!mappingEntity.parseMapping()) 
+			
+			if(mappingEntity.mappingIsRequired() && !mappingEntity.parseMapping()) 
 				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 		}
 		
@@ -77,14 +81,14 @@ public class MappingHandler {
 						if(mappingEntity.opStruct()) 
 							createStruct(mappingEntity);
 						
-						if(mappingEntity.getType().supportOpMapping()) 
+						if(mappingEntity.getType().opInMappingContainer()) 
 							addMapping(mappingEntity.getMapping());
 						break;
 					case DELETE: 
 						if(mappingEntity.opStruct()) 
 							deleteStruct(mappingEntity);
 						
-						if(mappingEntity.getType().supportOpMapping()) 
+						if(mappingEntity.getType().opInMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
 						break;
 				}
@@ -110,11 +114,13 @@ public class MappingHandler {
 	private void createStruct(MappingEntity mappingEntity) throws Exception {
 		switch(mappingEntity.getType()) {
 			case TABLE:
-				StructHandlerPackageContext.getTableStructHandler().createTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+				StructHandlerPackageContext.getTableStructHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case VIEW:
+				StructHandlerPackageContext.getViewStructHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
+				break;
 			case PROC:
-				StructHandlerPackageContext.getStructHandler().create(mappingEntity.getMapping().getMetadata());
+				StructHandlerPackageContext.getProcStructHandler().create((ProcMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case SQL:
 				break;
@@ -135,11 +141,13 @@ public class MappingHandler {
 	private void deleteStruct(MappingEntity mappingEntity) throws SQLException {
 		switch(mappingEntity.getType()) {
 			case TABLE:
-				StructHandlerPackageContext.getTableStructHandler().deleteTable((TableMetadata)mappingEntity.getMapping().getMetadata());
+				StructHandlerPackageContext.getTableStructHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case VIEW:
+				StructHandlerPackageContext.getViewStructHandler().delete(mappingEntity.getCode());
+				break;
 			case PROC:
-				StructHandlerPackageContext.getStructHandler().delete(mappingEntity.getMapping().getMetadata());
+				StructHandlerPackageContext.getProcStructHandler().delete(mappingEntity.getCode());
 				break;
 			case SQL:
 				break;

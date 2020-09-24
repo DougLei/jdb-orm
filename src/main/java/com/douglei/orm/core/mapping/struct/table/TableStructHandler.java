@@ -20,7 +20,7 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * 表结构处理器
  * @author DougLei
  */
-public class TableStructHandler extends StructHandler{
+public class TableStructHandler extends StructHandler<TableMetadata, TableMetadata>{
 	private TableSqlStatementHandler tableSqlStatementHandler;
 	
 	public TableStructHandler(DBConnection connection, TableSqlStatementHandler tableSqlStatementHandler) {
@@ -32,7 +32,7 @@ public class TableStructHandler extends StructHandler{
 	// 创建操作
 	// -------------------------------------------------------------------------------------------------------------------
 	// 创建表
-	private void createTable_(TableMetadata table) throws SQLException {
+	private void createTable(TableMetadata table) throws SQLException {
 		executeSql(tableSqlStatementHandler.tableCreateSqlStatement(table));
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.tableDropSqlStatement(table.getName()), connection);
 	}
@@ -323,7 +323,8 @@ public class TableStructHandler extends StructHandler{
 	 * @param table
 	 * @throws Exception 
 	 */
-	public void createTable(TableMetadata table) throws Exception {
+	@Override
+	public void create(TableMetadata table) throws Exception {
 		if(table.getCreateMode() == CreateMode.NONE)
 			return;
 		
@@ -343,7 +344,7 @@ public class TableStructHandler extends StructHandler{
 					return;
 			}
 		}
-		createTable_(table);
+		createTable(table);
 		createConstraints(table.getConstraints());
 		createIndexes(table.getIndexes());
 		createPrimaryKeySequence(table.getPrimaryKeySequence());
@@ -357,7 +358,8 @@ public class TableStructHandler extends StructHandler{
 	 * @param table
 	 * @throws SQLException 
 	 */
-	public void deleteTable(TableMetadata table) throws SQLException {
+	@Override
+	public void delete(TableMetadata table) throws SQLException {
 		if(table.getCreateMode() == CreateMode.NONE)
 			return;
 		

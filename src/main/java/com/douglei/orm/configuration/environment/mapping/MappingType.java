@@ -13,11 +13,11 @@ public enum MappingType {
 	private int priority; // 优先级, 越低越优先
 	private String fileSuffix;
 	private String name; 
-	private boolean supportOpMapping; // 是否支持操作映射
-	private MappingType(String fileSuffix, int priority, boolean supportOpMapping) {
+	private boolean opInMappingContainer; // 能否在映射容器中操作
+	private MappingType(String fileSuffix, int priority, boolean opInMappingContainer) {
 		this.fileSuffix = fileSuffix;
 		this.priority = priority;
-		this.supportOpMapping = supportOpMapping;
+		this.opInMappingContainer = opInMappingContainer;
 		this.name = name().toLowerCase();
 	}
 
@@ -55,11 +55,11 @@ public enum MappingType {
 	}
 
 	/**
-	 * 是否支持操作映射
+	 * 能否在映射容器中操作
 	 * @return
 	 */
-	public boolean supportOpMapping() {
-		return supportOpMapping;
+	public boolean opInMappingContainer() {
+		return opInMappingContainer;
 	}
 	
 	/**

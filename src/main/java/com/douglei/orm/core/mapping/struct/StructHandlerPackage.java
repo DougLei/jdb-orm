@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.mapping.struct.proc.ProcStructHandler;
 import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
+import com.douglei.orm.core.mapping.struct.view.ViewStructHandler;
 
 /**
  * 
@@ -15,8 +17,9 @@ class StructHandlerPackage {
 	private DataSourceWrapper dataSourceWrapper;
 	
 	private DBConnection connection;
-	private StructHandler structHandler;
 	private TableStructHandler tableStructHandler;
+	private ViewStructHandler viewStructHandler;
+	private ProcStructHandler procStructHandler;
 	
 	public StructHandlerPackage(DataSourceWrapper dataSourceWrapper) {
 		this.dataSourceWrapper = dataSourceWrapper;
@@ -39,10 +42,16 @@ class StructHandlerPackage {
 		return tableStructHandler;
 	}
 
-	public StructHandler getStructHandler() {
-		if(structHandler == null)
-			structHandler = new StructHandler(getConnection());
-		return structHandler;
+	public ViewStructHandler getViewStructHandler() {
+		if(viewStructHandler == null)
+			viewStructHandler = new ViewStructHandler(getConnection());
+		return viewStructHandler;
+	}
+	
+	public ProcStructHandler getProcStructHandler() {
+		if(procStructHandler == null)
+			procStructHandler = new ProcStructHandler(getConnection());
+		return procStructHandler;
 	}
 
 	public void destroy() {
