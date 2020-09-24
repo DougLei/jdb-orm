@@ -3,7 +3,6 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.db.object.DBObjectType;
 import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.pagequery.PageResult;
 import com.douglei.orm.core.sql.statement.InsertResult;
@@ -378,36 +377,4 @@ public interface SqlSession {
 	 * @return
 	 */
 	Object executeProcedure(ProcedureExecutor procedureExecutor);
-	
-	/**
-	 * 判断数据库对象是否存在
-	 * @param dbObjectType
-	 * @param dbObjectName
-	 * @return
-	 */
-	boolean dbObjectExists(DBObjectType dbObjectType, String dbObjectName);
-	
-	/**
-	 * 创建数据库对象, 如果存在则抛出已存在异常
-	 * @param dbObjectType
-	 * @param dbObjectName
-	 * @param createSqlStatement
-	 */
-	void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement);
-	
-	/**
-	 * 创建数据库对象
-	 * @param dbObjectType
-	 * @param dbObjectName
-	 * @param createSqlStatement
-	 * @param isOverride 如果对象已经存在, 是否覆盖; 如果存在且不覆盖, 则会抛出已存在异常
-	 */
-	void dbObjectCreate(DBObjectType dbObjectType, String dbObjectName, String createSqlStatement, boolean isOverride);
-	
-	/**
-	 * 删除数据库对象
-	 * @param dbObjectType
-	 * @param dbObjectName
-	 */
-	void dbObjectDrop(DBObjectType dbObjectType, String dbObjectName);
 }

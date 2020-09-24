@@ -55,7 +55,7 @@ public class ColumnMetadata implements Metadata{
 	
 	// 设置name的同时, 对name进行验证
 	private void setNameByValidate(String name, String oldName) {
-		EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getDialect().getObjectHandler().validateObjectName(name);
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {
 			this.oldName = this.name;

@@ -14,7 +14,7 @@ public abstract class AbstractMetadata {
 	
 	public AbstractMetadata(String name, String oldName, CreateMode createMode) {
 		// 设置name的同时, 对name进行验证
-		EnvironmentContext.getDialect().getDBObjectHandler().validateDBObjectName(name);
+		EnvironmentContext.getDialect().getObjectHandler().validateObjectName(name);
 		
 		this.name = name.toUpperCase();
 		if(StringUtil.isEmpty(oldName)) {

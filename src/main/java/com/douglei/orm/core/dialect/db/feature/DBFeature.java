@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.features;
+package com.douglei.orm.core.dialect.db.feature;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
  * 数据库特性
  * @author DougLei
  */
-public abstract class DBFeatures {
+public abstract class DBFeature {
 	
 	/**
 	 * <pre>

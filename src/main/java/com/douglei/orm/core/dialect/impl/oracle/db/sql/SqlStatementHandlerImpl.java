@@ -1,6 +1,6 @@
-package com.douglei.orm.core.dialect.impl.oracle.db.table;
+package com.douglei.orm.core.dialect.impl.oracle.db.sql;
 
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.tools.utils.StringUtil;
 
@@ -8,14 +8,29 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
+public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	
 	// --------------------------------------------------------------------------------------------
-	// table
+	// query
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String queryTableExistsSql() {
-		return "select count(1) from user_objects where object_name = ? and object_type = 'TABLE'";
+	public String queryNameExists() {
+		return "select count(1) from user_objects where object_name =?";
+	}
+
+	@Override
+	public String queryTableNameExists() {
+		return "select count(1) from user_objects where object_name =? and object_type = 'TABLE'";
+	}
+
+	@Override
+	public String queryViewNameExists() {
+		return "select count(1) from user_objects where object_name =? and object_type = 'VIEW'";
+	}
+
+	@Override
+	public String queryProcNameExists() {
+		return "select count(1) from user_objects where object_name =? and object_type = 'PROCEDURE'";
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -39,8 +54,4 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		tmpSql.append(" default null");
 		return tmpSql.toString();
 	}
-	
-	// --------------------------------------------------------------------------------------------
-	// index
-	// --------------------------------------------------------------------------------------------
 }

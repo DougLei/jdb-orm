@@ -1,4 +1,4 @@
-package com.douglei.orm.core.dialect.db.table;
+package com.douglei.orm.core.dialect.db.sql;
 
 import java.util.Collection;
 
@@ -7,29 +7,47 @@ import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 
 /**
- * 表sql语句处理器
+ * sql语句处理器
  * @author DougLei
  */
-public abstract class TableSqlStatementHandler {
+public abstract class SqlStatementHandler {
+	
+	// --------------------------------------------------------------------------------------------
+	// query
+	// --------------------------------------------------------------------------------------------
+	/**
+	 * 获取 查询name是否存在的sql语句, 目前是查询表名, 视图名, 存储过程名的集合
+	 */
+	public abstract String queryNameExists();
+	
+	/**
+	 * 获取 查询表名是否存在的sql语句
+	 * @return
+	 */
+	public abstract String queryTableNameExists();
+	
+	/**
+	 * 获取 查询视图名是否存在的sql语句
+	 * @return
+	 */
+	public abstract String queryViewNameExists();
+	
+	/**
+	 * 获取 查询存储过程名是否存在的sql语句
+	 * @return
+	 */
+	public abstract String queryProcNameExists();
+	
 	
 	// --------------------------------------------------------------------------------------------
 	// table
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * <pre>
-	 * 	获取查询表是否存在的sql语句
-	 * 	返回的sql语句需要使用PreparedStatement查询, 下标为1的传入表名, 且表名必须全大写
-	 * </pre>
-	 * @return 
-	 */
-	public abstract String queryTableExistsSql();
-	
-	/**
 	 * 获取create table的sql语句
 	 * @param table
 	 * @return
 	 */
-	public String tableCreateSqlStatement(TableMetadata table) {
+	public String createTable(TableMetadata table) {
 		StringBuilder sql = new StringBuilder(1000);
 		sql.append("create table ").append(table.getName());
 		sql.append("(");
@@ -64,7 +82,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param tableName
 	 * @return
 	 */
-	public String tableDropSqlStatement(String tableName) {
+	public String dropTable(String tableName) {
 		return "drop table " + tableName;
 	}
 	
@@ -74,7 +92,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param targetTableName
 	 * @return
 	 */
-	public String tableRenameSqlStatement(String originTableName, String targetTableName) {
+	public String renameTable(String originTableName, String targetTableName) {
 		StringBuilder tmpSql = new StringBuilder(80);
 		tmpSql.append("alter table ").append(originTableName).append(" rename to ").append(targetTableName);
 		return tmpSql.toString();
@@ -89,7 +107,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnCreateSqlStatement(String tableName, ColumnMetadata column) {
+	public String createColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -105,7 +123,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param columnName
 	 * @return
 	 */
-	public String columnDropSqlStatement(String tableName, String columnName) {
+	public String dropColumn(String tableName, String columnName) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" drop column ").append(columnName);
 		return tmpSql.toString();
@@ -118,7 +136,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param targetColumnName
 	 * @return
 	 */
-	public String columnRenameSqlStatement(String tableName, String originColumnName, String targetColumnName) {
+	public String renameColumn(String tableName, String originColumnName, String targetColumnName) {
 		StringBuilder tmpSql = new StringBuilder(80);
 		tmpSql.append("alter table ").append(tableName).append(" rename column ").append(originColumnName).append(" to ").append(targetColumnName);
 		return tmpSql.toString();
@@ -130,7 +148,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String columnModifySqlStatement(String tableName, ColumnMetadata column) {
+	public String modifyColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
@@ -148,7 +166,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param constraint
 	 * @return
 	 */
-	public String constraintCreateSqlStatement(Constraint constraint) {
+	public String createConstraint(Constraint constraint) {
 		switch(constraint.getConstraintType()) {
 			case PRIMARY_KEY:
 			case UNIQUE:
@@ -192,7 +210,7 @@ public abstract class TableSqlStatementHandler {
 	 * @param constraint
 	 * @return
 	 */
-	public String constraintDropSqlStatement(Constraint constraint) {
+	public String dropConstraint(Constraint constraint) {
 		switch(constraint.getConstraintType()) {
 			case PRIMARY_KEY:
 				return primaryKeyConstraintDropSqlStatement(constraint);

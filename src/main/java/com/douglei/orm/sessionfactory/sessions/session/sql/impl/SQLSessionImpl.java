@@ -305,7 +305,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					
 					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对procedureSupportDirectlyReturnResultSet=true的数据库有用
-					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getDBFeatures().supportProcedureDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getFeature().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
 						

@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.tools.utils.CloseUtil;
 
 /**
@@ -20,17 +22,23 @@ public class DBConnection {
 	private static final Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
 	private Connection connection;
+	private SqlStatementHandler sqlStatementHandler;
 	
-	public DBConnection(DataSourceWrapper dataSourceWrapper){
+	public DBConnection(DataSourceWrapper dataSourceWrapper, SqlStatementHandler sqlStatementHandler){
 		this.connection = dataSourceWrapper.getConnection(false).getConnection();
+		this.sqlStatementHandler = sqlStatementHandler;
+	}
+
+	public SqlStatementHandler getSqlStatementHandler() {
+		return sqlStatementHandler;
 	}
 
 	// -------------------------------------------------------------------------------------
 	private PreparedStatement queryTableExistsPreparedStatement;
 	
 	// 为表结构处理器初始化
-	public void init4TableStructHandler(String queryTableExistsSql) throws SQLException {
-		queryTableExistsPreparedStatement = connection.prepareStatement(queryTableExistsSql);
+	void init4TableStructHandler(SqlStatementHandler handler) throws SQLException {
+		queryTableExistsPreparedStatement = connection.prepareStatement(handler.queryTableExistsSql());
 	}
 	
 	// 查询判断表是否存在
@@ -39,8 +47,26 @@ public class DBConnection {
 		ResultSet resultSet = queryTableExistsPreparedStatement.executeQuery();
 		if(resultSet.next())
 			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
-		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据, 请检查查询表是否存在的sql语句是否正确");
+		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据, 请检查查询的sql语句是否正确");
 	}
+	
+	// -------------------------------------------------------------------------------------
+	private PreparedStatement queryViewExistsPreparedStatement;
+	
+	// 为视图结构处理器初始化
+	void init4ViewStructHandler(DBObjectHandler handler) throws SQLException {
+		queryViewExistsPreparedStatement = connection.prepareStatement(handler.queryViewExistsSql());
+	}
+	
+	// 查询判断视图是否存在
+	public boolean viewExists(String viewName) throws SQLException {
+		queryViewExistsPreparedStatement.setString(1, viewName);
+		ResultSet resultSet = queryViewExistsPreparedStatement.executeQuery();
+		if(resultSet.next())
+			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
+		throw new NullPointerException("查询视图是否存在时, ResultSet对象中没有任何数据, 请检查查询的sql语句是否正确");
+	}
+	
 	
 	// -------------------------------------------------------------------------------------
 	//执行SQL语句

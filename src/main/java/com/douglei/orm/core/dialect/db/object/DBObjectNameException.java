@@ -5,7 +5,6 @@ package com.douglei.orm.core.dialect.db.object;
  * @author DougLei
  */
 public class DBObjectNameException extends RuntimeException{
-	private static final long serialVersionUID = 4755976187768742182L;
 
 	public DBObjectNameException(String message) {
 		super(message);

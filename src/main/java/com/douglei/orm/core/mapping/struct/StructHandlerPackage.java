@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.mapping.struct.proc.ProcStructHandler;
 import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
 import com.douglei.orm.core.mapping.struct.view.ViewStructHandler;
@@ -17,6 +17,7 @@ class StructHandlerPackage {
 	private DataSourceWrapper dataSourceWrapper;
 	
 	private DBConnection connection;
+	
 	private TableStructHandler tableStructHandler;
 	private ViewStructHandler viewStructHandler;
 	private ProcStructHandler procStructHandler;
@@ -25,32 +26,27 @@ class StructHandlerPackage {
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
 	
-	private DBConnection getConnection() {
+	private DBConnection getConnection(SqlStatementHandler handler) {
 		if(connection == null)
-			connection = new DBConnection(dataSourceWrapper);
+			connection = new DBConnection(dataSourceWrapper, handler);
 		return connection;
 	}
 
 	public TableStructHandler getTableStructHandler() throws SQLException {
-		if(tableStructHandler == null) {
-			DBConnection connection = getConnection();
-			TableSqlStatementHandler handler = EnvironmentContext.getDialect().getTableSqlStatementHandler();
-			connection.init4TableStructHandler(handler.queryTableExistsSql());
-			
-			tableStructHandler = new TableStructHandler(connection, handler);
-		}
+		if(tableStructHandler == null) 
+			tableStructHandler = new TableStructHandler(getConnection(EnvironmentContext.getDialect().getSqlStatementHandler()));
 		return tableStructHandler;
 	}
 
 	public ViewStructHandler getViewStructHandler() {
-		if(viewStructHandler == null)
-			viewStructHandler = new ViewStructHandler(getConnection());
+		if(viewStructHandler == null) 
+			viewStructHandler = new ViewStructHandler(getConnection(EnvironmentContext.getDialect().getSqlStatementHandler()));
 		return viewStructHandler;
 	}
 	
 	public ProcStructHandler getProcStructHandler() {
-		if(procStructHandler == null)
-			procStructHandler = new ProcStructHandler(getConnection());
+		if(procStructHandler == null) 
+			procStructHandler = new ProcStructHandler(getConnection(EnvironmentContext.getDialect().getSqlStatementHandler()));
 		return procStructHandler;
 	}
 

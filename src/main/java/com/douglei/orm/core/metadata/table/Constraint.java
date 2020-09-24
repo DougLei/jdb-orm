@@ -18,7 +18,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
-	private static final long serialVersionUID = -6924155959689840702L;
 
 	private String name;// (前缀+表名+列名)
 	
@@ -140,7 +139,7 @@ public class Constraint implements Serializable{
 						break;
 				}
 			}
-			this.name = EnvironmentContext.getDialect().getDBObjectHandler().fixDBObjectName(nameBuilder.toString());// 设置约束名
+			this.name = EnvironmentContext.getDialect().getObjectHandler().fixObjectName(nameBuilder.toString());// 设置约束名
 			processConstraint = true;
 		}
 	}

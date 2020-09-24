@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.MappingEntity;
-import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
 import com.douglei.orm.configuration.impl.element.environment.mapping.MappingResolverContext;

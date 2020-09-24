@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
 import com.douglei.orm.core.mapping.rollback.RollbackExecMethod;
 import com.douglei.orm.core.mapping.rollback.RollbackRecorder;
 import com.douglei.orm.core.mapping.struct.DBConnection;
@@ -21,11 +20,9 @@ import com.douglei.orm.core.metadata.table.TableMetadata;
  * @author DougLei
  */
 public class TableStructHandler extends StructHandler<TableMetadata, TableMetadata>{
-	private TableSqlStatementHandler tableSqlStatementHandler;
 	
-	public TableStructHandler(DBConnection connection, TableSqlStatementHandler tableSqlStatementHandler) {
+	public TableStructHandler(DBConnection connection) {
 		super(connection);
-		this.tableSqlStatementHandler = tableSqlStatementHandler;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -33,14 +30,14 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	// -------------------------------------------------------------------------------------------------------------------
 	// 创建表
 	private void createTable(TableMetadata table) throws SQLException {
-		executeSql(tableSqlStatementHandler.tableCreateSqlStatement(table));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.tableDropSqlStatement(table.getName()), connection);
+		connection.executeSql(sqlStatementHandler.createTable(table));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropTable(table.getName()), connection);
 	}
 	
 	// 创建约束
 	private void createConstraint(Constraint constraint) throws SQLException {
-		executeSql(tableSqlStatementHandler.constraintCreateSqlStatement(constraint));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.constraintDropSqlStatement(constraint), connection);
+		connection.executeSql(sqlStatementHandler.createConstraint(constraint));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropConstraint(constraint), connection);
 	}
 	private void createConstraints(Collection<Constraint> constraints) throws SQLException {
 		if(constraints != null) {
@@ -52,7 +49,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 创建索引
 	private void createIndex(Index index) throws SQLException {
-		executeSql(index.getCreateSqlStatement());
+		connection.executeSql(index.getCreateSqlStatement());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, index.getDropSqlStatement(), connection);
 	}
 	private void createIndexes(Collection<Index> indexes) throws SQLException {
@@ -66,7 +63,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	// 创建主键序列
 	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) throws SQLException {
 		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
-			executeSql(primaryKeySequence.getCreateSql());
+			connection.executeSql(primaryKeySequence.getCreateSql());
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, primaryKeySequence.getDropSql(), connection);
 		}
 	}
@@ -210,7 +207,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 		if(EnvironmentContext.getProperty().enableColumnStructUpdateValidate()) {
 			boolean isModifyColumn = false;
 			if(column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler())) {
-				if(!EnvironmentContext.getDialect().getDBFeatures().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
+				if(!EnvironmentContext.getDialect().getFeature().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
 					throw new Exception("在数据库["+EnvironmentContext.getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
 				}
 				isModifyColumn = true;
@@ -244,32 +241,32 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 修改表名
 	private void tableRename(String originTableName, String targetTableName) throws SQLException {
-		executeSql(tableSqlStatementHandler.tableRenameSqlStatement(originTableName, targetTableName));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.tableRenameSqlStatement(targetTableName, originTableName), connection);
+		connection.executeSql(sqlStatementHandler.renameTable(originTableName, targetTableName));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.renameTable(targetTableName, originTableName), connection);
 	}
 	
 	// 创建列
 	private void createColumn(String tableName, ColumnMetadata column) throws SQLException {
-		executeSql(tableSqlStatementHandler.columnCreateSqlStatement(tableName, column));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()), connection);
+		connection.executeSql(sqlStatementHandler.createColumn(tableName, column));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropColumn(tableName, column.getName()), connection);
 	}
 	
 	// 删除列
 	private void dropColumn(String tableName, ColumnMetadata column) throws SQLException {
-		executeSql(tableSqlStatementHandler.columnDropSqlStatement(tableName, column.getName()));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.columnCreateSqlStatement(tableName, column), connection);
+		connection.executeSql(sqlStatementHandler.dropColumn(tableName, column.getName()));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.createColumn(tableName, column), connection);
 	}
 	
 	// 修改列名
 	private void columnRename(String tableName, String originColumnName, String targetColumnName) throws SQLException {
-		executeSql(tableSqlStatementHandler.columnRenameSqlStatement(tableName, originColumnName, targetColumnName));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.columnRenameSqlStatement(tableName, targetColumnName, originColumnName), connection);
+		connection.executeSql(sqlStatementHandler.renameColumn(tableName, originColumnName, targetColumnName));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.renameColumn(tableName, targetColumnName, originColumnName), connection);
 	}
 	
 	// 修改列
 	private void updateColumn(String tableName, ColumnMetadata originColumn, ColumnMetadata targetColumn) throws SQLException {
-		executeSql(tableSqlStatementHandler.columnModifySqlStatement(tableName, targetColumn));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.columnModifySqlStatement(tableName, originColumn), connection);
+		connection.executeSql(sqlStatementHandler.modifyColumn(tableName, targetColumn));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.modifyColumn(tableName, originColumn), connection);
 	}
 	
 	
@@ -279,14 +276,14 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	// 删除主键序列
 	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) throws SQLException {
 		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
-			executeSql(primaryKeySequence.getDropSql());
+			connection.executeSql(primaryKeySequence.getDropSql());
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, primaryKeySequence.getCreateSql(), connection);
 		}
 	}
 	
 	// 删除索引
 	private void dropIndex(Index index) throws SQLException {
-		executeSql(index.getDropSqlStatement());
+		connection.executeSql(index.getDropSqlStatement());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, index.getCreateSqlStatement(), connection);
 	}
 	private void dropIndexes(Collection<Index> indexes) throws SQLException {
@@ -299,8 +296,8 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 删除约束
 	private void dropConstraint(Constraint constraint) throws SQLException {
-		executeSql(tableSqlStatementHandler.constraintDropSqlStatement(constraint));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.constraintCreateSqlStatement(constraint), connection);
+		connection.executeSql(sqlStatementHandler.dropConstraint(constraint));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.createConstraint(constraint), connection);
 	}
 	private void dropConstraints(Collection<Constraint> constraints) throws SQLException {
 		if(constraints != null) {
@@ -312,8 +309,8 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 删除表
 	private void dropTable(TableMetadata table) throws SQLException {
-		executeSql(tableSqlStatementHandler.tableDropSqlStatement(table.getName()));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, tableSqlStatementHandler.tableCreateSqlStatement(table), connection);
+		connection.executeSql(sqlStatementHandler.dropTable(table.getName()));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.createTable(table), connection);
 	}
 	
 	

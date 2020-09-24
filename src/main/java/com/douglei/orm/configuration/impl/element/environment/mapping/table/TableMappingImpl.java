@@ -10,8 +10,6 @@ import java.util.Map;
 import org.dom4j.Attribute;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
@@ -42,7 +40,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMappingImpl implements Mapping {
-	private static final Logger logger = LoggerFactory.getLogger(TableMappingImpl.class);
 	private static final TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
 	private static final ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
 	
@@ -303,7 +300,7 @@ public class TableMappingImpl implements Mapping {
 			dropSqlStatement = elem==null?null:elem.getTextTrim();
 		}
 		PrimaryKeySequence primaryKeySequence = 
-				EnvironmentContext.getDialect().getDBObjectHandler().createPrimaryKeySequence(
+				EnvironmentContext.getDialect().getObjectHandler().createPrimaryKeySequence(
 						sequenceName, createSqlStatement, dropSqlStatement, tableMetadata.getName(), primaryKeyColumn);
 		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
 	}

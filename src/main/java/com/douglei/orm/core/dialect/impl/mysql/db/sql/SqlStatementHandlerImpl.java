@@ -1,6 +1,6 @@
-package com.douglei.orm.core.dialect.impl.mysql.db.table;
+package com.douglei.orm.core.dialect.impl.mysql.db.sql;
 
-import com.douglei.orm.core.dialect.db.table.TableSqlStatementHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.metadata.table.Constraint;
 import com.douglei.tools.utils.StringUtil;
 
@@ -8,14 +8,33 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
+public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	
 	// --------------------------------------------------------------------------------------------
-	// table
+	// query
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String queryTableExistsSql() {
-		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ?";
+	public String queryNameExists() {
+		return "select count(1) from (" + 
+				"	select table_name name_ from information_schema.tables where table_schema = (select database())" + 
+				"	union" + 
+				"	select routine_name name_ from information_schema.routines where routine_schema = (select database())" + 
+				") a where a.name_ = ?";
+	}
+
+	@Override
+	public String queryTableNameExists() {
+		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ? and table_type='BASE TABLE'";
+	}
+
+	@Override
+	public String queryViewNameExists() {
+		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ? and table_type='VIEW'";
+	}
+
+	@Override
+	public String queryProcNameExists() {
+		return "select count(1) from information_schema.routines where routine_schema = (select database()) and routine_type='PROCEDURE' and routine_name = ?";
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -70,8 +89,4 @@ public class TableSqlStatementHandlerImpl extends TableSqlStatementHandler{
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
 		return tmpSql.toString();
 	}
-	
-	// --------------------------------------------------------------------------------------------
-	// index
-	// --------------------------------------------------------------------------------------------
 }
