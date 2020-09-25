@@ -11,7 +11,7 @@ import com.douglei.orm.configuration.environment.mapping.container.impl.Applicat
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.configuration.environment.property.FieldMetaData;
 import com.douglei.orm.core.dialect.Dialect;
-import com.douglei.orm.core.dialect.DialectMapping;
+import com.douglei.orm.core.dialect.DialectContainer;
 import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.sql.parameter.DefaultValueHandler;
 import com.douglei.orm.core.metadata.sql.parameter.SqlParameterConfigHolder;
@@ -130,7 +130,7 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 
 	void setDialect(String value) {
 		if(StringUtil.notEmpty(value))
-			this.dialect = DialectMapping.getDialect(value, databaseMetadata);
+			this.dialect = DialectContainer.getDialect(value, databaseMetadata);
 	}
 	void setEnableStatementCache(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
@@ -185,7 +185,7 @@ public class EnvironmentPropertyImpl implements EnvironmentProperty{
 
 	// 根据数据库元数据, 获取对应的dialect
 	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
-		this.dialect = DialectMapping.getDialectByDatabaseMetadata(databaseMetadata);
+		this.dialect = DialectContainer.getDialectByDatabaseMetadata(databaseMetadata);
 	}
 	
 	@Override

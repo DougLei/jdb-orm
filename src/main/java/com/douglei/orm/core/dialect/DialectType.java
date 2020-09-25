@@ -48,9 +48,8 @@ public enum DialectType {
 	 * @return
 	 */
 	public Dialect getDialectInstance() {
-		if(dialectInstance == null) {
+		if(dialectInstance == null) 
 			dialectInstance = (Dialect) ConstructorUtil.newInstance(dialectClass);
-		}
 		return dialectInstance;
 	}
 	

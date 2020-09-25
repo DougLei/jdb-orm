@@ -9,14 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.DatabaseMetadata;
 
-
-
 /**
- * dialect映射
+ * dialect容器
  * @author DougLei
  */
-public class DialectMapping {
-	private static final Logger logger = LoggerFactory.getLogger(DialectMapping.class);
+public class DialectContainer {
+	private static final Logger logger = LoggerFactory.getLogger(DialectContainer.class);
 	private static final int count = DialectType.values().length;
 	
 	private static final Map<String, Dialect> DIALECT_MAP = new HashMap<String, Dialect>(count);// Dialect实例映射
