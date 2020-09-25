@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator.sql;
+package com.douglei.orm.sessionfactory.validator.sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,7 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public class SqlValidator {
-	
-	List<ContentValidator> contentValidators;
+	private List<ContentValidator> contentValidators;
 	
 	public SqlValidator(SqlMetadata sqlMetadata, String name) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);

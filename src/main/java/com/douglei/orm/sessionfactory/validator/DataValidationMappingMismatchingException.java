@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator;
+package com.douglei.orm.sessionfactory.validator;
 
 /**
  * 数据验证时的mapping不匹配异常

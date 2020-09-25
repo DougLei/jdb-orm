@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator.table;
+package com.douglei.orm.sessionfactory.validator.table;
 
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 

@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator;
+package com.douglei.orm.sessionfactory.validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import com.douglei.orm.configuration.environment.mapping.container.MappingContai
 import com.douglei.orm.core.metadata.sql.SqlMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.data.validator.sql.SqlValidator;
-import com.douglei.orm.sessionfactory.data.validator.table.PersistentObjectValidator;
+import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
+import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
 
 /**
  * 

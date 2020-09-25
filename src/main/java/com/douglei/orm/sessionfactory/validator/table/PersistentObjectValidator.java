@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator.table;
+package com.douglei.orm.sessionfactory.validator.table;
 
 import java.util.ArrayList;
 import java.util.List;

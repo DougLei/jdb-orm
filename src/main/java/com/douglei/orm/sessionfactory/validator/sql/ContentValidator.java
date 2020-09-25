@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.data.validator.sql;
+package com.douglei.orm.sessionfactory.validator.sql;
 
 import java.util.List;
 
@@ -11,7 +11,6 @@ import com.douglei.orm.core.metadata.validator.ValidationResult;
  * @author DougLei
  */
 class ContentValidator {
-	
 	private List<SqlNode> rootSqlNodes;
 	
 	public ContentValidator(ContentMetadata contentMetadata) {

@@ -9,10 +9,10 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.core.sql.ConnectionWrapper;
-import com.douglei.orm.sessionfactory.data.validator.DataValidatorProcessor;
 import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
+import com.douglei.orm.sessionfactory.validator.DataValidatorProcessor;
 
 /**
  * 
