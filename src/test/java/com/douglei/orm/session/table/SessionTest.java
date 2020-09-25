@@ -78,6 +78,11 @@ public class SessionTest {
 		System.out.println("end");
 	}
 	
+	@Test
+	public void test() {
+		System.out.println("测试存储过程映射");
+	}
+	
 	// --------------------------------------------------------------------------------------
 
 	private Configuration conf;

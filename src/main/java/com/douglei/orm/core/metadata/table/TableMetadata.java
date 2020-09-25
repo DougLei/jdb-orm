@@ -45,7 +45,7 @@ public class TableMetadata extends AbstractMetadata implements Metadata{
 	private Map<String, Index> indexes;// 索引
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
-		super(className, oldName);
+		super(name, oldName);
 		this.className = className;
 		this.createMode = createMode;
 	}
