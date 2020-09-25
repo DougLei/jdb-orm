@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 
-	<procedure name="SYS_USER">
-		create procedure SYS_USER (@id int)
+	<procedure name="SYS_USER1">
+		create procedure SYS_USER1 (@id int, @i int)
 		as
 		begin
 			select * from sys_user

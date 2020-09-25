@@ -16,7 +16,7 @@ public class ProcedureMetadataResolver extends ViewMetadataResolver {
 	}
 
 	@Override
-	protected ProcedureMetadata newInstance(String name, String oldName, String content) {
-		return new ProcedureMetadata(name, oldName, content);
+	protected ProcedureMetadata newInstance(String name, String oldName, String script) {
+		return new ProcedureMetadata(name, oldName, script);
 	}
 }

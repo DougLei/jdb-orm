@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 
-	<!-- name和oldName属性的配置含义, 可以参考《table映射配置结构设计.tmp.xml》中<table>元素的属性 -->
+	<!-- name必须和存储过程脚本的名称一致, oldName记录之前的name, 框架会将之前的存储过程删除 -->
 	<procedure name="" oldName="">
-		<!-- 这里写具体存储过程的内容 -->
+		<!-- 这里写具体存储过程的脚本 -->
 	</procedure>
 </mapping-configuration>

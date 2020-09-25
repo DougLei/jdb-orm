@@ -19,11 +19,11 @@ public class ViewMetadataResolver implements MetadataResolver<Element, ViewMetad
 		if(StringUtil.isEmpty(name)) 
 			throw new MetadataResolvingException("<"+elementName()+">元素的name属性值不能为空");
 		
-		String content = element.getText();
-		if(StringUtil.isEmpty(content)) 
-			throw new MetadataResolvingException("<"+elementName()+">元素中的具体内容不能为空");
+		String script = element.getText();
+		if(StringUtil.isEmpty(script)) 
+			throw new MetadataResolvingException("<"+elementName()+">元素中的脚本内容不能为空");
 		
-		return newInstance(name, element.attributeValue("oldName"), content);
+		return newInstance(name, element.attributeValue("oldName"), script);
 	}
 	
 	/**
@@ -39,10 +39,10 @@ public class ViewMetadataResolver implements MetadataResolver<Element, ViewMetad
 	 * @param name
 	 * @param oldName
 	 * @param createMode
-	 * @param content
+	 * @param script
 	 * @return
 	 */
-	protected ViewMetadata newInstance(String name, String oldName, String content) {
-		return new ViewMetadata(name, oldName, content); 
+	protected ViewMetadata newInstance(String name, String oldName, String script) {
+		return new ViewMetadata(name, oldName, script); 
 	}
 }

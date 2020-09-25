@@ -11,7 +11,6 @@ public abstract class AbstractMetadata {
 	protected String name; // 名
 	protected String oldName;// 旧名
 	
-	
 	public AbstractMetadata() {}
 	public AbstractMetadata(String name, String oldName) {
 		// 设置name的同时, 对name进行验证

@@ -23,14 +23,14 @@ public class ProcedureStructHandler extends StructHandler<ProcedureMetadata, Str
 	}
 
 	@Override
-	public void create(ProcedureMetadata proc) throws Exception {
-		delete(proc.getOldName()); // 不论怎样, 都先删除旧的
-		validateNameExists(proc); // 验证下新的名称是否可以使用
+	public void create(ProcedureMetadata procedureMetadata) throws Exception {
+		delete(procedureMetadata.getOldName()); // 不论怎样, 都先删除旧的
+		validateNameExists(procedureMetadata); // 验证下新的名称是否可以使用
 		
-		connection.executeSql(proc.getContent());
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropProc(proc.getName()), connection);
+		connection.executeSql(procedureMetadata.getScript());
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropProc(procedureMetadata.getName()), connection);
 		
-		serializationHandler.createFileDirectly(proc, ProcedureMetadata.class);
+		serializationHandler.createFileDirectly(procedureMetadata, ProcedureMetadata.class);
 	}
 
 	@Override
@@ -39,15 +39,15 @@ public class ProcedureStructHandler extends StructHandler<ProcedureMetadata, Str
 		if(!connection.procExists(procName))
 			return;
 		
-		String createContent; 
+		String script; 
 		if(deleted == null) {
 			logger.info("不存在name为{}的存储过程序列化文件, 去数据库中查找视图内容", procName);
-			createContent = connection.queryProcContent(procName);
+			script = connection.queryProcContent(procName);
 		}else {
-			createContent = deleted.getContent();
+			script = deleted.getScript();
 		}
 		
 		connection.executeSql(sqlStatementHandler.dropProc(procName));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, createContent, connection);
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, script, connection);
 	}
 }

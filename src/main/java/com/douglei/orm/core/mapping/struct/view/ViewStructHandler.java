@@ -27,7 +27,7 @@ public class ViewStructHandler extends StructHandler<ViewMetadata, String>{
 		delete(view.getOldName()); // 不论怎样, 都先删除旧的
 		validateNameExists(view); // 验证下新的名称是否可以使用
 		
-		connection.executeSql(view.getContent());
+		connection.executeSql(view.getScript());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropView(view.getName()), connection);
 		
 		serializationHandler.createFileDirectly(view, ViewMetadata.class);
@@ -39,15 +39,15 @@ public class ViewStructHandler extends StructHandler<ViewMetadata, String>{
 		if(!connection.viewExists(viewName))
 			return;
 		
-		String createContent; 
+		String script; 
 		if(deleted == null) {
 			logger.info("不存在name为{}的视图序列化文件, 去数据库中查找视图内容", viewName);
-			createContent = connection.queryViewContent(viewName);
+			script = connection.queryViewContent(viewName);
 		}else {
-			createContent = deleted.getContent();
+			script = deleted.getScript();
 		}
 		
 		connection.executeSql(sqlStatementHandler.dropView(viewName));
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, createContent, connection);
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, script, connection);
 	}
 }

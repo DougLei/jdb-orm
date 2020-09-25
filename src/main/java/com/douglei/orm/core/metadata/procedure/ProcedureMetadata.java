@@ -7,10 +7,9 @@ import com.douglei.orm.core.metadata.view.ViewMetadata;
  * @author DougLei
  */
 public class ProcedureMetadata extends ViewMetadata{
-	private static final long serialVersionUID = -4411237637382749351L;
-	
-	public ProcedureMetadata() {}
-	public ProcedureMetadata(String name, String oldName, String content) {
-		super(name, oldName, content);
+	private static final long serialVersionUID = 406374837795440256L;
+
+	public ProcedureMetadata(String name, String oldName, String script) {
+		super(name, oldName, script);
 	}
 }
