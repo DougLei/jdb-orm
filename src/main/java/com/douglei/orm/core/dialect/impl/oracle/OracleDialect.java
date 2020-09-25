@@ -9,6 +9,7 @@ import com.douglei.orm.core.dialect.impl.oracle.db.features.DBFeaturesImpl;
 import com.douglei.orm.core.dialect.impl.oracle.db.object.DBObjectHandlerImpl;
 import com.douglei.orm.core.dialect.impl.oracle.db.sql.SqlHandlerImpl;
 import com.douglei.orm.core.dialect.impl.oracle.db.sql.SqlStatementHandlerImpl;
+import com.douglei.orm.core.dialect.impl.oracle.db.sql.SqlQueryHandlerImpl;
 
 /**
  * 
@@ -24,6 +25,7 @@ public final class OracleDialect extends AbstractDialect{
 		
 		sqlHandler = new SqlHandlerImpl();
 		sqlStatementHandler = new SqlStatementHandlerImpl();
+		sqlQueryHandler = new SqlQueryHandlerImpl(sqlStatementHandler);
 	}
 
 	@Override

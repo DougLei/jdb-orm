@@ -19,7 +19,7 @@ import com.douglei.orm.core.mapping.rollback.RollbackExecMethod;
 import com.douglei.orm.core.mapping.rollback.RollbackExecutor;
 import com.douglei.orm.core.mapping.rollback.RollbackRecorder;
 import com.douglei.orm.core.mapping.struct.StructHandlerPackageContext;
-import com.douglei.orm.core.metadata.proc.ProcMetadata;
+import com.douglei.orm.core.metadata.procedure.ProcedureMetadata;
 import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.view.ViewMetadata;
 
@@ -75,19 +75,20 @@ public class MappingHandler {
 			StructHandlerPackageContext.initialize(dataSourceWrapper);
 			for (MappingEntity mappingEntity : mappingEntities) {
 				logger.debug("操作: {}", mappingEntity);
+				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
 						if(mappingEntity.opStruct()) 
 							createStruct(mappingEntity);
 						
-						if(mappingEntity.getType().opInMappingContainer()) 
+						if(mappingEntity.getType().opMappingContainer()) 
 							addMapping(mappingEntity.getMapping());
 						break;
 					case DELETE: 
 						if(mappingEntity.opStruct()) 
 							deleteStruct(mappingEntity);
 						
-						if(mappingEntity.getType().opInMappingContainer()) 
+						if(mappingEntity.getType().opMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
 						break;
 				}
@@ -118,8 +119,8 @@ public class MappingHandler {
 			case VIEW:
 				StructHandlerPackageContext.getViewStructHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
 				break;
-			case PROC:
-				StructHandlerPackageContext.getProcStructHandler().create((ProcMetadata)mappingEntity.getMapping().getMetadata());
+			case PROCEDURE:
+				StructHandlerPackageContext.getProcStructHandler().create((ProcedureMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case SQL:
 				break;
@@ -143,10 +144,10 @@ public class MappingHandler {
 				StructHandlerPackageContext.getTableStructHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case VIEW:
-				StructHandlerPackageContext.getViewStructHandler().delete(mappingEntity.getCode());
+				StructHandlerPackageContext.getViewStructHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
-			case PROC:
-				StructHandlerPackageContext.getProcStructHandler().delete(mappingEntity.getCode());
+			case PROCEDURE:
+				StructHandlerPackageContext.getProcStructHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
 			case SQL:
 				break;

@@ -3,7 +3,7 @@ package com.douglei.orm.core.mapping.struct;
 import java.sql.SQLException;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.core.mapping.struct.proc.ProcStructHandler;
+import com.douglei.orm.core.mapping.struct.procedure.ProcedureStructHandler;
 import com.douglei.orm.core.mapping.struct.table.TableStructHandler;
 import com.douglei.orm.core.mapping.struct.view.ViewStructHandler;
 
@@ -52,7 +52,7 @@ public class StructHandlerPackageContext {
 	 * 获取存储过程结构处理器
 	 * @return
 	 */
-	public static ProcStructHandler getProcStructHandler() {
+	public static ProcedureStructHandler getProcStructHandler() {
 		return context.get().getProcStructHandler();
 	}
 }

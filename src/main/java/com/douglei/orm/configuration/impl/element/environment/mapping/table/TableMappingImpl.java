@@ -40,6 +40,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TableMappingImpl implements Mapping {
+	private static final long serialVersionUID = -6488317987921398253L;
 	private static final TableMetadataResolver tableMetadataResolver = new TableMetadataResolver();
 	private static final ColumnMetadataResolver columnMetadataResolver = new ColumnMetadataResolver();
 	

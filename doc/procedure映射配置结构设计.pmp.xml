@@ -2,7 +2,7 @@
 <mapping-configuration>
 
 	<!-- name和oldName属性的配置含义, 可以参考《table映射配置结构设计.tmp.xml》中<table>元素的属性 -->
-	<view name="" oldName="">
-		<!-- 这里写具体视图的内容 -->
-	</view>
+	<procedure name="" oldName="">
+		<!-- 这里写具体存储过程的内容 -->
+	</procedure>
 </mapping-configuration>

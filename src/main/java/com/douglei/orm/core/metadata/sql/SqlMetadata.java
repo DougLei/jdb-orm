@@ -12,6 +12,8 @@ import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
  * @author DougLei
  */
 public class SqlMetadata implements Metadata{
+	private static final long serialVersionUID = 2951312641689328484L;
+	
 	private String namespace;
 	private List<ContentMetadata> contents;
 	

@@ -23,7 +23,10 @@ import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
  * @author DougLei
  */
 public class TableMetadata extends AbstractMetadata implements Metadata{
+	private static final long serialVersionUID = 5064603602345750282L;
+	
 	private String className;// 映射的代码类名
+	private CreateMode createMode;// 创建模式
 	
 	private List<ColumnMetadata> declareColumns;// 按声明顺序的列
 	private Map<String, ColumnMetadata> columns;// 列<列名: 列>
@@ -42,8 +45,9 @@ public class TableMetadata extends AbstractMetadata implements Metadata{
 	private Map<String, Index> indexes;// 索引
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
-		super(className, oldName, createMode);
+		super(className, oldName);
 		this.className = className;
+		this.createMode = createMode;
 	}
 	
 	/**
@@ -199,6 +203,9 @@ public class TableMetadata extends AbstractMetadata implements Metadata{
 	}
 	public String getClassName() {
 		return className;
+	}
+	public CreateMode getCreateMode() {
+		return createMode;
 	}
 	
 	public void setPrimaryKeyHandler(PrimaryKeyHandler primaryKeyHandler) {

@@ -1,9 +1,6 @@
 package com.douglei.orm.core.metadata.view;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import com.douglei.orm.core.metadata.AbstractMetadata;
-import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.Metadata;
 
 /**
@@ -11,13 +8,12 @@ import com.douglei.orm.core.metadata.Metadata;
  * @author DougLei
  */
 public class ViewMetadata extends AbstractMetadata implements Metadata{
+	private static final long serialVersionUID = -3153924208599743639L;
 	private String content; // 具体的内容
-	private String signature; // 内容签名
 	
-	public ViewMetadata(String name, String oldName, CreateMode createMode, String content) {
-		super(name, oldName, createMode);
+	public ViewMetadata(String name, String oldName, String content) {
+		super(name, oldName);
 		this.content = content;
-		this.signature = DigestUtils.md5Hex(content);
 	}
 	
 	@Override
@@ -26,8 +22,5 @@ public class ViewMetadata extends AbstractMetadata implements Metadata{
 
 	public String getContent() {
 		return content;
-	}
-	public String getSignature() {
-		return signature;
 	}
 }

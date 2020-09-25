@@ -10,6 +10,7 @@ import com.douglei.tools.utils.RegularExpressionUtil;
  * @author DougLei
  */
 public class SqlParameterConfigHolder implements Serializable{
+	private static final long serialVersionUID = -4975362124062906400L;
 	
 	/**
 	 * 前后缀一样

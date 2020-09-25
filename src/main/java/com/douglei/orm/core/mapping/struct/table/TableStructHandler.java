@@ -334,6 +334,8 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 					dropTable(table);
 					break;
 				case DYNAMIC_UPDATE:
+					if(table.getName() != table.getOldName()) 
+						validateNameExists(table);
 					if(updateTable(table))
 						serializationHandler.createFile(table, TableMetadata.class);
 					return;
@@ -341,6 +343,9 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 					return;
 			}
 		}
+		
+		validateNameExists(table);
+		
 		createTable(table);
 		createConstraints(table.getConstraints());
 		createIndexes(table.getIndexes());

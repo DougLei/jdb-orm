@@ -11,8 +11,8 @@ import com.douglei.orm.configuration.environment.mapping.MappingType;
 public class DeleteStructEntity extends MappingEntity {
 	
 	public DeleteStructEntity(String code, MappingType type) {
-		if(type.opInMappingContainer())
-			throw new IllegalArgumentException("要删除type="+type.getName()+"的映射, 请使用 [" + DeleteMappingEntity.class.getName() + "] 类");
+		if(type.opMappingContainer())
+			throw new IllegalArgumentException("要删除类型为"+type.getName()+"的映射, 请使用 [" + DeleteMappingEntity.class.getName() + "] 类");
 		
 		super.code = code;
 		super.type = type;

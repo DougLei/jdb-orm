@@ -11,6 +11,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class PrimaryKeySequence implements Serializable{
+	private static final long serialVersionUID = -8717165532020189463L;
 	private String name;// 序列名
 	private String createSql;
 	private String dropSql;

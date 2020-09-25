@@ -27,6 +27,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class SqlMappingImpl implements Mapping {
+	private static final long serialVersionUID = -6194361257210022653L;
 	private static final SqlMetadataResolver sqlMetadataResolver = new SqlMetadataResolver();
 	private static final ContentMetadataResolver contentMetadataResolver = new ContentMetadataResolver();
 	

@@ -41,10 +41,10 @@ public class RollbackExecutor {
 				mappingContainer.deleteMapping(object.toString());
 				break;
 			case EXEC_CREATE_SERIALIZATION_FILE:
-				SerializationHandler.getSingleton().rollbackCreateFile((AbstractMetadata)object);
+				SerializationHandler.getSingleton().createFileOnRollback((AbstractMetadata)object);
 				break;
 			case EXEC_DELETE_SERIALIZATION_FILE:
-				SerializationHandler.getSingleton().rollbackDeleteFile(object.toString());
+				SerializationHandler.getSingleton().deleteFileOnRollback(object.toString());
 				break;
 		}
 	}

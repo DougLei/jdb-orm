@@ -5,6 +5,7 @@ package com.douglei.orm.core.metadata;
  * @author DougLei
  */
 public class MetadataResolvingException extends RuntimeException{
+	private static final long serialVersionUID = -2424792234267248046L;
 	
 	public MetadataResolvingException(String message) {
 		super(message);

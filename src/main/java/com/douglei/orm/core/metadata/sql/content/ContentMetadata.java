@@ -12,6 +12,7 @@ import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
+	private static final long serialVersionUID = -480535121424450166L;
 	protected String name;
 	protected ContentType type;
 	private IncrementIdValueConfig incrementIdValueConfig;

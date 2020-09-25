@@ -4,6 +4,7 @@ import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.orm.core.metadata.AbstractMetadata;
 import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
@@ -13,11 +14,11 @@ import com.douglei.tools.utils.StringUtil;
  * 列元数据
  * @author DougLei
  */
-public class ColumnMetadata implements Metadata{
-	private String name;// 列名
+public class ColumnMetadata extends AbstractMetadata implements Metadata{
+	private static final long serialVersionUID = -3507893627706936833L;
+
 	private String property;// 映射的代码类中的属性名
 	
-	private String oldName;// 旧列名
 	private String descriptionName;// 描述名
 	private short length;// 长度
 	private short precision;// 精度
@@ -38,7 +39,7 @@ public class ColumnMetadata implements Metadata{
 	private ValidateHandler validateHandler;// 验证器
 	
 	public ColumnMetadata(String property, String name, String oldName, String descriptionName, String dataType, short length, short precision, boolean nullable, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate) {
-		setNameByValidate(name, oldName);
+		super(name, oldName);
 		
 		this.property = StringUtil.isEmpty(property)?null:property;
 		this.descriptionName = StringUtil.isEmpty(descriptionName)?name:descriptionName;
@@ -51,17 +52,6 @@ public class ColumnMetadata implements Metadata{
 		processDataType(DataType.toValue(dataType), dataType, length, precision);
 		set2UniqueConstraint(unique);
 		set2PrimaryKeyConstraint(primaryKey);
-	}
-	
-	// 设置name的同时, 对name进行验证
-	private void setNameByValidate(String name, String oldName) {
-		EnvironmentContext.getDialect().getObjectHandler().validateObjectName(name);
-		this.name = name.toUpperCase();
-		if(StringUtil.isEmpty(oldName)) {
-			this.oldName = this.name;
-		}else {
-			this.oldName = oldName.toUpperCase();
-		}
 	}
 	
 	// 处理数据类型
@@ -176,12 +166,6 @@ public class ColumnMetadata implements Metadata{
 		}
 	}
 	
-	public String getName() {
-		return name;
-	}
-	public String getOldName() {
-		return oldName;
-	}
 	public String getDescriptionName() {
 		return descriptionName;
 	}

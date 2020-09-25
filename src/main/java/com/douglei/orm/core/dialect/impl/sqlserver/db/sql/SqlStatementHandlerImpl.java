@@ -19,18 +19,28 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 
 	@Override
-	public String queryTableNameExists() {
+	public String queryTableExists() {
 		return "select count(1) from sysobjects where id = object_id(?) and type='U'";
 	}
 
 	@Override
-	public String queryViewNameExists() {
+	public String queryViewExists() {
 		return "select count(1) from sysobjects where id = object_id(?) and type='V'";
 	}
-
+	
 	@Override
-	public String queryProcNameExists() {
+	public String queryProcExists() {
 		return "select count(1) from sysobjects where id = object_id(?) and type='P'";
+	}
+	
+	@Override
+	public String queryViewScript() {
+		return "select b.definition from sysobjects a left join sys.sql_modules b on a.id=b.object_id where a.type='V' and a.name=?";
+	}
+	
+	@Override
+	public String queryProcScript() {
+		return "select b.definition from sysobjects a left join sys.sql_modules b on a.id=b.object_id where a.type='P' and a.name=?";
 	}
 	
 	// --------------------------------------------------------------------------------------------
@@ -73,7 +83,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String defaultValueConstraintCreateSqlStatement(Constraint constraint) {
+	protected String createDefaultValue(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName());
 		tmpSql.append(" default ").append(constraint.getDefaultValue());

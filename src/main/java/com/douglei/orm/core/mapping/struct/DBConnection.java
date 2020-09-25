@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlQueryConnection;
+import com.douglei.orm.core.dialect.db.sql.SqlQueryHandler;
 import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.tools.utils.CloseUtil;
 
@@ -23,50 +24,75 @@ public class DBConnection {
 	
 	private Connection connection;
 	private SqlStatementHandler sqlStatementHandler;
+	private SqlQueryHandler sqlQueryHandler;
 	
-	public DBConnection(DataSourceWrapper dataSourceWrapper, SqlStatementHandler sqlStatementHandler){
+	public DBConnection(DataSourceWrapper dataSourceWrapper, SqlStatementHandler sqlStatementHandler, SqlQueryHandler sqlQueryHandler){
 		this.connection = dataSourceWrapper.getConnection(false).getConnection();
 		this.sqlStatementHandler = sqlStatementHandler;
+		this.sqlQueryHandler = sqlQueryHandler;
 	}
 
-	public SqlStatementHandler getSqlStatementHandler() {
+	SqlStatementHandler getSqlStatementHandler() {
 		return sqlStatementHandler;
 	}
 
 	// -------------------------------------------------------------------------------------
-	private PreparedStatement queryTableExistsPreparedStatement;
+	// 查询xx是否存在的公共方法
+	private boolean queryExists(PreparedStatement ps, String value) throws SQLException {
+		ps.setString(1, value);
+		ResultSet resultSet = ps.executeQuery();
+		if(resultSet.next())
+			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
+		throw new NullPointerException("ResultSet对象中没有任何数据, 请检查sql语句是否正确");
+	}
 	
-	// 为表结构处理器初始化
-	void init4TableStructHandler(SqlStatementHandler handler) throws SQLException {
-		queryTableExistsPreparedStatement = connection.prepareStatement(handler.queryTableExistsSql());
+	// 查询判断name是否存在
+	private PreparedStatement nameExists;
+	public boolean nameExists(String name) throws SQLException {
+		if(nameExists == null)
+			nameExists = connection.prepareStatement(sqlStatementHandler.queryNameExists());
+		return queryExists(nameExists, name);
 	}
 	
 	// 查询判断表是否存在
+	private PreparedStatement tableExists;
 	public boolean tableExists(String tableName) throws SQLException {
-		queryTableExistsPreparedStatement.setString(1, tableName);
-		ResultSet resultSet = queryTableExistsPreparedStatement.executeQuery();
-		if(resultSet.next())
-			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
-		throw new NullPointerException("查询表是否存在时, ResultSet对象中没有任何数据, 请检查查询的sql语句是否正确");
-	}
-	
-	// -------------------------------------------------------------------------------------
-	private PreparedStatement queryViewExistsPreparedStatement;
-	
-	// 为视图结构处理器初始化
-	void init4ViewStructHandler(DBObjectHandler handler) throws SQLException {
-		queryViewExistsPreparedStatement = connection.prepareStatement(handler.queryViewExistsSql());
+		if(tableExists == null)
+			tableExists = connection.prepareStatement(sqlStatementHandler.queryTableExists());
+		return queryExists(tableExists, tableName);
 	}
 	
 	// 查询判断视图是否存在
+	private PreparedStatement viewExists;
 	public boolean viewExists(String viewName) throws SQLException {
-		queryViewExistsPreparedStatement.setString(1, viewName);
-		ResultSet resultSet = queryViewExistsPreparedStatement.executeQuery();
-		if(resultSet.next())
-			return Byte.parseByte(resultSet.getObject(1).toString()) == 1;
-		throw new NullPointerException("查询视图是否存在时, ResultSet对象中没有任何数据, 请检查查询的sql语句是否正确");
+		if(viewExists == null)
+			viewExists = connection.prepareStatement(sqlStatementHandler.queryViewExists());
+		return queryExists(viewExists, viewName);
 	}
 	
+	// 查询判断存储过程是否存在
+	private PreparedStatement procExists;
+	public boolean procExists(String procName) throws SQLException {
+		if(procExists == null)
+			procExists = connection.prepareStatement(sqlStatementHandler.queryProcExists());
+		return queryExists(procExists, procName);
+	}
+	
+	
+	private SqlQueryConnection queryConnection;
+	// 查询获取视图的内容
+	public String queryViewContent(String viewName) throws SQLException {
+		if(queryConnection == null)
+			queryConnection = new SqlQueryConnection(connection);
+		return sqlQueryHandler.queryViewScript(viewName, queryConnection);		
+	}
+	
+	// 查询获取视图的内容
+	public String queryProcContent(String procName) throws SQLException {
+		if(queryConnection == null)
+			queryConnection = new SqlQueryConnection(connection);
+		return sqlQueryHandler.queryProcScript(procName, queryConnection);		
+	}
 	
 	// -------------------------------------------------------------------------------------
 	//执行SQL语句
@@ -79,6 +105,8 @@ public class DBConnection {
 	
 	// 关闭
 	public void close() {
-		CloseUtil.closeDBConn(queryTableExistsPreparedStatement, connection);
+		if(queryConnection != null)
+			queryConnection.close();
+		CloseUtil.closeDBConn(nameExists, tableExists, viewExists, procExists, connection);
 	}
 }

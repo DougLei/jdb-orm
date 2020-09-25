@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mapping-configuration>
-
-	<!-- 具体的属性配置含义, 可以参考《table映射配置结构设计.tmp.xml》中<table>元素的属性 -->
-	<proc name="" oldName="" createMode="create" strict="">
-		<!-- 这里写具体存储过程的内容 -->
-	</proc>
-</mapping-configuration>

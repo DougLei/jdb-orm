@@ -11,7 +11,7 @@ import com.douglei.orm.configuration.environment.mapping.MappingEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingOP;
 import com.douglei.orm.configuration.environment.mapping.MappingType;
 import com.douglei.orm.configuration.environment.mapping.ParseMappingException;
-import com.douglei.orm.configuration.impl.element.environment.mapping.proc.ProcMappingImpl;
+import com.douglei.orm.configuration.impl.element.environment.mapping.procedure.ProcedureMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.SqlMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.TableMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.view.ViewMappingImpl;
@@ -63,8 +63,8 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 					super.mapping = new TableMappingImpl(rootElement);
 				}else if(type == MappingType.VIEW) {
 					super.mapping = new ViewMappingImpl(rootElement);
-				}else if(type == MappingType.PROC) {
-					super.mapping = new ProcMappingImpl(rootElement);
+				}else if(type == MappingType.PROCEDURE) {
+					super.mapping = new ProcedureMappingImpl(rootElement);
 				}
 			}
 			super.code = super.mapping.getCode();

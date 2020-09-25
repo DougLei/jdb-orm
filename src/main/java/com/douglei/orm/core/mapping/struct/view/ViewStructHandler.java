@@ -2,14 +2,13 @@ package com.douglei.orm.core.mapping.struct.view;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
-import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.core.mapping.rollback.RollbackExecMethod;
 import com.douglei.orm.core.mapping.rollback.RollbackRecorder;
 import com.douglei.orm.core.mapping.struct.DBConnection;
 import com.douglei.orm.core.mapping.struct.StructHandler;
-import com.douglei.orm.core.metadata.CreateMode;
-import com.douglei.orm.core.metadata.table.TableMetadata;
 import com.douglei.orm.core.metadata.view.ViewMetadata;
 
 /**
@@ -17,54 +16,38 @@ import com.douglei.orm.core.metadata.view.ViewMetadata;
  * @author DougLei
  */
 public class ViewStructHandler extends StructHandler<ViewMetadata, String>{
+	private static final Logger logger = LoggerFactory.getLogger(ViewStructHandler.class);
 	
 	public ViewStructHandler(DBConnection connection) {
 		super(connection);
 	}
 
-	// 创建视图
-	private void createView(ViewMetadata view) throws SQLException {
-		connection.executeSql(view.getContent());
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, dbObjectHandler.viewDropSqlStatement(view.getName()), connection);
-	}
-	
-	// 删除视图
-	private void dropView(String name) throws SQLException {
-		connection.executeSql(dbObjectHandler.viewDropSqlStatement(name));
-		
-	}
-	
-	
 	@Override
 	public void create(ViewMetadata view) throws Exception {
-		if(view.getCreateMode() == CreateMode.NONE)
-			return;
+		delete(view.getOldName()); // 不论怎样, 都先删除旧的
+		validateNameExists(view); // 验证下新的名称是否可以使用
 		
-		if(connection.tableExists(table.getOldName())) {
-			switch(table.getCreateMode()) {
-				case DROP_CREATE:
-					dropPrimaryKeySequence(table.getPrimaryKeySequence());
-					dropIndexes(table.getIndexes());
-					dropConstraints(table.getConstraints());
-					dropTable(table);
-					break;
-				case DYNAMIC_UPDATE:
-					if(updateTable(table))
-						serializationHandler.createFile(table, TableMetadata.class);
-					return;
-				default:
-					return;
-			}
-		}
-		createView(view);
+		connection.executeSql(view.getContent());
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropView(view.getName()), connection);
 		
-		if(view.getCreateMode() == CreateMode.DYNAMIC_UPDATE)
-			serializationHandler.createFile(view, ViewMetadata.class);
+		serializationHandler.createFileDirectly(view, ViewMetadata.class);
 	}
 
 	@Override
-	public void delete(String name) throws SQLException {
-		// TODO Auto-generated method stubz 
+	public void delete(String viewName) throws SQLException {
+		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, ViewMetadata.class);
+		if(!connection.viewExists(viewName))
+			return;
 		
+		String createContent; 
+		if(deleted == null) {
+			logger.info("不存在name为{}的视图序列化文件, 去数据库中查找视图内容", viewName);
+			createContent = connection.queryViewContent(viewName);
+		}else {
+			createContent = deleted.getContent();
+		}
+		
+		connection.executeSql(sqlStatementHandler.dropView(viewName));
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, createContent, connection);
 	}
 }

@@ -23,25 +23,35 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 
 	@Override
-	public String queryTableNameExists() {
+	public String queryTableExists() {
 		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ? and table_type='BASE TABLE'";
 	}
 
 	@Override
-	public String queryViewNameExists() {
+	public String queryViewExists() {
 		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ? and table_type='VIEW'";
 	}
-
+	
 	@Override
-	public String queryProcNameExists() {
+	public String queryProcExists() {
 		return "select count(1) from information_schema.routines where routine_schema = (select database()) and routine_type='PROCEDURE' and routine_name = ?";
+	}
+	
+	@Override
+	public String queryViewScript() {
+		return "select view_definition from information_schema.VIEWS where table_schema = (select database()) and table_name = ? ";
+	}
+	
+	@Override
+	public String queryProcScript() {
+		return "show create procedure "; // 后面加上存储过程名
 	}
 	
 	// --------------------------------------------------------------------------------------------
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String defaultValueConstraintCreateSqlStatement(Constraint constraint) {
+	protected String createDefaultValue(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
 		tmpSql.append(" set default ").append(constraint.getDefaultValue());
@@ -49,21 +59,21 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 
 	@Override
-	protected String primaryKeyConstraintDropSqlStatement(Constraint constraint) {
+	protected String dropPrimaryKey(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop primary key ");
 		return tmpSql.toString();
 	}
 
 	@Override
-	protected String uniqueConstraintDropSqlStatement(Constraint constraint) {
+	protected String dropUnique(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop index ").append(constraint.getName());
 		return tmpSql.toString();
 	}
 
 	@Override
-	protected String defaultValueConstraintDropSqlStatement(Constraint constraint) {
+	protected String dropDefaultValue(Constraint constraint) {
 		if(StringUtil.isEmpty(constraint.getConstraintColumnNames())) {
 			throw new NullPointerException("在mysql数据库中删除列的默认值时, 必须传入相应的列名");
 		}
@@ -74,17 +84,17 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 	
 	@Override
-	protected String checkConstraintDropSqlStatement(Constraint constraint) {
-		return ck_fk_constraintDropSqlStatement(constraint);
+	protected String dropCheck(Constraint constraint) {
+		return dropCK_FK(constraint);
 	}
 	
 	@Override
-	protected String foreignKeyConstraintDropSqlStatement(Constraint constraint) {
-		return ck_fk_constraintDropSqlStatement(constraint);
+	protected String dropForeignKey(Constraint constraint) {
+		return dropCK_FK(constraint);
 	}
 	
 	/**获取删除检查约束、外键约束的sql语句*/
-	private String ck_fk_constraintDropSqlStatement(Constraint constraint) {
+	private String dropCK_FK(Constraint constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
 		return tmpSql.toString();

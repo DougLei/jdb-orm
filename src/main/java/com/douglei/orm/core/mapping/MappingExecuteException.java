@@ -5,6 +5,7 @@ package com.douglei.orm.core.mapping;
  * @author DougLei
  */
 public class MappingExecuteException extends Exception{
+	private static final long serialVersionUID = 6920694440023409370L;
 
 	public MappingExecuteException(String message, Throwable t) {
 		super(message, t);

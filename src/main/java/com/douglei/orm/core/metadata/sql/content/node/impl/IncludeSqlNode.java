@@ -14,6 +14,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.ExecuteS
  * @author DougLei
  */
 public class IncludeSqlNode implements SqlNode {
+	private static final long serialVersionUID = 8246943298338787860L;
 	private SqlContentMetadata content;
 	private List<SqlNode> rootSqlNodes;
 	

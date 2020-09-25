@@ -14,6 +14,7 @@ import com.douglei.orm.core.metadata.view.ViewMetadata;
  * @author DougLei
  */
 public class ViewMappingImpl implements Mapping {
+	private static final long serialVersionUID = 6749821335330700969L;
 	private static final ViewMetadataResolver viewMetadataResolver = new ViewMetadataResolver();
 	
 	private ViewMetadata viewMetadata;

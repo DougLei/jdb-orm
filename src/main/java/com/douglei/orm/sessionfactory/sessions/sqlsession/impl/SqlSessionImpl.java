@@ -60,19 +60,19 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private StatementHandler getStatementHandler(String sql, List<Object> parameters, ReturnID returnID){
 		StatementHandler statementHandler = null;
 		if(enableStatementCache) {
-			String code = DigestUtils.md5Hex(sql);
+			String signature = DigestUtils.md5Hex(sql);
 			
 			if(statementHandlerCache == null) {
 				statementHandlerCache = new HashMap<String, StatementHandler>(8);
 			}else {
-				statementHandler = statementHandlerCache.get(code);
+				statementHandler = statementHandlerCache.get(signature);
 			}
 			
 			if(statementHandler == null) {
 				logger.debug("缓存中不存在相关的StatementHandler实例, 创建实例并尝试放到缓存中");
 				statementHandler = connection.createStatementHandler(sql, parameters, returnID);
 				if(statementHandler.supportCache())
-					statementHandlerCache.put(code, statementHandler);
+					statementHandlerCache.put(signature, statementHandler);
 			}
 		}else {
 			logger.debug("没有开启缓存, 只创建StatementHandler实例");

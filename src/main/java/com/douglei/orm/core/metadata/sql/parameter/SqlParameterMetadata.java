@@ -28,6 +28,8 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
+	private static final long serialVersionUID = -6293745189801690825L;
+
 	private String configText;
 	
 	private String name;// 参数名

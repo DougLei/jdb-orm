@@ -7,6 +7,7 @@ import com.douglei.orm.core.metadata.MetadataResolvingException;
  * @author DougLei
  */
 public class SqlNodeResolvingException extends MetadataResolvingException{
+	private static final long serialVersionUID = -6390370032453654570L;
 
 	public SqlNodeResolvingException(String message) {
 		super(message);

@@ -10,9 +10,8 @@ import com.douglei.tools.utils.StringUtil;
 public abstract class AbstractMetadata {
 	protected String name; // 名
 	protected String oldName;// 旧名
-	protected CreateMode createMode;// 创建模式
 	
-	public AbstractMetadata(String name, String oldName, CreateMode createMode) {
+	public AbstractMetadata(String name, String oldName) {
 		// 设置name的同时, 对name进行验证
 		EnvironmentContext.getDialect().getObjectHandler().validateObjectName(name);
 		
@@ -22,8 +21,6 @@ public abstract class AbstractMetadata {
 		}else {
 			this.oldName = oldName.toUpperCase();
 		}
-		
-		this.createMode = createMode;
 	}
 	
 	public String getName() {
@@ -31,8 +28,5 @@ public abstract class AbstractMetadata {
 	}
 	public String getOldName() {
 		return oldName;
-	}
-	public CreateMode getCreateMode() {
-		return createMode;
 	}
 }

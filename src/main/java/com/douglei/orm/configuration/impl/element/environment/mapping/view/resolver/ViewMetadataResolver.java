@@ -3,8 +3,6 @@ package com.douglei.orm.configuration.impl.element.environment.mapping.view.reso
 import org.dom4j.Element;
 
 import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.impl.element.environment.mapping.AbstractResolver;
-import com.douglei.orm.core.metadata.CreateMode;
 import com.douglei.orm.core.metadata.MetadataResolver;
 import com.douglei.orm.core.metadata.MetadataResolvingException;
 import com.douglei.orm.core.metadata.view.ViewMetadata;
@@ -14,7 +12,7 @@ import com.douglei.tools.utils.StringUtil;
  * view元数据解析
  * @author DougLei
  */
-public class ViewMetadataResolver extends AbstractResolver implements MetadataResolver<Element, ViewMetadata>{
+public class ViewMetadataResolver implements MetadataResolver<Element, ViewMetadata>{
 
 	public ViewMetadata resolving(Element element) throws MetadataResolvingException{
 		String name = element.attributeValue("name");
@@ -25,8 +23,7 @@ public class ViewMetadataResolver extends AbstractResolver implements MetadataRe
 		if(StringUtil.isEmpty(content)) 
 			throw new MetadataResolvingException("<"+elementName()+">元素中的具体内容不能为空");
 		
-		CreateMode createMode = getCreateMode(element);
-		return newInstance(name, element.attributeValue("oldName"), createMode, content);
+		return newInstance(name, element.attributeValue("oldName"), content);
 	}
 	
 	/**
@@ -45,7 +42,7 @@ public class ViewMetadataResolver extends AbstractResolver implements MetadataRe
 	 * @param content
 	 * @return
 	 */
-	protected ViewMetadata newInstance(String name, String oldName, CreateMode createMode, String content) {
-		return new ViewMetadata(name, oldName, createMode, content); 
+	protected ViewMetadata newInstance(String name, String oldName, String content) {
+		return new ViewMetadata(name, oldName, content); 
 	}
 }

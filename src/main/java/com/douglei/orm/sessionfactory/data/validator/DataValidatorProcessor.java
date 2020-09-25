@@ -59,8 +59,9 @@ public class DataValidatorProcessor {
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
 			case SQL:// 验证sql数据
 				return new SqlValidator((SqlMetadata)mapping.getMetadata(), name).validate(object);
+			default:
+				throw new UnsupportedOperationException("不支持"+mapping.getMappingType()+"类型的验证");
 		}
-		return null;
 	}
 	
 	// ------------------------------------------------------------------------------------------------------
@@ -128,6 +129,8 @@ public class DataValidatorProcessor {
 					index++;
 				}
 				break;
+			default:
+				throw new UnsupportedOperationException("不支持"+mapping.getMappingType()+"类型的验证");
 		}
 		return validationResults;
 	}

@@ -7,17 +7,17 @@ package com.douglei.orm.configuration.environment.mapping;
 public enum MappingType {
 	TABLE(".tmp.xml", 10, true),
 	VIEW(".vmp.xml", 20, false),
-	PROC(".pmp.xml", 30, false),
+	PROCEDURE(".pmp.xml", 30, false),
 	SQL(".smp.xml", 40, true);
 	
 	private int priority; // 优先级, 越低越优先
 	private String fileSuffix;
 	private String name; 
-	private boolean opInMappingContainer; // 能否在映射容器中操作
-	private MappingType(String fileSuffix, int priority, boolean opInMappingContainer) {
+	private boolean opMappingContainer; // 能否操作映射容器
+	private MappingType(String fileSuffix, int priority, boolean opMappingContainer) {
 		this.fileSuffix = fileSuffix;
 		this.priority = priority;
-		this.opInMappingContainer = opInMappingContainer;
+		this.opMappingContainer = opMappingContainer;
 		this.name = name().toLowerCase();
 	}
 
@@ -31,8 +31,8 @@ public enum MappingType {
 			return TABLE;
 		if(file.endsWith(SQL.fileSuffix))
 			return SQL;
-		if(file.endsWith(PROC.fileSuffix))
-			return PROC;
+		if(file.endsWith(PROCEDURE.fileSuffix))
+			return PROCEDURE;
 		if(file.endsWith(VIEW.fileSuffix))
 			return VIEW;
 		throw new NullPointerException("传入的" + file + ", 没有匹配到对应的MappingType");
@@ -43,7 +43,7 @@ public enum MappingType {
 	 * @return
 	 */
 	public static String[] getFileSuffixes() {
-		return new String[] {TABLE.fileSuffix, SQL.fileSuffix, PROC.fileSuffix, VIEW.fileSuffix};
+		return new String[] {TABLE.fileSuffix, SQL.fileSuffix, PROCEDURE.fileSuffix, VIEW.fileSuffix};
 	}
 
 	/**
@@ -55,11 +55,11 @@ public enum MappingType {
 	}
 
 	/**
-	 * 能否在映射容器中操作
+	 * 能否操作映射容器
 	 * @return
 	 */
-	public boolean opInMappingContainer() {
-		return opInMappingContainer;
+	public boolean opMappingContainer() {
+		return opMappingContainer;
 	}
 	
 	/**
