@@ -1,6 +1,6 @@
 package com.douglei.orm.core.sql.pagequery;
 
-import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.sql.SqlStatement;
 
 /**
@@ -9,8 +9,8 @@ import com.douglei.orm.core.sql.SqlStatement;
  */
 public class PageSqlStatement extends SqlStatement{
 
-	public PageSqlStatement(SqlHandler sqlHandler, String originSql) {
-		super(sqlHandler, originSql);
+	public PageSqlStatement(SqlStatementHandler sqlStatementHandler, String originSql) {
+		super(sqlStatementHandler, originSql);
 	}
 
 	/**
@@ -33,6 +33,6 @@ public class PageSqlStatement extends SqlStatement{
 	 * @return
 	 */
 	public String getPageQuerySql(int pageNum, int pageSize) {
-		return sqlHandler.getPageQuerySql(pageNum, pageSize, this);
+		return sqlStatementHandler.getPageQuerySql(pageNum, pageSize, this);
 	}
 }

@@ -18,7 +18,7 @@ public class ExecutionSql {
 	
 	public ExecutionSql(ExecuteHandler executionHandler) {
 		this.executionHandler = executionHandler;
-		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlHandler(), executionHandler.getCurrentSql());
+		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executionHandler.getCurrentSql());
 		this.parameters = executionHandler.getCurrentParameters();
 	}
 	

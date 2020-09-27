@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 /**
@@ -19,8 +19,8 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	private List<Object> parentValueList; // 父级主键值集合
 	private boolean parentValueExistNull; // 父级主键值是否有null, 如果有, 则要增加条件 is null
 	
-	public RecursiveSqlStatement(SqlHandler sqlHandler, String originSql, String pkColumnName, String parentPkColumnName, String childNodeName, Object parentValue) {
-		super(sqlHandler, originSql);
+	public RecursiveSqlStatement(SqlStatementHandler sqlStatementHandler, String originSql, String pkColumnName, String parentPkColumnName, String childNodeName, Object parentValue) {
+		super(sqlStatementHandler, originSql);
 		this.pkColumnName = pkColumnName;
 		this.parentPkColumnName = parentPkColumnName;
 		this.childNodeName = childNodeName;
@@ -149,7 +149,7 @@ public class RecursiveSqlStatement extends PageSqlStatement {
 	 * @return
 	 */
 	public String getRecursiveSql() {
-		return sqlHandler.getRecursiveSql(this);
+		return sqlStatementHandler.getRecursiveSql(this);
 	}
 	
 	

@@ -182,7 +182,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 
 	@Override
 	public long countQuery(String sql, List<Object> parameters) {
-		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
+		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql);
 		return Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString());
 	}
 
@@ -203,7 +203,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			pageSize = 10;
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
-		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql);
+		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql);
 		long count = Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
@@ -257,7 +257,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
-		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
+		RecursiveSqlStatement statement = new RecursiveSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		List<Map<String, Object>> rootList = query(statement.getRecursiveSql(), statement.appendParameterValues(parameters));
 		recursiveQuery_(targetClass, statement, rootList, deep-1, parameters);
 		statement.removeParentValueList(parameters);
@@ -348,7 +348,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			parameters = new ArrayList<Object>();
 		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
 		
-		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
+		PageRecursiveSqlStatement statement = new PageRecursiveSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 		long count = Integer.parseInt(uniqueQuery_(statement.getCountSql(), statement.appendParameterValues(parameters))[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);

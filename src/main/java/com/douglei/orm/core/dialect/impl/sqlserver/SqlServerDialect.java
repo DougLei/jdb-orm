@@ -4,11 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.douglei.orm.core.dialect.DialectType;
 import com.douglei.orm.core.dialect.impl.AbstractDialect;
-import com.douglei.orm.core.dialect.impl.sqlserver.db.sql.SqlQueryHandlerImpl;
 import com.douglei.orm.core.dialect.impl.sqlserver.datatype.handler.DataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.impl.sqlserver.db.features.DBFeaturesImpl;
 import com.douglei.orm.core.dialect.impl.sqlserver.db.object.DBObjectHandlerImpl;
-import com.douglei.orm.core.dialect.impl.sqlserver.db.sql.SqlHandlerImpl;
+import com.douglei.orm.core.dialect.impl.sqlserver.db.sql.SqlQueryHandlerImpl;
 import com.douglei.orm.core.dialect.impl.sqlserver.db.sql.SqlStatementHandlerImpl;
 
 /**
@@ -23,7 +22,6 @@ public final class SqlServerDialect extends AbstractDialect{
 		feature = new DBFeaturesImpl();
 		objectHandler = new DBObjectHandlerImpl();
 		
-		sqlHandler = new SqlHandlerImpl();
 		sqlStatementHandler = new SqlStatementHandlerImpl();
 		sqlQueryHandler = new SqlQueryHandlerImpl(sqlStatementHandler);
 	}

@@ -1,7 +1,12 @@
 package com.douglei.orm.core.dialect.impl.mysql.db.sql;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.metadata.table.Constraint;
+import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.core.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -9,6 +14,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class SqlStatementHandlerImpl extends SqlStatementHandler{
+	private static final Logger logger = LoggerFactory.getLogger(SqlStatementHandlerImpl.class);
 	
 	// --------------------------------------------------------------------------------------------
 	// query
@@ -43,7 +49,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 	
 	@Override
-	public String queryProcScript() {
+	public String queryProcedureScript() {
 		return "show create procedure "; // 后面加上存储过程名
 	}
 	
@@ -98,5 +104,29 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
 		return tmpSql.toString();
+	}
+	
+	// --------------------------------------------------------------------------------------------
+	// sql拼装
+	// --------------------------------------------------------------------------------------------
+	@Override
+	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
+		StringBuilder pageQuerySql = new StringBuilder(180 + statement.length());
+		if(statement.getWithClause() != null)
+			pageQuerySql.append(statement.getWithClause()).append(' ');
+		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
+		pageQuerySql.append(statement.getSql());
+		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
+		if(statement instanceof PageRecursiveSqlStatement) { // 分页递归查询
+			pageQuerySql.append(" WHERE ");
+			appendConditionSql2RecursiveSql(pageQuerySql, (PageRecursiveSqlStatement)statement);
+		}
+		pageQuerySql.append(" LIMIT ");
+		pageQuerySql.append((pageNum-1)*pageSize);
+		pageQuerySql.append(",");
+		pageQuerySql.append(pageSize);
+		if(logger.isDebugEnabled()) 
+			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
+		return pageQuerySql.toString();
 	}
 }

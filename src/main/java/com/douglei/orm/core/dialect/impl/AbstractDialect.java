@@ -4,7 +4,6 @@ import com.douglei.orm.core.dialect.Dialect;
 import com.douglei.orm.core.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.db.feature.DBFeature;
 import com.douglei.orm.core.dialect.db.object.DBObjectHandler;
-import com.douglei.orm.core.dialect.db.sql.SqlHandler;
 import com.douglei.orm.core.dialect.db.sql.SqlQueryHandler;
 import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 
@@ -18,10 +17,8 @@ public abstract class AbstractDialect implements Dialect{
 	protected DBFeature feature;
 	protected DBObjectHandler objectHandler;
 	
-	protected SqlHandler sqlHandler;
 	protected SqlStatementHandler sqlStatementHandler;
 	protected SqlQueryHandler sqlQueryHandler;
-	
 	
 	@Override
 	public AbstractDataTypeHandlerMapping getDataTypeHandlerMapping() {
@@ -36,11 +33,6 @@ public abstract class AbstractDialect implements Dialect{
 	@Override
 	public DBObjectHandler getObjectHandler() {
 		return objectHandler;
-	}
-
-	@Override
-	public SqlHandler getSqlHandler() {
-		return sqlHandler;
 	}
 
 	@Override

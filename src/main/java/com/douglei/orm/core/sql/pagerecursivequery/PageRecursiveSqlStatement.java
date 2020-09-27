@@ -1,6 +1,6 @@
 package com.douglei.orm.core.sql.pagerecursivequery;
 
-import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
 
 /**
@@ -9,8 +9,8 @@ import com.douglei.orm.core.sql.recursivequery.RecursiveSqlStatement;
  */
 public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 
-	public PageRecursiveSqlStatement(SqlHandler sqlHandler, String originSql, String pkColumnName, String parentPkColumnName, String childNodeName, Object parentValue) {
-		super(sqlHandler, originSql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
+	public PageRecursiveSqlStatement(SqlStatementHandler sqlStatementHandler, String originSql, String pkColumnName, String parentPkColumnName, String childNodeName, Object parentValue) {
+		super(sqlStatementHandler, originSql, pkColumnName, parentPkColumnName, childNodeName, parentValue);
 	}
 	
 	@Override
@@ -19,7 +19,7 @@ public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 		if(getWithClause() != null)
 			countSql.append(getWithClause()).append(' ');
 		countSql.append("SELECT COUNT(1) FROM (").append(sql).append(") JDB_ORM_QC_ WHERE ");
-		sqlHandler.appendConditionSql2RecursiveSql(countSql, this);
+		sqlStatementHandler.appendConditionSql2RecursiveSql(countSql, this);
 		return countSql.toString();
 	}
 	
@@ -30,6 +30,6 @@ public class PageRecursiveSqlStatement extends RecursiveSqlStatement {
 	 * @return
 	 */
 	public String getPageRecursiveQuerySql(int pageNum, int pageSize) {
-		return sqlHandler.getPageQuerySql(pageNum, pageSize, this);
+		return sqlStatementHandler.getPageQuerySql(pageNum, pageSize, this);
 	}
 }

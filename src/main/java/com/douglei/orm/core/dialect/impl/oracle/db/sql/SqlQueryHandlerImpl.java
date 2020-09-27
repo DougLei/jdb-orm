@@ -41,7 +41,7 @@ public class SqlQueryHandlerImpl extends SqlQueryHandler {
 
 	@Override
 	public String queryProcedureScript(String procName, SqlQueryConnection connection) throws SQLException{
-		PreparedStatement pst = connection.getPreparedStatement(sqlStatementHandler.queryProcScript());
+		PreparedStatement pst = connection.getPreparedStatement(sqlStatementHandler.queryProcedureScript());
 		pst.setString(1, procName);
 		
 		ResultSet rs = pst.executeQuery();

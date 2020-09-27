@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.core.dialect.db.sql.SqlHandler;
+import com.douglei.orm.core.dialect.db.sql.SqlStatementHandler;
 import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
 
 /**
@@ -14,7 +14,7 @@ import com.douglei.orm.core.sql.pagequery.PageSqlStatement;
  */
 public class SqlStatement {
 	private static final Logger logger = LoggerFactory.getLogger(PageSqlStatement.class);
-	protected SqlHandler sqlHandler;
+	protected SqlStatementHandler sqlStatementHandler;
 	
 	/**
 	 * with子句
@@ -30,8 +30,8 @@ public class SqlStatement {
 	protected String orderByClause;
 	
 	
-	public SqlStatement(SqlHandler sqlHandler, String originSql) {
-		this.sqlHandler = sqlHandler;
+	public SqlStatement(SqlStatementHandler sqlStatementHandler, String originSql) {
+		this.sqlStatementHandler = sqlStatementHandler;
 		resetSql(originSql);
 	}
 	
@@ -124,7 +124,7 @@ public class SqlStatement {
 	 * 提取order by子句
 	 */
 	private void extractOrderByClause() {
-		if(sqlHandler.needExtractOrderByClause())
+		if(sqlStatementHandler.needExtractOrderByClause())
 			new OrderByClauseResolver().extractOrderByClause(this);
 	}
 	

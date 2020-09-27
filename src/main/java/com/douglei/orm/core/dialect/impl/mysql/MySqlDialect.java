@@ -7,7 +7,6 @@ import com.douglei.orm.core.dialect.impl.AbstractDialect;
 import com.douglei.orm.core.dialect.impl.mysql.datatype.handler.DataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.impl.mysql.db.features.DBFeaturesImpl;
 import com.douglei.orm.core.dialect.impl.mysql.db.object.DBObjectHandlerImpl;
-import com.douglei.orm.core.dialect.impl.mysql.db.sql.SqlHandlerImpl;
 import com.douglei.orm.core.dialect.impl.mysql.db.sql.SqlQueryHandlerImpl;
 import com.douglei.orm.core.dialect.impl.mysql.db.sql.SqlStatementHandlerImpl;
 
@@ -23,7 +22,6 @@ public final class MySqlDialect extends AbstractDialect{
 		feature = new DBFeaturesImpl();
 		objectHandler = new DBObjectHandlerImpl();
 		
-		sqlHandler = new SqlHandlerImpl();
 		sqlStatementHandler = new SqlStatementHandlerImpl();
 		sqlQueryHandler = new SqlQueryHandlerImpl(sqlStatementHandler);
 	}
