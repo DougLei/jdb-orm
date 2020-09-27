@@ -70,7 +70,7 @@ public abstract class SqlStatementHandler {
 	 * @param procName
 	 * @return
 	 */
-	public String dropProc(String procName) {
+	public String dropProcedure(String procName) {
 		return "drop procedure " + procName;
 	}
 	

@@ -28,7 +28,7 @@ public class SqlQueryHandlerImpl extends SqlQueryHandler {
 	}
 
 	@Override
-	public String queryProcScript(String procName, SqlQueryConnection connection) throws SQLException {
+	public String queryProcedureScript(String procName, SqlQueryConnection connection) throws SQLException {
 		return queryScript(procName, sqlStatementHandler.queryProcScript(), connection, "存储过程");
 	}
 	

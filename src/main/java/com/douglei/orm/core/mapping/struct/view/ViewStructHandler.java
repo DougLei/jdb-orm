@@ -21,33 +21,55 @@ public class ViewStructHandler extends StructHandler<ViewMetadata, String>{
 	public ViewStructHandler(DBConnection connection) {
 		super(connection);
 	}
-
+	
+	// 获取删除的sql语句
+	protected String getDropSql(String name) {
+		return sqlStatementHandler.dropView(name);
+	}
+	// 获取序列化的class
+	protected Class<? extends ViewMetadata> getSerialClass(){
+		return ViewMetadata.class;
+	}
+	// 判断指定的name是否已经存在
+	protected boolean nameExists(String name) throws SQLException {
+		return connection.viewExists(name);
+	}
+	// 查询创建脚本
+	protected String queryCreateScript(String name) throws SQLException {
+		return connection.queryViewScript(name);
+	}
+	
+	
 	@Override
 	public void create(ViewMetadata view) throws Exception {
 		delete(view.getOldName()); // 不论怎样, 都先删除旧的
 		validateNameExists(view); // 验证下新的名称是否可以使用
 		
 		connection.executeSql(view.getScript());
-		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropView(view.getName()), connection);
+		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, getDropSql(view.getName()), connection);
 		
-		serializationHandler.createFileDirectly(view, ViewMetadata.class);
+		serializationHandler.createFileDirectly(view, getSerialClass());
 	}
 
+	/**
+	 * 
+	 * @param viewName 传入的viewName必须为大写
+	 */
 	@Override
 	public void delete(String viewName) throws SQLException {
-		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, ViewMetadata.class);
-		if(!connection.viewExists(viewName))
+		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, getSerialClass());
+		if(!nameExists(viewName))
 			return;
 		
 		String script; 
 		if(deleted == null) {
-			logger.info("不存在name为{}的视图序列化文件, 去数据库中查找视图内容", viewName);
-			script = connection.queryViewContent(viewName);
+			logger.debug("不存在name为{}的 [{}] 序列化文件, 去数据库中查找对应的脚本", viewName, getSerialClass());
+			script = queryCreateScript(viewName);
 		}else {
 			script = deleted.getScript();
 		}
 		
-		connection.executeSql(sqlStatementHandler.dropView(viewName));
+		connection.executeSql(getDropSql(viewName));
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, script, connection);
 	}
 }

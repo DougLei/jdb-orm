@@ -71,27 +71,27 @@ public class DBConnection {
 	}
 	
 	// 查询判断存储过程是否存在
-	private PreparedStatement procExists;
-	public boolean procExists(String procName) throws SQLException {
-		if(procExists == null)
-			procExists = connection.prepareStatement(sqlStatementHandler.queryProcExists());
-		return queryExists(procExists, procName);
+	private PreparedStatement procedureExists;
+	public boolean procedureExists(String procName) throws SQLException {
+		if(procedureExists == null)
+			procedureExists = connection.prepareStatement(sqlStatementHandler.queryProcExists());
+		return queryExists(procedureExists, procName);
 	}
 	
 	
 	private SqlQueryConnection queryConnection;
-	// 查询获取视图的内容
-	public String queryViewContent(String viewName) throws SQLException {
+	// 查询获取视图的脚本
+	public String queryViewScript(String viewName) throws SQLException {
 		if(queryConnection == null)
 			queryConnection = new SqlQueryConnection(connection);
 		return sqlQueryHandler.queryViewScript(viewName, queryConnection);		
 	}
 	
-	// 查询获取视图的内容
-	public String queryProcContent(String procName) throws SQLException {
+	// 查询获取视图的脚本
+	public String queryProcedureScript(String procName) throws SQLException {
 		if(queryConnection == null)
 			queryConnection = new SqlQueryConnection(connection);
-		return sqlQueryHandler.queryProcScript(procName, queryConnection);		
+		return sqlQueryHandler.queryProcedureScript(procName, queryConnection);		
 	}
 	
 	// -------------------------------------------------------------------------------------
@@ -107,6 +107,6 @@ public class DBConnection {
 	public void close() {
 		if(queryConnection != null)
 			queryConnection.close();
-		CloseUtil.closeDBConn(nameExists, tableExists, viewExists, procExists, connection);
+		CloseUtil.closeDBConn(nameExists, tableExists, viewExists, procedureExists, connection);
 	}
 }

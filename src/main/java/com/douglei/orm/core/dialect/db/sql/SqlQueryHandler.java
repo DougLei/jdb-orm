@@ -23,11 +23,11 @@ public abstract class SqlQueryHandler {
 	public abstract String queryViewScript(String viewName, SqlQueryConnection connection) throws SQLException;
 	
 	/**
-	 * 查询proc的脚本
+	 * 查询procedure的脚本
 	 * @param procName
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract String queryProcScript(String procName, SqlQueryConnection connection) throws SQLException;
+	public abstract String queryProcedureScript(String procName, SqlQueryConnection connection) throws SQLException;
 }
