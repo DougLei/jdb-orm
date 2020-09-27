@@ -4,7 +4,7 @@ import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.core.dialect.TransactionIsolationLevel;
 import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
 import com.douglei.orm.sessionfactory.sessions.Session;
-import com.douglei.orm.sessionfactory.validator.DataValidatorProcessor;
+import com.douglei.orm.sessionfactory.validator.DataValidator;
 
 /**
  * 
@@ -55,10 +55,10 @@ public interface SessionFactory {
 	}
 	
 	/**
-	 * 获取数据验证处理器
+	 * 获取数据验证器
 	 * @return
 	 */
-	default DataValidatorProcessor getDataValidatorProcessor() {
+	default DataValidator getDataValidator() {
 		return null;
 	}
 	

@@ -12,7 +12,7 @@ import com.douglei.orm.core.sql.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
-import com.douglei.orm.sessionfactory.validator.DataValidatorProcessor;
+import com.douglei.orm.sessionfactory.validator.DataValidator;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class SessionFactoryImpl implements SessionFactory {
 	private EnvironmentProperty environmentProperty;
 	
 	private MappingProcessor mappingProcessor;
-	private DataValidatorProcessor dataValidatorProcessor;
+	private DataValidator dataValidator;
 	
 	public SessionFactoryImpl(Configuration configuration, Environment environment) {
 		this.configuration = configuration;
@@ -71,18 +71,18 @@ public class SessionFactoryImpl implements SessionFactory {
 	}
 	
 	@Override
-	public DataValidatorProcessor getDataValidatorProcessor() {
-		if(dataValidatorProcessor == null) 
-			dataValidatorProcessor = new DataValidatorProcessor(environmentProperty.getMappingContainer());
+	public DataValidator getDataValidator() {
+		if(dataValidator == null) 
+			dataValidator = new DataValidator(environmentProperty.getMappingContainer());
 
 		EnvironmentContext.setProperty(environmentProperty);
-		return dataValidatorProcessor;
+		return dataValidator;
 	}
 
 	@Override
 	public void destroy() {
 		mappingProcessor = null;
-		dataValidatorProcessor = null;
+		dataValidator = null;
 		if(configuration != null) {
 			configuration.destroy();
 			configuration = null;

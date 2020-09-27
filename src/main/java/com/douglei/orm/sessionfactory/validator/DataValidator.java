@@ -15,10 +15,10 @@ import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
  * 
  * @author DougLei
  */
-public class DataValidatorProcessor {
+public class DataValidator {
 	private MappingContainer mappingContainer;
 	
-	public DataValidatorProcessor(MappingContainer mappingContainer) {
+	public DataValidator(MappingContainer mappingContainer) {
 		this.mappingContainer = mappingContainer;
 	}
 
