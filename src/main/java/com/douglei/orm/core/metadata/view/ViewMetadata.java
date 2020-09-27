@@ -1,14 +1,13 @@
 package com.douglei.orm.core.metadata.view;
 
 import com.douglei.orm.core.metadata.AbstractMetadata;
-import com.douglei.orm.core.metadata.Metadata;
 
 /**
  * 
  * @author DougLei
  */
-public class ViewMetadata extends AbstractMetadata implements Metadata{
-	private static final long serialVersionUID = -5934867049115808322L;
+public class ViewMetadata extends AbstractMetadata {
+	private static final long serialVersionUID = -4229191306971230892L;
 	
 	private String script; // 脚本内容
 	

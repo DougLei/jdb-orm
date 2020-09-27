@@ -5,7 +5,6 @@ import com.douglei.orm.core.dialect.datatype.DBDataType;
 import com.douglei.orm.core.dialect.datatype.DataType;
 import com.douglei.orm.core.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.core.metadata.AbstractMetadata;
-import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.validator.ValidateHandler;
 import com.douglei.orm.core.metadata.validator.internal._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
@@ -14,8 +13,8 @@ import com.douglei.tools.utils.StringUtil;
  * 列元数据
  * @author DougLei
  */
-public class ColumnMetadata extends AbstractMetadata implements Metadata{
-	private static final long serialVersionUID = -3507893627706936833L;
+public class ColumnMetadata extends AbstractMetadata {
+	private static final long serialVersionUID = 5112786402410372989L;
 
 	private String property;// 映射的代码类中的属性名
 	

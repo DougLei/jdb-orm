@@ -7,7 +7,9 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-public abstract class AbstractMetadata {
+public abstract class AbstractMetadata implements Metadata{
+	private static final long serialVersionUID = -3397371158612613919L;
+	
 	protected String name; // 名
 	protected String oldName;// 旧名
 	

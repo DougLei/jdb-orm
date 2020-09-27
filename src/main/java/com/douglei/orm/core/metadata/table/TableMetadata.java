@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.table.exce
 import com.douglei.orm.core.dialect.db.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.core.metadata.AbstractMetadata;
 import com.douglei.orm.core.metadata.CreateMode;
-import com.douglei.orm.core.metadata.Metadata;
 import com.douglei.orm.core.metadata.table.pk.PrimaryKeyHandler;
 import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
 
@@ -22,8 +21,8 @@ import com.douglei.orm.core.metadata.table.pk.impl.SequencePrimaryKeyHandler;
  * 表元数据
  * @author DougLei
  */
-public class TableMetadata extends AbstractMetadata implements Metadata{
-	private static final long serialVersionUID = 5064603602345750282L;
+public class TableMetadata extends AbstractMetadata {
+	private static final long serialVersionUID = -1741812808397484329L;
 	
 	private String className;// 映射的代码类名
 	private CreateMode createMode;// 创建模式
