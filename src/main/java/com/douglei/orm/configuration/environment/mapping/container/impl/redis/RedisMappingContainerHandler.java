@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 import redis.clients.jedis.Jedis;
@@ -21,7 +20,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 
 	public void clear(Jedis connection) {
 		Set<String> codes = connection.keys(getPrefix() + "*");
-		if(CollectionUtil.unEmpty(codes)) {
+		if(codes != null && !codes.isEmpty()) {
 			connection.del(getCodeByteArray(codes));
 		}
 	}

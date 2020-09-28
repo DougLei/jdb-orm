@@ -29,7 +29,7 @@ import com.douglei.orm.configuration.impl.element.environment.property.Environme
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jUtil;
 import com.douglei.orm.core.mapping.MappingHandler;
-import com.douglei.tools.instances.scanner.FileScanner;
+import com.douglei.tools.instances.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -161,8 +161,8 @@ public class EnvironmentImpl implements Environment{
 					path.append(",").append(p.getValue());
 				});
 				
-				FileScanner fileScanner = new FileScanner(MappingType.getFileSuffixes());
-				List<String> list = fileScanner.multiScan("true".equalsIgnoreCase(element.attributeValue("searchAll")), path.substring(1).split(","));
+				ResourceScanner scanner = new ResourceScanner(MappingType.getFileSuffixes());
+				List<String> list = scanner.multiScan("true".equalsIgnoreCase(element.attributeValue("searchAll")), path.substring(1).split(","));
 				if(!list.isEmpty()) {
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 

@@ -26,7 +26,6 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Per
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
-import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
@@ -318,7 +317,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 		
 	private void flushPersistentObjectCache() throws SessionExecutionException {
-		CollectionUtil.clear(tableMetadataCache);
+		if(!tableMetadataCache.isEmpty())
+			tableMetadataCache.clear();
+		
 		if(enableTalbeSessionCache && !persistentObjectCache.isEmpty()) {
 			Map<Identity, PersistentObject> map = null;
 			Set<String> codes = persistentObjectCache.keySet();

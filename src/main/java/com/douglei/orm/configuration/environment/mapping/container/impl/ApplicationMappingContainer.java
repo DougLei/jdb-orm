@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
-import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 使用当前系统的内存空间存储映射信息
@@ -48,7 +47,7 @@ public class ApplicationMappingContainer implements MappingContainer {
 	@Override
 	public void destroy() throws DestroyException {
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
-		if(CollectionUtil.unEmpty(mappings)) {
+		if(!mappings.isEmpty()) {
 			mappings.clear();
 			mappings = null;
 		}

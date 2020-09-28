@@ -15,7 +15,7 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.procedure.
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.SqlMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.TableMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.view.ViewMappingImpl;
-import com.douglei.tools.instances.scanner.FileScanner;
+import com.douglei.tools.instances.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 
@@ -49,7 +49,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	@Override
 	public boolean parseMapping() throws ParseMappingException {
 		logger.debug("开始解析{}类型的映射xml", type.getName());
-		InputStream input = filepath != null ? FileScanner.readByScanPath(filepath) : new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+		InputStream input = filepath != null ? ResourceScanner.readByScanPath(filepath) : new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 		try {
 			if(type == MappingType.SQL) {
 				org.w3c.dom.Document sqlDocument = MappingResolverContext.getDocumentBuilder().parse(input);

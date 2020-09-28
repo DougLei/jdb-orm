@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.impl.util.Dom4jUtil;
-import com.douglei.tools.instances.scanner.FileScanner;
+import com.douglei.tools.instances.scanner.impl.ResourceScanner;
 
 /**
  * 映射导入的数据上下文
@@ -31,12 +31,12 @@ public class MappingImportDataContext {
 	public static List<Element> getImportColumnElements(String importColumnFilePath) throws DocumentException {
 		Object importData = IMPORT_DATA.get(importColumnFilePath);
 		if(importData == null) {
-			List<String> files = new FileScanner().scan(importColumnFilePath);
+			List<String> files = new ResourceScanner().scan(importColumnFilePath);
 			if(files.size() == 0) {
 				throw new NullPointerException("在import-columns时, 未能在指定path=["+importColumnFilePath+"]下发现对应的配置文件");
 			}
 			
-			List<Element> importDataList = Dom4jUtil.elements("column", new SAXReader().read(FileScanner.readByScanPath(files.get(0))).getRootElement());
+			List<Element> importDataList = Dom4jUtil.elements("column", new SAXReader().read(ResourceScanner.readByScanPath(files.get(0))).getRootElement());
 			if(importDataList == null || importDataList.size() == 0) {
 				throw new NullPointerException("在指定path=["+importColumnFilePath+"]对应的配置文件中, 未能读取到任何<column>元素信息");
 			}

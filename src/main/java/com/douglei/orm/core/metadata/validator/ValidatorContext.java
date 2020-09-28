@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.tools.instances.file.reader.PropertiesReader;
-import com.douglei.tools.instances.scanner.ClassScanner;
+import com.douglei.tools.instances.scanner.impl.ClassScanner;
 import com.douglei.tools.utils.reflect.ClassLoadUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
@@ -24,11 +24,11 @@ class ValidatorContext {
 	 * 扫描并注册Validator
 	 */
 	private static void scanAndRegisterValidators() {
-		ClassScanner cs = new ClassScanner();
-		List<String> validatorClasses = cs.scan(Validator.class.getPackage().getName() +".impl");
+		ClassScanner scanner = new ClassScanner();
+		List<String> validatorClasses = scanner.scan(Validator.class.getPackage().getName() +".impl");
 		if(validatorClasses.size() > 0) 
 			validatorClasses.forEach(clz -> registerValidatorByScan(ClassLoadUtil.loadClass(clz)));
-		cs.destroy();
+		scanner.destroy();
 	}
 
 	/**

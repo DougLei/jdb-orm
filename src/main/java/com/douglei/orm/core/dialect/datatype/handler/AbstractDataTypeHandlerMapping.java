@@ -10,7 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
-import com.douglei.tools.instances.scanner.ClassScanner;
+import com.douglei.tools.instances.scanner.impl.ClassScanner;
 
 /**
  * 
@@ -22,9 +22,9 @@ public abstract class AbstractDataTypeHandlerMapping{
 	private final DBDataTypeHandlerMapping dbDataTypeHandlerMapping = new DBDataTypeHandlerMapping();
 	
 	public AbstractDataTypeHandlerMapping() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
-		ClassScanner cs = new ClassScanner();
+		ClassScanner scanner = new ClassScanner();
 		String basePackage = getClass().getPackage().getName();
-		List<String> classPaths = cs.multiScan(basePackage + ".classtype", basePackage + ".resultset.columntype", basePackage + ".dbtype");
+		List<String> classPaths = scanner.multiScan(basePackage + ".classtype", basePackage + ".resultset.columntype", basePackage + ".dbtype");
 		if(classPaths.size() > 0) {
 			Object obj = null;
 			for (String cp : classPaths) {
@@ -40,7 +40,7 @@ public abstract class AbstractDataTypeHandlerMapping{
 				}
 			}
 		}
-		cs.destroy();
+		scanner.destroy();
 	}
 	
 	public ClassDataTypeHandler getDataTypeHandlerByClassType(Object value) {

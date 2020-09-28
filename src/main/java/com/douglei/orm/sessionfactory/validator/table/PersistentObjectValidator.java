@@ -9,7 +9,6 @@ import com.douglei.orm.core.metadata.table.UniqueConstraint;
 import com.douglei.orm.core.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
-import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 持久化对象验证器
@@ -108,6 +107,7 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 	 * 销毁
 	 */
 	public void destroy() {
-		CollectionUtil.clear(uniqueValues);
+		if(uniqueValues != null)
+			uniqueValues.clear();
 	}
 }

@@ -14,7 +14,6 @@ import com.douglei.orm.core.sql.ReturnID;
 import com.douglei.orm.core.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.core.utils.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
@@ -155,7 +154,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	public void close() {
 		if(!isClosed) {
 			isClosed = true;
-			if(CollectionUtil.unEmpty(resultsetMetadatas)) 
+			if(resultsetMetadatas != null && !resultsetMetadatas.isEmpty()) 
 				resultsetMetadatas.clear();
 			
 			Statement statement = getStatement();

@@ -34,7 +34,6 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionExce
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
@@ -359,7 +358,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	@Override
 	public void close() {
-		CollectionUtil.clear(sqlMetadataCache);
+		if(!sqlMetadataCache.isEmpty())
+			sqlMetadataCache.clear();
 		super.close();
 	}
 }

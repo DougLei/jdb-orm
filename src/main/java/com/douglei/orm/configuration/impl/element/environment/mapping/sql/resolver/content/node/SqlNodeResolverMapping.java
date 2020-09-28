@@ -7,7 +7,7 @@ import java.util.Map;
 import org.w3c.dom.Node;
 
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
-import com.douglei.tools.instances.scanner.ClassScanner;
+import com.douglei.tools.instances.scanner.impl.ClassScanner;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -17,15 +17,15 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
 public class SqlNodeResolverMapping {
 	private static Map<String, SqlNodeResolver> SQL_NODE_RESOLVER_MAPPING = new HashMap<String, SqlNodeResolver>();
 	static {
-		ClassScanner cs = new ClassScanner();
-		List<String> classes = cs.scan(SqlNodeResolverMapping.class.getPackage().getName() + ".impl");
+		ClassScanner scanner = new ClassScanner();
+		List<String> classes = scanner.scan(SqlNodeResolverMapping.class.getPackage().getName() + ".impl");
 		
 		SqlNodeResolver sqlNodeHandler = null;
 		for (String cp : classes) {
 			sqlNodeHandler= (SqlNodeResolver) ConstructorUtil.newInstance(cp);
 			SQL_NODE_RESOLVER_MAPPING.put(sqlNodeHandler.getNodeName(), sqlNodeHandler);
 		}
-		cs.destroy();
+		scanner.destroy();
 	}
 	
 	/**

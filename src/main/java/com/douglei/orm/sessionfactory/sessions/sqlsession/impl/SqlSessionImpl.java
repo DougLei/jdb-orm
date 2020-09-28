@@ -26,7 +26,6 @@ import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
-import com.douglei.tools.utils.CollectionUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 import com.douglei.tools.utils.naming.converter.ConverterUtil;
 import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
@@ -480,9 +479,11 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(logger.isDebugEnabled()) {
 				logger.debug("close {}", getClass().getName());
 			}
-			if(enableStatementCache && CollectionUtil.unEmpty(statementHandlerCache)) {
-				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
-				statementHandlerCache.clear();
+			if(enableStatementCache && statementHandlerCache != null) {
+				if(!statementHandlerCache.isEmpty()) {
+					statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
+					statementHandlerCache.clear();
+				}
 				statementHandlerCache = null;
 			}
 			isClosed = true;
