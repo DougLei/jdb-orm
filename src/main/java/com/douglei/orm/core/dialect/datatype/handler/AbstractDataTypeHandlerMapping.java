@@ -40,7 +40,6 @@ public abstract class AbstractDataTypeHandlerMapping{
 				}
 			}
 		}
-		scanner.destroy();
 	}
 	
 	public ClassDataTypeHandler getDataTypeHandlerByClassType(Object value) {

@@ -25,7 +25,6 @@ public class SqlNodeResolverMapping {
 			sqlNodeHandler= (SqlNodeResolver) ConstructorUtil.newInstance(cp);
 			SQL_NODE_RESOLVER_MAPPING.put(sqlNodeHandler.getNodeName(), sqlNodeHandler);
 		}
-		scanner.destroy();
 	}
 	
 	/**

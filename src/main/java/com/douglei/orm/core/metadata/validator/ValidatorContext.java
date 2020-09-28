@@ -28,7 +28,6 @@ class ValidatorContext {
 		List<String> validatorClasses = scanner.scan(Validator.class.getPackage().getName() +".impl");
 		if(validatorClasses.size() > 0) 
 			validatorClasses.forEach(clz -> registerValidatorByScan(ClassLoadUtil.loadClass(clz)));
-		scanner.destroy();
 	}
 
 	/**
