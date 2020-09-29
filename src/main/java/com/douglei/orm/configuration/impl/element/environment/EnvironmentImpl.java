@@ -161,8 +161,7 @@ public class EnvironmentImpl implements Environment{
 					path.append(",").append(p.getValue());
 				});
 				
-				ResourceScanner scanner = new ResourceScanner(MappingType.getFileSuffixes());
-				List<String> list = scanner.multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
+				List<String> list = new ResourceScanner(MappingType.getFileSuffixes()).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
 				if(!list.isEmpty()) {
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 
