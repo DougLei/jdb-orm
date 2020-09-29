@@ -31,7 +31,7 @@ public interface TableSession {
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
 	 * @param objects
 	 */
-	void save(String code, List<Object> objects);
+	void save(String code, List<? extends Object> objects);
 	
 	/**
 	 * 修改对象

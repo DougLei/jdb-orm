@@ -185,7 +185,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void save(String code, List<Object> objects) {
+	public void save(String code, List<? extends Object> objects) {
 		TableMetadata table = getTableMetadata(code);
 		objects.forEach(propertyMap -> save_(table, propertyMap));
 	}
