@@ -15,7 +15,7 @@ import com.douglei.orm.configuration.impl.element.environment.mapping.procedure.
 import com.douglei.orm.configuration.impl.element.environment.mapping.sql.SqlMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.table.TableMappingImpl;
 import com.douglei.orm.configuration.impl.element.environment.mapping.view.ViewMappingImpl;
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 

@@ -29,7 +29,7 @@ import com.douglei.orm.configuration.impl.element.environment.property.Environme
 import com.douglei.orm.configuration.impl.element.properties.Properties;
 import com.douglei.orm.configuration.impl.util.Dom4jUtil;
 import com.douglei.orm.core.mapping.MappingHandler;
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.StringUtil;
 
 /**

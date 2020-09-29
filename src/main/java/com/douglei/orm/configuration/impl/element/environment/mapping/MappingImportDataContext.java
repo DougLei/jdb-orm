@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.impl.util.Dom4jUtil;
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 
 /**
  * 映射导入的数据上下文

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.w3c.dom.Node;
 
 import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
-import com.douglei.tools.instances.scanner.impl.ClassScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ClassScanner;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**

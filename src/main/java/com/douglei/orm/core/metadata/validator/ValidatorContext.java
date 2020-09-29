@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.tools.instances.file.reader.PropertiesReader;
-import com.douglei.tools.instances.scanner.impl.ClassScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ClassScanner;
 import com.douglei.tools.utils.reflect.ClassLoadUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 

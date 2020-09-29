@@ -10,7 +10,7 @@ import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.dbtype.DBDataTypeHandlerMapping;
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 import com.douglei.orm.core.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandlerMapping;
-import com.douglei.tools.instances.scanner.impl.ClassScanner;
+import com.douglei.tools.instances.resource.scanner.impl.ClassScanner;
 
 /**
  * 
