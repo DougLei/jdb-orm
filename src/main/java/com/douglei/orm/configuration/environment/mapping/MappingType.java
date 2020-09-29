@@ -55,6 +55,14 @@ public enum MappingType {
 	}
 
 	/**
+	 * 获取映射文件后缀
+	 * @return
+	 */
+	public String getFileSuffix() {
+		return fileSuffix;
+	}
+
+	/**
 	 * 能否操作映射容器
 	 * @return
 	 */
