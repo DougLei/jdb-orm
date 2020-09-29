@@ -19,7 +19,7 @@ public interface TableSession {
 	 * 保存对象, 同一个对象的集合
 	 * @param objects
 	 */
-	void save(List<Object> objects);
+	void save(List<? extends Object> objects);
 	/**
 	 * 保存对象
 	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
