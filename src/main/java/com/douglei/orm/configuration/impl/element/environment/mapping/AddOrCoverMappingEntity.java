@@ -48,7 +48,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	
 	@Override
 	public boolean parseMapping() throws ParseMappingException {
-		logger.debug("开始解析{}类型的映射xml", type.getName());
+		logger.debug("开始解析{}类型的映射", type.getName());
 		InputStream input = filepath != null ? ResourceScanner.readByScanPath(filepath) : new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
 		try {
 			if(type == MappingType.SQL) {
@@ -68,11 +68,11 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 				}
 			}
 			super.code = super.mapping.getCode();
-			logger.debug("结束解析{}类型的映射xml", type.getName());
+			logger.debug("结束解析{}类型, code={}的映射", type.getName(), super.code);
 			return true;
 		} catch(Exception e){
-			logger.error("解析映射xml[{}]时, 出现异常: {}", (filepath != null ? filepath : content), ExceptionUtil.getExceptionDetailMessage(e));
-			throw new ParseMappingException("在解析映射xml时, 出现异常", e);
+			logger.error("解析映射[{}]时, 出现异常: {}", (filepath != null ? filepath : content), ExceptionUtil.getExceptionDetailMessage(e));
+			throw new ParseMappingException("在解析映射时, 出现异常", e);
 		}finally {
 			CloseUtil.closeIO(input);
 		}

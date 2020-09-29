@@ -60,6 +60,6 @@ public abstract class MappingEntity {
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " [mappingIsRequired="+mappingIsRequired()+", code=" + code + ", type=" + type + ", op=" + getOp() + "]";
+		return getClass().getSimpleName() + " [mappingIsRequired="+mappingIsRequired()+", code=" + code + ", type=" + type + ", op=" + getOp() + "]";
 	}
 }
