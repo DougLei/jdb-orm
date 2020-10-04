@@ -19,6 +19,7 @@ public enum DialectType {
 	
 	SQLSERVER(SqlServerDialect.class, new byte[] {11});
 	
+	
 	private Class<? extends Dialect> dialectClass;// 方言类
 	private Dialect dialectInstance;// 方言实例
 	private byte[] supportMajorVersions;// 支持的主版本, 版本号为主版本号

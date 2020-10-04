@@ -103,9 +103,9 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 判断是否更新了列
 	private boolean isUpdateColumns(Collection<ColumnMetadata> columns, TableMetadata oldTable) {
-		if(columns.size() != oldTable.getDeclareColumns().size()) {
+		if(columns.size() != oldTable.getDeclareColumns().size()) 
 			return true;
-		}
+		
 		ColumnMetadata oldColumn = null;
 		for (ColumnMetadata column : columns) {
 			oldColumn = oldTable.getColumnByName(column.getOldName(), false);

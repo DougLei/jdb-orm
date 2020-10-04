@@ -26,6 +26,11 @@ public class SqlQueryConnection {
 		this.connection = connection;
 	}
 
+	/**
+	 * 获取Statement实例
+	 * @return
+	 * @throws SQLException
+	 */
 	public Statement getStatement() throws SQLException {
 		Statement st = connection.createStatement();
 		if(stList == null)
@@ -34,6 +39,12 @@ public class SqlQueryConnection {
 		return st;
 	}
 	
+	/**
+	 * 获取PreparedStatement实例
+	 * @param sql
+	 * @return
+	 * @throws SQLException
+	 */
 	public PreparedStatement getPreparedStatement(String sql) throws SQLException {
 		if(pstMap == null)
 			pstMap = new HashMap<String, PreparedStatement>(4);
@@ -50,6 +61,9 @@ public class SqlQueryConnection {
 		return pst;
 	}
 
+	/**
+	 * 关闭连接
+	 */
 	public void close() {
 		if(stList != null)
 			for(Statement st : stList)
