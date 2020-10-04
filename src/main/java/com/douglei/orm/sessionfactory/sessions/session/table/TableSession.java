@@ -2,7 +2,7 @@ package com.douglei.orm.sessionfactory.sessions.session.table;
 
 import java.util.List;
 
-import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.sql.pagequery.PageResult;
 
 /**
  * 和数据库交互的session接口

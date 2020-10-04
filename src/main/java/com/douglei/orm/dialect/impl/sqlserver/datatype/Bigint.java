@@ -1,0 +1,19 @@
+package com.douglei.orm.dialect.impl.sqlserver.datatype;
+
+import com.douglei.orm.dialect.datatype.DBDataType;
+
+/**
+ * 
+ * @author DougLei
+ */
+public class Bigint extends DBDataType{
+	private static final long serialVersionUID = 2528649375429984099L;
+	private static final Bigint instance = new Bigint();
+	public static final Bigint singleInstance() {
+		return instance;
+	}
+	
+	private Bigint() {
+		super((short)-5);
+	}
+}

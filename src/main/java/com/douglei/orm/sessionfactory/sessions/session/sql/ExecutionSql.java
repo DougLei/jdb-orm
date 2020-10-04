@@ -3,9 +3,9 @@ package com.douglei.orm.sessionfactory.sessions.session.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.core.sql.SqlStatement;
+import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
+import com.douglei.orm.sql.SqlStatement;
 
 /**
  * 

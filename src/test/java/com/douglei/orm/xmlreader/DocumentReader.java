@@ -16,7 +16,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.core.metadata.validator.ValidateHandler;
+import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.tools.utils.StringUtil;
 
 public class DocumentReader {

@@ -7,7 +7,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**

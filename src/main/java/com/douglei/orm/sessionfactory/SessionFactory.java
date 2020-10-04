@@ -1,69 +1,109 @@
 package com.douglei.orm.sessionfactory;
 
-import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.core.dialect.TransactionIsolationLevel;
-import com.douglei.orm.sessionfactory.mapping.MappingProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.douglei.orm.Configuration;
+import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.dialect.TransactionIsolationLevel;
+import com.douglei.orm.environment.Environment;
+import com.douglei.orm.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.environment.property.EnvironmentProperty;
+import com.douglei.orm.mapping.execute.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.Session;
+import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 import com.douglei.orm.sessionfactory.validator.DataValidator;
 
 /**
  * 
  * @author DougLei
  */
-public interface SessionFactory {
+public class SessionFactory {
+	private static final Logger logger = LoggerFactory.getLogger(SessionFactory.class);
+	
+	private Configuration configuration;
+	private Environment environment;
+	private EnvironmentProperty environmentProperty;
+	
+	private DataValidator dataValidator;
+	
+	public SessionFactory(Configuration configuration, Environment environment) {
+		this.configuration = configuration;
+		this.environment = environment;
+		this.environmentProperty = environment.getEnvironmentProperty();
+	}
 	
 	/**
-	 * 返回id值, 即 {@link Configuration}的id值
+	 * 获取id值
 	 * @return
 	 */
-	String getId();
+	public String getId() {
+		return configuration.getId();
+	}
 	
 	/**
-	 * <pre>
-	 * 	开启Session实例
-	 * 	默认开启事物
-	 * </pre>
+	 * 开启Session实例, 默认开启事物
 	 * @return
 	 */
-	Session openSession();
-	
+	public Session openSession() {
+		return openSession(true);
+	}
+
 	/**
-	 * <pre>
-	 * 	开启Session实例
-	 * </pre>
+	 * 开启Session实例
 	 * @param beginTransaction 是否开启事物
 	 * @return
 	 */
-	Session openSession(boolean beginTransaction);
-	
+	public Session openSession(boolean beginTransaction) {
+		return openSession(beginTransaction, null);
+	}
+
 	/**
-	 * <pre>
-	 * 	开启Session实例
-	 * </pre>
+	 * 开启Session实例
 	 * @param beginTransaction 是否开启事物
 	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
 	 * @return
 	 */
-	Session openSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel);
+	public Session openSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, beginTransaction, transactionIsolationLevel);
+		}
+		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty);
+	}
+	
+	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return environment.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
+	}
 	
 	/**
 	 * 获取映射处理器
 	 * @return
 	 */
-	default MappingProcessor getMappingProcessor() {
-		return null;
+	public MappingHandler getMappingHandler() {
+		EnvironmentContext.setProperty(environmentProperty);
+		return environment.getMappingHandler();
 	}
 	
 	/**
 	 * 获取数据验证器
 	 * @return
 	 */
-	default DataValidator getDataValidator() {
-		return null;
+	public DataValidator getDataValidator() {
+		if(dataValidator == null) 
+			dataValidator = new DataValidator(environmentProperty.getMappingContainer());
+
+		EnvironmentContext.setProperty(environmentProperty);
+		return dataValidator;
 	}
-	
+
 	/**
 	 * 销毁
 	 */
-	void destroy();
+	public void destroy() {
+		dataValidator = null;
+		if(configuration != null) {
+			configuration.destroy();
+			configuration = null;
+		}
+	}
 }

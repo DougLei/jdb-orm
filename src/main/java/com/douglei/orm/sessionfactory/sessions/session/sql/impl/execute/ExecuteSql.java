@@ -3,10 +3,10 @@ package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
-import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
-import com.douglei.orm.core.metadata.sql.content.node.ExecuteSqlNode;
-import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 
 /**
  * 要执行的sql实体

@@ -5,7 +5,6 @@ package com.douglei.orm.sessionfactory.sessions.session;
  * @author DougLei
  */
 public class MappingMismatchingException extends RuntimeException{
-	private static final long serialVersionUID = -6269686812173752450L;
 
 	public MappingMismatchingException() {
 		super();

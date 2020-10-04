@@ -8,12 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.ConfigurationImpl;
-import com.douglei.orm.core.sql.pagequery.PageResult;
+import com.douglei.orm.Configuration;
 import com.douglei.orm.session.SysUser;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.sessions.Session;
+import com.douglei.orm.sql.pagequery.PageResult;
 
 public class SessionTest {
 	
@@ -52,8 +51,8 @@ public class SessionTest {
 	
 	
 	public static void main(String[] args) {
-		Configuration conf = new ConfigurationImpl();
-		SessionFactory sf = conf.buildSessionFactory();
+		Configuration conf = new Configuration();
+		SessionFactory sf = conf.getSessionFactory();
 		System.out.println("start");
 		new Thread(new Runnable() {
 			@Override
@@ -90,8 +89,8 @@ public class SessionTest {
 	
 	@Before
 	public void before() {
-		conf = new ConfigurationImpl();
-		session = conf.buildSessionFactory().openSession();
+		conf = new Configuration();
+		session = conf.getSessionFactory().openSession();
 	}
 	@After
 	public void end() {

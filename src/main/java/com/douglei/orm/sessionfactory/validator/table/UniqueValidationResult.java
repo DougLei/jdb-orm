@@ -1,6 +1,6 @@
 package com.douglei.orm.sessionfactory.validator.table;
 
-import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
  * 

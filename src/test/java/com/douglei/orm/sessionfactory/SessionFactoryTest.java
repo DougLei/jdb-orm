@@ -3,8 +3,7 @@ package com.douglei.orm.sessionfactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.ConfigurationImpl;
+import com.douglei.orm.Configuration;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 public class SessionFactoryTest {
@@ -39,7 +38,7 @@ public class SessionFactoryTest {
 	
 	@Before
 	public void before() {
-		conf = new ConfigurationImpl();
-		sessionFactory = conf.buildSessionFactory();
+		conf = new Configuration();
+		sessionFactory = conf.getSessionFactory();
 	}
 }

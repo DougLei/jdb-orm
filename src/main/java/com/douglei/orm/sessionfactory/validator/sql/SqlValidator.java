@@ -3,9 +3,9 @@ package com.douglei.orm.sessionfactory.validator.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
-import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
  * sql参数验证器

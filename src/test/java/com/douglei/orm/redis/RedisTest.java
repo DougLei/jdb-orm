@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.douglei.orm.configuration.environment.mapping.container.impl.redis.RedisMappingContainer;
+import com.douglei.orm.mapping.container.impl.redis.RedisMappingContainer;
 import com.douglei.orm.session.SysUser;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 

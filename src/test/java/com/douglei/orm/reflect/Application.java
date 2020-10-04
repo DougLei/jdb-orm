@@ -2,7 +2,7 @@ package com.douglei.orm.reflect;
 
 import java.io.File;
 
-import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 public class Application {

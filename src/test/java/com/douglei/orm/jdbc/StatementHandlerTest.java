@@ -7,8 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.orm.configuration.Configuration;
-import com.douglei.orm.configuration.impl.ConfigurationImpl;
+import com.douglei.orm.Configuration;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 
 public class StatementHandlerTest {
@@ -42,7 +41,7 @@ public class StatementHandlerTest {
 	
 	@Before
 	public void before() {
-		conf = new ConfigurationImpl();
+		conf = new Configuration();
 //		session = conf.buildSessionFactory().openSqlSession();
 	}
 	@After

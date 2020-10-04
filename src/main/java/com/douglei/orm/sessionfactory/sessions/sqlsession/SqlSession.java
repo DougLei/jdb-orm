@@ -3,9 +3,9 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.core.sql.ReturnID;
-import com.douglei.orm.core.sql.pagequery.PageResult;
-import com.douglei.orm.core.sql.statement.InsertResult;
+import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.statement.InsertResult;
 
 /**
  * 和数据库交互的sql session接口

@@ -6,9 +6,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
-import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
+import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
 /**

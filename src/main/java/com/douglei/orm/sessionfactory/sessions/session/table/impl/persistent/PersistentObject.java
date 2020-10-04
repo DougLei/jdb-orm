@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.core.metadata.table.TableMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.DeleteExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.InsertExecuteHandler;

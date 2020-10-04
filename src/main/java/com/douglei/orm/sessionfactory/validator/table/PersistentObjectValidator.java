@@ -3,10 +3,10 @@ package com.douglei.orm.sessionfactory.validator.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.core.metadata.table.ColumnMetadata;
-import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.core.metadata.table.UniqueConstraint;
-import com.douglei.orm.core.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.UniqueConstraint;
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
 

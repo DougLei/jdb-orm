@@ -9,14 +9,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.core.metadata.table.ColumnMetadata;
-import com.douglei.orm.core.metadata.table.TableMetadata;
-import com.douglei.orm.core.sql.ConnectionWrapper;
-import com.douglei.orm.core.sql.ReturnID;
-import com.douglei.orm.core.sql.statement.InsertResult;
+import com.douglei.orm.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.environment.property.EnvironmentProperty;
+import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.impl.table.TableMappingType;
+import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
+import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
@@ -26,6 +25,8 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Per
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
@@ -74,76 +75,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			Mapping mapping = mappingContainer.getMapping(code);
 			if(mapping == null)
 				throw new NullPointerException("不存在code为"+code+"的映射信息");
-			if(mapping.getMappingType() != MappingType.TABLE) 
-				throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+MappingType.TABLE+"]类型");
+			if(!MappingTypeNameConstants.TABLE.equals(mapping.getType())) 
+				throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+TableMappingType.class+"]类型");
 			tm = (TableMetadata) mapping.getMetadata();
 			tableMetadataCache.put(code, tm);
 		}
 		return tm;
 	}
 	
-	
-//	/**
-//	 * 验证唯一值
-//	 * 需要开启 {enableTableSessionCache=true, enabledDataValidate=true} 这两个配置, 该功能才会启作用
-//	 * @param currentPersistent
-//	 * @param cache
-//	 */
-//	private void validateUniqueValue(PersistentObject currentPersistent, Map<Identity, PersistentObject> cache) {
-//		if(currentPersistent.existsUniqueConstraint()) {
-//			for (PersistentObject beforePersistent : cache.values()) {
-//				// 这个判断是因为update时可能会从缓存中取数据再修改, 所以防止同一个对象进行比较
-//				if(beforePersistent != currentPersistent) {
-//					doCompareUniqueValue(currentPersistent, beforePersistent.getPersistentObjectUniqueValue());
-//				}
-//			}
-//		}
-//	}
-	
-//	/**
-//	 * 比较唯一值
-//	 * @param currentPersistent
-//	 * @param beforePersistentObjectValidateUniqueValue
-//	 */
-//	@SuppressWarnings("unchecked")
-//	private void doCompareUniqueValue(PersistentObject currentPersistent, Object beforePersistentObjectValidateUniqueValue) {
-//		Object currentPersistentObjectValidateUniqueValue = currentPersistent.getPersistentObjectUniqueValue();
-//		if((currentPersistentObjectValidateUniqueValue instanceof UniqueValue) && currentPersistentObjectValidateUniqueValue.equals(beforePersistentObjectValidateUniqueValue)) {
-//			UniqueConstraint uc = currentPersistent.getUniqueConstraint((byte)0);
-//			throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
-//		}else if(currentPersistentObjectValidateUniqueValue instanceof List) {
-//			List<UniqueValue> currentPersistentObjectValidateUniqueValues = (List<UniqueValue>) currentPersistentObjectValidateUniqueValue;
-//			List<UniqueValue> beforePersistentObjectValidateUniqueValues = (List<UniqueValue>) beforePersistentObjectValidateUniqueValue;
-//			byte index=0, count = currentPersistent.getUniqueConstraintCount();
-//			for(; index<count; index++) {
-//				if(currentPersistentObjectValidateUniqueValues.get(index).equals(beforePersistentObjectValidateUniqueValues.get(index))) {
-//					UniqueConstraint uc = currentPersistent.getUniqueConstraint(index);
-//					throw new RepeatedUniqueValueException(getColumnDescriptionNames(uc, currentPersistent), getColumnNames(uc, currentPersistent), ((UniqueValue)currentPersistentObjectValidateUniqueValue).getValue(), new UniqueValidationResult(uc.getAllCode()));
-//				}
-//			}
-//		}
-//	}
-	
-//	// 获取列的description name
-//	private String getColumnDescriptionNames(UniqueConstraint uc, PersistentObject currentPersistent) {
-//		if(uc.isMultiColumns()) {
-//			StringBuilder sb = new StringBuilder(uc.size()*16);
-//			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnDescriptionNameByCode(code)));
-//			return sb.substring(1);
-//		}
-//		return currentPersistent.getColumnDescriptionNameByCode(uc.getCode());
-//	}
-//	// 获取列的name
-//	private String getColumnNames(UniqueConstraint uc, PersistentObject currentPersistent) {
-//		if(uc.isMultiColumns()) {
-//			StringBuilder sb = new StringBuilder(uc.size()*16);
-//			uc.getCodes().forEach(code -> sb.append(",").append(currentPersistent.getColumnNameByCode(code)));
-//			return sb.substring(1);
-//		}
-//		return currentPersistent.getColumnNameByCode(uc.getCode());
-//	}
-	
-
 	/**
 	 * 将要【保存的持久化对象】放到缓存中
 	 * @param persistent

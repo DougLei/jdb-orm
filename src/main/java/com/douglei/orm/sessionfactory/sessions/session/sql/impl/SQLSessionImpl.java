@@ -9,22 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.MappingType;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.core.metadata.sql.SqlMetadata;
-import com.douglei.orm.core.metadata.sql.content.ContentMetadata;
-import com.douglei.orm.core.metadata.sql.content.IncrementIdValueConfig;
-import com.douglei.orm.core.metadata.sql.content.node.SqlNode;
-import com.douglei.orm.core.metadata.sql.content.node.impl.TextSqlNode;
-import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMetadata;
-import com.douglei.orm.core.metadata.sql.parameter.SqlParameterMode;
-import com.douglei.orm.core.sql.ConnectionWrapper;
-import com.douglei.orm.core.sql.ReturnID;
-import com.douglei.orm.core.sql.pagequery.PageResult;
-import com.douglei.orm.core.sql.statement.InsertResult;
-import com.douglei.orm.core.utils.ResultSetUtil;
+import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.environment.property.EnvironmentProperty;
+import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.impl.sql.SqlMappingType;
+import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TextSqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
+import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.ExecutionSql;
@@ -33,6 +30,10 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecu
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.statement.InsertResult;
+import com.douglei.orm.sql.statement.util.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
@@ -53,8 +54,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			Mapping mapping = mappingContainer.getMapping(namespace);
 			if(mapping == null)
 				throw new NullPointerException("不存在code为"+namespace+"的映射信息");
-			if(mapping.getMappingType() != MappingType.SQL) 
-				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+MappingType.SQL+"]类型");
+			if(!MappingTypeNameConstants.SQL.equals(mapping.getType())) 
+				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+SqlMappingType.class+"]类型");
 			sm= (SqlMetadata) mapping.getMetadata();
 			sqlMetadataCache.put(namespace, sm);
 		}
