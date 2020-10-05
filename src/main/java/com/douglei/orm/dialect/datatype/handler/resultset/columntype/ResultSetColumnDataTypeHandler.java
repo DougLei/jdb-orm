@@ -13,7 +13,6 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public abstract class ResultSetColumnDataTypeHandler implements DataTypeHandler{
-	private static final long serialVersionUID = -3804325797513630249L;
 
 	/**
 	 * 支持处理的ColumnType类型

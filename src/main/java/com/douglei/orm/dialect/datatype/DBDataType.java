@@ -106,12 +106,10 @@ public abstract class DBDataType implements Serializable{
 	 * @return
 	 */
 	public boolean equalsTypeName(DBDataType other) {
-		if(other == null) {
+		if(other == null) 
 			return false;
-		}
-		if(other == this) {
+		if(other == this) 
 			return true;
-		}
 		return typeName.equals(other.typeName);
 	}
 }
