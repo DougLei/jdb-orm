@@ -177,16 +177,14 @@ public class ConnectionWrapper {
 	}
 
 	/**
-	 * 设置事物的隔离级别
+	 * 设置事物的隔离级别, 设置事物的隔离级别, 传入null则使用jdbc驱动中的默认隔离级别
 	 * @param transactionIsolationLevel
 	 */
 	public void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
-		if(isClosed) {
+		if(isClosed) 
 			throw new ConnectionWrapperException("连接已经关闭, 无法设置事物的隔离级别");
-		}
-		if(transactionIsolationLevel == null || transactionIsolationLevel == TransactionIsolationLevel.DEFAULT || this.transactionIsolationLevel == transactionIsolationLevel) {
+		if(transactionIsolationLevel == null || transactionIsolationLevel == TransactionIsolationLevel.DEFAULT || this.transactionIsolationLevel == transactionIsolationLevel) 
 			return;
-		}
 		
 		this.transactionIsolationLevel = transactionIsolationLevel;
 		try {

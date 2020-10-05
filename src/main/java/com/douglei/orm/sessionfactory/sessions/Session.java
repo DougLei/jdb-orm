@@ -13,10 +13,22 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
  */
 public interface Session {
 	
+	/**
+	 * 
+	 * @return
+	 */
 	SqlSession getSqlSession();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	TableSession getTableSession();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	SQLSession getSQLSession();
 	
 	/**
@@ -43,9 +55,20 @@ public interface Session {
 	 */
 	Connection getConnection();
 
+	/**
+	 * 是否开启事物
+	 * @return
+	 */
 	boolean isBeginTransaction();
 	
+	/**
+	 * 开启事物
+	 */
 	void beginTransaction();
 	
+	/**
+	 * 设置事物的隔离级别, 传入null则使用jdbc驱动中的默认隔离级别
+	 * @param transactionIsolationLevel
+	 */
 	void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel);
 }

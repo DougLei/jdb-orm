@@ -71,6 +71,7 @@ public class SessionFactory {
 		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty);
 	}
 	
+	// 获取数据库连接
 	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		return environment.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
 	}

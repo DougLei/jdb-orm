@@ -24,7 +24,7 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 public class SessionImpl implements Session {
 	private static final Logger logger = LoggerFactory.getLogger(SessionImpl.class);
 	
-	private SqlSession SqlSession;
+	private SqlSession sqlSession;
 	private TableSession TableSession;
 	private SQLSession SQLSession;
 
@@ -42,18 +42,17 @@ public class SessionImpl implements Session {
 	
 	// 验证session是否被关闭
 	private void validateSessionIsClosed() {
-		if(isClosed) {
+		if(isClosed) 
 			throw new SessionIsClosedException();
-		}
 	}
 	
 	@Override
 	public SqlSession getSqlSession() {
 		validateSessionIsClosed();
-		if(SqlSession == null) {
-			SqlSession = new SqlSessionImpl(connection, environmentProperty);
+		if(sqlSession == null) {
+			sqlSession = new SqlSessionImpl(connection, environmentProperty);
 		}
-		return SqlSession;
+		return sqlSession;
 	}
 
 	@Override
@@ -127,12 +126,12 @@ public class SessionImpl implements Session {
 	}
 	
 	private void closeSessions() {
-		if(SqlSession != null) {
+		if(sqlSession != null) {
 			if(logger.isDebugEnabled()) {
-				logger.debug("close , 将该实例置为null", SqlSession.getClass().getName());
+				logger.debug("close , 将该实例置为null", sqlSession.getClass().getName());
 			}
-			((Session)SqlSession).close();
-			SqlSession = null;
+			((Session)sqlSession).close();
+			sqlSession = null;
 		}
 		if(SQLSession != null) {
 			if(logger.isDebugEnabled()) {
