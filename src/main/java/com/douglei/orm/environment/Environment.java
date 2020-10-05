@@ -124,14 +124,7 @@ public class Environment {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
 		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
-		EnvironmentProperty environmentProperty = new EnvironmentProperty(id, propertyMap, databaseMetadata, mappingContainer);
-		if(environmentProperty.getDialect() == null) {
-			if(logger.isDebugEnabled())
-				logger.debug("<environment>没有配置dialect, 系统从DataSource中获取的DatabaseMetadata={}", databaseMetadata);
-			environmentProperty.setDialectByDatabaseMetadata(databaseMetadata);
-		}
-		
-		this.environmentProperty = environmentProperty;
+		this.environmentProperty = new EnvironmentProperty(id, propertyMap, databaseMetadata, mappingContainer);
 		EnvironmentContext.setProperty(environmentProperty);
 		logger.debug("处理<environment>下的所有property元素结束");
 	}

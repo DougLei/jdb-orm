@@ -24,9 +24,6 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  */
 public class EnvironmentProperty {
 	private String id;
-	private DatabaseMetadata databaseMetadata;
-	
-	@IsField
 	private Dialect dialect;
 	
 	@IsField
@@ -62,7 +59,7 @@ public class EnvironmentProperty {
 	
 	public EnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingContainer mappingContainer) throws Exception {
 		this.id = id;
-		this.databaseMetadata = databaseMetadata;
+		this.dialect = DialectContainer.getDialectByDatabaseMetadata(databaseMetadata);
 		this.mappingContainer = mappingContainer;
 		
 		List<String> fieldNames = getFieldNames(this.getClass().getDeclaredFields());
@@ -107,10 +104,6 @@ public class EnvironmentProperty {
 		sqlParameterConfigHolder = new SqlParameterConfigHolder(sqlParameterPrefix, sqlParameterSuffix, sqlParameterSplit, sqlParameterDefaultValueHandler);
 	}
 
-	void setDialect(String value) {
-		if(StringUtil.notEmpty(value))
-			this.dialect = DialectContainer.getDialect(value, databaseMetadata);
-	}
 	void setEnableStatementCache(String value) {
 		if(VerifyTypeMatchUtil.isBoolean(value)) {
 			this.enableStatementCache = Boolean.parseBoolean(value);
@@ -162,11 +155,6 @@ public class EnvironmentProperty {
 			this.columnNameConverter = (ColumnNameConverter) ConstructorUtil.newInstance(value);
 	}
 
-	// 根据数据库元数据, 获取对应的dialect
-	public void setDialectByDatabaseMetadata(DatabaseMetadata databaseMetadata) {
-		this.dialect = DialectContainer.getDialectByDatabaseMetadata(databaseMetadata);
-	}
-	
 	/**
 	 * 获取id
 	 */
