@@ -39,6 +39,6 @@ public class SessionFactoryTest {
 	@Before
 	public void before() {
 		conf = new Configuration();
-		sessionFactory = conf.getSessionFactory();
+		sessionFactory = conf.buildSessionFactory();
 	}
 }

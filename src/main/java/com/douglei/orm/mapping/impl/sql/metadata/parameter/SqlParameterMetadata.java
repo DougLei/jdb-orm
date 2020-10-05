@@ -10,7 +10,7 @@ import com.douglei.orm.dialect.datatype.handler.DataTypeHandler;
 import com.douglei.orm.dialect.datatype.handler.classtype.ClassDataTypeHandler;
 import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.mapping.context.parser.MappingParserContext;
+import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;

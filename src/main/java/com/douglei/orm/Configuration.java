@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.properties.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
-import com.douglei.orm.mapping.execute.serialization.FolderContainer;
+import com.douglei.orm.mapping.handler.serialization.FolderContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -28,11 +28,8 @@ public class Configuration {
 	
 	private String id;
 	private Environment environment;
-	
-	private ExternalDataSource externalDataSource;
-	private MappingContainer mappingContainer;
-	
-	private SessionFactory sessionFactory;
+	private ExternalDataSource externalDataSource; // 外部的数据源
+	private MappingContainer mappingContainer; // 从外部传入的映射容器实例
 	
 	public Configuration() {
 		inputstream = Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
@@ -44,16 +41,19 @@ public class Configuration {
 		inputstream = configurationInputStream;
 	}
 	
+	
+	private SessionFactory sessionFactory;
+	
 	/**
-	 * 获取SessionFactory实例
+	 * 构建SessionFactory实例, 同一个Configuration只能构建出一个SessionFactory实例
 	 * @return
 	 */
-	public SessionFactory getSessionFactory() {
+	public SessionFactory buildSessionFactory() {
 		if(sessionFactory == null) {
 			if(logger.isDebugEnabled()) 
 				logger.debug("开始初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class);
 			
-			Properties properties = null; // 对应<properties>元素, 在框架加载完成后即可销毁
+			Properties properties = null; // 对应<properties>元素, 在框架加载完成后即销毁
 			try {
 				Document xmlDocument = new SAXReader().read(inputstream);
 				Element root = xmlDocument.getRootElement();
@@ -98,6 +98,14 @@ public class Configuration {
 	}
 	
 	/**
+	 * 获取id
+	 * @return
+	 */
+	public String getId() {
+		return id;
+	}
+	
+	/**
 	 * 设置id
 	 * @param id
 	 */
@@ -124,13 +132,5 @@ public class Configuration {
 	 */
 	public void setMappingContainer(MappingContainer mappingContainer) {
 		this.mappingContainer = mappingContainer;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getId() {
-		return id;
 	}
 }

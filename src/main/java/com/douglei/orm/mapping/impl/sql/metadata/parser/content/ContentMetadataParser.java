@@ -6,7 +6,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.mapping.context.parser.MappingParserContext;
+import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 

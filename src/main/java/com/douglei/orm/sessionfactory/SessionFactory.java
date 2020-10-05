@@ -9,7 +9,7 @@ import com.douglei.orm.dialect.TransactionIsolationLevel;
 import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.property.EnvironmentProperty;
-import com.douglei.orm.mapping.execute.MappingHandler;
+import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 import com.douglei.orm.sessionfactory.validator.DataValidator;
@@ -24,13 +24,13 @@ public class SessionFactory {
 	private Configuration configuration;
 	private Environment environment;
 	private EnvironmentProperty environmentProperty;
-	
 	private DataValidator dataValidator;
 	
 	public SessionFactory(Configuration configuration, Environment environment) {
 		this.configuration = configuration;
 		this.environment = environment;
 		this.environmentProperty = environment.getEnvironmentProperty();
+		this.dataValidator = new DataValidator(environmentProperty.getMappingContainer());
 	}
 	
 	/**
@@ -89,18 +89,14 @@ public class SessionFactory {
 	 * @return
 	 */
 	public DataValidator getDataValidator() {
-		if(dataValidator == null) 
-			dataValidator = new DataValidator(environmentProperty.getMappingContainer());
-
 		EnvironmentContext.setProperty(environmentProperty);
 		return dataValidator;
 	}
-
+	
 	/**
 	 * 销毁
 	 */
 	public void destroy() {
-		dataValidator = null;
 		if(configuration != null) {
 			configuration.destroy();
 			configuration = null;

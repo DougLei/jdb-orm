@@ -14,7 +14,7 @@ public class SessionTest {
 	String sql = "select id, pid, name from classes order by id asc";
 	
 	Configuration configuration = new Configuration("jdb-orm.test.conf.xml");
-	SessionFactory sf = configuration.getSessionFactory();
+	SessionFactory sf = configuration.buildSessionFactory();
 	
 	@Test
 	public void testRecursiveQuery() {

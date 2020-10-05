@@ -52,7 +52,7 @@ public class SessionTest {
 	
 	public static void main(String[] args) {
 		Configuration conf = new Configuration();
-		SessionFactory sf = conf.getSessionFactory();
+		SessionFactory sf = conf.buildSessionFactory();
 		System.out.println("start");
 		new Thread(new Runnable() {
 			@Override
@@ -90,7 +90,7 @@ public class SessionTest {
 	@Before
 	public void before() {
 		conf = new Configuration();
-		session = conf.getSessionFactory().openSession();
+		session = conf.buildSessionFactory().openSession();
 	}
 	@After
 	public void end() {

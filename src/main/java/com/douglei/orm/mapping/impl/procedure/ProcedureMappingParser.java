@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-import com.douglei.orm.mapping.context.parser.MappingParserContext;
+import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.procedure.resolver.ProcedureMetadataResolver;
 import com.douglei.orm.mapping.type.MappingTypeNameConstants;

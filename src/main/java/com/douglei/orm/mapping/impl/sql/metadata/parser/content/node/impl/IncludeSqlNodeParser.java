@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.impl;
 
 import org.w3c.dom.Node;
 
-import com.douglei.orm.mapping.context.parser.MappingParserContext;
+import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.IncludeSqlNode;

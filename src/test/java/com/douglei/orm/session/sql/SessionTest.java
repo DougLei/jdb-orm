@@ -65,7 +65,7 @@ public class SessionTest {
 	@Before
 	public void before() {
 		conf = new Configuration();
-		session = conf.getSessionFactory().openSession();
+		session = conf.buildSessionFactory().openSession();
 	}
 	@After
 	public void end() {
