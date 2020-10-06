@@ -14,7 +14,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.MappingImportDataContext;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
@@ -133,9 +133,8 @@ class TableMappingParser {
 		ColumnMetadata columnMetadata = null;
 		for (Element element : columnElements) {
 			columnMetadata = columnMetadataParser.parse(element);
-			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) {
+			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) 
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
-			}
 			tableMetadata.addColumn(columnMetadata);
 		}
 		tableMetadata.sync();

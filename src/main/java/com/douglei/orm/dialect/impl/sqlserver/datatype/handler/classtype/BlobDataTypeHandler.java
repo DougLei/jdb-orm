@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varbinary;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varbinary;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractBlobDataTypeHandler;
 
 /**
  * 

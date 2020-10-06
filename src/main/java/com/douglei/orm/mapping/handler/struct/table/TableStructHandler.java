@@ -3,8 +3,7 @@ package com.douglei.orm.mapping.handler.struct.table;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.handler.struct.DBConnection;
@@ -94,7 +93,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	}
 	
 	// 判断是否更新了表
-	private boolean isUpdateTable(TableMetadata newTable, TableMetadata oldTable) {
+	private boolean isUpdateTable(TableMetadata newTable, TableMetadata oldTable) throws Exception {
 		return !newTable.getName().equals(oldTable.getName()) 
 				|| isUpdateColumns(newTable.getDeclareColumns(), oldTable)
 				|| isUpdateConstraints(newTable.getConstraints(), oldTable)
@@ -102,7 +101,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	}
 	
 	// 判断是否更新了列
-	private boolean isUpdateColumns(Collection<ColumnMetadata> columns, TableMetadata oldTable) {
+	private boolean isUpdateColumns(Collection<ColumnMetadata> columns, TableMetadata oldTable) throws Exception {
 		if(columns.size() != oldTable.getDeclareColumns().size()) 
 			return true;
 		
@@ -115,7 +114,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 				if(!column.getName().equals(oldColumn.getName())) {
 					return true;
 				}
-				if(isUpdateColumnStruct_(column, oldColumn)) {
+				if(isUpdateColumnStruct(column, oldColumn)) {
 					return true;
 				}
 			}
@@ -180,7 +179,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 				if(!column.getName().equals(oldColumn.getName())) {
 					columnRename(newTable.getName(), oldColumn.getName(), column.getName());
 				}
-				if(isUpdateColumnStruct(newTable, column, oldColumn)) {
+				if(isUpdateColumnStruct(column, oldColumn)) {
 					updateColumn(newTable.getName(), oldColumn, column);
 				}
 			}
@@ -202,38 +201,9 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 		return false;
 	}
 
-	// 是否修改了列结构(复杂判断)
-	private boolean isUpdateColumnStruct(TableMetadata table, ColumnMetadata column, ColumnMetadata oldColumn) throws Exception {
-		if(EnvironmentContext.getProperty().enableColumnStructUpdateValidate()) {
-			boolean isModifyColumn = false;
-			if(column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler())) {
-				if(!EnvironmentContext.getDialect().getFeature().supportColumnDataTypeConvert(oldColumn.getDBDataType(), column.getDBDataType())) {
-					throw new Exception("在数据库["+EnvironmentContext.getDialect().getType()+"]中, 修改["+table.getName()+"]表的["+column.getName()+"]列的数据类型时, 不支持从["+oldColumn.getDBDataType()+"]类型, 改为["+column.getDBDataType()+"]类型");
-				}
-				isModifyColumn = true;
-			}
-			if(column.getLength() != oldColumn.getLength()) {
-				if(column.getLength() < oldColumn.getLength()) {
-					throw new Exception("修改["+table.getName()+"]表的["+column.getName()+"]列的数据长度值时, 新的长度值["+column.getLength()+"]不能小于原长度值["+oldColumn.getLength()+"]");
-				}
-				isModifyColumn = true;
-			}
-			if(column.getPrecision() != oldColumn.getPrecision()) {
-				if(column.getPrecision() < oldColumn.getPrecision()) {
-					throw new Exception("修改["+table.getName()+"]表的["+column.getName()+"]列的数据精度值时, 新的精度值["+column.getPrecision()+"]不能小于原精度值["+oldColumn.getPrecision()+"]");
-				}
-				isModifyColumn = true;
-			}
-			if(column.isNullable() != oldColumn.isNullable()) {
-				isModifyColumn = true;
-			}
-			return isModifyColumn;
-		}
-		return isUpdateColumnStruct_(column, oldColumn);
-	}
-	// 是否修改了列结构(简单判断)
-	private boolean isUpdateColumnStruct_(ColumnMetadata column, ColumnMetadata oldColumn) {
-		return column.getDataTypeHandler().unEquals(oldColumn.getDataTypeHandler()) 
+	// 是否修改了列结构
+	private boolean isUpdateColumnStruct(ColumnMetadata column, ColumnMetadata oldColumn) throws Exception {
+		return 	!column.getDataType().equals(oldColumn.getDataType()) 
 				|| column.getLength() != oldColumn.getLength() 
 				|| column.getPrecision() != oldColumn.getPrecision() 
 				|| column.isNullable() != oldColumn.isNullable();

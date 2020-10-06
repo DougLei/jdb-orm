@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractShortDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Smallint;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Smallint;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractShortDataTypeHandler;
 
 /**
  * 

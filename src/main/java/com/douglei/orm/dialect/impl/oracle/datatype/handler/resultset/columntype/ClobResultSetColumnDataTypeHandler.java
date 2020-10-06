@@ -3,9 +3,9 @@ package com.douglei.orm.dialect.impl.oracle.datatype.handler.resultset.columntyp
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.orm.dialect.impl.oracle.datatype.Clob;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Clob;
 import com.douglei.orm.dialect.impl.oracle.datatype.handler.dbtype.ClobDBDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 

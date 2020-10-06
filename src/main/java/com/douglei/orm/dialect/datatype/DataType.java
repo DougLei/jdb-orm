@@ -1,55 +1,45 @@
 package com.douglei.orm.dialect.datatype;
 
-import com.douglei.tools.utils.StringUtil;
+import java.io.Serializable;
+
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
- * 
+ * 数据类型
  * @author DougLei
  */
-public enum DataType {
-	STRING,
-	NSTRING,
-	CHAR,
-	NCHAR,
+public abstract class DataType implements Serializable{
 	
-	BYTE,
-	SHORT,
-	INTEGER,
-	LONG,
+	/**
+	 * 获取数据类型的分类
+	 * @return
+	 */
+	public abstract Classification getClassification();
 	
-	FLOAT,
-	DOUBLE,
-	
-	DATE,
-	
-	CLOB,
-	BLOB;
-	
-	private String name;
-	private DataType() {
-		this.name = name().toLowerCase();
-	}
-	
+	/**
+	 * 获取类型名称, 全局唯一
+	 * @return
+	 */
 	public String getName() {
-		return name;
+		return getClass().getName();
 	}
 
-	public static DataType toValue(String type) {
-		if(StringUtil.isEmpty(type)) {
-			return STRING;
-		}
-		type = type.toUpperCase();
-		DataType[] dts = DataType.values();
-		for (DataType dt : dts) {
-			if(dt.name().equals(type)) {
-				return dt;
-			}
-		}
-		return null;
-	}
+	/**
+	 * 验证指定属性名的值
+	 * @param fieldName
+	 * @param fieldValue
+	 * @param length
+	 * @param precision
+	 * @return
+	 */
+	public abstract ValidationResult validate(String fieldName, Object fieldValue, int length, int precision);
 	
 	@Override
-	public String toString() {
-		return name();
+	public final boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		if(this == obj)
+			return true;
+		return this.getName().equals(((DataType)obj).getName());
 	}
 }

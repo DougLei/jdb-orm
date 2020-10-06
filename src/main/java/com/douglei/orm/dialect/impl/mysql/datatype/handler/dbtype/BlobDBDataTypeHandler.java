@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Mediumblob;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Mediumblob;
 import com.douglei.orm.dialect.impl.mysql.datatype.handler.classtype.BlobDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 
 /**
  * 

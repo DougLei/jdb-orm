@@ -36,13 +36,7 @@ public class EnvironmentProperty {
 	private MappingContainer mappingContainer;
 	
 	@IsField
-	private boolean clearMappingContainerOnStart = true;
-	
-	@IsField
 	private CreateMode tableCreateMode;
-	
-	@IsField
-	private boolean enableColumnStructUpdateValidate;
 	
 	@IsField
 	private String sqlParameterPrefix="#{";
@@ -118,17 +112,9 @@ public class EnvironmentProperty {
 		if(this.mappingContainer == null) 
 			this.mappingContainer = new ApplicationMappingContainer();
 	}
-	public void setClearMappingContainerOnStart(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value))
-			this.clearMappingContainerOnStart = Boolean.parseBoolean(value);
-	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) 
 			this.tableCreateMode = CreateMode.toValue(value);
-	}
-	void setEnableColumnStructUpdateValidate(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) 
-			this.enableColumnStructUpdateValidate = Boolean.parseBoolean(value);
 	}
 	void setSqlParameterPrefix(String value) {
 		if(StringUtil.notEmpty(value))
@@ -191,24 +177,10 @@ public class EnvironmentProperty {
 	}
 	
 	/**
-	 * 是否在启动时清空容器
-	 */
-	public boolean clearMappingContainerOnStart() {
-		return clearMappingContainerOnStart;
-	}
-	
-	/**
 	 * 获取全局的TableCreateMode
 	 */
 	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
-	}
-	
-	/**
-	 * 是否启用列结构更新验证
-	 */
-	public boolean enableColumnStructUpdateValidate() {
-		return enableColumnStructUpdateValidate;
 	}
 	
 	/**

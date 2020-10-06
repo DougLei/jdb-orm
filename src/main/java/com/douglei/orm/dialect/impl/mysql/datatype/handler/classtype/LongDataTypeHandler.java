@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.mysql.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractLongDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Bigint;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Bigint;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractLongDataTypeHandler;
 
 /**
  * 

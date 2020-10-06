@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractNCharDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.NChar;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.NChar;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractNCharDataTypeHandler;
 
 /**
  * 

@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.mysql.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Mediumtext;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Mediumtext;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractClobDataTypeHandler;
 
 /**
  * 

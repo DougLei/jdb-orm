@@ -3,7 +3,7 @@ package com.douglei.orm.dialect.impl.mysql.db.sql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.dialect.db.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sql.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.Constraint;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;

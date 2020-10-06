@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.util.Collections;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.ReadDataStreamException;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.oracle.datatype.Cursor;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Cursor;
+import com.douglei.orm.dialect.temp.datatype.handler.ReadDataStreamException;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
 import com.douglei.tools.utils.CloseUtil;
 

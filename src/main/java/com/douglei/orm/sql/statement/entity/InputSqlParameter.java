@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.datatype.handler.DataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.DataTypeHandler;
 
 /**
  * 输入的sql参数对象

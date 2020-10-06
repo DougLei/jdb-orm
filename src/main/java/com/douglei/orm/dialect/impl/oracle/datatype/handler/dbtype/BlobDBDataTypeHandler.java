@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.dialect.impl.oracle.datatype.handler.classtype.BlobDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class BlobDBDataTypeHandler extends DBDataTypeHandler{
 	
 	@Override
 	public DBDataType getDBDataType() {
-		return com.douglei.orm.dialect.impl.oracle.datatype.Blob.singleInstance();
+		return com.douglei.orm.dialect.impl.oracle.datatype.db.Blob.singleInstance();
 	}
 	
 	@Override

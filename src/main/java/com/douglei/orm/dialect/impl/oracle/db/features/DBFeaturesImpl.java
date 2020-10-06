@@ -1,6 +1,6 @@
 package com.douglei.orm.dialect.impl.oracle.db.features;
 
-import com.douglei.orm.dialect.db.feature.DBFeature;
+import com.douglei.orm.dialect.feature.DBFeature;
 
 /**
  * 

@@ -3,7 +3,7 @@ package com.douglei.orm.dialect.impl.sqlserver.db.sql;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.dialect.db.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sql.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.Constraint;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
@@ -78,7 +78,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	public String modifyColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" alter column ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDBDataType().getDBType4SqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDataType().mappedDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullable()) {
 			tmpSql.append("not null");
 		}

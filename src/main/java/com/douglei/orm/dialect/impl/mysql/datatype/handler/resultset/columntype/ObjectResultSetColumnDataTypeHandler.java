@@ -3,14 +3,14 @@ package com.douglei.orm.dialect.impl.mysql.datatype.handler.resultset.columntype
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Bigint;
-import com.douglei.orm.dialect.impl.mysql.datatype.Char;
-import com.douglei.orm.dialect.impl.mysql.datatype.Decimal;
-import com.douglei.orm.dialect.impl.mysql.datatype.Int;
-import com.douglei.orm.dialect.impl.mysql.datatype.Smallint;
-import com.douglei.orm.dialect.impl.mysql.datatype.Varchar;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Bigint;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Char;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Decimal;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Int;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Smallint;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Varchar;
 import com.douglei.orm.dialect.impl.mysql.datatype.handler.dbtype.VarcharDBDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 

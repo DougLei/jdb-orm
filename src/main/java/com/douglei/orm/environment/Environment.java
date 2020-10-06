@@ -139,8 +139,7 @@ public class Environment {
 		logger.debug("开始处理<environment>下的<mappings>元素");
 		this.mappingHandler = new MappingHandler(environmentProperty.getMappingContainer(), dataSourceWrapper);
 		
-		if(environmentProperty.clearMappingContainerOnStart())
-			environmentProperty.getMappingContainer().clear();
+		environmentProperty.getMappingContainer().clear();
 		
 		if(element != null) {
 			List<Attribute> paths = element.selectNodes("mapping/@path");

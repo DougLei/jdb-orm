@@ -7,7 +7,7 @@
 			<include ref-name="xx" />
 		</sql-content>
 		
-		<!-- type值包括: insert, delete, update, select, declare, procedure -->
+		<!-- type值目前包括: insert, delete, update, select, declare, procedure -->
 		<!-- 
 			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
 			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id

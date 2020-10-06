@@ -1,8 +1,8 @@
 package com.douglei.orm.dialect.impl.oracle.datatype.handler.classtype;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractDoubleDataTypeHandler;
-import com.douglei.orm.dialect.impl.oracle.datatype.Number;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Number;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractDoubleDataTypeHandler;
 
 /**
  * 

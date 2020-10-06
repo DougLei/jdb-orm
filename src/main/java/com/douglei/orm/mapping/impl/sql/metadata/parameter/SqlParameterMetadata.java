@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.dialect.datatype.handler.DataTypeHandler;
-import com.douglei.orm.dialect.datatype.handler.classtype.ClassDataTypeHandler;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.orm.dialect.datatype.DataType;
+import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.ClassDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeFeatures;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
@@ -33,8 +32,7 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private String name;// 参数名
 	private String descriptionName;// 描述名
-	private DataTypeHandler dataType;// 数据类型
-	private DBDataType dbDataType;// 数据库的数据类型, 根据dataTypeHandler得到
+	private DataType dataType;// 数据类型
 	
 	private SqlParameterMode mode;// 输入输出类型
 	

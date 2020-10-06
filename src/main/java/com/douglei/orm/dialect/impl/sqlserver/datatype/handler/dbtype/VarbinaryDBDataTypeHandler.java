@@ -7,9 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varbinary;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varbinary;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.handler.classtype.BlobDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 
 /**
  * 

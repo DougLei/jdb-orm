@@ -3,9 +3,9 @@ package com.douglei.orm.dialect.impl.mysql.datatype.handler.resultset.columntype
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Datetime;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Datetime;
 import com.douglei.orm.dialect.impl.mysql.datatype.handler.dbtype.DatetimeDBDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 

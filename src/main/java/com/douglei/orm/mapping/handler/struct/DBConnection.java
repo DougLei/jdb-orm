@@ -9,9 +9,9 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.dialect.db.sql.SqlQueryConnection;
-import com.douglei.orm.dialect.db.sql.SqlQueryHandler;
-import com.douglei.orm.dialect.db.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sql.SqlQueryConnection;
+import com.douglei.orm.dialect.sql.SqlQueryHandler;
+import com.douglei.orm.dialect.sql.SqlStatementHandler;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.tools.utils.CloseUtil;
 

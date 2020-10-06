@@ -1,11 +1,11 @@
 package com.douglei.orm.dialect.impl;
 
 import com.douglei.orm.dialect.Dialect;
-import com.douglei.orm.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.dialect.db.feature.DBFeature;
-import com.douglei.orm.dialect.db.object.DBObjectHandler;
-import com.douglei.orm.dialect.db.sql.SqlQueryHandler;
-import com.douglei.orm.dialect.db.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.feature.DBFeature;
+import com.douglei.orm.dialect.object.DBObjectHandler;
+import com.douglei.orm.dialect.sql.SqlQueryHandler;
+import com.douglei.orm.dialect.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
 
 /**
  * 

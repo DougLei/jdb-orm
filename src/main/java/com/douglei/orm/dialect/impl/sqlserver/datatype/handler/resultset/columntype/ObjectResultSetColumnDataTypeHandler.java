@@ -3,18 +3,18 @@ package com.douglei.orm.dialect.impl.sqlserver.datatype.handler.resultset.column
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Bigint;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Char;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Decimal;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Int;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.NChar;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.NVarchar;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Numeric;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Smallint;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Text;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varchar;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varcharmax;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Bigint;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Char;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Decimal;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Int;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.NChar;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.NVarchar;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Numeric;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Smallint;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Text;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varchar;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varcharmax;
+import com.douglei.orm.dialect.temp.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 

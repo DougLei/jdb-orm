@@ -1,6 +1,6 @@
 package com.douglei.orm.dialect.impl.mysql.db.object.pk.sequence;
 
-import com.douglei.orm.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 
 /**

@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Varchar;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Varchar;
 import com.douglei.orm.dialect.impl.mysql.datatype.handler.classtype.StringDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.dialect.db.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.exception.ColumnConfigurationException;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
 import com.douglei.orm.mapping.impl.table.exception.IndexConfigurationException;

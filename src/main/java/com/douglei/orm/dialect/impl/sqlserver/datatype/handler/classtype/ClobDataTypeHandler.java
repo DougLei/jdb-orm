@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varcharmax;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varcharmax;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractClobDataTypeHandler;
 
 /**
  * 

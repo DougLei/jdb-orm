@@ -3,12 +3,12 @@ package com.douglei.orm.dialect.impl.oracle.datatype.handler.resultset.columntyp
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
-import com.douglei.orm.dialect.impl.oracle.datatype.Char;
-import com.douglei.orm.dialect.impl.oracle.datatype.NChar;
-import com.douglei.orm.dialect.impl.oracle.datatype.NVarchar2;
-import com.douglei.orm.dialect.impl.oracle.datatype.Number;
-import com.douglei.orm.dialect.impl.oracle.datatype.Varchar2;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Char;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.NChar;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.NVarchar2;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Number;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Varchar2;
+import com.douglei.orm.dialect.temp.datatype.handler.resultset.columntype.ResultSetColumnDataTypeHandler;
 
 /**
  * 

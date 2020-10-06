@@ -3,9 +3,9 @@ package com.douglei.orm.dialect.impl.sqlserver.db.features;
 import java.util.HashMap;
 
 import com.douglei.orm.dialect.datatype.DBDataType;
-import com.douglei.orm.dialect.db.feature.DBFeature;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Int;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.Varchar;
+import com.douglei.orm.dialect.feature.DBFeature;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Int;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varchar;
 
 /**
  * 

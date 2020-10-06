@@ -2,8 +2,8 @@ package com.douglei.orm.mapping.handler.struct;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.db.object.DBObjectNameException;
-import com.douglei.orm.dialect.db.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.object.DBObjectNameException;
+import com.douglei.orm.dialect.sql.SqlStatementHandler;
 import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 

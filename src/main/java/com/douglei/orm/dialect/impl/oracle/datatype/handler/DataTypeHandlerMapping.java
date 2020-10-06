@@ -2,9 +2,9 @@ package com.douglei.orm.dialect.impl.oracle.datatype.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.douglei.orm.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.oracle.datatype.Varchar2;
+import com.douglei.orm.dialect.impl.oracle.datatype.db.Varchar2;
+import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 
 /**
  * oracle datatype handler mapping

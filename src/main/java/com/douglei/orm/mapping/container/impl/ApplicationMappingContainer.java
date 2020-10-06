@@ -19,7 +19,8 @@ public class ApplicationMappingContainer implements MappingContainer {
 	
 	@Override
 	public void clear() {
-		mappings.clear();
+		if(!mappings.isEmpty())
+			mappings.clear();
 	}
 	
 	@Override

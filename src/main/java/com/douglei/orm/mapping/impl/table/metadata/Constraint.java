@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.datatype.handler.DataTypeHandler;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractBlobDataTypeHandler;
-import com.douglei.orm.dialect.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeFeatures;
+import com.douglei.orm.dialect.temp.datatype.handler.DataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractBlobDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractClobDataTypeHandler;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
 import com.douglei.tools.utils.StringUtil;
 

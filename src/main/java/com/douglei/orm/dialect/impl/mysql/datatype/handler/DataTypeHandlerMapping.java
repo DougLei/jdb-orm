@@ -2,9 +2,9 @@ package com.douglei.orm.dialect.impl.mysql.datatype.handler;
 
 import java.lang.reflect.InvocationTargetException;
 
-import com.douglei.orm.dialect.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.dialect.datatype.handler.dbtype.DBDataTypeHandler;
-import com.douglei.orm.dialect.impl.mysql.datatype.Varchar;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Varchar;
+import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
+import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
 
 /**
  * mysql datatype handler mapping
