@@ -12,6 +12,11 @@ import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 public class DBObjectHandlerImpl extends DBObjectHandler {
 
 	@Override
+	public boolean supportProcedureDirectlyReturnResultSet() {
+		return false;
+	}
+	
+	@Override
 	protected short nameMaxLength() {
 		return 30;
 	}

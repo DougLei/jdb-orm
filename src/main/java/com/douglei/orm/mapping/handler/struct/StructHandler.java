@@ -2,7 +2,6 @@ package com.douglei.orm.mapping.handler.struct;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.object.DBObjectNameException;
 import com.douglei.orm.dialect.sql.SqlStatementHandler;
 import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
@@ -29,7 +28,7 @@ public abstract class StructHandler<C, D> {
 	 */
 	protected void validateNameExists(AbstractMetadata metadata) throws SQLException {
 		if(connection.nameExists(metadata.getName())) 
-			throw new DBObjectNameException("数据库中已经存在名为"+metadata.getName()+"的对象");
+			throw new IllegalArgumentException("数据库中已经存在名为"+metadata.getName()+"的对象");
 	}
 	
 	/**

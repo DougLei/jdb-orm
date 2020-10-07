@@ -8,19 +8,9 @@ import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
  * @author DougLei
  */
 public class MySqlPrimaryKeySequence extends PrimaryKeySequence{
-	private static final long serialVersionUID = 2470452265441588094L;
 
 	public MySqlPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		super(false, null, null, null, tableName, primaryKeyColumn);
-	}
-	
-	@Override
-	protected String processCreateSql(String createSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getTypeName()+" auto_increment";
-	}
-
-	@Override
-	protected String processDropSql(String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getTypeName();
+		super.createSql = "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getName()+" auto_increment";
+		super.dropSql = "alter table "+tableName+" change column "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getName()+" "+primaryKeyColumn.getDBDataType().getName();
 	}
 }

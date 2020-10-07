@@ -53,7 +53,7 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 					values.append(((OraclePrimaryKeySequence)value).getNextvalSql());
 				}else {
 					values.append("?");
-					parameters.add(new InputSqlParameter(value, column.getDataTypeHandler()));
+					parameters.add(new InputSqlParameter(value, column.getDBDataType()));
 				}
 			}
 		}

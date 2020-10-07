@@ -1,47 +1,50 @@
 package com.douglei.orm.dialect.impl;
 
 import com.douglei.orm.dialect.Dialect;
-import com.douglei.orm.dialect.feature.DBFeature;
+import com.douglei.orm.dialect.DialectType;
+import com.douglei.orm.dialect.datatype.DataTypeContainer;
 import com.douglei.orm.dialect.object.DBObjectHandler;
 import com.douglei.orm.dialect.sql.SqlQueryHandler;
 import com.douglei.orm.dialect.sql.SqlStatementHandler;
-import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractDialect implements Dialect{
-	protected AbstractDataTypeHandlerMapping dataTypeHandlerMapping;
-	
-	protected DBFeature feature;
+	private DialectType type;
+	protected DataTypeContainer dataTypeContainer = new DataTypeContainer();
 	protected DBObjectHandler objectHandler;
-	
 	protected SqlStatementHandler sqlStatementHandler;
 	protected SqlQueryHandler sqlQueryHandler;
 	
 	@Override
-	public AbstractDataTypeHandlerMapping getDataTypeHandlerMapping() {
-		return dataTypeHandlerMapping;
+	public final DialectType getType() {
+		return type;
+	}
+
+	@Override
+	public final void setType(DialectType type) {
+		this.type = type;
+	}
+
+	@Override
+	public final DataTypeContainer getDataTypeContainer() {
+		return dataTypeContainer;
 	}
 	
 	@Override
-	public DBFeature getFeature() {
-		return feature;
-	}
-	
-	@Override
-	public DBObjectHandler getObjectHandler() {
+	public final DBObjectHandler getObjectHandler() {
 		return objectHandler;
 	}
 
 	@Override
-	public SqlStatementHandler getSqlStatementHandler() {
+	public final SqlStatementHandler getSqlStatementHandler() {
 		return sqlStatementHandler;
 	}
 
 	@Override
-	public SqlQueryHandler getSqlQueryHandler() {
+	public final SqlQueryHandler getSqlQueryHandler() {
 		return sqlQueryHandler;
 	}
 }

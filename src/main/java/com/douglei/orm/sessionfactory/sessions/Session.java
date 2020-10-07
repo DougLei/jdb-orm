@@ -2,7 +2,7 @@ package com.douglei.orm.sessionfactory.sessions;
 
 import java.sql.Connection;
 
-import com.douglei.orm.dialect.TransactionIsolationLevel;
+import com.douglei.orm.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;

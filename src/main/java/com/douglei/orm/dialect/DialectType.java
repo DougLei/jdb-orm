@@ -2,68 +2,73 @@ package com.douglei.orm.dialect;
 
 import java.util.Arrays;
 
-import com.douglei.orm.dialect.impl.mysql.MySqlDialect;
-import com.douglei.orm.dialect.impl.oracle.OracleDialect;
-import com.douglei.orm.dialect.impl.sqlserver.SqlServerDialect;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
-
 /**
  * 
  * @author DougLei
  */
-public enum DialectType {
+public abstract class DialectType {
+	private Class<? extends Dialect> targetClass;
+	private int id;
+	private String name;
+	private int[] supportDatabaseMajorVersions;
 	
-	ORACLE(OracleDialect.class, new byte[] {11}),
-	
-	MYSQL(MySqlDialect.class, new byte[] {8}),
-	
-	SQLSERVER(SqlServerDialect.class, new byte[] {11});
-	
-	
-	private Class<? extends Dialect> dialectClass;// 方言类
-	private Dialect dialectInstance;// 方言实例
-	private byte[] supportMajorVersions;// 支持的主版本, 版本号为主版本号
-	
-	private DialectType(Class<? extends Dialect> dialectClass, byte[] supportMajorVersions) {
-		this.dialectClass = dialectClass;
-		this.supportMajorVersions = supportMajorVersions;
+	public DialectType(Class<? extends Dialect> targetClass, int id, String name, int... supportDatabaseMajorVersions) {
+		this.targetClass = targetClass;
+		this.id = id;
+		this.name = name;
+		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
 
 	/**
-	 * 调用该方法, 传入的参数必须先调用.toUpperCase()方法
-	 * @param dialect
+	 * 获取唯一值
 	 * @return
 	 */
-	public static DialectType toValue(String dialect) {
-		DialectType[] dts = DialectType.values();
-		for (DialectType dt : dts) {
-			if(dt.name().equals(dialect)) {
-				return dt;
-			}
+	public final int getId() {
+		return id;
+	}
+	
+	/**
+	 * 获取对应方言的实现类
+	 * @return
+	 */
+	public final Class<? extends Dialect> targetClass(){
+		return targetClass;
+	}
+	
+	/**
+	 * 获取方言名
+	 * @return
+	 */
+	public final String getName(){
+		return name;
+	}
+	
+	/**
+	 * 支持的数据库主版本
+	 * @return
+	 */
+	public int[] supportDatabaseMajorVersions() {
+		return supportDatabaseMajorVersions;
+	}
+	
+	/**
+	 * 当前方言是否支持参数中的数据库
+	 * @param key
+	 * @return
+	 */
+	public final boolean support(DialectKey key) {
+		if(!name.equals(key.getName())) 
+			return false;
+		
+		for(int version : supportDatabaseMajorVersions) {
+			if(version == key.getDatabaseMajorVersion())
+				return true;
 		}
-		return null;
-	}
-	
-	/**
-	 * 获取方言实例
-	 * @return
-	 */
-	public Dialect getDialectInstance() {
-		if(dialectInstance == null) 
-			dialectInstance = (Dialect) ConstructorUtil.newInstance(dialectClass);
-		return dialectInstance;
-	}
-	
-	/**
-	 * 支持的主版本
-	 * @return
-	 */
-	public byte[] supportMajorVersions() {
-		return supportMajorVersions;
+		return false;
 	}
 	
 	@Override
 	public String toString() {
-		return "{Database=["+name()+"], 支持的主版本="+Arrays.toString(supportMajorVersions) + "}";
+		return " [class="+getClass().getName()+", id="+id+", name=" + name + ", supportDatabaseMajorVersions=" + Arrays.toString(supportDatabaseMajorVersions) + "] ";
 	}
 }

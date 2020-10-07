@@ -6,10 +6,6 @@ package com.douglei.orm.sessionfactory.sessions.session;
  */
 public class MappingMismatchingException extends RuntimeException{
 
-	public MappingMismatchingException() {
-		super();
-	}
-
 	public MappingMismatchingException(String message) {
 		super(message);
 	}

@@ -96,7 +96,7 @@ public abstract class SqlStatementHandler {
 		Collection<ColumnMetadata> columns = table.getDeclareColumns();
 		for (ColumnMetadata column : columns) {
 			sql.append(column.getName()).append(" ");
-			sql.append(column.getDataType().mappedDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
+			sql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
 			if(column.isPrimaryKeySequence()) {
 				sql.append(primaryKeySequenceSqlKeyword()).append(" ");
 			}
@@ -151,7 +151,7 @@ public abstract class SqlStatementHandler {
 	public String createColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDataType().mappedDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullable()) {
 			tmpSql.append("not null");
 		}
@@ -192,7 +192,7 @@ public abstract class SqlStatementHandler {
 	public String modifyColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDataType().mappedDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullable()) {
 			tmpSql.append("not null");
 		}

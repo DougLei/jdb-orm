@@ -3,12 +3,9 @@ package com.douglei.orm.mapping.impl.sql.metadata.parameter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.datatype.DataType;
-import com.douglei.orm.dialect.temp.datatype.handler.AbstractDataTypeHandlerMapping;
-import com.douglei.orm.dialect.temp.datatype.handler.classtype.ClassDataTypeHandler;
-import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeFeatures;
-import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeHandler;
+import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.util.DBDataTypeHelper;
+import com.douglei.orm.dialect.datatype.util.DBDataTypeWrapper;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
@@ -31,8 +28,9 @@ public class SqlParameterMetadata implements Metadata{
 	private String configText;
 	
 	private String name;// 参数名
-	private String descriptionName;// 描述名
-	private DataType dataType;// 数据类型
+	private DBDataType dbDataType;// 数据类型
+	private int length;// 长度
+	private int precision;// 精度
 	
 	private SqlParameterMode mode;// 输入输出类型
 	
@@ -40,11 +38,10 @@ public class SqlParameterMetadata implements Metadata{
 	private String valuePrefix;// 如果不使用占位符, 参数值的前缀
 	private String valueSuffix;// 如果不使用占位符, 参数值的后缀
 	
-	private short length;// 长度
-	private short precision;// 精度
 	private boolean nullable;// 是否可为空
 	private String defaultValue;// 默认值
 	private boolean validate;// 是否验证
+	private String description;// 描述
 	
 	private ValidateHandler validateHandler;// 验证器
 	
@@ -56,21 +53,13 @@ public class SqlParameterMetadata implements Metadata{
 
 		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
 		setName(propertyMap.get("name"));
-		setDescriptionName(propertyMap.get("descriptionname"));
-		setDataType(propertyMap.get("datatype"));
-		setDBDataType(propertyMap.get("dbType"));
-		setMode(propertyMap.get("mode"));
+		setDataType(propertyMap);
 		
-		setUsePlaceholder(propertyMap.get("useplaceholder"));
-		if(!this.usePlaceholder) {
-			setValuePrefix(propertyMap.get("valueprefix"));
-			setValueSuffix(propertyMap.get("valuesuffix"));
-		}
-		setLength(propertyMap.get("length"));
-		setPrecision(propertyMap.get("precision"));
+		setUsePlaceholder(propertyMap);
 		setNullable(propertyMap.get("nullable"));
 		setDefaultValue(propertyMap.get("defaultvalue"));
 		setValidate(propertyMap.get("validate"));
+		setDescription(propertyMap.get("description"));
 		
 		setValidateHandler();
 		propertyMap.clear();
@@ -115,54 +104,41 @@ public class SqlParameterMetadata implements Metadata{
 	private void setName(String name) {
 		this.name = name;
 	}
-	private void setDescriptionName(String descriptionName) {
-		if(StringUtil.isEmpty(descriptionName)) {
-			descriptionName = name;
-		}
-		this.descriptionName = descriptionName;
+	private void setDescription(String description) {
+		if(StringUtil.isEmpty(description)) 
+			description = name;
+		this.description = description;
 	}
-	private void setDataType(String dataType) {
-		if(MappingParserContext.getCurrentSqlType() != ContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
-			if(StringUtil.isEmpty(dataType)) {
-				this.dataType = mapping.getDefaultClassDataTypeHandler();
-			}else {
-				this.dataType = mapping.getDataTypeHandlerByCode(dataType);
-			}
-			this.dbDataType = ((DBDataTypeFeatures)this.dataType).getDBDataType();
-		}
-	}
-	private void setDBDataType(String typeName) {
+	private void setDataType(Map<String, String> propertyMap) {
+		String confDataTypeVal;
 		if(MappingParserContext.getCurrentSqlType() == ContentType.PROCEDURE) {
-			AbstractDataTypeHandlerMapping mapping = EnvironmentContext.getDialect().getDataTypeHandlerMapping();
-			if(StringUtil.isEmpty(typeName)) {
-				this.dataType = mapping.getDefaultDBDataTypeHandler();
-			}else {
-				this.dataType = mapping.getDBDataTypeHandlerByDBTypeName(typeName);
-			}
-			this.dbDataType = ((DBDataTypeFeatures)this.dataType).getDBDataType();
+			confDataTypeVal = propertyMap.get("dbType");
+			this.mode = SqlParameterMode.toValue(propertyMap.get("mode"));
+		} else {
+			confDataTypeVal = propertyMap.get("datatype");
 		}
+		
+		DBDataTypeWrapper wrapper = DBDataTypeHelper.get(propertyMap.get("length"), propertyMap.get("precision"), confDataTypeVal);
+		this.dbDataType = wrapper.getDBDataType();
+		this.length = wrapper.getLength();
+		this.precision = wrapper.getPrecision();
 	}
-	private void setMode(String mode) {
-		if(MappingParserContext.getCurrentSqlType() == ContentType.PROCEDURE) {
-			if(StringUtil.notEmpty(mode)) {
-				this.mode = SqlParameterMode.toValue(mode);
-			}
-			if(this.mode == null) {
-				this.mode = SqlParameterMode.IN;
-			}
-		}
-	}
-	private void setUsePlaceholder(String usePlaceholder) {
-		if(VerifyTypeMatchUtil.isBoolean(usePlaceholder)) {
-			this.usePlaceholder = Boolean.parseBoolean(usePlaceholder);
+	private void setUsePlaceholder(Map<String, String> propertyMap) {
+		String value = propertyMap.get("useplaceholder");
+		if(VerifyTypeMatchUtil.isBoolean(value)) {
+			this.usePlaceholder = Boolean.parseBoolean(value);
 		}else {
 			this.usePlaceholder = true;
+		}
+		
+		if(!this.usePlaceholder) {
+			setValuePrefix(propertyMap.get("valueprefix"));
+			setValueSuffix(propertyMap.get("valuesuffix"));
 		}
 	}
 	private void setValuePrefix(String valuePrefix) {
 		if(StringUtil.isEmpty(valuePrefix)) {
-			if(((DBDataTypeFeatures)dataType).isCharacterType()) {
+			if(dbDataType.isCharacterType()) {
 				this.valuePrefix = "'";
 			}else {
 				this.valuePrefix = "";
@@ -173,7 +149,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	private void setValueSuffix(String valueSuffix) {
 		if(StringUtil.isEmpty(valueSuffix)) {
-			if(((DBDataTypeFeatures)dataType).isCharacterType()) {
+			if(dbDataType.isCharacterType()) {
 				this.valueSuffix = "'";
 			}else {
 				this.valueSuffix = "";
@@ -181,18 +157,6 @@ public class SqlParameterMetadata implements Metadata{
 		}else {
 			this.valueSuffix = valueSuffix;
 		}
-	}
-	private void setLength(String length) {
-		if(VerifyTypeMatchUtil.isLimitShort(length)) {
-			this.length = Short.parseShort(length);
-		}
-		this.length = this.dbDataType.correctInputLength(this.length);
-	}
-	private void setPrecision(String precision) {
-		if(VerifyTypeMatchUtil.isLimitShort(precision)) {
-			this.precision = Short.parseShort(precision);
-		}
-		this.precision = this.dbDataType.correctInputPrecision(this.length, this.precision);
 	}
 	private void setNullable(String nullable) {
 		this.nullable = Boolean.parseBoolean(nullable);
@@ -213,7 +177,7 @@ public class SqlParameterMetadata implements Metadata{
 			this.validate = true;
 			this.validateHandler = validateHandler;
 			this.validateHandler.setNullableValidator(defaultValue==null?nullable:true);
-			this.validateHandler.addValidator(new _DataTypeValidator(dataType, length, precision));
+			this.validateHandler.addValidator(new _DataTypeValidator(dbDataType, length, precision));
 		}
 	}
 
@@ -298,14 +262,11 @@ public class SqlParameterMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public String getDescriptionName() {
-		return descriptionName;
+	public String getDescription() {
+		return description;
 	}
-	public ClassDataTypeHandler getDataType() {
-		return (ClassDataTypeHandler) dataType;
-	}
-	public DBDataTypeHandler getDBDataType() {
-		return (DBDataTypeHandler) dataType;
+	public DBDataType getDBDataType() {
+		return dbDataType;
 	}
 	public boolean isUsePlaceholder() {
 		return usePlaceholder;
@@ -319,10 +280,10 @@ public class SqlParameterMetadata implements Metadata{
 	public SqlParameterMode getMode() {
 		return mode;
 	}
-	public short getLength() {
+	public int getLength() {
 		return length;
 	}
-	public short getPrecision() {
+	public int getPrecision() {
 		return precision;
 	}
 	public boolean isNullable() {

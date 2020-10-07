@@ -12,7 +12,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class UUID36PrimaryKeyHandler implements PrimaryKeyHandler{
-	private static final long serialVersionUID = 8524983915983303051L;
 
 	@Override
 	public void setValue2ObjectMap(Set<String> primaryKeyColumnCodes, Map<String, Object> objectMap, Object originObject) {

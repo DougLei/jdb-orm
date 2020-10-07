@@ -12,28 +12,30 @@ import com.douglei.tools.utils.StringUtil;
 public abstract class DBObjectHandler {
 	
 	/**
+	 * 支持存储过程直接返回 ResultSet
+	 * 即存储过程中编写 select语句, 执行该存储过程后, 会展示出该select结果集, 例如sqlserver数据库, mysql数据库
+	 * 但是例如oracle数据库, 则是必须通过输出参数才能返回结果集(cursor类型)
+	 * 默认是true
+	 * @return
+	 */
+	public boolean supportProcedureDirectlyReturnResultSet() {
+		return true;
+	}
+	
+	/**
 	 * 数据库对象名的最大长度
 	 * @return
 	 */
 	protected abstract short nameMaxLength();
 	
 	/**
-	 * 验证数据库object名称是否超长
-	 * @param dbObjectName
-	 * @return
-	 */
-	private boolean validateNameIsOverLength(String name) {
-		return name.length() > nameMaxLength();
-	}
-	
-	/**
 	 * 	验证数据库object名称
 	 * @param name
 	 * @throws DBObjectNameException
 	 */
-	public void validateObjectName(String name) throws DBObjectNameException {
-		if(validateNameIsOverLength(name)) 
-			throw new DBObjectNameException(EnvironmentContext.getDialect().getType().name() + "数据库的资源命名名称["+name+"]长度不能超过"+nameMaxLength()+"个字符");
+	public void validateObjectName(String name) {
+		if(name.length() > nameMaxLength()) 
+			throw new IllegalArgumentException(EnvironmentContext.getDialect().getType().getName() + "数据库的对象名称["+name+"], 其长度超过了限制的"+nameMaxLength()+"个字符");
 	}
 	
 	/**
@@ -46,8 +48,8 @@ public abstract class DBObjectHandler {
 	 * @param name
 	 * @return
 	 */
-	public String fixObjectName(String name) {
-		if(validateNameIsOverLength(name)) {
+	public String correctObjectName(String name) {
+		if(name.length() > nameMaxLength()) {
 			name = StringUtil.trim(name, '_');
 			
 			StringBuilder sb = new StringBuilder(name.length());
@@ -66,9 +68,8 @@ public abstract class DBObjectHandler {
 				}
 			}
 			sb.append("_").append(suffix).append("_").append(name.length());
-			if(sb.length() > nameMaxLength()) {
-				throw new DBObjectNameException("["+name+"]经过fixDBObjectName()后为["+sb.toString()+"], 其长度依然大于"+ EnvironmentContext.getDialect().getType().name() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
-			}
+			if(sb.length() > nameMaxLength()) 
+				throw new IllegalArgumentException("["+name+"]经过correctObjectName()后为["+sb.toString()+"], 其长度依然大于"+ EnvironmentContext.getDialect().getType().getName() + "数据库对象命名限制的最大字符长度("+nameMaxLength()+")");
 			return sb.toString();
 		}
 		return name;
@@ -76,7 +77,7 @@ public abstract class DBObjectHandler {
 
 	/**
 	 * 创建主键序列对象
-	 * @param name 序列名, 如果序列名为空, 则要使用tableName自动生成序列名
+	 * @param name 序列名
 	 * @param createSql 创建序列的sql语句
 	 * @param dropSql 删除序列的sql语句
 	 * @param tableName 表名

@@ -175,7 +175,7 @@ class TableMappingParser {
 					case PRIMARY_KEY:
 						for(Attribute columnName: columnNames) {
 							columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
-							columnMetadata.set2PrimaryKeyConstraint(true);
+							columnMetadata.setPrimaryKeyConstraint(true);
 							constraint.addColumn(columnMetadata);
 						}
 						break;
@@ -183,14 +183,14 @@ class TableMappingParser {
 						for(Attribute columnName: columnNames) {
 							columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
 							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-							columnMetadata.set2UniqueConstraint(true);
+							columnMetadata.setUniqueConstraint(true);
 							constraint.addColumn(columnMetadata);
 						}
 						break;
 					case DEFAULT_VALUE:
 						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.set2DefaultValue(constraintElement.attributeValue("value"));
+						columnMetadata.setDefaultValue(constraintElement.attributeValue("value"));
 						if(columnMetadata.getDefaultValue() == null) {
 							throw new NullPointerException("配置默认值约束, 默认值不能为空");
 						}
@@ -199,7 +199,7 @@ class TableMappingParser {
 					case CHECK:
 						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.set2CheckConstraint(constraintElement.attributeValue("expression"));
+						columnMetadata.setCheckConstraint(constraintElement.attributeValue("expression"));
 						if(columnMetadata.getCheck() == null) {
 							throw new NullPointerException("配置检查约束, 检查约束的表达式不能为空");
 						}
@@ -208,7 +208,7 @@ class TableMappingParser {
 					case FOREIGN_KEY:
 						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.set2ForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
+						columnMetadata.setForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
 						if(columnMetadata.getFkTableName() == null) {
 							throw new NullPointerException("配置外键约束, 关联的表名和列名均不能为空");
 						}
@@ -238,7 +238,7 @@ class TableMappingParser {
 				return;
 			
 			String indexName, createSqlStatement, dropSqlStatement;
-			String currentDialect = EnvironmentContext.getDialect().getType().name();
+			String currentDialect = EnvironmentContext.getDialect().getType().getName();
 			
 			for (Element indexElement : indexElements) {
 				if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name")))
@@ -275,9 +275,8 @@ class TableMappingParser {
 			// 获取主键处理器
 			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
 			if(primaryKeyHandler != null) {
-				if(!primaryKeyHandler.supportProcessMultiPKColumns() && tableMetadata.primaryKeyCount() > 1) {
+				if(!primaryKeyHandler.supportMultiColumns() && tableMetadata.primaryKeyCount() > 1) 
 					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getClass().getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
-				}
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				
 				// 如果是序列类型, 则去解析<sequence>元素
@@ -295,7 +294,7 @@ class TableMappingParser {
 	private void setPrimaryKeySequence(Element sequenceElement) {
 		// 因为主键序列只支持单列主键, 所以这里获取唯一的主键列, 并将其标识为主键序列
 		ColumnMetadata primaryKeyColumn = tableMetadata.getPrimaryKeyColumnByCode(tableMetadata.getPrimaryKeyColumnCodes().iterator().next());
-		primaryKeyColumn.set2PrimaryKeySequence();
+		primaryKeyColumn.setPrimaryKeySequence();
 		
 		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
 		String sequenceName = null;

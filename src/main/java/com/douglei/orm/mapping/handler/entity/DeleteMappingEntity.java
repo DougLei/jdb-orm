@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.handler.entity;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingTypeHandler;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 
 /**
  * 
@@ -22,7 +22,7 @@ public class DeleteMappingEntity extends MappingEntity{
 		if(mapping == null)
 			throw new NullPointerException("不存在code为"+code+"的映射, 无法删除"); 
 		super.mapping = mapping;
-		super.type = MappingTypeHandler.getMappingTypeByName(mapping.getType());
+		super.type = MappingTypeContainer.getMappingTypeByName(mapping.getType());
 	}
 
 	@Override

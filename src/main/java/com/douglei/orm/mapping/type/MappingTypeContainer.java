@@ -14,7 +14,7 @@ import com.douglei.orm.mapping.impl.view.ViewMappingType;
  * 
  * @author DougLei
  */
-public class MappingTypeHandler {
+public class MappingTypeContainer {
 	private static final Map<String, MappingType> container = new HashMap<String, MappingType>(8);
 	private static final List<String> fileSuffixes = new ArrayList<String>(6);
 	
@@ -31,9 +31,9 @@ public class MappingTypeHandler {
 	 */
 	public static void register(MappingType mappingType) {
 		if(container.containsKey(mappingType.getName()))
-			throw new RepeatedMappingTypeException("已存在名为"+mappingType.getName()+"的映射类型");
+			throw new RepeatedMappingTypeException("已存在名为 ["+mappingType.getName()+"] 的映射类型");
 		if(fileSuffixes.contains(mappingType.getFileSuffix()))
-			throw new RepeatedMappingTypeException("已存在文件后缀为"+mappingType.getFileSuffix()+"的映射类型");
+			throw new RepeatedMappingTypeException("已存在文件后缀为 ["+mappingType.getFileSuffix()+"] 的映射类型");
 		
 		container.put(mappingType.getName(), mappingType);
 		fileSuffixes.add(mappingType.getFileSuffix());
@@ -50,7 +50,7 @@ public class MappingTypeHandler {
 			List<String> names = new ArrayList<String>(fileSuffixes.size());
 			for(MappingType mt : container.values()) 
 				names.add(mt.getName());
-			throw new NullPointerException("不存在名为"+name+"的映射类型, 目前包含的映射类型名有: " + names);
+			throw new NullPointerException("不存在名为 ["+name+"] 的映射类型, 目前包含的映射类型名有: " + names);
 		}
 		return mappingType;
 	}

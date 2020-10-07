@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.DialectContainer;
-import com.douglei.orm.environment.DatabaseMetadata;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.DefaultValueHandler;
@@ -51,9 +51,9 @@ public class EnvironmentProperty {
 	@IsField
 	private ColumnNameConverter columnNameConverter;
 	
-	public EnvironmentProperty(String id, Map<String, String> propertyMap, DatabaseMetadata databaseMetadata, MappingContainer mappingContainer) throws Exception {
+	public EnvironmentProperty(String id, Map<String, String> propertyMap, DialectKey key, MappingContainer mappingContainer) throws Exception {
 		this.id = id;
-		this.dialect = DialectContainer.getDialectByDatabaseMetadata(databaseMetadata);
+		this.dialect = DialectContainer.get(key);
 		this.mappingContainer = mappingContainer;
 		
 		List<String> fieldNames = getFieldNames(this.getClass().getDeclaredFields());

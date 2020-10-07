@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.ExternalDataSource;
+import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.environment.properties.Properties;
 import com.douglei.orm.environment.property.EnvironmentProperty;
@@ -22,7 +23,7 @@ import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
-import com.douglei.orm.mapping.type.MappingTypeHandler;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.StringUtil;
@@ -123,8 +124,8 @@ public class Environment {
 	private void setEnvironmentProperties(String id, List<Element> elements, MappingContainer mappingContainer) throws Exception {
 		logger.debug("开始处理<environment>下的所有property元素");
 		Map<String, String> propertyMap = elementListToPropertyMap(elements);
-		DatabaseMetadata databaseMetadata = new DatabaseMetadata(dataSourceWrapper.getConnection(false, null).getConnection());
-		this.environmentProperty = new EnvironmentProperty(id, propertyMap, databaseMetadata, mappingContainer);
+		DialectKey key = new DialectKey(dataSourceWrapper.getConnection(false, null).getConnection());
+		this.environmentProperty = new EnvironmentProperty(id, propertyMap, key, mappingContainer);
 		EnvironmentContext.setProperty(environmentProperty);
 		logger.debug("处理<environment>下的所有property元素结束");
 	}
@@ -150,7 +151,7 @@ public class Environment {
 					path.append(",").append(p.getValue());
 				});
 				
-				List<String> list = new ResourceScanner(MappingTypeHandler.getFileSuffixes().toArray(new String[MappingTypeHandler.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
+				List<String> list = new ResourceScanner(MappingTypeContainer.getFileSuffixes().toArray(new String[MappingTypeContainer.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
 				if(!list.isEmpty()) {
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 

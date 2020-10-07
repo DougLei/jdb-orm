@@ -11,11 +11,10 @@ import java.util.Set;
 public interface PrimaryKeyHandler extends Serializable{
 
 	/**
-	 * 主键处理器是否支持处理多个主键列
-	 * 默认为false
+	 * 主键处理器是否支持处理多个主键列, 默认为false
 	 * @return
 	 */
-	default boolean supportProcessMultiPKColumns() {
+	default boolean supportMultiColumns() {
 		return true;
 	}
 	

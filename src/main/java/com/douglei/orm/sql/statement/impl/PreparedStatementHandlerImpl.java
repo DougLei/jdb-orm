@@ -33,16 +33,12 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	 */
 	private void setParameters(List<Object> parameters) throws SQLException {
 		if(parameters != null && !parameters.isEmpty()) {
-			InputSqlParameter inputSqlParameter = null;
 			short index = 1;
 			for (Object parameter : parameters) {
 				if(parameter instanceof InputSqlParameter) {
 					((InputSqlParameter)parameter).setValue(index++, preparedStatement);
 				}else {
-					if(inputSqlParameter == null)
-						inputSqlParameter = new InputSqlParameter();
-					inputSqlParameter.update(parameter);
-					inputSqlParameter.setValue(index++, preparedStatement);
+					new InputSqlParameter(parameter).setValue(index++, preparedStatement);
 				}
 			}
 		}

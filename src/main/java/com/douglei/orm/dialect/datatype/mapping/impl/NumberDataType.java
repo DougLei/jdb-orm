@@ -6,10 +6,10 @@ import com.douglei.orm.dialect.datatype.mapping.MappingDataType;
  * 
  * @author DougLei
  */
-public abstract class DateDataType extends MappingDataType {
+public abstract class NumberDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "date";
+		return "number";
 	}
 }

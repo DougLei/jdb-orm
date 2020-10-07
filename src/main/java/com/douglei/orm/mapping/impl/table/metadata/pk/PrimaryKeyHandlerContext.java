@@ -27,9 +27,8 @@ public class PrimaryKeyHandlerContext {
 	 * @return
 	 */
 	public static PrimaryKeyHandler getHandler(String primaryKeyHandler) {
-		if(StringUtil.isEmpty(primaryKeyHandler)) {
+		if(StringUtil.isEmpty(primaryKeyHandler)) 
 			return null;
-		}
 		PrimaryKeyHandler handler = handlers.get(primaryKeyHandler);
 		if(handler == null) {
 			handler = (PrimaryKeyHandler) ConstructorUtil.newInstance(primaryKeyHandler);

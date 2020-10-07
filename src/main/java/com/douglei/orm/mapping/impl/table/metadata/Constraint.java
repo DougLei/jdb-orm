@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.temp.datatype.handler.DataTypeHandler;
-import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractBlobDataTypeHandler;
-import com.douglei.orm.dialect.temp.datatype.handler.classtype.AbstractClobDataTypeHandler;
-import com.douglei.orm.dialect.temp.datatype.handler.dbtype.DBDataTypeFeatures;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
 import com.douglei.tools.utils.StringUtil;
 
@@ -18,7 +14,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
-	private static final long serialVersionUID = -6924155959689840702L;
 
 	private String name;// (前缀+表名+列名)
 	
@@ -44,7 +39,6 @@ public class Constraint implements Serializable{
 	 * @param column
 	 */
 	public Constraint addColumn(ColumnMetadata column) {
-		validateDataType(column.getDataTypeHandler());
 		if(columns == null) {
 			this.columns = new HashMap<String, ColumnMetadata>(constraintType.supportComposite()?4:2);
 		}else if(columns.containsKey(column.getName())) {
@@ -53,13 +47,6 @@ public class Constraint implements Serializable{
 		columns.put(column.getName(), column);
 		processColumnMetadata(column);
 		return this;
-	}
-	
-	// 验证数据类型是否符合创建约束
-	private void validateDataType(DataTypeHandler dataType) {
-		if(dataType instanceof AbstractClobDataTypeHandler || dataType instanceof AbstractBlobDataTypeHandler) {
-			throw new ConstraintConfigurationException("不支持给clob类型或blob类型(即大数据字段类型)的字段配置约束");
-		}
 	}
 	
 	// 处理列对象的元数据
@@ -117,7 +104,7 @@ public class Constraint implements Serializable{
 						if(this.defaultValue == null) {
 							throw new NullPointerException("配置的默认值约束, 默认值不能为空");
 						}
-						if(((DBDataTypeFeatures)column.getDataTypeHandler()).isCharacterType()) {
+						if(column.getDBDataType().isCharacterType()) {
 							this.defaultValue = "'"+this.defaultValue+"'";
 						}
 						break;
@@ -140,7 +127,7 @@ public class Constraint implements Serializable{
 						break;
 				}
 			}
-			this.name = EnvironmentContext.getDialect().getObjectHandler().fixObjectName(nameBuilder.toString());// 设置约束名
+			this.name = EnvironmentContext.getDialect().getObjectHandler().correctObjectName(nameBuilder.toString());// 设置约束名
 			processConstraint = true;
 		}
 	}

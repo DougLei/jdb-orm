@@ -10,13 +10,10 @@ public enum SqlParameterMode {
 	INOUT;
 
 	public static SqlParameterMode toValue(String mode) {
-		mode = mode.toUpperCase();
-		SqlParameterMode[] spms = SqlParameterMode.values();
-		for (SqlParameterMode sqlParameterMode : spms) {
-			if(sqlParameterMode.name().equals(mode)) {
-				return sqlParameterMode;
-			}
-		}
-		return null;
+		if(OUT.name().equalsIgnoreCase(mode))
+			return OUT;
+		if(INOUT.name().equalsIgnoreCase(mode))
+			return INOUT;
+		return IN;
 	}
 }

@@ -44,7 +44,7 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 					
 					columnMetadata = tableMetadata.getColumnByCode(code);
 					updateSql.append(columnMetadata.getName()).append("=?");
-					parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+					parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
 				}
 			}
 		}
@@ -63,7 +63,7 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 			columnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(objectMap.get(pkCode), columnMetadata.getDataTypeHandler()));
+			parameters.add(new InputSqlParameter(objectMap.get(pkCode), columnMetadata.getDBDataType()));
 			
 			if(index < size) {
 				updateSql.append(" and ");

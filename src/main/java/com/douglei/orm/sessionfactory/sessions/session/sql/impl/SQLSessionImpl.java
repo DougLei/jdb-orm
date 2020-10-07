@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -305,19 +306,20 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					
 					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对procedureSupportDirectlyReturnResultSet=true的数据库有用
-					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getFeature().supportProcedureDirectlyReturnResultSet();
+					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getObjectHandler().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
-						Map<String, Object> outMap = new HashMap<String, Object>(outParameterCount+(procedureSupportDirectlyReturnResultSet?4:0));
+						Map<String, Object> outMap = new HashMap<String, Object>(8);
 						
-						SqlParameterMetadata sqlParameterMetadata = null;
-						for(short i=0;i<outParameterCount;i++) {
-							sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]-1);
-							outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
+						if(outParameterCount > 0) {
+							SqlParameterMetadata sqlParameterMetadata = null;
+							for(short i=0;i<outParameterCount;i++) {
+								sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]-1);
+								outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
+							}
 						}
 						
-						if(procedureSupportDirectlyReturnResultSet) {
+						if(procedureSupportDirectlyReturnResultSet) 
 							processDirectlyReturnResultSet(outMap, callableStatement, returnResultSet);
-						}
 						return outMap;
 					}
 					return null;
@@ -333,11 +335,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				do {
 					if(returnResultSet) {
 						if((rs = callableStatement.getResultSet()) != null && rs.next()) {
-							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, ResultSetUtil.getResultSetListMap(rs));
+							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getResultSetListMap(rs));
 						}else {
-							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence, java.util.Collections.emptyList());
+							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, Collections.emptyList());
 						}
-						sequence++;
 					}else {
 						if(callableStatement.getUpdateCount() == -1)
 							break;

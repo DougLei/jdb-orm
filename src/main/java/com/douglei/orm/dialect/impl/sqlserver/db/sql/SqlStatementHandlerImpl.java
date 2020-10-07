@@ -78,7 +78,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	public String modifyColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" alter column ").append(column.getName()).append(" ");
-		tmpSql.append(column.getDataType().mappedDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
+		tmpSql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
 		if(!column.isNullable()) {
 			tmpSql.append("not null");
 		}

@@ -1,4 +1,4 @@
-package com.douglei.orm.dialect;
+package com.douglei.orm.environment.datasource;
 
 /**
  * 事物隔离级别

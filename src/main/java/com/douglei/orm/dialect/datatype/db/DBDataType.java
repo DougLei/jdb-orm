@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.Classification;
 import com.douglei.orm.dialect.datatype.DataType;
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
  * 数据库的数据类型
@@ -116,11 +117,11 @@ public abstract class DBDataType extends DataType {
 	/**
 	 * 从 {@link ResultSet} 中获取对应的列值
 	 * @param columnIndex
-	 * @param rs
+	 * @param resultSet
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract Object getValue(short columnIndex, ResultSet rs) throws SQLException;
+	public abstract Object getValue(int columnIndex, ResultSet resultSet) throws SQLException;
 	
 	/**
 	 * 从 {@link CallableStatement} 中获取输出参数的值
@@ -129,5 +130,23 @@ public abstract class DBDataType extends DataType {
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract Object getValue(short parameterIndex, CallableStatement callableStatement) throws SQLException;
+	public abstract Object getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException;
+	
+	/**
+	 * 支持处理的Class数组
+	 * @return 
+	 */
+	public Class<?>[] supportClasses() {
+		return null;
+	}
+	
+	/**
+	 * 验证指定属性名的属性值
+	 * @param fieldName
+	 * @param fieldValue
+	 * @param length
+	 * @param precision
+	 * @return 返回null表示验证通过
+	 */
+	public abstract ValidationResult validate(String fieldName, Object fieldValue, int length, int precision);
 }

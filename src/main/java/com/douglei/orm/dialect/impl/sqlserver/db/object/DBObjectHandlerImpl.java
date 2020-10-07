@@ -18,6 +18,6 @@ public class DBObjectHandlerImpl extends DBObjectHandler {
 
 	@Override
 	public PrimaryKeySequence createPrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
-		return SqlServerPrimaryKeySequence.singleInstance();
+		return SqlServerPrimaryKeySequence.singleton();
 	}
 }

@@ -61,7 +61,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	
 	// 创建主键序列
 	private void createPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) throws SQLException {
-		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
+		if(primaryKeySequence != null && primaryKeySequence.executeSql()) {
 			connection.executeSql(primaryKeySequence.getCreateSql());
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, primaryKeySequence.getDropSql(), connection);
 		}
@@ -203,7 +203,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 
 	// 是否修改了列结构
 	private boolean isUpdateColumnStruct(ColumnMetadata column, ColumnMetadata oldColumn) throws Exception {
-		return 	!column.getDataType().equals(oldColumn.getDataType()) 
+		return 	!column.getDBDataType().equals(oldColumn.getDBDataType()) 
 				|| column.getLength() != oldColumn.getLength() 
 				|| column.getPrecision() != oldColumn.getPrecision() 
 				|| column.isNullable() != oldColumn.isNullable();
@@ -245,7 +245,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 	// -------------------------------------------------------------------------------------------------------------------
 	// 删除主键序列
 	private void dropPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) throws SQLException {
-		if(primaryKeySequence != null && primaryKeySequence.executeSqlStatement()) {
+		if(primaryKeySequence != null && primaryKeySequence.executeSql()) {
 			connection.executeSql(primaryKeySequence.getDropSql());
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, primaryKeySequence.getCreateSql(), connection);
 		}

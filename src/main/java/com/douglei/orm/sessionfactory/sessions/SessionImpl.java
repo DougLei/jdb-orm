@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.TransactionIsolationLevel;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;

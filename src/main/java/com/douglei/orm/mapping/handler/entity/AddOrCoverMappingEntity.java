@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.mapping.type.MappingTypeHandler;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.CloseUtil;
@@ -28,7 +28,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	}
 	public AddOrCoverMappingEntity(String filepath, boolean opDatabaseStruct) {
 		this.filepath = filepath;
-		super.type = MappingTypeHandler.getMappingTypeByFile(filepath);
+		super.type = MappingTypeContainer.getMappingTypeByFile(filepath);
 		super.opDatabaseStruct = opDatabaseStruct;
 	}
 	
@@ -48,7 +48,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	 */
 	public AddOrCoverMappingEntity(String content, String typeName, boolean opDatabaseStruct) {
 		this.content = content;
-		super.type = MappingTypeHandler.getMappingTypeByName(typeName);
+		super.type = MappingTypeContainer.getMappingTypeByName(typeName);
 		super.opDatabaseStruct = opDatabaseStruct;
 	}
 	

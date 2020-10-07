@@ -16,10 +16,10 @@
 	<table name="SYS_USER" oldName="" class="com.douglei.orm.session.SysUser" createMode="create" strict="false">
 		<import-columns path=""/><!-- 从根路径查找, 要导入的列集合, 可以将所有表中的通用字段导入, 具体这个文件中怎么写, 看本文件最下面的注释内容 -->
 		<columns>
-			<!-- dataType的值包括: string, nstring, char, nchar, integer, double, date, clob, blob, 默认值为string -->
+			<!-- dataType的值包括: string, nstring, char, nchar, number, datetime, clob, blob, 默认值为string -->
 			<!-- nullable默认值为true, validate默认值为false -->
 			<column name="ID" oldName="IDENTITY" property="id" dataType="string" primaryKey="true" length="30" precision="" nullable="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
-			<column name="NANE" description="姓名" property="name" dataType="string" length="30" validate="true" unique="true" />
+			<column name="NANE" property="name" dataType="string" length="30" validate="true" unique="true" description="姓名" />
 			<column name="AGE" property="age" dataType="number" />
 			<column name="SEX" property="sex" dataType="string" />
 		</columns>

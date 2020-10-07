@@ -44,7 +44,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDataTypeHandler()));
+			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDBDataType()));
 			
 			if(index < size) {
 				deleteSql.append(" and ");
@@ -69,7 +69,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 				deleteSql.append(columnMetadata.getName()).append(" is null");
 			}else {
 				deleteSql.append(columnMetadata.getName()).append("=?");
-				parameters.add(new InputSqlParameter(value, columnMetadata.getDataTypeHandler()));
+				parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
 			}
 			
 			if(index < size) {

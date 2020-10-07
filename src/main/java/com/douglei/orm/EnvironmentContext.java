@@ -8,14 +8,14 @@ import com.douglei.orm.environment.property.EnvironmentProperty;
  * @author DougLei
  */
 public class EnvironmentContext {
-	private static ThreadLocal<EnvironmentProperty> PROPERTY = new ThreadLocal<EnvironmentProperty>();
+	private static ThreadLocal<EnvironmentProperty> context = new ThreadLocal<EnvironmentProperty>();
 	
 	/**
 	 * 设置配置的环境全局属性
 	 * @param property
 	 */
 	public static void setProperty(EnvironmentProperty property) {
-		PROPERTY.set(property);
+		context.set(property);
 	}
 	
 	/**
@@ -23,7 +23,7 @@ public class EnvironmentContext {
 	 * @return
 	 */
 	public static EnvironmentProperty getProperty() {
-		return PROPERTY.get();
+		return context.get();
 	}
 	
 	/**
@@ -31,6 +31,6 @@ public class EnvironmentContext {
 	 * @return
 	 */
 	public static Dialect getDialect() {
-		return PROPERTY.get().getDialect();
+		return context.get().getDialect();
 	}
 }

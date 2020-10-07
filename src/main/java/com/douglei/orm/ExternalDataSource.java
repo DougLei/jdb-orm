@@ -10,16 +10,9 @@ public class ExternalDataSource {
 	private DataSource dataSource;
 	private String closeMethodName;
 
-	
 	public ExternalDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+		this(dataSource, null);
 	}
-
-	/**
-	 * 
-	 * @param dataSource
-	 * @param closeMethodName 可以传入null
-	 */
 	public ExternalDataSource(DataSource dataSource, String closeMethodName) {
 		this.dataSource = dataSource;
 		this.closeMethodName = closeMethodName;
