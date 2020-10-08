@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.dialect.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 
 /**

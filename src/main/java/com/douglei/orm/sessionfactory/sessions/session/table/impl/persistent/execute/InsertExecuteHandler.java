@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import com.douglei.orm.dialect.impl.oracle.db.object.pk.sequence.OraclePrimaryKeySequence;
+import com.douglei.orm.dialect.impl.oracle.dbobject.pk.sequence.OraclePrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;

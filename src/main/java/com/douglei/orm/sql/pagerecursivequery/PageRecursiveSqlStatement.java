@@ -1,6 +1,6 @@
 package com.douglei.orm.sql.pagerecursivequery;
 
-import com.douglei.orm.dialect.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.sql.recursivequery.RecursiveSqlStatement;
 
 /**

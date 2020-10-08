@@ -9,9 +9,9 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.dialect.sql.SqlQueryConnection;
-import com.douglei.orm.dialect.sql.SqlQueryHandler;
-import com.douglei.orm.dialect.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sqlhandler.SqlQueryConnection;
+import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
+import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.tools.utils.CloseUtil;
 
@@ -23,6 +23,7 @@ public class DBConnection {
 	private static final Logger logger = LoggerFactory.getLogger(DBConnection.class);
 	
 	private Connection connection;
+	private SqlQueryConnection queryConnection;
 	private SqlStatementHandler sqlStatementHandler;
 	private SqlQueryHandler sqlQueryHandler;
 	
@@ -78,8 +79,6 @@ public class DBConnection {
 		return queryExists(procedureExists, procName);
 	}
 	
-	
-	private SqlQueryConnection queryConnection;
 	// 查询获取视图的脚本
 	public String queryViewScript(String viewName) throws SQLException {
 		if(queryConnection == null)

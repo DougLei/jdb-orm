@@ -14,7 +14,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.dbobject.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.MappingImportDataContext;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;

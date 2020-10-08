@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.handler.struct.table;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.dbobject.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.handler.struct.DBConnection;

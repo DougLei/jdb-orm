@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.dialect.sql.SqlStatementHandler;
+import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 
 /**
