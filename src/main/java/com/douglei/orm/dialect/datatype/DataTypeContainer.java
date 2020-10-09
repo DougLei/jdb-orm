@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.db.impl.Null;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -53,7 +54,8 @@ public class DataTypeContainer {
 	 * @param value
 	 */
 	public DBDataType getDBDataTypeByObject(Object value) {
-		// TODO value为null的情况怎么处理
+		if(value == null) 
+			return Null.getSingleton();
 		
 		DBDataType dbDataType = extendContainer4ClassType.get(value.getClass());
 		if(dbDataType == null)

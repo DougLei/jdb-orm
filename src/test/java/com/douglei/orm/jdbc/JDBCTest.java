@@ -81,7 +81,7 @@ public class JDBCTest {
 		PreparedStatement pst = connection.prepareStatement("insert into SYS_USER2(id,age) values(?, ?)");
 		
 		pst.setString(1, IdentityUtil.get32UUID());
-		pst.setShort(2, (short)28);
+		pst.setObject(2, null);
 		pst.executeUpdate();
 		connection.commit();
 		

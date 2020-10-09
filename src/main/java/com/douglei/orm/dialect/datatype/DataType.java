@@ -22,8 +22,6 @@ public abstract class DataType {
 
 	@Override
 	public final boolean equals(Object obj) {
-		if(obj == null)
-			return false;
 		if(this == obj)
 			return true;
 		return this.getName().equals(((DataType)obj).getName());

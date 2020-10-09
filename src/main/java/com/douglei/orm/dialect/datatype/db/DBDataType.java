@@ -116,7 +116,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @param value
 	 * @throws SQLException
 	 */
-	public final void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		if(value == null) {
 			preparedStatement.setNull(parameterIndex, sqlType);
 		}else {
@@ -132,7 +132,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 setValue(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
+		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 setValue_(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
 	}
 	
 	/**
