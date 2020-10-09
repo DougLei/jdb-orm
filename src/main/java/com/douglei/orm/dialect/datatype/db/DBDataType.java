@@ -106,13 +106,23 @@ public abstract class DBDataType extends DataType {
 	
 	// --------------------------------------------------------------------------------------
 	/**
+	 * 支持处理的Class数组
+	 * @return 
+	 */
+	public Class<?>[] supportClasses() {
+		return null;
+	}
+	
+	/**
 	 * 给 {@link PreparedStatement} 设置对应的参数值
 	 * @param preparedStatement
 	 * @param parameterIndex
 	 * @param value
 	 * @throws SQLException
 	 */
-	public abstract void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException;
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+		throw new NullPointerException("未实现该方法");
+	}
 	
 	/**
 	 * 从 {@link ResultSet} 中获取对应的列值
@@ -121,7 +131,9 @@ public abstract class DBDataType extends DataType {
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract Object getValue(int columnIndex, ResultSet resultSet) throws SQLException;
+	public Object getValue(int columnIndex, ResultSet resultSet) throws SQLException{
+		throw new NullPointerException("未实现该方法");
+	}
 	
 	/**
 	 * 从 {@link CallableStatement} 中获取输出参数的值
@@ -130,14 +142,8 @@ public abstract class DBDataType extends DataType {
 	 * @return
 	 * @throws SQLException
 	 */
-	public abstract Object getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException;
-	
-	/**
-	 * 支持处理的Class数组
-	 * @return 
-	 */
-	public Class<?>[] supportClasses() {
-		return null;
+	public Object getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException{
+		throw new NullPointerException("未实现该方法");
 	}
 	
 	/**
@@ -148,5 +154,7 @@ public abstract class DBDataType extends DataType {
 	 * @param precision
 	 * @return 返回null表示验证通过
 	 */
-	public abstract ValidationResult validate(String fieldName, Object fieldValue, int length, int precision);
+	public ValidationResult validate(String fieldName, Object fieldValue, int length, int precision){
+		throw new NullPointerException("未实现该方法");
+	}
 }

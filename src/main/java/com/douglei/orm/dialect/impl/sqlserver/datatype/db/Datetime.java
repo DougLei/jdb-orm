@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Datetime extends DBDataType{
+	private static final Datetime singleton = new Datetime();
+	public static Datetime getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Datetime() {
+	private Datetime() {
 		super(93);
 	}
 }

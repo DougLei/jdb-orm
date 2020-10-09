@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class NChar extends DBDataType{
+	private static final NChar singleton = new NChar();
+	public static NChar getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public NChar() {
+	private NChar() {
 		super(-15, 4000);
 	}
 	

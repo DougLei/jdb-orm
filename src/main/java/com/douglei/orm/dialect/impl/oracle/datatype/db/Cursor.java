@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Cursor extends DBDataType{
+	private static final Cursor singleton = new Cursor();
+	public static Cursor getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Cursor() {
+	private Cursor() {
 		super(-10);
 	}
 }

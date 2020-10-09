@@ -55,7 +55,7 @@ public class ResultSetUtil {
 		SqlResultsetMetadata sqlResultsetMetadata = null;
 		for(short i=0;i<count;i++) {
 			sqlResultsetMetadata = resultsetMetadatas.get(i);
-			map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue((short)(i+1), resultSet));
+			map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet));
 		}
 		return map;
 	}
@@ -88,7 +88,7 @@ public class ResultSetUtil {
 			map = new HashMap<String, Object>(count);
 			for(short i=0;i<count;i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue((short)(i+1), resultSet));
+				map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet));
 			}
 			listMap.add(map);
 		}while(resultSet.next());
@@ -108,7 +108,7 @@ public class ResultSetUtil {
 		Object[] array = new Object[count];
 		
 		for(short i=0;i<count;i++) {
-			array[i] = resultsetMetadatas.get(i).getDBDataType().getValue((short)(i+1), resultSet); 
+			array[i] = resultsetMetadatas.get(i).getDBDataType().getValue((i+1), resultSet); 
 		}
 		return array;
 	}
@@ -131,7 +131,7 @@ public class ResultSetUtil {
 			array = new Object[count];
 			for(short i=0;i<count;i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
-				array[i] = sqlResultsetMetadata.getDBDataType().getValue((short)(i+1), resultSet); 
+				array[i] = sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet); 
 			}
 			arrayList.add(array);
 		}while(resultSet.next());

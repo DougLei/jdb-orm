@@ -16,7 +16,7 @@ import com.douglei.orm.util.Dom4jUtil;
  * @author DougLei
  */
 class ViewMappingParser {
-	private static final ViewMetadataParser viewMetadataParser = new ViewMetadataParser();
+	private static ViewMetadataParser viewMetadataParser = new ViewMetadataParser();
 	
 	/**
 	 * 解析

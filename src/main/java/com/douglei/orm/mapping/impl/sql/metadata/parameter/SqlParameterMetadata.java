@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.dialect.datatype.util.DBDataTypeHelper;
-import com.douglei.orm.dialect.datatype.util.DBDataTypeWrapper;
+import com.douglei.orm.dialect.datatype.db.util.DBDataTypeUtil;
+import com.douglei.orm.dialect.datatype.db.util.DBDataTypeWrapper;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
@@ -118,7 +118,7 @@ public class SqlParameterMetadata implements Metadata{
 			confDataTypeVal = propertyMap.get("datatype");
 		}
 		
-		DBDataTypeWrapper wrapper = DBDataTypeHelper.get(propertyMap.get("length"), propertyMap.get("precision"), confDataTypeVal);
+		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), confDataTypeVal);
 		this.dbDataType = wrapper.getDBDataType();
 		this.length = wrapper.getLength();
 		this.precision = wrapper.getPrecision();

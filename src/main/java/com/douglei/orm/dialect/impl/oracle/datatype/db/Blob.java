@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Blob extends DBDataType{
+	private static final Blob singleton = new Blob();
+	public static Blob getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Blob() {
+	private Blob() {
 		super(2004);
 	}
 }

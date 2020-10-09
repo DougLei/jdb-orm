@@ -53,6 +53,8 @@ public class DataTypeContainer {
 	 * @param value
 	 */
 	public DBDataType getDBDataTypeByObject(Object value) {
+		// TODO value为null的情况怎么处理
+		
 		DBDataType dbDataType = extendContainer4ClassType.get(value.getClass());
 		if(dbDataType == null)
 			throw new NullPointerException("框架目前不支持处理Class=["+value.getClass()+"]的数据类型");

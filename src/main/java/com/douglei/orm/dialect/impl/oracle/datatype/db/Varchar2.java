@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Varchar2 extends DBDataType{
+	private static final Varchar2 singleton = new Varchar2();
+	public static Varchar2 getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Varchar2() {
+	private Varchar2() {
 		super(12, 4000);
 	}
 	

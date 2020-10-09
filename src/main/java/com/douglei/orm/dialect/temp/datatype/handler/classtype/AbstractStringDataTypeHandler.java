@@ -31,7 +31,7 @@ public abstract class AbstractStringDataTypeHandler extends ClassDataTypeHandler
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return new Class<?>[] {String.class, NString.class, Char.class, NChar.class, char.class, Character.class};
+		return new Class<?>[] {String.class, AbstractNStringDataType.class, AbstractCharDataType.class, AbstractNCharDataType.class, char.class, Character.class};
 	}
 
 	@Override

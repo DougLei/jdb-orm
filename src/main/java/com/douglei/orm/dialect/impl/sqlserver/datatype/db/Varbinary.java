@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Varbinary extends DBDataType{
+	private static final Varbinary singleton = new Varbinary();
+	public static Varbinary getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Varbinary() {
+	private Varbinary() {
 		super(-3);
 	}
 	

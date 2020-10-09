@@ -7,15 +7,22 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Varcharmax extends DBDataType{
+	private static final Varcharmax singleton = new Varcharmax();
+	public static Varcharmax getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Varcharmax() {
+	private Varcharmax() {
 		super(12);
-		super.typeName = "VARCHAR";
+		super.name = "VARCHAR";
 	}
 	
 	@Override
 	public String getSqlStatement(int length, int precision) {
-		return typeName + "(max)";
+		return name + "(max)";
 	}
 	
 	@Override

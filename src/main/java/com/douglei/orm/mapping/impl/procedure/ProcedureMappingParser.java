@@ -16,7 +16,7 @@ import com.douglei.orm.util.Dom4jUtil;
  * @author DougLei
  */
 class ProcedureMappingParser {
-	private static final ProcedureMetadataResolver procedureMetadataParser = new ProcedureMetadataResolver();
+	private static ProcedureMetadataResolver procedureMetadataParser = new ProcedureMetadataResolver();
 
 	/**
 	 * 解析

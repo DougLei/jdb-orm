@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Mediumtext extends DBDataType{
+	private static final Mediumtext singleton = new Mediumtext();
+	public static Mediumtext getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Mediumtext() {
+	private Mediumtext() {
 		super(-1);
 	}
 }

@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Char extends DBDataType{
+	private static final Char singleton = new Char();
+	public static Char getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Char() {
+	private Char() {
 		super(1, 2000);
 	}
 	

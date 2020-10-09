@@ -2,7 +2,7 @@ package com.douglei.orm.dialect.impl.sqlserver;
 
 import com.douglei.orm.dialect.DialectType;
 import com.douglei.orm.dialect.impl.AbstractDialect;
-import com.douglei.orm.dialect.impl.sqlserver.dbobject.DBObjectHandlerImpl;
+import com.douglei.orm.dialect.impl.sqlserver.object.DBObjectHandlerImpl;
 import com.douglei.orm.dialect.impl.sqlserver.sqlhandler.SqlQueryHandlerImpl;
 import com.douglei.orm.dialect.impl.sqlserver.sqlhandler.SqlStatementHandlerImpl;
 

@@ -22,7 +22,7 @@ public abstract class AbstractClobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return new Class<?>[] {Clob.class};
+		return new Class<?>[] {AbstractClobDataType.class};
 	}
 
 	@Override

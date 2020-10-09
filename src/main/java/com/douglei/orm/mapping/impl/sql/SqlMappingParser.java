@@ -27,8 +27,8 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 class SqlMappingParser {
-	private static final SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
-	private static final ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
+	private static SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
+	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
 	private SqlMetadata sqlMetadata;
 	

@@ -1,7 +1,7 @@
 package com.douglei.orm.dialect;
 
 import com.douglei.orm.dialect.datatype.DataTypeContainer;
-import com.douglei.orm.dialect.dbobject.DBObjectHandler;
+import com.douglei.orm.dialect.object.DBObjectHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 

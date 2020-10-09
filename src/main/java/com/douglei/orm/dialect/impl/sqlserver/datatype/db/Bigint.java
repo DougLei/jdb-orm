@@ -1,20 +1,21 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.db;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public class Bigint extends DBDataType{
+	private static final Bigint singleton = new Bigint();
+	public static Bigint getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Bigint() {
+	private Bigint() {
 		super(-5);
 	}
 }

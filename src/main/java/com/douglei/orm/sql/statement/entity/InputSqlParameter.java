@@ -29,12 +29,12 @@ public class InputSqlParameter {
 	 * @param preparedStatement
 	 * @throws SQLException
 	 */
-	public void setValue(short index, PreparedStatement preparedStatement) throws SQLException {
+	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
 		dbDataType.setValue(preparedStatement, index, value);
 	}
 	
 	@Override
 	public String toString() {
-		return "{ value=" + value + ", dbDataType=" + dbDataType.getName() + " } ";
+		return "{value=" + value + ", dbDataType=" + dbDataType.getName() + "}";
 	}
 }

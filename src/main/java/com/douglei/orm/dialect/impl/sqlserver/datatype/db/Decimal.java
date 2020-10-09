@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Decimal extends DBDataType{
+	private static final Decimal singleton = new Decimal();
+	public static Decimal getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Decimal() {
+	private Decimal() {
 		super(3, 38, 38);
 	}
 }

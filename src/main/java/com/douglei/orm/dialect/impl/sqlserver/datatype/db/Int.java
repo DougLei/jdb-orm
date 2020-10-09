@@ -7,8 +7,15 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Int extends DBDataType{
+	private static final Int singleton = new Int();
+	public static Int getSingleton() {
+		return singleton;
+	}
+	public Object readResolve() {
+		return singleton;
+	}
 	
-	public Int() {
+	private Int() {
 		super(4);
 	}
 }

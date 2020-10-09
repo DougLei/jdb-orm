@@ -2,8 +2,8 @@ package com.douglei.orm.mapping.impl.table.metadata.parser;
 
 import org.dom4j.Element;
 
-import com.douglei.orm.dialect.datatype.util.DBDataTypeHelper;
-import com.douglei.orm.dialect.datatype.util.DBDataTypeWrapper;
+import com.douglei.orm.dialect.datatype.db.util.DBDataTypeUtil;
+import com.douglei.orm.dialect.datatype.db.util.DBDataTypeWrapper;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
@@ -21,7 +21,7 @@ public class ColumnMetadataParser implements MetadataParser<Element, ColumnMetad
 		if(StringUtil.isEmpty(name)) 
 			throw new MetadataParseException("<column>元素的name属性值不能为空");
 
-		DBDataTypeWrapper wrapper = DBDataTypeHelper.get(element.attributeValue("length"), element.attributeValue("precision"), element.attributeValue("dataType"));
+		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(element.attributeValue("length"), element.attributeValue("precision"), element.attributeValue("dataType"));
 		
 		String value = element.attributeValue("nullable");
 		boolean nullable = StringUtil.isEmpty(value)?true:Boolean.parseBoolean(value);

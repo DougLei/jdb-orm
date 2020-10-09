@@ -21,7 +21,7 @@ public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
 	
 	@Override
 	public Class<?>[] supportClasses(){
-		return new Class<?>[] {Blob.class};
+		return new Class<?>[] {BlobDataType.class};
 	}
 
 	@Override
@@ -32,8 +32,8 @@ public abstract class AbstractBlobDataTypeHandler extends ClassDataTypeHandler{
 			byte[] blobContent = null;
 			if(value instanceof byte[]) {
 				blobContent = (byte[]) value;
-			}else if(value instanceof Blob){
-				blobContent = ((Blob)value).getValue();
+			}else if(value instanceof BlobDataType){
+				blobContent = ((BlobDataType)value).getValue();
 				if(blobContent == null || blobContent.length == 0) {
 					setNullBlob(preparedStatement, parameterIndex);
 				}
