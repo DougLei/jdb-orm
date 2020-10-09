@@ -1,5 +1,6 @@
 package com.douglei.orm.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.junit.Test;
+
+import com.douglei.tools.utils.IdentityUtil;
 
 public class JDBCTest {
 	
@@ -75,14 +78,13 @@ public class JDBCTest {
 		String pwd = "root";
 		
 		Connection connection = DriverManager.getConnection(url, username, pwd);
-		Statement st = connection.createStatement();
-		ResultSet rs = st.executeQuery("select test_seq.nextval from dual");
-		rs.next();
-		System.out.println("next value is " + rs.getInt(1));
-		rs = st.executeQuery("select test_seq.currval from dual");
-		rs.next();
-		System.out.println("current value is " + rs.getInt(1));
-		System.out.println(rs.getObject(1).getClass());
+		PreparedStatement pst = connection.prepareStatement("insert into SYS_USER2(id,age) values(?, ?)");
+		
+		pst.setString(1, IdentityUtil.get32UUID());
+		pst.setShort(2, (short)28);
+		pst.executeUpdate();
+		connection.commit();
+		
 	}
 	
 	@Test

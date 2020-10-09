@@ -21,7 +21,7 @@ public class Numeric extends DBDataType{
 	}
 	
 	private Numeric() {
-		super(2, 38, 38);
+		super(2);
 	}
 	
 	@Override

@@ -168,4 +168,9 @@ public abstract class DBDataType extends DataType implements Serializable{
 	public ValidationResult validate(String name, Object value, int length, int precision){
 		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 validate(String, Object, int, int)方法");
 	}
+	
+	@Override
+	public final String toString() {
+		return name;
+	}
 }

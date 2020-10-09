@@ -1,12 +1,12 @@
 package com.douglei.orm.dialect.impl.oracle.datatype.db;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
 
 /**
  * 
  * @author DougLei
  */
-public class NVarchar2 extends DBDataType{
+public class NVarchar2 extends AbstractCharacter{
 	private static final NVarchar2 singleton = new NVarchar2();
 	public static NVarchar2 getSingleton() {
 		return singleton;
@@ -17,10 +17,5 @@ public class NVarchar2 extends DBDataType{
 	
 	private NVarchar2() {
 		super(-9, 2000);
-	}
-	
-	@Override
-	public boolean isCharacterType() {
-		return true;
 	}
 }

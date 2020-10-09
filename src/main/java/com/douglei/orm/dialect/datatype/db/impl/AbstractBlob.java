@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.dialect.temp.datatype.handler.ReadDataStreamException;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.tools.utils.CloseUtil;
 

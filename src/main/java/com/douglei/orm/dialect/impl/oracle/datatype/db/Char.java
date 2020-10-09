@@ -1,12 +1,13 @@
 package com.douglei.orm.dialect.impl.oracle.datatype.db;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-public class Char extends DBDataType{
+public class Char extends AbstractCharacter{
 	private static final Char singleton = new Char();
 	public static Char getSingleton() {
 		return singleton;
@@ -18,9 +19,14 @@ public class Char extends DBDataType{
 	private Char() {
 		super(1, 2000);
 	}
+
+	@Override
+	public Class<?>[] supportClasses() {
+		return new Class<?>[] {char.class, Character.class};
+	}
 	
 	@Override
-	public boolean isCharacterType() {
-		return true;
+	protected int calcLength(String string) {
+		return StringUtil.calcLength(string);
 	}
 }

@@ -31,7 +31,7 @@ public abstract class AbstractDecimal extends DBDataType {
 	}
 	
 	@Override
-	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == double.class || value instanceof Double) {
 			preparedStatement.setDouble(parameterIndex, (double)value);
@@ -58,8 +58,7 @@ public abstract class AbstractDecimal extends DBDataType {
 	
 	@Override
 	public final ValidationResult validate(String name, Object value, int length, int precision) {
-		Class<?> valueClass = value.getClass();
-		if(valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || VerifyTypeMatchUtil.isDouble(value.toString())) {
+		if(validateType(value)) {
 			String string = value.toString();
 			if(string.length()-1 > length)
 				return new ValidationResult(name, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, (string.length() - 1));
@@ -72,5 +71,15 @@ public abstract class AbstractDecimal extends DBDataType {
 			}
 		}
 		return new ValidationResult(name, "数据值类型错误, 应为浮点类型", "jdb.data.validator.value.datatype.error.double");
+	}
+	
+	/**
+	 * 验证value的class
+	 * @param value
+	 * @return
+	 */
+	protected boolean validateType(Object value) {
+		Class<?> valueClass = value.getClass();
+		return valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || VerifyTypeMatchUtil.isDouble(value.toString());
 	}
 }

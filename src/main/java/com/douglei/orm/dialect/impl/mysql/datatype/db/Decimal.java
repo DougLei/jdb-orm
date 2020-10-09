@@ -1,12 +1,12 @@
 package com.douglei.orm.dialect.impl.mysql.datatype.db;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.db.impl.AbstractDecimal;
 
 /**
  * 
  * @author DougLei
  */
-public class Decimal extends DBDataType{
+public class Decimal extends AbstractDecimal{
 	private static final Decimal singleton = new Decimal();
 	public static Decimal getSingleton() {
 		return singleton;
@@ -16,6 +16,6 @@ public class Decimal extends DBDataType{
 	}
 	
 	private Decimal() {
-		super(3, 38, 30);
+		super(3, 38, 38);
 	}
 }
