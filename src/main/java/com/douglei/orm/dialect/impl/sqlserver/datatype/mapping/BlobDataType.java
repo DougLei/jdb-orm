@@ -2,6 +2,7 @@ package com.douglei.orm.dialect.impl.sqlserver.datatype.mapping;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.dialect.datatype.mapping.impl.AbstractBlobDataType;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varbinary;
 
 /**
  * 
@@ -11,7 +12,6 @@ public class BlobDataType extends AbstractBlobDataType {
 
 	@Override
 	public DBDataType mappedDBDataType(int length, int precision) {
-		// TODO Auto-generated method stub
-		return null;
+		return Varbinary.getSingleton();
 	}
 }

@@ -22,7 +22,12 @@ public class DBDataTypeUtil {
 	 */
 	public static DBDataTypeWrapper get(String confLengthVal, String confPrecisionVal, String confDataTypeVal) {
 		int length = VerifyTypeMatchUtil.isInteger(confLengthVal)?Integer.parseInt(confLengthVal):0;
+		if(length < 0)
+			length = 0;
+		
 		int precision = VerifyTypeMatchUtil.isInteger(confPrecisionVal)?Integer.parseInt(confPrecisionVal):0;
+		if(precision < 0)
+			precision = 0;
 		
 		DataType dataType = EnvironmentContext.getDialect().getDataTypeContainer().get(confDataTypeVal);
 		if(dataType.getClassification() == Classification.DB) 

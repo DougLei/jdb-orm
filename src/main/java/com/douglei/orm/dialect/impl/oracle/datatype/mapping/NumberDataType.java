@@ -11,7 +11,6 @@ public class NumberDataType extends AbstractNumberDataType {
 
 	@Override
 	public DBDataType mappedDBDataType(int length, int precision) {
-		// TODO Auto-generated method stub
-		return null;
+		return com.douglei.orm.dialect.impl.oracle.datatype.db.Number.getSingleton();
 	}
 }
