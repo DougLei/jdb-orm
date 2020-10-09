@@ -1,5 +1,6 @@
 package com.douglei.orm.dialect.impl.sqlserver;
 
+import com.douglei.orm.dialect.DialectType;
 import com.douglei.orm.dialect.impl.AbstractDialect;
 import com.douglei.orm.dialect.impl.sqlserver.dbobject.DBObjectHandlerImpl;
 import com.douglei.orm.dialect.impl.sqlserver.sqlhandler.SqlQueryHandlerImpl;
@@ -24,5 +25,10 @@ public class SqlServerDialect extends AbstractDialect{
 	private void initDataTypeContainer() {
 		// TODO 将实例注册到容器dataTypeContainer中
 		
+	}
+	
+	@Override
+	public DialectType getType() {
+		return DialectType.SQLSERVER;
 	}
 }

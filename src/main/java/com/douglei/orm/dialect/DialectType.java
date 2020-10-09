@@ -2,44 +2,43 @@ package com.douglei.orm.dialect;
 
 import java.util.Arrays;
 
+import com.douglei.orm.dialect.impl.mysql.MySqlDialect;
+import com.douglei.orm.dialect.impl.oracle.OracleDialect;
+import com.douglei.orm.dialect.impl.sqlserver.SqlServerDialect;
+import com.douglei.tools.utils.reflect.ConstructorUtil;
+
 /**
  * 
  * @author DougLei
  */
-public abstract class DialectType {
+public enum DialectType {
+	MYSQL(MySqlDialect.class, 8),
+	ORACLE(OracleDialect.class, 11),
+	SQLSERVER(SqlServerDialect.class, 11);
+	
 	private Class<? extends Dialect> targetClass;
-	private int id;
 	private String name;
 	private int[] supportDatabaseMajorVersions;
 	
-	public DialectType(Class<? extends Dialect> targetClass, int id, String name, int... supportDatabaseMajorVersions) {
+	private DialectType(Class<? extends Dialect> targetClass, int... supportDatabaseMajorVersions) {
 		this.targetClass = targetClass;
-		this.id = id;
-		this.name = name;
+		this.name = name();
 		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
 
 	/**
-	 * 获取唯一值
+	 * 创建方言实例
 	 * @return
 	 */
-	public final int getId() {
-		return id;
-	}
-	
-	/**
-	 * 获取对应方言的实现类
-	 * @return
-	 */
-	public final Class<? extends Dialect> targetClass(){
-		return targetClass;
+	public Dialect newDialectInstance(){
+		return (Dialect) ConstructorUtil.newInstance(targetClass);
 	}
 	
 	/**
 	 * 获取方言名
 	 * @return
 	 */
-	public final String getName(){
+	public String getName(){
 		return name;
 	}
 	
@@ -56,7 +55,7 @@ public abstract class DialectType {
 	 * @param key
 	 * @return
 	 */
-	public final boolean support(DialectKey key) {
+	public boolean support(DialectKey key) {
 		if(!name.equals(key.getName())) 
 			return false;
 		
@@ -69,6 +68,6 @@ public abstract class DialectType {
 	
 	@Override
 	public String toString() {
-		return " [class="+getClass().getName()+", id="+id+", name=" + name + ", supportDatabaseMajorVersions=" + Arrays.toString(supportDatabaseMajorVersions) + "] ";
+		return " [name=" + name + ", supportDatabaseMajorVersions=" + Arrays.toString(supportDatabaseMajorVersions) + "] ";
 	}
 }

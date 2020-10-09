@@ -5,7 +5,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.dialect.impl.oracle.OracleDialectType;
+import com.douglei.orm.dialect.DialectType;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
@@ -133,7 +133,7 @@ public class SqlContentMetadataParser implements MetadataParser<Node, SqlContent
 			if(keyAttr != null && StringUtil.notEmpty(key = keyAttr.getNodeValue())) {
 				IncrementIdValueConfig config = new IncrementIdValueConfig(key);
 				
-				if(EnvironmentContext.getDialect().getType().getId() == OracleDialectType.ID) {
+				if(EnvironmentContext.getDialect().getType() == DialectType.ORACLE) {
 					Node oracleSequenceNameAttr = attributeMap.getNamedItem("oracleSequenceName");
 					String oracleSequenceName = null;
 					if(oracleSequenceNameAttr == null || StringUtil.isEmpty(oracleSequenceName = oracleSequenceNameAttr.getNodeValue()))

@@ -18,13 +18,6 @@ public interface Dialect {
 	DialectType getType();
 	
 	/**
-	 * 
-	 * @param type
-	 */
-	void setType(DialectType type);
-	
-	
-	/**
 	 * 获取数据类型容器
 	 * @return
 	 */

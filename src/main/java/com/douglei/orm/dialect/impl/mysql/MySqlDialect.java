@@ -1,5 +1,6 @@
 package com.douglei.orm.dialect.impl.mysql;
 
+import com.douglei.orm.dialect.DialectType;
 import com.douglei.orm.dialect.impl.AbstractDialect;
 import com.douglei.orm.dialect.impl.mysql.dbobject.DBObjectHandlerImpl;
 import com.douglei.orm.dialect.impl.mysql.sqlhandler.SqlQueryHandlerImpl;
@@ -24,5 +25,10 @@ public class MySqlDialect extends AbstractDialect{
 	private void initDataTypeContainer() {
 		// TODO 将实例注册到容器dataTypeContainer中
 		
+	}
+	
+	@Override
+	public DialectType getType() {
+		return DialectType.MYSQL;
 	}
 }
