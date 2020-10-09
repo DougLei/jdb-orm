@@ -17,4 +17,9 @@ public class SqlServerPrimaryKeySequence extends PrimaryKeySequence{
 	
 	private SqlServerPrimaryKeySequence() {
 	}
+	
+	@Override
+	public boolean executeSql() {
+		return false;
+	}
 }

@@ -17,6 +17,7 @@ import com.douglei.orm.dialect.impl.mysql.datatype.mapping.ClobDataType;
 import com.douglei.orm.dialect.impl.mysql.datatype.mapping.DatetimeDataType;
 import com.douglei.orm.dialect.impl.mysql.datatype.mapping.NCharDataType;
 import com.douglei.orm.dialect.impl.mysql.datatype.mapping.NStringDataType;
+import com.douglei.orm.dialect.impl.mysql.datatype.mapping.NumberDataType;
 import com.douglei.orm.dialect.impl.mysql.datatype.mapping.SNumberDataType;
 import com.douglei.orm.dialect.impl.mysql.datatype.mapping.StringDataType;
 import com.douglei.orm.dialect.impl.mysql.object.DBObjectHandlerImpl;
@@ -56,6 +57,7 @@ public class MySqlDialect extends AbstractDialect{
 		dataTypeContainer.register(new DatetimeDataType());
 		dataTypeContainer.register(new NCharDataType());
 		dataTypeContainer.register(new NStringDataType());
+		dataTypeContainer.register(new NumberDataType());
 		dataTypeContainer.register(new SNumberDataType());
 		dataTypeContainer.register(new StringDataType());
 	}

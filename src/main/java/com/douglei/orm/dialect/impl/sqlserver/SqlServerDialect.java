@@ -12,7 +12,7 @@ import com.douglei.orm.dialect.impl.sqlserver.datatype.db.NVarchar;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Numeric;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Smallint;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Text;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varbinary;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varbinarymax;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varchar;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varcharmax;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.BlobDataType;
@@ -21,6 +21,7 @@ import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.ClobDataType;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.DatetimeDataType;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.NCharDataType;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.NStringDataType;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.NumberDataType;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.SNumberDataType;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.mapping.StringDataType;
 import com.douglei.orm.dialect.impl.sqlserver.object.DBObjectHandlerImpl;
@@ -54,7 +55,7 @@ public class SqlServerDialect extends AbstractDialect{
 		dataTypeContainer.register(NVarchar.getSingleton());
 		dataTypeContainer.register(Smallint.getSingleton());
 		dataTypeContainer.register(Text.getSingleton());
-		dataTypeContainer.register(Varbinary.getSingleton());
+		dataTypeContainer.register(Varbinarymax.getSingleton());
 		dataTypeContainer.register(Varchar.getSingleton());
 		dataTypeContainer.register(Varcharmax.getSingleton());
 		
@@ -64,6 +65,7 @@ public class SqlServerDialect extends AbstractDialect{
 		dataTypeContainer.register(new DatetimeDataType());
 		dataTypeContainer.register(new NCharDataType());
 		dataTypeContainer.register(new NStringDataType());
+		dataTypeContainer.register(new NumberDataType());
 		dataTypeContainer.register(new SNumberDataType());
 		dataTypeContainer.register(new StringDataType());
 	}

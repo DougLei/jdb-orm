@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<sql namespace="com.test">
+
+<!-- 		
+		<content name="insertSysUser" type="insert" key="id" oracleSequenceName="PKSEQ_SYS_USER">
+			insert into sys_user(id, name, age, sex) 
+				values(PKSEQ_SYS_USER.nextval, #{name}, #{age, dataType=number}, #{sex} )
+		</content>
+-->
+		
 		<content name="insertSysUser" type="insert" key="id" oracleSequenceName="PKSEQ_SYS_USER">
 			insert into sys_user(name, age, sex) 
-				values( #{name}, #{age, dataType=integer}, #{sex} )
+				values(#{name}, #{age, dataType=number}, #{sex} )
 		</content>
 		
 		<content name="insertSysUser2" type="insert">
 			insert into sys_user2(id, name, age, sex) 
-				values(#{id, defaultValue=douglei23fxxxx}, #{name}, #{age, dataType=integer}, #{sex} )
+				values(#{id, defaultValue=douglei23fxxxx}, #{name}, #{age, dataType=number}, #{sex} )
 		</content>
 		
 		<content name="insertSysUser3" type="insert" key="user.id" oracleSequenceName="PKSEQ_SYS_USER">
 			insert into sys_user(name, age, sex) 
-				values( #{user.name}, #{user.age, dataType=integer}, #{user.sex} )
+				values( #{user.name}, #{user.age, dataType=number}, #{user.sex} )
 		</content>
 		
 		<content name="insertSysUser4" type="insert">
 			insert into sys_user2(id, name, age, sex) 
-				values(#{user.id, defaultValue=xxx}, #{user.name}, #{user.age, dataType=integer}, #{user.sex} )
+				values(#{user.id, defaultValue=xxx}, #{user.name}, #{user.age, dataType=number}, #{user.sex} )
 		</content>
 	</sql>
 </mapping-configuration>

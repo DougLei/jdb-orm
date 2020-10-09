@@ -16,6 +16,7 @@ import com.douglei.orm.dialect.impl.oracle.datatype.mapping.ClobDataType;
 import com.douglei.orm.dialect.impl.oracle.datatype.mapping.DatetimeDataType;
 import com.douglei.orm.dialect.impl.oracle.datatype.mapping.NCharDataType;
 import com.douglei.orm.dialect.impl.oracle.datatype.mapping.NStringDataType;
+import com.douglei.orm.dialect.impl.oracle.datatype.mapping.NumberDataType;
 import com.douglei.orm.dialect.impl.oracle.datatype.mapping.SNumberDataType;
 import com.douglei.orm.dialect.impl.oracle.datatype.mapping.StringDataType;
 import com.douglei.orm.dialect.impl.oracle.object.DBObjectHandlerImpl;
@@ -55,6 +56,7 @@ public class OracleDialect extends AbstractDialect{
 		dataTypeContainer.register(new DatetimeDataType());
 		dataTypeContainer.register(new NCharDataType());
 		dataTypeContainer.register(new NStringDataType());
+		dataTypeContainer.register(new NumberDataType());
 		dataTypeContainer.register(new SNumberDataType());
 		dataTypeContainer.register(new StringDataType());
 	}

@@ -50,32 +50,32 @@ public class SessionTest {
 	}
 	
 	
-	public static void main(String[] args) {
-		Configuration conf = new Configuration();
-		SessionFactory sf = conf.buildSessionFactory();
-		System.out.println("start");
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SysUser user = new SysUser(0, "石磊33333", 28, "男");
-				Session session = sf.openSession();
-				session.getTableSession().save(user);
-				session.close();
-				System.out.println(Thread.currentThread().getName() + "==============>" + user);
-			}
-		}).start();
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SysUser user = new SysUser(0, "成荣3333", 25, "女");
-				Session session = sf.openSession();
-				session.getTableSession().save(user);
-				session.close();
-				System.out.println(Thread.currentThread().getName() + "==============>" + user);
-			}
-		}).start();
-		System.out.println("end");
-	}
+//	public static void main(String[] args) {
+//		Configuration conf = new Configuration();
+//		SessionFactory sf = conf.buildSessionFactory();
+//		System.out.println("start");
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				SysUser user = new SysUser(0, "石磊33333", 28, "男");
+//				Session session = sf.openSession();
+//				session.getTableSession().save(user);
+//				session.close();
+//				System.out.println(Thread.currentThread().getName() + "==============>" + user);
+//			}
+//		}).start();
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				SysUser user = new SysUser(0, "成荣3333", 25, "女");
+//				Session session = sf.openSession();
+//				session.getTableSession().save(user);
+//				session.close();
+//				System.out.println(Thread.currentThread().getName() + "==============>" + user);
+//			}
+//		}).start();
+//		System.out.println("end");
+//	}
 	
 	@Test
 	public void test() {

@@ -56,7 +56,7 @@ public enum DialectType {
 	 * @return
 	 */
 	public boolean support(DialectKey key) {
-		if(!name.equals(key.getName())) 
+		if(!name.equalsIgnoreCase(key.getName())) 
 			return false;
 		
 		for(int version : supportDatabaseMajorVersions) {

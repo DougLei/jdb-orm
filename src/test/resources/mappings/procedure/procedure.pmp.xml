@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 
-	<procedure name="SYS_USER22" oldName = "SYS_USER1">
+	<procedure name="SYS_USER22">
 		create procedure SYS_USER22 (@idD int)
 		as
 		begin

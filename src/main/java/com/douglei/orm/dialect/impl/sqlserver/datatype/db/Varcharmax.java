@@ -18,12 +18,12 @@ public class Varcharmax extends AbstractCharacter{
 	
 	private Varcharmax() {
 		super(12);
-		super.name = "VARCHAR";
+		super.name = "VARCHAR(MAX)";
 	}
 	
 	@Override
 	public String getSqlStatement(int length, int precision) {
-		return name + "(MAX)";
+		return name;
 	}
 	
 	@Override

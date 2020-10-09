@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" strict="create">
+	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" strict="true">
 		<columns>
-			<column name="id" property="id" dataType="integer" primaryKey="true" length="20" />
+			<column name="id" property="id" dataType="number" primaryKey="true" length="20" />
 			<column name="name" property="name" dataType="string" length="30" />
-			<column name="age" property="age" dataType="integer" />
+			<column name="age" property="age" dataType="number" />
 			<column name="sex" property="sex" dataType="string" />
 		</columns>
 		<primaryKeyHandler type="sequence"></primaryKeyHandler>
