@@ -15,6 +15,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public abstract class DBDataType extends DataType implements Serializable{
+	private static final long serialVersionUID = -6142370632027959328L;
 	private static final int NO_LIMIT = -1; // 对长度(或精度)没有限制
 	
 	protected String name;// 类型的名称, 大写

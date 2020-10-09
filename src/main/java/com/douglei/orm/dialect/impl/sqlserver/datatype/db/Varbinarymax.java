@@ -7,6 +7,7 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractBlob;
  * @author DougLei
  */
 public class Varbinarymax extends AbstractBlob{
+	private static final long serialVersionUID = -3877395094547043545L;
 	private static final Varbinarymax singleton = new Varbinarymax();
 	public static Varbinarymax getSingleton() {
 		return singleton;

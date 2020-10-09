@@ -7,6 +7,7 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
  * @author DougLei
  */
 public class Char extends AbstractCharacter{
+	private static final long serialVersionUID = -7471867460847270040L;
 	private static final Char singleton = new Char();
 	public static Char getSingleton() {
 		return singleton;

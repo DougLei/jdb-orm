@@ -8,6 +8,8 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class _NullableValidator extends Validator {
+	private static final long serialVersionUID = 2823731998571046351L;
+	
 	private boolean nullable;
 	
 	public _NullableValidator(boolean nullable) {

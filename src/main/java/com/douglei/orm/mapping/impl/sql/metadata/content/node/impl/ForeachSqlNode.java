@@ -19,6 +19,8 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = 3627348338163036212L;
+	
 	private String collection;
 	private String alias;
 	

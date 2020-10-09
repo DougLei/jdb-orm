@@ -12,6 +12,7 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Numeric extends DBDataType{
+	private static final long serialVersionUID = -1597482421554261866L;
 	private static final Numeric singleton = new Numeric();
 	public static Numeric getSingleton() {
 		return singleton;

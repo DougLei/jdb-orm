@@ -8,6 +8,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Char extends AbstractCharacter{
+	private static final long serialVersionUID = 1312714023942422792L;
 	private static final Char singleton = new Char();
 	public static Char getSingleton() {
 		return singleton;

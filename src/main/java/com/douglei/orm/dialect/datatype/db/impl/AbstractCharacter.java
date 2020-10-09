@@ -13,6 +13,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public abstract class AbstractCharacter extends DBDataType {
+	private static final long serialVersionUID = -6610022383230396501L;
 
 	protected AbstractCharacter(int sqlType) {
 		super(sqlType);

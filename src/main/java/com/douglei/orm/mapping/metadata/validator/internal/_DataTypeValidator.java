@@ -9,6 +9,8 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class _DataTypeValidator extends Validator {
+	private static final long serialVersionUID = -261062758535507133L;
+	
 	private DBDataType dbDataType;
 	private int length;
 	private int precision;

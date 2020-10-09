@@ -7,6 +7,8 @@ import java.io.Serializable;
  * @author DougLei
  */
 public abstract class PrimaryKeySequence implements Serializable{
+	private static final long serialVersionUID = 6777082974190751849L;
+	
 	protected String name;// 序列名
 	protected String createSql;
 	protected String dropSql;

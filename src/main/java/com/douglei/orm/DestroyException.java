@@ -5,6 +5,7 @@ package com.douglei.orm;
  * @author DougLei
  */
 public class DestroyException extends RuntimeException{
+	private static final long serialVersionUID = -26330067800715494L;
 
 	public DestroyException(String message, Throwable cause) {
 		super(message, cause);

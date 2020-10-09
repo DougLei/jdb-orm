@@ -11,6 +11,8 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class UniqueConstraint implements Serializable{
+	private static final long serialVersionUID = -3123529109893796912L;
+	
 	private byte size;
 	private Object code;// 唯一约束的列code, 可能为String(multiColumn=false), 也可能为List<String>(multiColumn=true)
 	

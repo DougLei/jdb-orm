@@ -16,6 +16,7 @@ import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
  * @author DougLei
  */
 public class Datetime extends DBDataType{
+	private static final long serialVersionUID = 2100812854275653786L;
 	private static final Datetime singleton = new Datetime();
 	public static Datetime getSingleton() {
 		return singleton;

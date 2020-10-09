@@ -10,6 +10,7 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Null extends DBDataType{
+	private static final long serialVersionUID = 6267071556036491574L;
 	private static final Null singleton = new Null();
 	public static Null getSingleton() {
 		return singleton;

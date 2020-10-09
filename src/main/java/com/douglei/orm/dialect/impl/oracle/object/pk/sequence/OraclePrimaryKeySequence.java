@@ -10,6 +10,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class OraclePrimaryKeySequence extends PrimaryKeySequence{
+	private static final long serialVersionUID = 6391062981855439045L;
 
 	public OraclePrimaryKeySequence(String name, String createSql, String dropSql, String tableName, ColumnMetadata primaryKeyColumn) {
 		if(StringUtil.isEmpty(name)) 

@@ -5,10 +5,7 @@ package com.douglei.orm.sql.statement;
  * @author DougLei
  */
 public class NonUniqueDataException extends RuntimeException{
-
-	public NonUniqueDataException() {
-		super();
-	}
+	private static final long serialVersionUID = -4955992721004923076L;
 
 	public NonUniqueDataException(String message) {
 		super(message);

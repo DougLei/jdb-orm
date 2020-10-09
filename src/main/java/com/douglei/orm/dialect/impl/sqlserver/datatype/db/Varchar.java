@@ -8,6 +8,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Varchar extends AbstractCharacter{
+	private static final long serialVersionUID = 7344138459862108126L;
 	private static final Varchar singleton = new Varchar();
 	public static Varchar getSingleton() {
 		return singleton;

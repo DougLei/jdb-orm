@@ -10,6 +10,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = -4287261067377795975L;
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {

@@ -17,6 +17,8 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
+	private static final long serialVersionUID = -1202993618207160897L;
+	
 	protected String content;
 	protected List<SqlParameterMetadata> sqlParameters;// sql参数, 按照配置中定义的顺序记录
 	

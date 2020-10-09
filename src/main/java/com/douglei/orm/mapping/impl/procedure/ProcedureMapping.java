@@ -9,6 +9,7 @@ import com.douglei.orm.mapping.type.MappingTypeNameConstants;
  * @author DougLei
  */
 public class ProcedureMapping extends Mapping {
+	private static final long serialVersionUID = 1519821354288730820L;
 
 	public ProcedureMapping(Metadata metadata) {
 		super(MappingTypeNameConstants.PROCEDURE, metadata);

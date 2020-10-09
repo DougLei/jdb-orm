@@ -8,6 +8,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public class Varcharmax extends AbstractCharacter{
+	private static final long serialVersionUID = 8074576046918825812L;
 	private static final Varcharmax singleton = new Varcharmax();
 	public static Varcharmax getSingleton() {
 		return singleton;

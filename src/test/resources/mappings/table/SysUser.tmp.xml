@@ -2,7 +2,7 @@
 <mapping-configuration>
 	<table name="SYS_USER" class="com.douglei.orm.session.SysUser" strict="true">
 		<columns>
-			<column name="id" property="id" dataType="number" primaryKey="true" length="20" />
+			<column name="id" property="id" dataType="number" primaryKey="true" length="10" />
 			<column name="name" property="name" dataType="string" length="30" />
 			<column name="age" property="age" dataType="number" />
 			<column name="sex" property="sex" dataType="string" />

@@ -15,6 +15,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractDecimal extends DBDataType {
+	private static final long serialVersionUID = -1415778428467161812L;
 
 	protected AbstractDecimal(int sqlType, int maxLength, int maxPrecision) {
 		super(sqlType, maxLength, maxPrecision);

@@ -20,6 +20,7 @@ import com.douglei.tools.utils.CloseUtil;
  * @author DougLei
  */
 public abstract class AbstractBlob extends DBDataType{
+	private static final long serialVersionUID = -75803985360741822L;
 
 	protected AbstractBlob(int sqlType) {
 		super(sqlType);

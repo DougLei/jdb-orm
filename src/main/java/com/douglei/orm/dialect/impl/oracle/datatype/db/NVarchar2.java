@@ -7,6 +7,7 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
  * @author DougLei
  */
 public class NVarchar2 extends AbstractCharacter{
+	private static final long serialVersionUID = 2583499014173244514L;
 	private static final NVarchar2 singleton = new NVarchar2();
 	public static NVarchar2 getSingleton() {
 		return singleton;

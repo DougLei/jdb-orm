@@ -12,6 +12,8 @@ import com.douglei.orm.mapping.metadata.Metadata;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
+	private static final long serialVersionUID = 5933886870399981053L;
+	
 	protected String name;
 	protected ContentType type;
 	private IncrementIdValueConfig incrementIdValueConfig;

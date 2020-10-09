@@ -7,6 +7,8 @@ import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
  * @author DougLei
  */
 public class SqlServerPrimaryKeySequence extends PrimaryKeySequence{
+	private static final long serialVersionUID = 3127057337205623920L;
+	
 	private static final SqlServerPrimaryKeySequence singleton = new SqlServerPrimaryKeySequence();
 	public static PrimaryKeySequence getSingleton() {
 		return singleton;

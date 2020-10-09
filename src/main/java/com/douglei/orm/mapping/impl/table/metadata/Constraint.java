@@ -14,6 +14,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class Constraint implements Serializable{
+	private static final long serialVersionUID = -5028706075462950560L;
 
 	private String name;// (前缀+表名+列名)
 	

@@ -13,7 +13,7 @@ public class DBDataTypeWrapper {
 
 	DBDataTypeWrapper(DBDataType dbDataType, int length, int precision) {
 		this.dbDataType = dbDataType;
-		this.length = dbDataType.correctInputLength(this.length);
+		this.length = dbDataType.correctInputLength(length);
 		this.precision = dbDataType.correctInputPrecision(this.length, precision);
 	}
 

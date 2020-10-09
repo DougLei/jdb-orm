@@ -15,6 +15,7 @@ import com.douglei.orm.sql.statement.util.ResultSetUtil;
  * @author DougLei
  */
 public class Cursor extends DBDataType{
+	private static final long serialVersionUID = 7009102113374600665L;
 	private static final Cursor singleton = new Cursor();
 	public static Cursor getSingleton() {
 		return singleton;

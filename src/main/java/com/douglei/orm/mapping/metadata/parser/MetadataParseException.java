@@ -5,7 +5,8 @@ package com.douglei.orm.mapping.metadata.parser;
  * @author DougLei
  */
 public class MetadataParseException extends RuntimeException{
-	
+	private static final long serialVersionUID = 5941342349787872166L;
+
 	public MetadataParseException(String message) {
 		super(message);
 	}

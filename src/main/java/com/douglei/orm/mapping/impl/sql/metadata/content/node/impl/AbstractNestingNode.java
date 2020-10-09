@@ -10,6 +10,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
  * @author DougLei
  */
 public abstract class AbstractNestingNode implements SqlNode{
+	private static final long serialVersionUID = -3094977397408838123L;
 	
 	protected List<SqlNode> sqlNodes;// 内部的node集合
 	

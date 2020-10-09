@@ -12,6 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class Number extends AbstractDecimal{
+	private static final long serialVersionUID = 3801515554935666998L;
 	private static final Number singleton = new Number();
 	public static Number getSingleton() {
 		return singleton;

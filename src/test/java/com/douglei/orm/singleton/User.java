@@ -3,6 +3,7 @@ package com.douglei.orm.singleton;
 import java.io.Serializable;
 
 public class User implements Serializable{
+	private static final long serialVersionUID = 6111882281007893271L;
 	private static final User singleton = new User("Douglei", 30);
 	public static User getSingleton() {
 		return singleton;

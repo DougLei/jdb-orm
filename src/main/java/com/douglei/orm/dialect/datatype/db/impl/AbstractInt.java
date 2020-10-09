@@ -12,6 +12,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractInt extends DBDataType {
+	private static final long serialVersionUID = -1328013077879682555L;
 
 	protected AbstractInt(int sqlType, int maxLength) {
 		super(sqlType, maxLength);

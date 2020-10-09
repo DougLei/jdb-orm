@@ -7,6 +7,7 @@ import java.io.Serializable;
  * @author DougLei
  */
 public class DefaultValueHandler implements Serializable{
+	private static final long serialVersionUID = -6977665783075620833L;
 
 	/**
 	 * 转换默认值

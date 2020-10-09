@@ -21,6 +21,7 @@ import com.douglei.orm.mapping.metadata.AbstractMetadata;
  * @author DougLei
  */
 public class TableMetadata extends AbstractMetadata {
+	private static final long serialVersionUID = 1100405493074032864L;
 	
 	private String className;// 映射的代码类名
 	private CreateMode createMode;// 创建模式

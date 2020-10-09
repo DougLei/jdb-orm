@@ -7,6 +7,7 @@ import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
  * @author DougLei
  */
 public class SqlNodeParserException extends MetadataParseException{
+	private static final long serialVersionUID = -1934703178774042215L;
 
 	public SqlNodeParserException(String message) {
 		super(message);
