@@ -21,7 +21,10 @@ public class ColumnMetadataParser implements MetadataParser<Element, ColumnMetad
 		if(StringUtil.isEmpty(name)) 
 			throw new MetadataParseException("<column>元素的name属性值不能为空");
 
-		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(element.attributeValue("length"), element.attributeValue("precision"), element.attributeValue("dataType"));
+		String dataType = element.attributeValue("dataType");
+		if(StringUtil.isEmpty(dataType))
+			dataType = "string";
+		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(element.attributeValue("length"), element.attributeValue("precision"), dataType);
 		
 		String value = element.attributeValue("nullable");
 		boolean nullable = StringUtil.isEmpty(value)?true:Boolean.parseBoolean(value);

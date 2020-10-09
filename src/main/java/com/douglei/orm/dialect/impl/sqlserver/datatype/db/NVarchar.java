@@ -1,12 +1,12 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.db;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
 
 /**
  * 
  * @author DougLei
  */
-public class NVarchar extends DBDataType{
+public class NVarchar extends AbstractCharacter{
 	private static final NVarchar singleton = new NVarchar();
 	public static NVarchar getSingleton() {
 		return singleton;
@@ -17,10 +17,5 @@ public class NVarchar extends DBDataType{
 	
 	private NVarchar() {
 		super(-9, 4000);
-	}
-	
-	@Override
-	public boolean isCharacterType() {
-		return true;
 	}
 }

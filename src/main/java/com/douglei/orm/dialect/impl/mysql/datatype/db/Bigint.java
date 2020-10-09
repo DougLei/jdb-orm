@@ -18,4 +18,9 @@ public class Bigint extends DBDataType{
 	private Bigint() {
 		super(-5);
 	}
+	
+	@Override
+	public Class<?>[] supportClasses() {
+		return new Class<?>[] {long.class, Long.class};
+	}
 }

@@ -1,12 +1,10 @@
 package com.douglei.orm.dialect.datatype;
 
-import java.io.Serializable;
-
 /**
  * 数据类型
  * @author DougLei
  */
-public abstract class DataType implements Serializable{
+public abstract class DataType {
 	
 	/**
 	 * 获取数据类型的分类

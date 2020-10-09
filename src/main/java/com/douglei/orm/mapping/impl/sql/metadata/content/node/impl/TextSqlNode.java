@@ -10,7 +10,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
  * @author DougLei
  */
 public class TextSqlNode extends AbstractSqlNode {
-	private static final long serialVersionUID = 3381188223142243984L;
 
 	public TextSqlNode(String content) {
 		super(content);

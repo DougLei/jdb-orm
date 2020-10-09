@@ -20,7 +20,7 @@ public class _DataTypeValidator extends Validator {
 	}
 
 	@Override
-	public ValidationResult validate(String fieldName, Object value) {
-		return dbDataType.validate(fieldName, value, length, precision);
+	public ValidationResult validate(String name, Object value) {
+		return dbDataType.validate(name, value, length, precision);
 	}
 }

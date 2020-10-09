@@ -87,39 +87,16 @@ public class JDBCTest {
 	
 	@Test
 	public void mssql() throws Exception {
-		String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
 		String username = "sa";
 		String pwd = "root";
 		
-		Class.forName(className);
 		Connection connection = DriverManager.getConnection(url, username, pwd);
-//		Statement statement = connection.createStatement();
-//		ResultSet rs = statement.executeQuery("select * from sys_user");
-//		while(rs.next()) {
-//			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
-//		}
-//		
-//		connection = statement.getConnection();
-//		statement = connection.createStatement();
-//		rs = statement.executeQuery("select * from sys_user");
-//		while(rs.next()) {
-//			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
-//		}
-		
-		PreparedStatement statement = connection.prepareStatement("select * from sys_user");
-		ResultSet rs = statement.executeQuery();
+		ResultSet rs = connection.createStatement().executeQuery("select text_, numeric_ from number_table");
 		while(rs.next()) {
-			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
+			System.out.println(rs.getString(1).getClass());
+			System.out.println();
+			System.out.println(rs.getObject(2).getClass());
 		}
-		
-		Connection c = statement.getConnection();
-		System.out.println(c == connection);
-		statement = connection.prepareStatement("select * from sys_user");
-		rs = statement.executeQuery();
-		while(rs.next()) {
-			System.out.println(rs.getString(1) + "\t" + rs.getString(2));
-		}
-		
 	}
 }

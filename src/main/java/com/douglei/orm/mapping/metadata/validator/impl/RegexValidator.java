@@ -11,7 +11,6 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class RegexValidator extends Validator {
-	private static final long serialVersionUID = 611579482166693340L;
 	private List<RegexStruct> regexes;
 	
 	@Override

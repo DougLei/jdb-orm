@@ -13,7 +13,6 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 823723527731904445L;
 	private String prefix;
 	private String suffix;
 	
