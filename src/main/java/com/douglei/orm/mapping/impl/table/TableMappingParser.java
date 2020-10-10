@@ -79,7 +79,8 @@ class TableMappingParser {
 		List<Element> columnElements = null;
 		
 		// 解析<columns>
-		List<Element> localColumnElements = tableElement.element("columns").elements("column");
+		Element columnsElement = tableElement.element("columns");
+		List<Element> localColumnElements = columnsElement==null?Collections.emptyList():columnsElement.elements("column");
 		
 		// 解析<import-columns>
 		Element importColumnsElement = tableElement.element("import-columns");
