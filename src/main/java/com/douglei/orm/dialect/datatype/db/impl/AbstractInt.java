@@ -21,8 +21,16 @@ public abstract class AbstractInt extends DBDataType {
 	@Override
 	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
-		if(valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte){
-			setIntValue(preparedStatement, parameterIndex, (long)value);
+		if(valueClass == int.class || valueClass == long.class || valueClass == short.class || valueClass == byte.class){
+			setIntValue(preparedStatement, parameterIndex, value);
+		}else if(value instanceof Integer) {
+			setIntValue(preparedStatement, parameterIndex, ((Integer)value).intValue());
+		}else if(value instanceof Long) {
+			setIntValue(preparedStatement, parameterIndex, ((Long)value).longValue());
+		}else if(value instanceof Short) {
+			setIntValue(preparedStatement, parameterIndex, ((Short)value).shortValue());
+		}else if(value instanceof Byte) {
+			setIntValue(preparedStatement, parameterIndex, ((Byte)value).byteValue());
 		}else if(VerifyTypeMatchUtil.isInteger(value.toString())){
 			setIntValue(preparedStatement, parameterIndex, parseIntValue(value.toString()));
 		}else {
