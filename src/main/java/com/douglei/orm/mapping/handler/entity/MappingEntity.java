@@ -47,22 +47,22 @@ public abstract class MappingEntity {
 	 * 是否要操作数据库结构
 	 * @return
 	 */
-	public boolean opDatabaseStruct() {
+	public final boolean opDatabaseStruct() {
 		return opDatabaseStruct;
 	}
 	
-	public String getCode() {
+	public final String getCode() {
 		return code;
 	}
-	public MappingType getType() {
+	public final MappingType getType() {
 		return type;
 	}
-	public Mapping getMapping() {
+	public final Mapping getMapping() {
 		return mapping;
 	}
 	
 	@Override
-	public String toString() {
+	public final String toString() {
 		return getClass().getSimpleName() + " [mappingIsRequired="+mappingIsRequired()+", code=" + code + ", type=" + type + ", op=" + getOp() + "]";
 	}
 }

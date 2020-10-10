@@ -1,6 +1,8 @@
-package com.douglei.orm.mapping.handler.entity;
+package com.douglei.orm.mapping.handler.entity.impl;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.handler.entity.MappingEntity;
+import com.douglei.orm.mapping.handler.entity.MappingOP;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
 
 /**

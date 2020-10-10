@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.handler.entity;
+package com.douglei.orm.mapping.handler.entity.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.mapping.handler.entity.MappingEntity;
+import com.douglei.orm.mapping.handler.entity.MappingOP;
+import com.douglei.orm.mapping.handler.entity.ParseMappingException;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;

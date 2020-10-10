@@ -34,6 +34,23 @@ public class MappingHandler {
 	private MappingContainer mappingContainer;
 	private DataSourceWrapper dataSourceWrapper;
 	
+	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper) {
+		this.mappingContainer = mappingContainer;
+		this.dataSourceWrapper = dataSourceWrapper;
+	}
+	
+	// 解析映射实体
+	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
+		for (MappingEntity mappingEntity : mappingEntities) {
+			logger.debug("解析: {}", mappingEntity);
+			if(mappingEntity.mappingIsRequired() && !mappingEntity.parseMapping()) 
+				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
+		}
+		
+		if(mappingEntities.size() > 1)
+			Collections.sort(mappingEntities, priorityComparator);
+	}
+	
 	// 在一次操作多个映射时, 需要对其进行优先级排序, 从优先级高的执行到优先级低的
 	private static final Comparator<MappingEntity> priorityComparator = new Comparator<MappingEntity>() {
 		@Override
@@ -46,23 +63,6 @@ public class MappingHandler {
 		}
 	};
 	
-	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper) {
-		this.mappingContainer = mappingContainer;
-		this.dataSourceWrapper = dataSourceWrapper;
-	}
-
-	// 解析映射实体
-	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
-		for (MappingEntity mappingEntity : mappingEntities) {
-			logger.debug("解析: {}", mappingEntity);
-			
-			if(mappingEntity.mappingIsRequired() && !mappingEntity.parseMapping()) 
-				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
-		}
-		
-		if(mappingEntities.size() > 1)
-			Collections.sort(mappingEntities, priorityComparator);
-	}
 	
 	/**
 	 * 操作映射
