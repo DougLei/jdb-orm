@@ -18,7 +18,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	private static final long serialVersionUID = -6142370632027959328L;
 	private static final int NO_LIMIT = -1; // 对长度(或精度)没有限制
 	
-	protected String name;// 类型的名称, 大写
+	protected String name;// 类型的名称, 必须是大写!
 	protected int sqlType;// @see java.sql.Types
 	
 	private int maxLength;// 最大长度

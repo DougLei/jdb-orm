@@ -13,7 +13,7 @@ public abstract class DataType {
 	public abstract Classification getClassification();
 	
 	/**
-	 * 获取类型名称, 全局唯一
+	 * 获取类型名称, 全局唯一, 目前遵守MappingDataType的name都是小写, DBDataType的name都是大写
 	 * @return
 	 */
 	public String getName() {

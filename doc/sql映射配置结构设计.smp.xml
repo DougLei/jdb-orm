@@ -90,6 +90,15 @@
 			
 		
 		</content>
+		<!-- 
+			dbType的值必须是全大写, 框架是区分大小写的, 目前支持的类型有:
+			
+				mysql数据库: BIGINT, CHAR, DATETIME, DECIMAL, INT, MEDIUMBLOB, MEDIUMTEXT, SMALLINT, VARCHAR
+				
+				oracle数据库: BLOB, CHAR, CLOB, CURSOR, DATE, NCHAR, NUMBER, NVARCHAR2, VARCHAR2
+				
+				sqlserver数据库: BIGINT, CHAR, DATETIME, DECIMAL, INT, NCHAR, NVARCHAR, SMALLINT, VARBINARY(MAX), VARCHAR, VARCHAR(MAX)
+		 -->
 	<!-- 	
 		<content name="execProcedure" type="procedure">
 			{call test_procedure (
