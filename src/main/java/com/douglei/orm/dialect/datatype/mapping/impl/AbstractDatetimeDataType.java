@@ -10,6 +10,6 @@ public abstract class AbstractDatetimeDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "DATETIME";
+		return "datetime";
 	}
 }

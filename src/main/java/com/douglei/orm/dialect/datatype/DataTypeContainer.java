@@ -43,7 +43,7 @@ public class DataTypeContainer {
 	 * @param name 
 	 */
 	public DataType get(String name) {
-		DataType dataType = container.get(name.toUpperCase());
+		DataType dataType = container.get(name);
 		if(dataType == null) 
 			dataType = register((DataType) ConstructorUtil.newInstance(name));
 		return dataType;

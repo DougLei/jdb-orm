@@ -10,6 +10,6 @@ public abstract class AbstractClobDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "CLOB";
+		return "clob";
 	}
 }

@@ -13,11 +13,11 @@ public abstract class DataType {
 	public abstract Classification getClassification();
 	
 	/**
-	 * 获取类型名称, 全局唯一, 要求名称必须全部大写
+	 * 获取类型名称, 全局唯一
 	 * @return
 	 */
 	public String getName() {
-		return getClass().getName().toUpperCase();
+		return getClass().getName();
 	}
 
 	@Override

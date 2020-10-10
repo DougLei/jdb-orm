@@ -23,7 +23,7 @@ public class ColumnMetadataParser implements MetadataParser<Element, ColumnMetad
 
 		String dataType = element.attributeValue("dataType");
 		if(StringUtil.isEmpty(dataType))
-			dataType = "STRING";
+			dataType = "string";
 		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(element.attributeValue("length"), element.attributeValue("precision"), dataType);
 		
 		String value = element.attributeValue("nullable");

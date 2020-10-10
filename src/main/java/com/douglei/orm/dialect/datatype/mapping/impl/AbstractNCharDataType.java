@@ -10,6 +10,6 @@ public abstract class AbstractNCharDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "NCHAR";
+		return "nchar";
 	}
 }
