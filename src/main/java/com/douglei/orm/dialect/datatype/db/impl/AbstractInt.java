@@ -22,7 +22,7 @@ public abstract class AbstractInt extends DBDataType {
 	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte){
-			setIntValue(preparedStatement, parameterIndex, value);
+			setIntValue(preparedStatement, parameterIndex, (long)value);
 		}else if(VerifyTypeMatchUtil.isInteger(value.toString())){
 			setIntValue(preparedStatement, parameterIndex, parseIntValue(value.toString()));
 		}else {
