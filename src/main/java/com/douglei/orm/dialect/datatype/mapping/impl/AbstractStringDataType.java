@@ -10,6 +10,6 @@ public abstract class AbstractStringDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "string";
+		return "STRING";
 	}
 }

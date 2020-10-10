@@ -10,6 +10,6 @@ public abstract class AbstractNStringDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "nstring";
+		return "NSTRING";
 	}
 }

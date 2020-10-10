@@ -10,6 +10,6 @@ public abstract class AbstractNumberDataType extends MappingDataType {
 
 	@Override
 	public final String getName() {
-		return "number";
+		return "NUMBER";
 	}
 }

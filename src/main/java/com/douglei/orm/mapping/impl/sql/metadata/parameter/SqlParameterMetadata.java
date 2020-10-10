@@ -118,7 +118,7 @@ public class SqlParameterMetadata implements Metadata{
 		} else {
 			confDataTypeVal = propertyMap.get("datatype");
 			if(StringUtil.isEmpty(confDataTypeVal))
-				confDataTypeVal = "string";
+				confDataTypeVal = "STRING";
 		}
 		
 		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), confDataTypeVal);

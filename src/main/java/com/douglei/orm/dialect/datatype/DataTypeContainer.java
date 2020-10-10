@@ -21,9 +21,10 @@ public class DataTypeContainer {
 	 * @param dataType
 	 */
 	public DataType register(DataType dataType) {
-		if(container.containsKey(dataType.getName()))
-			throw new RepeatedDataTypeException("已经存在名为 ["+dataType.getName()+"] 的数据类型");
-		container.put(dataType.getName(), dataType);
+		String name = dataType.getName();
+		if(container.containsKey(name))
+			throw new RepeatedDataTypeException("已经存在名为 ["+name+"] 的数据类型");
+		container.put(name, dataType);
 		
 		if(dataType.getClassification() == Classification.DB) 
 			register2ExtendContainer((DBDataType)dataType);
@@ -39,10 +40,10 @@ public class DataTypeContainer {
 	
 	/**
 	 * 获取指定类型名称的数据类型
-	 * @param name 可以传入类型名称, 或继承了 {@link DataType} 抽象类的实现类的全路径
+	 * @param name 
 	 */
 	public DataType get(String name) {
-		DataType dataType = container.get(name);
+		DataType dataType = container.get(name.toUpperCase());
 		if(dataType == null) 
 			dataType = register((DataType) ConstructorUtil.newInstance(name));
 		return dataType;
