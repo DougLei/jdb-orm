@@ -23,14 +23,6 @@ public abstract class AbstractInt extends DBDataType {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == int.class || valueClass == long.class || valueClass == short.class || valueClass == byte.class){
 			setIntValue(preparedStatement, parameterIndex, value);
-		}else if(value instanceof Integer) {
-			setIntValue(preparedStatement, parameterIndex, ((Integer)value).intValue());
-		}else if(value instanceof Long) {
-			setIntValue(preparedStatement, parameterIndex, ((Long)value).longValue());
-		}else if(value instanceof Short) {
-			setIntValue(preparedStatement, parameterIndex, ((Short)value).shortValue());
-		}else if(value instanceof Byte) {
-			setIntValue(preparedStatement, parameterIndex, ((Byte)value).byteValue());
 		}else if(VerifyTypeMatchUtil.isInteger(value.toString())){
 			setIntValue(preparedStatement, parameterIndex, parseIntValue(value.toString()));
 		}else {
