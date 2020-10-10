@@ -113,7 +113,7 @@ public class SqlParameterMetadata implements Metadata{
 	private void setDataType(Map<String, String> propertyMap) {
 		String confDataTypeVal;
 		if(MappingParserContext.getCurrentSqlType() == ContentType.PROCEDURE) {
-			confDataTypeVal = propertyMap.get("dbType");
+			confDataTypeVal = propertyMap.get("dbtype");
 			this.mode = SqlParameterMode.toValue(propertyMap.get("mode"));
 		} else {
 			confDataTypeVal = propertyMap.get("datatype");

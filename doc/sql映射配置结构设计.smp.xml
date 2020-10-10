@@ -91,7 +91,7 @@
 		
 		</content>
 		<!-- 
-			dbType的值必须是全大写, 框架是区分大小写的, 目前支持的类型有:
+			dbType的值必须是全大写, 框架是区分大小写的, 且必须配置, 没有默认值, 目前支持的类型有:
 			
 				mysql数据库: BIGINT, CHAR, DATETIME, DECIMAL, INT, MEDIUMBLOB, MEDIUMTEXT, SMALLINT, VARCHAR
 				
