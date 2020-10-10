@@ -4,12 +4,12 @@ package com.douglei.orm.mapping.handler.entity;
  * 
  * @author DougLei
  */
-public class MappingEntityState {
+public class MappingEntityFeature {
 	private String code;
 	private String type;
 	private boolean builtin;
 	
-	public MappingEntityState(String code, String type, boolean builtin) {
+	public MappingEntityFeature(String code, String type, boolean builtin) {
 		this.code = code;
 		this.type = type;
 		this.builtin = builtin;
