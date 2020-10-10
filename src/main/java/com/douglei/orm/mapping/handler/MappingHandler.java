@@ -60,16 +60,8 @@ public class MappingHandler {
 				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 		}
 		
-		System.out.println("1");
-		for (MappingEntity mappingEntity : mappingEntities) {
-			System.out.println(mappingEntity.getType());
-		}
-		
 		if(mappingEntities.size() > 1)
 			Collections.sort(mappingEntities, priorityComparator);
-		for (MappingEntity mappingEntity : mappingEntities) {
-			System.out.println(mappingEntity.getType());
-		}
 	}
 	
 	/**
