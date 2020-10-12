@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -55,9 +56,9 @@ public class MappingHandler {
 	private static final Comparator<MappingEntity> priorityComparator = new Comparator<MappingEntity>() {
 		@Override
 		public int compare(MappingEntity o1, MappingEntity o2) {
-			if(o1.getType().getPriority() == o2.getType().getPriority())
+			if(o1.getFeature().getType().getPriority() == o2.getFeature().getType().getPriority())
 				return 0;
-			if(o1.getType().getPriority() < o2.getType().getPriority())
+			if(o1.getFeature().getType().getPriority() < o2.getFeature().getType().getPriority())
 				return -1;
 			return 0;
 		}
@@ -89,17 +90,17 @@ public class MappingHandler {
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
+						if(mappingEntity.opDatabaseStruct() && mappingEntity.getFeature().getType().opDatabaseStruct()) 
 							createStruct(mappingEntity);
 						
-						if(mappingEntity.getType().opMappingContainer()) 
-							addMapping(mappingEntity.getMapping());
+						if(mappingEntity.getFeature().getType().opMappingContainer()) 
+							addMapping(mappingEntity);
 						break;
 					case DELETE: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
+						if(mappingEntity.opDatabaseStruct() && mappingEntity.getFeature().getType().opDatabaseStruct()) 
 							deleteStruct(mappingEntity);
 						
-						if(mappingEntity.getType().opMappingContainer()) 
+						if(mappingEntity.getFeature().getType().opMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
 						break;
 				}
@@ -123,7 +124,7 @@ public class MappingHandler {
 	
 	// 创建结构
 	private void createStruct(MappingEntity mappingEntity) throws Exception {
-		switch(mappingEntity.getType().getName()) {
+		switch(mappingEntity.getFeature().getType().getName()) {
 			case MappingTypeConstants.TABLE:
 				StructHandlerPackageContext.getTableStructHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
@@ -137,18 +138,18 @@ public class MappingHandler {
 	}
 	
 	// 添加或覆盖映射
-	private void addMapping(Mapping mapping) {
-		Mapping exMapping = mappingContainer.addMapping(mapping);
+	private void addMapping(MappingEntity entity) {
+		Mapping exMapping = mappingContainer.addMapping(entity.getMapping());
 		if (exMapping == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode(), null);
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, entity.getMapping().getCode(), null);
 		}else {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
 		}
 	}
-
+	
 	// 删除结构
 	private void deleteStruct(MappingEntity mappingEntity) throws SQLException {
-		switch(mappingEntity.getType().getName()) {
+		switch(mappingEntity.getFeature().getType().getName()) {
 			case MappingTypeConstants.TABLE:
 				StructHandlerPackageContext.getTableStructHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
@@ -190,11 +191,20 @@ public class MappingHandler {
 	}
 	
 	/**
+	 * 获取指定code的映射特性, 如不存在则返回null
+	 * @param code
+	 * @return
+	 */
+	public MappingFeature getMappingFeature(String code) {
+		return mappingContainer.getMappingFeature(code);
+	}
+	
+	/**
 	 * 获取指定code的映射, 如不存在则返回null
 	 * @param code
 	 * @return
 	 */
-	public Mapping get(String code) {
+	public Mapping getMapping(String code) {
 		return mappingContainer.getMapping(code);
 	}
 }

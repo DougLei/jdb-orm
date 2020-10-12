@@ -10,9 +10,8 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public abstract class Mapping implements Serializable{
-	private static final long serialVersionUID = -5409652429793816381L;
-	protected String type;
-	protected Metadata metadata;
+	private String type;
+	private Metadata metadata;
 	
 	public Mapping(String type, Metadata metadata) {
 		this.type = type;

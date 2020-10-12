@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<sql namespace="com.test">
+	<sql namespace="com.test" oldNamespace="">
 		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->
 		<sql-content name="rs">
 			select * from test

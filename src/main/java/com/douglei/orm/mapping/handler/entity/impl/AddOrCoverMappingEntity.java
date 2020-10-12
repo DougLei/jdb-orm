@@ -7,11 +7,13 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingOP;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
+import com.douglei.orm.mapping.type.MappingType;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -23,6 +25,7 @@ import com.douglei.tools.utils.ExceptionUtil;
 public class AddOrCoverMappingEntity extends MappingEntity {
 	private static final Logger logger = LoggerFactory.getLogger(AddOrCoverMappingEntity.class);
 
+	private MappingType type;
 	private String filepath; // 从文件获取映射
 	private String content; // 从内容获取映射
 	
@@ -31,7 +34,8 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	}
 	public AddOrCoverMappingEntity(String filepath, boolean opDatabaseStruct) {
 		this.filepath = filepath;
-		super.type = MappingTypeContainer.getMappingTypeByFile(filepath);
+		this.type = MappingTypeContainer.getMappingTypeByFile(filepath);
+		super.feature = new MappingFeature(this.type.getName());
 		super.opDatabaseStruct = opDatabaseStruct;
 	}
 	
@@ -51,8 +55,37 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	 */
 	public AddOrCoverMappingEntity(String content, String type, boolean opDatabaseStruct) {
 		this.content = content;
-		super.type = MappingTypeContainer.getMappingTypeByName(type);
+		this.type = MappingTypeContainer.getMappingTypeByName(type);
+		super.feature = new MappingFeature(this.type.getName());
 		super.opDatabaseStruct = opDatabaseStruct;
+	}
+	
+	/**
+	 * 设置mapping是否可以被覆盖
+	 * @param allowCover
+	 * @return
+	 */
+	public AddOrCoverMappingEntity setAllowCover(boolean allowCover) {
+		super.feature.setAllowCover(allowCover);
+		return this;
+	}
+	/**
+	 * 设置mapping是否可以被删除
+	 * @param allowDelete
+	 * @return
+	 */
+	public AddOrCoverMappingEntity setAllowDelete(boolean allowDelete) {
+		super.feature.setAllowDelete(allowDelete);
+		return this;
+	}
+	/**
+	 * 设置mapping的扩展特性, 可由第三方扩展
+	 * @param extend
+	 * @return
+	 */
+	public AddOrCoverMappingEntity setExtend(Object extend) {
+		super.feature.setExtend(extend);
+		return this;
 	}
 	
 	@Override

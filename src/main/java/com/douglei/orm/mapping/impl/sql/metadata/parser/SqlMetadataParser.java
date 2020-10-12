@@ -17,16 +17,20 @@ public class SqlMetadataParser implements MetadataParser<Node, SqlMetadata> {
 	@Override
 	public SqlMetadata parse(Node sqlNode) throws MetadataParseException {
 		NamedNodeMap attributeMap = sqlNode.getAttributes();
-		return new SqlMetadata(getNamespace(attributeMap.getNamedItem("namespace")));
+		
+		String namespace = getNamespaceValue(attributeMap.getNamedItem("namespace"));
+		if(namespace == null)
+			throw new MetadataParseException("<sql>元素的namespace属性值不能为空");
+		
+		return new SqlMetadata(namespace, getNamespaceValue(attributeMap.getNamedItem("oldNamespace")));
 	}
-	
-	private String getNamespace(Node namespaceItem) {
-		if(namespaceItem != null) {
-			String namespace = namespaceItem.getNodeValue();
-			if(StringUtil.notEmpty(namespace)) {
-				return namespace;
-			}
+
+	private String getNamespaceValue(Node item) {
+		if(item != null) {
+			String value = item.getNodeValue();
+			if(StringUtil.notEmpty(value)) 
+				return value;
 		}
-		throw new MetadataParseException("<sql>元素的namespace属性值不能为空");
+		return null;
 	}
 }

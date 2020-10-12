@@ -18,9 +18,8 @@ public class TableMetadataParser implements MetadataParser<Element, TableMetadat
 	@Override
 	public TableMetadata parse(Element element) throws MetadataParseException{
 		String name = element.attributeValue("name");
-		if(StringUtil.isEmpty(name)) {
+		if(StringUtil.isEmpty(name)) 
 			throw new MetadataParseException("<table>元素的name属性值不能为空");
-		}
 		
 		CreateMode createMode = getCreateMode(element);
 		return new TableMetadata(name, element.attributeValue("oldName"), element.attributeValue("class"), createMode);

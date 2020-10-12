@@ -7,7 +7,6 @@ import com.douglei.orm.mapping.metadata.AbstractMetadata;
  * @author DougLei
  */
 public class ViewMetadata extends AbstractMetadata {
-	private static final long serialVersionUID = -1453945598551390420L;
 	
 	private String script; // 脚本内容
 	
@@ -16,10 +15,6 @@ public class ViewMetadata extends AbstractMetadata {
 		this.script = script;
 	}
 	
-	@Override
-	public String getCode() {
-		return name;	}
-
 	public String getScript() {
 		return script;
 	}

@@ -22,16 +22,16 @@ public interface TableSession {
 	void save(List<? extends Object> objects);
 	/**
 	 * 保存对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param object
 	 */
-	void save(String code, Object object);
+	void save(String name, Object object);
 	/**
 	 * 保存对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param objects
 	 */
-	void save(String code, List<? extends Object> objects);
+	void save(String name, List<? extends Object> objects);
 	
 	/**
 	 * 修改对象
@@ -49,19 +49,19 @@ public interface TableSession {
 	}
 	/**
 	 * 修改对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param object
 	 */
-	default void update(String code, Object object) {
-		update(code, object, false);
+	default void update(String name, Object object) {
+		update(name, object, false);
 	}
 	/**
 	 * 修改对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param objects
 	 */
-	default void update(String code, List<Object> objects) {
-		update(code, objects, false);
+	default void update(String name, List<Object> objects) {
+		update(name, objects, false);
 	}
 	
 	/**
@@ -78,18 +78,18 @@ public interface TableSession {
 	void update(List<Object> objects, boolean updateNullValue);
 	/**
 	 * 修改对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param object
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
-	void update(String code, Object object, boolean updateNullValue);
+	void update(String name, Object object, boolean updateNullValue);
 	/**
 	 * 修改对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param objects
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
-	void update(String code, List<Object> objects, boolean updateNullValue);
+	void update(String name, List<Object> objects, boolean updateNullValue);
 	
 	
 	/**
@@ -104,16 +104,16 @@ public interface TableSession {
 	void delete(List<Object> objects);
 	/**
 	 * 删除对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param object
 	 */
-	void delete(String code, Object object);
+	void delete(String name, Object object);
 	/**
 	 * 删除对象
-	 * @param code <table>元素中的name属性值, 或<table>元素中的class属性值
+	 * @param name table元素中的name属性值
 	 * @param objects
 	 */
-	void delete(String code, List<Object> objects);
+	void delete(String name, List<Object> objects);
 	
 	/**
 	 * 执行批量查询
@@ -241,21 +241,20 @@ public interface TableSession {
 	 */
 	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
 	
+	
 	/**
 	 * 获取指定类的列名, 多个用, 分割
 	 * @param clz
 	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
 	 * @return
 	 */
-	default String getColumnNames(Class<?> clz, String... excludeColumnNames) {
-		return getColumnNames(clz.getClass().getName(), excludeColumnNames);
-	}
+	String getColumnNames(Class<?> clz, String... excludeColumnNames);
 	
 	/**
-	 * 获取指定code的列名, 多个用, 分割
-	 * @param code
+	 * 获取指定name的列名, 多个用, 分割
+	 * @param name table元素中的name属性值
 	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
 	 * @return
 	 */
-	String getColumnNames(String code, String... excludeColumnNames);
+	String getColumnNames(String name, String... excludeColumnNames);
 }

@@ -119,13 +119,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void save(String code, Object object) {
-		save_(getTableMetadata(code), object);
+	public void save(String name, Object object) {
+		save_(getTableMetadata(name.toUpperCase()), object);
 	}
 	
 	@Override
-	public void save(String code, List<? extends Object> objects) {
-		TableMetadata table = getTableMetadata(code);
+	public void save(String name, List<? extends Object> objects) {
+		TableMetadata table = getTableMetadata(name.toUpperCase());
 		objects.forEach(propertyMap -> save_(table, propertyMap));
 	}
 	
@@ -184,13 +184,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void update(String code, Object object, boolean updateNullValue) {
-		update_(getTableMetadata(code), object, updateNullValue);
+	public void update(String name, Object object, boolean updateNullValue) {
+		update_(getTableMetadata(name.toUpperCase()), object, updateNullValue);
 	}
 	
 	@Override
-	public void update(String code, List<Object> objects, boolean updateNullValue) {
-		TableMetadata table = getTableMetadata(code);
+	public void update(String name, List<Object> objects, boolean updateNullValue) {
+		TableMetadata table = getTableMetadata(name.toUpperCase());
 		objects.forEach(propertyMap -> update_(table, propertyMap, updateNullValue));
 	}
 	
@@ -244,13 +244,13 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void delete(String code, Object object) {
-		delete_(getTableMetadata(code), object);
+	public void delete(String name, Object object) {
+		delete_(getTableMetadata(name.toUpperCase()), object);
 	}
 	
 	@Override
-	public void delete(String code, List<Object> objects) {
-		TableMetadata table = getTableMetadata(code);
+	public void delete(String name, List<Object> objects) {
+		TableMetadata table = getTableMetadata(name.toUpperCase());
 		objects.forEach(propertyMap -> delete_(table, propertyMap));
 	}
 
@@ -343,7 +343,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 
 	
 	@Override
-	public String getColumnNames(String code, String... excludeColumnNames) {
+	public String getColumnNames(Class<?> clz, String... excludeColumnNames) {
+		return getColumnNames_(clz.getName(), excludeColumnNames);
+	}
+	
+	@Override
+	public String getColumnNames(String name, String... excludeColumnNames) {
+		return getColumnNames_(name.toUpperCase(), excludeColumnNames);
+	}
+	
+	private String getColumnNames_(String code, String... excludeColumnNames) {
 		TableMetadata tableMetadata = getTableMetadata(code);
 		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 40);
 		boolean excludeColumnNamesIsEmpty = toUpperCase(excludeColumnNames); 

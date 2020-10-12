@@ -5,22 +5,24 @@ import java.util.Collections;
 import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
-import com.douglei.orm.mapping.metadata.Metadata;
+import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
  * sql元数据
  * @author DougLei
  */
-public class SqlMetadata implements Metadata{
-	private static final long serialVersionUID = -6680342204867423907L;
+public class SqlMetadata extends AbstractMetadata{
 	
-	private String namespace;
 	private List<ContentMetadata> contents;
 	
-	public SqlMetadata(String namespace) {
-		this.namespace = namespace;
+	public SqlMetadata(String namespace, String oldNamespace) {
+		super.name = namespace;
+		if(oldNamespace == null)
+			super.oldName = namespace;
+		else
+			super.oldName = oldNamespace;
 	}
-	
+
 	/**
 	 * 添加 sql content
 	 * @param sqlContentMetadata
@@ -59,11 +61,6 @@ public class SqlMetadata implements Metadata{
 		return Collections.emptyList();
 	}
 
-	@Override
-	public String getCode() {
-		return namespace;
-	}
-	
 	/**
 	 * 获取数据库对象集合, 如果没有则返回null
 	 * @return
