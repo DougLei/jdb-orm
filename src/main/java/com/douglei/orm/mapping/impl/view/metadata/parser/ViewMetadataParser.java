@@ -5,7 +5,7 @@ import org.dom4j.Element;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -32,7 +32,7 @@ public class ViewMetadataParser implements MetadataParser<Element, ViewMetadata>
 	 * @return
 	 */
 	protected String elementName() {
-		return MappingTypeNameConstants.VIEW;
+		return MappingTypeConstants.VIEW;
 	}
 	
 	/**

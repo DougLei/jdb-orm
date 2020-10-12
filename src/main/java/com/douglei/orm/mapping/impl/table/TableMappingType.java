@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
  * 
@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 public class TableMappingType extends MappingType{
 	
 	public TableMappingType() {
-		super(MappingTypeNameConstants.TABLE, ".tmp.xml", 10, true, true);
+		super(MappingTypeConstants.TABLE, ".tmp.xml", 10, true, true);
 	}
 
 	@Override

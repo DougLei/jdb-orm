@@ -32,7 +32,7 @@ import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandlerContext;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.utils.StringUtil;
 
@@ -54,7 +54,7 @@ class TableMappingParser {
 	 */
 	public TableMapping parse(InputStream input) throws Exception {
 		Document document = MappingParserContext.getSAXReader().read(input);
-		Element tableElement = Dom4jUtil.getElement(MappingTypeNameConstants.TABLE, document.getRootElement());
+		Element tableElement = Dom4jUtil.getElement(MappingTypeConstants.TABLE, document.getRootElement());
 		
 		tableMetadata = tableMetadataParser.parse(tableElement);
 		

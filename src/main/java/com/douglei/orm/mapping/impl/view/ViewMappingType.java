@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
  * 
@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 public class ViewMappingType extends MappingType{
 	
 	public ViewMappingType() {
-		super(MappingTypeNameConstants.VIEW, ".vmp.xml", 20, true, false);
+		super(MappingTypeConstants.VIEW, ".vmp.xml", 20, true, false);
 	}
 
 	@Override

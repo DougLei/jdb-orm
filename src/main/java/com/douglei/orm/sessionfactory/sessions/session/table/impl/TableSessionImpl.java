@@ -15,7 +15,7 @@ import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.impl.table.TableMappingType;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
@@ -75,7 +75,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			Mapping mapping = mappingContainer.getMapping(code);
 			if(mapping == null)
 				throw new NullPointerException("不存在code为"+code+"的映射信息");
-			if(!MappingTypeNameConstants.TABLE.equals(mapping.getType())) 
+			if(!MappingTypeConstants.TABLE.equals(mapping.getType())) 
 				throw new MappingMismatchingException("传入code=["+code+"], 获取的mapping不是["+TableMappingType.class+"]类型");
 			tm = (TableMetadata) mapping.getMetadata();
 			tableMetadataCache.put(code, tm);

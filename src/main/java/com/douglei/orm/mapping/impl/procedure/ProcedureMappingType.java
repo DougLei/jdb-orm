@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
  * 
@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 public class ProcedureMappingType extends MappingType{
 	
 	public ProcedureMappingType() {
-		super(MappingTypeNameConstants.PROCEDURE, ".pmp.xml", 30, true, false);
+		super(MappingTypeConstants.PROCEDURE, ".pmp.xml", 30, true, false);
 	}
 
 	@Override

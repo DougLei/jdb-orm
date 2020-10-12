@@ -8,7 +8,7 @@ import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
 
@@ -56,9 +56,9 @@ public class DataValidator {
 			throw new NullPointerException("不存在code为"+code+"的映射信息");
 		
 		switch(mapping.getType()) {
-			case MappingTypeNameConstants.TABLE:// 验证表数据
+			case MappingTypeConstants.TABLE:// 验证表数据
 				return new PersistentObjectValidator((TableMetadata) mapping.getMetadata()).doValidate(object);
-			case MappingTypeNameConstants.SQL:// 验证sql数据
+			case MappingTypeConstants.SQL:// 验证sql数据
 				return new SqlValidator((SqlMetadata)mapping.getMetadata(), name).validate(object);
 			default:
 				throw new UnsupportedOperationException("不支持"+mapping.getType()+"类型的验证");
@@ -101,7 +101,7 @@ public class DataValidator {
 		short index = 0;
 		ValidationResult vr = null;
 		switch(mapping.getType()) {
-			case MappingTypeNameConstants.TABLE:// 验证表数据
+			case MappingTypeConstants.TABLE:// 验证表数据
 				PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator((TableMetadata) mapping.getMetadata(), objects.size());
 				for (Object object : objects) {
 					vr = persistentObjectValidator.doValidate(object);
@@ -116,7 +116,7 @@ public class DataValidator {
 				}
 				persistentObjectValidator.destroy();
 				break;
-			case MappingTypeNameConstants.SQL:// 验证sql数据
+			case MappingTypeConstants.SQL:// 验证sql数据
 				SqlValidator sqlValidator = new SqlValidator((SqlMetadata) mapping.getMetadata(), name);
 				for (Object object : objects) {
 					vr = sqlValidator.validate(object);

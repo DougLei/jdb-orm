@@ -11,7 +11,7 @@ import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingOP;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
 import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -38,20 +38,20 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	/**
 	 * 
 	 * @param content
-	 * @param typeName 通过 {@link MappingTypeNameConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
+	 * @param typeName 通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
 	 */
-	public AddOrCoverMappingEntity(String content, String typeName) {
-		this(content, typeName, true);
+	public AddOrCoverMappingEntity(String content, String type) {
+		this(content, type, true);
 	}
 	/**
 	 * 
 	 * @param content
-	 * @param typeName 通过 {@link MappingTypeNameConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
+	 * @param typeName 通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
 	 * @param opDatabaseStruct
 	 */
-	public AddOrCoverMappingEntity(String content, String typeName, boolean opDatabaseStruct) {
+	public AddOrCoverMappingEntity(String content, String type, boolean opDatabaseStruct) {
 		this.content = content;
-		super.type = MappingTypeContainer.getMappingTypeByName(typeName);
+		super.type = MappingTypeContainer.getMappingTypeByName(type);
 		super.opDatabaseStruct = opDatabaseStruct;
 	}
 	

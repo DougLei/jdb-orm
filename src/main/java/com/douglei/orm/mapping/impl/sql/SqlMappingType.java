@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
  * 
@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeNameConstants;
 public class SqlMappingType extends MappingType{
 	
 	public SqlMappingType() {
-		super(MappingTypeNameConstants.SQL, ".smp.xml", 40, false, true);
+		super(MappingTypeConstants.SQL, ".smp.xml", 40, false, true);
 	}
 
 	@Override

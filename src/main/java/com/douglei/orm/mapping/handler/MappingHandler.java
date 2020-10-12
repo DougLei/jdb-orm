@@ -23,7 +23,7 @@ import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
  * 映射处理器
@@ -124,13 +124,13 @@ public class MappingHandler {
 	// 创建结构
 	private void createStruct(MappingEntity mappingEntity) throws Exception {
 		switch(mappingEntity.getType().getName()) {
-			case MappingTypeNameConstants.TABLE:
+			case MappingTypeConstants.TABLE:
 				StructHandlerPackageContext.getTableStructHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
-			case MappingTypeNameConstants.VIEW:
+			case MappingTypeConstants.VIEW:
 				StructHandlerPackageContext.getViewStructHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
 				break;
-			case MappingTypeNameConstants.PROCEDURE:
+			case MappingTypeConstants.PROCEDURE:
 				StructHandlerPackageContext.getProcStructHandler().create((ProcedureMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 		}
@@ -149,13 +149,13 @@ public class MappingHandler {
 	// 删除结构
 	private void deleteStruct(MappingEntity mappingEntity) throws SQLException {
 		switch(mappingEntity.getType().getName()) {
-			case MappingTypeNameConstants.TABLE:
+			case MappingTypeConstants.TABLE:
 				StructHandlerPackageContext.getTableStructHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
-			case MappingTypeNameConstants.VIEW:
+			case MappingTypeConstants.VIEW:
 				StructHandlerPackageContext.getViewStructHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
-			case MappingTypeNameConstants.PROCEDURE:
+			case MappingTypeConstants.PROCEDURE:
 				StructHandlerPackageContext.getProcStructHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
 		}

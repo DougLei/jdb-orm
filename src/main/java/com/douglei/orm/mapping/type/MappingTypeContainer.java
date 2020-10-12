@@ -41,7 +41,7 @@ public class MappingTypeContainer {
 	
 	/**
 	 * 根据映射类型的名称, 获取映射类型实例
-	 * @param name  通过 {@link MappingTypeNameConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名 
+	 * @param name  通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名 
 	 * @return
 	 */
 	public static MappingType getMappingTypeByName(String name) {

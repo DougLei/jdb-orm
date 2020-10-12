@@ -19,7 +19,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.parser.SqlMetadataParser;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.ContentMetadataParser;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -42,7 +42,7 @@ class SqlMappingParser {
 		Document sqlDocument = MappingParserContext.getDocumentBuilder().parse(input);
 		Element rootElement = sqlDocument.getDocumentElement();
 		
-		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(MappingTypeNameConstants.SQL));
+		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(MappingTypeConstants.SQL));
 		this.sqlMetadata = sqlMetadataParser.parse(sqlNode);
 		
 		setParameterValidator(sqlNode);

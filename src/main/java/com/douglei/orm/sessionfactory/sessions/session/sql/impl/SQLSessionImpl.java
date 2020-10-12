@@ -22,7 +22,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TextSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
-import com.douglei.orm.mapping.type.MappingTypeNameConstants;
+import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.ExecutionSql;
@@ -55,7 +55,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			Mapping mapping = mappingContainer.getMapping(namespace);
 			if(mapping == null)
 				throw new NullPointerException("不存在code为"+namespace+"的映射信息");
-			if(!MappingTypeNameConstants.SQL.equals(mapping.getType())) 
+			if(!MappingTypeConstants.SQL.equals(mapping.getType())) 
 				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+SqlMappingType.class+"]类型");
 			sm= (SqlMetadata) mapping.getMetadata();
 			sqlMetadataCache.put(namespace, sm);
