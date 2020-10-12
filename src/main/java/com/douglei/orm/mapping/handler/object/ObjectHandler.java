@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.handler.struct;
+package com.douglei.orm.mapping.handler.object;
 
 import java.sql.SQLException;
 
@@ -7,16 +7,16 @@ import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
- * 结构处理器
+ * 对象处理器
  * @author DougLei
  */
-public abstract class StructHandler<C, D> {
+public abstract class ObjectHandler<C, D> {
 	protected SerializationHandler serializationHandler = SerializationHandler.getSingleton();
 	
 	protected DBConnection connection;
 	protected SqlStatementHandler sqlStatementHandler;
 	
-	public StructHandler(DBConnection connection) {
+	public ObjectHandler(DBConnection connection) {
 		this.connection = connection;
 		this.sqlStatementHandler = connection.getSqlStatementHandler();
 	}

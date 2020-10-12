@@ -9,24 +9,24 @@ import com.douglei.orm.mapping.type.MappingTypeContainer;
  * 
  * @author DougLei
  */
-public class DeleteDatabaseStructOnlyEntity extends MappingEntity {
+public class DeleteDatabaseObjectOnlyEntity extends MappingEntity {
 	
 	/**
 	 * 
 	 * @param code
 	 * @param type  通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
 	 */
-	public DeleteDatabaseStructOnlyEntity(String code, String type) {
+	public DeleteDatabaseObjectOnlyEntity(String code, String type) {
 		super.type = MappingTypeContainer.getMappingTypeByName(type);
 		if(super.type.opMappingContainer())
 			throw new IllegalArgumentException("要删除类型为["+type+"]的映射, 请使用 [" + DeleteMappingEntity.class.getName() + "] 类");
 		
 		super.code = code;
-		super.opDatabaseStruct = true;
+		super.opDatabaseObject = true;
 	}
 	
 	@Override
 	public MappingOP getOp() {
-		return MappingOP.DELETE_DATABASE_STRUCT_ONLY;
+		return MappingOP.DELETE_DATABASE_OBJECT_ONLY;
 	}
 }

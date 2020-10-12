@@ -19,10 +19,10 @@ import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.handler.entity.impl.DeleteMappingEntity;
+import com.douglei.orm.mapping.handler.object.ObjectHandlerPackageContext;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
-import com.douglei.orm.mapping.handler.struct.StructHandlerPackageContext;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -64,27 +64,30 @@ public class MappingHandler {
 					if(feature.getType().equals(MappingTypeConstants.TABLE))
 						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 					break;
-				case DELETE_DATABASE_STRUCT_ONLY:
+				case DELETE_DATABASE_OBJECT_ONLY:
 					break;
 			}
 		}
 		
 		if(mappingEntities.size() > 1)
-			Collections.sort(mappingEntities, mappingEntityComparator);
+			Collections.sort(mappingEntities, comparator);
 	}
 	
-	// 在一次操作多个映射时, 需要对其进行排序, 先执行delete的所有操作, 再执行addorcover的所有操作, 接下来将addorcover的所有操作按照优先级, 从优先级高的执行到优先级低的
-	private static final Comparator<MappingEntity> mappingEntityComparator = new Comparator<MappingEntity>() {
+	// 在一次操作多个映射时, 需要对其进行排序, 先按照getOp的优先级排序, 再细分按照type的优先级排序, 优先级高的在前面, 低的在后面, 即优先级值越低的越靠前
+	private static final Comparator<MappingEntity> comparator = new Comparator<MappingEntity>() {
 		@Override
 		public int compare(MappingEntity o1, MappingEntity o2) {
-			if(o1.getFeature().getType().getPriority() == o2.getFeature().getType().getPriority())
-				return 0;
-			if(o1.getFeature().getType().getPriority() < o2.getFeature().getType().getPriority())
+			if(o1.getOp().getPriority() < o2.getOp().getPriority())
 				return -1;
+			if(o1.getOp().getPriority() > o2.getOp().getPriority())
+				return 1;
+			if(o1.getType().getPriority() < o2.getType().getPriority())
+				return -1;
+			if(o1.getType().getPriority() > o2.getType().getPriority())
+				return 1;
 			return 0;
 		}
 	};
-	
 	
 	/**
 	 * 操作映射
@@ -105,22 +108,22 @@ public class MappingHandler {
 		try {
 			parseMappingEntities(mappingEntities);
 			
-			StructHandlerPackageContext.initialize(dataSourceWrapper);
+			ObjectHandlerPackageContext.initialize(dataSourceWrapper);
 			for (MappingEntity mappingEntity : mappingEntities) {
 				logger.debug("操作: {}", mappingEntity);
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
-							createStruct(mappingEntity);
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().opDatabaseObject()) 
+							createObject(mappingEntity);
 						
 						if(mappingEntity.getType().opMappingContainer()) 
 							addMapping(mappingEntity);
 						break;
 					case DELETE: 
-					case DELETE_DATABASE_STRUCT_ONLY: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
-							deleteStruct(mappingEntity);
+					case DELETE_DATABASE_OBJECT_ONLY: 
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().opDatabaseObject()) 
+							deleteObject(mappingEntity);
 						
 						if(mappingEntity.getType().opMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
@@ -138,23 +141,23 @@ public class MappingHandler {
 			throw new MappingHandlerException("在操作映射时出现异常", executeException);
 		} finally {
 			RollbackRecorder.clear();
-			StructHandlerPackageContext.destroy();
+			ObjectHandlerPackageContext.destroy();
 			MappingParserContext.destroy();
 			logger.debug("操作映射结束");
 		}
 	}
 	
-	// 创建结构
-	private void createStruct(MappingEntity mappingEntity) throws Exception {
-		switch(mappingEntity.getFeature().getType().getName()) {
+	// 创建对象
+	private void createObject(MappingEntity mappingEntity) throws Exception {
+		switch(mappingEntity.getType().getName()) {
 			case MappingTypeConstants.TABLE:
-				StructHandlerPackageContext.getTableStructHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getTableObjectHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case MappingTypeConstants.VIEW:
-				StructHandlerPackageContext.getViewStructHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getViewObjectHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case MappingTypeConstants.PROCEDURE:
-				StructHandlerPackageContext.getProcStructHandler().create((ProcedureMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getProcedureObjectHandler().create((ProcedureMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 		}
 	}
@@ -169,17 +172,17 @@ public class MappingHandler {
 		}
 	}
 	
-	// 删除结构
-	private void deleteStruct(MappingEntity mappingEntity) throws SQLException {
-		switch(mappingEntity.getFeature().getType().getName()) {
+	// 删除对象
+	private void deleteObject(MappingEntity mappingEntity) throws SQLException {
+		switch(mappingEntity.getType().getName()) {
 			case MappingTypeConstants.TABLE:
-				StructHandlerPackageContext.getTableStructHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case MappingTypeConstants.VIEW:
-				StructHandlerPackageContext.getViewStructHandler().delete(mappingEntity.getCode().toUpperCase());
+				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
 			case MappingTypeConstants.PROCEDURE:
-				StructHandlerPackageContext.getProcStructHandler().delete(mappingEntity.getCode().toUpperCase());
+				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode().toUpperCase());
 				break;
 		}
 	}

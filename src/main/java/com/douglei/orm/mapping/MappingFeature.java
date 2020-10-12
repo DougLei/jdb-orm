@@ -5,12 +5,11 @@ package com.douglei.orm.mapping;
  * @author DougLei
  */
 public class MappingFeature {
-	private String code; // mapping的唯一标识
+	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型
 	private boolean allowCover=true; // mapping是否可以被覆盖
 	private boolean allowDelete=true; // mapping是否可以被删除
 	private Object extend; // mapping的扩展特性, 可由第三方扩展
-
 	
 	public void setCode(String code) {
 		this.code = code;

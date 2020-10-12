@@ -1,18 +1,18 @@
-package com.douglei.orm.mapping.handler.struct.procedure;
+package com.douglei.orm.mapping.handler.object.procedure;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.mapping.handler.struct.DBConnection;
-import com.douglei.orm.mapping.handler.struct.view.ViewStructHandler;
+import com.douglei.orm.mapping.handler.object.DBConnection;
+import com.douglei.orm.mapping.handler.object.view.ViewObjectHandler;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 
 /**
- * 存储过程结构处理器
+ * 存储过程对象处理器
  * @author DougLei
  */
-public class ProcedureStructHandler extends ViewStructHandler{
-	public ProcedureStructHandler(DBConnection connection) {
+public class ProcedureObjectHandler extends ViewObjectHandler{
+	public ProcedureObjectHandler(DBConnection connection) {
 		super(connection);
 	}
 

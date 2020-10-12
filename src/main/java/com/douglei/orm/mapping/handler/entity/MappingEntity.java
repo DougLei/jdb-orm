@@ -13,7 +13,7 @@ public abstract class MappingEntity {
 	protected MappingType type; // 映射的类型
 	protected MappingFeature feature; // 映射的特性
 	protected Mapping mapping; // mapping实例
-	protected boolean opDatabaseStruct; // 是否操作数据库结构
+	protected boolean opDatabaseObject; // 是否操作数据库对象
 	
 	/**
 	 * 获取对映射进行的操作
@@ -34,8 +34,8 @@ public abstract class MappingEntity {
 	public final Mapping getMapping() {
 		return mapping;
 	}
-	public final boolean opDatabaseStruct() {
-		return opDatabaseStruct;
+	public final boolean opDatabaseObject() {
+		return opDatabaseObject;
 	}
 	
 	@Override

@@ -17,10 +17,7 @@ public class SqlMetadata extends AbstractMetadata{
 	
 	public SqlMetadata(String namespace, String oldNamespace) {
 		super.name = namespace;
-		if(oldNamespace == null)
-			super.oldName = namespace;
-		else
-			super.oldName = oldNamespace;
+		super.oldName = oldNamespace;
 	}
 
 	/**

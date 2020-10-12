@@ -1,24 +1,24 @@
-package com.douglei.orm.mapping.handler.struct.view;
+package com.douglei.orm.mapping.handler.object.view;
 
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.mapping.handler.object.DBConnection;
+import com.douglei.orm.mapping.handler.object.ObjectHandler;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
-import com.douglei.orm.mapping.handler.struct.DBConnection;
-import com.douglei.orm.mapping.handler.struct.StructHandler;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 
 /**
- * 视图结构处理器
+ * 视图对象处理器
  * @author DougLei
  */
-public class ViewStructHandler extends StructHandler<ViewMetadata, String>{
-	private static final Logger logger = LoggerFactory.getLogger(ViewStructHandler.class);
+public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
+	private static final Logger logger = LoggerFactory.getLogger(ViewObjectHandler.class);
 	
-	public ViewStructHandler(DBConnection connection) {
+	public ViewObjectHandler(DBConnection connection) {
 		super(connection);
 	}
 	

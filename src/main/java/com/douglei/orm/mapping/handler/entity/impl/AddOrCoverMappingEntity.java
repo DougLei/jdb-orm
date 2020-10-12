@@ -30,10 +30,10 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	public AddOrCoverMappingEntity(String filepath) {
 		this(filepath, true);
 	}
-	public AddOrCoverMappingEntity(String filepath, boolean opDatabaseStruct) {
+	public AddOrCoverMappingEntity(String filepath, boolean opDatabaseObject) {
 		this.filepath = filepath;
 		super.type = MappingTypeContainer.getMappingTypeByFile(filepath);
-		super.opDatabaseStruct = opDatabaseStruct;
+		super.opDatabaseObject = opDatabaseObject;
 	}
 	
 	/**
@@ -48,12 +48,12 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	 * 
 	 * @param content
 	 * @param type 通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
-	 * @param opDatabaseStruct
+	 * @param opDatabaseObject
 	 */
-	public AddOrCoverMappingEntity(String content, String type, boolean opDatabaseStruct) {
+	public AddOrCoverMappingEntity(String content, String type, boolean opDatabaseObject) {
 		this.content = content;
 		super.type = MappingTypeContainer.getMappingTypeByName(type);
-		super.opDatabaseStruct = opDatabaseStruct;
+		super.opDatabaseObject = opDatabaseObject;
 	}
 	
 	/**

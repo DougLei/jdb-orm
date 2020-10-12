@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.handler.struct;
+package com.douglei.orm.mapping.handler.object;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

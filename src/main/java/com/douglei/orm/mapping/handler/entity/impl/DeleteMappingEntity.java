@@ -14,9 +14,9 @@ public class DeleteMappingEntity extends MappingEntity{
 	public DeleteMappingEntity(String code) {
 		this(code, true);
 	}
-	public DeleteMappingEntity(String code, boolean opDatabaseStruct) {
+	public DeleteMappingEntity(String code, boolean opDatabaseObject) {
 		super.code = code;
-		super.opDatabaseStruct = opDatabaseStruct;
+		super.opDatabaseObject = opDatabaseObject;
 	}
 	
 	public void setMapping(Mapping mapping) {

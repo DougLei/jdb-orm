@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.handler.rollback;
 
 import java.util.LinkedList;
 
-import com.douglei.orm.mapping.handler.struct.DBConnection;
+import com.douglei.orm.mapping.handler.object.DBConnection;
 
 /**
  * 回滚信息记录器

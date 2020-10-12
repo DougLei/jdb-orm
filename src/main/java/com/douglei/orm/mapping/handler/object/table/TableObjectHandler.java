@@ -1,13 +1,13 @@
-package com.douglei.orm.mapping.handler.struct.table;
+package com.douglei.orm.mapping.handler.object.table;
 
 import java.sql.SQLException;
 import java.util.Collection;
 
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.mapping.handler.object.DBConnection;
+import com.douglei.orm.mapping.handler.object.ObjectHandler;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
-import com.douglei.orm.mapping.handler.struct.DBConnection;
-import com.douglei.orm.mapping.handler.struct.StructHandler;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.Constraint;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
@@ -15,12 +15,12 @@ import com.douglei.orm.mapping.impl.table.metadata.Index;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 
 /**
- * 表结构处理器
+ * 表对象处理器
  * @author DougLei
  */
-public class TableStructHandler extends StructHandler<TableMetadata, TableMetadata>{
+public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetadata>{
 	
-	public TableStructHandler(DBConnection connection) {
+	public TableObjectHandler(DBConnection connection) {
 		super(connection);
 	}
 
@@ -114,7 +114,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 				if(!column.getName().equals(oldColumn.getName())) {
 					return true;
 				}
-				if(isUpdateColumnStruct(column, oldColumn)) {
+				if(isUpdateColumnObject(column, oldColumn)) {
 					return true;
 				}
 			}
@@ -179,7 +179,7 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 				if(!column.getName().equals(oldColumn.getName())) {
 					columnRename(newTable.getName(), oldColumn.getName(), column.getName());
 				}
-				if(isUpdateColumnStruct(column, oldColumn)) {
+				if(isUpdateColumnObject(column, oldColumn)) {
 					updateColumn(newTable.getName(), oldColumn, column);
 				}
 			}
@@ -201,8 +201,8 @@ public class TableStructHandler extends StructHandler<TableMetadata, TableMetada
 		return false;
 	}
 
-	// 是否修改了列结构
-	private boolean isUpdateColumnStruct(ColumnMetadata column, ColumnMetadata oldColumn) throws Exception {
+	// 是否修改了列对象
+	private boolean isUpdateColumnObject(ColumnMetadata column, ColumnMetadata oldColumn) throws Exception {
 		return 	!column.getDBDataType().equals(oldColumn.getDBDataType()) 
 				|| column.getLength() != oldColumn.getLength() 
 				|| column.getPrecision() != oldColumn.getPrecision() 

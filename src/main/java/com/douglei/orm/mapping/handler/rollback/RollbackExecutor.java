@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.handler.object.DBConnection;
 import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
-import com.douglei.orm.mapping.handler.struct.DBConnection;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
