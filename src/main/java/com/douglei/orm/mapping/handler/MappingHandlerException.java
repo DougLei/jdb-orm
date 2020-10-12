@@ -5,8 +5,9 @@ package com.douglei.orm.mapping.handler;
  * @author DougLei
  */
 public class MappingHandlerException extends Exception{
-	private static final long serialVersionUID = -4386252126785504085L;
-
+	public MappingHandlerException(String message) {
+		super(message);
+	}
 	public MappingHandlerException(String message, Throwable t) {
 		super(message, t);
 	}

@@ -19,7 +19,7 @@ public abstract class Mapping implements Serializable{
 	}
 
 	/**
-	 * 获取映射唯一标示
+	 * 获取映射唯一标识
 	 * @return
 	 */
 	public final String getCode() {

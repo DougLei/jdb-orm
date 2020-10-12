@@ -40,19 +40,19 @@ public abstract class MappingType {
 	public abstract Mapping parse(InputStream input) throws Exception;
 	
 	
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
-	public String getFileSuffix() {
+	public final String getFileSuffix() {
 		return fileSuffix;
 	}
-	public int getPriority() {
+	public final int getPriority() {
 		return priority;
 	}
-	public boolean opDatabaseStruct() {
+	public final boolean opDatabaseStruct() {
 		return opDatabaseStruct;
 	}
-	public boolean opMappingContainer() {
+	public final boolean opMappingContainer() {
 		return opMappingContainer;
 	}
 

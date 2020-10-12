@@ -1,8 +1,8 @@
 package com.douglei.orm.mapping.handler.entity;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
 import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.type.MappingType;
 
 /**
  * 
@@ -21,40 +21,12 @@ public abstract class MappingEntity {
 	 */
 	public abstract MappingOP getOp();
 	
-	/**
-	 * 映射实例是否是必须的, 默认为true; 如果是必须的, 则必须进行parseMapping或setMapping
-	 * @return
-	 */
-	public boolean mappingIsRequired() {
-		return true;
-	}
-	
-	/**
-	 * 解析出mapping实例
-	 * @return 解析是否成功
-	 * @throws ParseMappingException
-	 */
-	public boolean parseMapping() throws ParseMappingException {
-		return false;
-	}
-	
-	/**
-	 * 将外部的mapping实例set进来
-	 * @param mapping
-	 */
-	public void setMapping(Mapping mapping) {
-	}
-	
-	/**
-	 * 是否要操作数据库结构
-	 * @return
-	 */
-	public final boolean opDatabaseStruct() {
-		return opDatabaseStruct;
-	}
 	
 	public final String getCode() {
 		return code;
+	}
+	public final MappingType getType() {
+		return type;
 	}
 	public final MappingFeature getFeature() {
 		return feature;
@@ -62,9 +34,12 @@ public abstract class MappingEntity {
 	public final Mapping getMapping() {
 		return mapping;
 	}
+	public final boolean opDatabaseStruct() {
+		return opDatabaseStruct;
+	}
 	
 	@Override
 	public final String toString() {
-		return getClass().getSimpleName() + " [mappingIsRequired="+mappingIsRequired()+", code=" + code + ", feature=" + feature + ", op=" + getOp() + "]";
+		return getClass().getSimpleName() + " [code=" + code + ", feature=" + feature + "]";
 	}
 }

@@ -13,9 +13,12 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingIdentity;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
+import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
+import com.douglei.orm.mapping.handler.entity.impl.DeleteMappingEntity;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
@@ -42,18 +45,36 @@ public class MappingHandler {
 	
 	// 解析映射实体
 	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
-		for (MappingEntity mappingEntity : mappingEntities) {
+		MappingFeature feature;
+		for(MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
-			if(mappingEntity.mappingIsRequired() && !mappingEntity.parseMapping()) 
-				mappingEntity.setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
+			switch (mappingEntity.getOp()) {
+				case ADD_OR_COVER: // 解析映射, 并判断是否存在同code映射, 如果存在, 还要保证之前的映射可以被覆盖
+					((AddOrCoverMappingEntity)mappingEntity).parseMapping();
+					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
+					if(feature != null && !feature.isAllowCover())
+						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
+					break;
+				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取table类型的映射即可
+					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
+					if(feature == null)
+						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
+					if(!feature.isAllowDelete())
+						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
+					if(feature.getType().equals(MappingTypeConstants.TABLE))
+						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
+					break;
+				case DELETE_DATABASE_STRUCT_ONLY:
+					break;
+			}
 		}
 		
 		if(mappingEntities.size() > 1)
-			Collections.sort(mappingEntities, priorityComparator);
+			Collections.sort(mappingEntities, mappingEntityComparator);
 	}
 	
-	// 在一次操作多个映射时, 需要对其进行优先级排序, 从优先级高的执行到优先级低的
-	private static final Comparator<MappingEntity> priorityComparator = new Comparator<MappingEntity>() {
+	// 在一次操作多个映射时, 需要对其进行排序, 先执行delete的所有操作, 再执行addorcover的所有操作, 接下来将addorcover的所有操作按照优先级, 从优先级高的执行到优先级低的
+	private static final Comparator<MappingEntity> mappingEntityComparator = new Comparator<MappingEntity>() {
 		@Override
 		public int compare(MappingEntity o1, MappingEntity o2) {
 			if(o1.getFeature().getType().getPriority() == o2.getFeature().getType().getPriority())
@@ -90,17 +111,18 @@ public class MappingHandler {
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getFeature().getType().opDatabaseStruct()) 
+						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
 							createStruct(mappingEntity);
 						
-						if(mappingEntity.getFeature().getType().opMappingContainer()) 
+						if(mappingEntity.getType().opMappingContainer()) 
 							addMapping(mappingEntity);
 						break;
 					case DELETE: 
-						if(mappingEntity.opDatabaseStruct() && mappingEntity.getFeature().getType().opDatabaseStruct()) 
+					case DELETE_DATABASE_STRUCT_ONLY: 
+						if(mappingEntity.opDatabaseStruct() && mappingEntity.getType().opDatabaseStruct()) 
 							deleteStruct(mappingEntity);
 						
-						if(mappingEntity.getFeature().getType().opMappingContainer()) 
+						if(mappingEntity.getType().opMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
 						break;
 				}
@@ -195,16 +217,16 @@ public class MappingHandler {
 	 * @param code
 	 * @return
 	 */
-	public MappingFeature getMappingFeature(String code) {
+	public MappingFeature getFeature(String code) {
 		return mappingContainer.getMappingFeature(code);
 	}
 	
 	/**
-	 * 获取指定code的映射, 如不存在则返回null
-	 * @param code
+	 * 获取指定querier的映射, 如不存在则返回null
+	 * @param id 先调用 {@link MappingHandler.getFeature(String)} 方法后, 用其返回值作为参数, 传入到本方法中
 	 * @return
 	 */
-	public Mapping getMapping(String code) {
-		return mappingContainer.getMapping(code);
+	public Mapping getMapping(MappingIdentity id) {
+		return mappingContainer.getMapping(id.getCode());
 	}
 }
