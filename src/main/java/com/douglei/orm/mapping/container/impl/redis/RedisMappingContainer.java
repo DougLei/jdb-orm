@@ -1,6 +1,7 @@
 package com.douglei.orm.mapping.container.impl.redis;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.container.MappingContainer;
 
 import redis.clients.jedis.Jedis;
@@ -30,6 +31,29 @@ public class RedisMappingContainer implements MappingContainer {
 		if(!handler.isStoreMultiDataSource()) {
 			redisPool.destroy();
 			redisPool = null;	
+		}
+	}
+	
+	@Override
+	public MappingFeature addMappingFeature(MappingFeature mappingFeature) {
+		try(Jedis connection = redisPool.getResource()){
+			return handler.addMappingFeature(mappingFeature, connection);
+		}
+	}
+	
+	
+	@Override
+	public MappingFeature deleteMappingFeature(String code) {
+		try(Jedis connection = redisPool.getResource()){
+			return handler.deleteMappingFeature(code, connection);
+		}
+	}
+	
+	
+	@Override
+	public MappingFeature getMappingFeature(String code) {
+		try(Jedis connection = redisPool.getResource()){
+			return handler.getMappingFeature(code, connection);
 		}
 	}
 	

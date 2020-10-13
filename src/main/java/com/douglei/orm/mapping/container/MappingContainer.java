@@ -4,7 +4,7 @@ import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingFeature;
 
 /**
- * 映射特性和映射一定是成对出现的, 映射特性的code值与映射的code值是完全一样的
+ * 映射特性和映射一定是成对出现的, 映射特性的code值与映射的code值是完全一样的, 即 {@link Mapping.getCode()} 与 {@link MappingFeature.getCode()} 是完全一样的
  * @author DougLei
  */
 public interface MappingContainer {

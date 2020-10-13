@@ -304,7 +304,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 					dropTable(table);
 					break;
 				case DYNAMIC_UPDATE:
-					if(table.getName() != table.getOldName()) 
+					if(table.isUpdateName()) 
 						validateNameExists(table);
 					if(updateTable(table))
 						serializationHandler.createFile(table, TableMetadata.class);

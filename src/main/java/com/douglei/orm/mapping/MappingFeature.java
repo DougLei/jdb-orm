@@ -1,10 +1,12 @@
 package com.douglei.orm.mapping;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author DougLei
  */
-public class MappingFeature {
+public class MappingFeature implements Serializable{
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型
 	private boolean supportUsed=true; // mapping是否支持被使用
@@ -31,14 +33,9 @@ public class MappingFeature {
 		this.extend = extend;
 	}
 	
-	/**
-	 * 获取mapping的唯一标识
-	 * @return
-	 */
-	public MappingIdentity getIdentity() {
-		return new MappingIdentity(code);
+	public MappingCode getMappingCode() {
+		return new MappingCode(code);
 	}
-	
 	public String getCode() {
 		return code;
 	}

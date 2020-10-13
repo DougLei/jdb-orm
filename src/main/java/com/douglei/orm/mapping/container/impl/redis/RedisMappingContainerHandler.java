@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 import redis.clients.jedis.Jedis;
@@ -19,29 +20,53 @@ class RedisMappingContainerHandler extends RedisHandler {
 
 	public void clear(Jedis connection) {
 		Set<String> codes = connection.keys(getPrefix() + "*");
-		if(codes != null && !codes.isEmpty()) {
+		if(codes != null && !codes.isEmpty()) 
 			connection.del(getCodeByteArray(codes));
-		}
+	}
+	
+	public MappingFeature addMappingFeature(MappingFeature mappingFeature, Jedis connection) {
+		MappingFeature exMappingFeature = getMappingFeature(mappingFeature.getCode(), connection);
+		if(logger.isDebugEnabled() && exMappingFeature != null) 
+			logger.debug("覆盖code为[{}]的映射特性: {}", mappingFeature.getCode(), exMappingFeature);
+		
+		connection.set(getCode4Feature(mappingFeature.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mappingFeature));
+		return exMappingFeature;
+	}
+	
+	public MappingFeature deleteMappingFeature(String code, Jedis connection) {
+		if(!exists(code, connection)) 
+			return null;
+		
+		code = getCode4Feature(code);
+		MappingFeature mappingFeature = JdkSerializeProcessor.deserializeFromByteArray(MappingFeature.class, connection.get(code.getBytes()));
+		connection.del(code);
+		return mappingFeature;
+	}
+	
+	public MappingFeature getMappingFeature(String code, Jedis connection) {
+		byte[] mpfbyte = connection.get(getCode4Feature(code).getBytes());
+		if(mpfbyte == null || mpfbyte.length == 0) 
+			return null;
+		return JdkSerializeProcessor.deserializeFromByteArray(MappingFeature.class, mpfbyte);
 	}
 	
 	public Mapping addMapping(Mapping mapping, Jedis connection) {
-		String code = getCode(mapping.getCode());
-		Mapping exMapping = getMapping(code, connection);
-		if(logger.isDebugEnabled() && exMapping != null) {
-			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode(), connection));
-		}
-		connection.set(code.getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
+		Mapping exMapping = getMapping(mapping.getCode(), connection);
+		if(logger.isDebugEnabled() && exMapping != null) 
+			logger.debug("覆盖code为[{}]的映射: {}", mapping.getCode(), exMapping);
+		
+		connection.set(getCode(mapping.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
 		return exMapping;
 	}
 	
 	public Mapping deleteMapping(String code, Jedis connection) {
+		if(!exists(code, connection)) 
+			return null;
+		
 		code = getCode(code);
-		if(exists(code, connection)) {
-			Mapping mp = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
-			connection.del(code);
-			return mp;
-		}
-		return null;
+		Mapping mapping = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
+		connection.del(code);
+		return mapping;
 	}
 	
 	public Mapping getMapping(String code, Jedis connection) {
@@ -52,6 +77,6 @@ class RedisMappingContainerHandler extends RedisHandler {
 	}
 	
 	public boolean exists(String code, Jedis connection) {
-		return connection.exists(code);
+		return connection.exists(getCode(code));
 	}
 }

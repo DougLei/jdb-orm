@@ -15,7 +15,7 @@ import com.douglei.orm.EnvironmentContext;
 public abstract class RedisHandler{
 	private static final Logger logger = LoggerFactory.getLogger(RedisHandler.class);
 	protected static final String prefix = "ORM:MP:";
-	protected boolean storeMultiDataSource;// 是否存储多个数据源的映射, 如果是 则code需要前缀区分是哪个数据源, 即ORM:MP:dataSourceId:xxx.code
+	protected boolean storeMultiDataSource;// 是否存储多个数据源的映射, 如果是 则code需要前缀区分是哪个数据源, 即ORM:MP:SessionFactoryId:xxx.code
 	
 	// 获取byte数组的key
 	protected byte[] getByteArrayKey(String code) {
@@ -40,6 +40,9 @@ public abstract class RedisHandler{
 	}
 	protected String getCode(String code) {
 		return getPrefix() + code;
+	}
+	protected String getCode4Feature(String code) {
+		return getCode(code) + ":F";
 	}
 	
 	public void setStoreMultiDataSource(boolean storeMultiDataSource) {
