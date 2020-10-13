@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingFeature;
-import com.douglei.orm.mapping.MappingCode;
+import com.douglei.orm.mapping.MappingIdentity;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -236,11 +236,11 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定code的映射, 如不存在则返回null
-	 * @param code 先调用 {@link MappingHandler.getFeature(String)} 方法后, 再调用其返回值 {@link MappingFeature.getMappingCode()} 的方法获取本参数
+	 * 获取指定id的映射, 如不存在则返回null
+	 * @param id 通过调用 {@link MappingHandler.getFeature(String)} 方法后, 再调用其返回值 {@link MappingFeature.getMappingIdentity()} 的方法获取本参数实例
 	 * @return
 	 */
-	public Mapping getMapping(MappingCode code) {
-		return mappingContainer.getMapping(code.getValue());
+	public Mapping getMapping(MappingIdentity id) {
+		return mappingContainer.getMapping(id.getCode());
 	}
 }

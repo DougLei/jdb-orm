@@ -33,8 +33,8 @@ public class MappingFeature implements Serializable{
 		this.extend = extend;
 	}
 	
-	public MappingCode getMappingCode() {
-		return new MappingCode(code);
+	public MappingIdentity getMappingIdentity() {
+		return new MappingIdentity(code);
 	}
 	public String getCode() {
 		return code;
