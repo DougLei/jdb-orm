@@ -58,15 +58,6 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	}
 	
 	/**
-	 * 设置mapping是否支持被使用
-	 * @param supportUsed
-	 * @return
-	 */
-	public AddOrCoverMappingEntity setSupportUsed(boolean supportUsed) {
-		feature.setSupportUsed(supportUsed);
-		return this;
-	}
-	/**
 	 * 设置mapping是否支持被覆盖
 	 * @param supportCover
 	 * @return

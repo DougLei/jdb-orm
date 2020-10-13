@@ -9,6 +9,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public class TableMapping extends Mapping {
+	private static final long serialVersionUID = 3858630569886995529L;
 
 	public TableMapping(AbstractMetadata metadata) {
 		super(MappingTypeConstants.TABLE, metadata);

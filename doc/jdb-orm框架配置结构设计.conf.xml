@@ -9,6 +9,9 @@
 		<!-- 没有默认值, 可以不配置, 具体参考《table映射配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有表映射的createMode配置值 -->
 		<!-- <property name="tableCreateMode" value="" /> -->
 		
+		<!-- 映射特性设置器, 在系统启动的过程中, 当系统加载配置的映射资源文件时, 其用来设置每个映射的特性, 默认实现为com.douglei.orm.mapping.MappingFeatureSetter, 也可以继承该类, 并重写setFeature(String, AddOrCoverMappingEntity)方法, 并在这里配置实现类的全路径即可 -->
+		<!-- <property name="mappingFeatureSetter" value="com.douglei.orm.mapping.MappingFeatureSetter" /> -->
+		
 		<!-- sql语句中, 声明参数时的前缀, 默认为#{ -->
 		<!-- <property name="sqlParameterPrefix" value="#{" /> -->
 		<!-- sql语句中, 声明参数时的后缀, 默认为} -->

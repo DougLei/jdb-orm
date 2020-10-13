@@ -12,6 +12,7 @@ import com.douglei.orm.mapping.metadata.AbstractMetadata;
  * @author DougLei
  */
 public class SqlMetadata extends AbstractMetadata{
+	private static final long serialVersionUID = 347258921203737778L;
 	
 	private List<ContentMetadata> contents;
 	

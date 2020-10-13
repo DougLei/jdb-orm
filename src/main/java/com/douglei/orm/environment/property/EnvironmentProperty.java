@@ -8,6 +8,7 @@ import java.util.Map;
 import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.DialectContainer;
+import com.douglei.orm.mapping.MappingFeatureSetter;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.DefaultValueHandler;
@@ -25,6 +26,7 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
 public class EnvironmentProperty {
 	private String id;
 	private Dialect dialect;
+	private MappingContainer mappingContainer;
 	
 	@IsField
 	private boolean enableStatementCache = true;
@@ -33,10 +35,10 @@ public class EnvironmentProperty {
 	private boolean enableTableSessionCache;
 	
 	@IsField
-	private MappingContainer mappingContainer;
+	private CreateMode tableCreateMode;
 	
 	@IsField
-	private CreateMode tableCreateMode;
+	private MappingFeatureSetter mappingFeatureSetter;
 	
 	@IsField
 	private String sqlParameterPrefix="#{";
@@ -54,7 +56,7 @@ public class EnvironmentProperty {
 	public EnvironmentProperty(String id, Map<String, String> propertyMap, DialectKey key, MappingContainer mappingContainer) throws Exception {
 		this.id = id;
 		this.dialect = DialectContainer.get(key);
-		this.mappingContainer = mappingContainer;
+		this.mappingContainer = mappingContainer==null?new ApplicationMappingContainer():mappingContainer;
 		
 		List<String> fieldNames = getFieldNames(this.getClass().getDeclaredFields());
 		setFieldValues(fieldNames, propertyMap);
@@ -108,13 +110,15 @@ public class EnvironmentProperty {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
-	void setMappingContainer(String value) {
-		if(this.mappingContainer == null) 
-			this.mappingContainer = new ApplicationMappingContainer();
-	}
 	void setTableCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) 
 			this.tableCreateMode = CreateMode.toValue(value);
+	}
+	void setMappingFeatureSetter(String value) {
+		if(StringUtil.isEmpty(value))
+			this.mappingFeatureSetter = new MappingFeatureSetter();
+		else
+			this.mappingFeatureSetter = (MappingFeatureSetter) ConstructorUtil.newInstance(value);
 	}
 	void setSqlParameterPrefix(String value) {
 		if(StringUtil.notEmpty(value))
@@ -156,6 +160,13 @@ public class EnvironmentProperty {
 	}
 	
 	/**
+	 * 获取映射容器
+	 */
+	public MappingContainer getMappingContainer() {
+		return mappingContainer;
+	}
+	
+	/**
 	 * 是否启用Statement缓存
 	 */
 	public boolean enableStatementCache() {
@@ -170,19 +181,20 @@ public class EnvironmentProperty {
 	}
 	
 	/**
-	 * 获取映射容器
-	 */
-	public MappingContainer getMappingContainer() {
-		return mappingContainer;
-	}
-	
-	/**
 	 * 获取全局的TableCreateMode
 	 */
 	public CreateMode getTableCreateMode() {
 		return tableCreateMode;
 	}
-	
+
+	/**
+	 * 获取映射特性设置器
+	 * @return
+	 */
+	public MappingFeatureSetter getMappingFeatureSetter() {
+		return mappingFeatureSetter;
+	}
+
 	/**
 	 * 获取sql参数配置持有器
 	 */

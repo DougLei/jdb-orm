@@ -19,6 +19,7 @@ import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.environment.properties.Properties;
 import com.douglei.orm.environment.property.EnvironmentProperty;
+import com.douglei.orm.mapping.MappingFeatureSetter;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
@@ -153,9 +154,10 @@ public class Environment {
 				
 				List<String> list = new ResourceScanner(MappingTypeContainer.getFileSuffixes().toArray(new String[MappingTypeContainer.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
 				if(!list.isEmpty()) {
+					MappingFeatureSetter setter = environmentProperty.getMappingFeatureSetter();
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 
-						mappingEntities.add(new AddOrCoverMappingEntity(file));
+						mappingEntities.add(setter.setFeature(file, new AddOrCoverMappingEntity(file).setSupportCover(false).setSupportDelete(false)));
 					this.mappingHandler.execute(mappingEntities);
 				}
 			}
