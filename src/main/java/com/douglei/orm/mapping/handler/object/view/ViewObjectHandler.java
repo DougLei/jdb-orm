@@ -39,10 +39,17 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 		return connection.queryViewScript(name);
 	}
 	
-	
 	@Override
 	public void create(ViewMetadata view) throws Exception {
-		delete(view.getOldName()); // 不论怎样, 都先删除旧的
+		if(nameExists(view.getOldName())) {
+			switch(view.getCreateMode()) {
+				case DROP_CREATE:
+					delete(view.getOldName());
+					break;
+				default:
+					return;
+			}
+		}
 		validateNameExists(view); // 验证下新的名称是否可以使用
 		
 		connection.executeSql(view.getScript());
@@ -57,8 +64,6 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 	 */
 	@Override
 	public void delete(String viewName) throws SQLException {
-		viewName = viewName.toUpperCase();
-		
 		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, getSerialClass());
 		if(!nameExists(viewName))
 			return;

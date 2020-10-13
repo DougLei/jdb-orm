@@ -1,6 +1,7 @@
-package com.douglei.orm.mapping.impl.procedure.resolver;
+package com.douglei.orm.mapping.impl.procedure.parser;
 
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.impl.view.metadata.parser.ViewMetadataParser;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 
@@ -8,7 +9,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * procedure元数据解析
  * @author DougLei
  */
-public class ProcedureMetadataResolver extends ViewMetadataParser {
+public class ProcedureMetadataParser extends ViewMetadataParser {
 
 	@Override
 	protected String elementName() {
@@ -16,7 +17,7 @@ public class ProcedureMetadataResolver extends ViewMetadataParser {
 	}
 
 	@Override
-	protected ProcedureMetadata newInstance(String name, String oldName, String script) {
-		return new ProcedureMetadata(name, oldName, script);
+	protected ProcedureMetadata newInstance(String name, String oldName, CreateMode createMode, String script) {
+		return new ProcedureMetadata(name, oldName, createMode, script);
 	}
 }

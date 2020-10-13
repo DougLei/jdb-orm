@@ -2,7 +2,15 @@
 <mapping-configuration>
 
 	<!-- name必须和视图脚本的名称一致, oldName记录之前的name, 框架会将oldName对应的视图删除 -->
-	<view name="" oldName="">
+	<!-- 
+		createMode和strict, 参考《table映射配置结构设计.tmp.xml》文件中的createMode和strict属性描述
+		但是这里 createMode 可以有的值只能有create, drop_create, 默认为create
+		
+		如果配置的是另外两个模式, 则会自动将其转换为create或drop_create
+				  none ==> create
+		dynamic_update ==> drop_create
+	 -->
+	<view name="" oldName="" createMode="" strict="false">
 		<!-- 这里写具体视图的脚本 -->
 	</view>
 </mapping-configuration>

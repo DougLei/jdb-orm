@@ -2,6 +2,7 @@ package com.douglei.orm.mapping.impl.view.metadata.parser;
 
 import org.dom4j.Element;
 
+import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
@@ -24,7 +25,12 @@ public class ViewMetadataParser implements MetadataParser<Element, ViewMetadata>
 		if(StringUtil.isEmpty(script)) 
 			throw new MetadataParseException("<"+elementName()+">元素中的脚本内容不能为空");
 		
-		return newInstance(name, element.attributeValue("oldName"), script);
+		CreateMode createMode = getCreateMode(element);
+		// 这里不用专门判断none的情况, 因为在后续处理中, create和none都在switch的default中了
+		if(createMode == CreateMode.DYNAMIC_UPDATE)
+			createMode = CreateMode.DROP_CREATE;
+		
+		return newInstance(name, element.attributeValue("oldName"), createMode, script);
 	}
 	
 	/**
@@ -43,7 +49,7 @@ public class ViewMetadataParser implements MetadataParser<Element, ViewMetadata>
 	 * @param script
 	 * @return
 	 */
-	protected ViewMetadata newInstance(String name, String oldName, String script) {
-		return new ViewMetadata(name, oldName, script); 
+	protected ViewMetadata newInstance(String name, String oldName, CreateMode createMode, String script) {
+		return new ViewMetadata(name, oldName, createMode, script); 
 	}
 }

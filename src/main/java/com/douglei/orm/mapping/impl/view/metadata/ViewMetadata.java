@@ -1,5 +1,6 @@
 package com.douglei.orm.mapping.impl.view.metadata;
 
+import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
@@ -8,13 +9,18 @@ import com.douglei.orm.mapping.metadata.AbstractMetadata;
  */
 public class ViewMetadata extends AbstractMetadata {
 	
+	private CreateMode createMode; // 创建模式
 	private String script; // 脚本内容
 	
-	public ViewMetadata(String name, String oldName, String script) {
+	public ViewMetadata(String name, String oldName, CreateMode createMode, String script) {
 		super(name, oldName);
+		this.createMode = createMode;
 		this.script = script;
 	}
 	
+	public CreateMode getCreateMode() {
+		return createMode;
+	}
 	public String getScript() {
 		return script;
 	}
