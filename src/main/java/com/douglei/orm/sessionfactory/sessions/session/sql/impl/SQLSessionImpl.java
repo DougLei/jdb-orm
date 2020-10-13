@@ -14,7 +14,6 @@ import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.impl.sql.SqlMappingType;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
@@ -54,9 +53,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
 			Mapping mapping = mappingContainer.getMapping(namespace);
 			if(mapping == null)
-				throw new NullPointerException("不存在code为"+namespace+"的映射信息");
+				throw new NullPointerException("不存在code为"+namespace+"的mapping");
 			if(!MappingTypeConstants.SQL.equals(mapping.getType())) 
-				throw new MappingMismatchingException("传入code=["+namespace+"], 获取的mapping不是["+SqlMappingType.class+"]类型");
+				throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
 			sm= (SqlMetadata) mapping.getMetadata();
 			sqlMetadataCache.put(namespace, sm);
 		}

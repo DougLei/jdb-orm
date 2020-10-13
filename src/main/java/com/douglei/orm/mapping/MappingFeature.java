@@ -7,8 +7,9 @@ package com.douglei.orm.mapping;
 public class MappingFeature {
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型
-	private boolean allowCover=true; // mapping是否可以被覆盖
-	private boolean allowDelete=true; // mapping是否可以被删除
+	private boolean supportUsed=true; // mapping是否支持被使用
+	private boolean supportCover=true; // mapping是否支持被覆盖
+	private boolean supportDelete=true; // mapping是否支持被删除
 	private Object extend; // mapping的扩展特性, 可由第三方扩展
 	
 	public void setCode(String code) {
@@ -17,11 +18,14 @@ public class MappingFeature {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public void setAllowCover(boolean allowCover) {
-		this.allowCover = allowCover;
+	public void setSupportUsed(boolean supportUsed) {
+		this.supportUsed = supportUsed;
 	}
-	public void setAllowDelete(boolean allowDelete) {
-		this.allowDelete = allowDelete;
+	public void setSupportCover(boolean supportCover) {
+		this.supportCover = supportCover;
+	}
+	public void setSupportDelete(boolean supportDelete) {
+		this.supportDelete = supportDelete;
 	}
 	public void setExtend(Object extend) {
 		this.extend = extend;
@@ -41,11 +45,14 @@ public class MappingFeature {
 	public String getType() {
 		return type;
 	}
-	public boolean isAllowCover() {
-		return allowCover;
+	public boolean supportUsed() {
+		return supportUsed;
 	}
-	public boolean isAllowDelete() {
-		return allowDelete;
+	public boolean supportCover() {
+		return supportCover;
+	}
+	public boolean supportDelete() {
+		return supportDelete;
 	}
 	public Object getExtend() {
 		return extend;
@@ -53,6 +60,6 @@ public class MappingFeature {
 	
 	@Override
 	public String toString() {
-		return "MappingFeature [allowCover=" + allowCover + ", allowDelete=" + allowDelete + ", extend=" + extend + "]";
+		return "MappingFeature [code=" + code + ", type=" + type + ", supportUsed=" + supportUsed + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extend=" + extend + "]";
 	}
 }

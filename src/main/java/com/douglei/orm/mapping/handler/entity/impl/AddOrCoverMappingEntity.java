@@ -26,6 +26,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 
 	private String filepath; // 从文件获取映射
 	private String content; // 从内容获取映射
+	private MappingFeature feature = new MappingFeature(); // 映射的特性
 	
 	public AddOrCoverMappingEntity(String filepath) {
 		this(filepath, true);
@@ -57,25 +58,30 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	}
 	
 	/**
-	 * 设置mapping是否可以被覆盖
-	 * @param allowCover
+	 * 设置mapping是否支持被使用
+	 * @param supportUsed
 	 * @return
 	 */
-	public AddOrCoverMappingEntity setAllowCover(boolean allowCover) {
-		if(super.feature == null)
-			super.feature = new MappingFeature();
-		super.feature.setAllowCover(allowCover);
+	public AddOrCoverMappingEntity setSupportUsed(boolean supportUsed) {
+		feature.setSupportUsed(supportUsed);
 		return this;
 	}
 	/**
-	 * 设置mapping是否可以被删除
-	 * @param allowDelete
+	 * 设置mapping是否支持被覆盖
+	 * @param supportCover
 	 * @return
 	 */
-	public AddOrCoverMappingEntity setAllowDelete(boolean allowDelete) {
-		if(super.feature == null)
-			super.feature = new MappingFeature();
-		super.feature.setAllowDelete(allowDelete);
+	public AddOrCoverMappingEntity setSupportCover(boolean supportCover) {
+		feature.setSupportCover(supportCover);
+		return this;
+	}
+	/**
+	 * 设置mapping是否支持被删除
+	 * @param supportDelete
+	 * @return
+	 */
+	public AddOrCoverMappingEntity setSupportDelete(boolean supportDelete) {
+		feature.setSupportDelete(supportDelete);
 		return this;
 	}
 	/**
@@ -84,9 +90,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	 * @return
 	 */
 	public AddOrCoverMappingEntity setExtend(Object extend) {
-		if(super.feature == null)
-			super.feature = new MappingFeature();
-		super.feature.setExtend(extend);
+		feature.setExtend(extend);
 		return this;
 	}
 	
@@ -99,10 +103,8 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 		try {
 			super.mapping = super.type.parse(input);
 			super.code = super.mapping.getCode();
-			if(super.feature == null)
-				super.feature = new MappingFeature();
-			super.feature.setCode(super.code);
-			super.feature.setType(super.type.getName());
+			feature.setCode(super.code);
+			feature.setType(super.type.getName());
 			logger.debug("结束解析{}类型, code={}的映射", super.type.getName(), super.code);
 		} catch(Exception e){
 			logger.error("解析映射[{}]时, 出现异常: {}", (filepath != null ? filepath : content), ExceptionUtil.getExceptionDetailMessage(e));
@@ -110,6 +112,10 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 		}finally {
 			CloseUtil.closeIO(input);
 		}
+	}
+	
+	public MappingFeature getFeature() {
+		return feature;
 	}
 	
 	@Override

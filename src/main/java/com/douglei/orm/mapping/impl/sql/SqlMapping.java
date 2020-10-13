@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.impl.sql;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.metadata.Metadata;
+import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 
 /**
@@ -10,7 +10,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  */
 public class SqlMapping extends Mapping {
 
-	public SqlMapping(Metadata metadata) {
+	public SqlMapping(AbstractMetadata metadata) {
 		super(MappingTypeConstants.SQL, metadata);
 	}
 }

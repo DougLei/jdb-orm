@@ -28,10 +28,18 @@ public abstract class AbstractMetadata implements Metadata{
 	public String getCode() {
 		return name;
 	}
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
-	public String getOldName() {
+	public final String getOldName() {
 		return oldName;
+	}
+	
+	/**
+	 * 是否修改了name, 即name与oldName不同
+	 * @return
+	 */
+	public final boolean isUpdateName() {
+		return oldName != null && name != oldName;
 	}
 }

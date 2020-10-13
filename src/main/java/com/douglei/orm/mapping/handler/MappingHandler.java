@@ -52,14 +52,14 @@ public class MappingHandler {
 				case ADD_OR_COVER: // 解析映射, 并判断是否存在同code映射, 如果存在, 还要保证之前的映射可以被覆盖
 					((AddOrCoverMappingEntity)mappingEntity).parseMapping();
 					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
-					if(feature != null && !feature.isAllowCover())
+					if(feature != null && !feature.supportCover())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
 					break;
 				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取table类型的映射即可
 					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
 					if(feature == null)
 						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
-					if(!feature.isAllowDelete())
+					if(!feature.supportDelete())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
 					if(feature.getType().equals(MappingTypeConstants.TABLE))
 						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
@@ -73,7 +73,7 @@ public class MappingHandler {
 			Collections.sort(mappingEntities, comparator);
 	}
 	
-	// 在一次操作多个映射时, 需要对其进行排序, 先按照getOp的优先级排序, 再细分按照type的优先级排序, 优先级高的在前面, 低的在后面, 即优先级值越低的越靠前
+	// 在一次操作多个映射时, 需要对其进行排序, 先删再加, 删除时倒序删, 添加时正序加
 	private static final Comparator<MappingEntity> comparator = new Comparator<MappingEntity>() {
 		@Override
 		public int compare(MappingEntity o1, MappingEntity o2) {
@@ -81,11 +81,7 @@ public class MappingHandler {
 				return -1;
 			if(o1.getOp().getPriority() > o2.getOp().getPriority())
 				return 1;
-			if(o1.getType().getPriority() < o2.getType().getPriority())
-				return -1;
-			if(o1.getType().getPriority() > o2.getType().getPriority())
-				return 1;
-			return 0;
+			return o1.getOp().compare4Sort(o1, o2);
 		}
 	};
 	
@@ -114,18 +110,18 @@ public class MappingHandler {
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().opDatabaseObject()) 
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
 							createObject(mappingEntity);
 						
-						if(mappingEntity.getType().opMappingContainer()) 
-							addMapping(mappingEntity);
+						if(mappingEntity.getType().supportOpMappingContainer()) 
+							addMapping((AddOrCoverMappingEntity)mappingEntity);
 						break;
 					case DELETE: 
 					case DELETE_DATABASE_OBJECT_ONLY: 
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().opDatabaseObject()) 
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
 							deleteObject(mappingEntity);
 						
-						if(mappingEntity.getType().opMappingContainer()) 
+						if(mappingEntity.getType().supportOpMappingContainer()) 
 							deleteMapping(mappingEntity.getCode());
 						break;
 				}
@@ -163,12 +159,23 @@ public class MappingHandler {
 	}
 	
 	// 添加或覆盖映射
-	private void addMapping(MappingEntity entity) {
-		Mapping exMapping = mappingContainer.addMapping(entity.getMapping());
+	private void addMapping(AddOrCoverMappingEntity entity) {
+		Mapping mapping = entity.getMapping();
+		if(mapping.getMetadata().isUpdateName()) 
+			deleteMapping(mapping.getMetadata().getOldName());
+		
+		Mapping exMapping = mappingContainer.addMapping(mapping);
 		if (exMapping == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, entity.getMapping().getCode(), null);
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode(), null);
 		}else {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
+		}
+		
+		MappingFeature exMappingFeature = mappingContainer.addMappingFeature(entity.getFeature());
+		if (exMappingFeature == null) {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_FEATURE, mapping.getCode(), null);
+		}else {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
 		}
 	}
 	
@@ -179,19 +186,23 @@ public class MappingHandler {
 				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
 				break;
 			case MappingTypeConstants.VIEW:
-				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode().toUpperCase());
+				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode());
 				break;
 			case MappingTypeConstants.PROCEDURE:
-				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode().toUpperCase());
+				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode());
 				break;
 		}
 	}
 
 	// 删除映射
-	private void deleteMapping(String mappingCode) {
-		Mapping exMapping = mappingContainer.deleteMapping(mappingCode);
+	private void deleteMapping(String code) {
+		Mapping exMapping = mappingContainer.deleteMapping(code);
 		if(exMapping != null) 
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
+		
+		MappingFeature exMappingFeature = mappingContainer.deleteMappingFeature(code);
+		if(exMappingFeature != null) 
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
 	}
 	
 	/**

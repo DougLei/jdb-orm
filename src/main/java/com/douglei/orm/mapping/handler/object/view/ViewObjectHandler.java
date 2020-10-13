@@ -53,10 +53,12 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 
 	/**
 	 * 
-	 * @param viewName 传入的viewName必须为大写
+	 * @param viewName
 	 */
 	@Override
 	public void delete(String viewName) throws SQLException {
+		viewName = viewName.toUpperCase();
+		
 		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, getSerialClass());
 		if(!nameExists(viewName))
 			return;

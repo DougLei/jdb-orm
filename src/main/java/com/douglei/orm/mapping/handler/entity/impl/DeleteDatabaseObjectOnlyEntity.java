@@ -18,7 +18,7 @@ public class DeleteDatabaseObjectOnlyEntity extends MappingEntity {
 	 */
 	public DeleteDatabaseObjectOnlyEntity(String code, String type) {
 		super.type = MappingTypeContainer.getMappingTypeByName(type);
-		if(super.type.opMappingContainer())
+		if(super.type.supportOpMappingContainer())
 			throw new IllegalArgumentException("要删除类型为["+type+"]的映射, 请使用 [" + DeleteMappingEntity.class.getName() + "] 类");
 		
 		super.code = code;
