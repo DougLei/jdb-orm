@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @author DougLei
  */
 public class MappingFeature implements Serializable{
-	private static final long serialVersionUID = 8493048417923363816L;
+	private static final long serialVersionUID = 308939161739639110L;
 	
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
@@ -31,9 +31,6 @@ public class MappingFeature implements Serializable{
 		this.extend = extend;
 	}
 	
-	public MappingIdentity getMappingIdentity() {
-		return new MappingIdentity(code);
-	}
 	public String getCode() {
 		return code;
 	}

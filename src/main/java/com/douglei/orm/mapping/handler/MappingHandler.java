@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingFeature;
-import com.douglei.orm.mapping.MappingIdentity;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -164,18 +163,18 @@ public class MappingHandler {
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
 		
-		Mapping exMapping = mappingContainer.addMapping(mapping);
-		if (exMapping == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode(), null);
-		}else {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
-		}
-		
 		MappingFeature exMappingFeature = mappingContainer.addMappingFeature(entity.getFeature());
 		if (exMappingFeature == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_FEATURE, mapping.getCode(), null);
 		}else {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
+		}
+		
+		Mapping exMapping = mappingContainer.addMapping(mapping);
+		if (exMapping == null) {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode(), null);
+		}else {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
 		}
 	}
 	
@@ -196,13 +195,13 @@ public class MappingHandler {
 
 	// 删除映射
 	private void deleteMapping(String code) {
-		Mapping exMapping = mappingContainer.deleteMapping(code);
-		if(exMapping != null) 
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
-		
 		MappingFeature exMappingFeature = mappingContainer.deleteMappingFeature(code);
 		if(exMappingFeature != null) 
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
+		
+		Mapping exMapping = mappingContainer.deleteMapping(code);
+		if(exMapping != null) 
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
 	}
 	
 	/**
@@ -236,11 +235,12 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定id的映射, 如不存在则返回null
-	 * @param id 通过调用 {@link MappingHandler.getFeature(String)} 方法后, 再调用其返回值 {@link MappingFeature.getMappingIdentity()} 的方法获取本参数实例
+	 * 获取指定code的映射, 如不存在则返回null; 
+	 * <p><b>注意: 建议先调用getFeature(String)进行预处理, 再决定是否调用getMapping(String)方法</b></p>
+	 * @param code 
 	 * @return
 	 */
-	public Mapping getMapping(MappingIdentity id) {
-		return mappingContainer.getMapping(id.getCode());
+	public Mapping getMapping(String code) {
+		return mappingContainer.getMapping(code);
 	}
 }

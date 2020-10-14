@@ -35,7 +35,7 @@ public interface MetadataParser<P, R extends Metadata> {
 			return createMode;
 		}
 		
-		CreateMode createMode = EnvironmentContext.getProperty().getTableCreateMode();
+		CreateMode createMode = EnvironmentContext.getProperty().getCreateMode();
 		if(createMode == null) {
 			createMode = CreateMode.toValue(element.attributeValue("createMode"));
 			

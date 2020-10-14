@@ -35,7 +35,7 @@ public class EnvironmentProperty {
 	private boolean enableTableSessionCache;
 	
 	@IsField
-	private CreateMode tableCreateMode;
+	private CreateMode createMode;
 	
 	@IsField
 	private MappingFeatureSetter mappingFeatureSetter;
@@ -110,9 +110,9 @@ public class EnvironmentProperty {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}
-	void setTableCreateMode(String value) {
+	void setCreateMode(String value) {
 		if(StringUtil.notEmpty(value)) 
-			this.tableCreateMode = CreateMode.toValue(value);
+			this.createMode = CreateMode.toValue(value);
 	}
 	void setMappingFeatureSetter(String value) {
 		if(StringUtil.isEmpty(value))
@@ -181,10 +181,10 @@ public class EnvironmentProperty {
 	}
 	
 	/**
-	 * 获取全局的TableCreateMode
+	 * 获取全局的CreateMode
 	 */
-	public CreateMode getTableCreateMode() {
-		return tableCreateMode;
+	public CreateMode getCreateMode() {
+		return createMode;
 	}
 
 	/**
