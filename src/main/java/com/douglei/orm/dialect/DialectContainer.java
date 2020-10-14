@@ -8,7 +8,7 @@ import java.util.List;
  * @author DougLei
  */
 public class DialectContainer {
-	private static final List<Dialect> instanceContainer = new ArrayList<Dialect>(3);
+	private static final List<Dialect> instanceContainer = new ArrayList<Dialect>(DialectType.values().length);
 	
 	/**
 	 * 获取方言实例

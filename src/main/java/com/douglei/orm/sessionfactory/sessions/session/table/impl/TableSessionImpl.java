@@ -137,9 +137,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 * @param cache
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, boolean updateNullValue, Map<Identity, PersistentObject> cache) {
-		if(!tableMetadata.existsPrimaryKey()) {
+		if(tableMetadata.getPrimaryKeyColumns_() == null) 
 			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode());
-		}
+		
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE, updateNullValue);
 		if(enableTalbeSessionCache) {
 			if(!cache.isEmpty() && cache.containsKey(persistentObject.getId())) {
@@ -285,7 +285,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			TableMetadata tableMetadata = persistentObject.getTableMetadata();
 			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
 			// 将执行insert语句后生成的序列值, 赋给源实例
-			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumnCodes().iterator().next(), result.getId());
+			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next(), result.getId());
 		}else {
 			super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 		}
@@ -316,9 +316,9 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	@SuppressWarnings("unchecked")
 	private <T> T map2Class(TableMetadata tableMetadata, Class<T> targetClass, Map<String, Object> resultMap) {
 		ColumnMetadata column = null;
-		Set<String> codes = tableMetadata.getColumnCodes();
+		Set<String> codes = tableMetadata.getColumns_().keySet();
 		for (String code : codes) {
-			column = tableMetadata.getColumnByCode(code);
+			column = tableMetadata.getColumns_().get(code);
 			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
 		}
 		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);

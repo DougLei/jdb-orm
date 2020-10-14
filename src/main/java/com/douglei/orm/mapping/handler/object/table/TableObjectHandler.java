@@ -134,7 +134,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 				return true;
 			}
 			for (Constraint constraint : constraints) {
-				if(oldTable.getConstraintByName(constraint.getName()) == null) {
+				if(oldTable.getConstraint(constraint.getName()) == null) {
 					return true;
 				}
 			}
@@ -153,7 +153,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 				return true;
 			}
 			for (Index index : indexes) {
-				if(oldTable.getIndexByName(index.getName()) == null) {
+				if(oldTable.getIndex(index.getName()) == null) {
 					return true;
 				}
 			}

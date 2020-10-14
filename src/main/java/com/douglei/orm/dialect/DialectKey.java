@@ -41,7 +41,7 @@ public class DialectKey {
 		if(b-1 <= a) 
 			throw new ArithmeticException("JDBCUrl=" + JDBCUrl + ", 无法从中截取到对应的dialect数据, 第一个冒号的下标="+a+", 第二个冒号的下标="+b);
 		
-		String dialectName = JDBCUrl.substring(a, b-1);
+		String dialectName = JDBCUrl.substring(a, b-1).toUpperCase();
 		logger.debug("从 JDBCUrl= {}中, 提取的dialect名为 {}", JDBCUrl, dialectName);
 		return dialectName;
 	}

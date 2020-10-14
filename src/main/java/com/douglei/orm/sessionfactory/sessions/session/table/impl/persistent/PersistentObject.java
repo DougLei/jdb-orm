@@ -39,8 +39,8 @@ public class PersistentObject extends AbstractPersistentObject{
 	
 	public Identity getId() {
 		if(id == null) {
-			if(tableMetadata.existsPrimaryKey()) {
-				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
+			if(tableMetadata.getPrimaryKeyColumns_() != null) {
+				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 				Object id;
 				if(primaryKeyColumnMetadataCodes.size() == 1) {
 					id = objectMap.get(primaryKeyColumnMetadataCodes.iterator().next());

@@ -23,7 +23,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		StringBuilder deleteSql = new StringBuilder(200);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
-		if(tableMetadata.existsPrimaryKey()) {
+		if(tableMetadata.getPrimaryKeyColumns_() != null) {
 			setSqlWhenExistsPrimaryKey(deleteSql);
 		}else {
 			setSqlWhenUnExistsPrimaryKey(deleteSql);
@@ -33,7 +33,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 	
 	// 当存在primaryKey时, set对应的sql语句
 	private void setSqlWhenExistsPrimaryKey(StringBuilder deleteSql) {
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 		byte size = (byte)primaryKeyColumnMetadataCodes.size();
 		
 		parameters = new ArrayList<Object>(size);
@@ -41,7 +41,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		ColumnMetadata primaryKeyColumnMetadata = null;
 		byte index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
+			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumns_().get(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDBDataType()));
@@ -62,7 +62,7 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : objectMap.keySet()) {
-			columnMetadata = tableMetadata.getColumnByCode(code);
+			columnMetadata = tableMetadata.getColumns_().get(code);
 			value = objectMap.get(code);
 			
 			if(value == null) {

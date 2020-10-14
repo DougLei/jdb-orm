@@ -46,7 +46,7 @@ public class AbstractPersistentObject {
 			objectMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
 		}else {
 			logger.debug("originObject is Object type [{}], 从该object中, 通过java内省机制, 获取相关列的数据信息", originObject.getClass());
-			objectMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumnCodes());
+			objectMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumns_().keySet());
 		}
 		if(objectMap == null || objectMap.size() == 0) {
 			throw new NullPointerException("要操作的数据不能为空");
@@ -64,14 +64,14 @@ public class AbstractPersistentObject {
 	 * @return
 	 */
 	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		Set<String> columnMetadataCodes = tableMetadata.getColumnCodes();
+		Set<String> columnMetadataCodes = tableMetadata.getColumns_().keySet();
 		short columnSize = (short) columnMetadataCodes.size();
 		Map<String, Object> objectMap = new HashMap<String, Object>(columnSize);
 		
 		int index = 1;
 		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
 		for (String originPMkey : originPropertyMapKeys) {
-			if(tableMetadata.isColumnByCode(originPMkey)) {
+			if(tableMetadata.getColumns_().containsKey(originPMkey)) {
 				objectMap.put(originPMkey, originPropertyMap.get(originPMkey));
 				if(index == columnSize) {
 					break;

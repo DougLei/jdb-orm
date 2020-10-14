@@ -12,17 +12,17 @@ import com.douglei.tools.utils.reflect.ConstructorUtil;
  * @author DougLei
  */
 public enum DialectType {
-	MYSQL(MySqlDialect.class, 8),
-	ORACLE(OracleDialect.class, 11),
-	SQLSERVER(SqlServerDialect.class, 11);
+	MYSQL("MYSQL", MySqlDialect.class, 8),
+	ORACLE("ORACLE", OracleDialect.class, 11),
+	SQLSERVER("SQLSERVER", SqlServerDialect.class, 11, 12);
 	
+	private String name; // 必须是全大写
 	private Class<? extends Dialect> targetClass;
-	private String name;
 	private int[] supportDatabaseMajorVersions;
 	
-	private DialectType(Class<? extends Dialect> targetClass, int... supportDatabaseMajorVersions) {
+	private DialectType(String name, Class<? extends Dialect> targetClass, int... supportDatabaseMajorVersions) {
+		this.name = name; // 这里name通过传入的形式, 方便后续扩展同数据库不同版本的枚举
 		this.targetClass = targetClass;
-		this.name = name();
 		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
 
@@ -43,20 +43,12 @@ public enum DialectType {
 	}
 	
 	/**
-	 * 支持的数据库主版本
-	 * @return
-	 */
-	public int[] supportDatabaseMajorVersions() {
-		return supportDatabaseMajorVersions;
-	}
-	
-	/**
 	 * 当前方言是否支持参数中的数据库
 	 * @param key
 	 * @return
 	 */
 	public boolean support(DialectKey key) {
-		if(!name.equalsIgnoreCase(key.getName())) 
+		if(!name.equals(key.getName())) 
 			return false;
 		
 		for(int version : supportDatabaseMajorVersions) {

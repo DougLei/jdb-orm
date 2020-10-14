@@ -134,7 +134,7 @@ class TableMappingParser {
 		ColumnMetadata columnMetadata = null;
 		for (Element element : columnElements) {
 			columnMetadata = columnMetadataParser.parse(element);
-			if(columnMetadata.isPrimaryKey() && tableMetadata.existsPrimaryKey()) 
+			if(columnMetadata.isPrimaryKey() && tableMetadata.getPrimaryKeyColumns_() != null) 
 				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
 			tableMetadata.addColumn(columnMetadata);
 		}
@@ -272,18 +272,17 @@ class TableMappingParser {
 	 * @param primaryKeyHandlerElement
 	 */
 	private void setPrimaryKeyHandler(Element primaryKeyHandlerElement) {
-		if(tableMetadata.existsPrimaryKey() && primaryKeyHandlerElement != null) {
+		if(tableMetadata.getPrimaryKeyColumns_() != null && primaryKeyHandlerElement != null) {
 			// 获取主键处理器
 			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
 			if(primaryKeyHandler != null) {
-				if(!primaryKeyHandler.supportMultiColumns() && tableMetadata.primaryKeyCount() > 1) 
-					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getClass().getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumnCodes()+"]");
+				if(!primaryKeyHandler.supportMultiColumns() && tableMetadata.getPrimaryKeyColumns_().size() > 1) 
+					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getClass().getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumns_().keySet()+"]");
 				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
 				
 				// 如果是序列类型, 则去解析<sequence>元素
-				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) {
+				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) 
 					setPrimaryKeySequence(primaryKeyHandlerElement.element("sequence"));
-				}
 			}
 		}
 	}
@@ -294,7 +293,7 @@ class TableMappingParser {
 	 */
 	private void setPrimaryKeySequence(Element sequenceElement) {
 		// 因为主键序列只支持单列主键, 所以这里获取唯一的主键列, 并将其标识为主键序列
-		ColumnMetadata primaryKeyColumn = tableMetadata.getPrimaryKeyColumnByCode(tableMetadata.getPrimaryKeyColumnCodes().iterator().next());
+		ColumnMetadata primaryKeyColumn = tableMetadata.getPrimaryKeyColumns_().get(tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next());
 		primaryKeyColumn.setPrimaryKeySequence();
 		
 		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
@@ -360,7 +359,7 @@ class TableMappingParser {
 	private ValidateHandler getValidateHandler(Element validatorElement) {
 		String code = validatorElement.attributeValue("code");
 		if(StringUtil.notEmpty(code)) {
-			if(tableMetadata.getColumnByCode(code) == null)
+			if(tableMetadata.getColumns_().get(code) == null)
 				throw new NullPointerException("配置验证器时, 不存在code="+code+"的列");
 			
 			ValidateHandler handler = new ValidateHandler(code, true);

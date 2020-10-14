@@ -31,7 +31,7 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 
 	// 进行验证
 	public ValidationResult doValidate(Object originObject) {
-		if(tableMetadata.existsValidateColumns()) {
+		if(tableMetadata.getValidateColumns() != null) {
 			setOriginObject(originObject);
 			
 			Object value = null;

@@ -24,6 +24,7 @@ public class ColumnMetadataParser implements MetadataParser<Element, ColumnMetad
 		String dataType = element.attributeValue("dataType");
 		if(StringUtil.isEmpty(dataType))
 			dataType = "string";
+		// 这里不对dataType进行转小写的操作, 原因是, dataType可能是一个自定义类的全路径, 转小写后无法进行反射构建实例
 		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(element.attributeValue("length"), element.attributeValue("precision"), dataType);
 		
 		String value = element.attributeValue("nullable");

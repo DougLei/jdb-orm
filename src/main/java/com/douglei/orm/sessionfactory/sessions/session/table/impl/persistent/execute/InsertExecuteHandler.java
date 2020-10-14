@@ -46,7 +46,7 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 					insertSql.append(",");
 					values.append(",");
 				}
-				column = tableMetadata.getColumnByCode(code);
+				column = tableMetadata.getColumns_().get(code);
 
 				insertSql.append(column.getName());
 				if(value instanceof OraclePrimaryKeySequence) {

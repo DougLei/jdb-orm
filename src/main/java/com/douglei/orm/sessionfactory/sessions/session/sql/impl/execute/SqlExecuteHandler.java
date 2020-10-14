@@ -24,16 +24,14 @@ public class SqlExecuteHandler implements ExecuteHandler{
 	
 	public SqlExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
-		if(contents.size() == 0) {
+		if(contents.isEmpty())
 			throw new NullPointerException("不存在任何可以执行的sql语句");
-		}
 		
 		executeSqlCount = contents.size();
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
-		for (ContentMetadata content : contents) {
+		for (ContentMetadata content : contents) 
 			executeSqls.add(new ExecuteSql(content, sqlParameter));
-		}
 	}
 	
 	@Override
@@ -49,17 +47,15 @@ public class SqlExecuteHandler implements ExecuteHandler{
 	
 	@Override
 	public String getCurrentSql() {
-		if(logger.isDebugEnabled()) {
+		if(logger.isDebugEnabled()) 
 			logger.debug("获取第{}个 executeSql", executeSqlIndex+1);
-		}
 		return executeSqls.get(executeSqlIndex).getContent();
 	}
 
 	@Override
 	public List<Object> getCurrentParameters() {
-		if(logger.isDebugEnabled()) {
+		if(logger.isDebugEnabled()) 
 			logger.debug("获取第{}个 parameters", executeSqlIndex+1);
-		}
 		return executeSqls.get(executeSqlIndex).getParameters();
 	}
 	

@@ -237,9 +237,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = sqlMetadata.getContents(name);
-		if(contents.size() == 0) {
+		if(contents.isEmpty()) 
 			throw new NullPointerException("不存在可以执行的存储过程");
-		}
 		
 		int length = contents.size();
 		List<Object> list = new ArrayList<Object>(length);

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.exception.ColumnConfigurationException;
@@ -21,7 +20,6 @@ import com.douglei.orm.mapping.metadata.AbstractMetadata;
  * @author DougLei
  */
 public class TableMetadata extends AbstractMetadata {
-	private static final long serialVersionUID = 1100405493074032864L;
 	
 	private String className;// 映射的代码类名
 	private CreateMode createMode;// 创建模式
@@ -73,18 +71,16 @@ public class TableMetadata extends AbstractMetadata {
 	
 	// 按照声明顺序添加列
 	private void addDeclareColumn(ColumnMetadata column) {
-		if(declareColumns == null) {
+		if(declareColumns == null) 
 			declareColumns = new ArrayList<ColumnMetadata>();
-		}
 		declareColumns.add(column);
 	}
 
 	// 添加主键列
 	private void addPrimaryKeyColumns(Collection<ColumnMetadata> pkColumns) {
 		this.primaryKeyColumns_ = new HashMap<String, ColumnMetadata>(pkColumns.size());
-		for (ColumnMetadata pkcolumn : pkColumns) {
+		for (ColumnMetadata pkcolumn : pkColumns) 
 			this.primaryKeyColumns_.put(pkcolumn.getCode(), pkcolumn);
-		}
 	}
 	
 	/**
@@ -93,30 +89,24 @@ public class TableMetadata extends AbstractMetadata {
 	 */
 	public void setValidateColumn(ColumnMetadata column) {
 		if(column != null) {
-			if(validateColumns == null) {
+			if(validateColumns == null) 
 				validateColumns = new ArrayList<ColumnMetadata>(declareColumns.size());
-			}
 			validateColumns.add(column);
 		}
 	}
 	
 	// 通过列, 添加单列约束
 	private void addConstraint(ColumnMetadata column) {
-		if(column.isPrimaryKey()) {
+		if(column.isPrimaryKey()) 
 			addConstraint(new Constraint(ConstraintType.PRIMARY_KEY, name).addColumn(column));
-		}
-		if(column.isUnique()) {
+		if(column.isUnique()) 
 			addConstraint(new Constraint(ConstraintType.UNIQUE, name).addColumn(column));
-		}
-		if(column.getDefaultValue() != null) {
+		if(column.getDefaultValue() != null) 
 			addConstraint(new Constraint(ConstraintType.DEFAULT_VALUE, name).addColumn(column));
-		}
-		if(column.getCheck() != null) {
+		if(column.getCheck() != null) 
 			addConstraint(new Constraint(ConstraintType.CHECK, name).addColumn(column));
-		}
-		if(column.getFkTableName() != null) {
+		if(column.getFkTableName() != null) 
 			addConstraint(new Constraint(ConstraintType.FOREIGN_KEY, name).addColumn(column));
-		}
 	}
 	
 	/**
@@ -130,7 +120,9 @@ public class TableMetadata extends AbstractMetadata {
 			throw new ConstraintConfigurationException("约束名"+constraint.getName()+"重复");
 		}
 		if(constraint.getConstraintType() == ConstraintType.PRIMARY_KEY) {
-			validatePrimaryKeyColumnExists();
+			if(primaryKeyColumns_ != null) // 验证主键列是否存在
+				throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
+			
 			addPrimaryKeyColumns(constraint.getColumns());
 		}else if(constraint.getConstraintType() == ConstraintType.UNIQUE) {
 			if(uniqueConstraints == null) {
@@ -154,34 +146,44 @@ public class TableMetadata extends AbstractMetadata {
 		indexes.put(index.getName(), index);
 	}
 	
-	// 获取约束集合
+	/**
+	 * 获取约束集合
+	 * @return
+	 */
 	public Collection<Constraint> getConstraints() {
-		if(constraints == null) {
+		if(constraints == null) 
 			return null;
-		}
 		return constraints.values();
 	}
-	// 根据约束名, 获取约束
-	public Constraint getConstraintByName(String constraintName) {
-		if(constraints == null) {
+	/**
+	 * 获取指定name的约束
+	 * @param name
+	 * @return
+	 */
+	public Constraint getConstraint(String name) {
+		if(constraints == null) 
 			return null;
-		}
-		return constraints.get(constraintName);
+		return constraints.get(name);
 	}
 	
-	// 获取索引集合
+	/**
+	 * 获取索引集合
+	 * @return
+	 */
 	public Collection<Index> getIndexes(){
-		if(indexes == null) {
+		if(indexes == null) 
 			return null;
-		}
 		return indexes.values();
 	}
-	// 根据索引名, 获取索引
-	public Index getIndexByName(String indexName) {
-		if(indexes == null) {
+	/**
+	 * 获取指定name的索引
+	 * @param name
+	 * @return
+	 */
+	public Index getIndex(String name) {
+		if(indexes == null) 
 			return null;
-		}
-		return indexes.get(indexName);
+		return indexes.get(name);
 	}
 
 	/**
@@ -215,6 +217,7 @@ public class TableMetadata extends AbstractMetadata {
 	public PrimaryKeySequence getPrimaryKeySequence() {
 		return primaryKeySequence;
 	}
+	
 	/**
 	 * 给实体map设置主键值
 	 * @param objectMap 实体map
@@ -230,61 +233,42 @@ public class TableMetadata extends AbstractMetadata {
 		}
 	}
 
-	// 获取列的code集合
-	public Set<String> getColumnCodes() {
-		return columns_.keySet();
+	/**
+	 * 获取列集合
+	 * @return key为code, value为ColumnMetadata
+	 */
+	public Map<String, ColumnMetadata> getColumns_() {
+		return columns_;
 	}
-	// 根据code获取列
-	public ColumnMetadata getColumnByCode(String code) {
-		return columns_.get(code);
-	}
-	// 根据code判断是否是列
-	public boolean isColumnByCode(String code) {
-		return columns_.containsKey(code);
-	}
-	
-	// 验证主键列是否存在
-	private void validatePrimaryKeyColumnExists() {
-		if(existsPrimaryKey()) 
-			throw new RepeatedPrimaryKeyException("已配置主键["+primaryKeyColumns_.keySet()+"], 不能重复配置");
-	}
-	// 是否存在主键
-	public boolean existsPrimaryKey() {
-		return primaryKeyColumns_ != null;
+
+	/**
+	 * 获取主键列集合
+	 * @return key为code, value为ColumnMetadata
+	 */
+	public Map<String, ColumnMetadata> getPrimaryKeyColumns_(){
+		return primaryKeyColumns_;
 	}
 	
-	// 获取主键列的code集合
-	public Set<String> getPrimaryKeyColumnCodes(){
-		return primaryKeyColumns_.keySet();
-	}
-	// 根据code获取主键列
-	public ColumnMetadata getPrimaryKeyColumnByCode(String code) {
-		return primaryKeyColumns_.get(code);
-	}
-	// 根据code判断是否是主键列
-	public boolean isPrimaryKeyColumnByCode(String code) {
-		return primaryKeyColumns_.containsKey(code);
-	}
-	// 获取主键列的数量
-	public byte primaryKeyCount() {
-		return (byte) primaryKeyColumns_.size();
-	}
-	
-	// 是否存在需要验证的列
-	public boolean existsValidateColumns() {
-		return validateColumns != null;
-	}
-	// 获取要验证的列集合
+	/**
+	 * 获取要验证的列集合
+	 * @return
+	 */
 	public List<ColumnMetadata> getValidateColumns() {
 		return validateColumns;
 	}
 	
-	// 获取唯一约束集合
+	/**
+	 * 获取唯一约束集合 
+	 * @return
+	 */
 	public List<UniqueConstraint> getUniqueConstraints() {
 		return uniqueConstraints;
 	}
 
-	// 获取按照定义顺序的列集合
+	/**
+	 * 获取按照定义顺序的列集合 
+	 * @return
+	 */
 	public List<ColumnMetadata> getDeclareColumns() {
 		return declareColumns;
 	}
@@ -297,9 +281,8 @@ public class TableMetadata extends AbstractMetadata {
 	 */
 	public ColumnMetadata getColumnByName(String columnName, boolean validateColumnExists) {
 		ColumnMetadata column = columns.get(columnName);
-		if(validateColumnExists && column == null) {
+		if(validateColumnExists && column == null) 
 			throw new NullPointerException("不存在column name=["+columnName+"]的列");
-		}
 		return column;
 	}
 }

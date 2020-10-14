@@ -27,9 +27,8 @@ public class ExecuteSql {
 			if(rootSqlNode.matching(sqlParameter)) {
 				rootExecuteSqlNode = rootSqlNode.getExecuteSqlNode(sqlParameter);
 				if(rootExecuteSqlNode.existsParameter()) {
-					if(parameters == null) {
+					if(parameters == null) 
 						parameters = new ArrayList<Object>();
-					}
 					parameters.addAll(rootExecuteSqlNode.getParameters());
 				}
 				sqlContent.append(rootExecuteSqlNode.getContent()).append(" ");

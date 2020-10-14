@@ -24,7 +24,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = -3056641416893794138L;
 
 	private String configText;
 	
@@ -53,7 +52,6 @@ public class SqlParameterMetadata implements Metadata{
 		this.configText = sqlParameterConfigHolder.splitIncludeRegExKey()?RegularExpressionUtil.transferRegularExpressionKey(configText):configText;
 
 		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
-		setName(propertyMap.get("name"));
 		setDataType(propertyMap);
 		
 		setUsePlaceholder(propertyMap);
@@ -75,7 +73,9 @@ public class SqlParameterMetadata implements Metadata{
 			throw new NullPointerException("sql参数, 必须配置参数名");
 		
 		Map<String, String> propertyMap = new HashMap<String, String>();
-		propertyMap.put("name", cts[0].trim());
+		this.name = cts[0].trim(); // 这里设置参数名
+		if(StringUtil.isEmpty(this.name))
+			throw new NullPointerException("sql参数, 必须配置参数名");
 		
 		if(length > 1) {
 			String[] keyValue = null;
@@ -102,26 +102,22 @@ public class SqlParameterMetadata implements Metadata{
 		return null;
 	}
 	
-	private void setName(String name) {
-		this.name = name;
-	}
-	private void setDescription(String description) {
-		if(StringUtil.isEmpty(description)) 
-			description = name;
-		this.description = description;
-	}
 	private void setDataType(Map<String, String> propertyMap) {
-		String confDataTypeVal;
+		String dataType;
 		if(MappingParserContext.getCurrentSqlType() == ContentType.PROCEDURE) {
-			confDataTypeVal = propertyMap.get("dbtype");
+			dataType = propertyMap.get("dbtype");
+			if(StringUtil.isEmpty(dataType))
+				throw new NullPointerException("存储过程中, 参数["+name+"]的dbType不能为空");
+			
 			this.mode = SqlParameterMode.toValue(propertyMap.get("mode"));
 		} else {
-			confDataTypeVal = propertyMap.get("datatype");
-			if(StringUtil.isEmpty(confDataTypeVal))
-				confDataTypeVal = "string";
+			dataType = propertyMap.get("datatype");
+			if(StringUtil.isEmpty(dataType))
+				dataType = "string";
 		}
 		
-		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), confDataTypeVal);
+		// 这里不对dataType进行转大/小写的操作, 原因是, dataType可能是一个自定义类的全路径, 转换后无法进行反射构建实例
+		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), dataType);
 		this.dbDataType = wrapper.getDBDataType();
 		this.length = wrapper.getLength();
 		this.precision = wrapper.getPrecision();
@@ -169,6 +165,11 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	private void setValidate(String validate) {
 		this.validate = Boolean.parseBoolean(validate);
+	}
+	private void setDescription(String description) {
+		if(StringUtil.isEmpty(description)) 
+			description = name;
+		this.description = description;
 	}
 	
 	private void setValidateHandler() {

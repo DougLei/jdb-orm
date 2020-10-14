@@ -33,7 +33,7 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 		Object value = null;
 		ColumnMetadata columnMetadata = null;
 		for (String code : objectMap.keySet()) {
-			if(!tableMetadata.isPrimaryKeyColumnByCode(code)) {
+			if(!tableMetadata.getPrimaryKeyColumns_().containsKey(code)) {
 				value = objectMap.get(code);
 				if(updateNullValue || value != null) {
 					if(isFirst) {
@@ -42,7 +42,7 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 						updateSql.append(", ");
 					}
 					
-					columnMetadata = tableMetadata.getColumnByCode(code);
+					columnMetadata = tableMetadata.getColumns_().get(code);
 					updateSql.append(columnMetadata.getName()).append("=?");
 					parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
 				}
@@ -56,11 +56,11 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 	// 当存在primaryKey时, set对应的where sql语句
 	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, ColumnMetadata columnMetadata) {
 		updateSql.append(" where ");
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumnCodes();
+		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 		byte size = (byte) primaryKeyColumnMetadataCodes.size();
 		byte index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			columnMetadata = tableMetadata.getPrimaryKeyColumnByCode(pkCode);
+			columnMetadata = tableMetadata.getPrimaryKeyColumns_().get(pkCode);
 			
 			updateSql.append(columnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(objectMap.get(pkCode), columnMetadata.getDBDataType()));
