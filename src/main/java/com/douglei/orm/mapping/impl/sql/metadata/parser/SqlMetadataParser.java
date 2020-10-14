@@ -25,9 +25,9 @@ public class SqlMetadataParser implements MetadataParser<Node, SqlMetadata> {
 		return new SqlMetadata(namespace, getNamespaceValue(attributeMap.getNamedItem("oldNamespace")));
 	}
 
-	private String getNamespaceValue(Node item) {
-		if(item != null) {
-			String value = item.getNodeValue();
+	private String getNamespaceValue(Node namespaceItem) {
+		if(namespaceItem != null) {
+			String value = namespaceItem.getNodeValue();
 			if(StringUtil.notEmpty(value)) 
 				return value;
 		}
