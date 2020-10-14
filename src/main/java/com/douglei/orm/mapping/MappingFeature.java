@@ -28,6 +28,8 @@ public class MappingFeature implements Serializable{
 		this.supportDelete = supportDelete;
 	}
 	public void setExtend(Object extend) {
+		if(!(extend instanceof Serializable))
+			throw new IllegalArgumentException("mapping的扩展特性, 必须实现: "+Serializable.class);
 		this.extend = extend;
 	}
 	
