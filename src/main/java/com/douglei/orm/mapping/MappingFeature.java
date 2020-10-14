@@ -13,7 +13,7 @@ public class MappingFeature implements Serializable{
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
 	private boolean supportCover=true; // mapping是否支持被覆盖
 	private boolean supportDelete=true; // mapping是否支持被删除
-	private Object extend; // mapping的扩展特性, 可由第三方扩展
+	private Object extend; // mapping的扩展特性, 可由第三方扩展, 特别注意的是, 扩展的特性, 必须实现 java.io.Serializable 接口
 	
 	public void setCode(String code) {
 		this.code = code;
