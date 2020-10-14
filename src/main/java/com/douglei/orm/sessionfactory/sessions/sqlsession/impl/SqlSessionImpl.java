@@ -476,9 +476,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@Override
 	public void close() {
 		if(!isClosed) {
-			if(logger.isDebugEnabled()) {
+			if(logger.isDebugEnabled()) 
 				logger.debug("close {}", getClass().getName());
-			}
+			
 			if(enableStatementCache && statementHandlerCache != null) {
 				if(!statementHandlerCache.isEmpty()) {
 					statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());

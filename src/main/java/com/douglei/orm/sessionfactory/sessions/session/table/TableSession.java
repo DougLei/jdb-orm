@@ -240,21 +240,4 @@ public interface TableSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
-	
-	
-	/**
-	 * 获取指定类的列名, 多个用, 分割
-	 * @param clz
-	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
-	 * @return
-	 */
-	String getColumnNames(Class<?> clz, String... excludeColumnNames);
-	
-	/**
-	 * 获取指定name的列名, 多个用, 分割
-	 * @param name table元素中的name属性值
-	 * @param excludeColumnNames 要排除的列名, 注意这里输入的是列名!
-	 * @return
-	 */
-	String getColumnNames(String name, String... excludeColumnNames);
 }

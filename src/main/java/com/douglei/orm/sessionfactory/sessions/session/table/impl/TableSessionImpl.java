@@ -292,22 +292,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void close() {
-		if(!isClosed) {
-			if(logger.isDebugEnabled()) {
-				logger.debug("close {}", getClass().getName());
-			}
-			try {
-				flushPersistentObjectCache();
-			} catch(SessionExecutionException see){
-				throw see;
-			}finally {
-				super.close();
-			}
-		}
-	}
-	
-	@Override
 	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
 		List<T> listT = new ArrayList<T>(resultListMap.size());
@@ -339,50 +323,20 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		}
 		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
 	}
-
 	
 	@Override
-	public String getColumnNames(Class<?> clz, String... excludeColumnNames) {
-		return getColumnNames_(clz.getName(), excludeColumnNames);
-	}
-	
-	@Override
-	public String getColumnNames(String name, String... excludeColumnNames) {
-		return getColumnNames_(name.toUpperCase(), excludeColumnNames);
-	}
-	
-	private String getColumnNames_(String code, String... excludeColumnNames) {
-		TableMetadata tableMetadata = getTableMetadata(code);
-		StringBuilder cns = new StringBuilder(tableMetadata.getDeclareColumns().size() * 40);
-		boolean excludeColumnNamesIsEmpty = toUpperCase(excludeColumnNames); 
-		tableMetadata.getDeclareColumns().forEach(column -> {
-			if(excludeColumnNamesIsEmpty || !excludeColumnName(column.getName(), excludeColumnNames)) {
-				cns.append(", ").append(column.getName());
-			}
-		});
-		if(cns.length() == 0) {
-			throw new NullPointerException("在code=["+code+"]的表映射中, 没有匹配到任何列名, 请确保没有对过多的列名进行排除 ");
-		}
-		logger.debug("得到的列名为 -> {}", cns);
-		return cns.substring(1);
-	}
-	
-	// 将要排除的列名全部都转大写, 返回传入的数组是否为空
-	private boolean toUpperCase(String... excludeColumnNames) {
-		if(excludeColumnNames.length == 0)
-			return true;
-		for (int i = 0; i < excludeColumnNames.length; i++) 
-			excludeColumnNames[i] = excludeColumnNames[i].toUpperCase();
-		return false;
-	}
-	
-	// 判断指定的columnName是否被排除
-	private boolean excludeColumnName(String columnName, String... excludeColumnNames) {
-		for (String ecn : excludeColumnNames) {
-			if(columnName.equalsIgnoreCase(ecn)) {
-				return true;
+	public void close() {
+		if(!isClosed) {
+			if(logger.isDebugEnabled()) 
+				logger.debug("close {}", getClass().getName());
+			
+			try {
+				flushPersistentObjectCache();
+			} catch(SessionExecutionException e){
+				throw e;
+			}finally {
+				super.close();
 			}
 		}
-		return false;
 	}
 }
