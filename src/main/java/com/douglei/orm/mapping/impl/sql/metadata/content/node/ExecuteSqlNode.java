@@ -13,7 +13,7 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 public class ExecuteSqlNode {
 	private static final ExecuteSqlNode EMPTY_EXECUTE_SQL_NODE = new ExecuteSqlNode("", null);
 	private String content;
-	private List<Object> parameters;
+	private List<Object> parameters; // 当前执行sql语句对应的参数值集合
 	
 	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
 		if(sqlParameterByDefinedOrders != null) {

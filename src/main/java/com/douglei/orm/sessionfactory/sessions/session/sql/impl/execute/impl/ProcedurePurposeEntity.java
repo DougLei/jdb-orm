@@ -8,7 +8,11 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class ProcedurePurposeEntity extends PurposeEntity {
-	public static final ProcedurePurposeEntity DEFAULT = new ProcedurePurposeEntity();
+	public static final ProcedurePurposeEntity DEFAULT = new ProcedurePurposeEntity(true, false);
+	
+	public ProcedurePurposeEntity(boolean getSqlParameters, boolean getSqlParameterValues) {
+		super(getSqlParameters, getSqlParameterValues);
+	}
 	
 	@Override
 	public Purpose getPurpose() {

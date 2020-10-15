@@ -8,7 +8,11 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class UnknowPurposeEntity extends PurposeEntity {
-	public static final UnknowPurposeEntity DEFAULT = new UnknowPurposeEntity();
+	public static final UnknowPurposeEntity DEFAULT = new UnknowPurposeEntity(true, true);
+
+	public UnknowPurposeEntity(boolean getSqlParameters, boolean getSqlParameterValues) {
+		super(getSqlParameters, getSqlParameterValues);
+	}
 	
 	@Override
 	public Purpose getPurpose() {

@@ -8,7 +8,11 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class UpdatePurposeEntity extends PurposeEntity {
-	public static final UpdatePurposeEntity DEFAULT = new UpdatePurposeEntity();
+	public static final UpdatePurposeEntity DEFAULT = new UpdatePurposeEntity(false, true);
+	
+	public UpdatePurposeEntity(boolean getSqlParameters, boolean getSqlParameterValues) {
+		super(getSqlParameters, getSqlParameterValues);
+	}
 	
 	@Override
 	public Purpose getPurpose() {

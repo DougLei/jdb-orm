@@ -15,11 +15,8 @@ import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TextSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
@@ -235,34 +232,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, sqlMetadata, name, sqlParameter);
-		
-		ContentMetadata content = sqlMetadata.getContents().get(0);
-		if(content.getType() != ContentType.PROCEDURE)
-			throw new IllegalArgumentException("name为["+content.getName()+"]的sql, 不是["+ContentType.PROCEDURE+"]类型, 无法执行");
-		
-		List<Object> list = new ArrayList<Object>(length);
-		
-		StringBuilder sqlContent = new StringBuilder();
-		List<SqlParameterMetadata> sqlParameters = new ArrayList<SqlParameterMetadata>(10);
-		
-		List<SqlNode> sqlNodes = null;
-		TextSqlNode textSqlNode = null;
-		for (ContentMetadata content : contents) {
-			sqlNodes = content.getRootSqlNodes();
-			
-			for(SqlNode sn: sqlNodes) {
-				textSqlNode = (TextSqlNode) sn;
-				sqlContent.append(textSqlNode.getContent()).append(" ");
-				if(textSqlNode.getSqlParameters() != null) {
-					sqlParameters.addAll(textSqlNode.getSqlParameters());
-				}
-			}
-			
-			list.add(executeProcedure(sqlContent.toString(), sqlParameters, sqlParameter));
-		}
-		if(length == 1) 
-			return list.get(0);
-		return list;
+		return executeProcedure(executeHandler.getCurrentSql(), executeHandler.getCurrentSqlParameters(), sqlParameter);
 	}
 	
 	// 执行存储过程

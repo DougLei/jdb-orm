@@ -8,6 +8,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 
 /**
  * 要执行的sql实体
@@ -17,10 +18,11 @@ public class ExecuteSql {
 	private String name;
 	private ContentType type;
 	private String content;
-	private List<Object> parameters;
+	private List<Object> parameters; // 执行sql语句对应的参数值集合
+	private List<SqlParameterMetadata> sqlParameters; // sql参数集合
 	private IncrementIdValueConfig incrementIdValueConfig;
 	
-	public ExecuteSql(ContentMetadata contentMetadata, Object sqlParameter) {
+	public ExecuteSql(PurposeEntity purposeEntity, ContentMetadata contentMetadata, Object sqlParameter) {
 		StringBuilder sqlContent = new StringBuilder();
 		
 		List<SqlNode> rootSqlNodes = contentMetadata.getRootSqlNodes();
@@ -56,6 +58,9 @@ public class ExecuteSql {
 	}
 	public List<Object> getParameters() {
 		return parameters;
+	}
+	public List<SqlParameterMetadata> getSqlParameters() {
+		return sqlParameters;
 	}
 	public IncrementIdValueConfig getIncrementIdValueConfig() {
 		return incrementIdValueConfig;

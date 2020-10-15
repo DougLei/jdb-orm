@@ -8,6 +8,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
 /**
@@ -29,7 +30,7 @@ public class SqlExecuteHandler implements ExecuteHandler{
 		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
 		
 		for (ContentMetadata content : contents) 
-			executeSqls.add(new ExecuteSql(content, sqlParameter));
+			executeSqls.add(new ExecuteSql(purposeEntity, content, sqlParameter));
 	}
 	
 	// 获取指定name的sql content; 
@@ -121,6 +122,14 @@ public class SqlExecuteHandler implements ExecuteHandler{
 	@Override
 	public List<Object> getCurrentParameters() {
 		return executeSqls.get(executeSqlIndex).getParameters();
+	}
+	
+	/**
+	 * 获取当前sql参数集合
+	 * @return
+	 */
+	public List<SqlParameterMetadata> getCurrentSqlParameters() {
+		return executeSqls.get(executeSqlIndex).getSqlParameters();
 	}
 	
 	/**

@@ -31,7 +31,7 @@ public interface ExecuteHandler {
 	String getCurrentSql();
 	
 	/**
-	 * 获取当前执行sql语句对应的参数集合
+	 * 获取当前执行sql语句对应的参数值集合
 	 * @return
 	 */
 	List<Object> getCurrentParameters();

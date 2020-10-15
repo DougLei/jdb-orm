@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 import com.douglei.orm.sql.SqlStatement;
 
@@ -18,6 +19,7 @@ public class SqlExecutionEntity {
 	private ContentType type;
 	private SqlStatement sql;
 	private List<Object> parameters;
+	private List<SqlParameterMetadata> sqlParameters;
 	
 	public SqlExecutionEntity(SqlExecuteHandler sqlExecutionHandler) {
 		this.sqlExecutionHandler = sqlExecutionHandler;
@@ -25,6 +27,7 @@ public class SqlExecutionEntity {
 		this.type = sqlExecutionHandler.getCurrentType();
 		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sqlExecutionHandler.getCurrentSql());
 		this.parameters = sqlExecutionHandler.getCurrentParameters();
+		this.sqlParameters = sqlExecutionHandler.getCurrentSqlParameters();
 	}
 	
 	/**
@@ -69,14 +72,21 @@ public class SqlExecutionEntity {
 	}
 	
 	/**
-	 * 获取参数list
+	 * 获取执行sql语句对应的参数值集合
 	 * @return
 	 */
 	public List<Object> getParameters(){
-		if(parameters == null) {
+		if(parameters == null) 
 			parameters = new ArrayList<Object>();
-		}
 		return parameters;
+	}
+	
+	/**
+	 * 获取sql参数集合
+	 * @return
+	 */
+	public List<SqlParameterMetadata> getSqlParameters(){
+		return sqlParameters;
 	}
 	
 	/**
@@ -97,6 +107,7 @@ public class SqlExecutionEntity {
 			this.type = sqlExecutionHandler.getCurrentType();
 			this.sql.reset(sqlExecutionHandler.getCurrentSql());
 			this.parameters = sqlExecutionHandler.getCurrentParameters();
+			this.sqlParameters = sqlExecutionHandler.getCurrentSqlParameters();
 			return true;
 		}
 		return false;
