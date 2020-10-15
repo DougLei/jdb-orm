@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping-configuration>
+
+	<procedure name="TEST1" createMode="drop_create">
+	
+	<![CDATA[ 
+		create procedure TEST1 (@id int)
+as
+		begin
+			if(@id < 1)
+				select * from sys_user;
+			
+			select * from sys_user;
+		end 
+	
+	 ]]> 
+		
+	</procedure>
+</mapping-configuration>
