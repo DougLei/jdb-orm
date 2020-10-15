@@ -421,24 +421,4 @@ public interface SQLSession {
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
-	
-	
-	/**
-	 * 获取要执行的sql
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
-	 * @return
-	 */
-	default ExecutionSql getExecuteSql(String namespace, String name) {
-		return getExecuteSql(namespace, name, null);
-	}
-	
-	/**
-	 * 获取要执行的sql
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
-	 * @param sqlParameter
-	 * @return
-	 */
-	ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter);
 }

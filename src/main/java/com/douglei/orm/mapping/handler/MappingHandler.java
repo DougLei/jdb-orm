@@ -24,9 +24,12 @@ import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.sessionfactory.sessions.session.sql.SqlExecutionEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 
 /**
  * 映射处理器
@@ -242,5 +245,28 @@ public class MappingHandler {
 	 */
 	public Mapping getMapping(String code) {
 		return mappingContainer.getMapping(code);
+	}
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	/**
+	 * 获取指定namespace的sql映射执行实体
+	 * @param namespace
+	 * @param sqlParameter 输入参数
+	 * @return
+	 */
+	public SqlExecutionEntity getSqlMappingExecutionEntity(String namespace, Object sqlParameter){
+		return getSqlMappingExecutionEntity(namespace, null, sqlParameter);
+	}
+	
+	/**
+	 * 获取指定namespace和name的sql映射执行实体
+	 * @param namespace
+	 * @param name 可传入null
+	 * @param sqlParameter 输入参数
+	 * @return
+	 */
+	public SqlExecutionEntity getSqlMappingExecutionEntity(String namespace, String name, Object sqlParameter){
+		SqlMetadata sqlMetadata = (SqlMetadata) getMapping(namespace).getMetadata();
+		return new SqlExecutionEntity(new SqlExecuteHandler(sqlMetadata, name, sqlParameter));
 	}
 }

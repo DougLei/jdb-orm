@@ -24,7 +24,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.sql.ExecutionSql;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
@@ -349,13 +348,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return executeResult;
 	}
 
-	
-	@Override
-	public ExecutionSql getExecuteSql(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
-		return new ExecutionSql(executeHandler);
-	}
-	
 	@Override
 	public void close() {
 		if(!sqlMetadataCache.isEmpty())

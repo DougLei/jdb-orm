@@ -11,12 +11,12 @@ import com.douglei.orm.sql.SqlStatement;
  * 
  * @author DougLei
  */
-public class ExecutionSql {
+public class SqlExecutionEntity {
 	private ExecuteHandler executionHandler;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
-	public ExecutionSql(ExecuteHandler executionHandler) {
+	public SqlExecutionEntity(ExecuteHandler executionHandler) {
 		this.executionHandler = executionHandler;
 		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executionHandler.getCurrentSql());
 		this.parameters = executionHandler.getCurrentParameters();
