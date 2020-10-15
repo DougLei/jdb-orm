@@ -340,7 +340,7 @@ public interface SqlSession {
 	/**
 	 * 执行插入操作
 	 * @param sql
-	 * @param returnID 可传入null
+	 * @param returnID
 	 * @return 
 	 */
 	default InsertResult executeInsert(String sql, ReturnID returnID) {
@@ -350,7 +350,7 @@ public interface SqlSession {
 	 * 执行插入操作
 	 * @param sql
 	 * @param parameters
-	 * @param returnID 可传入null
+	 * @param returnID
 	 * @return 
 	 */
 	InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID);

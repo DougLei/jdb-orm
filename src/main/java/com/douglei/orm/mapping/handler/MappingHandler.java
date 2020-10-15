@@ -1,7 +1,6 @@
 package com.douglei.orm.mapping.handler;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,13 +24,9 @@ import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
-import com.douglei.orm.mapping.parameter.Parameter;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 
 /**
  * 映射处理器
@@ -247,67 +242,5 @@ public class MappingHandler {
 	 */
 	public Mapping getMapping(String code) {
 		return mappingContainer.getMapping(code);
-	}
-	
-	// ------------------------------------------------------------------------------------------------
-	/**
-	 * 获取指定class映射的表映射的参数集合, 即列集合
-	 * @param clazz
-	 * @return
-	 */
-	public List<Parameter> getTableMappingParameters(Class<?> clazz){
-		return getTableMappingParameters_(clazz.getName());
-	} 
-	
-	/**
-	 * 获取指定name的表映射的参数集合, 即列集合
-	 * @param name
-	 * @return
-	 */
-	public List<Parameter> getTableMappingParameters(String name){
-		return getTableMappingParameters_(name.toUpperCase());
-	}
-	
-	/**
-	 * 获取指定code的表映射的参数集合, 即列集合
-	 * @param code
-	 * @return
-	 */
-	private List<Parameter> getTableMappingParameters_(String code){
-		MappingFeature feature = getFeature(code);
-		if(feature == null || !MappingTypeConstants.TABLE.equals(feature.getType()))
-			return Collections.emptyList();
-		
-		List<ColumnMetadata> columns = ((TableMetadata) getMapping(code).getMetadata()).getDeclareColumns();
-		List<Parameter> parameters = new ArrayList<Parameter>(columns.size());
-		for (ColumnMetadata column : columns) 
-			parameters.add(new Parameter(column.getName(), column.getDBDataType()));
-		return parameters;
-	}
-	
-	/**
-	 * 获取指定namespace的sql映射执行器
-	 * @param namespace
-	 * @param sqlParameter 输入参数
-	 * @return
-	 */
-	public SqlExecuteHandler getSqlMappingExecuteHandler(String namespace, Object sqlParameter){
-		return getSqlMappingExecuteHandler(namespace, null, sqlParameter);
-	}
-	
-	/**
-	 * 获取指定namespace和name的sql映射执行器
-	 * @param namespace
-	 * @param name 可传入null
-	 * @param sqlParameter 输入参数
-	 * @return
-	 */
-	public SqlExecuteHandler getSqlMappingExecuteHandler(String namespace, String name, Object sqlParameter){
-		MappingFeature feature = getFeature(namespace);
-		if(feature == null || !MappingTypeConstants.SQL.equals(feature.getType()))
-			return null;
-		
-		SqlMetadata sqlMetadata = (SqlMetadata) getMapping(namespace).getMetadata();
-		return new SqlExecuteHandler(sqlMetadata, name, sqlParameter);
 	}
 }

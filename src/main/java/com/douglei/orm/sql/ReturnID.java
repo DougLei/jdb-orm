@@ -5,15 +5,13 @@ package com.douglei.orm.sql;
  * @author DougLei
  */
 public class ReturnID {
-	private String oracleSequenceName;
+	private String oracleSequenceName; // 针对oracle数据库, 传入序列名
 
-	/**
-	 * 
-	 * @param oracleSequenceName 可为空, 针对oracle数据库, 传入序列名
-	 */
+	public ReturnID() {}
 	public ReturnID(String oracleSequenceName) {
 		this.oracleSequenceName = oracleSequenceName;
 	}
+	
 	public String getOracleSequenceName() {
 		return oracleSequenceName;
 	}

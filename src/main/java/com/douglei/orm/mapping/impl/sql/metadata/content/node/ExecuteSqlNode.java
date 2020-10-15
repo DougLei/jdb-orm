@@ -21,9 +21,8 @@ public class ExecuteSqlNode {
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
 				parameterValue = parameter.getValue(sqlParameter, sqlParameterNamePrefix);
 				if(parameter.isUsePlaceholder()) {
-					if(parameters == null) {
+					if(parameters == null) 
 						parameters = new ArrayList<Object>();
-					}
 					parameters.add(new InputSqlParameter(parameterValue, parameter.getDBDataType()));
 				}else {
 					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
