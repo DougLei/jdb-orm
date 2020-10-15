@@ -13,6 +13,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.SqlMetadataParser;
@@ -26,18 +27,13 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-class SqlMappingParser {
+class SqlMappingParser extends MappingParser<SqlMapping>{
 	private static SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
 	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
 	private SqlMetadata sqlMetadata;
 	
-	/**
-	 * 解析
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
+	@Override
 	public SqlMapping parse(InputStream input) throws Exception {
 		Document sqlDocument = MappingParserContext.getDocumentBuilder().parse(input);
 		Element rootElement = sqlDocument.getDocumentElement();
@@ -50,7 +46,8 @@ class SqlMappingParser {
 		
 		resolvingContents(sqlNode);
 		
-		return new SqlMapping(sqlMetadata);
+		NodeList featuresNodeList = rootElement.getElementsByTagName("feature");
+		return new SqlMapping(sqlMetadata, (featuresNodeList == null || featuresNodeList.getLength() == 0)?null:parseFeature(sqlMetadata.getCode(), MappingTypeConstants.SQL, featuresNodeList.item(0)));
 	}
 	
 	/**

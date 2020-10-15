@@ -15,11 +15,9 @@ public enum ContentType {
 	
 	public static ContentType toValue(String type) {
 		type = type.toUpperCase();
-		ContentType[] scts = ContentType.values();
-		for (ContentType sct : scts) {
-			if(sct.name().equals(type)) {
-				return sct;
-			}
+		for (ContentType contentType : ContentType.values()) {
+			if(contentType.name().equals(type)) 
+				return contentType;
 		}
 		return null;
 	}

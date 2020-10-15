@@ -15,6 +15,7 @@ import org.dom4j.Element;
 
 import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.impl.MappingImportDataContext;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
@@ -40,22 +41,18 @@ import com.douglei.tools.utils.StringUtil;
  * 
  * @author DougLei
  */
-class TableMappingParser {
+class TableMappingParser extends MappingParser<TableMapping>{
 	private static TableMetadataParser tableMetadataParser = new TableMetadataParser();
 	private static ColumnMetadataParser columnMetadataParser = new ColumnMetadataParser();
 	
 	private TableMetadata tableMetadata;
 	
-	/**
-	 * 解析
-	 * @param input
-	 * @return
-	 * @throws Exception
-	 */
+	@Override
 	public TableMapping parse(InputStream input) throws Exception {
 		Document document = MappingParserContext.getSAXReader().read(input);
-		Element tableElement = Dom4jUtil.getElement(MappingTypeConstants.TABLE, document.getRootElement());
+		Element rootElement = document.getRootElement();
 		
+		Element tableElement = Dom4jUtil.getElement(MappingTypeConstants.TABLE, rootElement);
 		tableMetadata = tableMetadataParser.parse(tableElement);
 		
 		addColumnMetadata(getColumnElements(tableElement));
@@ -64,9 +61,8 @@ class TableMappingParser {
 		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 		setColumnValidator(tableElement.element("validators"));
 		
-		return new TableMapping(tableMetadata);
+		return new TableMapping(tableMetadata, parseFeature(tableMetadata.getCode(), MappingTypeConstants.TABLE, rootElement.element("feature")));
 	}
-	
 	
 	/**
 	 * 获取column元素集合

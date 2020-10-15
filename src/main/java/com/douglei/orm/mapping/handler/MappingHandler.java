@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -166,7 +166,7 @@ public class MappingHandler {
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
 		
-		MappingFeature exMappingFeature = mappingContainer.addMappingFeature(entity.getFeature());
+		MappingFeature exMappingFeature = mappingContainer.addMappingFeature(mapping.getFeature());
 		if (exMappingFeature == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_FEATURE, mapping.getCode(), null);
 		}else {

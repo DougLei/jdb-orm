@@ -10,14 +10,18 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public abstract class Mapping implements Serializable{
-	private static final long serialVersionUID = -3845085027152898281L;
 	
 	private String type;
+	private MappingFeature feature;
 	private AbstractMetadata metadata;
 	
 	public Mapping(String type, AbstractMetadata metadata) {
+		this(type, metadata, null);
+	}
+	public Mapping(String type, AbstractMetadata metadata, MappingFeature feature) {
 		this.type = type;
 		this.metadata = metadata;
+		this.feature = feature;
 	}
 
 	/**
@@ -34,6 +38,14 @@ public abstract class Mapping implements Serializable{
 	 */
 	public final String getType() {
 		return type;
+	}
+	
+	/**
+	 * 获取特性
+	 * @return
+	 */
+	public final MappingFeature getFeature() {
+		return feature;
 	}
 	
 	/**

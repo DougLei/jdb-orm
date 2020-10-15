@@ -16,6 +16,7 @@ import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TextSqlNode;
@@ -176,12 +177,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		SqlExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
 		int updateRowCount = 0;
 		do {
-			if((incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) == null) {
-				updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
-			}else {
+			if(executeHandler.getCurrentSqlType() == ContentType.INSERT && (incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) != null) {
 				insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
 				updateRowCount += insertResult.getRow();
 				IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
+			}else {
+				updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 			}
 		}while(executeHandler.next());
 		return updateRowCount;

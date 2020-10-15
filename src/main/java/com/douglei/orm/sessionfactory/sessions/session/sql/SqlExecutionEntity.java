@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 import com.douglei.orm.sql.SqlStatement;
 
 /**
@@ -12,14 +13,24 @@ import com.douglei.orm.sql.SqlStatement;
  * @author DougLei
  */
 public class SqlExecutionEntity {
-	private ExecuteHandler executionHandler;
+	private SqlExecuteHandler sqlExecutionHandler;
+	private ContentType sqlType;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
-	public SqlExecutionEntity(ExecuteHandler executionHandler) {
-		this.executionHandler = executionHandler;
-		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executionHandler.getCurrentSql());
-		this.parameters = executionHandler.getCurrentParameters();
+	public SqlExecutionEntity(SqlExecuteHandler sqlExecutionHandler) {
+		this.sqlExecutionHandler = sqlExecutionHandler;
+		this.sqlType = sqlExecutionHandler.getCurrentSqlType();
+		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sqlExecutionHandler.getCurrentSql());
+		this.parameters = sqlExecutionHandler.getCurrentParameters();
+	}
+	
+	/**
+	 * 获取当前执行sql的类型
+	 * @return
+	 */
+	public ContentType getSqlType() {
+		return sqlType;
 	}
 	
 	/**
@@ -63,7 +74,7 @@ public class SqlExecutionEntity {
 	 * @return
 	 */
 	public int executeSqlCount() {
-		return executionHandler.executeSqlCount();
+		return sqlExecutionHandler.executeSqlCount();
 	}
 	
 	/**
@@ -71,9 +82,10 @@ public class SqlExecutionEntity {
 	 * @return
 	 */
 	public boolean next() {
-		if(this.executionHandler.next()) {
-			this.sql.resetSql(executionHandler.getCurrentSql());
-			this.parameters = executionHandler.getCurrentParameters();
+		if(this.sqlExecutionHandler.next()) {
+			this.sqlType = sqlExecutionHandler.getCurrentSqlType();
+			this.sql.resetSql(sqlExecutionHandler.getCurrentSql());
+			this.parameters = sqlExecutionHandler.getCurrentParameters();
 			return true;
 		}
 		return false;

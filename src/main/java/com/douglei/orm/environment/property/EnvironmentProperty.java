@@ -5,16 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.DialectContainer;
-import com.douglei.orm.mapping.MappingFeatureSetter;
+import com.douglei.orm.dialect.DialectKey;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.DefaultValueHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-import com.douglei.orm.sql.statement.entity.ColumnNameConverter;
 import com.douglei.tools.utils.StringUtil;
 import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
@@ -38,9 +36,6 @@ public class EnvironmentProperty {
 	private CreateMode createMode;
 	
 	@IsField
-	private MappingFeatureSetter mappingFeatureSetter;
-	
-	@IsField
 	private String sqlParameterPrefix="#{";
 	@IsField
 	private String sqlParameterSuffix="}";
@@ -49,9 +44,6 @@ public class EnvironmentProperty {
 	@IsField
 	private DefaultValueHandler sqlParameterDefaultValueHandler;
 	private SqlParameterConfigHolder sqlParameterConfigHolder; // 根据上面sql参数的配置信息, 最后创建出该实例
-	
-	@IsField
-	private ColumnNameConverter columnNameConverter;
 	
 	public EnvironmentProperty(String id, Map<String, String> propertyMap, DialectKey key, MappingContainer mappingContainer) throws Exception {
 		this.id = id;
@@ -114,12 +106,6 @@ public class EnvironmentProperty {
 		if(StringUtil.notEmpty(value)) 
 			this.createMode = CreateMode.toValue(value);
 	}
-	void setMappingFeatureSetter(String value) {
-		if(StringUtil.isEmpty(value))
-			this.mappingFeatureSetter = new MappingFeatureSetter();
-		else
-			this.mappingFeatureSetter = (MappingFeatureSetter) ConstructorUtil.newInstance(value);
-	}
 	void setSqlParameterPrefix(String value) {
 		if(StringUtil.notEmpty(value))
 			this.sqlParameterPrefix = value;
@@ -137,12 +123,6 @@ public class EnvironmentProperty {
 			this.sqlParameterDefaultValueHandler = new DefaultValueHandler();
 		else
 			this.sqlParameterDefaultValueHandler = (DefaultValueHandler) ConstructorUtil.newInstance(value);
-	}
-	void setColumnNameConverter(String value) {
-		if(StringUtil.isEmpty(value))
-			this.columnNameConverter = new ColumnNameConverter();
-		else
-			this.columnNameConverter = (ColumnNameConverter) ConstructorUtil.newInstance(value);
 	}
 
 	/**
@@ -188,24 +168,9 @@ public class EnvironmentProperty {
 	}
 
 	/**
-	 * 获取映射特性设置器
-	 * @return
-	 */
-	public MappingFeatureSetter getMappingFeatureSetter() {
-		return mappingFeatureSetter;
-	}
-
-	/**
 	 * 获取sql参数配置持有器
 	 */
 	public SqlParameterConfigHolder getSqlParameterConfigHolder() {
 		return sqlParameterConfigHolder;
-	}
-	
-	/**
-	 * 获取列名转换器
-	 */
-	public ColumnNameConverter getColumnNameConverter() {
-		return columnNameConverter;
 	}
 }

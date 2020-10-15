@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 
@@ -43,6 +44,16 @@ public class SqlExecuteHandler implements ExecuteHandler{
 	public boolean next() {
 		executeSqlIndex++;
 		return executeSqlIndex < executeSqlCount;
+	}
+	
+	/**
+	 * 获取当前sql的类型
+	 * @return
+	 */
+	public ContentType getCurrentSqlType() {
+		if(logger.isDebugEnabled()) 
+			logger.debug("获取第{}个 sqlContentType", executeSqlIndex+1);
+		return executeSqls.get(executeSqlIndex).getSqlType(); 
 	}
 	
 	@Override

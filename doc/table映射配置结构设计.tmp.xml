@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<!-- 
+		supportCover:  mapping是否支持被覆盖, 默认为true
+		supportDelete: mapping是否支持被删除, 默认为true
+		extendExpr:    mapping的扩展特性, 可由第三方扩展
+	-->
+	<feature supportCover="true" supportDelete="true" extendExpr="" />
+
+	<!-- 
 		createMode的值包括: none, create, drop_create(可用来重置表), dynamic_update, 默认为create
 		
 		none模式下, 需要用户自己在数据库创建表, 这里映射文件只是起到一个映射的作用, 所以在此模式下, 无论对该映射执行add或delete操作, 都不会影响到数据库中对应的表
