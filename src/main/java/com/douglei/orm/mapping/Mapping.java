@@ -12,7 +12,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public abstract class Mapping implements Serializable{
 	
 	private String type;
-	private MappingFeature feature;
+	private transient MappingFeature feature;
 	private AbstractMetadata metadata;
 	
 	public Mapping(String type, AbstractMetadata metadata) {

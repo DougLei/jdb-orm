@@ -32,20 +32,20 @@ public class SqlStatement {
 	
 	public SqlStatement(SqlStatementHandler sqlStatementHandler, String originSql) {
 		this.sqlStatementHandler = sqlStatementHandler;
-		resetSql(originSql);
+		reset(originSql);
 	}
 	
 	/**
 	 * 重置sql
-	 * @param originSql
+	 * @param newSql
 	 */
-	public void resetSql(String originSql) {
-		this.sql = originSql.trim();
+	public void reset(String newSql) {
+		this.sql = newSql.trim();
 		extractWithClause();
 		extractOrderByClause();
 		
 		if(logger.isDebugEnabled()) {
-			logger.debug("完成 {} 实例化, originSql is: {}", SqlStatement.class.getName(), originSql);
+			logger.debug("完成 {} 实例化, originSql is: {}", SqlStatement.class.getName(), newSql);
 			logger.debug("with clause sql is: {}", withClause);
 			logger.debug("sql is: {}", sql);
 			logger.debug("orderByClause is: {}", orderByClause);

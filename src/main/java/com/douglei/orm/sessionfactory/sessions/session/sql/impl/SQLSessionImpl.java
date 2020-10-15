@@ -24,9 +24,12 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
-import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.ProcedurePurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.QueryPurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.UpdatePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
@@ -62,110 +65,105 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return sm;
 	}
 	
-	// 获取ExecuteHandler
-	private SqlExecuteHandler getExecuteHandler(String namespace, String name, Object sqlParameter) {
+	// 获取SqlExecuteHandler
+	private SqlExecuteHandler getSqlExecuteHandler(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		return getExecuteHandler(sqlMetadata, name, sqlParameter);
-	}
-	
-	// 获取ExecuteHandler
-	private SqlExecuteHandler getExecuteHandler(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
-		return new SqlExecuteHandler(sqlMetadata, name, sqlParameter);
+		return new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter);
 	}
 
 	@Override
 	public List<Map<String, Object>> query(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.query(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.query(targetClass, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public List<Object[]> query_(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.query_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public Map<String, Object> uniqueQuery(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.uniqueQuery(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.uniqueQuery(targetClass, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public Object[] uniqueQuery_(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.uniqueQuery_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public Map<String, Object> queryFirst(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.queryFirst(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public <T> T queryFirst(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.queryFirst(targetClass, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public Object[] queryFirst_(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.queryFirst_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public long countQuery(String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.countQuery(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.pageQuery(pageNum, pageSize, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.pageQuery(targetClass, pageNum, pageSize, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 	
 	@Override
 	public PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
 	@Override
 	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		return super.pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 	}
 
@@ -174,10 +172,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		IncrementIdValueConfig incrementIdValueConfig;
 		InsertResult insertResult;
 		
-		SqlExecuteHandler executeHandler = getExecuteHandler(namespace, name, sqlParameter);
+		SqlExecuteHandler executeHandler = getSqlExecuteHandler(UpdatePurposeEntity.DEFAULT, namespace, name, sqlParameter);
 		int updateRowCount = 0;
 		do {
-			if(executeHandler.getCurrentSqlType() == ContentType.INSERT && (incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) != null) {
+			if(executeHandler.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) != null) {
 				insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
 				updateRowCount += insertResult.getRow();
 				IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
@@ -203,18 +201,18 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		IncrementIdValueConfig incrementIdValueConfig;
 		InsertResult insertResult;
 		
-		SqlMetadata sql = getSqlMetadata(namespace);
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		int updateRowCount = 0;
 		SqlExecuteHandler executeHandler = null;
 		for (Object sqlParameter : sqlParameters) {
-			executeHandler = getExecuteHandler(sql, name, sqlParameter);
+			executeHandler = new SqlExecuteHandler(UpdatePurposeEntity.DEFAULT, sqlMetadata, name, sqlParameter);
 			do {
-				if((incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) == null) {
-					updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
-				}else {
+				if(executeHandler.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executeHandler.getCurrentIncrementIdValueConfig()) != null) {
 					insertResult = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
 					updateRowCount += insertResult.getRow();
 					IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
+				}else {
+					updateRowCount += super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
 				}
 			}while(executeHandler.next());
 		}
@@ -236,11 +234,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
-		List<ContentMetadata> contents = sqlMetadata.getContents(name);
-		if(contents.isEmpty()) 
-			throw new NullPointerException("不存在可以执行的存储过程");
+		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, sqlMetadata, name, sqlParameter);
 		
-		int length = contents.size();
+		ContentMetadata content = sqlMetadata.getContents().get(0);
+		if(content.getType() != ContentType.PROCEDURE)
+			throw new IllegalArgumentException("name为["+content.getName()+"]的sql, 不是["+ContentType.PROCEDURE+"]类型, 无法执行");
+		
 		List<Object> list = new ArrayList<Object>(length);
 		
 		StringBuilder sqlContent = new StringBuilder();
@@ -249,7 +248,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		List<SqlNode> sqlNodes = null;
 		TextSqlNode textSqlNode = null;
 		for (ContentMetadata content : contents) {
-			reset(sqlContent, sqlParameters);
 			sqlNodes = content.getRootSqlNodes();
 			
 			for(SqlNode sn: sqlNodes) {
@@ -262,21 +260,11 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			
 			list.add(executeProcedure(sqlContent.toString(), sqlParameters, sqlParameter));
 		}
-		if(length == 1) {
+		if(length == 1) 
 			return list.get(0);
-		}
 		return list;
 	}
 	
-	private void reset(StringBuilder sqlContent, List<SqlParameterMetadata> sqlParameters) {
-		if(sqlContent.length() > 0) {
-			sqlContent.setLength(0);
-		}
-		if(sqlParameters.size() > 0) {
-			sqlParameters.clear();
-		}
-	}
-
 	// 执行存储过程
 	private Object executeProcedure(String callableSqlContent, List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
 		Object executeResult = super.executeProcedure(new ProcedureExecutor() {

@@ -3,6 +3,7 @@ package com.douglei.orm.sessionfactory.sessions.session.sql;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.sql.pagequery.PageResult;
 
 /**
@@ -14,8 +15,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<列名:值>的list-map集合
 	 */
 	default List<Map<String, Object>> query(String namespace, String name) {
@@ -24,8 +25,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
@@ -34,8 +35,8 @@ public interface SQLSession {
 	/**
 	 * 执行批量查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<列名:值>的list-map集合
 	 */
 	default <T> List<T> query(Class<T> targetClass, String namespace, String name) {
@@ -44,8 +45,8 @@ public interface SQLSession {
 	/**
 	 * 执行批量查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的list-map集合
 	 */
@@ -53,8 +54,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<值>的list-数组集合
 	 */
 	default List<Object[]> query_(String namespace, String name) {
@@ -62,8 +63,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行批量查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<值>的list-数组集合
 	 */
@@ -71,8 +72,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<列名:值>的map集合
 	 */
 	default Map<String, Object> uniqueQuery(String namespace, String name) {
@@ -80,8 +81,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -90,8 +91,8 @@ public interface SQLSession {
 	/**
 	 * 执行唯一查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<列名:值>的map集合
 	 */
 	default <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
@@ -100,8 +101,8 @@ public interface SQLSession {
 	/**
 	 * 执行唯一查询
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -109,8 +110,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<值>的数组
 	 */
 	default Object[] uniqueQuery_(String namespace, String name) {
@@ -118,8 +119,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行唯一查询
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
@@ -127,8 +128,8 @@ public interface SQLSession {
 	
 	/**
 	 * 查询第一条数据
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 返回<列名:值>的map集合
 	 */
 	default Map<String, Object> queryFirst(String namespace, String name) {
@@ -136,8 +137,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 查询第一条数据
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -146,8 +147,8 @@ public interface SQLSession {
 	/**
 	 * 查询第一条数据
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
 	 */
 	default <T> T queryFirst(Class<T> targetClass, String namespace, String name) {
@@ -156,8 +157,8 @@ public interface SQLSession {
 	/**
 	 * 查询第一条数据
 	 * @param targetClass
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 
 	 */
@@ -165,8 +166,8 @@ public interface SQLSession {
 	
 	/**
 	 * 查询第一条数据
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
@@ -175,8 +176,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 查询第一条数据
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
@@ -184,8 +185,8 @@ public interface SQLSession {
 	
 	/**
 	 * 查询结果数据总数量
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default long countQuery(String namespace, String name) {
@@ -194,8 +195,8 @@ public interface SQLSession {
 	
 	/**
 	 * 查询结果数据总数量
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -205,8 +206,8 @@ public interface SQLSession {
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name) {
@@ -216,8 +217,8 @@ public interface SQLSession {
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -228,8 +229,8 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name) {
@@ -240,8 +241,8 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param pageNum
 	 * @param pageSize
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -254,8 +255,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
@@ -268,8 +269,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -283,8 +284,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
@@ -298,8 +299,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -314,8 +315,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
@@ -330,8 +331,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -347,8 +348,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
 	default <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
@@ -364,8 +365,8 @@ public interface SQLSession {
 	 * @param parentPkColumnName 存储父级主键的列名
 	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
 	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return
 	 */
@@ -374,23 +375,23 @@ public interface SQLSession {
 	
 	/**
 	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @return 影响的行数
 	 */
 	int executeUpdate(String namespace, String name);
 	/**
 	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 影响的行数
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
 	/**
 	 * 执行增删改查操作
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
 	 * @return 影响的行数
 	 */
@@ -398,8 +399,8 @@ public interface SQLSession {
 	
 	/**
 	 * 执行存储过程
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	default Object executeProcedure(String namespace, String name) {
@@ -407,16 +408,16 @@ public interface SQLSession {
 	}
 	/**
 	 * 执行存储过程
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
 	/**
 	 * 执行存储过程
-	 * @param namespace <sql>元素中的namespace属性值, 不能为空
-	 * @param name <sql>元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
 	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */

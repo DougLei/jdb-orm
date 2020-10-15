@@ -14,23 +14,33 @@ import com.douglei.orm.sql.SqlStatement;
  */
 public class SqlExecutionEntity {
 	private SqlExecuteHandler sqlExecutionHandler;
-	private ContentType sqlType;
+	private String name;
+	private ContentType type;
 	private SqlStatement sql;
 	private List<Object> parameters;
 	
 	public SqlExecutionEntity(SqlExecuteHandler sqlExecutionHandler) {
 		this.sqlExecutionHandler = sqlExecutionHandler;
-		this.sqlType = sqlExecutionHandler.getCurrentSqlType();
+		this.name = sqlExecutionHandler.getCurrentName();
+		this.type = sqlExecutionHandler.getCurrentType();
 		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sqlExecutionHandler.getCurrentSql());
 		this.parameters = sqlExecutionHandler.getCurrentParameters();
+	}
+	
+	/**
+	 * 获取当前执行sql的名称
+	 * @return
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
 	 * 获取当前执行sql的类型
 	 * @return
 	 */
-	public ContentType getSqlType() {
-		return sqlType;
+	public ContentType getType() {
+		return type;
 	}
 	
 	/**
@@ -83,8 +93,9 @@ public class SqlExecutionEntity {
 	 */
 	public boolean next() {
 		if(this.sqlExecutionHandler.next()) {
-			this.sqlType = sqlExecutionHandler.getCurrentSqlType();
-			this.sql.resetSql(sqlExecutionHandler.getCurrentSql());
+			this.name = sqlExecutionHandler.getCurrentName();
+			this.type = sqlExecutionHandler.getCurrentType();
+			this.sql.reset(sqlExecutionHandler.getCurrentSql());
 			this.parameters = sqlExecutionHandler.getCurrentParameters();
 			return true;
 		}

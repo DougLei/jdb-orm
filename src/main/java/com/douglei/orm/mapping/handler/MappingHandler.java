@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -29,6 +29,7 @@ import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SqlExecutionEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
 
 /**
@@ -250,23 +251,25 @@ public class MappingHandler {
 	// ---------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 获取指定namespace的sql映射执行实体
+	 * @param purposeEntity
 	 * @param namespace
 	 * @param sqlParameter 输入参数
 	 * @return
 	 */
-	public SqlExecutionEntity getSqlMappingExecutionEntity(String namespace, Object sqlParameter){
-		return getSqlMappingExecutionEntity(namespace, null, sqlParameter);
+	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, Object sqlParameter){
+		return getSqlMappingExecutionEntity(purposeEntity, namespace, null, sqlParameter);
 	}
 	
 	/**
 	 * 获取指定namespace和name的sql映射执行实体
+	 * @param purposeEntity
 	 * @param namespace
-	 * @param name 可传入null
+	 * @param name 
 	 * @param sqlParameter 输入参数
 	 * @return
 	 */
-	public SqlExecutionEntity getSqlMappingExecutionEntity(String namespace, String name, Object sqlParameter){
+	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = (SqlMetadata) getMapping(namespace).getMetadata();
-		return new SqlExecutionEntity(new SqlExecuteHandler(sqlMetadata, name, sqlParameter));
+		return new SqlExecutionEntity(new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
 }

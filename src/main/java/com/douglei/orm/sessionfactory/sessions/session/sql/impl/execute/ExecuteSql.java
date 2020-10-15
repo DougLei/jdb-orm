@@ -14,7 +14,8 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
  * @author DougLei
  */
 public class ExecuteSql {
-	private ContentType sqlType;
+	private String name;
+	private ContentType type;
 	private String content;
 	private List<Object> parameters;
 	private IncrementIdValueConfig incrementIdValueConfig;
@@ -39,12 +40,16 @@ public class ExecuteSql {
 		
 		// 记录sql语句
 		this.content = sqlContent.toString();
-		this.sqlType = contentMetadata.getType();
+		this.name = contentMetadata.getName();
+		this.type = contentMetadata.getType();
 		this.incrementIdValueConfig = contentMetadata.getIncrementIdValueConfig();
 	}
 	
-	public ContentType getSqlType() {
-		return sqlType;
+	public String getName() {
+		return name;
+	}
+	public ContentType getType() {
+		return type;
 	}
 	public String getContent() {
 		return content;
