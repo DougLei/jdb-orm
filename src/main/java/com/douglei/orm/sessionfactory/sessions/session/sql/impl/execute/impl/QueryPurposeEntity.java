@@ -8,10 +8,10 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class QueryPurposeEntity extends PurposeEntity {
-	public static final QueryPurposeEntity DEFAULT = new QueryPurposeEntity(false, true);
+	public static final QueryPurposeEntity DEFAULT = new QueryPurposeEntity(true, false);
 
-	public QueryPurposeEntity(boolean getSqlParameters, boolean getSqlParameterValues) {
-		super(getSqlParameters, getSqlParameterValues);
+	public QueryPurposeEntity(boolean isGetSqlParameterValues, boolean isGetSqlParameters) {
+		super(isGetSqlParameterValues, isGetSqlParameters);
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node;
 import java.io.Serializable;
 
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 
 /**
  * 
@@ -37,20 +38,22 @@ public interface SqlNode extends Serializable{
 	
 	/**
 	 * 获取可执行的sql node
+	 * @param purposeEntity
 	 * @param sqlParameter
 	 * @return
 	 */
-	default ExecuteSqlNode getExecuteSqlNode(Object sqlParameter) {
-		return getExecuteSqlNode(sqlParameter, null);
+	default ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter) {
+		return getExecuteSqlNode(purposeEntity, sqlParameter, null);
 	}
 	
 	/**
 	 * 获取可执行的sql node
+	 * @param purposeEntity
 	 * @param sqlParameter
 	 * @param sqlParameterNamePrefix sql参数名前缀, 即别名alias
 	 * @return
 	 */
-	ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix);
+	ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix);
 	
 	/**
 	 * 验证参数

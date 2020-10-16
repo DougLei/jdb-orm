@@ -31,6 +31,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SqlExecutionEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.QueryPurposeEntity;
 
 /**
  * 映射处理器
@@ -251,7 +252,7 @@ public class MappingHandler {
 	// ---------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 获取指定namespace的sql映射执行实体
-	 * @param purposeEntity
+	 * @param purposeEntity 创建对应的实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
 	 * @param namespace
 	 * @param sqlParameter 输入参数
 	 * @return
@@ -262,7 +263,7 @@ public class MappingHandler {
 	
 	/**
 	 * 获取指定namespace和name的sql映射执行实体
-	 * @param purposeEntity
+	 * @param purposeEntity 创建对应的实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
 	 * @param namespace
 	 * @param name 
 	 * @param sqlParameter 输入参数

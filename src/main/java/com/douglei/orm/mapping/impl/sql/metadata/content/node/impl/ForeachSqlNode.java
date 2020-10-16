@@ -11,6 +11,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
@@ -19,7 +20,6 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 3627348338163036212L;
 	
 	private String collection;
 	private String alias;
@@ -108,7 +108,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
 		Object[] array = getArray(sqlParameter);
 		List<String> sqlContentList = null;
 		List<Object> parameters = null;
@@ -121,7 +121,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 						sqlContentList = new ArrayList<String>(10);
 					}
 					
-					executeSqlNode = sqlNode.getExecuteSqlNode(array[i], alias);
+					executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, array[i], alias);
 					if(executeSqlNode.existsParameter()) {
 						if(parameters == null) {
 							parameters = new ArrayList<Object>();

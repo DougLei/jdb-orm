@@ -30,11 +30,16 @@ public class ExecuteSql {
 		ExecuteSqlNode rootExecuteSqlNode = null;
 		for (SqlNode rootSqlNode : rootSqlNodes) {
 			if(rootSqlNode.matching(sqlParameter)) {
-				rootExecuteSqlNode = rootSqlNode.getExecuteSqlNode(sqlParameter);
-				if(rootExecuteSqlNode.existsParameter()) {
+				rootExecuteSqlNode = rootSqlNode.getExecuteSqlNode(purposeEntity, sqlParameter);
+				if(rootExecuteSqlNode.existsParameters()) {
 					if(parameters == null) 
 						parameters = new ArrayList<Object>();
 					parameters.addAll(rootExecuteSqlNode.getParameters());
+				}
+				if(rootExecuteSqlNode.existsSqlParameters()) {
+					if(sqlParameters == null)
+						sqlParameters = new ArrayList<SqlParameterMetadata>();
+					sqlParameters.addAll(rootExecuteSqlNode.getSqlParameters());
 				}
 				sqlContent.append(rootExecuteSqlNode.getContent()).append(" ");
 			}

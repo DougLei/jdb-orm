@@ -6,6 +6,7 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
@@ -13,7 +14,6 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 5248939610116329948L;
 	
 	private String prefix;
 	private String suffix;
@@ -47,15 +47,19 @@ public class TrimSqlNode extends AbstractNestingNode {
 	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
 		StringBuilder sqlContentBuilder = new StringBuilder();
 		List<Object> parameters = null;
+		List<SqlParameterMetadata> sqlParameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
 				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameter, sqlParameterNamePrefix);
 				if(executeSqlNode.existsParameter()) {
-					if(parameters == null) {
+					if(sqlParameters == null)
+						sqlParameters = new ArrayList<SqlParameterMetadata>();
+					sqlParameters.addAll(executeSqlNode.getSqlParameters());
+					
+					if(parameters == null) 
 						parameters = new ArrayList<Object>();
-					}
 					parameters.addAll(executeSqlNode.getParameters());
 				}
 				sqlContentBuilder.append(executeSqlNode.getContent()).append(" ");
@@ -84,7 +88,7 @@ public class TrimSqlNode extends AbstractNestingNode {
 			}
 			sqlContent = prefix + sqlContent + suffix;
 		}
-		return new ExecuteSqlNode(sqlContent, parameters);
+		return new ExecuteSqlNode(sqlContent, parameters, sqlParameters);
 	}
 	
 	@Override

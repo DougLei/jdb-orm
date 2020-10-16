@@ -24,7 +24,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = -3056641416893794138L;
 
 	private String configText;
 	
@@ -305,7 +304,14 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		return name.equals(((SqlParameterMetadata) obj).getName());
+	}
+
+	@Override
 	public String toString() {
-		return "SqlParameterMetadata [name=" + name + "]";
+		return "SqlParameterMetadata [name=" + name + ", dbDataType=" + dbDataType + "]";
 	}
 }

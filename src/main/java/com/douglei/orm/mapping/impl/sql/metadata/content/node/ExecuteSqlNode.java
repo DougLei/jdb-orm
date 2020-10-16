@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 
 /**
@@ -11,30 +12,33 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * @author DougLei
  */
 public class ExecuteSqlNode {
-	private static final ExecuteSqlNode EMPTY_EXECUTE_SQL_NODE = new ExecuteSqlNode("", null);
+	private static final ExecuteSqlNode EMPTY_EXECUTE_SQL_NODE = new ExecuteSqlNode("", null, null);
 	private String content;
-	private List<Object> parameters; // 当前执行sql语句对应的参数值集合
+	private List<Object> parameters; // 执行sql语句对应的参数值集合
+	private List<SqlParameterMetadata> sqlParameters; // sql参数集合
 	
-	public ExecuteSqlNode(String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
 		if(sqlParameterByDefinedOrders != null) {
-			Object parameterValue = null;
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
-				parameterValue = parameter.getValue(sqlParameter, sqlParameterNamePrefix);
 				if(parameter.isUsePlaceholder()) {
-					if(parameters == null) 
-						parameters = new ArrayList<Object>();
-					parameters.add(new InputSqlParameter(parameterValue, parameter.getDBDataType()));
+					if(purposeEntity.isGetSqlParameterValues()) {
+						if(parameters == null) 
+							parameters = new ArrayList<Object>();
+						parameters.add(new InputSqlParameter(parameter.getValue(sqlParameter, sqlParameterNamePrefix), parameter.getDBDataType()));
+					}
 				}else {
-					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameterValue + parameter.getValueSuffix());
+					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameter.getValue(sqlParameter, sqlParameterNamePrefix) + parameter.getValueSuffix());
 				}
 			}
 		}
 		this.content = content;
+		this.sqlParameters = purposeEntity.isGetSqlParameters()?sqlParameterByDefinedOrders:null;
 	}
 	
-	public ExecuteSqlNode(String finalContent, List<Object> parameters) {
+	public ExecuteSqlNode(String finalContent, List<Object> parameters, List<SqlParameterMetadata> sqlParameters) {
 		this.content = finalContent;
 		this.parameters = parameters;
+		this.sqlParameters = sqlParameters;
 	}
 
 	/**
@@ -48,12 +52,16 @@ public class ExecuteSqlNode {
 	public String getContent() {
 		return content;
 	}
-	
 	public List<Object> getParameters(){
 		return parameters;
 	}
-	
-	public boolean existsParameter() {
+	public boolean existsParameters() {
 		return parameters != null;
+	}
+	public List<SqlParameterMetadata> getSqlParameters() {
+		return sqlParameters;
+	}
+	public boolean existsSqlParameters() {
+		return sqlParameters != null;
 	}
 }

@@ -27,9 +27,8 @@ public class SqlValidator {
 		ValidationResult result = null;
 		for (ContentValidator cvalidator : contentValidators) {
 			result = cvalidator.validate(sqlParameter);
-			if(result != null) {
+			if(result != null) 
 				break;
-			}
 		}
 		return result;
 	}
