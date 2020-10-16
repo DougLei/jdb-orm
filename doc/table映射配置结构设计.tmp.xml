@@ -3,9 +3,9 @@
 	<!-- 
 		supportCover:  mapping是否支持被覆盖, 默认为true
 		supportDelete: mapping是否支持被删除, 默认为true
-		extendExpr:    mapping的扩展特性, 可由第三方扩展
+		extendExpr:    mapping的扩展属性, 可由第三方扩展
 	-->
-	<feature supportCover="true" supportDelete="true" extendExpr="" />
+	<property supportCover="true" supportDelete="true" extendExpr="" />
 
 	<!-- 
 		createMode的值包括: none, create, drop_create(可用来重置表), dynamic_update, 默认为create

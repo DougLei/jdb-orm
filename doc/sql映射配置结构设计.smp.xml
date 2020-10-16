@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<!-- 特性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的特性配置说明 -->
-	<feature supportCover="true" supportDelete="true" extendExpr="" />
+	<!-- 属性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
+	<property supportCover="true" supportDelete="true" extendExpr="" />
 	
 	<sql namespace="com.test" oldNamespace="">
 		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->

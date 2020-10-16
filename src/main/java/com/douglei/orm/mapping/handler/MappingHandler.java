@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
@@ -49,23 +49,23 @@ public class MappingHandler {
 	
 	// 解析映射实体
 	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
-		MappingFeature feature;
+		MappingProperty property;
 		for(MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
 			switch (mappingEntity.getOp()) {
 				case ADD_OR_COVER: // 解析映射, 并判断是否存在同code映射, 如果存在, 还要保证之前的映射可以被覆盖
 					((AddOrCoverMappingEntity)mappingEntity).parseMapping();
-					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
-					if(feature != null && !feature.supportCover())
+					property = mappingContainer.getMappingProperty(mappingEntity.getCode());
+					if(property != null && !property.supportCover())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
 					break;
 				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取table类型的映射即可
-					feature = mappingContainer.getMappingFeature(mappingEntity.getCode());
-					if(feature == null)
+					property = mappingContainer.getMappingProperty(mappingEntity.getCode());
+					if(property == null)
 						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
-					if(!feature.supportDelete())
+					if(!property.supportDelete())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
-					if(feature.getType().equals(MappingTypeConstants.TABLE))
+					if(property.getType().equals(MappingTypeConstants.TABLE))
 						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 					break;
 				case DELETE_DATABASE_OBJECT_ONLY:
@@ -168,11 +168,11 @@ public class MappingHandler {
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
 		
-		MappingFeature exMappingFeature = mappingContainer.addMappingFeature(mapping.getFeature());
-		if (exMappingFeature == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_FEATURE, mapping.getCode(), null);
+		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mapping.getProperty());
+		if (exMappingProperty == null) {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, mapping.getCode(), null);
 		}else {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, exMappingProperty, null);
 		}
 		
 		Mapping exMapping = mappingContainer.addMapping(mapping);
@@ -200,9 +200,9 @@ public class MappingHandler {
 
 	// 删除映射
 	private void deleteMapping(String code) {
-		MappingFeature exMappingFeature = mappingContainer.deleteMappingFeature(code);
-		if(exMappingFeature != null) 
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_FEATURE, exMappingFeature, null);
+		MappingProperty exMappingProperty = mappingContainer.deleteMappingProperty(code);
+		if(exMappingProperty != null) 
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, exMappingProperty, null);
 		
 		Mapping exMapping = mappingContainer.deleteMapping(code);
 		if(exMapping != null) 
@@ -231,17 +231,17 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定code的映射特性, 如不存在则返回null
+	 * 获取指定code的映射属性, 如不存在则返回null
 	 * @param code
 	 * @return
 	 */
-	public MappingFeature getFeature(String code) {
-		return mappingContainer.getMappingFeature(code);
+	public MappingProperty getProperty(String code) {
+		return mappingContainer.getMappingProperty(code);
 	}
 	
 	/**
 	 * 获取指定code的映射, 如不存在则返回null; 
-	 * <p><b>注意: 建议先调用getFeature(String)进行预处理, 再决定是否调用getMapping(String)方法</b></p>
+	 * <p><b>注意: 建议先调用getProperty(String)进行预处理, 再决定是否调用getMapping(String)方法</b></p>
 	 * @param code 
 	 * @return
 	 */

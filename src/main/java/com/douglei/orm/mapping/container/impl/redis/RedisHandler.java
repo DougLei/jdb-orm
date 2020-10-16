@@ -41,8 +41,8 @@ public abstract class RedisHandler{
 	protected String getCode(String code) {
 		return getPrefix() + code;
 	}
-	protected String getCode4Feature(String code) {
-		return getCode(code) + ":F";
+	protected String getCode4Property(String code) {
+		return getCode(code) + ":P";
 	}
 	
 	public void setStoreMultiDataSource(boolean storeMultiDataSource) {

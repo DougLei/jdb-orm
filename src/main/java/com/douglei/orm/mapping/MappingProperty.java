@@ -9,15 +9,15 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * 
  * @author DougLei
  */
-public class MappingFeature implements Serializable{
+public class MappingProperty implements Serializable{
 	
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
 	private boolean supportCover=true; // mapping是否支持被覆盖
 	private boolean supportDelete=true; // mapping是否支持被删除
-	private String extendExpr; // mapping的扩展特性, 可由第三方扩展
+	private String extendExpr; // mapping的扩展属性, 可由第三方扩展
 	
-	public MappingFeature(String code, String type) {
+	public MappingProperty(String code, String type) {
 		this.code = code;
 		this.type = type;
 	}
@@ -26,7 +26,7 @@ public class MappingFeature implements Serializable{
 	 * 设置值
 	 * @param supportCover mapping是否支持被覆盖, 默认true
 	 * @param supportDelete mapping是否支持被删除, 默认true
-	 * @param extendExpr mapping的扩展特性, 可由第三方扩展
+	 * @param extendExpr mapping的扩展属性, 可由第三方扩展
 	 */
 	public void setValues(String supportCover, String supportDelete, String extendExpr) {
 		if(VerifyTypeMatchUtil.isBoolean(supportCover))
@@ -57,6 +57,6 @@ public class MappingFeature implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "MappingFeature [code=" + code + ", type=" + type + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extendExpr=" + extendExpr + "]";
+		return "MappingProperty [code=" + code + ", type=" + type + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extendExpr=" + extendExpr + "]";
 	}
 }

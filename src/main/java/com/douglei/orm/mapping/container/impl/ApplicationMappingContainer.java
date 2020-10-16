@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
 
 /**
@@ -17,35 +17,35 @@ import com.douglei.orm.mapping.container.MappingContainer;
 public class ApplicationMappingContainer implements MappingContainer {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingContainer.class);
 	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
-	private Map<String, MappingFeature> mappingFeatures = new HashMap<String, MappingFeature>(64);
+	private Map<String, MappingProperty> mappingProperties = new HashMap<String, MappingProperty>(64);
 	
 	@Override
 	public void clear() {
 		if(!mappings.isEmpty())
 			mappings.clear();
-		if(!mappingFeatures.isEmpty())
-			mappingFeatures.clear();
+		if(!mappingProperties.isEmpty())
+			mappingProperties.clear();
 	}
 	
 	@Override
-	public MappingFeature addMappingFeature(MappingFeature mappingFeature) {
-		String code = mappingFeature.getCode();
-		MappingFeature exMappingFeature = getMappingFeature(code);
-		if(logger.isDebugEnabled() && exMappingFeature != null) 
-			logger.debug("覆盖code为[{}]的映射特性: {}", code, exMappingFeature);
+	public MappingProperty addMappingProperty(MappingProperty mappingProperty) {
+		String code = mappingProperty.getCode();
+		MappingProperty exMappingProperty = getMappingProperty(code);
+		if(logger.isDebugEnabled() && exMappingProperty != null) 
+			logger.debug("覆盖code为[{}]的映射属性: {}", code, exMappingProperty);
 
-		mappingFeatures.put(code, mappingFeature);
-		return exMappingFeature;
+		mappingProperties.put(code, mappingProperty);
+		return exMappingProperty;
 	}
 
 	@Override
-	public MappingFeature deleteMappingFeature(String code) {
-		return mappingFeatures.remove(code);
+	public MappingProperty deleteMappingProperty(String code) {
+		return mappingProperties.remove(code);
 	}
 
 	@Override
-	public MappingFeature getMappingFeature(String code) {
-		return mappingFeatures.get(code);
+	public MappingProperty getMappingProperty(String code) {
+		return mappingProperties.get(code);
 	}
 	
 	@Override

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
 
 import redis.clients.jedis.Jedis;
@@ -24,30 +24,30 @@ class RedisMappingContainerHandler extends RedisHandler {
 			connection.del(getCodeByteArray(codes));
 	}
 	
-	public MappingFeature addMappingFeature(MappingFeature mappingFeature, Jedis connection) {
-		MappingFeature exMappingFeature = getMappingFeature(mappingFeature.getCode(), connection);
-		if(logger.isDebugEnabled() && exMappingFeature != null) 
-			logger.debug("覆盖code为[{}]的映射特性: {}", mappingFeature.getCode(), exMappingFeature);
+	public MappingProperty addMappingProperty(MappingProperty mappingProperty, Jedis connection) {
+		MappingProperty exMappingProperty = getMappingProperty(mappingProperty.getCode(), connection);
+		if(logger.isDebugEnabled() && exMappingProperty != null) 
+			logger.debug("覆盖code为[{}]的映射属性: {}", mappingProperty.getCode(), exMappingProperty);
 		
-		connection.set(getCode4Feature(mappingFeature.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mappingFeature));
-		return exMappingFeature;
+		connection.set(getCode4Property(mappingProperty.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mappingProperty));
+		return exMappingProperty;
 	}
 	
-	public MappingFeature deleteMappingFeature(String code, Jedis connection) {
+	public MappingProperty deleteMappingProperty(String code, Jedis connection) {
 		if(!exists(code, connection)) 
 			return null;
 		
-		code = getCode4Feature(code);
-		MappingFeature mappingFeature = JdkSerializeProcessor.deserializeFromByteArray(MappingFeature.class, connection.get(code.getBytes()));
+		code = getCode4Property(code);
+		MappingProperty mappingProperty = JdkSerializeProcessor.deserializeFromByteArray(MappingProperty.class, connection.get(code.getBytes()));
 		connection.del(code);
-		return mappingFeature;
+		return mappingProperty;
 	}
 	
-	public MappingFeature getMappingFeature(String code, Jedis connection) {
-		byte[] mpfbyte = connection.get(getCode4Feature(code).getBytes());
+	public MappingProperty getMappingProperty(String code, Jedis connection) {
+		byte[] mpfbyte = connection.get(getCode4Property(code).getBytes());
 		if(mpfbyte == null || mpfbyte.length == 0) 
 			return null;
-		return JdkSerializeProcessor.deserializeFromByteArray(MappingFeature.class, mpfbyte);
+		return JdkSerializeProcessor.deserializeFromByteArray(MappingProperty.class, mpfbyte);
 	}
 	
 	public Mapping addMapping(Mapping mapping, Jedis connection) {

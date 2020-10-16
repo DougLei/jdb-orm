@@ -8,6 +8,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.ExecuteSql;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 
 /**
  * 
@@ -29,9 +30,9 @@ public class IncludeSqlNode implements SqlNode {
 	}
 
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
-		ExecuteSql executeSql = new ExecuteSql(content, sqlParameter);
-		return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters());
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
+		ExecuteSql executeSql = new ExecuteSql(purposeEntity, content, sqlParameter);
+		return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters(), executeSql.getSqlParameters());
 	}
 
 	@Override

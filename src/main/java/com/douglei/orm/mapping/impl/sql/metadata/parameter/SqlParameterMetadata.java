@@ -266,9 +266,6 @@ public class SqlParameterMetadata implements Metadata{
 	public String getName() {
 		return name;
 	}
-	public String getDescription() {
-		return description;
-	}
 	public DBDataType getDBDataType() {
 		return dbDataType;
 	}
@@ -298,6 +295,9 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	public boolean isValidate() {
 		return validate;
+	}
+	public String getDescription() {
+		return description;
 	}
 	public SqlParameterConfigHolder getConfigHolder() {
 		return configHolder;

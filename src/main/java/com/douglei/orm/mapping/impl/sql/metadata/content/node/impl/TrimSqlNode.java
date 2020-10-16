@@ -8,6 +8,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 
 /**
  * 
@@ -44,7 +45,7 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
 		StringBuilder sqlContentBuilder = new StringBuilder();
 		List<Object> parameters = null;
 		List<SqlParameterMetadata> sqlParameters = null;
@@ -52,15 +53,16 @@ public class TrimSqlNode extends AbstractNestingNode {
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(sqlParameter, sqlParameterNamePrefix);
-				if(executeSqlNode.existsParameter()) {
-					if(sqlParameters == null)
-						sqlParameters = new ArrayList<SqlParameterMetadata>();
-					sqlParameters.addAll(executeSqlNode.getSqlParameters());
-					
+				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, sqlParameterNamePrefix);
+				if(executeSqlNode.existsParameters()) {
 					if(parameters == null) 
 						parameters = new ArrayList<Object>();
 					parameters.addAll(executeSqlNode.getParameters());
+				}
+				if(executeSqlNode.existsSqlParameters()) {
+					if(sqlParameters == null)
+						sqlParameters = new ArrayList<SqlParameterMetadata>();
+					sqlParameters.addAll(executeSqlNode.getSqlParameters());
 				}
 				sqlContentBuilder.append(executeSqlNode.getContent()).append(" ");
 			}

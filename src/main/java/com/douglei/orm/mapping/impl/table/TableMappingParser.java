@@ -16,6 +16,7 @@ import org.dom4j.Element;
 import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.MappingParser;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.impl.MappingImportDataContext;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
@@ -61,7 +62,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 		setColumnValidator(tableElement.element("validators"));
 		
-		return new TableMapping(tableMetadata, parseFeature(tableMetadata.getCode(), MappingTypeConstants.TABLE, rootElement.element("feature")));
+		return new TableMapping(tableMetadata, getTableMappingProperty(rootElement));
 	}
 	
 	/**
@@ -386,5 +387,24 @@ class TableMappingParser extends MappingParser<TableMapping>{
 			handler = new ValidateHandler(columnCode);
 		}
 		return handler;
+	}
+	
+	/**
+	 * 获取表映射属性实例
+	 * @param rootElement
+	 * @return
+	 */
+	private MappingProperty getTableMappingProperty(Element rootElement) {
+		TableMappingProperty property = new TableMappingProperty(tableMetadata.getCode(), MappingTypeConstants.TABLE);
+		Element propertyElement = rootElement.element("property");
+		property.setValues(propertyElement.attributeValue("supportCover"), propertyElement.attributeValue("supportDelete"), propertyElement.attributeValue("extendExpr"));
+		
+		List<ColumnMetadata> columnMetadatas = tableMetadata.getDeclareColumns();
+		List<Column> columns = new ArrayList<Column>(columnMetadatas.size());
+		for (ColumnMetadata columnMetadata : columnMetadatas) 
+			columns.add(new Column(columnMetadata.getName(), columnMetadata.getDBDataType()));
+		property.setColumns(columns);
+		
+		return property;
 	}
 }

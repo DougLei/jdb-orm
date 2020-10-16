@@ -13,6 +13,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
@@ -46,8 +47,8 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 		
 		resolvingContents(sqlNode);
 		
-		NodeList featuresNodeList = rootElement.getElementsByTagName("feature");
-		return new SqlMapping(sqlMetadata, (featuresNodeList == null || featuresNodeList.getLength() == 0)?null:parseFeature(sqlMetadata.getCode(), MappingTypeConstants.SQL, featuresNodeList.item(0)));
+		NodeList propertyNodeList = rootElement.getElementsByTagName("property");
+		return new SqlMapping(sqlMetadata, (propertyNodeList == null || propertyNodeList.getLength() == 0)?null:parseProperty(propertyNodeList.item(0)));
 	}
 	
 	/**
@@ -116,4 +117,23 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 			sqlMetadata.addContentMetadata(contentMetadataParser.parse(contentNodeList.item(i)));
 	}
 	
+	/**
+	 * 通过DocumentBuilder解析property元素, 
+	 * @param propertyNode
+	 * @return
+	 */
+	private final MappingProperty parseProperty(Node propertyNode) {
+		if(!propertyNode.hasAttributes())
+			return null;
+		
+		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MappingTypeConstants.SQL);
+		NamedNodeMap attributeMap = propertyNode.getAttributes();
+		property.setValues(getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
+		return property;
+	}
+	private String getValue(Node attributeNode) {
+		if(attributeNode == null)
+			return null;
+		return attributeNode.getNodeValue();
+	}
 }

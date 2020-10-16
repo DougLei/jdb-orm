@@ -12,16 +12,16 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public abstract class Mapping implements Serializable{
 	
 	private String type;
-	private transient MappingFeature feature;
+	private transient MappingProperty property;
 	private AbstractMetadata metadata;
 	
 	public Mapping(String type, AbstractMetadata metadata) {
 		this(type, metadata, null);
 	}
-	public Mapping(String type, AbstractMetadata metadata, MappingFeature feature) {
+	public Mapping(String type, AbstractMetadata metadata, MappingProperty property) {
 		this.type = type;
 		this.metadata = metadata;
-		this.feature = feature;
+		this.property = property;
 	}
 
 	/**
@@ -41,11 +41,11 @@ public abstract class Mapping implements Serializable{
 	}
 	
 	/**
-	 * 获取特性
+	 * 获取属性
 	 * @return
 	 */
-	public final MappingFeature getFeature() {
-		return feature;
+	public final MappingProperty getProperty() {
+		return property;
 	}
 	
 	/**

@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.handler.rollback;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.object.DBConnection;
@@ -35,11 +35,11 @@ public class RollbackExecutor {
 			case EXEC_DDL_SQL:
 				connection.executeSql(object.toString());
 				break;
-			case EXEC_ADD_MAPPING_FEATURE:
-				mappingContainer.addMappingFeature((MappingFeature)object);
+			case EXEC_ADD_MAPPING_PROPERTY:
+				mappingContainer.addMappingProperty((MappingProperty)object);
 				break;
-			case EXEC_DELETE_MAPPING_FEATURE:
-				mappingContainer.deleteMappingFeature(object.toString());
+			case EXEC_DELETE_MAPPING_PROPERTY:
+				mappingContainer.deleteMappingProperty(object.toString());
 				break;
 			case EXEC_ADD_MAPPING:
 				mappingContainer.addMapping((Mapping)object);

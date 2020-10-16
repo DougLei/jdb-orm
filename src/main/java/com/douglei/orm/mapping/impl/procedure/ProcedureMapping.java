@@ -1,7 +1,6 @@
 package com.douglei.orm.mapping.impl.procedure;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.MappingFeature;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 
