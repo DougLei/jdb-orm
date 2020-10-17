@@ -16,7 +16,7 @@ public abstract class MappingDataType extends DataType{
 	}
 
 	/**
-	 * 映射的数据库数据类型, 部分映射类型会需要根据长度和精度决定最终返回哪种数据库数据类型, 例如number类型
+	 * 映射的数据库数据类型, 数字类型会需要根据长度和精度决定最终返回哪种数据库数据类型, 所以需要length和precision两个参数
 	 * @param length
 	 * @param precision
 	 * @return

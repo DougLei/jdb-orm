@@ -15,8 +15,8 @@ public class DBDataTypeUtil {
 
 	/**
 	 * 获取数据库数据类型包装类
-	 * @param confLengthVal 配置的长度值
-	 * @param confPrecisionVal 配置的精度值
+	 * @param confLengthVal 配置的长度
+	 * @param confPrecisionVal 配置的精度
 	 * @param confDataTypeVal 配置的数据类型
 	 * @return
 	 */
