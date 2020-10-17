@@ -12,7 +12,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 
@@ -21,7 +21,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -1726472941856863502L;
+	private static final long serialVersionUID = 7236276157006381761L;
 	
 	private String collection;
 	private String alias;

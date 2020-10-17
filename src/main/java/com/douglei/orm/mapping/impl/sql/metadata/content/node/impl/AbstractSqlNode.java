@@ -10,7 +10,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -18,7 +18,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class AbstractSqlNode implements SqlNode{
-	private static final long serialVersionUID = -2212125025293532238L;
+	private static final long serialVersionUID = 7544703145526206857L;
 	
 	protected String content;
 	protected List<SqlParameterMetadata> sqlParameters;// sql参数, 按照配置中定义的顺序记录

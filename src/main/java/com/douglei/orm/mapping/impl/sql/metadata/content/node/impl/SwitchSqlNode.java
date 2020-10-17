@@ -4,14 +4,14 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
  * 
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 7256628862706928942L;
+	private static final long serialVersionUID = 6112742403201533418L;
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {

@@ -28,10 +28,10 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.sessionfactory.sessions.session.sql.SqlExecutionEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.QueryPurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.QueryPurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecutionEntity;
 
 /**
  * 映射处理器

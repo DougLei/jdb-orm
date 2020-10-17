@@ -28,9 +28,8 @@ public class IfSqlNode extends AbstractSqlNode {
 		if(unProcessExpression) {
 			unProcessExpression = false;
 			
-			if(sqlParameterNamePrefix != null && expression.indexOf(sqlParameterNamePrefix+".") != -1) {
+			if(sqlParameterNamePrefix != null && expression.indexOf(sqlParameterNamePrefix+".") != -1) 
 				expression = expression.replace(sqlParameterNamePrefix+".", "");
-			}
 		}
 	}
 

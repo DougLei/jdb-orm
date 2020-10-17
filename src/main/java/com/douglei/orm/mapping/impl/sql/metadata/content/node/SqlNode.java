@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node;
 import java.io.Serializable;
 
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
  * 

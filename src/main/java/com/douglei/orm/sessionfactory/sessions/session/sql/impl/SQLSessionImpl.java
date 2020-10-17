@@ -13,7 +13,7 @@ import java.util.Map;
 import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.property.EnvironmentProperty;
-import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
@@ -21,12 +21,9 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.ProcedurePurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.QueryPurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.impl.UpdatePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
@@ -51,12 +48,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private SqlMetadata getSqlMetadata(String namespace) {
 		SqlMetadata sm = null;
 		if(sqlMetadataCache.isEmpty() || (sm = sqlMetadataCache.get(namespace)) == null) {
-			Mapping mapping = mappingContainer.getMapping(namespace);
-			if(mapping == null)
+			MappingProperty mappingProperty = mappingContainer.getMappingProperty(namespace);
+			if(mappingProperty == null)
 				throw new NullPointerException("不存在code为"+namespace+"的mapping");
-			if(!MappingTypeConstants.SQL.equals(mapping.getType())) 
+			if(!MappingTypeConstants.SQL.equals(mappingProperty.getType())) 
 				throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
-			sm= (SqlMetadata) mapping.getMetadata();
+			sm= (SqlMetadata) mappingContainer.getMapping(namespace).getMetadata();
 			sqlMetadataCache.put(namespace, sm);
 		}
 		return sm;

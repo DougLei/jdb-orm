@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 
 /**

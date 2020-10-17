@@ -7,15 +7,15 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.ExecuteSql;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeEntity;
 
 /**
  * 
  * @author DougLei
  */
 public class IncludeSqlNode implements SqlNode {
-	private static final long serialVersionUID = -6945918274123214610L;
+	private static final long serialVersionUID = -8310008016718130757L;
 	
 	private SqlContentMetadata content;
 	private List<SqlNode> rootSqlNodes;

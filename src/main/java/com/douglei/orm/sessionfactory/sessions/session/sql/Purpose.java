@@ -1,7 +1,7 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
+package com.douglei.orm.sessionfactory.sessions.session.sql;
 
 /**
- * SqlExecuteHandler 的用途
+ * sql的用途
  * @author DougLei
  */
 public enum Purpose {

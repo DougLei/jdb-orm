@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.property.EnvironmentProperty;
-import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
@@ -71,12 +71,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private TableMetadata getTableMetadata(String code) {
 		TableMetadata tm = null;
 		if(tableMetadataCache.isEmpty() || (tm = tableMetadataCache.get(code)) == null) {
-			Mapping mapping = mappingContainer.getMapping(code);
-			if(mapping == null)
+			MappingProperty mappingProperty = mappingContainer.getMappingProperty(code);
+			if(mappingProperty == null)
 				throw new NullPointerException("不存在code为"+code+"的mapping");
-			if(!MappingTypeConstants.TABLE.equals(mapping.getType())) 
+			if(!MappingTypeConstants.TABLE.equals(mappingProperty.getType())) 
 				throw new MappingMismatchingException("code为"+code+"的mapping不是["+MappingTypeConstants.TABLE+"]类型");
-			tm = (TableMetadata) mapping.getMetadata();
+			tm = (TableMetadata) mappingContainer.getMapping(code).getMetadata();
 			tableMetadataCache.put(code, tm);
 		}
 		return tm;

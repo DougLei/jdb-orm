@@ -102,12 +102,4 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		uniqueValues.add(currentPersistentObjectUniqueValue);
 		return null;
 	}
-	
-	/**
-	 * 销毁
-	 */
-	public void destroy() {
-		if(uniqueValues != null)
-			uniqueValues.clear();
-	}
 }
