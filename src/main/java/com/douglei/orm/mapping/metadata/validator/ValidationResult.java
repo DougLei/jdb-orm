@@ -7,23 +7,22 @@ import com.douglei.i18n.Result;
  * @author DougLei
  */
 public class ValidationResult extends Result{
-	private short index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
-	private String fieldName; // 记录验证失败的属性名
-	
+	private int index; // 如果验证的是集合, 该字段用来记录验证数据在集合中的下标
+	private String name; // 记录验证失败的对象名称
 	
 	public ValidationResult() {}
-	public ValidationResult(String fieldName, String originMessage, String code, Object... params) {
+	public ValidationResult(String name, String originMessage, String code, Object... params) {
 		super(originMessage, code, params);
-		this.fieldName = fieldName;
+		this.name = name;
 	}
 	
-	public String getFieldName() {
-		return fieldName;
+	public String getName() {
+		return name;
 	}
-	public final short getIndex() {
+	public final int getIndex() {
 		return index;
 	}
-	public final void setIndex(short index) {
+	public final void setIndex(int index) {
 		this.index = index;
 	}
 }
