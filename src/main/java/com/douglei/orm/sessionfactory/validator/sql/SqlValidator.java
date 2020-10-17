@@ -15,10 +15,21 @@ public class SqlValidator {
 	private List<ContentValidator> contentValidators;
 	
 	public SqlValidator(SqlMetadata sqlMetadata, String name) {
-		List<ContentMetadata> contents = sqlMetadata.getContents(name);
-		if(contents.size() == 0) {
-			throw new NullPointerException("无法验证sql参数, 不存在任何可以执行的sql语句");
+		List<ContentMetadata> contents = null;
+		if(name == null) {
+			contents = sqlMetadata.getContents();
+		}else {
+			contents = new ArrayList<ContentMetadata>(1);
+			for(ContentMetadata content : sqlMetadata.getContents()) {
+				if(content.getName().equals(name)) {
+					contents.add(content);
+					break;
+				}
+			}
 		}
+		if(contents.isEmpty()) 
+			throw new NullPointerException("无法验证sql参数, 不存在任何可以执行的sql语句");
+		
 		contentValidators = new ArrayList<ContentValidator>(contents.size());
 		contents.forEach(content -> contentValidators.add(new ContentValidator(content)));
 	}

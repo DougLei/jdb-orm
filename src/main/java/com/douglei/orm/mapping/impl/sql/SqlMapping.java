@@ -10,6 +10,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public class SqlMapping extends Mapping {
+	private static final long serialVersionUID = -671186402591634974L;
 
 	public SqlMapping(AbstractMetadata metadata, MappingProperty property) {
 		super(MappingTypeConstants.SQL, metadata, property);

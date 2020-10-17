@@ -10,6 +10,7 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class MappingProperty implements Serializable{
+	private static final long serialVersionUID = 6872827600771552533L;
 	
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名

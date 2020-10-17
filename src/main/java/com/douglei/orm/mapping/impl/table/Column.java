@@ -9,6 +9,8 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Column implements Serializable{
+	private static final long serialVersionUID = 673309519157633457L;
+	
 	private String name;
 	private DBDataType dbDataType;
 	

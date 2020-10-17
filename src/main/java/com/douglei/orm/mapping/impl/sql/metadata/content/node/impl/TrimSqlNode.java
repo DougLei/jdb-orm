@@ -15,6 +15,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = -4464512199393639547L;
 	
 	private String prefix;
 	private String suffix;

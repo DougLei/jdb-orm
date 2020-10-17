@@ -11,6 +11,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.PurposeE
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
+	private static final long serialVersionUID = 7256628862706928942L;
 
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
