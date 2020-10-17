@@ -11,6 +11,6 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class ViewMapping extends Mapping {
 
 	public ViewMapping(AbstractMetadata metadata) {
-		super(MappingTypeConstants.VIEW, metadata);
+		super(MappingTypeConstants.VIEW, metadata, null);
 	}
 }

@@ -12,12 +12,15 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public abstract class Mapping implements Serializable{
 	
 	private String type;
-	private transient MappingProperty property;
 	private AbstractMetadata metadata;
+	private transient MappingProperty property;
 	
-	public Mapping(String type, AbstractMetadata metadata) {
-		this(type, metadata, null);
-	}
+	/**
+	 * 
+	 * @param type
+	 * @param metadata
+	 * @param property 映射属性, 当映射的类型支持操作映射容器(即supportOpMappingContainer=true)时, 必须传入实例, 否则可以传入null;  <b>本构造器中没有做任何容错处理, 需要使用者按照要求传入参数</b>
+	 */
 	public Mapping(String type, AbstractMetadata metadata, MappingProperty property) {
 		this.type = type;
 		this.metadata = metadata;

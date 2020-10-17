@@ -11,6 +11,6 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class ProcedureMapping extends Mapping {
 
 	public ProcedureMapping(AbstractMetadata metadata) {
-		super(MappingTypeConstants.PROCEDURE, metadata);
+		super(MappingTypeConstants.PROCEDURE, metadata, null);
 	}
 }

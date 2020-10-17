@@ -118,7 +118,7 @@ public class MappingHandler {
 							createObject(mappingEntity);
 						
 						if(mappingEntity.getType().supportOpMappingContainer()) 
-							addMapping((AddOrCoverMappingEntity)mappingEntity);
+							addMapping(mappingEntity);
 						break;
 					case DELETE: 
 					case DELETE_DATABASE_OBJECT_ONLY: 
@@ -163,7 +163,7 @@ public class MappingHandler {
 	}
 	
 	// 添加或覆盖映射
-	private void addMapping(AddOrCoverMappingEntity entity) {
+	private void addMapping(MappingEntity entity) {
 		Mapping mapping = entity.getMapping();
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
@@ -249,7 +249,6 @@ public class MappingHandler {
 		return mappingContainer.getMapping(code);
 	}
 	
-	// ---------------------------------------------------------------------------------------------------------------------
 	/**
 	 * 获取指定namespace的sql映射执行实体
 	 * @param purposeEntity 创建对应的实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}

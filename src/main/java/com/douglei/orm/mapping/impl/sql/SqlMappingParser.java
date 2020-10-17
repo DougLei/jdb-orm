@@ -47,8 +47,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 		
 		resolvingContents(sqlNode);
 		
-		NodeList propertyNodeList = rootElement.getElementsByTagName("property");
-		return new SqlMapping(sqlMetadata, (propertyNodeList == null || propertyNodeList.getLength() == 0)?null:parseProperty(propertyNodeList.item(0)));
+		return new SqlMapping(sqlMetadata, getSqlMappingProperty(rootElement.getElementsByTagName("property")));
 	}
 	
 	/**
@@ -118,17 +117,19 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 	}
 	
 	/**
-	 * 通过DocumentBuilder解析property元素, 
-	 * @param propertyNode
+	 * 获取sql映射属性实例
+	 * @param propertyNodeList
 	 * @return
 	 */
-	private final MappingProperty parseProperty(Node propertyNode) {
-		if(!propertyNode.hasAttributes())
-			return null;
-		
+	private MappingProperty getSqlMappingProperty(NodeList propertyNodeList) {
 		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MappingTypeConstants.SQL);
-		NamedNodeMap attributeMap = propertyNode.getAttributes();
-		property.setValues(getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
+		if(propertyNodeList != null && propertyNodeList.getLength() > 0) {
+			Node propertyNode = propertyNodeList.item(0);
+			if(propertyNode.hasAttributes()) {
+				NamedNodeMap attributeMap = propertyNode.getAttributes();
+				property.setValues(getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
+			}
+		}
 		return property;
 	}
 	private String getValue(Node attributeNode) {
