@@ -12,6 +12,6 @@ public class ViewMapping extends Mapping {
 	private static final long serialVersionUID = -5605757723206116778L;
 
 	public ViewMapping(AbstractMetadata metadata) {
-		super(MappingTypeConstants.VIEW, metadata, null);
+		super(MappingTypeConstants.VIEW, metadata);
 	}
 }

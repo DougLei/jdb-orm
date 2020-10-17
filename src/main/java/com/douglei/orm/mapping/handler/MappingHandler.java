@@ -168,7 +168,10 @@ public class MappingHandler {
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
 		
-		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mapping.getProperty());
+		MappingProperty mappingProperty = mapping.getProperty();
+		if(mappingProperty == null)
+			mappingProperty = new MappingProperty(mapping.getCode(), mapping.getType());
+		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mappingProperty);
 		if (exMappingProperty == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, mapping.getCode(), null);
 		}else {

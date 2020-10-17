@@ -12,6 +12,6 @@ public class ProcedureMapping extends Mapping {
 	private static final long serialVersionUID = -1074679041003201221L;
 
 	public ProcedureMapping(AbstractMetadata metadata) {
-		super(MappingTypeConstants.PROCEDURE, metadata, null);
+		super(MappingTypeConstants.PROCEDURE, metadata);
 	}
 }
