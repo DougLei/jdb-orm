@@ -28,13 +28,10 @@ public class EnvironmentProperty {
 	
 	@IsField
 	private boolean enableStatementCache = true;
-	
 	@IsField
 	private boolean enableTableSessionCache;
-	
 	@IsField
 	private CreateMode createMode;
-	
 	@IsField
 	private String sqlParameterPrefix="#{";
 	@IsField
