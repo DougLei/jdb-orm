@@ -395,16 +395,9 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	 * @return
 	 */
 	private MappingProperty getTableMappingProperty(Element rootElement) {
-		TableMappingProperty property = new TableMappingProperty(tableMetadata.getCode(), MappingTypeConstants.TABLE);
+		MappingProperty property = new MappingProperty(tableMetadata.getCode(), MappingTypeConstants.TABLE);
 		Element propertyElement = rootElement.element("property");
 		property.setValues(propertyElement.attributeValue("supportCover"), propertyElement.attributeValue("supportDelete"), propertyElement.attributeValue("extendExpr"));
-		
-		List<ColumnMetadata> columnMetadatas = tableMetadata.getDeclareColumns();
-		List<Column> columns = new ArrayList<Column>(columnMetadatas.size());
-		for (ColumnMetadata columnMetadata : columnMetadatas) 
-			columns.add(new Column(columnMetadata.getName(), columnMetadata.getDBDataType()));
-		property.setColumns(columns);
-		
 		return property;
 	}
 }
