@@ -31,11 +31,11 @@ public abstract class SqlContentExtractor {
 	
 	// 获取指定name的sql content; 
 	// 若name为null, 则根据purpose决定获取content的方式: 
-	// 	1. purpose为UPDATE/UNKNOW时, 返回所有sql content.
+	// 	1. purpose为UPDATE时, 返回所有sql content.
 	// 	2. purpose为QUERY/PROCEDURE时, 返回第一个sql content; 
 	private List<ContentMetadata> getContents_(Purpose purpose, String name, List<ContentMetadata> contents) {
 		if(name == null) {
-			if(purpose == Purpose.UPDATE || purpose == Purpose.UNKNOW)
+			if(purpose == Purpose.UPDATE)
 				return contents;
 			
 			List<ContentMetadata> list = new ArrayList<ContentMetadata>(1);
@@ -77,8 +77,6 @@ public abstract class SqlContentExtractor {
 							break;
 					}
 				}
-				break;
-			case UNKNOW:
 				break;
 		}
 	}

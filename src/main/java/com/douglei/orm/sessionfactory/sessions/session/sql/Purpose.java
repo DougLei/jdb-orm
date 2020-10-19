@@ -18,10 +18,5 @@ public enum Purpose {
 	/**
 	 * 存储过程用途
 	 */
-	PROCEDURE,
-	
-	/**
-	 * 未知用途
-	 */
-	UNKNOW;
+	PROCEDURE;
 }
