@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.datasource.TransactionIsolationLevel;
-import com.douglei.orm.environment.property.EnvironmentProperty;
-import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
@@ -30,14 +30,14 @@ public class SessionImpl implements Session {
 
 	protected boolean isClosed;
 	protected ConnectionWrapper connection;
-	protected EnvironmentProperty environmentProperty;
-	protected MappingContainer mappingContainer;
+	protected Environment environment;
+	protected MappingHandler mappingHandler;
 	
-	public SessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
+	public SessionImpl(ConnectionWrapper connection, Environment environment) {
 		this.connection = connection;
-		this.environmentProperty = environmentProperty;
-		this.mappingContainer = environmentProperty.getMappingContainer();
-		EnvironmentContext.setProperty(environmentProperty);
+		this.environment = environment;
+		this.mappingHandler = environment.getMappingHandler();
+		EnvironmentContext.setProperty(environment.getEnvironmentProperty());
 	}
 	
 	// 验证session是否被关闭
@@ -49,27 +49,24 @@ public class SessionImpl implements Session {
 	@Override
 	public SqlSession getSqlSession() {
 		validateSessionIsClosed();
-		if(sqlSession == null) {
-			sqlSession = new SqlSessionImpl(connection, environmentProperty);
-		}
+		if(sqlSession == null) 
+			sqlSession = new SqlSessionImpl(connection, environment);
 		return sqlSession;
 	}
 
 	@Override
 	public TableSession getTableSession() {
 		validateSessionIsClosed();
-		if(TableSession == null) {
-			TableSession = new TableSessionImpl(connection, environmentProperty);
-		}
+		if(TableSession == null) 
+			TableSession = new TableSessionImpl(connection, environment);
 		return TableSession;
 	}
 
 	@Override
 	public SQLSession getSQLSession() {
 		validateSessionIsClosed();
-		if(SQLSession == null) {
-			SQLSession = new SQLSessionImpl(connection, environmentProperty);
-		}
+		if(SQLSession == null) 
+			SQLSession = new SQLSessionImpl(connection, environment);
 		return SQLSession;
 	}
 	

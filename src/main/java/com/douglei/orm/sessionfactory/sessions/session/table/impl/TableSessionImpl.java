@@ -9,14 +9,11 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
-import com.douglei.orm.environment.property.EnvironmentProperty;
-import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
-import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.OperationState;
@@ -40,13 +37,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private final Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
 	
-	public TableSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
-		super(connection, environmentProperty);
-		this.enableTalbeSessionCache = environmentProperty.enableTableSessionCache();
+	public TableSessionImpl(ConnectionWrapper connection, Environment environment) {
+		super(connection, environment);
+		this.enableTalbeSessionCache = environment.getEnvironmentProperty().enableTableSessionCache();
 		logger.debug("是否开启TableSession缓存: {}", enableTalbeSessionCache);
-		if(enableTalbeSessionCache) {
+		if(enableTalbeSessionCache) 
 			persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>(8);
-		}
 	}
 	
 	/**
@@ -69,17 +65,12 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	private TableMetadata getTableMetadata(String code) {
-		TableMetadata tm = null;
-		if(tableMetadataCache.isEmpty() || (tm = tableMetadataCache.get(code)) == null) {
-			MappingProperty mappingProperty = mappingContainer.getMappingProperty(code);
-			if(mappingProperty == null)
-				throw new NullPointerException("不存在code为"+code+"的mapping");
-			if(!MappingTypeConstants.TABLE.equals(mappingProperty.getType())) 
-				throw new MappingMismatchingException("code为"+code+"的mapping不是["+MappingTypeConstants.TABLE+"]类型");
-			tm = (TableMetadata) mappingContainer.getMapping(code).getMetadata();
-			tableMetadataCache.put(code, tm);
+		TableMetadata tableMetadata = null;
+		if(tableMetadataCache.isEmpty() || (tableMetadata = tableMetadataCache.get(code)) == null) {
+			tableMetadata = mappingHandler.getTableMetadata(code);
+			tableMetadataCache.put(code, tableMetadata);
 		}
-		return tm;
+		return tableMetadata;
 	}
 	
 	/**

@@ -28,6 +28,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.QueryPurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
@@ -238,7 +239,7 @@ public class MappingHandler {
 	 * @param code
 	 * @return
 	 */
-	public MappingProperty getProperty(String code) {
+	public MappingProperty getMappingProperty(String code) {
 		return mappingContainer.getMappingProperty(code);
 	}
 	
@@ -263,5 +264,33 @@ public class MappingHandler {
 	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = (SqlMetadata) getMapping(namespace).getMetadata();
 		return new SqlExecutionEntity(new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter));
+	}
+	
+	/**
+	 * 获取表元数据实例
+	 * @param code 配置的name或class, 如果是name则必须是全大写, 这里的方法没有做容错处理, 需要调用者按规定传参
+	 * @return
+	 */
+	public TableMetadata getTableMetadata(String code) {
+		MappingProperty mappingProperty = mappingContainer.getMappingProperty(code);
+		if(mappingProperty == null)
+			throw new NullPointerException("不存在code为"+code+"的mapping");
+		if(!MappingTypeConstants.TABLE.equals(mappingProperty.getType())) 
+			throw new MappingMismatchingException("code为"+code+"的mapping不是["+MappingTypeConstants.TABLE+"]类型");
+		return (TableMetadata) mappingContainer.getMapping(code).getMetadata();
+	}
+	
+	/**
+	 * 获取sql元数据实例
+	 * @param namespace
+	 * @return
+	 */
+	public SqlMetadata getSqlMetadata(String namespace) {
+		MappingProperty mappingProperty = mappingContainer.getMappingProperty(namespace);
+		if(mappingProperty == null)
+			throw new NullPointerException("不存在code为"+namespace+"的mapping");
+		if(!MappingTypeConstants.SQL.equals(mappingProperty.getType())) 
+			throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
+		return (SqlMetadata) mappingContainer.getMapping(namespace).getMetadata();
 	}
 }

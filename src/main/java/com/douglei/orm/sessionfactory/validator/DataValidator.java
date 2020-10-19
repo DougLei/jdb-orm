@@ -3,13 +3,10 @@ package com.douglei.orm.sessionfactory.validator;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
@@ -19,10 +16,10 @@ import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
  * @author DougLei
  */
 public class DataValidator {
-	private MappingContainer mappingContainer;
+	private MappingHandler mappingHandler;
 	
-	public DataValidator(MappingContainer mappingContainer) {
-		this.mappingContainer = mappingContainer;
+	public DataValidator(MappingHandler mappingHandler) {
+		this.mappingHandler = mappingHandler;
 	}
 
 	// ------------------------------------------------------------------------------------------------------
@@ -42,7 +39,7 @@ public class DataValidator {
 	 * @return
 	 */
 	public ValidationResult validate4TableMapping(String code, Object object) {
-		TableMetadata tableMetadata = getTableMetadata(code);
+		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
 		return new PersistentObjectValidator(tableMetadata).doValidate(object);
 	}
 	
@@ -62,7 +59,7 @@ public class DataValidator {
 	 * @return
 	 */
 	public List<ValidationResult> validate4TableMapping(String code, List<Object> objects){
-		TableMetadata tableMetadata = getTableMetadata(code);
+		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
 		PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator(tableMetadata, objects.size());
 		
 		List<ValidationResult> validationResults = null;
@@ -81,16 +78,6 @@ public class DataValidator {
 		return validationResults;
 	}
 	
-	// 获取表元数据实例
-	private TableMetadata getTableMetadata(String code) {
-		MappingProperty mappingProperty = mappingContainer.getMappingProperty(code);
-		if(mappingProperty == null)
-			throw new NullPointerException("不存在code为"+code+"的mapping");
-		if(!MappingTypeConstants.TABLE.equals(mappingProperty.getType())) 
-			throw new MappingMismatchingException("code为"+code+"的mapping不是["+MappingTypeConstants.TABLE+"]类型");
-		return (TableMetadata) mappingContainer.getMapping(code).getMetadata();
-	}
-	
 	// ------------------------------------------------------------------------------------------------------
 	/**
 	 * 验证sql映射数据
@@ -106,7 +93,7 @@ public class DataValidator {
 	 * @return
 	 */
 	public ValidationResult validate4SqlMapping(Purpose purpose, String namespace, String name, Object object) {
-		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
+		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		return new SqlValidator(purpose, sqlMetadata, name).validate(object);
 	}
 	
@@ -124,7 +111,7 @@ public class DataValidator {
 	 * @return
 	 */
 	public List<ValidationResult> validate4SqlMapping(Purpose purpose, String namespace, String name, List<Object> objects){
-		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
+		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		SqlValidator sqlValidator = new SqlValidator(purpose, sqlMetadata, name);
 		
 		List<ValidationResult> validationResults = null;
@@ -141,15 +128,5 @@ public class DataValidator {
 			index++;
 		}
 		return validationResults;
-	}
-	
-	// 获取sql元数据实例
-	private SqlMetadata getSqlMetadata(String namespace) {
-		MappingProperty mappingProperty = mappingContainer.getMappingProperty(namespace);
-		if(mappingProperty == null)
-			throw new NullPointerException("不存在code为"+namespace+"的mapping");
-		if(!MappingTypeConstants.SQL.equals(mappingProperty.getType())) 
-			throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
-		return (SqlMetadata) mappingContainer.getMapping(namespace).getMetadata();
 	}
 }

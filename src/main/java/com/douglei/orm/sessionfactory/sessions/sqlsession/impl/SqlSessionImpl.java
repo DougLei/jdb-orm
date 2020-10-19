@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
-import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
@@ -43,9 +43,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	private boolean enableStatementCache;// 是否启用Statement缓存
 	private Map<String, StatementHandler> statementHandlerCache;
 	
-	public SqlSessionImpl(ConnectionWrapper connection, EnvironmentProperty environmentProperty) {
-		super(connection, environmentProperty);
-		this.enableStatementCache = environmentProperty.enableStatementCache();
+	public SqlSessionImpl(ConnectionWrapper connection, Environment environment) {
+		super(connection, environment);
+		this.enableStatementCache = environment.getEnvironmentProperty().enableStatementCache();
 		logger.debug("是否开启Statement缓存: {}", enableStatementCache);
 	}
 	

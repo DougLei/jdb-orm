@@ -8,7 +8,6 @@ import com.douglei.orm.EnvironmentContext;
 import com.douglei.orm.environment.Environment;
 import com.douglei.orm.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.environment.datasource.TransactionIsolationLevel;
-import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
@@ -23,14 +22,12 @@ public class SessionFactory {
 	
 	private Configuration configuration;
 	private Environment environment;
-	private EnvironmentProperty environmentProperty;
 	private DataValidator dataValidator;
 	
 	public SessionFactory(Configuration configuration, Environment environment) {
 		this.configuration = configuration;
 		this.environment = environment;
-		this.environmentProperty = environment.getEnvironmentProperty();
-		this.dataValidator = new DataValidator(environmentProperty.getMappingContainer());
+		this.dataValidator = new DataValidator(environment.getMappingHandler());
 	}
 	
 	/**
@@ -68,7 +65,7 @@ public class SessionFactory {
 		if(logger.isDebugEnabled()) {
 			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, beginTransaction, transactionIsolationLevel);
 		}
-		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environmentProperty);
+		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environment);
 	}
 	
 	// 获取数据库连接
@@ -81,7 +78,7 @@ public class SessionFactory {
 	 * @return
 	 */
 	public MappingHandler getMappingHandler() {
-		EnvironmentContext.setProperty(environmentProperty);
+		EnvironmentContext.setProperty(environment.getEnvironmentProperty());
 		return environment.getMappingHandler();
 	}
 	
@@ -90,7 +87,7 @@ public class SessionFactory {
 	 * @return
 	 */
 	public DataValidator getDataValidator() {
-		EnvironmentContext.setProperty(environmentProperty);
+		EnvironmentContext.setProperty(environment.getEnvironmentProperty());
 		return dataValidator;
 	}
 	
