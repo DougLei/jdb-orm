@@ -213,28 +213,25 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return updateRowCount;
 	}
 
-	
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
-		return executeProcedure_(getSqlMetadata(namespace), name, sqlParameter);
+		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, getSqlMetadata(namespace), name, null);
+		return executeProcedure(executeHandler.getCurrentSql(), executeHandler.getCurrentSqlParameters(), sqlParameter);
 	}
 	
 	@Override
 	public List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		List<Object> objects = new ArrayList<Object>(sqlParameters.size());
-		sqlParameters.forEach(sqlParameter -> objects.add(executeProcedure_(sqlMetadata, name, sqlParameters)));
-		return objects;
-	}
-	
-	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, sqlMetadata, name, null);
-		return executeProcedure(executeHandler.getCurrentSql(), executeHandler.getCurrentSqlParameters(), sqlParameter);
+		for (Object sqlParameter : sqlParameters) 
+			objects.add(executeProcedure(executeHandler.getCurrentSql(), executeHandler.getCurrentSqlParameters(), sqlParameter));
+		return objects;
 	}
 	
 	// 执行存储过程
 	private Object executeProcedure(String callableSqlContent, List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
-		Object executeResult = super.executeProcedure(new ProcedureExecutor() {
+		return super.executeProcedure(new ProcedureExecutor() {
 			@Override
 			public Object execute(Connection connection) throws ProcedureExecutionException {
 				try (CallableStatement callableStatement = connection.prepareCall(callableSqlContent)){
@@ -303,7 +300,6 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				CloseUtil.closeDBConn(rs);
 			}
 		});
-		return executeResult;
 	}
 
 	@Override
