@@ -401,7 +401,7 @@ public interface SQLSession {
 	 * 执行存储过程
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 * @return Map<输出参数名 : 输出值>, 没有输出值时, 返回null
 	 */
 	default Object executeProcedure(String namespace, String name) {
 		return executeProcedure(namespace, name, null);
@@ -411,7 +411,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 * @return Map<输出参数名 : 输出值>, 没有输出值时, 返回null
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
 	/**
@@ -419,7 +419,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
-	 * @return Map<输出参数名 : 输出值> 或 List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
+	 * @return List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
 	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
 }

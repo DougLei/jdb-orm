@@ -228,7 +228,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	private Object executeProcedure_(SqlMetadata sqlMetadata, String name, Object sqlParameter) {
-		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, sqlMetadata, name, sqlParameter);
+		SqlExecuteHandler executeHandler = new SqlExecuteHandler(ProcedurePurposeEntity.DEFAULT, sqlMetadata, name, null);
 		return executeProcedure(executeHandler.getCurrentSql(), executeHandler.getCurrentSqlParameters(), sqlParameter);
 	}
 	
