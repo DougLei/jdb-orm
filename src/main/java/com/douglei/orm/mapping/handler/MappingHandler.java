@@ -253,19 +253,8 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定namespace的sql映射执行实体
-	 * @param purposeEntity 创建对应的实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
-	 * @param namespace
-	 * @param sqlParameter 输入参数
-	 * @return
-	 */
-	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, Object sqlParameter){
-		return getSqlMappingExecutionEntity(purposeEntity, namespace, null, sqlParameter);
-	}
-	
-	/**
 	 * 获取指定namespace和name的sql映射执行实体
-	 * @param purposeEntity 创建对应的实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
+	 * @param purposeEntity 创建对应的用途实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
 	 * @param namespace
 	 * @param name 
 	 * @param sqlParameter 输入参数
