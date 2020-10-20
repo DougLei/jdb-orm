@@ -34,9 +34,10 @@ public class ConnectionWrapper {
 			this.beginTransaction = beginTransaction;
 			this.transactionIsolationLevel = transactionIsolationLevel;
 			this.connection = dataSource.getConnection();
-			
+			if(transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) 
+				connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
+
 			processIsBeginTransaction();
-			processTransactionIsolationLevel();
 		} catch (SQLException e) {
 			throw new ConnectionWrapperException("从数据源["+dataSource.getClass().getName()+"]获取Connection时出现异常", e);
 		}
@@ -56,13 +57,6 @@ public class ConnectionWrapper {
 		}
 	}
 	
-	// 处理事物的隔离级别
-	private void processTransactionIsolationLevel() throws SQLException {
-		if(transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) {
-			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
-		}
-	}
-
 	public Connection getConnection() {
 		return connection;
 	}

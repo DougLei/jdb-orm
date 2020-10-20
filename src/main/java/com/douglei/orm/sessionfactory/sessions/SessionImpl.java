@@ -47,7 +47,7 @@ public class SessionImpl implements Session {
 	}
 	
 	@Override
-	public SqlSession getSqlSession() {
+	public final SqlSession getSqlSession() {
 		validateSessionIsClosed();
 		if(sqlSession == null) 
 			sqlSession = new SqlSessionImpl(connection, environment);
@@ -55,7 +55,7 @@ public class SessionImpl implements Session {
 	}
 
 	@Override
-	public TableSession getTableSession() {
+	public final TableSession getTableSession() {
 		validateSessionIsClosed();
 		if(TableSession == null) 
 			TableSession = new TableSessionImpl(connection, environment);
@@ -63,7 +63,7 @@ public class SessionImpl implements Session {
 	}
 
 	@Override
-	public SQLSession getSQLSession() {
+	public final SQLSession getSQLSession() {
 		validateSessionIsClosed();
 		if(SQLSession == null) 
 			SQLSession = new SQLSessionImpl(connection, environment);
@@ -71,28 +71,28 @@ public class SessionImpl implements Session {
 	}
 	
 	@Override
-	public Connection getConnection() {
+	public final Connection getConnection() {
 		validateSessionIsClosed();
 		return connection.getConnection();
 	}
 
 	@Override
-	public boolean isBeginTransaction() {
+	public final boolean isBeginTransaction() {
 		return connection.isBeginTransaction();
 	}
 
 	@Override
-	public void beginTransaction() {
+	public final void beginTransaction() {
 		connection.beginTransaction();
 	}
 	
 	@Override
-	public void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
+	public final void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
 		connection.setTransactionIsolationLevel(transactionIsolationLevel);
 	}
 	
 	@Override
-	public void commit() {
+	public final void commit() {
 		if(!isClosed) {
 			closeSessions();
 			connection.commit();
@@ -100,7 +100,7 @@ public class SessionImpl implements Session {
 	}
 
 	@Override
-	public void rollback() {
+	public final void rollback() {
 		if(!isClosed) {
 			closeSessions();
 			connection.rollback();
