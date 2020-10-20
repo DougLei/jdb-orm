@@ -397,7 +397,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	private MappingProperty getTableMappingProperty(Element rootElement) {
 		MappingProperty property = new MappingProperty(tableMetadata.getCode(), MappingTypeConstants.TABLE);
 		Element propertyElement = rootElement.element("property");
-		if(property != null)
+		if(propertyElement != null)
 			property.setValues(propertyElement.attributeValue("supportCover"), propertyElement.attributeValue("supportDelete"), propertyElement.attributeValue("extendExpr"));
 		return property;
 	}
