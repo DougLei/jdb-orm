@@ -48,7 +48,7 @@ public class DataValidator {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(List<Object> objects){
+	public List<ValidationResult> validate4TableMapping(List<? extends Object> objects){
 		return validate4TableMapping(objects.get(0).getClass().getName(), objects);
 	}
 	
@@ -58,7 +58,7 @@ public class DataValidator {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(String code, List<Object> objects){
+	public List<ValidationResult> validate4TableMapping(String code, List<? extends Object> objects){
 		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
 		PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator(tableMetadata, objects.size());
 		
@@ -110,7 +110,7 @@ public class DataValidator {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> validate4SqlMapping(Purpose purpose, String namespace, String name, List<Object> objects){
+	public List<ValidationResult> validate4SqlMapping(Purpose purpose, String namespace, String name, List<? extends Object> objects){
 		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		SqlValidator sqlValidator = new SqlValidator(purpose, sqlMetadata, name);
 		
