@@ -23,6 +23,7 @@ import com.douglei.orm.dialect.impl.mysql.datatype.mapping.StringDataType;
 import com.douglei.orm.dialect.impl.mysql.object.DBObjectHandlerImpl;
 import com.douglei.orm.dialect.impl.mysql.sqlhandler.SqlQueryHandlerImpl;
 import com.douglei.orm.dialect.impl.mysql.sqlhandler.SqlStatementHandlerImpl;
+import com.douglei.orm.dialect.impl.mysql.datatype.db.Date;
 
 /**
  * 
@@ -43,6 +44,7 @@ public class MySqlDialect extends AbstractDialect{
 	private void initDataTypeContainer() {
 		dataTypeContainer.register(Bigint.getSingleton());
 		dataTypeContainer.register(Char.getSingleton());
+		dataTypeContainer.register(Date.getSingleton());
 		dataTypeContainer.register(Datetime.getSingleton());
 		dataTypeContainer.register(Decimal.getSingleton());
 		dataTypeContainer.register(Int.getSingleton());

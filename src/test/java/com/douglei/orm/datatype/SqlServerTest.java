@@ -83,14 +83,12 @@ public class SqlServerTest {
 	
 	@Before
 	public void before() throws Exception {
-		String className = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
 		String username = "sa";
 		String pwd = "root";
-		Class.forName(className);
 		conn = DriverManager.getConnection(url, username, pwd);
 //		insertPst = conn.prepareStatement("insert into test(T) values(?)");
-		selectPst = conn.prepareStatement("select _te from test2");
+//		selectPst = conn.prepareStatement("select _te from test2");
 //		rs = selectPst.executeQuery();
 //		System.err.println("读取的列类型值为 = " + rs.getMetaData().getColumnType(1));
 //		System.err.println("读取的列类型名为 = " + rs.getMetaData().getColumnTypeName(1));
@@ -128,6 +126,18 @@ public class SqlServerTest {
 //			System.err.println("读取的列值为 = "+writer.toString());
 //		}
 	}
+	
+	@Test
+	public void date() throws Exception{
+		ResultSet rs = conn.createStatement().executeQuery("select date_ from DATATYPETEST");
+		if(rs.next()) {
+			System.out.println(rs.getMetaData().getColumnTypeName(1));
+			System.out.println(rs.getMetaData().getColumnType(1));
+			
+			
+		}
+	}
+	
 	@After
 	public void after() throws Exception {
 //		System.err.println("\n执行insert影响的行数 = "+insertPst.executeUpdate());

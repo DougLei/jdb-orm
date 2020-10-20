@@ -4,6 +4,7 @@ import com.douglei.orm.dialect.DialectType;
 import com.douglei.orm.dialect.impl.AbstractDialect;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Bigint;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Char;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Date;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Datetime;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Decimal;
 import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Int;
@@ -47,6 +48,7 @@ public class SqlServerDialect extends AbstractDialect{
 	private void initDataTypeContainer() {
 		dataTypeContainer.register(Bigint.getSingleton());
 		dataTypeContainer.register(Char.getSingleton());
+		dataTypeContainer.register(Date.getSingleton());
 		dataTypeContainer.register(Datetime.getSingleton());
 		dataTypeContainer.register(Decimal.getSingleton());
 		dataTypeContainer.register(Int.getSingleton());
