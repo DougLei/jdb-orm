@@ -66,7 +66,9 @@ public class MappingHandler {
 						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
 					if(!property.supportDelete())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
-					if(property.getType().equals(MappingTypeConstants.TABLE))
+					
+					((DeleteMappingEntity)mappingEntity).setType(property.getType());
+					if(mappingEntity.getType().supportOpDatabaseObject()) 
 						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
 					break;
 				case DELETE_DATABASE_OBJECT_ONLY:

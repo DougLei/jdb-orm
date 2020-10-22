@@ -19,9 +19,11 @@ public class DeleteMappingEntity extends MappingEntity{
 		super.opDatabaseObject = opDatabaseObject;
 	}
 	
+	public void setType(String type) {
+		super.type = MappingTypeContainer.getMappingTypeByName(type);
+	}
 	public void setMapping(Mapping mapping) {
 		super.mapping = mapping;
-		super.type = MappingTypeContainer.getMappingTypeByName(mapping.getType());
 	}
 
 	@Override
