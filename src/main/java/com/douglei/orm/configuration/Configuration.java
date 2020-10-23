@@ -60,7 +60,7 @@ public class Configuration {
 				Element root = xmlDocument.getRootElement();
 				setId(root.attributeValue("id"));
 				properties = new Properties(root.element("properties"));
-				new ExtendOptions().handle(root.element("extent-options"));
+				new ExtendOptions().handle(root.element("extend-options"));
 				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), properties, externalDataSource, mappingContainer);
 				this.sessionFactory = new SessionFactory(this, environment);
 			} catch (Exception e) {
