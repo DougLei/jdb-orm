@@ -34,6 +34,7 @@ import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandlerContext;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
+import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -332,7 +333,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	@SuppressWarnings("unchecked")
 	private Map<String, ValidateHandler> getValidateHandlerMap(Element validatorsElement) {
 		if(validatorsElement != null) {
-			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
+			List<Element> validatorElements = validatorsElement.selectNodes("validator[@code!='']");
 			if(validatorElements != null && !validatorElements.isEmpty()) {
 				Map<String, ValidateHandler> validatorMap = new HashMap<String, ValidateHandler>();
 				
@@ -364,7 +365,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 			if(attributes.size() > 1) {
 				attributes.forEach(attribute -> {
 					if(!"code".equals(attribute.getName())) 
-						handler.addValidator(attribute.getName(), attribute.getValue());
+						handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getName(), attribute.getValue()));
 				});
 			}
 			return handler;

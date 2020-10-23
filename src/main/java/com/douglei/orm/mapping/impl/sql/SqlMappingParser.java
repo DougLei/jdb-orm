@@ -21,6 +21,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.parser.SqlMetadataParser;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.ContentMetadataParser;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
+import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.tools.utils.StringUtil;
 
@@ -88,7 +89,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 						for(int j=0;j<attributes.getLength();j++) {
 							attribute = attributes.item(j);
 							if(!"code".equals(attribute.getNodeName()))
-								handler.addValidator(attribute.getNodeName(), attribute.getNodeValue());
+								handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getNodeName(), attribute.getNodeValue()));
 						}
 					}
 					validateHandlerMap.put(handler.getCode(), handler);

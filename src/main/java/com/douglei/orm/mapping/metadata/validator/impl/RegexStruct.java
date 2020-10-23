@@ -18,10 +18,10 @@ class RegexStruct {
 	private String message;
 	private String i18nCode;
 	
-	public ValidationResult match(String validateFieldName, String value) {
+	public ValidationResult match(String name, String value) {
 		if(getPattern().matcher(value).matches()) 
 			return null;
-		return new ValidationResult(validateFieldName, message==null?DEFAULT_MESSAGE:message, i18nCode==null?DEFAULT_I18N_CODE:i18nCode);
+		return new ValidationResult(name, message==null?DEFAULT_MESSAGE:message, i18nCode==null?DEFAULT_I18N_CODE:i18nCode);
 	}
 	
 	private Pattern getPattern() {

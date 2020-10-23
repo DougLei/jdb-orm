@@ -11,7 +11,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.mapping.metadata.validator.internal._DataTypeValidator;
+import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -24,7 +24,6 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 6608387412551678697L;
 
 	private String configText;
 	

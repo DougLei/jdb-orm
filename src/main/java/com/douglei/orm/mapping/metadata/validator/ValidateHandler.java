@@ -4,14 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.metadata.validator.internal._NullableValidator;
+import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
 
 /**
  * 
  * @author DougLei
  */
 public class ValidateHandler implements Serializable{
-	private static final long serialVersionUID = 4450563487176738364L;
 	
 	private String code;
 	private boolean byConfig;// 是否使用配置validators验证器的方式, 创建的ValidateHandler实例
@@ -35,23 +34,22 @@ public class ValidateHandler implements Serializable{
 			_nullableValidator = new _NullableValidator(nullable);
 	}
 	
-	/**
-	 * 添加验证器
-	 * @param validatorName 验证器的名称, 即配置文件中的属性名
-	 * @param configValue 验证器的配置值, 即配置文件中属性名等号右边配置的值
-	 */
-	public void addValidator(String validatorName, String configValue) {
-		addValidator(ValidatorContext.getValidatorInstance(validatorName, configValue));
-	}
+//	/**
+//	 * 添加验证器
+//	 * @param validatorName 验证器的名称, 即配置文件中的属性名
+//	 * @param configValue 验证器的配置值, 即配置文件中属性名等号右边配置的值
+//	 */
+//	public void addValidator(String validatorName, String configValue) {
+//		addValidator(ValidatorContainer.getValidatorInstance(validatorName, configValue));
+//	}
 	
 	/**
 	 * 添加验证器
 	 * @param validator
 	 */
 	public void addValidator(Validator validator) {
-		if(validators == null) {
+		if(validators == null) 
 			validators = new ArrayList<Validator>();
-		}
 		validators.add(validator);
 	}
 	
@@ -61,16 +59,15 @@ public class ValidateHandler implements Serializable{
 	 * @return
 	 */
 	public ValidationResult validate(Object value) {
-		if(_nullableValidator == null) {
-			throw new NullPointerException("必须设置是否为空验证器["+_NullableValidator.class.getName()+"]");
-		}
+		if(_nullableValidator == null) 
+			throw new NullPointerException("必须设置是否为空验证器["+_NullableValidator.class+"]");
+		
 		ValidationResult result = _nullableValidator.validate(code, value);
 		if(result == null && value != null && validators != null) {
 			for (Validator validator : validators) {
 				result = validator.validate(code, value);
-				if(result != null) {
+				if(result != null || !validator.toNext()) 
 					break;
-				}
 			}
 		}
 		return result;

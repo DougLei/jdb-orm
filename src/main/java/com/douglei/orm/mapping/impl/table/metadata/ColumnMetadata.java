@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.table.metadata;
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
-import com.douglei.orm.mapping.metadata.validator.internal._DataTypeValidator;
+import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -11,7 +11,6 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata extends AbstractMetadata {
-	private static final long serialVersionUID = -2555114553259534088L;
 
 	private String property;// 映射的代码类中的属性名
 	

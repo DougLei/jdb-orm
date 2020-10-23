@@ -8,12 +8,16 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class NotBlankValidator extends Validator{
-	private static final long serialVersionUID = 8586357375570434994L;
 
 	@Override
-	public ValidationResult validate(String fieldName, Object value) {
+	protected int getOrder() {
+		return 40;
+	}
+
+	@Override
+	public ValidationResult validate(String name, Object value) {
 		if(value == null || value.toString().trim().length() == 0) 
-			return new ValidationResult(fieldName, "不能为空字符串", "jdb.data.validator.notblank");
+			return new ValidationResult(name, "不能为空字符串", "jdb.data.validator.notblank");
 		return null;
 	}
 }

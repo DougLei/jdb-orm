@@ -69,32 +69,20 @@
 				2.验证器名称=验证器配置值, 可以配置多个验证器
 				
 				目前提供的验证器
+				notBlank: 验证指定的参数值是否为空字符串,  若是则验证失败; 其配置任何值都可以, 因为该验证器不会使用配置值, 不过建议配置为true或1
 				regex: 正则表达式, 可以配置json数组或json对象
-				notblank: 不能为空字符串
-				也可以自己继承 com.douglei.orm.core.metadata.validator.Validator, 实现自定义的验证器, 并在resources中的jdb.validator.properties文件中配置
+				也可以自己继承 com.douglei.orm.mapping.metadata.validator, 实现自定义的验证器, 并在这里通过: 类的全路径=验证器配置值, 来配置验证器
 			 -->
-			<validator code="id" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" notBlank="true" />
+			<validator code="id" notBlank="true" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" />
 		</validators>
 	</table>
 </mapping-configuration>
 
 <!-- 
-	-- 导入列的文件配置内容
-	
+	--导入列的文件配置内容
 	<?xml version="1.0" encoding="UTF-8"?>
 	<columns>
 		<column name="id" property="id" dataType="integer" primaryKey="true" length="20" validate="true" />
-				
-		<column name="project_id" property="projectId" dataType="string" length="36" nullable="false" />
-		<column name="table_index" property="tableIndex" dataType="short" length="3" nullable="false" />
-		<column name="table_state" property="tableState" dataType="byte" length="1" nullable="false" />
-		
-		<column name="create_user_id" property="createUserId" dataType="string" length="36" nullable="false" />
-		<column name="create_user_name" property="createUserName" dataType="nstring" length="50" nullable="false" />
-		<column name="create_date" property="createDate" dataType="date" nullable="false" />
-		
-		<column name="destroy_user_id" property="destroyUserId" dataType="string" length="36" />
-		<column name="destroy_user_name" property="destroyUserName" dataType="nstring" length="50" />
-		<column name="destroy_date" property="destroyDate" dataType="date" />
+		... 与<column>的配置一致
 	</columns>
  -->

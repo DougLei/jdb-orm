@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.metadata.validator.internal;
+package com.douglei.orm.mapping.metadata.validator.impl;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
@@ -9,12 +9,16 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class _DataTypeValidator extends Validator {
-	private static final long serialVersionUID = -261062758535507133L;
 	
 	private DBDataType dbDataType;
 	private int length;
 	private int precision;
 	
+	@Override
+	protected int getOrder() {
+		return 20;
+	}
+
 	public _DataTypeValidator(DBDataType dbDataType, int length, int precision) {
 		this.dbDataType = dbDataType;
 		this.length = length;
