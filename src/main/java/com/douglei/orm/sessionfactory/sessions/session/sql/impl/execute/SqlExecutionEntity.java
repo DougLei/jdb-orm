@@ -1,6 +1,5 @@
 package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.douglei.orm.EnvironmentContext;
@@ -72,17 +71,15 @@ public class SqlExecutionEntity {
 	
 	/**
 	 * 获取执行sql语句对应的参数值集合
-	 * @return
+	 * @return 可能为null
 	 */
 	public List<Object> getParameters(){
-		if(parameters == null) 
-			parameters = new ArrayList<Object>();
 		return parameters;
 	}
 	
 	/**
 	 * 获取sql参数集合
-	 * @return
+	 * @return 可能为null
 	 */
 	public List<SqlParameterMetadata> getSqlParameters(){
 		return sqlParameters;

@@ -230,7 +230,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					
 					short outParameterCount = 0;
 					short[] outParameterIndex = null;
-					if(!callableSqlParameters.isEmpty()) {
+					if(callableSqlParameters != null) {
 						outParameterIndex = new short[callableSqlParameters.size()];
 						
 						short index = 1;
