@@ -1,4 +1,4 @@
-package com.douglei.orm.environment.property;
+package com.douglei.orm.configuration.environment.property;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -11,11 +11,12 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class RegexValidator extends Validator {
+	private static final long serialVersionUID = -7459993719344601539L;
 	
 	private List<RegexStruct> regexes;
 	
 	@Override
-	protected int getOrder() {
+	public int getOrder() {
 		return 60;
 	}
 	
@@ -34,9 +35,8 @@ public class RegexValidator extends Validator {
 	private ValidationResult validate_(String name, String value) {
 		ValidationResult result = null;
 		for (RegexStruct regex : regexes) {
-			if((result = regex.match(name, value)) != null) {
+			if((result = regex.match(name, value)) != null) 
 				break;
-			}
 		}
 		return result;
 	}

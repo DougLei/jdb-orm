@@ -1,4 +1,4 @@
-package com.douglei.orm.environment.properties;
+package com.douglei.orm.configuration.properties;
 
 import java.util.HashMap;
 import java.util.List;

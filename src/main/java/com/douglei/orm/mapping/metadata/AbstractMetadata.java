@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.metadata;
 
-import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.tools.utils.StringUtil;
 
 /**

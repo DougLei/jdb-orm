@@ -9,20 +9,22 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public abstract class Validator implements Serializable{
+	private static final long serialVersionUID = 4371755096471223998L;
 
 	/**
 	 * 获取验证器的顺序值, 当存在多个验证器时可进行排序
 	 * @return
 	 */
-	protected int getOrder() {
+	public int getOrder() {
 		return 100;
 	}
 	
 	/**
-	 * 是否要调用下一个验证器进行验证; 如果当前验证器验证后没有必要再验证下去时, 该方法可返回false
+	 * 根据要验证的值判断, 是否要调用下一个验证器进行验证; 如果当前验证器验证后没有必要再验证下去时, 该方法可返回false
+	 * @param value 被验证的值
 	 * @return
 	 */
-	protected boolean toNext() {
+	protected boolean toNext(Object value) {
 		return true;
 	}
 	
@@ -34,9 +36,9 @@ public abstract class Validator implements Serializable{
 	}
 	
 	/**
-	 * 进行验证, 如果验证通过, 则返回null, 否则返回验证失败的message
-	 * @param name 要验证的属性名
-	 * @param value 要验证的属性值, 不会为null, 即在调用该方法时, 不会传入null
+	 * 进行验证, 如果验证通过, 则返回null, 否则返回验证失败的结果
+	 * @param name 被验证的名称, 例如列名, sql参数名
+	 * @param value 被验证的值
 	 * @return
 	 */
 	public abstract ValidationResult validate(String name, Object value);

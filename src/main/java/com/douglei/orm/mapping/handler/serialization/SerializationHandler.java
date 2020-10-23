@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.handler.serialization;
 
 import java.io.File;
 
-import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;

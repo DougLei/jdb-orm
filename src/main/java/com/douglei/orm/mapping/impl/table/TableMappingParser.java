@@ -13,7 +13,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
-import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingProperty;
@@ -321,7 +321,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 		Map<String, ValidateHandler> validateHandlerMap = getValidateHandlerMap(validatorsElement);
 		boolean existsPrimaryKeyHandler = tableMetadata.existsPrimaryKeyHandler();
 		tableMetadata.getDeclareColumns().forEach(column -> {
-			tableMetadata.setValidateColumn(column.setValidateHandler(existsPrimaryKeyHandler, getValidateHandler(column.getCode(), validateHandlerMap)));
+			tableMetadata.setValidateColumn(column.setValidateHandler(existsPrimaryKeyHandler, validateHandlerMap.isEmpty()?null:validateHandlerMap.get(column.getCode())));
 		});
 	}
 	
@@ -360,7 +360,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 			if(tableMetadata.getColumns_().get(code) == null)
 				throw new NullPointerException("配置验证器时, 不存在code="+code+"的列");
 			
-			ValidateHandler handler = new ValidateHandler(code, true);
+			ValidateHandler handler = new ValidateHandler(code);
 			List<Attribute> attributes = validatorElement.attributes();
 			if(attributes.size() > 1) {
 				attributes.forEach(attribute -> {
@@ -371,23 +371,6 @@ class TableMappingParser extends MappingParser<TableMapping>{
 			return handler;
 		}
 		throw new NullPointerException("<validator>元素中的code属性值不能为空");
-	}
-	
-	/**
-	 * 获取指定code的ValidateHandler
-	 * @param columnCode
-	 * @param validateHandlerMap
-	 * @return
-	 */
-	private ValidateHandler getValidateHandler(String columnCode, Map<String, ValidateHandler> validateHandlerMap) {
-		if(validateHandlerMap.isEmpty()) {
-			return new ValidateHandler(columnCode);
-		}
-		ValidateHandler handler = validateHandlerMap.get(columnCode);
-		if(handler == null) {
-			handler = new ValidateHandler(columnCode);
-		}
-		return handler;
 	}
 	
 	/**

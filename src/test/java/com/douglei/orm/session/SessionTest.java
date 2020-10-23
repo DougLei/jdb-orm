@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.douglei.orm.Configuration;
+import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sql.pagequery.PageResult;
 

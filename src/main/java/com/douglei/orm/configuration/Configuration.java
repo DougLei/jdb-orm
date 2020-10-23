@@ -1,4 +1,4 @@
-package com.douglei.orm;
+package com.douglei.orm.configuration;
 
 import java.io.InputStream;
 
@@ -8,8 +8,9 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.environment.Environment;
-import com.douglei.orm.environment.properties.Properties;
+import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.extend.option.ExtendOptions;
+import com.douglei.orm.configuration.properties.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.serialization.FolderContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
@@ -59,6 +60,7 @@ public class Configuration {
 				Element root = xmlDocument.getRootElement();
 				setId(root.attributeValue("id"));
 				properties = new Properties(root.element("properties"));
+				new ExtendOptions().handle(root.element("extent-options"));
 				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), properties, externalDataSource, mappingContainer);
 				this.sessionFactory = new SessionFactory(this, environment);
 			} catch (Exception e) {

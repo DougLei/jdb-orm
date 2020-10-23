@@ -1,4 +1,4 @@
-package com.douglei.orm.environment;
+package com.douglei.orm.configuration.environment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,12 +13,12 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.ExternalDataSource;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.ExternalDataSource;
+import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
+import com.douglei.orm.configuration.properties.Properties;
 import com.douglei.orm.dialect.DialectKey;
-import com.douglei.orm.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.environment.properties.Properties;
-import com.douglei.orm.environment.property.EnvironmentProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;

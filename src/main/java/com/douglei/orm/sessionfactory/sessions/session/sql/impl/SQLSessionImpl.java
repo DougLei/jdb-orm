@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.environment.Environment;
-import com.douglei.orm.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;

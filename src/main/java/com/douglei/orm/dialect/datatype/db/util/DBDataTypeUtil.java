@@ -1,6 +1,6 @@
 package com.douglei.orm.dialect.datatype.db.util;
 
-import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.dialect.datatype.Classification;
 import com.douglei.orm.dialect.datatype.DataType;
 import com.douglei.orm.dialect.datatype.db.DBDataType;

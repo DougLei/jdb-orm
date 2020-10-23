@@ -4,6 +4,7 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
+import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -11,6 +12,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata extends AbstractMetadata {
+	private static final long serialVersionUID = -2555114553259534088L;
 
 	private String property;// 映射的代码类中的属性名
 	
@@ -119,11 +121,14 @@ public class ColumnMetadata extends AbstractMetadata {
 	 * @param validateHandler
 	 */
 	public ColumnMetadata setValidateHandler(boolean existsPrimaryKeyHandler, ValidateHandler validateHandler) {
-		if(validate || validateHandler.byConfig()) {
+		if(validate && validateHandler == null) 
+			validateHandler = new ValidateHandler(name);
+		if(validateHandler != null) {
 			this.validate = true;
 			this.validateHandler = validateHandler;
-			this.validateHandler.setNullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true));
+			this.validateHandler.addValidator(new _NullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true)));
 			this.validateHandler.addValidator(new _DataTypeValidator(dbDataType, length, precision));
+			this.validateHandler.sort();
 			return this;
 		}
 		return null;

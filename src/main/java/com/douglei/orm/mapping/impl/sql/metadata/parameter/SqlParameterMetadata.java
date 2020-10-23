@@ -12,6 +12,7 @@ import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
+import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
@@ -24,6 +25,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
+	private static final long serialVersionUID = 6608387412551678697L;
 
 	private String configText;
 	
@@ -174,14 +176,14 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private void setValidateHandler() {
 		ValidateHandler validateHandler = MappingParserContext.getSqlValidateHandlers().get(name);
-		if(validateHandler == null && validate) {
+		if(validate && validateHandler == null) 
 			validateHandler = new ValidateHandler(name);
-		}
 		if(validateHandler != null) {
 			this.validate = true;
 			this.validateHandler = validateHandler;
-			this.validateHandler.setNullableValidator(defaultValue==null?nullable:true);
+			this.validateHandler.addValidator(new _NullableValidator(defaultValue==null?nullable:true));
 			this.validateHandler.addValidator(new _DataTypeValidator(dbDataType, length, precision));
+			this.validateHandler.sort();
 		}
 	}
 

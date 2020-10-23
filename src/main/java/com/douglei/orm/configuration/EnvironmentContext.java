@@ -1,7 +1,7 @@
-package com.douglei.orm;
+package com.douglei.orm.configuration;
 
+import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
 import com.douglei.orm.dialect.Dialect;
-import com.douglei.orm.environment.property.EnvironmentProperty;
 
 /**
  * 

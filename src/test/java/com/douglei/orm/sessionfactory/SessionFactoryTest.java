@@ -3,7 +3,7 @@ package com.douglei.orm.sessionfactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.orm.Configuration;
+import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.sessionfactory.SessionFactory;
 
 public class SessionFactoryTest {

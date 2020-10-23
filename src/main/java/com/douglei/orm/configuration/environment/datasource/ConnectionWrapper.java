@@ -1,4 +1,4 @@
-package com.douglei.orm.environment.datasource;
+package com.douglei.orm.configuration.environment.datasource;
 
 import java.sql.Connection;
 import java.sql.SQLException;

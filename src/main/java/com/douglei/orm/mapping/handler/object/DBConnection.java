@@ -9,10 +9,10 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryConnection;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.orm.environment.datasource.DataSourceWrapper;
 import com.douglei.tools.utils.CloseUtil;
 
 /**

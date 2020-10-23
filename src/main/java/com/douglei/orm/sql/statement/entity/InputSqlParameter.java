@@ -3,7 +3,7 @@ package com.douglei.orm.sql.statement.entity;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.douglei.orm.EnvironmentContext;
+import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 
 /**

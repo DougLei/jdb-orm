@@ -1,4 +1,4 @@
-package com.douglei.orm;
+package com.douglei.orm.configuration;
 
 import javax.sql.DataSource;
 

@@ -84,7 +84,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 					if(validateHandlerMap == null)
 						validateHandlerMap = new HashMap<String, ValidateHandler>(validatorNodeList.getLength());
 					
-					ValidateHandler handler = new ValidateHandler(code, true);
+					ValidateHandler handler = new ValidateHandler(code);
 					if(attributes.getLength() > 1) {
 						for(int j=0;j<attributes.getLength();j++) {
 							attribute = attributes.item(j);

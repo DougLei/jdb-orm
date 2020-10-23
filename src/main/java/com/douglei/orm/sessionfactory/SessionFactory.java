@@ -3,11 +3,11 @@ package com.douglei.orm.sessionfactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.Configuration;
-import com.douglei.orm.EnvironmentContext;
-import com.douglei.orm.environment.Environment;
-import com.douglei.orm.environment.datasource.ConnectionWrapper;
-import com.douglei.orm.environment.datasource.TransactionIsolationLevel;
+import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;

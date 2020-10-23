@@ -9,20 +9,21 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class _DataTypeValidator extends Validator {
+	private static final long serialVersionUID = 3859501062174880062L;
 	
 	private DBDataType dbDataType;
 	private int length;
 	private int precision;
 	
-	@Override
-	protected int getOrder() {
-		return 20;
-	}
-
 	public _DataTypeValidator(DBDataType dbDataType, int length, int precision) {
 		this.dbDataType = dbDataType;
 		this.length = length;
 		this.precision = precision;
+	}
+	
+	@Override
+	public int getOrder() {
+		return 20;
 	}
 
 	@Override

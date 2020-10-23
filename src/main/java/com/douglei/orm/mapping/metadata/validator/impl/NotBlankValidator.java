@@ -8,9 +8,10 @@ import com.douglei.orm.mapping.metadata.validator.Validator;
  * @author DougLei
  */
 public class NotBlankValidator extends Validator{
+	private static final long serialVersionUID = 3737012381222822895L;
 
 	@Override
-	protected int getOrder() {
+	public int getOrder() {
 		return 40;
 	}
 

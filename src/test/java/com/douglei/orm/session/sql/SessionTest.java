@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.orm.Configuration;
+import com.douglei.orm.configuration.Configuration;
 import com.douglei.orm.session.SysUser;
 import com.douglei.orm.session.UserP;
 import com.douglei.orm.sessionfactory.sessions.Session;

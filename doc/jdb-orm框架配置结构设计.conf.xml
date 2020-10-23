@@ -41,4 +41,10 @@
 	<properties placeholderPrefix="${" placeholderSuffix="}">
 		<resource path="jdbc.properties" decryptValue="true"/><!-- decryptValue标识是否对配置文件中的数据进行解密, 默认值为false  -->
 	</properties>
+	
+	<!-- 扩展项配置 -->
+	<extent-options>
+		<!-- type为扩展项类型, 目前包括的类型值有: mappingType; 区分大小写 -->
+		<option type="mappingType" value="" /><!-- value配置自定义实现的映射类型类的全路径 -->
+	</extent-options>
 </configuration>
