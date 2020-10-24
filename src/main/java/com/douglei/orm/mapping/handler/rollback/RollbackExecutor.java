@@ -2,12 +2,10 @@ package com.douglei.orm.mapping.handler.rollback;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.object.DBConnection;
-import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
-import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
  * 回滚的执行者
@@ -46,12 +44,6 @@ public class RollbackExecutor {
 				break;
 			case EXEC_DELETE_MAPPING:
 				mappingContainer.deleteMapping(object.toString());
-				break;
-			case EXEC_CREATE_SERIALIZATION_FILE:
-				SerializationHandler.getSingleton().createFileOnRollback((AbstractMetadata)object);
-				break;
-			case EXEC_DELETE_SERIALIZATION_FILE:
-				SerializationHandler.getSingleton().deleteFileOnRollback(object.toString());
 				break;
 		}
 	}

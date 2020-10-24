@@ -26,10 +26,6 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 	protected String getDropSql(String name) {
 		return sqlStatementHandler.dropView(name);
 	}
-	// 获取序列化的class
-	protected Class<? extends ViewMetadata> getSerialClass(){
-		return ViewMetadata.class;
-	}
 	// 判断指定的name是否已经存在
 	protected boolean nameExists(String name) throws SQLException {
 		return connection.viewExists(name);
@@ -40,11 +36,11 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 	}
 	
 	@Override
-	public void create(ViewMetadata view) throws Exception {
+	public void create(ViewMetadata view, ViewMetadata exViewMetadata) throws Exception {
 		if(nameExists(view.getOldName())) {
 			switch(view.getCreateMode()) {
 				case DROP_CREATE:
-					delete(view.getOldName());
+					delete_(false, view.getOldName(), exViewMetadata);
 					break;
 				default:
 					return;
@@ -54,26 +50,30 @@ public class ViewObjectHandler extends ObjectHandler<ViewMetadata, String>{
 		
 		connection.executeSql(view.getScript());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, getDropSql(view.getName()), connection);
-		
-		serializationHandler.createFileDirectly(view, getSerialClass());
 	}
 
+	@Override
+	public void delete(String viewName, ViewMetadata exViewMetadata) throws SQLException {
+		delete_(true, viewName, exViewMetadata);
+	}
+	
 	/**
 	 * 
+	 * @param isValidateNameExists 是否验证name是否存在 
 	 * @param viewName
+	 * @param exViewMetadata
+	 * @throws SQLException
 	 */
-	@Override
-	public void delete(String viewName) throws SQLException {
-		ViewMetadata deleted = (ViewMetadata) serializationHandler.deleteFile(viewName, getSerialClass());
-		if(!nameExists(viewName))
+	private void delete_(boolean isValidateNameExists, String viewName, ViewMetadata exViewMetadata) throws SQLException {
+		if(isValidateNameExists && !nameExists(viewName))
 			return;
 		
 		String script; 
-		if(deleted == null) {
-			logger.debug("不存在name为{}的 [{}] 序列化文件, 去数据库中查找对应的脚本", viewName, getSerialClass());
+		if(exViewMetadata == null) {
+			logger.debug("去数据库中查找名为[{}]的脚本", viewName);
 			script = queryCreateScript(viewName);
 		}else {
-			script = deleted.getScript();
+			script = exViewMetadata.getScript();
 		}
 		
 		connection.executeSql(getDropSql(viewName));

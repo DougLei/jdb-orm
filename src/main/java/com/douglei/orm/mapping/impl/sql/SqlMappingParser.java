@@ -126,7 +126,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 			Node propertyNode = propertyNodeList.item(0);
 			if(propertyNode.hasAttributes()) {
 				NamedNodeMap attributeMap = propertyNode.getAttributes();
-				property.setValues(getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
+				property.setValues(getValue(attributeMap.getNamedItem("order")), getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
 			}
 		}
 		return property;

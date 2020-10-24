@@ -1,6 +1,7 @@
 package com.douglei.orm.mapping.impl.procedure;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 
@@ -9,9 +10,9 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public class ProcedureMapping extends Mapping {
-	private static final long serialVersionUID = -1074679041003201221L;
+	private static final long serialVersionUID = 5699739230288370355L;
 
-	public ProcedureMapping(AbstractMetadata metadata) {
-		super(MappingTypeConstants.PROCEDURE, metadata);
+	public ProcedureMapping(AbstractMetadata metadata, MappingProperty property) {
+		super(MappingTypeConstants.PROCEDURE, metadata, property);
 	}
 }

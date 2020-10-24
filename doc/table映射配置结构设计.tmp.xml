@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<!-- 
+		order:		   mapping的顺序, 默认为0; 其作用为, 在进行AddOrCover时, 值越小的先执行; 在进行Delete时, 值越大的先执行
 		supportCover:  mapping是否支持被覆盖, 默认为true
 		supportDelete: mapping是否支持被删除, 默认为true
 		extendExpr:    mapping的扩展属性, 可由第三方扩展
 	-->
-	<property supportCover="true" supportDelete="true" extendExpr="" />
+	<property order="0" supportCover="true" supportDelete="true" extendExpr="" />
 
 	<!-- 
 		createMode的值包括: none, create, drop_create(可用来重置表), dynamic_update, 默认为create

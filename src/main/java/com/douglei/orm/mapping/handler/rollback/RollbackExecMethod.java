@@ -11,8 +11,5 @@ public enum RollbackExecMethod {
 	EXEC_DELETE_MAPPING_PROPERTY, // 执行删除映射属性
 	
 	EXEC_ADD_MAPPING, // 执行添加映射
-	EXEC_DELETE_MAPPING, // 执行删除映射
-	
-	EXEC_CREATE_SERIALIZATION_FILE, // 创建序列化文件
-	EXEC_DELETE_SERIALIZATION_FILE; // 删除序列化文件
+	EXEC_DELETE_MAPPING; // 执行删除映射
 }

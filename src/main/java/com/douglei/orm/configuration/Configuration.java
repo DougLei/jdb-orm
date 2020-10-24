@@ -12,7 +12,6 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.extend.option.ExtendOptions;
 import com.douglei.orm.configuration.properties.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
-import com.douglei.orm.mapping.handler.serialization.FolderContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.utils.ExceptionUtil;
@@ -96,7 +95,6 @@ public class Configuration {
 	private void destroy_() throws Exception { 
 		if(environment != null)
 			environment.destroy();
-		FolderContainer.deleteFolder(this.id);
 	}
 	
 	/**
@@ -116,7 +114,6 @@ public class Configuration {
 			if(StringUtil.isEmpty(id)) 
 				throw new NullPointerException("["+getClass().getName() + "]的id属性值不能为空");
 			this.id = id;
-			FolderContainer.createFolder(this.id);
 		}
 	}
 	

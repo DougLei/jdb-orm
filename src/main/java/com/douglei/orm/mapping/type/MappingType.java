@@ -13,7 +13,6 @@ public abstract class MappingType {
 	private String fileSuffix;
 	private int priority;
 	private boolean supportOpDatabaseObject;
-	private boolean supportOpMappingContainer;
 	
 	/**
 	 * 
@@ -21,14 +20,12 @@ public abstract class MappingType {
 	 * @param fileSuffix 映射类型对应文件的后缀, 唯一的
 	 * @param priority 优先级, 优先级越低越优先, 在操作多个映射时, 会按照优先级的顺序操作,  <b>注意, 如果是第三方用来扩映射类型, 该值要求不能小于等于60</b>
 	 * @param supportOpDatabaseObject 当前类型是否支持操作数据库对象, 例如操作表, 存储过程, 视图等
-	 * @param supportOpMappingContainer 当前类型是否支持操作映射容器, 即通过映射容器, 对映射进行增删改查
 	 */
-	public MappingType(String name, String fileSuffix, int priority, boolean supportOpDatabaseObject, boolean supportOpMappingContainer) {
+	public MappingType(String name, String fileSuffix, int priority, boolean supportOpDatabaseObject) {
 		this.name = name;
 		this.fileSuffix = fileSuffix;
 		this.priority = priority;
 		this.supportOpDatabaseObject = supportOpDatabaseObject;
-		this.supportOpMappingContainer = supportOpMappingContainer;
 	}
 	
 	/**
@@ -51,12 +48,9 @@ public abstract class MappingType {
 	public final boolean supportOpDatabaseObject() {
 		return supportOpDatabaseObject;
 	}
-	public final boolean supportOpMappingContainer() {
-		return supportOpMappingContainer;
-	}
 
 	@Override
 	public String toString() {
-		return "MappingType [name=" + name + ", fileSuffix=" + fileSuffix + ", priority=" + priority + ", supportOpDatabaseObject=" + supportOpDatabaseObject + ", supportOpMappingContainer=" + supportOpMappingContainer + "]";
+		return "MappingType [name=" + name + ", fileSuffix=" + fileSuffix + ", priority=" + priority + ", supportOpDatabaseObject=" + supportOpDatabaseObject + "]";
 	}
 }

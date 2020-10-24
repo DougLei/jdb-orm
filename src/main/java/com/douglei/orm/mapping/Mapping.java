@@ -22,7 +22,7 @@ public abstract class Mapping implements Serializable{
 	public Mapping(String type, AbstractMetadata metadata, MappingProperty property) {
 		this.type = type;
 		this.metadata = metadata;
-		this.property = property;
+		this.property = property==null?new MappingProperty(metadata.getCode(), type):property;
 	}
 
 	/**

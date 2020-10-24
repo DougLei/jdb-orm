@@ -26,6 +26,6 @@ class ViewMappingParser extends MappingParser<ViewMapping>{
 		
 		Element viewElement = Dom4jUtil.getElement(MappingTypeConstants.VIEW, rootElement);
 		ViewMetadata viewMetadata = viewMetadataParser.parse(viewElement);
-		return new ViewMapping(viewMetadata);
+		return new ViewMapping(viewMetadata, getMappingProperty4Dom4j(rootElement, viewMetadata.getCode(), MappingTypeConstants.VIEW));
 	}
 }

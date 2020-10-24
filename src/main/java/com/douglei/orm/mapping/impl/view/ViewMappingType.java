@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class ViewMappingType extends MappingType{
 	
 	public ViewMappingType() {
-		super(MappingTypeConstants.VIEW, ".vmp.xml", 20, true, false);
+		super(MappingTypeConstants.VIEW, ".vmp.xml", 20, true);
 	}
 
 	@Override

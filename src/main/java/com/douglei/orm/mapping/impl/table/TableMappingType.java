@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class TableMappingType extends MappingType{
 	
 	public TableMappingType() {
-		super(MappingTypeConstants.TABLE, ".tmp.xml", 10, true, true);
+		super(MappingTypeConstants.TABLE, ".tmp.xml", 10, true);
 	}
 
 	@Override

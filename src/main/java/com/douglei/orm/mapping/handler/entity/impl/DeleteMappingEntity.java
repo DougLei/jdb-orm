@@ -22,6 +22,9 @@ public class DeleteMappingEntity extends MappingEntity{
 	public void setType(String type) {
 		super.type = MappingTypeContainer.getMappingTypeByName(type);
 	}
+	public void setOrder(int order) {
+		super.order = order;
+	}
 	public void setMapping(Mapping mapping) {
 		super.mapping = mapping;
 	}

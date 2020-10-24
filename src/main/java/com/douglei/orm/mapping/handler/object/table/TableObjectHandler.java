@@ -72,24 +72,21 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	// 同步操作
 	// -------------------------------------------------------------------------------------------------------------------
 	// 更新表, 返回是否更新了表结构
-	private boolean updateTable(TableMetadata newTable) throws Exception {
-		TableMetadata oldTable = (TableMetadata) serializationHandler.deserialize(newTable.getOldName(), TableMetadata.class);
-		if(oldTable == null) // 该判断, 目前处理更新序列化版本后启动框架时, 框架会从新的路径加载序列化文件, 必然是加载不到的, 然后根据返回的false值, 调用方会创建一个新的序列化文件; 这也是一种变相的修改了表信息
-			return true;
+	private void updateTable(TableMetadata newTable, TableMetadata oldTableMetadata) throws Exception {
+		if(oldTableMetadata == null) // 如果为null, 有两种情况, 一种是框架启动, 另一个种是数据库中存在表, 而映射容器中不存在; 经过此次处理后, 框架可动态的将已存在的表和本次的新映射关联起来
+			return;
 		
-		if(isUpdateTable(newTable, oldTable)) {
+		if(isUpdateTable(newTable, oldTableMetadata)) {
 			// 删除旧表的约束和索引
-			dropConstraints(oldTable.getConstraints());
-			dropIndexes(oldTable.getIndexes());
+			dropConstraints(oldTableMetadata.getConstraints());
+			dropIndexes(oldTableMetadata.getIndexes());
 			// 对表和列进行同步
-			syncTable(newTable, oldTable);
-			syncColumns(newTable, oldTable);
+			syncTable(newTable, oldTableMetadata);
+			syncColumns(newTable, oldTableMetadata);
 			// 创建新表的约束和索引
 			createConstraints(newTable.getConstraints());
 			createIndexes(newTable.getIndexes());
-			return true;
 		}
-		return false;
 	}
 	
 	// 判断是否更新了表
@@ -281,13 +278,8 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	
 	
 	// -------------------------------------------------------------------------------------------------------------------
-	/**
-	 * 创建表, 根据table的createMode决定如何同步
-	 * @param table
-	 * @throws Exception 
-	 */
 	@Override
-	public void create(TableMetadata table) throws Exception {
+	public void create(TableMetadata table, TableMetadata exTableMetadata) throws Exception {
 		if(table.getCreateMode() == CreateMode.NONE)
 			return;
 		
@@ -302,8 +294,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 				case DYNAMIC_UPDATE:
 					if(table.isUpdateName()) 
 						validateNameExists(table);
-					if(updateTable(table))
-						serializationHandler.createFile(table, TableMetadata.class);
+					updateTable(table, exTableMetadata);
 					return;
 				default:
 					return;
@@ -316,27 +307,16 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 		createConstraints(table.getConstraints());
 		createIndexes(table.getIndexes());
 		createPrimaryKeySequence(table.getPrimaryKeySequence());
-		
-		if(table.getCreateMode() == CreateMode.DYNAMIC_UPDATE)
-			serializationHandler.createFile(table, TableMetadata.class);
 	}
 	
-	/**
-	 * 删除表
-	 * @param table
-	 * @throws SQLException 
-	 */
 	@Override
-	public void delete(TableMetadata table) throws SQLException {
-		if(table.getCreateMode() == CreateMode.NONE)
+	public void delete(TableMetadata table, TableMetadata exTableMetadata) throws SQLException {
+		if(table.getCreateMode() == CreateMode.NONE || !connection.tableExists(table.getOldName()))
 			return;
 		
-		if(connection.tableExists(table.getOldName())) {
-			dropPrimaryKeySequence(table.getPrimaryKeySequence());
-			dropIndexes(table.getIndexes());
-			dropConstraints(table.getConstraints());
-			dropTable(table);
-		}
-		serializationHandler.deleteFile(table.getName(), TableMetadata.class);
+		dropPrimaryKeySequence(table.getPrimaryKeySequence());
+		dropIndexes(table.getIndexes());
+		dropConstraints(table.getConstraints());
+		dropTable(table);
 	}
 }

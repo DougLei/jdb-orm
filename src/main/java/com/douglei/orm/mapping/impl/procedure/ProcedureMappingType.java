@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class ProcedureMappingType extends MappingType{
 	
 	public ProcedureMappingType() {
-		super(MappingTypeConstants.PROCEDURE, ".pmp.xml", 30, true, false);
+		super(MappingTypeConstants.PROCEDURE, ".pmp.xml", 30, true);
 	}
 
 	@Override

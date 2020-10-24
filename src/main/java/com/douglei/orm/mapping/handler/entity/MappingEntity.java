@@ -10,6 +10,7 @@ import com.douglei.orm.mapping.type.MappingType;
 public abstract class MappingEntity {
 	protected String code; // 映射的编码
 	protected MappingType type; // 映射的类型
+	protected int order; // 映射的顺序
 	protected Mapping mapping; // mapping实例
 	protected boolean opDatabaseObject; // 是否操作数据库对象
 	
@@ -24,6 +25,9 @@ public abstract class MappingEntity {
 	}
 	public final MappingType getType() {
 		return type;
+	}
+	public final int getOrder() {
+		return order;
 	}
 	public final Mapping getMapping() {
 		return mapping;

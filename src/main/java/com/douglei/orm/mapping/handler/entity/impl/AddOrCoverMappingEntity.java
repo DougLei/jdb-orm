@@ -64,6 +64,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 		try {
 			super.mapping = super.type.parse(input);
 			super.code = super.mapping.getCode();
+			super.order = super.mapping.getProperty().getOrder();
 			logger.debug("结束解析{}类型, code={}的映射", super.type.getName(), super.code);
 		} catch(Exception e){
 			logger.error("解析映射[{}]时, 出现异常: {}", (filepath != null ? filepath : content), ExceptionUtil.getExceptionDetailMessage(e));

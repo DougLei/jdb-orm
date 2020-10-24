@@ -10,10 +10,11 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public class MappingProperty implements Serializable{
-	private static final long serialVersionUID = 6872827600771552533L;
+	private static final long serialVersionUID = 4994319037542802481L;
 	
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
+	private int order; // mapping的排序值
 	private boolean supportCover=true; // mapping是否支持被覆盖
 	private boolean supportDelete=true; // mapping是否支持被删除
 	private String extendExpr; // mapping的扩展属性, 可由第三方扩展
@@ -25,11 +26,15 @@ public class MappingProperty implements Serializable{
 	
 	/**
 	 * 设置值
+	 * @param order mapping的排序值, 默认0
 	 * @param supportCover mapping是否支持被覆盖, 默认true
 	 * @param supportDelete mapping是否支持被删除, 默认true
 	 * @param extendExpr mapping的扩展属性, 可由第三方扩展
 	 */
-	public void setValues(String supportCover, String supportDelete, String extendExpr) {
+	public void setValues(String order, String supportCover, String supportDelete, String extendExpr) {
+		if(VerifyTypeMatchUtil.isInteger(order))
+			this.order = Integer.parseInt(order);
+		
 		if(VerifyTypeMatchUtil.isBoolean(supportCover))
 			this.supportCover = Boolean.parseBoolean(supportCover);
 		
@@ -46,6 +51,9 @@ public class MappingProperty implements Serializable{
 	public String getType() {
 		return type;
 	}
+	public int getOrder() {
+		return order;
+	}
 	public boolean supportCover() {
 		return supportCover;
 	}
@@ -58,6 +66,6 @@ public class MappingProperty implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "MappingProperty [code=" + code + ", type=" + type + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extendExpr=" + extendExpr + "]";
+		return "MappingProperty [code=" + code + ", type=" + type + ", order=" + order + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extendExpr=" + extendExpr + "]";
 	}
 }

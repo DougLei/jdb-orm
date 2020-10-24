@@ -27,6 +27,7 @@ import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
+import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
@@ -60,7 +61,7 @@ public class MappingHandler {
 					if(property != null && !property.supportCover())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
 					break;
-				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取table类型的映射即可
+				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取supportOpDatabaseObject为true的类型的映射即可
 					property = mappingContainer.getMappingProperty(mappingEntity.getCode());
 					if(property == null)
 						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
@@ -68,10 +69,9 @@ public class MappingHandler {
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
 					
 					((DeleteMappingEntity)mappingEntity).setType(property.getType());
+					((DeleteMappingEntity)mappingEntity).setOrder(property.getOrder());
 					if(mappingEntity.getType().supportOpDatabaseObject()) 
 						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
-					break;
-				case DELETE_DATABASE_OBJECT_ONLY:
 					break;
 			}
 		}
@@ -112,24 +112,22 @@ public class MappingHandler {
 			parseMappingEntities(mappingEntities);
 			
 			ObjectHandlerPackageContext.initialize(dataSourceWrapper);
+			Mapping exMapping = null;
 			for (MappingEntity mappingEntity : mappingEntities) {
 				logger.debug("操作: {}", mappingEntity);
 				
 				switch (mappingEntity.getOp()) {
 					case ADD_OR_COVER: 
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
-							createObject(mappingEntity);
+						exMapping = addMapping(mappingEntity);
 						
-						if(mappingEntity.getType().supportOpMappingContainer()) 
-							addMapping(mappingEntity);
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
+							createObject(mappingEntity.getType().getName(), mappingEntity.getMapping().getMetadata(), exMapping==null?null:exMapping.getMetadata());
 						break;
 					case DELETE: 
-					case DELETE_DATABASE_OBJECT_ONLY: 
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
-							deleteObject(mappingEntity);
+						exMapping = deleteMapping(mappingEntity.getCode());
 						
-						if(mappingEntity.getType().supportOpMappingContainer()) 
-							deleteMapping(mappingEntity.getCode());
+						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
+							deleteObject(mappingEntity, exMapping.getMetadata());
 						break;
 				}
 			}
@@ -151,30 +149,27 @@ public class MappingHandler {
 	}
 	
 	// 创建对象
-	private void createObject(MappingEntity mappingEntity) throws Exception {
-		switch(mappingEntity.getType().getName()) {
+	private void createObject(String type, AbstractMetadata metadata, AbstractMetadata exMetadata) throws Exception {
+		switch(type) {
 			case MappingTypeConstants.TABLE:
-				ObjectHandlerPackageContext.getTableObjectHandler().create((TableMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getTableObjectHandler().create((TableMetadata)metadata, (TableMetadata)exMetadata);
 				break;
 			case MappingTypeConstants.VIEW:
-				ObjectHandlerPackageContext.getViewObjectHandler().create((ViewMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getViewObjectHandler().create((ViewMetadata)metadata, (ViewMetadata)exMetadata);
 				break;
 			case MappingTypeConstants.PROCEDURE:
-				ObjectHandlerPackageContext.getProcedureObjectHandler().create((ProcedureMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getProcedureObjectHandler().create((ProcedureMetadata)metadata, (ProcedureMetadata)exMetadata);
 				break;
 		}
 	}
 	
-	// 添加或覆盖映射
-	private void addMapping(MappingEntity entity) {
+	// 添加或覆盖映射; 如果是添加, 返回null, 如果是覆盖, 返回被覆盖的mapping;
+	private Mapping addMapping(MappingEntity entity) {
 		Mapping mapping = entity.getMapping();
 		if(mapping.getMetadata().isUpdateName()) 
 			deleteMapping(mapping.getMetadata().getOldName());
 		
-		MappingProperty mappingProperty = mapping.getProperty();
-		if(mappingProperty == null)
-			mappingProperty = new MappingProperty(mapping.getCode(), mapping.getType());
-		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mappingProperty);
+		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mapping.getProperty());
 		if (exMappingProperty == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, mapping.getCode(), null);
 		}else {
@@ -187,25 +182,26 @@ public class MappingHandler {
 		}else {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
 		}
+		return exMapping;
 	}
 	
 	// 删除对象
-	private void deleteObject(MappingEntity mappingEntity) throws SQLException {
+	private void deleteObject(MappingEntity mappingEntity, AbstractMetadata exMetadata) throws SQLException {
 		switch(mappingEntity.getType().getName()) {
 			case MappingTypeConstants.TABLE:
-				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata());
+				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata(), null);
 				break;
 			case MappingTypeConstants.VIEW:
-				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode());
+				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode(), (ViewMetadata)exMetadata);
 				break;
 			case MappingTypeConstants.PROCEDURE:
-				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode());
+				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode(), (ProcedureMetadata)exMetadata);
 				break;
 		}
 	}
 
-	// 删除映射
-	private void deleteMapping(String code) {
+	// 删除映射; 返回被删除的映射实例, 如果没有映射, 返回null
+	private Mapping deleteMapping(String code) {
 		MappingProperty exMappingProperty = mappingContainer.deleteMappingProperty(code);
 		if(exMappingProperty != null) 
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, exMappingProperty, null);
@@ -213,6 +209,7 @@ public class MappingHandler {
 		Mapping exMapping = mappingContainer.deleteMapping(code);
 		if(exMapping != null) 
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
+		return exMapping;
 	}
 	
 	/**

@@ -3,16 +3,13 @@ package com.douglei.orm.mapping.handler.object;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.orm.mapping.handler.serialization.SerializationHandler;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
  * 对象处理器
  * @author DougLei
  */
-public abstract class ObjectHandler<C, D> {
-	protected SerializationHandler serializationHandler = SerializationHandler.getSingleton();
-	
+public abstract class ObjectHandler<M, D> {
 	protected DBConnection connection;
 	protected SqlStatementHandler sqlStatementHandler;
 	
@@ -32,16 +29,18 @@ public abstract class ObjectHandler<C, D> {
 	}
 	
 	/**
-	 * 创建, 根据createMode决定如何同步
+	 * 创建对象, 根据createMode决定如何同步
 	 * @param createParameter
+	 * @param exMetadata 之前的元数据, 如果当前创建的对象为新对象, 则该参数为null
 	 * @throws Exception 
 	 */
-	public abstract void create(C createParameter) throws Exception;
+	public abstract void create(M createParameter, M exMetadata) throws Exception;
 
 	/**
-	 * 删除
+	 * 删除对象
 	 * @param deleteParameter
+	 * @param exMetadata 之前的元数据, 如果当前创建的对象为新对象, 则该参数为null
 	 * @throws SQLException
 	 */
-	public abstract void delete(D deleteParameter) throws SQLException;
+	public abstract void delete(D deleteParameter, M exMetadata) throws SQLException;
 }

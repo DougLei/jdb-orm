@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
 public class SqlMappingType extends MappingType{
 	
 	public SqlMappingType() {
-		super(MappingTypeConstants.SQL, ".smp.xml", 40, false, true);
+		super(MappingTypeConstants.SQL, ".smp.xml", 40, false);
 	}
 
 	@Override
