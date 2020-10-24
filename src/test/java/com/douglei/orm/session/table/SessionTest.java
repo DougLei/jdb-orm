@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.douglei.orm.configuration.Configuration;
+import com.douglei.orm.mapping.handler.MappingHandlerException;
 import com.douglei.orm.session.SysUser;
+import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.sessions.Session;
 import com.douglei.orm.sql.pagequery.PageResult;
 
@@ -77,19 +79,23 @@ public class SessionTest {
 //	}
 	
 	@Test
-	public void test() {
+	public void test() throws MappingHandlerException {
 		System.out.println("测试存储过程映射");
+		
+//		sessionFactory.getMappingHandler().execute(new AddOrCoverMappingEntity("C:\\Users\\Administrator.USER-20190410XF\\Desktop\\SysUser2.tmp.xml"));
 	}
 	
 	// --------------------------------------------------------------------------------------
 
 	private Configuration conf;
+	private SessionFactory sessionFactory;
 	private Session session;
 	
 	@Before
 	public void before() {
 		conf = new Configuration();
-		session = conf.buildSessionFactory().openSession();
+		sessionFactory = conf.buildSessionFactory();
+		session = sessionFactory.openSession();
 	}
 	@After
 	public void end() {
