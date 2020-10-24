@@ -12,7 +12,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class ColumnMetadata extends AbstractMetadata {
-	private static final long serialVersionUID = -2555114553259534088L;
+	private static final long serialVersionUID = -7093225708443633905L;
 
 	private String property;// 映射的代码类中的属性名
 	
@@ -20,7 +20,7 @@ public class ColumnMetadata extends AbstractMetadata {
 	private int length;// 长度
 	private int precision;// 精度
 	private boolean nullable;// 是否可为空
-	private boolean primaryKey;// 是否是主键
+	private boolean isPrimaryKey;// 是否是主键
 	private boolean unique;// 是否唯一
 	private String defaultValue;// 默认值
 	private String check;// 检查约束表达式
@@ -52,9 +52,9 @@ public class ColumnMetadata extends AbstractMetadata {
 	}
 	
 	// 设置主键约束
-	public void setPrimaryKeyConstraint(boolean primaryKey) {
-		this.primaryKey = primaryKey;
-		if(primaryKey) {
+	public void setPrimaryKeyConstraint(boolean isPrimaryKey) {
+		this.isPrimaryKey = isPrimaryKey;
+		if(isPrimaryKey) {
 			this.nullable = false;// 如果是主键, 则不能为空
 			this.unique = false;// 如果是主键, 则不需要设置唯一
 			this.defaultValue = null;// 如果是主键, 则不能有默认值
@@ -81,9 +81,8 @@ public class ColumnMetadata extends AbstractMetadata {
 	 * @param defaultValue
 	 */
 	public void setDefaultValue(String defaultValue) {
-		if(defaultValue != null) {
+		if(defaultValue != null) 
 			this.defaultValue = defaultValue;
-		}
 	}
 	
 	/**
@@ -91,9 +90,8 @@ public class ColumnMetadata extends AbstractMetadata {
 	 * @param checkConstraint
 	 */
 	public void setCheckConstraint(String checkConstraint) {
-		if(StringUtil.notEmpty(checkConstraint)) {
+		if(StringUtil.notEmpty(checkConstraint)) 
 			this.check = checkConstraint;
-		}
 	}
 	
 	/**
@@ -126,7 +124,7 @@ public class ColumnMetadata extends AbstractMetadata {
 		if(validateHandler != null) {
 			this.validate = true;
 			this.validateHandler = validateHandler;
-			this.validateHandler.addValidator(new _NullableValidator((primaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true)));
+			this.validateHandler.addValidator(new _NullableValidator((isPrimaryKey && existsPrimaryKeyHandler)?true:(defaultValue==null?nullable:true)));
 			this.validateHandler.addValidator(new _DataTypeValidator(dbDataType, length, precision));
 			this.validateHandler.sort();
 			return this;
@@ -135,10 +133,7 @@ public class ColumnMetadata extends AbstractMetadata {
 	}
 	
 	/**
-	 * <pre>
-	 * 	如果指定了propertyName, 则返回propertyName
-	 * 	否则返回name, 即列名
-	 * </pre>
+	 * 如果指定了propertyName, 则返回propertyName; 否则返回name, 即列名
 	 * @return
 	 */
 	@Override
@@ -157,7 +152,7 @@ public class ColumnMetadata extends AbstractMetadata {
 		return property;
 	}
 	public boolean isPrimaryKey() {
-		return primaryKey;
+		return isPrimaryKey;
 	}
 	public int getLength() {
 		return length;

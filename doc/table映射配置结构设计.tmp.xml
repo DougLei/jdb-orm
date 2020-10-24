@@ -64,8 +64,8 @@
 		<validators>
 			<!--
 				配置结构描述: 
-				1.code: 参数编码, 指定给哪个参数编码添加验证器, 如果该参数的validate为false, 又这里配置了验证器, 框架会自动将该参数的validate值改为true; 即想要对一个参数设置验证, 有两种方式, 第一种是将参数的validate值设置为true, 或者在这里配置验证器都可以
-				                  如果是列, 有property时配置property值(属性名), 否则配置name值(列名), 如果是sql参数, 则配置sql参数名即可, 这里要注意大小写和你定义时写的大小写必须一致
+				1.name: 参数名, 指定给哪个参数名添加验证器, 如果该参数的validate为false, 又这里配置了验证器, 框架会自动将该参数的validate值改为true; 即想要对一个参数设置验证, 有两种方式, 第一种是将参数的validate值设置为true, 或者在这里配置验证器都可以
+				                  如果是列, 则配置name值(即列名, 不是property的值); 如果是sql参数, 则配置sql参数名; 这里要注意大小写和你定义时写的大小写必须一致
 				2.验证器名称=验证器配置值, 可以配置多个验证器
 				
 				目前提供的验证器
@@ -73,7 +73,7 @@
 				regex: 正则表达式, 可以配置json数组或json对象
 				也可以自己继承 com.douglei.orm.mapping.metadata.validator, 实现自定义的验证器, 并在这里通过: 类的全路径=验证器配置值, 来配置验证器
 			 -->
-			<validator code="id" notBlank="true" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" />
+			<validator name="NAME" notBlank="true" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" />
 		</validators>
 	</table>
 </mapping-configuration>
@@ -82,7 +82,7 @@
 	--导入列的文件配置内容
 	<?xml version="1.0" encoding="UTF-8"?>
 	<columns>
-		<column name="id" property="id" dataType="integer" primaryKey="true" length="20" validate="true" />
+		<column name="id" property="id" dataType="number" primaryKey="true" length="10" validate="true" />
 		... 与<column>的配置一致
 	</columns>
  -->

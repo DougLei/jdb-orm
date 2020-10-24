@@ -10,13 +10,13 @@ import java.util.List;
  * @author DougLei
  */
 public class ValidateHandler implements Serializable{
-	private static final long serialVersionUID = -2666244276319030860L;
+	private static final long serialVersionUID = -8047443259945028038L;
 	
-	private String code;
+	private String name;
 	private List<Validator> validators = new ArrayList<Validator>(5);
 	
-	public ValidateHandler(String code) {
-		this.code = code;
+	public ValidateHandler(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class ValidateHandler implements Serializable{
 	public ValidationResult validate(Object value) {
 		ValidationResult result = null;
 		for (Validator validator : validators) {
-			result = validator.validate(code, value);
+			result = validator.validate(name, value);
 			if(result != null || !validator.toNext(value))
 				break;
 		}
@@ -50,7 +50,7 @@ public class ValidateHandler implements Serializable{
 			Collections.sort(validators, ValidatorComparator.instance);
 	}
 	
-	public String getCode() {
-		return code;
+	public String getName() {
+		return name;
 	}
 }

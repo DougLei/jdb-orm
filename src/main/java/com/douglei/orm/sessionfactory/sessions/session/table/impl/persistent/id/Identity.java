@@ -112,9 +112,9 @@ public class Identity {
 	 * @return
 	 */
 	private boolean allowNullId() {
-		if(tableMetadata != null && tableMetadata.existsPrimaryKeyHandler()) {
+		if(tableMetadata != null && tableMetadata.getPrimaryKeyHandler() != null) {
 			this.id = IdentityUtil.getUUID();
-			logger.debug("当有主键处理器的时候, 可以不用传入id值, 暂时提供一个默认的的id值=[{}]使用", id);
+			logger.debug("当有主键处理器的时候, 可以不用传入id值, 暂时提供一个随机的id值[{}]使用", id);
 			return true;
 		}
 		return false;

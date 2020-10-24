@@ -157,37 +157,34 @@ class TableMappingParser extends MappingParser<TableMapping>{
 			
 			for (Element constraintElement : elements) {
 				columnNames = constraintElement.selectNodes("column/@name");
-				if(columnNames == null || columnNames.size() == 0) {
+				if(columnNames.isEmpty()) 
 					throw new NullPointerException(constraintElement.asXML() + " 中没有配置任何<column name=\"xxx\">元素");
-				}
 				
 				constraintType = ConstraintType.toValue(constraintElement.attributeValue("type"));
-				if(constraintType == null) {
+				if(constraintType == null) 
 					throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
-				}
-				if(columnNames.size() > 1 && !constraintType.supportComposite()) {
+				if(columnNames.size() > 1 && !constraintType.supportComposite()) 
 					throw new ConstraintConfigurationException("不支持给多个列添加复合["+constraintType.name()+"]约束");
-				}
 				
 				constraint = new Constraint(constraintType, tableMetadata.getName());
 				switch(constraintType) {
 					case PRIMARY_KEY:
 						for(Attribute columnName: columnNames) {
-							columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
+							columnMetadata = getColumnByName(columnName.getValue());
 							columnMetadata.setPrimaryKeyConstraint(true);
 							constraint.addColumn(columnMetadata);
 						}
 						break;
 					case UNIQUE:
 						for(Attribute columnName: columnNames) {
-							columnMetadata = tableMetadata.getColumnByName(columnName.getValue().toUpperCase(), true);
+							columnMetadata = getColumnByName(columnName.getValue());
 							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 							columnMetadata.setUniqueConstraint(true);
 							constraint.addColumn(columnMetadata);
 						}
 						break;
 					case DEFAULT_VALUE:
-						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+						columnMetadata = getColumnByName(columnNames.get(0).getValue());
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 						columnMetadata.setDefaultValue(constraintElement.attributeValue("value"));
 						if(columnMetadata.getDefaultValue() == null) {
@@ -196,7 +193,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 						constraint.addColumn(columnMetadata);
 						break;
 					case CHECK:
-						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+						columnMetadata = getColumnByName(columnNames.get(0).getValue());
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 						columnMetadata.setCheckConstraint(constraintElement.attributeValue("expression"));
 						if(columnMetadata.getCheck() == null) {
@@ -205,7 +202,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 						constraint.addColumn(columnMetadata);
 						break;
 					case FOREIGN_KEY:
-						columnMetadata = tableMetadata.getColumnByName(columnNames.get(0).getValue().toUpperCase(), true);
+						columnMetadata = getColumnByName(columnNames.get(0).getValue());
 						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
 						columnMetadata.setForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
 						if(columnMetadata.getFkTableName() == null) {
@@ -217,6 +214,14 @@ class TableMappingParser extends MappingParser<TableMapping>{
 				tableMetadata.addConstraint(constraint);
 			}
 		}
+	}
+	
+	// 根据列名获取列对象
+	private ColumnMetadata getColumnByName(String name) {
+		ColumnMetadata column = tableMetadata.getColumns().get(name.toUpperCase());
+		if(column == null)
+			throw new NullPointerException("不存在name为["+name+"]的列");
+		return column;
 	}
 	
 	// 验证指定列是否已经存在主键约束
@@ -319,9 +324,9 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	 */
 	private void setColumnValidator(Element validatorsElement) {
 		Map<String, ValidateHandler> validateHandlerMap = getValidateHandlerMap(validatorsElement);
-		boolean existsPrimaryKeyHandler = tableMetadata.existsPrimaryKeyHandler();
+		boolean existsPrimaryKeyHandler = tableMetadata.getPrimaryKeyHandler() != null;
 		tableMetadata.getDeclareColumns().forEach(column -> {
-			tableMetadata.setValidateColumn(column.setValidateHandler(existsPrimaryKeyHandler, validateHandlerMap.isEmpty()?null:validateHandlerMap.get(column.getCode())));
+			tableMetadata.addValidateColumn(column.setValidateHandler(existsPrimaryKeyHandler, validateHandlerMap.isEmpty()?null:validateHandlerMap.get(column.getName())));
 		});
 	}
 	
@@ -333,14 +338,17 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	@SuppressWarnings("unchecked")
 	private Map<String, ValidateHandler> getValidateHandlerMap(Element validatorsElement) {
 		if(validatorsElement != null) {
-			List<Element> validatorElements = validatorsElement.selectNodes("validator[@code!='']");
-			if(validatorElements != null && !validatorElements.isEmpty()) {
-				Map<String, ValidateHandler> validatorMap = new HashMap<String, ValidateHandler>();
+			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
+			if(!validatorElements.isEmpty()) {
+				Map<String, ValidateHandler> validatorMap = null;
 				
-				ValidateHandler handler = null;
-				for (Element ve : validatorElements) {
-					handler = getValidateHandler(ve);
-					validatorMap.put(handler.getCode(), handler);
+				ValidateHandler validateHandler = null;
+				for (Element validatorElement : validatorElements) {
+					validateHandler = getValidateHandler(validatorElement);
+					
+					if(validatorMap == null)
+						validatorMap = new HashMap<String, ValidateHandler>();
+					validatorMap.put(validateHandler.getName(), validateHandler);
 				}
 				return validatorMap;
 			}
@@ -355,22 +363,19 @@ class TableMappingParser extends MappingParser<TableMapping>{
 	 */
 	@SuppressWarnings("unchecked")
 	private ValidateHandler getValidateHandler(Element validatorElement) {
-		String code = validatorElement.attributeValue("code");
-		if(StringUtil.notEmpty(code)) {
-			if(tableMetadata.getColumns_().get(code) == null)
-				throw new NullPointerException("配置验证器时, 不存在code="+code+"的列");
-			
-			ValidateHandler handler = new ValidateHandler(code);
-			List<Attribute> attributes = validatorElement.attributes();
-			if(attributes.size() > 1) {
-				attributes.forEach(attribute -> {
-					if(!"code".equals(attribute.getName())) 
-						handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getName(), attribute.getValue()));
-				});
-			}
-			return handler;
+		String name = validatorElement.attributeValue("name");
+		if(StringUtil.isEmpty(name)) 
+			throw new NullPointerException("<validator>元素中的name属性值不能为空");
+		
+		ValidateHandler handler = new ValidateHandler(getColumnByName(name).getName());
+		List<Attribute> attributes = validatorElement.attributes();
+		if(attributes.size() > 1) {
+			attributes.forEach(attribute -> {
+				if(!"name".equals(attribute.getName())) 
+					handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getName(), attribute.getValue()));
+			});
 		}
-		throw new NullPointerException("<validator>元素中的code属性值不能为空");
+		return handler;
 	}
 	
 	/**

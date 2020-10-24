@@ -40,7 +40,7 @@ class MappingParser4Sql {
 	 */
 	public NodeList getValidatorNodeList(Node sqlNode) throws XPathExpressionException {
 		if(validatorNodeExpression == null)
-			validatorNodeExpression = XPathFactory.newInstance().newXPath().compile("validators/validator[@code!='']");
+			validatorNodeExpression = XPathFactory.newInstance().newXPath().compile("validators/validator[@name!='']");
 		return (NodeList) validatorNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
 	}
 

@@ -107,7 +107,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 		
 		ColumnMetadata oldColumn = null;
 		for (ColumnMetadata column : columns) {
-			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
+			oldColumn = oldTable.getColumns().get(column.getOldName());
 			if(oldColumn == null) {
 				return true;
 			}else {// 不为空, 标识可能为修改列
@@ -169,33 +169,29 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	
 	// 同步列
 	private void syncColumns(TableMetadata newTable, TableMetadata oldTable) throws Exception {
-		Collection<ColumnMetadata> columns = newTable.getDeclareColumns();
 		ColumnMetadata oldColumn;
-		for (ColumnMetadata column : columns) {
-			oldColumn = oldTable.getColumnByName(column.getOldName(), false);
+		for (ColumnMetadata newColumn : newTable.getDeclareColumns()) {
+			oldColumn = oldTable.getColumns().get(newColumn.getOldName());
 			if(oldColumn == null) { // 为空, 标识为新加的列
-				createColumn(newTable.getName(), column);
+				createColumn(newTable.getName(), newColumn);
 			}else { // 不为空, 可能是修改了列
-				if(!column.getName().equals(oldColumn.getName())) {
-					columnRename(newTable.getName(), oldColumn.getName(), column.getName());
-				}
-				if(isUpdateColumnObject(column, oldColumn)) {
-					updateColumn(newTable.getName(), oldColumn, column);
-				}
+				if(!newColumn.getName().equals(oldColumn.getName())) 
+					columnRename(newTable.getName(), oldColumn.getName(), newColumn.getName());
+				if(isUpdateColumnObject(newColumn, oldColumn)) 
+					updateColumn(newTable.getName(), oldColumn, newColumn);
 			}
 		}
 		
 		for (ColumnMetadata oldColumn_ : oldTable.getDeclareColumns()) {
 			// 如果在新表中找不到旧的列实例                                     同时, 使用新表中所有列的oldName也找不到旧的列实例
-			if(newTable.getColumnByName(oldColumn_.getName(), false) == null && !columnExistsByOldName(columns, oldColumn_.getName())) { 
+			if(!newTable.getColumns().containsKey(oldColumn_.getName()) && !columnExistsByOldName(newTable.getDeclareColumns(), oldColumn_.getName())) 
 				dropColumn(newTable.getName(), oldColumn_);
-			}
 		}
 	}
 	// 根据旧列名, 判断列是否存在
-	private boolean columnExistsByOldName(Collection<ColumnMetadata> columns, String oldColumnName) {
-		for (ColumnMetadata column : columns) {
-			if(column.getOldName().equals(oldColumnName)) 
+	private boolean columnExistsByOldName(Collection<ColumnMetadata> newColumns, String oldColumnName) {
+		for (ColumnMetadata newColumn : newColumns) {
+			if(newColumn.getOldName().equals(oldColumnName)) 
 				return true;
 		}
 		return false;

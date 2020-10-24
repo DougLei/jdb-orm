@@ -74,28 +74,26 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 		NodeList validatorNodeList = MappingParserContext.getValidatorNodeList(sqlNode);
 		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
 			NamedNodeMap attributes = null;
-			String code = null;
+			String name = null;
 			Node attribute = null;
 			for(int i=0;i<validatorNodeList.getLength();i++) {
 				attributes = validatorNodeList.item(i).getAttributes();
-				
-				code = attributes.getNamedItem("code").getNodeValue();
-				if(StringUtil.notEmpty(code)) {
-					if(validateHandlerMap == null)
-						validateHandlerMap = new HashMap<String, ValidateHandler>(validatorNodeList.getLength());
+				name = attributes.getNamedItem("name").getNodeValue();
+				if(StringUtil.isEmpty(name)) 
+					throw new MetadataParseException("<validator>元素中的name属性值不能为空");
 					
-					ValidateHandler handler = new ValidateHandler(code);
-					if(attributes.getLength() > 1) {
-						for(int j=0;j<attributes.getLength();j++) {
-							attribute = attributes.item(j);
-							if(!"code".equals(attribute.getNodeName()))
-								handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getNodeName(), attribute.getNodeValue()));
-						}
+				ValidateHandler validateHandler = new ValidateHandler(name);
+				if(attributes.getLength() > 1) {
+					for(int j=0;j<attributes.getLength();j++) {
+						attribute = attributes.item(j);
+						if(!"name".equals(attribute.getNodeName()))
+							validateHandler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getNodeName(), attribute.getNodeValue()));
 					}
-					validateHandlerMap.put(handler.getCode(), handler);
-					continue;
 				}
-				throw new MetadataParseException("<validator>元素中的code属性值不能为空");
+				
+				if(validateHandlerMap == null)
+					validateHandlerMap = new HashMap<String, ValidateHandler>();
+				validateHandlerMap.put(validateHandler.getName(), validateHandler);
 			}
 		}
 		if(validateHandlerMap == null) 

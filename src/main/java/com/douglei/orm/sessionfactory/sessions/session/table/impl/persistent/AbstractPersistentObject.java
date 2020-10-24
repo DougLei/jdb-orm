@@ -65,7 +65,7 @@ public class AbstractPersistentObject {
 	 */
 	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
 		Set<String> columnMetadataCodes = tableMetadata.getColumns_().keySet();
-		short columnSize = (short) columnMetadataCodes.size();
+		int columnSize = columnMetadataCodes.size();
 		Map<String, Object> objectMap = new HashMap<String, Object>(columnSize);
 		
 		int index = 1;
