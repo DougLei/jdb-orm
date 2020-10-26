@@ -127,6 +127,12 @@ public class SqlStatement {
 		if(sqlStatementHandler.needExtractOrderByClause())
 			new OrderByClauseResolver().extractOrderByClause(this);
 	}
+	void setSql(String sql) {
+		this.sql = sql;
+	}
+	void setOrderByClause(String orderByClause) {
+		this.orderByClause = orderByClause;
+	}
 	
 	/**
 	 * 指定字符是否是空白
@@ -152,11 +158,5 @@ public class SqlStatement {
 	}
 	public String getOrderByClause() {
 		return orderByClause;
-	}
-	void setSql(String sql) {
-		this.sql = sql;
-	}
-	void setOrderByClause(String orderByClause) {
-		this.orderByClause = orderByClause;
 	}
 }
