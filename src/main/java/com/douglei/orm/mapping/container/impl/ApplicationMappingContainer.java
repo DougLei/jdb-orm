@@ -30,7 +30,7 @@ public class ApplicationMappingContainer implements MappingContainer {
 	@Override
 	public MappingProperty addMappingProperty(MappingProperty mappingProperty) {
 		String code = mappingProperty.getCode();
-		MappingProperty exMappingProperty = getMappingProperty(code);
+		MappingProperty exMappingProperty = mappingProperties.get(code);
 		if(logger.isDebugEnabled() && exMappingProperty != null) 
 			logger.debug("覆盖code为[{}]的映射属性: {}", code, exMappingProperty);
 

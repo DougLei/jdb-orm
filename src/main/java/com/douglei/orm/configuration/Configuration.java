@@ -30,6 +30,7 @@ public class Configuration {
 	private Environment environment;
 	private ExternalDataSource externalDataSource; // 外部的数据源
 	private MappingContainer mappingContainer; // 从外部传入的映射容器实例
+	private SessionFactory sessionFactory;
 	
 	public Configuration() {
 		inputstream = Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
@@ -40,9 +41,6 @@ public class Configuration {
 	public Configuration(InputStream configurationInputStream) {
 		inputstream = configurationInputStream;
 	}
-	
-	
-	private SessionFactory sessionFactory;
 	
 	/**
 	 * 构建SessionFactory实例, 同一个Configuration只能构建出一个SessionFactory实例
