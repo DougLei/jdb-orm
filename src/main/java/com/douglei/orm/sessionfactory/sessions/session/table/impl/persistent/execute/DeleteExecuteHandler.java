@@ -34,21 +34,20 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 	// 当存在primaryKey时, set对应的sql语句
 	private void setSqlWhenExistsPrimaryKey(StringBuilder deleteSql) {
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
-		byte size = (byte)primaryKeyColumnMetadataCodes.size();
+		int size = primaryKeyColumnMetadataCodes.size();
 		
 		parameters = new ArrayList<Object>(size);
 		
 		ColumnMetadata primaryKeyColumnMetadata = null;
-		byte index = 1;
+		int index = 1;
 		for (String pkCode : primaryKeyColumnMetadataCodes) {
 			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumns_().get(pkCode);
 			
 			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
 			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDBDataType()));
 			
-			if(index < size) {
+			if(index < size) 
 				deleteSql.append(" and ");
-			}
 			index++;
 		}
 	}
