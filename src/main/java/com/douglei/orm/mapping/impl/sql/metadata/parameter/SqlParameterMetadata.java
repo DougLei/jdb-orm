@@ -112,10 +112,11 @@ public class SqlParameterMetadata implements Metadata{
 			
 			this.mode = SqlParameterMode.toValue(propertyMap.get("mode"));
 		} else {
-			if(StringUtil.isEmpty(type))
+			if(StringUtil.isEmpty(type)) {
 				type = propertyMap.get("datatype");
-			if(StringUtil.isEmpty(type))
-				type = "string";
+				if(StringUtil.isEmpty(type))
+					type = "string";
+			}
 		}
 		
 		// 这里不对dataType进行转大/小写的操作, 原因是, dataType可能是一个自定义类的全路径, 转换后无法进行反射构建实例
