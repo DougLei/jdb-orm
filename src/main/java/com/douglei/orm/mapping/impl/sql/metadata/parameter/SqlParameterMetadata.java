@@ -54,7 +54,7 @@ public class SqlParameterMetadata implements Metadata{
 		this.configText = sqlParameterConfigHolder.splitIncludeRegExKey()?RegularExpressionUtil.transferRegularExpressionKey(configText):configText;
 
 		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
-		setDataType(propertyMap);
+		setDBDataType(propertyMap);
 		
 		setUsePlaceholder(propertyMap);
 		setNullable(propertyMap.get("nullable"));
@@ -104,22 +104,22 @@ public class SqlParameterMetadata implements Metadata{
 		return null;
 	}
 	
-	private void setDataType(Map<String, String> propertyMap) {
-		String dataType;
+	private void setDBDataType(Map<String, String> propertyMap) {
+		String type = propertyMap.get("dbtype");
 		if(MappingParserContext.getCurrentSqlType() == ContentType.PROCEDURE) {
-			dataType = propertyMap.get("dbtype");
-			if(StringUtil.isEmpty(dataType))
+			if(StringUtil.isEmpty(type))
 				throw new NullPointerException("存储过程中, 参数["+name+"]的dbType不能为空");
 			
 			this.mode = SqlParameterMode.toValue(propertyMap.get("mode"));
 		} else {
-			dataType = propertyMap.get("datatype");
-			if(StringUtil.isEmpty(dataType))
-				dataType = "string";
+			if(StringUtil.isEmpty(type))
+				type = propertyMap.get("datatype");
+			if(StringUtil.isEmpty(type))
+				type = "string";
 		}
 		
 		// 这里不对dataType进行转大/小写的操作, 原因是, dataType可能是一个自定义类的全路径, 转换后无法进行反射构建实例
-		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), dataType);
+		DBDataTypeWrapper wrapper = DBDataTypeUtil.get(propertyMap.get("length"), propertyMap.get("precision"), type);
 		this.dbDataType = wrapper.getDBDataType();
 		this.length = wrapper.getLength();
 		this.precision = wrapper.getPrecision();

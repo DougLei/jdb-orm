@@ -33,7 +33,9 @@
 		<!-- 
 			<where>
 				<if test="age != null and age == 23">
-					and name = #{name, description=姓名, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
+					
+					sql参数的属性配置, 参考《table映射配置结构设计.tmp.xml》中<column>的配置					
+					and name = #{name, description=姓名, dbType=VARCHAR, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
 				</if>
 				<if test="age != null">
 					and name = 'DougLei'
@@ -96,11 +98,11 @@
 		<!-- 
 			dbType的值必须是全大写, 框架是区分大小写的, 且必须配置, 没有默认值, 目前支持的类型有:
 			
-				mysql数据库: BIGINT, CHAR, DATETIME, DECIMAL, INT, MEDIUMBLOB, MEDIUMTEXT, SMALLINT, VARCHAR
+				mysql数据库: BIGINT, CHAR, DATETIME, DATE, DECIMAL, INT, MEDIUMBLOB, MEDIUMTEXT, SMALLINT, VARCHAR
 				
 				oracle数据库: BLOB, CHAR, CLOB, CURSOR, DATE, NCHAR, NUMBER, NVARCHAR2, VARCHAR2
 				
-				sqlserver数据库: BIGINT, CHAR, DATETIME, DECIMAL, INT, NCHAR, NVARCHAR, SMALLINT, VARBINARY(MAX), VARCHAR, VARCHAR(MAX)
+				sqlserver数据库: BIGINT, CHAR, DATETIME, DATE, DECIMAL, INT, NCHAR, NVARCHAR, SMALLINT, VARBINARY(MAX), VARCHAR, VARCHAR(MAX)
 		 -->
 	<!-- 	
 		<content name="execProcedure" type="procedure">
