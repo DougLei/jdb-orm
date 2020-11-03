@@ -5,16 +5,15 @@ import java.util.Map;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.dialect.datatype.db.impl.Null;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
  * 类型容器
  * @author DougLei
  */
 public class DataTypeContainer {
-	private final Map<String, DataType> container = new HashMap<String, DataType>(32);
-	private final Map<Class<?>, DBDataType> extendContainer4ClassType = new HashMap<Class<?>, DBDataType>(32);
-	private final Map<Integer, DBDataType> extendContainer4ColumnType = new HashMap<Integer, DBDataType>(32);
+	private Map<String, DataType> container = new HashMap<String, DataType>(32);
+	private Map<Class<?>, DBDataType> extendContainer4ClassType = new HashMap<Class<?>, DBDataType>(32);
+	private Map<Integer, DBDataType> extendContainer4ColumnType = new HashMap<Integer, DBDataType>(32);
 	
 	/**
 	 * 注册类型
@@ -44,8 +43,13 @@ public class DataTypeContainer {
 	 */
 	public DataType get(String name) {
 		DataType dataType = container.get(name);
-		if(dataType == null) 
-			dataType = register((DataType) ConstructorUtil.newInstance(name));
+		if(dataType == null) {
+			try {
+				dataType = register((DataType) Class.forName(name).newInstance());
+			} catch (Exception e) {
+				throw new IllegalArgumentException("在获取名为["+name+"]的数据类型时出现异常, 请检查类型名称, 或自定义数据类型实现类的路径是否正确", e);
+			}
+		}
 		return dataType;
 	}
 	
