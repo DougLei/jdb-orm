@@ -8,10 +8,11 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.Classification;
 import com.douglei.orm.dialect.datatype.DataType;
+import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Bigint;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 
 /**
- * 数据库的数据类型
+ * 数据库的数据类型; 自定义的扩展类型, 类的类名即类型名, 具体可参考框架已经实现的类, 例如 {@link Bigint}
  * @author DougLei
  */
 public abstract class DBDataType extends DataType implements Serializable{
