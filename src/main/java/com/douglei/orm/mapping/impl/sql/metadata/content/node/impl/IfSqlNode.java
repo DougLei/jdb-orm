@@ -8,7 +8,7 @@ import com.douglei.tools.instances.ognl.OgnlHandler;
  * @author DougLei
  */
 public class IfSqlNode extends AbstractSqlNode {
-	private static final long serialVersionUID = -1251199371548478127L;
+	private static final long serialVersionUID = -3653851460984152044L;
 	
 	private String expression;
 	
@@ -18,18 +18,19 @@ public class IfSqlNode extends AbstractSqlNode {
 	}
 
 	@Override
-	public boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
-		processExpression(sqlParameterNamePrefix);
+	public boolean matching(Object sqlParameter, String alias) {
+		processExpression(alias);
+		if(sqlParameter == null)
+			return false;
 		return OgnlHandler.getSingleton().getBooleanValue(expression, sqlParameter);
 	}
 	
-	private boolean unProcessExpression = true;// 是否【没有】处理expression, 默认没有处理
-	private void processExpression(String sqlParameterNamePrefix) {
-		if(unProcessExpression) {
-			unProcessExpression = false;
-			
-			if(sqlParameterNamePrefix != null && expression.indexOf(sqlParameterNamePrefix+".") != -1) 
-				expression = expression.replace(sqlParameterNamePrefix+".", "");
+	private boolean flag;// 是否处理了expression, 默认没有处理
+	private void processExpression(String alias) {
+		if(!flag) {
+			flag = true;
+			if(alias != null && expression.indexOf(alias+".") != -1) 
+				expression = expression.replace(alias+".", "");
 		}
 	}
 

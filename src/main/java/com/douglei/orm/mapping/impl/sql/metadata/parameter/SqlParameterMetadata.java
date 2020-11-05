@@ -25,7 +25,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 6608387412551678697L;
+	private static final long serialVersionUID = 7338472070728018677L;
 
 	private String configText;
 	
@@ -165,14 +165,14 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	private void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+		if(defaultValue != null)
+			this.nullable = true;
 	}
 	private void setValidate(String validate) {
 		this.validate = Boolean.parseBoolean(validate);
 	}
 	private void setDescription(String description) {
-		if(StringUtil.isEmpty(description)) 
-			description = name;
-		this.description = description;
+		this.description = StringUtil.isEmpty(description)?name:description;
 	}
 	
 	private void setValidateHandler() {
@@ -182,53 +182,56 @@ public class SqlParameterMetadata implements Metadata{
 		if(validateHandler != null) {
 			this.validate = true;
 			this.validateHandler = validateHandler;
-			this.validateHandler.addValidator(new _NullableValidator(defaultValue==null?nullable:true));
+			this.validateHandler.addValidator(new _NullableValidator(nullable));
 			this.validateHandler.addValidator(new _DataTypeValidator(dbDataType, length, precision));
 			this.validateHandler.sort();
 		}
 	}
 
-	private boolean unProcessNamePrefix = true;// 是否【没有】处理过name前缀, 默认都没有处理
+	private boolean flag;// 是否处理过name前缀, 默认都没有处理
 	private boolean isSingleName;// 是否只是一个name, 如果不是的话(即alias.xxx这种多层级name), 则需要ognl解析
-	private void processNamePrefix(String sqlParameterNamePrefix) {
-		if(unProcessNamePrefix) {
-			unProcessNamePrefix = false;
+	private void processNamePrefix(String alias) {
+		if(!flag) {
+			flag = false;
 			
 			// 在foreach中, 传入一个List<String>, alias=id, #{id}, 即别名和参数名一致, 这个时候就不能substring
-			if(sqlParameterNamePrefix != null) {
-				int subLength = sqlParameterNamePrefix.length()+1;// +1是把表达式后面的.去掉
-				if(name.length() > subLength) {
+			if(alias != null) {
+				int subLength = alias.length()+1;// +1是把表达式后面的.去掉
+				if(name.length() > subLength) 
 					name = name.substring(subLength);
-				}
 			}
 			isSingleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的多层级形式
 		}
 	}
 	
 	// 获取值
-	private Object getValue_(Object sqlParameter, String sqlParameterNamePrefix) {
-		processNamePrefix(sqlParameterNamePrefix);
+	private Object getValue_(Object sqlParameter, String alias, boolean validateNullValue) {
+		processNamePrefix(alias);
 		
 		Object value = null;
-		if(sqlParameter instanceof Map<?, ?> && isSingleName) {
-			value = ((Map<?, ?>)sqlParameter).get(name); 
-		}else if(ConverterUtil.isSimpleType(sqlParameter)){
-			value = sqlParameter;
-		}else {
-			value = OgnlHandler.getSingleton().getObjectValue(name, sqlParameter);
-		}
-		
-		if(value == null) {
-			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
-			if(value != null) {
-				if(isSingleName) {
-					IntrospectorUtil.setProperyValue(sqlParameter, name, value);
-				}else {
-					int dot = name.lastIndexOf(".");
-					IntrospectorUtil.setProperyValue(OgnlHandler.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
-				}
+		if(sqlParameter != null) {
+			if(sqlParameter instanceof Map<?, ?> && isSingleName) {
+				value = ((Map<?, ?>)sqlParameter).get(name); 
+			}else if(ConverterUtil.isSimpleType(sqlParameter)){
+				value = sqlParameter;
+			}else {
+				value = OgnlHandler.getSingleton().getObjectValue(name, sqlParameter);
 			}
 		}
+		
+		if(value == null && defaultValue != null) {
+			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
+			
+			if(isSingleName) {
+				IntrospectorUtil.setProperyValue(sqlParameter, name, value);
+			}else {
+				int dot = name.lastIndexOf(".");
+				IntrospectorUtil.setProperyValue(OgnlHandler.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
+			}
+		}
+		
+		if(validateNullValue && value == null && !nullable)
+			throw new NullPointerException("名为"+name+"的参数, 不能传入null值");
 		return value;
 	}
 	
@@ -238,28 +241,28 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter) {
-		return getValue_(sqlParameter, null);
+		return getValue_(sqlParameter, null, true);
 	}
 	
 	/**
 	 * 获取值
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix 即如果是alias.xxx, 要去除alias.
+	 * @param alias 即如果是alias.xxx, 要去除alias.
 	 * @return
 	 */
-	public Object getValue(Object sqlParameter, String sqlParameterNamePrefix) {
-		return getValue_(sqlParameter, sqlParameterNamePrefix);
+	public Object getValue(Object sqlParameter, String alias) {
+		return getValue_(sqlParameter, alias, true);
 	}
 	
 	/**
 	 * 验证数据
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix
+	 * @param alias
 	 * @return
 	 */
-	public ValidationResult validate(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validate(Object sqlParameter, String alias) {
 		if(validate) 
-			return validateHandler.validate(getValue_(sqlParameter, sqlParameterNamePrefix));
+			return validateHandler.validate(getValue_(sqlParameter, alias, false));
 		return null;
 	}
 	
@@ -310,7 +313,7 @@ public class SqlParameterMetadata implements Metadata{
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		return name.equals(((SqlParameterMetadata) obj).getName());
+		return name.equals(((SqlParameterMetadata) obj).name);
 	}
 
 	@Override

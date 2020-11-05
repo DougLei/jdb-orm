@@ -31,16 +31,16 @@ public class IncludeSqlNode implements SqlNode {
 	}
 
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		ExecuteSql executeSql = new ExecuteSql(purposeEntity, content, sqlParameter);
 		return new ExecuteSqlNode(executeSql.getContent(), executeSql.getParameters(), executeSql.getSqlParameters());
 	}
 
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : rootSqlNodes) {
-			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
+			if(sqlNode.matching(sqlParameter, alias)) {
 				if((result = sqlNode.validateParameter(sqlParameter)) != null) {
 					return result;
 				}

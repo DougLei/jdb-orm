@@ -46,15 +46,15 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		StringBuilder sqlContentBuilder = new StringBuilder();
 		List<Object> parameters = null;
 		List<SqlParameterMetadata> sqlParameters = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, sqlParameterNamePrefix);
+			if(sqlNode.matching(sqlParameter, alias)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
 				if(executeSqlNode.existsParameters()) {
 					if(parameters == null) 
 						parameters = new ArrayList<Object>();
@@ -95,10 +95,10 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix) && (result = sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix)) != null) {
+			if(sqlNode.matching(sqlParameter, alias) && (result = sqlNode.validateParameter(sqlParameter, alias)) != null) {
 				return result;
 			}
 		}

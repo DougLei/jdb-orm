@@ -19,9 +19,8 @@ public abstract class AbstractNestingNode implements SqlNode{
 	 * @param sqlNode
 	 */
 	public void addSqlNode(SqlNode sqlNode) {
-		if(sqlNodes == null) {
-			sqlNodes = new ArrayList<SqlNode>(10);
-		}
+		if(sqlNodes == null) 
+			sqlNodes = new ArrayList<SqlNode>();
 		sqlNodes.add(sqlNode);
 	}
 	

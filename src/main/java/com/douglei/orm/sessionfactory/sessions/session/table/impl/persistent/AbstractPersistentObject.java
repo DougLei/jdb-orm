@@ -2,7 +2,6 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,12 +47,10 @@ public class AbstractPersistentObject {
 			logger.debug("originObject is Object type [{}], 从该object中, 通过java内省机制, 获取相关列的数据信息", originObject.getClass());
 			objectMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumns_().keySet());
 		}
-		if(objectMap == null || objectMap.size() == 0) {
+		if(logger.isDebugEnabled()) 
+			logger.debug("获取的最终objectMap为: {}", objectMap);
+		if(objectMap.isEmpty()) 
 			throw new NullPointerException("要操作的数据不能为空");
-		}
-		if(logger.isDebugEnabled()) {
-			logger.debug("获取的最终objectMap为: {}", objectMap.toString());
-		}
 		this.originObject = originObject;
 	}
 	
@@ -64,18 +61,15 @@ public class AbstractPersistentObject {
 	 * @return
 	 */
 	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		Set<String> columnMetadataCodes = tableMetadata.getColumns_().keySet();
-		int columnSize = columnMetadataCodes.size();
+		int columnSize = tableMetadata.getDeclareColumns().size();
 		Map<String, Object> objectMap = new HashMap<String, Object>(columnSize);
 		
 		int index = 1;
-		Set<String> originPropertyMapKeys = originPropertyMap.keySet();
-		for (String originPMkey : originPropertyMapKeys) {
+		for (String originPMkey : originPropertyMap.keySet()) {
 			if(tableMetadata.getColumns_().containsKey(originPMkey)) {
 				objectMap.put(originPMkey, originPropertyMap.get(originPMkey));
-				if(index == columnSize) {
+				if(index == columnSize) 
 					break;
-				}
 				index++;
 			}
 		}

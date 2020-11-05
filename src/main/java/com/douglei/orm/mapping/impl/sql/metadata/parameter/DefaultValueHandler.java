@@ -11,10 +11,10 @@ public class DefaultValueHandler implements Serializable{
 
 	/**
 	 * 转换默认值
-	 * @param value
+	 * @param configDefaultValue 给参数配置的默认值
 	 * @return
 	 */
-	public Object getDefaultValue(String value) {
-		return value;
+	public Object getDefaultValue(String configDefaultValue) {
+		return configDefaultValue;
 	}
 }

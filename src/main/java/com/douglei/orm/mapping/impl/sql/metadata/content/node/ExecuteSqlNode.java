@@ -17,17 +17,17 @@ public class ExecuteSqlNode {
 	private List<Object> parameters; // 执行sql语句对应的参数值集合
 	private List<SqlParameterMetadata> sqlParameters; // sql参数集合
 	
-	public ExecuteSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String alias) {
 		if(sqlParameterByDefinedOrders != null) {
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
 				if(parameter.isUsePlaceholder()) {
 					if(purposeEntity.isGetSqlParameterValues()) {
 						if(parameters == null) 
 							parameters = new ArrayList<Object>();
-						parameters.add(new InputSqlParameter(parameter.getValue(sqlParameter, sqlParameterNamePrefix), parameter.getDBDataType()));
+						parameters.add(new InputSqlParameter(parameter.getValue(sqlParameter, alias), parameter.getDBDataType()));
 					}
 				}else {
-					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameter.getValue(sqlParameter, sqlParameterNamePrefix) + parameter.getValueSuffix());
+					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameter.getValue(sqlParameter, alias) + parameter.getValueSuffix());
 				}
 			}
 		}

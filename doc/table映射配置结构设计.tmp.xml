@@ -34,7 +34,7 @@
 				
 				dbType通常情况下无法实现跨库, 例如sqlserver和mysql的VARCHAR, 与oracle的VARCHAR2
 			-->
-			<!-- nullable默认值为true, validate默认值为false -->
+			<!-- nullable默认值为true, validate默认值为false; 在sql参数时, nullable的默认值为false, validate默认值为false -->
 			<column name="ID" oldName="IDENTITY" property="id" dbType="VARCHAR" dataType="string" primaryKey="true" length="30" precision="" nullable="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column name="NANE" property="name" dataType="string" length="30" validate="true" unique="true" description="姓名" />
 			<column name="AGE" property="age" dataType="number" />

@@ -29,10 +29,10 @@ public interface SqlNode extends Serializable{
 	/**
 	 * 该node是否满足匹配
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix
+	 * @param alias
 	 * @return
 	 */
-	default boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
+	default boolean matching(Object sqlParameter, String alias) {
 		return true;
 	}
 	
@@ -50,10 +50,10 @@ public interface SqlNode extends Serializable{
 	 * 获取可执行的sql node
 	 * @param purposeEntity
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix sql参数名前缀, 即别名alias
+	 * @param alias sql参数名前缀, 即别名alias
 	 * @return
 	 */
-	ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix);
+	ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias);
 	
 	/**
 	 * 验证参数
@@ -67,8 +67,8 @@ public interface SqlNode extends Serializable{
 	/**
 	 * 验证参数
 	 * @param sqlParameter
-	 * @param sqlParameterNamePrefix
+	 * @param alias
 	 * @return
 	 */
-	ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix);
+	ValidationResult validateParameter(Object sqlParameter, String alias);
 }

@@ -21,7 +21,7 @@ public abstract class SqlContentExtractor {
 	 * @param contents
 	 * @return
 	 */
-	protected List<ContentMetadata> getContents(Purpose purpose, String name, List<ContentMetadata> contents){
+	protected final List<ContentMetadata> getContents(Purpose purpose, String name, List<ContentMetadata> contents){
 		List<ContentMetadata> list = getContents_(purpose, name, contents);
 		if(list.isEmpty())
 			throw new NullPointerException("不存在任何可以执行的sql语句");

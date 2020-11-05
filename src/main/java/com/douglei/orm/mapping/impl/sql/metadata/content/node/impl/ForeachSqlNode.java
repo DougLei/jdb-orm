@@ -40,13 +40,11 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	
 	// 获取要foreach的集合/数组对象
 	private Object getCollectionObject(Object sqlParameter) {
-		if(sqlParameter != null) {
-			if(sqlParameter instanceof Collection<?> || sqlParameter.getClass().isArray()) {
-				return sqlParameter;
-			}
-			return OgnlHandler.getSingleton().getObjectValue(collection, sqlParameter);
-		}
-		return null;
+		if(sqlParameter == null)
+			return sqlParameter;
+		if(sqlParameter instanceof Collection<?> || sqlParameter.getClass().isArray()) 
+			return sqlParameter;
+		return OgnlHandler.getSingleton().getObjectValue(collection, sqlParameter);
 	}
 	
 	/**
@@ -89,28 +87,19 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public boolean matching(Object sqlParameter, String sqlParameterNamePrefix) {
+	public boolean matching(Object sqlParameter, String alias) {
 		Object collectionObject = getCollectionObject(sqlParameter);
-		if(collectionObject == null) {
+		if(collectionObject == null) 
 			return false;
-		}
-		if(collectionObject instanceof Collection<?>) {
-			Collection<?> tc = (Collection<?>) collectionObject;
-			if(tc.isEmpty()) {
-				return false;
-			}
-		}else if(collectionObject.getClass().isArray()) {
-			if(((Object[]) collectionObject).length == 0) {
-				return false;
-			}
-		}else {
-			throw new IllegalArgumentException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型], [数组类型]");
-		}
-		return true;
+		if(collectionObject instanceof Collection<?>) 
+			return !((Collection<?>) collectionObject).isEmpty();
+		if(collectionObject.getClass().isArray()) 
+			return ((Object[]) collectionObject).length > 0;
+		throw new IllegalArgumentException("目前<foreach>元素中的collection属性, 只支持["+Collection.class+"类型]和[数组类型]的数据");
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		Object[] array = getArray(sqlParameter);
 		List<String> sqlContentList = null;
 		List<Object> parameters = null;
@@ -120,9 +109,8 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], alias)) {
-					if(sqlContentList == null) {
+					if(sqlContentList == null) 
 						sqlContentList = new ArrayList<String>(10);
-					}
 					
 					executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, array[i], alias);
 					if(executeSqlNode.existsParameters()) {
@@ -140,9 +128,9 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			}
 		}
 		
-		if(sqlContentList == null) {
+		if(sqlContentList == null) 
 			return ExecuteSqlNode.emptyExecuteSqlNode();
-		}
+		
 		StringBuilder sqlContent = new StringBuilder(100);
 		sqlContent.append(open);
 		
@@ -161,7 +149,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		Object[] array = getArray(sqlParameter);
 		ValidationResult result = null;
 		for(int i=0;i<array.length;i++) {

@@ -14,20 +14,19 @@ public class SwitchSqlNode extends AbstractNestingNode {
 	private static final long serialVersionUID = 6112742403201533418L;
 
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
-				return sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, sqlParameterNamePrefix);
-			}
+			if(sqlNode.matching(sqlParameter, alias)) 
+				return sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
 		}
 		return ExecuteSqlNode.emptyExecuteSqlNode();
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, sqlParameterNamePrefix)) {
-				return sqlNode.validateParameter(sqlParameter, sqlParameterNamePrefix);
+			if(sqlNode.matching(sqlParameter, alias)) {
+				return sqlNode.validateParameter(sqlParameter, alias);
 			}
 		}
 		return null;

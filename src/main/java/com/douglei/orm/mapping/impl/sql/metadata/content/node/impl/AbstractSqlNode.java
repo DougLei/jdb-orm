@@ -105,16 +105,16 @@ public abstract class AbstractSqlNode implements SqlNode{
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String sqlParameterNamePrefix) {
-		return new ExecuteSqlNode(purposeEntity, content, sqlParameters, sqlParameter, sqlParameterNamePrefix);
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
+		return new ExecuteSqlNode(purposeEntity, content, sqlParameters, sqlParameter, alias);
 	}
 
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String sqlParameterNamePrefix) {
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		if(sqlParameters != null) {
 			ValidationResult result = null;
 			for (SqlParameterMetadata parameter : sqlParameters) {
-				if((result = parameter.validate(sqlParameter, sqlParameterNamePrefix)) != null) {
+				if((result = parameter.validate(sqlParameter, alias)) != null) {
 					return result;
 				}
 			}
