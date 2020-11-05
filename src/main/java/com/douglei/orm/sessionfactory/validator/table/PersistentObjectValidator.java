@@ -38,9 +38,8 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
 				value = objectMap.get(column.getCode());
-				if((result = column.getValidateHandler().validate(value)) != null) {
+				if((result = column.getValidateHandler().validate(value)) != null) 
 					return result;
-				}
 			}
 			
 			// 如果还存在唯一约束, 则要对集合中的数据也进行验证
