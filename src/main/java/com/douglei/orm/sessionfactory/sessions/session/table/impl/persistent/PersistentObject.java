@@ -39,7 +39,9 @@ public class PersistentObject extends AbstractPersistentObject{
 	
 	public Identity getId() {
 		if(id == null) {
-			if(tableMetadata.getPrimaryKeyColumns_() != null) {
+			if(tableMetadata.getPrimaryKeyColumns_() == null) {
+				this.id = new Identity(objectMap);// 不存在主键配置时, 就将整个对象做为id
+			}else {
 				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 				Object id;
 				if(primaryKeyColumnMetadataCodes.size() == 1) {
@@ -51,8 +53,6 @@ public class PersistentObject extends AbstractPersistentObject{
 					id = idMap;
 				}
 				this.id = new Identity(id, tableMetadata);
-			}else {
-				this.id = new Identity(objectMap);// 不存在主键配置时, 就将整个对象做为id
 			}
 		}
 		return id;
@@ -61,7 +61,7 @@ public class PersistentObject extends AbstractPersistentObject{
 	// 获取执行器实例
 	public ExecuteHandler getExecuteHandler() {
 		switch(operationState) {
-			case CREATE:
+			case INSERT:
 				return new InsertExecuteHandler(tableMetadata, objectMap, originObject);
 			case DELETE:
 				return new DeleteExecuteHandler(tableMetadata, objectMap);

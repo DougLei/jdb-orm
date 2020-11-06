@@ -24,15 +24,15 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
 		if(tableMetadata.getPrimaryKeyColumns_() != null) {
-			setSqlWhenExistsPrimaryKey(deleteSql);
+			setWhereSqlStatementWhenExistsPrimaryKey(deleteSql);
 		}else {
-			setSqlWhenUnExistsPrimaryKey(deleteSql);
+			setWhereSqlStatementWhenUnExistsPrimaryKey(deleteSql);
 		}
 		this.sql = deleteSql.toString();
 	}
 	
-	// 当存在primaryKey时, set对应的sql语句
-	private void setSqlWhenExistsPrimaryKey(StringBuilder deleteSql) {
+	// 当存在primaryKey时, set对应的where sql语句
+	private void setWhereSqlStatementWhenExistsPrimaryKey(StringBuilder deleteSql) {
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 		int size = primaryKeyColumnMetadataCodes.size();
 		
@@ -52,8 +52,8 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 		}
 	}
 	
-	// 当不存在primaryKey时, set对应的sql语句
-	private void setSqlWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
+	// 当不存在primaryKey时, set对应的where sql语句
+	private void setWhereSqlStatementWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
 		int size = objectMap.size();
 		parameters = new ArrayList<Object>(size);
 		
@@ -71,9 +71,8 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 				parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
 			}
 			
-			if(index < size) {
+			if(index < size) 
 				deleteSql.append(" and ");
-			}
 			index++;
 		}
 	}

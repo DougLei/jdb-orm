@@ -16,9 +16,11 @@ import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AlreadyDeletedException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.OperationState;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UnsupportUpdatePersistentWithoutPrimaryKeyException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.orm.sql.ReturnID;
@@ -79,13 +81,11 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putInsertPersistentObjectCache(PersistentObject persistent) {
 		if(enableTalbeSessionCache) {
-			String code = persistent.getCode();
+			String code = persistent.getTableMetadata().getCode();
 			Map<Identity, PersistentObject> cache = getCache(code);
 			
-			if(!cache.isEmpty()) {
-				if(cache.containsKey(persistent.getId())) 
-					throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
-			}
+			if(!cache.isEmpty() && cache.containsKey(persistent.getId())) 
+				throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
 			cache.put(persistent.getId(), persistent);
 		}else {
 			executePersistentObject(persistent);
@@ -93,7 +93,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	private void save_(TableMetadata table, Object object) {
-		PersistentObject persistent = new PersistentObject(table, object, OperationState.CREATE, false);
+		PersistentObject persistent = new PersistentObject(table, object, OperationState.INSERT, false);
 		putInsertPersistentObjectCache(persistent);
 	}
 	
@@ -129,7 +129,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, boolean updateNullValue, Map<Identity, PersistentObject> cache) {
 		if(tableMetadata.getPrimaryKeyColumns_() == null) 
-			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode());
+			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode()); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
 		
 		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE, updateNullValue);
 		if(enableTalbeSessionCache) {
@@ -137,11 +137,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 				logger.debug("缓存中存在要修改的数据持久化对象");
 				persistentObject = cache.get(persistentObject.getId());
 				switch(persistentObject.getOperationState()) {
-					case CREATE:
+					case INSERT:
 					case UPDATE:
-						if(logger.isDebugEnabled()) {
-							logger.debug("将{}状态的数据, 修改originObject数据后, 不对状态进行修改, 完成update", persistentObject.getOriginObject());// 如果修改create=>update, 最后发出的sql语句会不同, 试问一个没有create过的数据, 怎么可能执行成功update 
-						}
 						persistentObject.setOriginObject(object);
 						persistentObject.setUpdateNullValue(updateNullValue);
 						break;
@@ -198,7 +195,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 				logger.debug("缓存中存在要删除的数据持久化对象");
 				persistentObject = cache.get(persistentObject.getId());
 				switch(persistentObject.getOperationState()) {
-					case CREATE:
+					case INSERT:
 						logger.debug("将create状态的数据直接从cache中移除, 完成delete");
 						cache.remove(persistentObject.getId());
 						return;
@@ -271,7 +268,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
 		ExecuteHandler executeHandler = persistentObject.getExecuteHandler();
-		if(persistentObject.getOperationState() == OperationState.CREATE && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
+		if(persistentObject.getOperationState() == OperationState.INSERT && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
 			TableMetadata tableMetadata = persistentObject.getTableMetadata();
 			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));

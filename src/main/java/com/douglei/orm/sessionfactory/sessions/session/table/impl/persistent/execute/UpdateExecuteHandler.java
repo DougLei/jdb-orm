@@ -49,12 +49,12 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 			}
 		}
 		
-		setWhereSqlWhenExistsPrimaryKey(updateSql, columnMetadata);
+		setWhereSqlStatement(updateSql, columnMetadata);
 		this.sql = updateSql.toString();
 	}
 	
-	// 当存在primaryKey时, set对应的where sql语句
-	private void setWhereSqlWhenExistsPrimaryKey(StringBuilder updateSql, ColumnMetadata columnMetadata) {
+	// set对应的where sql语句
+	private void setWhereSqlStatement(StringBuilder updateSql, ColumnMetadata columnMetadata) {
 		updateSql.append(" where ");
 		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
 		byte size = (byte) primaryKeyColumnMetadataCodes.size();
