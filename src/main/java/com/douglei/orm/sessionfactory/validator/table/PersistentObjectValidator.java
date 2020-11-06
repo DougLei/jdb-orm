@@ -34,6 +34,8 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		if(tableMetadata.getValidateColumns() != null) {
 			setOriginObject(originObject);
 			
+			// TODO 如果是update且不修改null值时, 是不需要验证非空字段的值的
+			
 			Object value = null;
 			ValidationResult result = null;
 			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
@@ -63,13 +65,12 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 	 * @return {@link UniqueValue} / {@link List<UniqueValue>}
 	 */
 	private Object getPersistentObjectUniqueValue(){
-		if(uniqueConstraints.size() == 1) {
+		if(uniqueConstraints.size() == 1) 
 			return new UniqueValue(objectMap, uniqueConstraints.get(0));
-		}else {
-			List<UniqueValue> currentPersistentObjectUniqueValues = new ArrayList<UniqueValue>(uniqueConstraints.size());
-			uniqueConstraints.forEach(uc -> currentPersistentObjectUniqueValues.add(new UniqueValue(objectMap, uc)));
-			return currentPersistentObjectUniqueValues;
-		}
+		
+		List<UniqueValue> currentPersistentObjectUniqueValues = new ArrayList<UniqueValue>(uniqueConstraints.size());
+		uniqueConstraints.forEach(uc -> currentPersistentObjectUniqueValues.add(new UniqueValue(objectMap, uc)));
+		return currentPersistentObjectUniqueValues;
 	}
 	
 	/**
@@ -81,9 +82,8 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		Object currentPersistentObjectUniqueValue = getPersistentObjectUniqueValue();
 		if(uniqueConstraints.size() == 1) {
 			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
-				if(currentPersistentObjectUniqueValue.equals(beforePersistentObjectUniqueValue)) {
+				if(currentPersistentObjectUniqueValue.equals(beforePersistentObjectUniqueValue)) 
 					return new UniqueValidationResult(uniqueConstraints.get(0).getAllCode());
-				}
 			}
 		}else {
 			List<UniqueValue> currentPersistentObjectUniqueValues = (List<UniqueValue>) currentPersistentObjectUniqueValue;
@@ -92,9 +92,8 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 			for (Object beforePersistentObjectUniqueValue : uniqueValues) {
 				beforePersistentObjectUniqueValues = (List<UniqueValue>) beforePersistentObjectUniqueValue;
 				for(index=0; index < uniqueConstraints.size(); index++) {
-					if(currentPersistentObjectUniqueValues.get(index).equals(beforePersistentObjectUniqueValues.get(index))) {
+					if(currentPersistentObjectUniqueValues.get(index).equals(beforePersistentObjectUniqueValues.get(index))) 
 						return new UniqueValidationResult(uniqueConstraints.get(index).getAllCode());
-					}
 				}
 			}
 		}

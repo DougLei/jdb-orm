@@ -46,9 +46,8 @@ public class PersistentObject extends AbstractPersistentObject{
 					id = objectMap.get(primaryKeyColumnMetadataCodes.iterator().next());
 				}else {
 					Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumnMetadataCodes.size());
-					for (String pkCode : primaryKeyColumnMetadataCodes) {
+					for (String pkCode : primaryKeyColumnMetadataCodes) 
 						idMap.put(pkCode, objectMap.get(pkCode));
-					}
 					id = idMap;
 				}
 				this.id = new Identity(id, tableMetadata);
