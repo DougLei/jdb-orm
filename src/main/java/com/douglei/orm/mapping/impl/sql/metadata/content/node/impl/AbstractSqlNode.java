@@ -114,9 +114,8 @@ public abstract class AbstractSqlNode implements SqlNode{
 		if(sqlParameters != null) {
 			ValidationResult result = null;
 			for (SqlParameterMetadata parameter : sqlParameters) {
-				if((result = parameter.validate(sqlParameter, alias)) != null) {
+				if((result = parameter.validate(sqlParameter, alias)) != null) 
 					return result;
-				}
 			}
 		}
 		return null;

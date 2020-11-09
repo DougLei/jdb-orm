@@ -9,6 +9,7 @@ import com.douglei.orm.mapping.impl.table.metadata.UniqueConstraint;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
+import com.douglei.orm.sessionfactory.validator.table.mode.ExecuteHandler;
 
 /**
  * 持久化对象验证器
@@ -16,17 +17,19 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Uni
  */
 public class PersistentObjectValidator extends AbstractPersistentObject {
 	private int validateDataCount;// 要验证的数据数量, 可以判断出是否是批量验证, 批量验证的时候, 需要验证唯一约束
+	private ExecuteHandler executeHandler; // 验证执行器
 	
 	private List<UniqueConstraint> uniqueConstraints;// 唯一约束集合
 	private List<Object> uniqueValues;// 如果是批量验证, 且有唯一约束, 则记录每个对象中相应的唯一列的值
 	
-	public PersistentObjectValidator(TableMetadata tableMetadata) {
-		this(tableMetadata, 1);
+	public PersistentObjectValidator(TableMetadata tableMetadata, ExecuteHandler executeHandler) {
+		this(tableMetadata, 1, executeHandler);
 	}
-	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount) {
+	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount, ExecuteHandler executeHandler) {
 		super(tableMetadata);
 		if((this.validateDataCount = validateDataCount) > 1)
 			this.uniqueConstraints = tableMetadata.getUniqueConstraints();
+		this.executeHandler = executeHandler;
 	}
 
 	// 进行验证

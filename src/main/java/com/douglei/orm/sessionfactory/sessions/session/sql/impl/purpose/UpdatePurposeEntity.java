@@ -8,10 +8,13 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class UpdatePurposeEntity extends PurposeEntity {
-	public static final UpdatePurposeEntity DEFAULT = new UpdatePurposeEntity(true, false);
+	public static final UpdatePurposeEntity singleton = new UpdatePurposeEntity();
+	public static UpdatePurposeEntity getSingleton() {
+		return singleton;
+	}
 	
-	public UpdatePurposeEntity(boolean isGetSqlParameterValues, boolean isGetSqlParameters) {
-		super(isGetSqlParameterValues, isGetSqlParameters);
+	private UpdatePurposeEntity() {
+		super(true, false);
 	}
 	
 	@Override

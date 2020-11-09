@@ -17,6 +17,6 @@ public class Decimal extends AbstractDecimal{
 	}
 	
 	private Decimal() {
-		super(3, 38, 38);
+		super(3);
 	}
 }

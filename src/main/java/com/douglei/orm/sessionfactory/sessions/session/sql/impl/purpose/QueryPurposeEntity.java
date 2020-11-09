@@ -8,10 +8,13 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class QueryPurposeEntity extends PurposeEntity {
-	public static final QueryPurposeEntity DEFAULT = new QueryPurposeEntity(true, false);
-
-	public QueryPurposeEntity(boolean isGetSqlParameterValues, boolean isGetSqlParameters) {
-		super(isGetSqlParameterValues, isGetSqlParameters);
+	public static final QueryPurposeEntity singleton = new QueryPurposeEntity();
+	public static QueryPurposeEntity getSingleton() {
+		return singleton;
+	}
+	
+	private QueryPurposeEntity() {
+		super(true, false);
 	}
 	
 	@Override

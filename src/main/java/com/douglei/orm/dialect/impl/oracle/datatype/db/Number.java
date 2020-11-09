@@ -22,7 +22,7 @@ public class Number extends AbstractDecimal{
 	}
 	
 	private Number() {
-		super(2, 38, 38);
+		super(2);
 	}
 	
 	@Override

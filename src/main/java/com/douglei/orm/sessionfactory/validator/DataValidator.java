@@ -10,6 +10,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
+import com.douglei.orm.sessionfactory.validator.table.mode.ExecuteHandler;
 
 /**
  * 
@@ -26,41 +27,45 @@ public class DataValidator {
 	/**
 	 * 验证表映射数据
 	 * @param object
+	 * @param executeHandler
 	 * @return
 	 */
-	public ValidationResult validate4TableMapping(Object object) {
-		return validate4TableMapping(object.getClass().getName(), object);
+	public ValidationResult validate4TableMapping(Object object, ExecuteHandler executeHandler) {
+		return validate4TableMapping(object.getClass().getName(), object, executeHandler);
 	}
 	
 	/**
 	 * 验证表映射数据
 	 * @param code 表映射的tableName
 	 * @param object
+	 * @param executeHandler
 	 * @return
 	 */
-	public ValidationResult validate4TableMapping(String code, Object object) {
+	public ValidationResult validate4TableMapping(String code, Object object, ExecuteHandler executeHandler) {
 		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
-		return new PersistentObjectValidator(tableMetadata).doValidate(object);
+		return new PersistentObjectValidator(tableMetadata, executeHandler).doValidate(object);
 	}
 	
 	/**
 	 * 验证表映射数据
 	 * @param objects
+	 * @param executeHandler
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(List<? extends Object> objects){
-		return validate4TableMapping(objects.get(0).getClass().getName(), objects);
+	public List<ValidationResult> validate4TableMapping(List<? extends Object> objects, ExecuteHandler executeHandler){
+		return validate4TableMapping(objects.get(0).getClass().getName(), objects, executeHandler);
 	}
 	
 	/**
 	 * 验证表映射数据
 	 * @param code 表映射的tableName
 	 * @param objects
+	 * @param executeHandler
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(String code, List<? extends Object> objects){
+	public List<ValidationResult> validate4TableMapping(String code, List<? extends Object> objects, ExecuteHandler executeHandler){
 		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
-		PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator(tableMetadata, objects.size());
+		PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator(tableMetadata, objects.size(), executeHandler);
 		
 		List<ValidationResult> validationResults = null;
 		ValidationResult validationResult;

@@ -5,6 +5,7 @@ package com.douglei.orm.sessionfactory.sessions.session.sql;
  * @author DougLei
  */
 public enum Purpose {
+	
 	/**
 	 * 查询用途
 	 */

@@ -15,10 +15,10 @@ import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
  * @author DougLei
  */
 public abstract class AbstractDecimal extends DBDataType {
-	private static final long serialVersionUID = -1415778428467161812L;
+	private static final long serialVersionUID = -2887834254624286175L;
 
-	protected AbstractDecimal(int sqlType, int maxLength, int maxPrecision) {
-		super(sqlType, maxLength, maxPrecision);
+	protected AbstractDecimal(int sqlType) {
+		super(sqlType, 38, 38);
 	}
 
 	@Override
