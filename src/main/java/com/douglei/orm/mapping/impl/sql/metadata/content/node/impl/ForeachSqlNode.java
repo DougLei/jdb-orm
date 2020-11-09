@@ -154,9 +154,8 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		ValidationResult result = null;
 		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
-				if(sqlNode.matching(array[i], alias) && (result = sqlNode.validateParameter(array[i], alias)) != null) {
+				if(sqlNode.matching(array[i], alias) && (result = sqlNode.validateParameter(array[i], alias)) != null) 
 					return result;
-				}
 			}
 		}
 		return null;
