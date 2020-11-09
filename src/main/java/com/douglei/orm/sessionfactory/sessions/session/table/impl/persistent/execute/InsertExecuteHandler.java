@@ -2,7 +2,6 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.ex
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import com.douglei.orm.dialect.impl.oracle.object.pk.sequence.OraclePrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
@@ -27,37 +26,31 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 		StringBuilder insertSql = new StringBuilder(300);
 		insertSql.append("insert into ").append(tableMetadata.getName()).append("(");
 		
-		StringBuilder values = new StringBuilder();
-		values.append(" values(");
+		StringBuilder valuesSql = new StringBuilder();
+		valuesSql.append(" values(");
 		
 		tableMetadata.setPrimaryKeyValue2ObjectMap(objectMap, originObject);
 		parameters = new ArrayList<Object>(objectMap.size());
 		
-		boolean isFirst = true;
 		Object value = null;
 		ColumnMetadata column = null;
-		Set<String> codes = objectMap.keySet();
-		for (String code : codes) {
+		for (String code : objectMap.keySet()) {
 			value = objectMap.get(code);
-			if(value != null) {// 只保存不为空的值, 空值不需要处理
-				if(isFirst) {
-					isFirst = false;
-				}else {
-					insertSql.append(",");
-					values.append(",");
-				}
+			if(value != null) {// 只保存不为空的值, 空值不处理
 				column = tableMetadata.getColumns_().get(code);
-
-				insertSql.append(column.getName());
+				insertSql.append(column.getName()).append(',');
 				if(value instanceof OraclePrimaryKeySequence) {
-					values.append(((OraclePrimaryKeySequence)value).getNextvalSql());
+					valuesSql.append(((OraclePrimaryKeySequence)value).getNextvalSql()).append(',');
 				}else {
-					values.append("?");
+					valuesSql.append("?,");
 					parameters.add(new InputSqlParameter(value, column.getDBDataType()));
 				}
 			}
 		}
-		insertSql.append(")").append(values).append(")");
-		this.sql = insertSql.toString();
+		
+		// 去掉最后一个,(逗号)  并将insertSql和valuesSql拼接起来
+		insertSql.setLength(insertSql.length()-1); 
+		valuesSql.setLength(valuesSql.length()-1);
+		this.sql = insertSql.append(")").append(valuesSql).append(")").toString();
 	}
 }

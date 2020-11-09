@@ -42,11 +42,17 @@ public class Bigint extends AbstractInt{
 	
 	@Override
 	public Long getValue(int columnIndex, ResultSet resultSet) throws SQLException {
-		return resultSet.getLong(columnIndex);
+		Object value = resultSet.getObject(columnIndex);
+		if(value == null)
+			return null;
+		return Long.parseLong(value.toString());
 	}
 	
 	@Override
 	public Long getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException {
-		return callableStatement.getLong(parameterIndex);
+		Object value = callableStatement.getObject(parameterIndex);
+		if(value == null)
+			return null;
+		return Long.parseLong(value.toString());
 	}
 }

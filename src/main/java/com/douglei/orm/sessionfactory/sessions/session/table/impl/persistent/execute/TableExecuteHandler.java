@@ -36,7 +36,6 @@ public abstract class TableExecuteHandler implements ExecuteHandler {
 	 */
 	protected abstract void initial();
 	
-	
 	protected String sql;
 	protected List<Object> parameters;
 	

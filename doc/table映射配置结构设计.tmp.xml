@@ -31,10 +31,10 @@
 				dataType的值必须遵照上面列举的配置值, 框架是区分大小写的
 				
 				dbType和dataType互斥, dbType的优先级高于dataType; dbType没有默认值, dataType的默认值为string
-				
 				dbType通常情况下无法实现跨库, 例如sqlserver和mysql的VARCHAR, 与oracle的VARCHAR2
+				
+				nullable默认值为true, validate默认值为false; sql参数使用相同逻辑
 			-->
-			<!-- nullable默认值为true, validate默认值为false; 在sql参数时, nullable的默认值为false, validate默认值为false -->
 			<column name="ID" oldName="IDENTITY" property="id" dbType="VARCHAR" dataType="string" primaryKey="true" length="30" precision="" nullable="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
 			<column name="NANE" property="name" dataType="string" length="30" validate="true" unique="true" description="姓名" />
 			<column name="AGE" property="age" dataType="number" />
@@ -70,6 +70,9 @@
 		<!-- 验证器配置 -->
 		<validators>
 			<!--
+				注意：table或sql, 配置的验证参数, 均只在验证器(com.douglei.orm.sessionfactory.validator.DataValidator)中被使用; 例如验证参数是否必填(nullable=false)等; 
+					  直接使用TableSession或SQLSession时, 传入的数据是不会被验证的; 例如给非空字段插入null值等; 所以在实际使用前, 要么通过验证器, 要么自行验证, 传入的数据验证通过后, 再去调用TableSession或SQLSession的方法
+			
 				配置结构描述: 
 				1.name: 参数名, 指定给哪个参数名添加验证器, 如果该参数的validate为false, 又这里配置了验证器, 框架会自动将该参数的validate值改为true; 即想要对一个参数设置验证, 有两种方式, 第一种是将参数的validate值设置为true, 或者在这里配置验证器都可以
 				                  如果是列, 则配置name值(即列名, 不是property的值); 如果是sql参数, 则配置sql参数名; 这里要注意大小写和你定义时写的大小写必须一致

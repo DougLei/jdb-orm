@@ -57,8 +57,7 @@ public class SqlParameterMetadata implements Metadata{
 		setDBDataType(propertyMap);
 		
 		setUsePlaceholder(propertyMap);
-		setNullable(propertyMap.get("nullable"));
-		setDefaultValue(propertyMap.get("defaultvalue"));
+		setDefaultValueAndNullable(propertyMap.get("defaultvalue"), propertyMap.get("nullable"));
 		setValidate(propertyMap.get("validate"));
 		setDescription(propertyMap.get("description"));
 		
@@ -160,13 +159,13 @@ public class SqlParameterMetadata implements Metadata{
 			this.valueSuffix = valueSuffix;
 		}
 	}
-	private void setNullable(String nullable) {
-		this.nullable = Boolean.parseBoolean(nullable);
-	}
-	private void setDefaultValue(String defaultValue) {
+	private void setDefaultValueAndNullable(String defaultValue, String nullable) {
 		this.defaultValue = defaultValue;
-		if(defaultValue != null)
+		if(defaultValue == null) {
+			this.nullable = StringUtil.isEmpty(nullable)?true:Boolean.parseBoolean(nullable);
+		}else {
 			this.nullable = true;
+		}
 	}
 	private void setValidate(String validate) {
 		this.validate = Boolean.parseBoolean(validate);
@@ -205,7 +204,7 @@ public class SqlParameterMetadata implements Metadata{
 	}
 	
 	// 获取值
-	private Object getValue_(Object sqlParameter, String alias, boolean validateNullValue) {
+	private Object getValue_(Object sqlParameter, String alias) {
 		processNamePrefix(alias);
 		
 		Object value = null;
@@ -229,9 +228,6 @@ public class SqlParameterMetadata implements Metadata{
 				IntrospectorUtil.setProperyValue(OgnlHandler.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
 			}
 		}
-		
-		if(validateNullValue && value == null && !nullable)
-			throw new NullPointerException("名为"+name+"的参数, 不能传入null值");
 		return value;
 	}
 	
@@ -241,7 +237,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter) {
-		return getValue_(sqlParameter, null, true);
+		return getValue_(sqlParameter, null);
 	}
 	
 	/**
@@ -251,7 +247,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @return
 	 */
 	public Object getValue(Object sqlParameter, String alias) {
-		return getValue_(sqlParameter, alias, true);
+		return getValue_(sqlParameter, alias);
 	}
 	
 	/**
@@ -262,7 +258,7 @@ public class SqlParameterMetadata implements Metadata{
 	 */
 	public ValidationResult validate(Object sqlParameter, String alias) {
 		if(validate) 
-			return validateHandler.validate(getValue_(sqlParameter, alias, false));
+			return validateHandler.validate(getValue_(sqlParameter, alias));
 		return null;
 	}
 	

@@ -2,7 +2,6 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.ex
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -20,60 +19,52 @@ public class DeleteExecuteHandler extends TableExecuteHandler{
 
 	@Override
 	protected void initial() {
-		StringBuilder deleteSql = new StringBuilder(200);
+		StringBuilder deleteSql = new StringBuilder(300);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
-		if(tableMetadata.getPrimaryKeyColumns_() != null) {
-			setWhereSqlStatementWhenExistsPrimaryKey(deleteSql);
+		if(tableMetadata.getPrimaryKeyColumns_() == null) {
+			setWhereSqlStatementWhenUnExistsPrimaryKeys(deleteSql);
 		}else {
-			setWhereSqlStatementWhenUnExistsPrimaryKey(deleteSql);
+			setWhereSqlStatementWhenExistsPrimaryKeys(deleteSql);
 		}
 		this.sql = deleteSql.toString();
 	}
 	
 	// 当存在primaryKey时, set对应的where sql语句
-	private void setWhereSqlStatementWhenExistsPrimaryKey(StringBuilder deleteSql) {
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
-		int size = primaryKeyColumnMetadataCodes.size();
+	private void setWhereSqlStatementWhenExistsPrimaryKeys(StringBuilder deleteSql) {
+		Map<String, ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns_();
+		parameters = new ArrayList<Object>(primaryKeyColumns.size());
 		
-		parameters = new ArrayList<Object>(size);
-		
-		ColumnMetadata primaryKeyColumnMetadata = null;
-		int index = 1;
-		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			primaryKeyColumnMetadata = tableMetadata.getPrimaryKeyColumns_().get(pkCode);
+		ColumnMetadata column = null;
+		for (String pkCode : primaryKeyColumns.keySet()) {
+			column = primaryKeyColumns.get(pkCode);
 			
-			deleteSql.append(primaryKeyColumnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(objectMap.get(pkCode), primaryKeyColumnMetadata.getDBDataType()));
+			deleteSql.append(column.getName()).append("=?");
+			parameters.add(new InputSqlParameter(objectMap.get(pkCode), column.getDBDataType()));
 			
-			if(index < size) 
-				deleteSql.append(" and ");
-			index++;
+			deleteSql.append(" and ");
 		}
+		deleteSql.setLength(deleteSql.length()-5);
 	}
 	
 	// 当不存在primaryKey时, set对应的where sql语句
-	private void setWhereSqlStatementWhenUnExistsPrimaryKey(StringBuilder deleteSql) {
-		int size = objectMap.size();
-		parameters = new ArrayList<Object>(size);
+	private void setWhereSqlStatementWhenUnExistsPrimaryKeys(StringBuilder deleteSql) {
+		parameters = new ArrayList<Object>(objectMap.size());
 		
-		int index = 1;
 		Object value = null;
-		ColumnMetadata columnMetadata = null;
+		ColumnMetadata column = null;
 		for (String code : objectMap.keySet()) {
-			columnMetadata = tableMetadata.getColumns_().get(code);
+			column = tableMetadata.getColumns_().get(code);
 			value = objectMap.get(code);
 			
 			if(value == null) {
-				deleteSql.append(columnMetadata.getName()).append(" is null");
+				deleteSql.append(column.getName()).append(" is null");
 			}else {
-				deleteSql.append(columnMetadata.getName()).append("=?");
-				parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
+				deleteSql.append(column.getName()).append("=?");
+				parameters.add(new InputSqlParameter(value, column.getDBDataType()));
 			}
-			
-			if(index < size) 
-				deleteSql.append(" and ");
-			index++;
+			deleteSql.append(" and ");
 		}
+		deleteSql.setLength(deleteSql.length()-5);
 	}
 }

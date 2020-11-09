@@ -42,11 +42,17 @@ public class Int extends AbstractInt{
 	
 	@Override
 	public Integer getValue(int columnIndex, ResultSet resultSet) throws SQLException {
-		return resultSet.getInt(columnIndex);
+		Object value = resultSet.getObject(columnIndex);
+		if(value == null)
+			return null;
+		return Integer.parseInt(value.toString());
 	}
 	
 	@Override
 	public Integer getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException {
-		return callableStatement.getInt(parameterIndex);
+		Object value = callableStatement.getObject(parameterIndex);
+		if(value == null)
+			return null;
+		return Integer.parseInt(value.toString());
 	}
 }

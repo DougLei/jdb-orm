@@ -42,11 +42,17 @@ public class Smallint extends AbstractInt{
 	
 	@Override
 	public Short getValue(int columnIndex, ResultSet resultSet) throws SQLException {
-		return resultSet.getShort(columnIndex);
+		Object value = resultSet.getObject(columnIndex);
+		if(value == null)
+			return null;
+		return Short.parseShort(value.toString());
 	}
 	
 	@Override
 	public Short getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException {
-		return callableStatement.getShort(parameterIndex);
+		Object value = callableStatement.getObject(parameterIndex);
+		if(value == null)
+			return null;
+		return Short.parseShort(value.toString());
 	}
 }

@@ -2,7 +2,6 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.ex
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -27,48 +26,37 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
 		parameters = new ArrayList<Object>(objectMap.size());
+		Map<String, ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns_();
 		
 		// 处理update set
-		boolean isFirst = true;
 		Object value = null;
-		ColumnMetadata columnMetadata = null;
+		ColumnMetadata column = null;
 		for (String code : objectMap.keySet()) {
-			if(!tableMetadata.getPrimaryKeyColumns_().containsKey(code)) {
-				value = objectMap.get(code);
-				if(updateNullValue || value != null) {
-					if(isFirst) {
-						isFirst = false;
-					}else {
-						updateSql.append(", ");
-					}
-					
-					columnMetadata = tableMetadata.getColumns_().get(code);
-					updateSql.append(columnMetadata.getName()).append("=?");
-					parameters.add(new InputSqlParameter(value, columnMetadata.getDBDataType()));
-				}
+			if(primaryKeyColumns.containsKey(code))
+				continue;
+			
+			value = objectMap.get(code);
+			if(updateNullValue || value != null) {
+				column = tableMetadata.getColumns_().get(code);
+				updateSql.append(column.getName()).append("=?,");
+				parameters.add(new InputSqlParameter(value, column.getDBDataType()));
 			}
 		}
+		updateSql.setLength(updateSql.length()-1);
 		
-		setWhereSqlStatement(updateSql, columnMetadata);
-		this.sql = updateSql.toString();
-	}
-	
-	// set对应的where sql语句
-	private void setWhereSqlStatement(StringBuilder updateSql, ColumnMetadata columnMetadata) {
+		// set对应的where sql语句
 		updateSql.append(" where ");
-		Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
-		byte size = (byte) primaryKeyColumnMetadataCodes.size();
-		byte index = 1;
-		for (String pkCode : primaryKeyColumnMetadataCodes) {
-			columnMetadata = tableMetadata.getPrimaryKeyColumns_().get(pkCode);
+		for (String pkCode : primaryKeyColumns.keySet()) {
+			value = objectMap.get(pkCode);
+			column = primaryKeyColumns.get(pkCode);
 			
-			updateSql.append(columnMetadata.getName()).append("=?");
-			parameters.add(new InputSqlParameter(objectMap.get(pkCode), columnMetadata.getDBDataType()));
+			updateSql.append(column.getName()).append("=?");
+			parameters.add(new InputSqlParameter(value, column.getDBDataType()));
 			
-			if(index < size) {
-				updateSql.append(" and ");
-			}
-			index++;
+			updateSql.append(" and ");
 		}
+		updateSql.setLength(updateSql.length()-5);
+		
+		this.sql = updateSql.toString();
 	}
 }
