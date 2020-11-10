@@ -3,13 +3,14 @@ package com.douglei.orm.sessionfactory.validator.table;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.UniqueConstraint;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AbstractPersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UniqueValue;
-import com.douglei.orm.sessionfactory.validator.table.mode.ExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UnsupportUpdatePersistentWithoutPrimaryKeyException;
+import com.douglei.orm.sessionfactory.validator.table.mode.Mode;
+import com.douglei.orm.sessionfactory.validator.table.mode.ValidateMode;
 
 /**
  * 持久化对象验证器
@@ -17,19 +18,21 @@ import com.douglei.orm.sessionfactory.validator.table.mode.ExecuteHandler;
  */
 public class PersistentObjectValidator extends AbstractPersistentObject {
 	private int validateDataCount;// 要验证的数据数量, 可以判断出是否是批量验证, 批量验证的时候, 需要验证唯一约束
-	private ExecuteHandler executeHandler; // 验证执行器
+	private ValidateMode validateMode; // 验证模式
 	
 	private List<UniqueConstraint> uniqueConstraints;// 唯一约束集合
 	private List<Object> uniqueValues;// 如果是批量验证, 且有唯一约束, 则记录每个对象中相应的唯一列的值
 	
-	public PersistentObjectValidator(TableMetadata tableMetadata, ExecuteHandler executeHandler) {
-		this(tableMetadata, 1, executeHandler);
+	public PersistentObjectValidator(TableMetadata tableMetadata, ValidateMode validateMode) {
+		this(tableMetadata, 1, validateMode);
 	}
-	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount, ExecuteHandler executeHandler) {
+	public PersistentObjectValidator(TableMetadata tableMetadata, int validateDataCount, ValidateMode validateMode) {
 		super(tableMetadata);
-		if((this.validateDataCount = validateDataCount) > 1)
+		if(validateMode.getMode() == Mode.UPDATE && tableMetadata.getPrimaryKeyColumns_() == null) 
+			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode()); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
+		if(validateMode.getMode() != Mode.DELETE && (this.validateDataCount = validateDataCount) > 1)
 			this.uniqueConstraints = tableMetadata.getUniqueConstraints();
-		this.executeHandler = executeHandler;
+		this.validateMode = validateMode;
 	}
 
 	// 进行验证
@@ -37,15 +40,9 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 		if(tableMetadata.getValidateColumns() != null) {
 			setOriginObject(originObject);
 			
-			// TODO 如果是update且不修改null值时, 是不需要验证非空字段的值的
-			
-			Object value = null;
-			ValidationResult result = null;
-			for(ColumnMetadata column : tableMetadata.getValidateColumns()) {
-				value = objectMap.get(column.getCode());
-				if((result = column.getValidateHandler().validate(value)) != null) 
-					return result;
-			}
+			ValidationResult result = validateMode.validate(objectMap, tableMetadata);
+			if(result != null)
+				return result;
 			
 			// 如果还存在唯一约束, 则要对集合中的数据也进行验证
 			if(uniqueConstraints != null) {
@@ -53,9 +50,8 @@ public class PersistentObjectValidator extends AbstractPersistentObject {
 					uniqueValues = new ArrayList<Object>(validateDataCount);
 					uniqueValues.add(getPersistentObjectUniqueValue());
 				}else {
-					if((result = validateUniqueValue()) != null) {
+					if((result = validateUniqueValue()) != null) 
 						return result;
-					}
 				}
 			}
 		}

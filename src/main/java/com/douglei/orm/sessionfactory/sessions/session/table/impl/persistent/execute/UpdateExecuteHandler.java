@@ -2,6 +2,7 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.ex
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -28,30 +29,28 @@ public class UpdateExecuteHandler extends TableExecuteHandler{
 		parameters = new ArrayList<Object>(objectMap.size());
 		Map<String, ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns_();
 		
-		// 处理update set
-		Object value = null;
+		// 拼装update set sql语句
 		ColumnMetadata column = null;
-		for (String code : objectMap.keySet()) {
-			if(primaryKeyColumns.containsKey(code))
+		for (Entry<String, Object> entry : objectMap.entrySet()) {
+			if(primaryKeyColumns.containsKey(entry.getKey()))
 				continue;
 			
-			value = objectMap.get(code);
-			if(updateNullValue || value != null) {
-				column = tableMetadata.getColumns_().get(code);
+			if(updateNullValue || entry.getValue() != null) {
+				column = tableMetadata.getColumns_().get(entry.getKey());
 				updateSql.append(column.getName()).append("=?,");
-				parameters.add(new InputSqlParameter(value, column.getDBDataType()));
+				parameters.add(new InputSqlParameter(entry.getValue(), column.getDBDataType()));
 			}
 		}
 		updateSql.setLength(updateSql.length()-1);
 		
-		// set对应的where sql语句
+		// 拼装where sql语句
 		updateSql.append(" where ");
-		for (String pkCode : primaryKeyColumns.keySet()) {
-			value = objectMap.get(pkCode);
-			column = primaryKeyColumns.get(pkCode);
+		Object value = null;
+		for (ColumnMetadata pkColumn : primaryKeyColumns.values()) {
+			value = objectMap.get(pkColumn.getCode());
 			
-			updateSql.append(column.getName()).append("=?");
-			parameters.add(new InputSqlParameter(value, column.getDBDataType()));
+			updateSql.append(pkColumn.getName()).append("=?");
+			parameters.add(new InputSqlParameter(value, pkColumn.getDBDataType()));
 			
 			updateSql.append(" and ");
 		}

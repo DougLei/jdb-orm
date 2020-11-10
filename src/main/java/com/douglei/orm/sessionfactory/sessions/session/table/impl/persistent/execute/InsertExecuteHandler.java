@@ -2,6 +2,7 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.ex
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.douglei.orm.dialect.impl.oracle.object.pk.sequence.OraclePrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
@@ -32,18 +33,16 @@ public class InsertExecuteHandler extends TableExecuteHandler{
 		tableMetadata.setPrimaryKeyValue2ObjectMap(objectMap, originObject);
 		parameters = new ArrayList<Object>(objectMap.size());
 		
-		Object value = null;
 		ColumnMetadata column = null;
-		for (String code : objectMap.keySet()) {
-			value = objectMap.get(code);
-			if(value != null) {// 只保存不为空的值, 空值不处理
-				column = tableMetadata.getColumns_().get(code);
+		for (Entry<String, Object> entry : objectMap.entrySet()) {
+			if(entry.getValue() != null) {// 只保存不为空的值, 空值不处理
+				column = tableMetadata.getColumns_().get(entry.getKey());
 				insertSql.append(column.getName()).append(',');
-				if(value instanceof OraclePrimaryKeySequence) {
-					valuesSql.append(((OraclePrimaryKeySequence)value).getNextvalSql()).append(',');
+				if(entry.getValue() instanceof OraclePrimaryKeySequence) {
+					valuesSql.append(((OraclePrimaryKeySequence)entry.getValue()).getNextvalSql()).append(',');
 				}else {
 					valuesSql.append("?,");
-					parameters.add(new InputSqlParameter(value, column.getDBDataType()));
+					parameters.add(new InputSqlParameter(entry.getValue(), column.getDBDataType()));
 				}
 			}
 		}
