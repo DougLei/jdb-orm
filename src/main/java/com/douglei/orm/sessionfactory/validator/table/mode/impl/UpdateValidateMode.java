@@ -14,8 +14,15 @@ import com.douglei.orm.sessionfactory.validator.table.mode.ValidateMode;
  * @author DougLei
  */
 public class UpdateValidateMode implements ValidateMode {
-	public static final UpdateValidateMode INSTANCE = new UpdateValidateMode(false);
-	public static final UpdateValidateMode INSTANCE_4_UPDATE_NULL_VALUE = new UpdateValidateMode(true);
+	private static final UpdateValidateMode instance = new UpdateValidateMode(false);
+	private static final UpdateValidateMode instance4UpdateNullValue = new UpdateValidateMode(true);
+	public static UpdateValidateMode getInstance() {
+		return instance;
+	}
+	public static UpdateValidateMode getInstance4UpdateNullValue() {
+		return instance4UpdateNullValue;
+	}
+	
 	private boolean updateNullValue;
 	
 	/**
