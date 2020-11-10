@@ -61,13 +61,13 @@ public class TableMetadata extends AbstractMetadata {
 	 */
 	public void addColumn(ColumnMetadata column) {
 		if(columns == null) {
-			columns = new HashMap<String, ColumnMetadata>();
 			declareColumns = new ArrayList<ColumnMetadata>();
+			columns = new HashMap<String, ColumnMetadata>();
 		}else if(columns.containsKey(column.getName())) {
 			throw new ColumnConfigurationException("列名"+column.getName()+"重复");
 		}
-		columns.put(column.getName(), column);
 		declareColumns.add(column);
+		columns.put(column.getName(), column);
 		addConstraint(column);
 	}
 	
@@ -182,21 +182,7 @@ public class TableMetadata extends AbstractMetadata {
 	public void setPrimaryKeySequence(PrimaryKeySequence primaryKeySequence) {
 		this.primaryKeySequence = primaryKeySequence;
 	}
-	/**
-	 * 给实体map设置主键值
-	 * @param objectMap 实体map
-	 * @param originObject 源实体, 如果可以将生成的id值, 也保存到源实例中, 通过引用传递, 返回给调用者, 例如uuid32, uuid36这种主键生成器
-	 */
-	public void setPrimaryKeyValue2ObjectMap(Map<String, Object> objectMap, Object originObject) {
-		if(primaryKeyHandler != null) {
-			if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) {
-				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, primaryKeySequence);
-			}else {
-				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, originObject);
-			}
-		}
-	}
-	
+
 	/**
 	 * 	如果指定了className, 则返回className, 否则返回name, 即表名
 	 * @return
@@ -266,5 +252,20 @@ public class TableMetadata extends AbstractMetadata {
 	 */
 	public List<ColumnMetadata> getDeclareColumns() {
 		return declareColumns;
+	}
+	
+	/**
+	 * 给实体map设置主键值
+	 * @param objectMap 实体map
+	 * @param originObject 源实体, 如果可以将生成的id值, 也保存到源实例中, 通过引用传递, 返回给调用者, 例如uuid32, uuid36这种主键生成器
+	 */
+	public void setPrimaryKeyValue2ObjectMap(Map<String, Object> objectMap, Object originObject) {
+		if(primaryKeyHandler != null) {
+			if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) {
+				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, primaryKeySequence);
+			}else {
+				primaryKeyHandler.setValue2ObjectMap(primaryKeyColumns_.keySet(), objectMap, originObject);
+			}
+		}
 	}
 }

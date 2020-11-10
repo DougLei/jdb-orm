@@ -14,14 +14,15 @@ import com.douglei.orm.sessionfactory.validator.table.mode.ValidateMode;
  * @author DougLei
  */
 public class UpdateValidateMode implements ValidateMode {
-	public static final UpdateValidateMode DEFAULT_INSTANCE = new UpdateValidateMode(false);
+	public static final UpdateValidateMode INSTANCE = new UpdateValidateMode(false);
+	public static final UpdateValidateMode INSTANCE_4_UPDATE_NULL_VALUE = new UpdateValidateMode(true);
 	private boolean updateNullValue;
 	
 	/**
 	 * 
 	 * @param updateNullValue 是否更新null值, 如果要更新null值, 则会对必要的null值进行验证
 	 */
-	public UpdateValidateMode(boolean updateNullValue) {
+	private UpdateValidateMode(boolean updateNullValue) {
 		this.updateNullValue = updateNullValue;
 	}
 

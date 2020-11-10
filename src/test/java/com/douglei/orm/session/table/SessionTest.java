@@ -82,7 +82,7 @@ public class SessionTest {
 	public void test() throws MappingHandlerException {
 		System.out.println("测试存储过程映射");
 		
-//		sessionFactory.getMappingHandler().execute(new AddOrCoverMappingEntity("C:\\Users\\Administrator.USER-20190410XF\\Desktop\\SysUser2.tmp.xml"));
+//		sessionFactory.getMappingHandler().execute(new AddOrCoverMappingEntity("C:\\Users\\Administrator.USER-20190410XF\\Desktop\\SysMenu.tmp.xml"));
 	}
 	
 	// --------------------------------------------------------------------------------------

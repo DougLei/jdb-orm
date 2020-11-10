@@ -166,9 +166,6 @@ public class MappingHandler {
 	// 添加或覆盖映射; 如果是添加, 返回null, 如果是覆盖, 返回被覆盖的mapping;
 	private Mapping addMapping(MappingEntity entity) {
 		Mapping mapping = entity.getMapping();
-		if(mapping.getMetadata().isUpdateName()) 
-			deleteMapping(mapping.getMetadata().getOldName());
-		
 		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mapping.getProperty());
 		if (exMappingProperty == null) {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, mapping.getCode(), null);
@@ -182,6 +179,9 @@ public class MappingHandler {
 		}else {
 			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
 		}
+		
+		if(mapping.getMetadata().isUpdateName()) 
+			exMapping = deleteMapping(mapping.getMetadata().getOldName());
 		return exMapping;
 	}
 	
