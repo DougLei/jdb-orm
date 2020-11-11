@@ -7,13 +7,6 @@
   
 	<name>jdb-orm</name>
   	
-  	<developers>
-  		<developer>
-  			<name>金石磊</name>
-  			<email>953034206@qq.com</email>
-  		</developer>
-  	</developers>
-  	
 	<dependencies>
 		<dependency>
 			<groupId>com.douglei</groupId>
