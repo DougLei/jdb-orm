@@ -49,7 +49,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		try {
 			setParameters(parameters);
 			return executeQuery(preparedStatement.executeQuery());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
@@ -59,7 +59,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		try {
 			setParameters(parameters);
 			return executeUniqueQuery(preparedStatement.executeQuery());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
@@ -69,7 +69,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		try {
 			setParameters(parameters);
 			return executeQuery_(preparedStatement.executeQuery());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
@@ -79,7 +79,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		try {
 			setParameters(parameters);
 			return executeUniqueQuery_(preparedStatement.executeQuery());
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}
@@ -99,7 +99,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 				result.setId(getOracleSeqCurval(preparedStatement.getConnection().createStatement()));
 			}
 			return result;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		}
 	}
@@ -109,7 +109,7 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		try {
 			setParameters(parameters);
 			return preparedStatement.executeUpdate();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, parameters, e);
 		} 
 	}

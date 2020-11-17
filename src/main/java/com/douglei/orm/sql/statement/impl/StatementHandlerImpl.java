@@ -32,7 +32,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public List<Map<String, Object>> executeQueryResultList(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return executeQuery(statement.executeQuery(sql));
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
@@ -43,7 +43,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return executeUniqueQuery(statement.executeQuery(sql));
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
@@ -54,7 +54,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return executeQuery_(statement.executeQuery(sql));
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
@@ -65,7 +65,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return executeUniqueQuery_(statement.executeQuery(sql));
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
@@ -86,7 +86,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 				result.setId(getOracleSeqCurval(statement));
 			}
 			return result;
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
@@ -97,7 +97,7 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public int executeUpdate(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return statement.executeUpdate(sql);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {
 			close();
