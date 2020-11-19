@@ -29,7 +29,7 @@ public class Configuration {
 	private String id;
 	private Environment environment;
 	private ExternalDataSource externalDataSource; // 外部的数据源
-	private MappingContainer mappingContainer; // 从外部传入的映射容器实例
+	private MappingContainer mappingContainer; // 映射容器
 	private SessionFactory sessionFactory;
 	
 	public Configuration() {
@@ -61,11 +61,11 @@ public class Configuration {
 				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), properties, externalDataSource, mappingContainer);
 				this.sessionFactory = new SessionFactory(this, environment);
 			} catch (Exception e) {
-				logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例时, 出现异常: {}", SessionFactory.class, ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例时, 出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getExceptionDetailMessage(e));
 				try {
 					destroy_();
 				} catch (Exception e1) {
-					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例出现异常后, 在进行自动销毁时, 又出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e1));
+					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例出现异常后, 在进行自动销毁时, 又出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getExceptionDetailMessage(e1));
 					e.addSuppressed(e1);
 				}
 				throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
@@ -73,7 +73,7 @@ public class Configuration {
 				if(properties != null)
 					properties.clear();
 				if(logger.isDebugEnabled()) 
-					logger.debug("结束初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class);
+					logger.debug("结束初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class.getName());
 			}
 		}
 		return sessionFactory;	
@@ -82,7 +82,7 @@ public class Configuration {
 	/**
 	 * 销毁
 	 */
-	public final void destroy() {
+	public void destroy() {
 		try {
 			destroy_();
 		} catch (Exception e) {
