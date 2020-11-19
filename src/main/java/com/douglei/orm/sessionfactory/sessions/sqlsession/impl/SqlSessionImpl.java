@@ -57,6 +57,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 * @return
 	 */
 	private StatementHandler getStatementHandler(String sql, List<Object> parameters, ReturnID returnID){
+		logger.debug("执行的sql语句为: {}", sql);
+		logger.debug("传入的sql参数为: {}", parameters);
+		
 		StatementHandler statementHandler = null;
 		if(enableStatementCache) {
 			String signature = DigestUtils.md5Hex(sql);
