@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.dom4j.Element;
 
+import com.douglei.tools.utils.StringUtil;
+
 /**
  * 
  * @author DougLei
@@ -21,7 +23,11 @@ public class ExtendOptions {
 		List<Element> options = element.elements("option");
 		if(options.isEmpty())
 			return;
-		for (Element option : options) 
-			Type.toValue(option.attributeValue("type")).handle(option.attributeValue("value"));
+		
+		options.forEach(option -> {
+			String enabled = option.attributeValue("enabled");
+			if(StringUtil.isEmpty(enabled) || Boolean.parseBoolean(enabled))
+				Type.get(option.attributeValue("type")).handle(option.attributeValue("value"));
+		});
 	}
 }

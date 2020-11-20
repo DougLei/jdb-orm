@@ -45,6 +45,7 @@
 	<!-- 扩展项配置 -->
 	<extend-options>
 		<!-- type为扩展项类型, 目前包括的类型值有: mappingType; 区分大小写 -->
-		<option type="mappingType" value="" /><!-- value配置自定义实现的映射类型类的全路径 -->
+		<!-- enabled为该扩展项是否有效, 可为空, 默认为true; 如果为false, 则框架不会处理该扩展项 -->
+		<option type="mappingType" enabled="true" value="" /><!-- value配置自定义实现的映射类型类的全路径 -->
 	</extend-options>
 </configuration>

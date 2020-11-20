@@ -26,7 +26,7 @@ enum Type {
 	 * @param type
 	 * @return
 	 */
-	static Type toValue(String type) {
+	static Type get(String type) {
 		if(StringUtil.isEmpty(type))
 			throw new NullPointerException("扩展项的类型不能为空");
 		if("mappingType".equals(type))
