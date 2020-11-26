@@ -2,13 +2,9 @@ package com.douglei.orm.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import org.junit.Test;
-
-import com.douglei.tools.utils.IdentityUtil;
 
 public class JDBCTest {
 	
@@ -16,15 +12,19 @@ public class JDBCTest {
 	public void test() throws Exception {
 		Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=douglei", "sa", "root");
 		
-		Statement st = connection.createStatement();
-		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from LOG_SQL_1");
+//		Statement st = connection.createStatement();
+//		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from LOG_SQL_1");
+//		
+//		System.out.println(rs.getMetaData().getColumnName(1));
+//		System.out.println(rs.getMetaData().getColumnType(1));
+//		System.out.println(rs.getMetaData().getColumnTypeName(1));
 		
-		System.out.println(rs.getMetaData().getColumnName(1));
-		System.out.println(rs.getMetaData().getColumnType(1));
-		System.out.println(rs.getMetaData().getColumnTypeName(1));
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
 		
-		
-		
+		connection.commit();
 		
 //		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
 		
@@ -51,13 +51,20 @@ public class JDBCTest {
 //		pst.setString(1, "test.");
 //		pst.executeUpdate();
 		
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
 		
-		Statement st = connection.createStatement();
-		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from log_operation");
+		connection.commit();
 		
-		System.out.println(rs.getMetaData().getColumnName(1));
-		System.out.println(rs.getMetaData().getColumnType(1));
-		System.out.println(rs.getMetaData().getColumnTypeName(1));
+		
+//		Statement st = connection.createStatement();
+//		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from log_operation");
+//		
+//		System.out.println(rs.getMetaData().getColumnName(1));
+//		System.out.println(rs.getMetaData().getColumnType(1));
+//		System.out.println(rs.getMetaData().getColumnTypeName(1));
 		
 //		System.out.println(conn.getMetaData().getDatabaseMajorVersion());
 //		System.out.println(conn.getMetaData().getDatabaseMinorVersion());
@@ -77,11 +84,19 @@ public class JDBCTest {
 		String pwd = "root";
 		
 		Connection connection = DriverManager.getConnection(url, username, pwd);
-		PreparedStatement pst = connection.prepareStatement("insert into SYS_USER2(id,age) values(?, ?)");
+//		PreparedStatement pst = connection.prepareStatement("insert into SYS_USER2(id,age) values(?, ?)");
+//		
+//		pst.setString(1, IdentityUtil.get32UUID());
+//		pst.setObject(2, null);
+//		pst.executeUpdate();
+//		connection.commit();
 		
-		pst.setString(1, IdentityUtil.get32UUID());
-		pst.setObject(2, null);
-		pst.executeUpdate();
+		
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		
 		connection.commit();
 		
 	}
