@@ -21,9 +21,8 @@ public class TrimSqlNodeParser implements SqlNodeParser {
 	public SqlNode parse(Node node) throws SqlNodeParserException {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
-		if(cl == 0) {
+		if(cl == 0) 
 			throw new SqlNodeParserException("<trim>元素中不存在任何sql语句");
-		}
 		
 		NamedNodeMap attributeMap = node.getAttributes();
 		TrimSqlNode trimSqlNode = new TrimSqlNode(
@@ -43,9 +42,8 @@ public class TrimSqlNodeParser implements SqlNodeParser {
 				}
 			}
 		}
-		if(trimSqlNode.existsSqlNode()) {
+		if(trimSqlNode.existsSqlNode()) 
 			return trimSqlNode;
-		}
 		throw new SqlNodeParserException("<trim>元素中不存在任何sql语句");
 	}
 	

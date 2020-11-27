@@ -20,9 +20,8 @@ public class SwitchSqlNodeParser implements SqlNodeParser {
 	public SqlNode parse(Node node) throws SqlNodeParserException {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
-		if(cl == 0) {
+		if(cl == 0) 
 			throw new SqlNodeParserException("<switch>元素中不存在任何元素配置");
-		}
 		
 		SwitchSqlNode switchSqlNode = new SwitchSqlNode();
 		
@@ -37,9 +36,8 @@ public class SwitchSqlNodeParser implements SqlNodeParser {
 				}
 			}
 		}
-		if(switchSqlNode.existsSqlNode()) {
+		if(switchSqlNode.existsSqlNode()) 
 			return switchSqlNode;
-		}
 		throw new SqlNodeParserException("<switch>元素中不存在任何元素配置");
 	}
 	

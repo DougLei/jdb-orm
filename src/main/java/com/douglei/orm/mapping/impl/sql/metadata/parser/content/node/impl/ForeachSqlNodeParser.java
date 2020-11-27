@@ -21,9 +21,8 @@ public class ForeachSqlNodeParser implements SqlNodeParser {
 	public SqlNode parse(Node node) throws SqlNodeParserException {
 		NodeList childrens = node.getChildNodes();
 		int cl = childrens.getLength();
-		if(cl == 0) {
+		if(cl == 0) 
 			throw new SqlNodeParserException("<foreach>元素中不存在任何sql语句");
-		}
 		
 		NamedNodeMap attributeMap = node.getAttributes();
 		
@@ -33,9 +32,8 @@ public class ForeachSqlNodeParser implements SqlNodeParser {
 		}
 		
 		String alias = getAttributeValue(attributeMap.getNamedItem("alias"));
-		if(StringUtil.isEmpty(alias)) {
+		if(StringUtil.isEmpty(alias)) 
 			throw new SqlNodeParserException("<foreach>元素中的alias属性值不能为空");
-		}
 		
 		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(collection.trim(), alias.trim(),
 				getAttributeValue(attributeMap.getNamedItem("open")),
@@ -45,13 +43,11 @@ public class ForeachSqlNodeParser implements SqlNodeParser {
 		SqlNode sqlNode = null;
 		for(int i=0;i<cl;i++) {
 			sqlNode = SqlNodeParserContainer.parse(childrens.item(i));
-			if(sqlNode != null) {
+			if(sqlNode != null) 
 				foreachSqlNode.addSqlNode(sqlNode);
-			}
 		}
-		if(foreachSqlNode.existsSqlNode()) {
+		if(foreachSqlNode.existsSqlNode()) 
 			return foreachSqlNode;
-		}
 		throw new SqlNodeParserException("<foreach>元素中不存在任何sql语句");
 	}
 	

@@ -1,19 +1,19 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 
 /**
  * 
  * @author DougLei
  */
-public class IfSqlNode extends AbstractSqlNode {
-	private static final long serialVersionUID = -3653851460984152044L;
-	
+public class IfSqlNode extends AbstractNestingNode {
 	private String expression;
 	
-	public IfSqlNode(String expression, String content) {
-		super(content);
+	public IfSqlNode(String expression) {
 		this.expression = expression;
 	}
 
@@ -37,5 +37,17 @@ public class IfSqlNode extends AbstractSqlNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.IF;
+	}
+
+	@Override
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ValidationResult validateParameter(Object sqlParameter, String alias) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
