@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.container.impl;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +16,8 @@ import com.douglei.orm.mapping.container.MappingContainer;
  */
 public class ApplicationMappingContainer implements MappingContainer {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingContainer.class);
-	private Map<String, Mapping> mappings = new ConcurrentHashMap<String, Mapping>(64);
-	private Map<String, MappingProperty> mappingProperties = new ConcurrentHashMap<String, MappingProperty>(64);
+	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
+	private Map<String, MappingProperty> mappingProperties = new HashMap<String, MappingProperty>(64);
 	
 	@Override
 	public void clear() {
