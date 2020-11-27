@@ -35,11 +35,6 @@ public class IfSqlNode extends AbstractNestingNode {
 	}
 
 	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.IF;
-	}
-
-	@Override
 	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		// TODO Auto-generated method stub
 		return null;
@@ -49,5 +44,10 @@ public class IfSqlNode extends AbstractNestingNode {
 	public ValidationResult validateParameter(Object sqlParameter, String alias) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.IF;
 	}
 }
