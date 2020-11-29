@@ -109,9 +109,6 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], alias)) {
-					if(sqlContentList == null) 
-						sqlContentList = new ArrayList<String>(10);
-					
 					executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, array[i], alias);
 					if(executeSqlNode.existsParameters()) {
 						if(parameters == null) 
@@ -123,6 +120,9 @@ public class ForeachSqlNode extends AbstractNestingNode {
 							sqlParameters = new ArrayList<SqlParameterMetadata>();
 						sqlParameters.addAll(executeSqlNode.getSqlParameters());
 					}
+					
+					if(sqlContentList == null) 
+						sqlContentList = new ArrayList<String>(10);
 					sqlContentList.add(executeSqlNode.getContent());
 				}
 			}
@@ -134,12 +134,12 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		StringBuilder sqlContent = new StringBuilder(100);
 		sqlContent.append(open);
 		
-		short index = 0, lastIndex = (short) (sqlContentList.size()-1);
+		int index = 0, lastIndex = (sqlContentList.size()-1);
 		for (String sc : sqlContentList) {
 			sqlContent.append(sc);
-			if(index == lastIndex) {
+			if(index == lastIndex) 
 				break;
-			}
+			
 			sqlContent.append(separator);
 			index++;
 		}
