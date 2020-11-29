@@ -1,14 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 
 /**
@@ -16,12 +8,16 @@ import com.douglei.tools.instances.ognl.OgnlHandler;
  * @author DougLei
  */
 public class IfSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -4575393350930688205L;
+	private static final long serialVersionUID = -1920145243940720139L;
 	
 	private String expression;
-	
 	public IfSqlNode(String expression) {
 		this.expression = expression;
+	}
+	
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.IF;
 	}
 
 	@Override
@@ -39,57 +35,5 @@ public class IfSqlNode extends AbstractNestingNode {
 			if(alias != null && expression.indexOf(alias+".") != -1) 
 				expression = expression.replace(alias+".", "");
 		}
-	}
-
-	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
-		List<String> sqlContentList = null;
-		List<Object> parameters = null;
-		List<SqlParameterMetadata> sqlParameters = null;
-		
-		ExecuteSqlNode executeSqlNode = null;
-		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
-				if(executeSqlNode.existsParameters()) {
-					if(parameters == null) 
-						parameters = new ArrayList<Object>();
-					parameters.addAll(executeSqlNode.getParameters());
-				}
-				if(executeSqlNode.existsSqlParameters()) {
-					if(sqlParameters == null)
-						sqlParameters = new ArrayList<SqlParameterMetadata>();
-					sqlParameters.addAll(executeSqlNode.getSqlParameters());
-				}
-				
-				if(sqlContentList == null) 
-					sqlContentList = new ArrayList<String>(10);
-				sqlContentList.add(executeSqlNode.getContent());
-			}
-		}
-		
-		if(sqlContentList == null) 
-			return ExecuteSqlNode.emptyExecuteSqlNode();
-		
-		StringBuilder sqlContent = new StringBuilder(100);
-		for (String sc : sqlContentList) {
-			sqlContent.append(sc).append(' ');
-		}
-		return new ExecuteSqlNode(sqlContent.toString(), parameters, sqlParameters);
-	}
-
-	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String alias) {
-		ValidationResult result = null;
-		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias) && (result = sqlNode.validateParameter(sqlParameter, alias)) != null) 
-				return result;
-		}
-		return null;
-	}
-	
-	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.IF;
 	}
 }

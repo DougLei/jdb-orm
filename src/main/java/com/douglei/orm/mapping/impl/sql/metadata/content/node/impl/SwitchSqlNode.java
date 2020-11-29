@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
@@ -11,8 +11,13 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class SwitchSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 6112742403201533418L;
+	private static final long serialVersionUID = 3460504912024958924L;
 
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.SWITCH;
+	}
+	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
 		for (SqlNode sqlNode : sqlNodes) {
@@ -30,10 +35,5 @@ public class SwitchSqlNode extends AbstractNestingNode {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.SWITCH;
 	}
 }

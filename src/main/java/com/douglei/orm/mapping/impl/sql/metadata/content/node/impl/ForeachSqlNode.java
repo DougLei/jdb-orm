@@ -9,8 +9,8 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.instances.ognl.OgnlHandler;
@@ -21,7 +21,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 7236276157006381761L;
+	private static final long serialVersionUID = 6143004343917638321L;
 	
 	private String collection;
 	private String alias;
@@ -84,6 +84,11 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			array = (Object[]) collectionObject;
 		}
 		return array;
+	}
+	
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.FOREACH;
 	}
 	
 	@Override
@@ -159,10 +164,5 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.FOREACH;
 	}
 }

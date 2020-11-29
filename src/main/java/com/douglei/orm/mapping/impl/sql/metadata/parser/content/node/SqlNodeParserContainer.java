@@ -19,7 +19,7 @@ public class SqlNodeParserContainer {
 		SqlNodeParser sqlNodeHandler = null;
 		for (String classpath : new ClassScanner().scan(SqlNodeParserContainer.class.getPackage().getName() + ".impl")) {
 			sqlNodeHandler= (SqlNodeParser) ConstructorUtil.newInstance(classpath);
-			container.put(sqlNodeHandler.getNodeName(), sqlNodeHandler);
+			container.put(sqlNodeHandler.getNodeType().getNodeName(), sqlNodeHandler);
 		}
 	}
 	

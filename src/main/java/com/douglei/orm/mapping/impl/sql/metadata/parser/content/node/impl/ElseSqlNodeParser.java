@@ -6,25 +6,23 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ElseSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParser;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserException;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 
 /**
  * 
  * @author DougLei
  */
-public class ElseSqlNodeParser implements SqlNodeParser {
+public class ElseSqlNodeParser extends SqlNodeParser {
 
 	@Override
 	public SqlNode parse(Node node) throws SqlNodeParserException {
-		String content = node.getTextContent();
-		if(StringUtil.isEmpty(content)) {
-			throw new SqlNodeParserException("<else>元素中的内容不能为空");
-		}
-		return new ElseSqlNode(content);
+		ElseSqlNode elseSqlNode = new ElseSqlNode();
+		setChildrenSqlNodes(elseSqlNode, node);
+		return elseSqlNode;
 	}
 	
 	@Override
-	public String getNodeName() {
-		return "else";
+	public SqlNodeType getNodeType() {
+		return SqlNodeType.ELSE;
 	}
 }

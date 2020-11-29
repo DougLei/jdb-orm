@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
@@ -15,7 +15,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -6704088452531657308L;
+	private static final long serialVersionUID = 5408227332113053242L;
 	
 	private String prefix;
 	private String suffix;
@@ -43,6 +43,11 @@ public class TrimSqlNode extends AbstractNestingNode {
 				this.suffixoverride[i] = tmp[i];
 			}
 		}
+	}
+	
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.TRIM;
 	}
 	
 	@Override
@@ -103,10 +108,5 @@ public class TrimSqlNode extends AbstractNestingNode {
 			}
 		}
 		return null;
-	}
-	
-	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.TRIM;
 	}
 }
