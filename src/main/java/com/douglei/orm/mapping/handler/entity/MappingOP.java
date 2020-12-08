@@ -9,21 +9,7 @@ public enum MappingOP {
 	/**
 	 * 添加或覆盖
 	 */
-	ADD_OR_COVER(2){
-		@Override
-		public int compare4Sort(MappingEntity o1, MappingEntity o2) {
-			if(o1.getType().getPriority() < o2.getType().getPriority())
-				return -1;
-			if(o1.getType().getPriority() > o2.getType().getPriority())
-				return 1;
-			
-			if(o1.getOrder() < o2.getOrder())
-				return -1;
-			if(o1.getOrder() > o2.getOrder())
-				return 1;
-			return 0;
-		}
-	},
+	ADD_OR_COVER(2),
 	
 	/**
 	 * 删除
@@ -31,16 +17,16 @@ public enum MappingOP {
 	DELETE(1){
 		@Override
 		public int compare4Sort(MappingEntity o1, MappingEntity o2) {
-			if(o1.getType().getPriority() > o2.getType().getPriority())
-				return -1;
-			if(o1.getType().getPriority() < o2.getType().getPriority())
-				return 1;
-
-			if(o1.getOrder() > o2.getOrder())
-				return -1;
-			if(o1.getOrder() < o2.getOrder())
-				return 1;
-			return 0;
+			switch(super.compare4Sort(o1, o2)) {
+				case 0:
+					return 0;
+				case 1:
+					return -1;
+				case -1:
+					return 1;
+				default:
+					throw new IllegalArgumentException();
+			}
 		}
 	};
 	
@@ -54,10 +40,21 @@ public enum MappingOP {
 	}
 
 	/**
-	 * 将o1和o2比较, 进行排序
+	 * 将o1和o2比较, 进行排序; 默认进行ADD_OR_COVER时的比较
 	 * @param o1
 	 * @param o2
 	 * @return
 	 */
-	public abstract int compare4Sort(MappingEntity o1, MappingEntity o2);
+	public int compare4Sort(MappingEntity o1, MappingEntity o2) {
+		if(o1.getType().getPriority() < o2.getType().getPriority())
+			return -1;
+		if(o1.getType().getPriority() > o2.getType().getPriority())
+			return 1;
+		
+		if(o1.getOrder() < o2.getOrder())
+			return -1;
+		if(o1.getOrder() > o2.getOrder())
+			return 1;
+		return 0;
+	}
 }
