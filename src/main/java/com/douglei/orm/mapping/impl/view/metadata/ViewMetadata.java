@@ -2,6 +2,7 @@ package com.douglei.orm.mapping.impl.view.metadata;
 
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.metadata.AbstractDatabaseObjectMetadata;
+import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
@@ -16,7 +17,7 @@ public class ViewMetadata extends AbstractDatabaseObjectMetadata {
 	public ViewMetadata(String name, String oldName, CreateMode createMode, String script) {
 		super(name);
 		super.name = name;
-		super.oldName = oldName;
+		super.oldName = StringUtil.isEmpty(oldName)?name:oldName;
 		this.createMode = createMode;
 		this.script = script;
 	}
