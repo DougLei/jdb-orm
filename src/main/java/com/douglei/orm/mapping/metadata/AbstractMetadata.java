@@ -25,6 +25,6 @@ public abstract class AbstractMetadata implements Metadata{
 	 * @return
 	 */
 	public final boolean isUpdateName() {
-		return oldName != null && name != oldName;
+		return oldName != null && !name.equals(oldName);
 	}
 }
