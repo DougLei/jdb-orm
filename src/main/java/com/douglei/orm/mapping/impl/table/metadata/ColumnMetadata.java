@@ -33,7 +33,13 @@ public class ColumnMetadata extends AbstractMetadata {
 	private ValidateHandler validateHandler;// 验证器
 	
 	public ColumnMetadata(String property, String name, String oldName, DBDataType dbDataType, int length, int precision, boolean nullable, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate, String description) {
-		super(name, oldName);
+		super(name);
+		
+		this.name = name.toUpperCase();
+		if(StringUtil.isEmpty(oldName)) 
+			this.oldName = this.name;
+		else 
+			this.oldName = oldName.toUpperCase();
 		
 		this.property = StringUtil.isEmpty(property)?null:property;
 		this.dbDataType = dbDataType;

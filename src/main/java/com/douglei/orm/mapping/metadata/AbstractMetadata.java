@@ -1,29 +1,21 @@
 package com.douglei.orm.mapping.metadata;
 
 import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractMetadata implements Metadata{
-	private static final long serialVersionUID = -8051964135726869108L;
+	private static final long serialVersionUID = 7166906399729424369L;
 	
 	protected String name; // 名
 	protected String oldName;// 旧名
 	
 	public AbstractMetadata() {}
-	protected AbstractMetadata(String name, String oldName) {
+	protected AbstractMetadata(String name) {
 		EnvironmentContext.getDialect().getObjectHandler().validateObjectName(name); // 验证name的长度是否超过数据库支持的最大长度
-		
-		this.name = name.toUpperCase();
-		if(StringUtil.isEmpty(oldName)) 
-			this.oldName = this.name;
-		else 
-			this.oldName = oldName.toUpperCase();
 	}
-	
 	
 	@Override
 	public String getCode() {

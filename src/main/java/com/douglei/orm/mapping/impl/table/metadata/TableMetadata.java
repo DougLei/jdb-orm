@@ -42,7 +42,14 @@ public class TableMetadata extends AbstractMetadata {
 	private List<ColumnMetadata> validateColumns;// 需要验证的列
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
-		super(name, oldName);
+		super(name);
+		
+		this.name = name.toUpperCase();
+		if(StringUtil.isEmpty(oldName)) 
+			this.oldName = this.name;
+		else 
+			this.oldName = oldName.toUpperCase();
+		
 		this.className = StringUtil.isEmpty(className)?null:className;
 		this.createMode = createMode;
 	}

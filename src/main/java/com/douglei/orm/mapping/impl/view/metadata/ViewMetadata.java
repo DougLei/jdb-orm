@@ -14,7 +14,9 @@ public class ViewMetadata extends AbstractMetadata {
 	private String script; // 脚本内容
 	
 	public ViewMetadata(String name, String oldName, CreateMode createMode, String script) {
-		super(name, oldName);
+		super(name);
+		super.name = name;
+		super.oldName = oldName;
 		this.createMode = createMode;
 		this.script = script;
 	}
