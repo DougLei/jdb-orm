@@ -1,13 +1,13 @@
 package com.douglei.orm.mapping.impl.view.metadata;
 
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-import com.douglei.orm.mapping.metadata.AbstractMetadata;
+import com.douglei.orm.mapping.metadata.AbstractDatabaseObjectMetadata;
 
 /**
  * 
  * @author DougLei
  */
-public class ViewMetadata extends AbstractMetadata {
+public class ViewMetadata extends AbstractDatabaseObjectMetadata {
 	private static final long serialVersionUID = -4631261045702701161L;
 	
 	private CreateMode createMode; // 创建模式

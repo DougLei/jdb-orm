@@ -1,7 +1,6 @@
 package com.douglei.orm.mapping.impl.table.metadata;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
@@ -11,7 +10,7 @@ import com.douglei.tools.utils.StringUtil;
  * 列元数据
  * @author DougLei
  */
-public class ColumnMetadata extends AbstractMetadata {
+public class ColumnMetadata extends AbstractMetadata4Table {
 	private static final long serialVersionUID = -7093225708443633905L;
 
 	private String property;// 映射的代码类中的属性名
@@ -33,14 +32,7 @@ public class ColumnMetadata extends AbstractMetadata {
 	private ValidateHandler validateHandler;// 验证器
 	
 	public ColumnMetadata(String property, String name, String oldName, DBDataType dbDataType, int length, int precision, boolean nullable, boolean primaryKey, boolean unique, String defaultValue, String check, String fkTableName, String fkColumnName, boolean validate, String description) {
-		super(name);
-		
-		this.name = name.toUpperCase();
-		if(StringUtil.isEmpty(oldName)) 
-			this.oldName = this.name;
-		else 
-			this.oldName = oldName.toUpperCase();
-		
+		super(name, oldName);
 		this.property = StringUtil.isEmpty(property)?null:property;
 		this.dbDataType = dbDataType;
 		this.length = length;

@@ -13,14 +13,13 @@ import com.douglei.orm.mapping.impl.table.exception.IndexConfigurationException;
 import com.douglei.orm.mapping.impl.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandler;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
-import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.tools.utils.StringUtil;
 
 /**
  * 表元数据
  * @author DougLei
  */
-public class TableMetadata extends AbstractMetadata {
+public class TableMetadata extends AbstractMetadata4Table {
 	private static final long serialVersionUID = -921176736727336961L;
 	
 	private String className;// 映射的代码类名
@@ -42,14 +41,7 @@ public class TableMetadata extends AbstractMetadata {
 	private List<ColumnMetadata> validateColumns;// 需要验证的列
 	
 	public TableMetadata(String name, String oldName, String className, CreateMode createMode) {
-		super(name);
-		
-		this.name = name.toUpperCase();
-		if(StringUtil.isEmpty(oldName)) 
-			this.oldName = this.name;
-		else 
-			this.oldName = oldName.toUpperCase();
-		
+		super(name, oldName);
 		this.className = StringUtil.isEmpty(className)?null:className;
 		this.createMode = createMode;
 	}
