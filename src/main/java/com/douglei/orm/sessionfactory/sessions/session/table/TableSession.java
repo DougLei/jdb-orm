@@ -1,6 +1,7 @@
 package com.douglei.orm.sessionfactory.sessions.session.table;
 
 import java.util.List;
+import java.util.Map;
 
 import com.douglei.orm.sql.pagequery.PageResult;
 
@@ -22,16 +23,16 @@ public interface TableSession {
 	void save(List<? extends Object> objects);
 	/**
 	 * 保存对象
-	 * @param name table元素中的name属性值
-	 * @param object
+	 * @param tableName
+	 * @param objectMap
 	 */
-	void save(String name, Object object);
+	void save(String tableName, Map<String, Object> objectMap);
 	/**
 	 * 保存对象
-	 * @param name table元素中的name属性值
-	 * @param objects
+	 * @param tableName
+	 * @param objectMaps
 	 */
-	void save(String name, List<? extends Object> objects);
+	void save(String tableName, List<Map<String, Object>> objectMaps);
 	
 	/**
 	 * 修改对象
@@ -49,19 +50,19 @@ public interface TableSession {
 	}
 	/**
 	 * 修改对象
-	 * @param name table元素中的name属性值
-	 * @param object
+	 * @param tableName
+	 * @param objectMap
 	 */
-	default void update(String name, Object object) {
-		update(name, object, false);
+	default void update(String tableName, Map<String, Object> objectMap) {
+		update(tableName, objectMap, false);
 	}
 	/**
 	 * 修改对象
-	 * @param name table元素中的name属性值
-	 * @param objects
+	 * @param tableName
+	 * @param objectMaps
 	 */
-	default void update(String name, List<Object> objects) {
-		update(name, objects, false);
+	default void update(String tableName, List<Map<String, Object>> objectMaps) {
+		update(tableName, objectMaps, false);
 	}
 	
 	/**
@@ -78,18 +79,18 @@ public interface TableSession {
 	void update(List<Object> objects, boolean updateNullValue);
 	/**
 	 * 修改对象
-	 * @param name table元素中的name属性值
-	 * @param object
+	 * @param tableName
+	 * @param objectMap
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
-	void update(String name, Object object, boolean updateNullValue);
+	void update(String tableName, Map<String, Object> objectMap, boolean updateNullValue);
 	/**
 	 * 修改对象
-	 * @param name table元素中的name属性值
-	 * @param objects
+	 * @param tableName
+	 * @param objectMaps
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
-	void update(String name, List<Object> objects, boolean updateNullValue);
+	void update(String tableName, List<Map<String, Object>> objectMaps, boolean updateNullValue);
 	
 	
 	/**
@@ -104,16 +105,16 @@ public interface TableSession {
 	void delete(List<Object> objects);
 	/**
 	 * 删除对象
-	 * @param name table元素中的name属性值
-	 * @param object
+	 * @param tableName
+	 * @param objectMap
 	 */
-	void delete(String name, Object object);
+	void delete(String tableName, Map<String, Object> objectMap);
 	/**
 	 * 删除对象
-	 * @param name table元素中的name属性值
-	 * @param objects
+	 * @param tableName
+	 * @param objectMaps
 	 */
-	void delete(String name, List<Object> objects);
+	void delete(String tableName, List<Map<String, Object>> objectMaps);
 	
 	/**
 	 * 执行批量查询

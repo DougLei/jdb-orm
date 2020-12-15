@@ -109,14 +109,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void save(String name, Object object) {
-		save_(getTableMetadata(name.toUpperCase()), object);
+	public void save(String tableName, Map<String, Object> objectMap) {
+		save_(getTableMetadata(tableName.toUpperCase()), objectMap);
 	}
 	
 	@Override
-	public void save(String name, List<? extends Object> objects) {
-		TableMetadata table = getTableMetadata(name.toUpperCase());
-		objects.forEach(propertyMap -> save_(table, propertyMap));
+	public void save(String tableName, List<Map<String, Object>> objectMaps) {
+		TableMetadata table = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> save_(table, objectMap));
 	}
 	
 	
@@ -171,14 +171,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void update(String name, Object object, boolean updateNullValue) {
-		update_(getTableMetadata(name.toUpperCase()), object, updateNullValue);
+	public void update(String tableName, Map<String, Object> objectMap, boolean updateNullValue) {
+		update_(getTableMetadata(tableName.toUpperCase()), objectMap, updateNullValue);
 	}
 	
 	@Override
-	public void update(String name, List<Object> objects, boolean updateNullValue) {
-		TableMetadata table = getTableMetadata(name.toUpperCase());
-		objects.forEach(propertyMap -> update_(table, propertyMap, updateNullValue));
+	public void update(String tableName, List<Map<String, Object>> objectMaps, boolean updateNullValue) {
+		TableMetadata table = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> update_(table, objectMap, updateNullValue));
 	}
 	
 
@@ -231,14 +231,14 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void delete(String name, Object object) {
-		delete_(getTableMetadata(name.toUpperCase()), object);
+	public void delete(String tableName, Map<String, Object> objectMap) {
+		delete_(getTableMetadata(tableName.toUpperCase()), objectMap);
 	}
 	
 	@Override
-	public void delete(String name, List<Object> objects) {
-		TableMetadata table = getTableMetadata(name.toUpperCase());
-		objects.forEach(propertyMap -> delete_(table, propertyMap));
+	public void delete(String tableName, List<Map<String, Object>> objectMaps) {
+		TableMetadata table = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> delete_(table, objectMap));
 	}
 
 		
