@@ -25,7 +25,7 @@ public abstract class SqlContentExtractor {
 		List<ContentMetadata> list = getContents_(purpose, name, contents);
 		if(list.isEmpty())
 			throw new NullPointerException("不存在任何可以执行的sql语句");
-		validate(purpose, contents);
+		validate(purpose, list);
 		return list;
 	}
 	
