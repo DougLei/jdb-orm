@@ -25,7 +25,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 7338472070728018677L;
+	private static final long serialVersionUID = 540870890144322641L;
 
 	private String configText;
 	
@@ -187,29 +187,20 @@ public class SqlParameterMetadata implements Metadata{
 		}
 	}
 
-	private boolean flag;// 是否处理过name前缀, 默认都没有处理
-	private boolean isSingleName;// 是否只是一个name, 如果不是的话(即alias.xxx这种多层级name), 则需要ognl解析
-	private void processNamePrefix(String alias) {
-		if(!flag) {
-			flag = false;
-			
-			// 在foreach中, 传入一个List<String>, alias=id, #{id}, 即别名和参数名一致, 这个时候就不能substring
-			if(alias != null) {
-				int subLength = alias.length()+1;// +1是把表达式后面的.去掉
-				if(name.length() > subLength) 
-					name = name.substring(subLength);
-			}
-			isSingleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的多层级形式
-		}
-	}
-	
+	private boolean nameFlag;// 标识是否处理过name
+	private boolean singleName;// 是否只是一个name, 如果不是的话(即alias.xxx这种多层级name), 则需要ognl解析
 	// 获取值
 	private Object getValue_(Object sqlParameter, String alias) {
-		processNamePrefix(alias);
+		if(!nameFlag) {
+			nameFlag = true;
+			if(alias != null && name.startsWith(alias+'.'))
+				name = name.substring(alias.length()+1);
+			singleName = name.indexOf(".") == -1;// 可能会出现alias.xx.xx的多层级形式
+		}
 		
 		Object value = null;
 		if(sqlParameter != null) {
-			if(sqlParameter instanceof Map<?, ?> && isSingleName) {
+			if(sqlParameter instanceof Map<?, ?> && singleName) {
 				value = ((Map<?, ?>)sqlParameter).get(name); 
 			}else if(ConverterUtil.isSimpleType(sqlParameter)){
 				value = sqlParameter;
@@ -221,7 +212,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(value == null && defaultValue != null) {
 			value = configHolder.getDefaultValueHandler().getDefaultValue(defaultValue);
 			
-			if(isSingleName) {
+			if(singleName) {
 				IntrospectorUtil.setProperyValue(sqlParameter, name, value);
 			}else {
 				int dot = name.lastIndexOf(".");

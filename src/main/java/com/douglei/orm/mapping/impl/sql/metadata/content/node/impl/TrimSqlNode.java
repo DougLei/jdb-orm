@@ -7,7 +7,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
@@ -15,7 +14,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 5408227332113053242L;
+	private static final long serialVersionUID = -6238903487680223625L;
 	
 	private String prefix;
 	private String suffix;
@@ -51,24 +50,24 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
 		StringBuilder sqlContentBuilder = new StringBuilder();
-		List<Object> parameters = null;
-		List<SqlParameterMetadata> sqlParameters = null;
+		List<SqlParameterMetadata> parameters = null;
+		List<Object> parameterValues = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
+			if(sqlNode.matching(sqlParameter, previousAlias)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, previousAlias);
 				if(executeSqlNode.existsParameters()) {
-					if(parameters == null) 
-						parameters = new ArrayList<Object>();
+					if(parameters == null)
+						parameters = new ArrayList<SqlParameterMetadata>();
 					parameters.addAll(executeSqlNode.getParameters());
 				}
-				if(executeSqlNode.existsSqlParameters()) {
-					if(sqlParameters == null)
-						sqlParameters = new ArrayList<SqlParameterMetadata>();
-					sqlParameters.addAll(executeSqlNode.getSqlParameters());
+				if(executeSqlNode.existsParameterValues()) {
+					if(parameterValues == null) 
+						parameterValues = new ArrayList<Object>();
+					parameterValues.addAll(executeSqlNode.getParameterValues());
 				}
 				sqlContentBuilder.append(executeSqlNode.getContent()).append(" ");
 			}
@@ -96,17 +95,6 @@ public class TrimSqlNode extends AbstractNestingNode {
 			}
 			sqlContent = prefix + sqlContent + suffix;
 		}
-		return new ExecuteSqlNode(sqlContent, parameters, sqlParameters);
-	}
-	
-	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String alias) {
-		ValidationResult result = null;
-		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias) && (result = sqlNode.validateParameter(sqlParameter, alias)) != null) {
-				return result;
-			}
-		}
-		return null;
+		return new ExecuteSqlNode(sqlContent, parameters, parameterValues);
 	}
 }

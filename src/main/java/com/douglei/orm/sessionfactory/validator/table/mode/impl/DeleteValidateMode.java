@@ -28,9 +28,13 @@ public class DeleteValidateMode implements ValidateMode {
 				if((result = column.getValidateHandler().validate(objectMap.get(column.getCode()))) != null) 
 					return result;
 			}
-		}else { // 有主键时的删除验证, 验证主键值; 前提是主键配置了需要被验证, 即validate=true
+		}else { // 有主键时的删除验证, 验证主键值; 前提是主键配置了需要被验证
 			for (ColumnMetadata pkColumn : table.getPrimaryKeyColumns_().values()) {
-				if(pkColumn.getValidateHandler() != null && (result = pkColumn.getValidateHandler().validate(objectMap.get(pkColumn.getCode()))) != null)
+				if(pkColumn.getValidateHandler() == null)
+					continue;
+				
+				result = pkColumn.getValidateHandler().validate(objectMap.get(pkColumn.getCode()));
+				if(result != null)
 					return result;
 			}
 		}

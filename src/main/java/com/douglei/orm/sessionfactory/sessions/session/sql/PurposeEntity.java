@@ -5,24 +5,27 @@ package com.douglei.orm.sessionfactory.sessions.session.sql;
  * @author DougLei
  */
 public abstract class PurposeEntity {
-	private boolean isGetSqlParameterValues;
-	private boolean isGetSqlParameters;
+	private boolean isGetParameters; 
+	private boolean isGetParameterValues;  
 	
-	/**
-	 * 
-	 * @param isGetSqlParameterValues 是否要获取sql参数值集合
-	 * @param isGetSqlParameters 是否要获取sql参数集合
-	 */
-	protected PurposeEntity(boolean isGetSqlParameterValues, boolean isGetSqlParameters) {
-		this.isGetSqlParameterValues = isGetSqlParameterValues;
-		this.isGetSqlParameters = isGetSqlParameters;
+	protected PurposeEntity(boolean isGetParameters, boolean isGetParameterValues) {
+		this.isGetParameters = isGetParameters;
+		this.isGetParameterValues = isGetParameterValues;
 	}
 
-	public final boolean isGetSqlParameterValues() {
-		return isGetSqlParameterValues;
+	/**
+	 * 是否要获取sql参数集合
+	 * @return
+	 */
+	public final boolean isGetParameters() {
+		return isGetParameters;
 	}
-	public final boolean isGetSqlParameters() {
-		return isGetSqlParameters;
+	/**
+	 * 是否要获取sql参数值集合
+	 * @return
+	 */
+	public final boolean isGetParameterValues() {
+		return isGetParameterValues;
 	}
 
 	/**

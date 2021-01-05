@@ -6,7 +6,7 @@ package com.douglei.orm.sql.statement;
  */
 public class InsertResult {
 	private int row; // 影响的行数 
-	private int id; // 自增主键值
+	private int id; // 自增的主键值
 	
 	public int getRow() {
 		return row;

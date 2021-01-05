@@ -34,5 +34,5 @@ public interface ExecuteHandler {
 	 * 获取当前执行sql语句对应的参数值集合
 	 * @return
 	 */
-	List<Object> getCurrentParameters();
+	List<Object> getCurrentParameterValues();
 }

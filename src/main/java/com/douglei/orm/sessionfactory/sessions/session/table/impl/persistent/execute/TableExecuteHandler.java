@@ -45,7 +45,7 @@ public abstract class TableExecuteHandler implements ExecuteHandler {
 	}
 
 	@Override
-	public List<Object> getCurrentParameters() {
+	public List<Object> getCurrentParameterValues() {
 		return parameters;
 	}
 	

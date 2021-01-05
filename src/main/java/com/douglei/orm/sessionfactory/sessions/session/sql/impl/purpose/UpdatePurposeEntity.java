@@ -14,7 +14,7 @@ public class UpdatePurposeEntity extends PurposeEntity {
 	}
 	
 	private UpdatePurposeEntity() {
-		super(true, false);
+		super(false, true);
 	}
 	
 	@Override

@@ -165,7 +165,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void update(List<Object> objects, boolean updateNullValue) {
+	public void update(List<? extends Object> objects, boolean updateNullValue) {
 		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
 		objects.forEach(object -> update_(table, object, updateNullValue));
 	}
@@ -225,7 +225,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	@Override
-	public void delete(List<Object> objects) {
+	public void delete(List<? extends Object> objects) {
 		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
 		objects.forEach(object -> delete_(table, object));
 	}
@@ -271,11 +271,11 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		if(persistentObject.getOperationState() == OperationState.INSERT && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
 			TableMetadata tableMetadata = persistentObject.getTableMetadata();
-			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
+			InsertResult result = super.executeInsert(executeHandler.getCurrentSql(), executeHandler.getCurrentParameterValues(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
 			// 将执行insert语句后生成的序列值, 赋给源实例
 			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next(), result.getId());
 		}else {
-			super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameters());
+			super.executeUpdate(executeHandler.getCurrentSql(), executeHandler.getCurrentParameterValues());
 		}
 	}
 	

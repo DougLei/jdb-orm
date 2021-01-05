@@ -11,10 +11,10 @@ import com.douglei.orm.mapping.metadata.validator.ValidationResult;
  * @author DougLei
  */
 class ContentValidator {
-	private List<SqlNode> rootSqlNodes;
+	private List<SqlNode> sqlNodes;
 	
 	public ContentValidator(ContentMetadata contentMetadata) {
-		rootSqlNodes = contentMetadata.getRootSqlNodes();
+		sqlNodes = contentMetadata.getSqlNodes();
 	}
 
 	/**
@@ -24,7 +24,7 @@ class ContentValidator {
 	 */
 	public ValidationResult validate(Object sqlParameter) {
 		ValidationResult result = null;
-		for (SqlNode sqlNode : rootSqlNodes) {
+		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
 				if((result = sqlNode.validateParameter(sqlParameter)) != null) 
 					return result;

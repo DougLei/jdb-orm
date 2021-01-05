@@ -14,7 +14,7 @@ public class QueryPurposeEntity extends PurposeEntity {
 	}
 	
 	private QueryPurposeEntity() {
-		super(true, false);
+		super(false, true);
 	}
 	
 	@Override

@@ -26,6 +26,7 @@ public class TableMetadata extends AbstractMetadata4Table {
 	private CreateMode createMode;// 创建模式
 	
 	private List<ColumnMetadata> declareColumns;// 按声明顺序的列
+	
 	private Map<String, ColumnMetadata> columns;// <列名: 列>
 	private Map<String, ColumnMetadata> columns_;// <code: 列>
 	

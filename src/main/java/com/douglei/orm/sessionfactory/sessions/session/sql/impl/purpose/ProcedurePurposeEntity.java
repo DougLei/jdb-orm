@@ -14,7 +14,7 @@ public class ProcedurePurposeEntity extends PurposeEntity {
 	}
 	
 	private ProcedurePurposeEntity() {
-		super(false, true);
+		super(true, false);
 	}
 	
 	@Override

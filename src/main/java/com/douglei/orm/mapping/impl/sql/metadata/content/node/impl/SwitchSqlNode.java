@@ -19,19 +19,19 @@ public class SwitchSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias)) 
-				return sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
+			if(sqlNode.matching(sqlParameter, previousAlias)) 
+				return sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, previousAlias);
 		}
 		return ExecuteSqlNode.emptyExecuteSqlNode();
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String alias) {
+	public ValidationResult validateParameter(Object sqlParameter, String previousAlias) {
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias)) {
-				return sqlNode.validateParameter(sqlParameter, alias);
+			if(sqlNode.matching(sqlParameter, previousAlias)) {
+				return sqlNode.validateParameter(sqlParameter, previousAlias);
 			}
 		}
 		return null;

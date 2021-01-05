@@ -19,10 +19,10 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TextSqlNode implements SqlNode {
-	private static final long serialVersionUID = 4155598587310382398L;
+	private static final long serialVersionUID = 5680225153097060912L;
 	
 	private String content;
-	private List<SqlParameterMetadata> sqlParameters;// sql参数, 按照配置中定义的顺序记录
+	private List<SqlParameterMetadata> parameters;// sql参数, 按照配置中定义的顺序记录
 	
 	public TextSqlNode(String content) {
 		this.content = content.trim();
@@ -84,21 +84,21 @@ public class TextSqlNode implements SqlNode {
 			}
 		}
 		
-		if(sqlParameters != null) {
-			for (SqlParameterMetadata sqlParameter : sqlParameters) {
-				if(sqlParameter.isUsePlaceholder()) {
-					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + sqlParameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
+		if(parameters != null) {
+			for (SqlParameterMetadata parameter : parameters) {
+				if(parameter.isUsePlaceholder()) {
+					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + parameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
 				}else{
-					content = content.replaceAll(sqlParameter.getConfigText(), sqlParameter.getName());
+					content = content.replaceAll(parameter.getConfigText(), parameter.getName());
 				}
 			}
 		}
 	}
 	// 添加 sql parameter
 	private void addSqlParameter(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
-		if(sqlParameters == null) 
-			sqlParameters = new ArrayList<SqlParameterMetadata>();
-		sqlParameters.add(new SqlParameterMetadata(configText, sqlParameterConfigHolder));
+		if(parameters == null) 
+			parameters = new ArrayList<SqlParameterMetadata>();
+		parameters.add(new SqlParameterMetadata(configText, sqlParameterConfigHolder));
 	}
 	
 	@Override
@@ -108,34 +108,18 @@ public class TextSqlNode implements SqlNode {
 	
 	@Override
 	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
-		return new ExecuteSqlNode(purposeEntity, content, sqlParameters, sqlParameter, alias);
+		return new ExecuteSqlNode(purposeEntity, content, parameters, sqlParameter, alias);
 	}
 
 	@Override
 	public ValidationResult validateParameter(Object sqlParameter, String alias) {
-		if(sqlParameters != null) {
+		if(parameters != null) {
 			ValidationResult result = null;
-			for (SqlParameterMetadata parameter : sqlParameters) {
+			for (SqlParameterMetadata parameter : parameters) {
 				if((result = parameter.validate(sqlParameter, alias)) != null) 
 					return result;
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * 获取sql内容
-	 * @return
-	 */
-	public String getContent() {
-		return content;
-	}
-	
-	/**
-	 * 获取sql参数, 按照sql内容中定义的顺序(可重复)
-	 * @return
-	 */
-	public List<SqlParameterMetadata> getSqlParameters(){
-		return sqlParameters;
 	}
 }

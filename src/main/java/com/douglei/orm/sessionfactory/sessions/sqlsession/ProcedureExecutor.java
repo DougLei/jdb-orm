@@ -4,7 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 
 /**
- * 
+ * 存储过程执行器
  * @author DougLei
  */
 public interface ProcedureExecutor {

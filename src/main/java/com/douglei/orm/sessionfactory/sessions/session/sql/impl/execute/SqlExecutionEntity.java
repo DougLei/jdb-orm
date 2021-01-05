@@ -16,8 +16,8 @@ public class SqlExecutionEntity {
 	private String name;
 	private ContentType type;
 	private SqlStatement sql;
-	private List<Object> parameters;
-	private List<SqlParameterMetadata> sqlParameters;
+	private List<SqlParameterMetadata> parameters;
+	private List<Object> parameterValues;
 	
 	public SqlExecutionEntity(SqlExecuteHandler sqlExecutionHandler) {
 		this.sqlExecutionHandler = sqlExecutionHandler;
@@ -25,7 +25,7 @@ public class SqlExecutionEntity {
 		this.type = sqlExecutionHandler.getCurrentType();
 		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sqlExecutionHandler.getCurrentSql());
 		this.parameters = sqlExecutionHandler.getCurrentParameters();
-		this.sqlParameters = sqlExecutionHandler.getCurrentSqlParameters();
+		this.parameterValues = sqlExecutionHandler.getCurrentParameterValues();
 	}
 	
 	/**
@@ -60,7 +60,6 @@ public class SqlExecutionEntity {
 		return sql.getSql();
 	}
 	
-
 	/**
 	 * 获取order by子句, 如果是select类型的sql
 	 * @return
@@ -70,19 +69,19 @@ public class SqlExecutionEntity {
 	}
 	
 	/**
-	 * 获取执行sql语句对应的参数值集合
+	 * 获取sql参数集合
 	 * @return 可能为null
 	 */
-	public List<Object> getParameters(){
+	public List<SqlParameterMetadata> getParameters(){
 		return parameters;
 	}
 	
 	/**
-	 * 获取sql参数集合
+	 * 获取执行sql语句时的参数值集合
 	 * @return 可能为null
 	 */
-	public List<SqlParameterMetadata> getSqlParameters(){
-		return sqlParameters;
+	public List<Object> getParameterValues(){
+		return parameterValues;
 	}
 	
 	/**
@@ -103,7 +102,7 @@ public class SqlExecutionEntity {
 			this.type = sqlExecutionHandler.getCurrentType();
 			this.sql.reset(sqlExecutionHandler.getCurrentSql());
 			this.parameters = sqlExecutionHandler.getCurrentParameters();
-			this.sqlParameters = sqlExecutionHandler.getCurrentSqlParameters();
+			this.parameterValues = sqlExecutionHandler.getCurrentParameterValues();
 			return true;
 		}
 		return false;

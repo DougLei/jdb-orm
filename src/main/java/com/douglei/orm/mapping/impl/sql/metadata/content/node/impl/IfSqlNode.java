@@ -8,32 +8,29 @@ import com.douglei.tools.instances.ognl.OgnlHandler;
  * @author DougLei
  */
 public class IfSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -1920145243940720139L;
+	private static final long serialVersionUID = 504149933956674908L;
 	
 	private String expression;
+	private boolean expressionFlag; // 标识是否处理过expression
 	public IfSqlNode(String expression) {
 		this.expression = expression;
 	}
 	
 	@Override
-	public SqlNodeType getType() {
-		return SqlNodeType.IF;
-	}
-
-	@Override
-	public boolean matching(Object sqlParameter, String alias) {
-		processExpression(alias);
+	public boolean matching(Object sqlParameter, String previousAlias) {
 		if(sqlParameter == null)
 			return false;
+		
+		if(previousAlias != null && !expressionFlag) {
+			expressionFlag = true;
+			if(expression.startsWith(previousAlias+'.'))
+				expression = expression.substring(previousAlias.length()+1);
+		}
 		return OgnlHandler.getSingleton().getBooleanValue(expression, sqlParameter);
 	}
 	
-	private boolean flag;// 是否处理了expression, 默认没有处理
-	private void processExpression(String alias) {
-		if(!flag) {
-			flag = true;
-			if(alias != null && expression.indexOf(alias+".") != -1) 
-				expression = expression.replace(alias+".", "");
-		}
+	@Override
+	public SqlNodeType getType() {
+		return SqlNodeType.IF;
 	}
 }

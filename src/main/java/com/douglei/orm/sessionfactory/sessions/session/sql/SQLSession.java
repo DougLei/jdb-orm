@@ -389,13 +389,13 @@ public interface SQLSession {
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
 	/**
-	 * 执行增删改查操作
+	 * 批量执行增删改查操作
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
 	 * @return 影响的行数
 	 */
-	int executeUpdate(String namespace, String name, List<? extends Object> sqlParameters);
+	int executeUpdates(String namespace, String name, List<? extends Object> sqlParameters);
 	
 	/**
 	 * 执行存储过程
@@ -415,11 +415,11 @@ public interface SQLSession {
 	 */
 	Object executeProcedure(String namespace, String name, Object sqlParameter);
 	/**
-	 * 执行存储过程
+	 * 批量执行存储过程
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType PROCEDURE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
 	 * @return List<Map<输出参数名 : 输出值>>, 没有输出值时, 返回null
 	 */
-	List<Object> executeProcedure(String namespace, String name, List<? extends Object> sqlParameters);
+	List<Object> executeProcedures(String namespace, String name, List<? extends Object> sqlParameters);
 }

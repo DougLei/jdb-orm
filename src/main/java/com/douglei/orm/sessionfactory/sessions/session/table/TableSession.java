@@ -13,29 +13,40 @@ public interface TableSession {
 
 	/**
 	 * 保存对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param object
 	 */
 	void save(Object object);
 	/**
 	 * 保存对象, 同一个对象的集合
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param objects
 	 */
 	void save(List<? extends Object> objects);
 	/**
 	 * 保存对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMap
 	 */
 	void save(String tableName, Map<String, Object> objectMap);
 	/**
 	 * 保存对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMaps
 	 */
 	void save(String tableName, List<Map<String, Object>> objectMaps);
 	
+	
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param object
 	 */
 	default void update(Object object) {
@@ -43,13 +54,17 @@ public interface TableSession {
 	}
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param objects
 	 */
-	default void update(List<Object> objects) {
+	default void update(List<? extends Object> objects) {
 		update(objects, false);
 	}
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMap
 	 */
@@ -58,27 +73,34 @@ public interface TableSession {
 	}
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMaps
 	 */
 	default void update(String tableName, List<Map<String, Object>> objectMaps) {
 		update(tableName, objectMaps, false);
 	}
-	
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param object
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
 	void update(Object object, boolean updateNullValue);
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param objects
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
 	 */
-	void update(List<Object> objects, boolean updateNullValue);
+	void update(List<? extends Object> objects, boolean updateNullValue);
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMap
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
@@ -86,6 +108,8 @@ public interface TableSession {
 	void update(String tableName, Map<String, Object> objectMap, boolean updateNullValue);
 	/**
 	 * 修改对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMaps
 	 * @param updateNullValue 是否修改为null值, 即如果对象中属性的值为null, 是否将该字段的值也update为null
@@ -95,26 +119,35 @@ public interface TableSession {
 	
 	/**
 	 * 删除对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param object
 	 */
 	void delete(Object object);
 	/**
 	 * 删除对象
+	 * <p>
+	 * 在配置文件中配置了class时使用该方法
 	 * @param objects
 	 */
-	void delete(List<Object> objects);
+	void delete(List<? extends Object> objects);
 	/**
 	 * 删除对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMap
 	 */
 	void delete(String tableName, Map<String, Object> objectMap);
 	/**
 	 * 删除对象
+	 * <p>
+	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objectMaps
 	 */
 	void delete(String tableName, List<Map<String, Object>> objectMaps);
+	
 	
 	/**
 	 * 执行批量查询

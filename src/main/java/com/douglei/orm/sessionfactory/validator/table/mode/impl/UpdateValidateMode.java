@@ -23,12 +23,7 @@ public class UpdateValidateMode implements ValidateMode {
 		return instance4UpdateNullValue;
 	}
 	
-	private boolean updateNullValue;
-	
-	/**
-	 * 
-	 * @param updateNullValue 是否更新null值, 如果要更新null值, 则会对必要的null值进行验证
-	 */
+	private boolean updateNullValue; // 是否更新null值, 如果要更新null值, 则会对必要的null值进行验证
 	private UpdateValidateMode(boolean updateNullValue) {
 		this.updateNullValue = updateNullValue;
 	}
@@ -52,7 +47,9 @@ public class UpdateValidateMode implements ValidateMode {
 			
 			if(!updateNullValue && entry.getValue() == null)
 				continue;
-			if((result = column.getValidateHandler().validate(entry.getValue())) != null)
+			
+			result = column.getValidateHandler().validate(entry.getValue());
+			if(result != null)
 				return result;
 		}
 		return null;

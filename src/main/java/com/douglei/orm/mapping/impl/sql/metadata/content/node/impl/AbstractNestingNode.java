@@ -37,47 +37,47 @@ public abstract class AbstractNestingNode implements SqlNode{
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
-		List<String> sqlContentList = null;
-		List<Object> parameters = null;
-		List<SqlParameterMetadata> sqlParameters = null;
+	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
+		List<String> contentList = null;
+		List<SqlParameterMetadata> parameters = null;
+		List<Object> parameterValues = null;
 		
 		ExecuteSqlNode executeSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, alias);
+			if(sqlNode.matching(sqlParameter, previousAlias)) {
+				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, previousAlias);
 				if(executeSqlNode.existsParameters()) {
-					if(parameters == null) 
-						parameters = new ArrayList<Object>();
+					if(parameters == null)
+						parameters = new ArrayList<SqlParameterMetadata>();
 					parameters.addAll(executeSqlNode.getParameters());
 				}
-				if(executeSqlNode.existsSqlParameters()) {
-					if(sqlParameters == null)
-						sqlParameters = new ArrayList<SqlParameterMetadata>();
-					sqlParameters.addAll(executeSqlNode.getSqlParameters());
+				if(executeSqlNode.existsParameterValues()) {
+					if(parameterValues == null) 
+						parameterValues = new ArrayList<Object>();
+					parameterValues.addAll(executeSqlNode.getParameterValues());
 				}
 				
-				if(sqlContentList == null) 
-					sqlContentList = new ArrayList<String>(10);
-				sqlContentList.add(executeSqlNode.getContent());
+				if(contentList == null) 
+					contentList = new ArrayList<String>(10);
+				contentList.add(executeSqlNode.getContent());
 			}
 		}
 		
-		if(sqlContentList == null) 
+		if(contentList == null) 
 			return ExecuteSqlNode.emptyExecuteSqlNode();
 		
 		StringBuilder sqlContent = new StringBuilder(100);
-		for (String sc : sqlContentList) 
-			sqlContent.append(sc).append(' ');
+		for (String content : contentList) 
+			sqlContent.append(content).append(' ');
 		
-		return new ExecuteSqlNode(sqlContent.toString(), parameters, sqlParameters);
+		return new ExecuteSqlNode(sqlContent.toString(), parameters, parameterValues);
 	}
 
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String alias) {
+	public ValidationResult validateParameter(Object sqlParameter, String previousAlias) {
 		ValidationResult result = null;
 		for (SqlNode sqlNode : sqlNodes) {
-			if(sqlNode.matching(sqlParameter, alias) && (result = sqlNode.validateParameter(sqlParameter, alias)) != null) 
+			if(sqlNode.matching(sqlParameter, previousAlias) && (result = sqlNode.validateParameter(sqlParameter, previousAlias)) != null) 
 				return result;
 		}
 		return null;

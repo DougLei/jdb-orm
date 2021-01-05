@@ -12,13 +12,12 @@ import com.douglei.orm.mapping.metadata.Metadata;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
-	private static final long serialVersionUID = 5933886870399981053L;
+	private static final long serialVersionUID = 7918171070776891692L;
 	
 	protected String name;
 	protected ContentType type;
 	private IncrementIdValueConfig incrementIdValueConfig;
-	
-	private List<SqlNode> rootSqlNodes;
+	private List<SqlNode> sqlNodes;
 	
 	public ContentMetadata(String name, IncrementIdValueConfig incrementIdValueConfig) {
 		this.name = name;
@@ -26,11 +25,11 @@ public class ContentMetadata implements Metadata{
 		this.type = MappingParserContext.getCurrentSqlType();
 	}
 
-	public void addRootSqlNode(SqlNode rootSqlNode) {
-		if(rootSqlNodes == null) {
-			rootSqlNodes = new ArrayList<SqlNode>();
+	public void addSqlNode(SqlNode sqlNode) {
+		if(sqlNodes == null) {
+			sqlNodes = new ArrayList<SqlNode>();
 		}
-		rootSqlNodes.add(rootSqlNode);
+		sqlNodes.add(sqlNode);
 	}
 	
 	public String getName() {
@@ -39,8 +38,8 @@ public class ContentMetadata implements Metadata{
 	public ContentType getType() {
 		return type;
 	}
-	public List<SqlNode> getRootSqlNodes() {
-		return rootSqlNodes;
+	public List<SqlNode> getSqlNodes() {
+		return sqlNodes;
 	}
 	public IncrementIdValueConfig getIncrementIdValueConfig() {
 		return incrementIdValueConfig;

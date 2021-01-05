@@ -244,7 +244,8 @@ public class MappingHandler {
 	
 	/**
 	 * 获取指定code的映射, 如不存在则返回null; 
-	 * <p><b>注意: 建议先调用getProperty(String)进行预处理, 再决定是否调用getMapping(String)方法</b></p>
+	 * <p>
+	 * 注意: 建议先调用getMappingProperty(String)进行预处理, 判断资源是否存在, 再调用getMapping(String)方法, 减少不必要的性能消耗
 	 * @param code 
 	 * @return
 	 */
@@ -253,21 +254,8 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定namespace和name的sql映射执行实体
-	 * @param purposeEntity 创建对应的用途实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity.DEFAULT}
-	 * @param namespace
-	 * @param name 
-	 * @param sqlParameter 输入参数
-	 * @return
-	 */
-	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
-		SqlMetadata sqlMetadata = (SqlMetadata) getMapping(namespace).getMetadata();
-		return new SqlExecutionEntity(new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter));
-	}
-	
-	/**
-	 * 获取表元数据实例
-	 * @param code 配置的name或class, 如果是name则必须是全大写, 这里的方法没有做容错处理, 需要调用者按规定传参
+	 * 获取code对应的表元数据实例
+	 * @param code 值分两种, 1.对应类的全路径(com.test.SysUser); 2.对应的表名, 表名必须全大写(SYS_USER); 如果在映射文件中配置了class, 则必须传入类的全路径; 否则只能传入表名
 	 * @return
 	 */
 	public TableMetadata getTableMetadata(String code) {
@@ -291,5 +279,18 @@ public class MappingHandler {
 		if(!MappingTypeConstants.SQL.equals(mappingProperty.getType())) 
 			throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
 		return (SqlMetadata) mappingContainer.getMapping(namespace).getMetadata();
+	}
+	
+	/**
+	 * 获取指定namespace和name的sql映射执行实体实例
+	 * @param purposeEntity 创建对应的用途实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity}
+	 * @param namespace
+	 * @param name 
+	 * @param sqlParameter 输入参数
+	 * @return
+	 */
+	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
+		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
+		return new SqlExecutionEntity(new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
 }

@@ -40,7 +40,7 @@ public class SqlContentMetadataParser implements MetadataParser<Node, SqlContent
 		for(int i=0;i<length;i++) {
 			sqlNode = SqlNodeParserContainer.parse(children.item(i));
 			if(sqlNode != null) 
-				sqlContentMetadata.addRootSqlNode(sqlNode);
+				sqlContentMetadata.addSqlNode(sqlNode);
 		}
 		return sqlContentMetadata;
 	}

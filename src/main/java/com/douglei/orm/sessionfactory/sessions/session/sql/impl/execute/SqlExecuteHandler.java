@@ -62,17 +62,17 @@ public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHan
 		return executeSqls.get(executeSqlIndex).getContent();
 	}
 
-	@Override
-	public List<Object> getCurrentParameters() {
-		return executeSqls.get(executeSqlIndex).getParameters();
-	}
-	
 	/**
 	 * 获取当前sql参数集合
 	 * @return
 	 */
-	public List<SqlParameterMetadata> getCurrentSqlParameters() {
-		return executeSqls.get(executeSqlIndex).getSqlParameters();
+	public List<SqlParameterMetadata> getCurrentParameters() {
+		return executeSqls.get(executeSqlIndex).getParameters();
+	}
+	
+	@Override
+	public List<Object> getCurrentParameterValues() {
+		return executeSqls.get(executeSqlIndex).getParameterValues();
 	}
 	
 	/**
