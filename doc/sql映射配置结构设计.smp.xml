@@ -35,7 +35,7 @@
 				<if test="age != null and age == 23">
 					
 					sql参数的属性配置, 参考《table映射配置结构设计.tmp.xml》中<column>的配置					
-					and name = #{name, description=姓名, dbType=VARCHAR, dataType=string, usePlaceholder=false, valuePrefix=', valueSuffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
+					and name = #{name, description=姓名, dbType=VARCHAR, dataType=string, placeholder=false, prefix=', suffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
 				</if>
 				<if test="age != null">
 					and name = 'DougLei'

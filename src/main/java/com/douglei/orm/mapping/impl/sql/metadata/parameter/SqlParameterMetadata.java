@@ -16,7 +16,6 @@ import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
 import com.douglei.tools.instances.ognl.OgnlHandler;
 import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
 import com.douglei.tools.utils.datatype.converter.ConverterUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
@@ -25,7 +24,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SqlParameterMetadata implements Metadata{
-	private static final long serialVersionUID = 540870890144322641L;
+	private static final long serialVersionUID = 1648404942738838493L;
 
 	private String configText;
 	
@@ -36,9 +35,9 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private SqlParameterMode mode;// 输入输出类型
 	
-	private boolean usePlaceholder;// 是否使用占位符?
-	private String valuePrefix;// 如果不使用占位符, 参数值的前缀
-	private String valueSuffix;// 如果不使用占位符, 参数值的后缀
+	private boolean placeholder;// 是否使用占位符?
+	private String prefix;// 如果不使用占位符, 参数值的前缀
+	private String suffix;// 如果不使用占位符, 参数值的后缀
 	
 	private boolean nullable;// 是否可为空
 	private String defaultValue;// 默认值
@@ -56,7 +55,7 @@ public class SqlParameterMetadata implements Metadata{
 		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
 		setDBDataType(propertyMap);
 		
-		setUsePlaceholder(propertyMap);
+		setPlaceholder(propertyMap);
 		setDefaultValueAndNullable(propertyMap.get("defaultvalue"), propertyMap.get("nullable"));
 		setValidate(propertyMap.get("validate"));
 		setDescription(propertyMap.get("description"));
@@ -124,39 +123,33 @@ public class SqlParameterMetadata implements Metadata{
 		this.length = wrapper.getLength();
 		this.precision = wrapper.getPrecision();
 	}
-	private void setUsePlaceholder(Map<String, String> propertyMap) {
-		String value = propertyMap.get("useplaceholder");
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
-			this.usePlaceholder = Boolean.parseBoolean(value);
-		}else {
-			this.usePlaceholder = true;
-		}
-		
-		if(!this.usePlaceholder) {
-			setValuePrefix(propertyMap.get("valueprefix"));
-			setValueSuffix(propertyMap.get("valuesuffix"));
+	private void setPlaceholder(Map<String, String> propertyMap) {
+		this.placeholder = !"false".equalsIgnoreCase(propertyMap.get("placeholder"));
+		if(!this.placeholder) {
+			setPrefix(propertyMap.get("prefix"));
+			setSuffix(propertyMap.get("suffix"));
 		}
 	}
-	private void setValuePrefix(String valuePrefix) {
-		if(StringUtil.isEmpty(valuePrefix)) {
+	private void setPrefix(String prefix) {
+		if(StringUtil.isEmpty(prefix)) {
 			if(dbDataType.isCharacterType()) {
-				this.valuePrefix = "'";
+				this.prefix = "'";
 			}else {
-				this.valuePrefix = "";
+				this.prefix = "";
 			}
 		}else {
-			this.valuePrefix = valuePrefix;
+			this.prefix = prefix;
 		}
 	}
-	private void setValueSuffix(String valueSuffix) {
-		if(StringUtil.isEmpty(valueSuffix)) {
+	private void setSuffix(String suffix) {
+		if(StringUtil.isEmpty(suffix)) {
 			if(dbDataType.isCharacterType()) {
-				this.valueSuffix = "'";
+				this.suffix = "'";
 			}else {
-				this.valueSuffix = "";
+				this.suffix = "";
 			}
 		}else {
-			this.valueSuffix = valueSuffix;
+			this.suffix = suffix;
 		}
 	}
 	private void setDefaultValueAndNullable(String defaultValue, String nullable) {
@@ -262,14 +255,14 @@ public class SqlParameterMetadata implements Metadata{
 	public DBDataType getDBDataType() {
 		return dbDataType;
 	}
-	public boolean isUsePlaceholder() {
-		return usePlaceholder;
+	public boolean isPlaceholder() {
+		return placeholder;
 	}
-	public String getValuePrefix() {
-		return valuePrefix;
+	public String getPrefix() {
+		return prefix;
 	}
-	public String getValueSuffix() {
-		return valueSuffix;
+	public String getSuffix() {
+		return suffix;
 	}
 	public SqlParameterMode getMode() {
 		return mode;

@@ -20,7 +20,7 @@ public class ExecuteSqlNode {
 	public ExecuteSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String previousAlias) {
 		if(sqlParameterByDefinedOrders != null) {
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
-				if(parameter.isUsePlaceholder()) {
+				if(parameter.isPlaceholder()) {
 					if(purposeEntity.isGetParameterValues()) {
 						if(parameterValues == null) 
 							parameterValues = new ArrayList<Object>();
@@ -28,7 +28,7 @@ public class ExecuteSqlNode {
 					}
 				}else {
 					// 非占位符, 将实际值替换到变量的位置
-					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getValuePrefix() + parameter.getValue(sqlParameter, previousAlias) + parameter.getValueSuffix());
+					content = content.replaceAll(parameter.getConfigHolder().getPrefix() + parameter.getName() + parameter.getConfigHolder().getSuffix(), parameter.getPrefix() + parameter.getValue(sqlParameter, previousAlias) + parameter.getSuffix());
 				}
 			}
 		}

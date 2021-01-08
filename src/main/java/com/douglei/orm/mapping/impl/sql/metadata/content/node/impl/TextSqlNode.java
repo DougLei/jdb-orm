@@ -86,7 +86,7 @@ public class TextSqlNode implements SqlNode {
 		
 		if(parameters != null) {
 			for (SqlParameterMetadata parameter : parameters) {
-				if(parameter.isUsePlaceholder()) {
+				if(parameter.isPlaceholder()) {
 					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + parameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
 				}else{
 					content = content.replaceAll(parameter.getConfigText(), parameter.getName());

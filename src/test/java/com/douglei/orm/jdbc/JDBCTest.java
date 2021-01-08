@@ -115,9 +115,11 @@ public class JDBCTest {
 					Connection connection = DriverManager.getConnection(url, username, pwd);
 					connection.setAutoCommit(false);
 					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					connection.createStatement().executeUpdate("update sys_user set name = '石磊44444' where id=1");
+					connection.createStatement().executeUpdate("update sys_user set name = '石磊aaaaa' where id=1");
 					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					connection.commit();
+//					System.out.println(getName() + "未提交");
+//					connection.commit();
+//					System.out.println(getName() + "提交了");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -132,9 +134,11 @@ public class JDBCTest {
 					Connection connection = DriverManager.getConnection(url, username, pwd);
 					connection.setAutoCommit(false);
 					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					connection.createStatement().executeUpdate("update sys_user set name = '石磊55555' where id=1");
+					connection.createStatement().executeUpdate("update sys_user set name = '石磊bbbbb' where id=1");
 					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
+					System.out.println(getName() + "未提交");
 					connection.commit();
+					System.out.println(getName() + "提交了");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

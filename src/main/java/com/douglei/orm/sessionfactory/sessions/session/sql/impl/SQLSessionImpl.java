@@ -238,7 +238,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						
 						short index = 1;
 						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
-							if(!sqlParameterMetadata.isUsePlaceholder())
+							if(!sqlParameterMetadata.isPlaceholder())
 								continue;
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) 
 								sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
