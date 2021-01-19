@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
@@ -39,6 +42,7 @@ import com.douglei.tools.utils.reflect.IntrospectorUtil;
  * @author DougLei
  */
 public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
+	private static final Logger logger = LoggerFactory.getLogger(SQLSessionImpl.class);
 	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
 	
 	public SQLSessionImpl(ConnectionWrapper connection, Environment environment) {
@@ -230,6 +234,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			@Override
 			public Object execute(Connection connection) throws ProcedureExecutionException {
 				try (CallableStatement callableStatement = connection.prepareCall(callableSqlContent)){
+					logger.debug("执行的存储过程sql语句为: {}", callableSqlContent);
 					
 					short outParameterCount = 0;
 					short[] outParameterIndex = null;
@@ -240,6 +245,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
 							if(!sqlParameterMetadata.isPlaceholder())
 								continue;
+							
+							logger.debug("传入的sql参数为: index={}, parameter={}", index, sqlParameterMetadata);
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) 
 								sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
