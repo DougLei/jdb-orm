@@ -59,7 +59,7 @@ public class Environment {
 		if(elements.isEmpty())
 			return Collections.emptyMap();
 		
-		Map<String, String> propertyMap = new HashMap<String, String>(elements.size());
+		Map<String, String> propertyMap = new HashMap<String, String>();
 		for (Element elem : elements) 
 			propertyMap.put(elem.attributeValue("name"), getValue(elem.attributeValue("value"), properties));
 		return propertyMap;

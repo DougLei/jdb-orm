@@ -16,7 +16,7 @@ public class DialectContainer {
 	 * @return
 	 */
 	public static Dialect get(DialectKey key) {
-		if(!instanceContainer.isEmpty()) {
+		if(instanceContainer.size() > 0) {
 			for(Dialect dialect : instanceContainer) {
 				if(dialect.getType().support(key))
 					return dialect;
