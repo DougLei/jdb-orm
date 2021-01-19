@@ -10,7 +10,7 @@ import com.douglei.tools.utils.RegularExpressionUtil;
  * @author DougLei
  */
 public class SqlParameterConfigHolder implements Serializable{
-	private static final long serialVersionUID = 849576201581654508L;
+	private static final long serialVersionUID = -7175699608417952764L;
 	
 	/**
 	 * 前后缀一样
@@ -45,21 +45,20 @@ public class SqlParameterConfigHolder implements Serializable{
 	private Pattern suffixPattern;
 	
 	private String split;
-	private boolean splitIncludeRegExKey; // 分隔符是否包含正则表达式的关键字
 	
 	private DefaultValueHandler defaultValueHandler;
 	
 	public SqlParameterConfigHolder(String prefix, String suffix, String split, DefaultValueHandler defaultValueHandler) {
 		this.prefixLength = prefix.length();
 		
-		this.prefix = RegularExpressionUtil.transferRegularExpressionKey(prefix);
+		this.prefix = RegularExpressionUtil.transferKey(prefix);
 		this.prefixPattern = Pattern.compile(this.prefix, Pattern.MULTILINE);
 		if(prefix.equals(suffix)) {
 			this.suffix = this.prefix;
 			this.suffixPattern = this.prefixPattern;
 			this.psRelation = SAME;
 		}else {
-			this.suffix = RegularExpressionUtil.transferRegularExpressionKey(suffix);
+			this.suffix = RegularExpressionUtil.transferKey(suffix);
 			this.suffixPattern = Pattern.compile(this.suffix, Pattern.MULTILINE);
 			this.psRelation = DIFFERENT;
 			if(prefix.indexOf(suffix) != -1) {
@@ -69,8 +68,7 @@ public class SqlParameterConfigHolder implements Serializable{
 			}
 		}
 		
-		this.split = RegularExpressionUtil.transferRegularExpressionKey(split);
-		this.splitIncludeRegExKey = this.split != split;
+		this.split = RegularExpressionUtil.transferKey(split);
 		this.defaultValueHandler = defaultValueHandler;
 	}
 	
@@ -97,8 +95,5 @@ public class SqlParameterConfigHolder implements Serializable{
 	}
 	public DefaultValueHandler getDefaultValueHandler() {
 		return defaultValueHandler;
-	}
-	public boolean splitIncludeRegExKey() {
-		return splitIncludeRegExKey;
 	}
 }

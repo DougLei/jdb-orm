@@ -12,7 +12,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.tools.utils.RegularExpressionUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -88,7 +87,7 @@ public class TextSqlNode implements SqlNode {
 		if(parameters != null) {
 			for (SqlParameterMetadata parameter : parameters) {
 				if(parameter.isPlaceholder()) {
-					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + RegularExpressionUtil.transferRegularExpressionKey(parameter.getConfigText()) + sqlParameterConfigHolder.getSuffix(), "?");
+					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + parameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
 				}else{
 					content = content.replaceAll(parameter.getConfigText(), parameter.getName());
 				}
