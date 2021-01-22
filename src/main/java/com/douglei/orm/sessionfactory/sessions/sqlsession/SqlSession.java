@@ -110,62 +110,64 @@ public interface SqlSession {
 	Object[] uniqueQuery_(String sql, List<Object> parameters);
 	
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @return 返回<列名:值>的map集合
 	 */
-	default Map<String, Object> queryFirst(String sql) {
-		return queryFirst(sql, null);
+	default List<Map<String, Object>> queryLimit(String sql, int startRow, int length) {
+		return queryLimit(sql, startRow, length, null);
 	}
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
 	 */
-	default Map<String, Object> queryFirst(String sql, List<Object> parameters){
-		List<Map<String, Object>> list = query(sql, parameters);
-		if(list.isEmpty())
-			return null;
-		return list.get(0);
-	}
+	List<Map<String, Object>> queryLimit(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param targetClass
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @return 
 	 */
-	<T> T queryFirst(Class<T> targetClass, String sql);
+	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length);
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param targetClass
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @return 返回<值>的数组
 	 */
-	default Object[] queryFirst_(String sql) {
-		return queryFirst_(sql, null);
+	default List<Object[]> queryLimit_(String sql, int startRow, int length) {
+		return queryLimit_(sql, startRow, length, null);
 	}
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于等于0时返回空集合
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
 	 */
-	default Object[] queryFirst_(String sql, List<Object> parameters) {
-		List<Object[]> list = query_(sql, parameters);
-		if(list.isEmpty())
-			return null;
-		return list.get(0);
-	}
+	List<Object[]> queryLimit_(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 查询结果数据总数量
@@ -175,7 +177,6 @@ public interface SqlSession {
 	default long countQuery(String sql) {
 		return countQuery(sql, null);
 	}
-	
 	/**
 	 * 查询结果数据总数量
 	 * @param sql
