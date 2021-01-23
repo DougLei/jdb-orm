@@ -182,20 +182,24 @@ public interface TableSession {
 	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param targetClass
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
-	<T> T queryFirst(Class<T> targetClass, String sql);
+	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length);
 	/**
-	 * 查询第一条数据
+	 * 执行限制查询
 	 * @param targetClass
 	 * @param sql
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 分页查询

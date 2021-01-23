@@ -170,18 +170,46 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public <T> T queryFirst(Class<T> targetClass, String sql) {
-		return queryFirst(targetClass, sql, null);
+	public List<Map<String, Object>> queryLimit(String sql, int startRow, int length, List<Object> parameters){
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
+		try {
+			return statementHandler.executeLimitQueryResultList(startRow, length, parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
+		} finally {
+			if(!enableStatementCache) 
+				statementHandler.close();
+		}
 	}
-
+	
 	@Override
-	public <T> T queryFirst(Class<T> targetClass, String sql, List<Object> parameters) {
-		List<T> list = query(targetClass, sql, parameters);
-		if(list.isEmpty())
-			return null;
-		return list.get(0);
+	public <T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length){
+		return queryLimit(targetClass, sql, startRow, length, null);
 	}
-
+	
+	@Override
+	public <T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters){
+		List<Map<String, Object>> listMap = queryLimit(sql, startRow, length, parameters);
+		if(listMap.isEmpty())
+			return Collections.emptyList();
+		return listMap2listClass(targetClass, listMap);
+	}
+	
+	@Override
+	public List<Object[]> queryLimit_(String sql, int startRow, int length, List<Object> parameters){
+		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
+		try {
+			return statementHandler.executeLimitQueryResultList_(startRow, length, parameters);
+		} catch (StatementExecutionException e) {
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			throw new SessionExecutionException("在查询数据时出现异常", e);
+		} finally {
+			if(!enableStatementCache) 
+				statementHandler.close();
+		}
+	}
+	
 	@Override
 	public long countQuery(String sql, List<Object> parameters) {
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql);

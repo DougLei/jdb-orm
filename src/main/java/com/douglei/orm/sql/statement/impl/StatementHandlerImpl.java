@@ -38,6 +38,17 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 			close();
 		}
 	}
+	
+	@Override
+	public List<Map<String, Object>> executeLimitQueryResultList(int startRow, int length, List<Object> parameters) throws StatementExecutionException {
+		try {
+			return executeLimitQuery(startRow, length, statement.executeQuery(sql));
+		} catch (Exception e) {
+			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
+		}
+	}
 
 	@Override
 	public Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
@@ -54,6 +65,17 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	public List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException {
 		try {
 			return executeQuery_(statement.executeQuery(sql));
+		} catch (Exception e) {
+			throw new StatementExecutionException(sql, e);
+		} finally {
+			close();
+		}
+	}
+	
+	@Override
+	public List<Object[]> executeLimitQueryResultList_(int startRow, int length, List<Object> parameters) throws StatementExecutionException {
+		try {
+			return executeLimitQuery_(startRow, length, statement.executeQuery(sql));
 		} catch (Exception e) {
 			throw new StatementExecutionException(sql, e);
 		} finally {

@@ -55,6 +55,16 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	}
 	
 	@Override
+	public List<Map<String, Object>> executeLimitQueryResultList(int startRow, int length, List<Object> parameters) throws StatementExecutionException {
+		try {
+			setParameters(parameters);
+			return executeLimitQuery(startRow, length, preparedStatement.executeQuery());
+		} catch (Exception e) {
+			throw new StatementExecutionException(sql, parameters, e);
+		} 
+	}
+	
+	@Override
 	public Map<String, Object> executeQueryUniqueResult(List<Object> parameters) throws StatementExecutionException {
 		try {
 			setParameters(parameters);
@@ -74,6 +84,16 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 		} 
 	}
 
+	@Override
+	public List<Object[]> executeLimitQueryResultList_(int startRow, int length, List<Object> parameters) throws StatementExecutionException {
+		try {
+			setParameters(parameters);
+			return executeLimitQuery_(startRow, length, preparedStatement.executeQuery());
+		} catch (Exception e) {
+			throw new StatementExecutionException(sql, parameters, e);
+		} 
+	}
+	
 	@Override
 	public Object[] executeQueryUniqueResult_(List<Object> parameters) throws StatementExecutionException {
 		try {

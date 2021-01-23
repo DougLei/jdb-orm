@@ -113,7 +113,7 @@ public interface SqlSession {
 	 * 执行限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<列名:值>的map集合
 	 */
 	default List<Map<String, Object>> queryLimit(String sql, int startRow, int length) {
@@ -123,7 +123,7 @@ public interface SqlSession {
 	 * 执行限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -134,7 +134,7 @@ public interface SqlSession {
 	 * @param targetClass
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
 	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length);
@@ -143,7 +143,7 @@ public interface SqlSession {
 	 * @param targetClass
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
@@ -153,7 +153,7 @@ public interface SqlSession {
 	 * 执行限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<值>的数组
 	 */
 	default List<Object[]> queryLimit_(String sql, int startRow, int length) {
@@ -163,7 +163,7 @@ public interface SqlSession {
 	 * 执行限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于等于0时返回空集合
+	 * @param length 长度, 小于1时会修正为1
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
 	 */

@@ -127,61 +127,73 @@ public interface SQLSession {
 	Object[] uniqueQuery_(String namespace, String name, Object sqlParameter);
 	
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<列名:值>的map集合
 	 */
-	default Map<String, Object> queryFirst(String namespace, String name) {
-		return queryFirst(namespace, name, null);
+	default List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length) {
+		return queryLimit(namespace, name, startRow, length, null);
 	}
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
-	Map<String, Object> queryFirst(String namespace, String name, Object sqlParameter);
+	List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param targetClass
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
-	default <T> T queryFirst(Class<T> targetClass, String namespace, String name) {
-		return queryFirst(targetClass, namespace, namespace, null);
+	default <T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length) {
+		return queryLimit(targetClass, namespace, name, startRow, length, null);
 	}
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param targetClass
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> T queryFirst(Class<T> targetClass, String namespace, String name, Object sqlParameter);
+	<T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
-	default Object[] queryFirst_(String namespace, String name) {
-		return queryFirst_(namespace, name, null);
+	default List<Object[]> queryLimit_(String namespace, String name, int startRow, int length) {
+		return queryLimit_(namespace, name, startRow, length, null);
 	}
 	/**
-	 * 查询第一条数据
+	 * 限制查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
-	Object[] queryFirst_(String namespace, String name, Object sqlParameter);
+	List<Object[]> queryLimit_(String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
 	 * 查询结果数据总数量
@@ -260,7 +272,7 @@ public interface SQLSession {
 	 * @return
 	 */
 	default List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, namespace, null);
+		return recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
 	}
 	/**
 	 * 递归查询
@@ -289,7 +301,7 @@ public interface SQLSession {
 	 * @return
 	 */
 	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, namespace, null);
+		return recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
 	}
 	/**
 	 * 递归查询
@@ -353,7 +365,7 @@ public interface SQLSession {
 	 * @return
 	 */
 	default <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, namespace, null);
+		return pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
 	}
 	/**
 	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页

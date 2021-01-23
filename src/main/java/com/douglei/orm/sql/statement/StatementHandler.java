@@ -18,6 +18,16 @@ public interface StatementHandler {
 	List<Map<String, Object>> executeQueryResultList(List<Object> parameters) throws StatementExecutionException;
 	
 	/**
+	 * 执行限制查询, 获取结果集
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
+	 * @param parameters
+	 * @return 返回<列名:值>的list-map集合
+	 * @throws StatementExecutionException
+	 */
+	List<Map<String, Object>> executeLimitQueryResultList(int startRow, int length, List<Object> parameters) throws StatementExecutionException;
+	
+	/**
 	 * 执行查询, 获取唯一结果
 	 * @param parameters
 	 * @return 返回<列名:值>的map集合
@@ -32,6 +42,16 @@ public interface StatementHandler {
 	 * @throws StatementExecutionException
 	 */
 	List<Object[]> executeQueryResultList_(List<Object> parameters) throws StatementExecutionException;
+	
+	/**
+	 * 执行限制查询, 获取结果集
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
+	 * @param parameters
+	 * @return 返回<值>的list-数组集合
+	 * @throws StatementExecutionException
+	 */
+	List<Object[]> executeLimitQueryResultList_(int startRow, int length, List<Object> parameters) throws StatementExecutionException;
 	
 	/**
 	 * 执行查询, 获取唯一结果

@@ -69,8 +69,30 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	protected List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
 		try {
+			if(setResutSetColumnNames(resultSet)) 
+				return ResultSetUtil.getResultSetListMap(1, -1, resultsetMetadatas, resultSet);
+			return Collections.emptyList();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
+	}
+	
+	/**
+	 * 执行限制查询
+	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
+	 * @param length 长度, 小于1时会修正为1
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	protected List<Map<String, Object>> executeLimitQuery(int startRow, int length, ResultSet resultSet) throws SQLException {
+		try {
 			if(setResutSetColumnNames(resultSet)) {
-				return ResultSetUtil.getResultSetListMap(resultsetMetadatas, resultSet);
+				if(startRow < 1) startRow=1;
+				if(length < 1) length=1;
+				return ResultSetUtil.getResultSetListMap(startRow, length, resultsetMetadatas, resultSet);
 			}
 			return Collections.emptyList();
 		} catch (SQLException e) {
@@ -90,9 +112,8 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				Map<String, Object> result = ResultSetUtil.getResultSetMap(resultsetMetadatas, resultSet);
-				if(resultSet.next()) {
+				if(resultSet.next()) 
 					throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
-				}
 				return result;
 			}
 			return null;
@@ -111,8 +132,30 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 */
 	protected List<Object[]> executeQuery_(ResultSet resultSet) throws SQLException {
 		try {
+			if(setResutSetColumnNames(resultSet)) 
+				return ResultSetUtil.getResultSetListArray(1, -1, resultsetMetadatas, resultSet);
+			return Collections.emptyList();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			CloseUtil.closeDBConn(resultSet);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param startRow
+	 * @param length
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	protected List<Object[]> executeLimitQuery_(int startRow, int length, ResultSet resultSet) throws SQLException {
+		try {
 			if(setResutSetColumnNames(resultSet)) {
-				return ResultSetUtil.getResultSetListArray(resultsetMetadatas, resultSet);
+				if(startRow < 1) startRow=1;
+				if(length < 1) length=1;
+				return ResultSetUtil.getResultSetListArray(startRow, length, resultsetMetadatas, resultSet);
 			}
 			return Collections.emptyList();
 		} catch (SQLException e) {
@@ -132,9 +175,8 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				Object[] result = ResultSetUtil.getResultSetArray(resultsetMetadatas, resultSet);
-				if(resultSet.next()) {
+				if(resultSet.next()) 
 					throw new NonUniqueDataException("进行唯一查询时, 查询出多条数据");
-				}
 				return result;
 			}
 			return null;

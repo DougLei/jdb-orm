@@ -2,10 +2,8 @@ package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,6 @@ import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.pagequery.PageResult;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
-import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.reflect.IntrospectorUtil;
 
 /**
@@ -101,21 +98,21 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public Map<String, Object> queryFirst(String namespace, String name, Object sqlParameter) {
+	public List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryFirst(executeHandler.getCurrentSql(), executeHandler.getCurrentParameterValues());
+		return super.queryLimit(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> T queryFirst(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+	public <T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryFirst(targetClass, executeHandler.getCurrentSql(), executeHandler.getCurrentParameterValues());
+		return super.queryLimit(targetClass, executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override
-	public Object[] queryFirst_(String namespace, String name, Object sqlParameter) {
+	public List<Object[]> queryLimit_(String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryFirst_(executeHandler.getCurrentSql(), executeHandler.getCurrentParameterValues());
+		return super.queryLimit_(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override
@@ -284,21 +281,15 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			// 处理直接返回 ResultSet
 			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement, boolean returnResultSet) throws SQLException {
 				byte sequence = 1;
-				ResultSet rs = null;
 				do {
 					if(returnResultSet) {
-						if((rs = callableStatement.getResultSet()) != null && rs.next()) {
-							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getResultSetListMap(rs));
-						}else {
-							outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, Collections.emptyList());
-						}
+						outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getResultSetListMap(callableStatement.getResultSet()));
 					}else {
 						if(callableStatement.getUpdateCount() == -1)
 							break;
 					}
 					returnResultSet = callableStatement.getMoreResults();
 				}while(true);
-				CloseUtil.closeDBConn(rs);
 			}
 		});
 	}

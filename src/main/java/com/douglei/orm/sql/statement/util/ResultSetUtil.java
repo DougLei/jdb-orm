@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,31 +65,36 @@ public class ResultSetUtil {
 	 * @throws SQLException 
 	 */
 	public static List<Map<String, Object>> getResultSetListMap(ResultSet resultSet) throws SQLException {
-		return getResultSetListMap(getSqlResultSetMetadata(resultSet), resultSet);
+		if(resultSet == null || !resultSet.next()) 
+			return Collections.emptyList();
+		return getResultSetListMap(1, -1, getSqlResultSetMetadata(resultSet), resultSet);
 	}
 	
 	/**
 	 * 获取ResultSet ListMap
+	 * @param startRow 起始的行数, 值从1开始, 不能传入小于1的数字
+	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param resultsetMetadatas
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException 
 	 */
-	public static List<Map<String, Object>> getResultSetListMap(List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
-		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>(16);
+	public static List<Map<String, Object>> getResultSetListMap(int startRow, int length, List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
+		if(!move2StartRow(startRow, resultSet))
+			return Collections.emptyList();
 		
-		int count = resultsetMetadatas.size();
+		List<Map<String, Object>> listMap = new ArrayList<Map<String,Object>>(length<1?10:length);
 		Map<String, Object> map = null;
 		SqlResultsetMetadata sqlResultsetMetadata = null;
-		
 		do {
-			map = new HashMap<String, Object>(count);
-			for(short i=0;i<count;i++) {
+			map = new HashMap<String, Object>();
+			for(short i=0;i<resultsetMetadatas.size();i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
 				map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet));
 			}
 			listMap.add(map);
-		}while(resultSet.next());
+			length--;
+		}while(resultSet.next() && length != 0);
 		return listMap;
 	}
 	
@@ -101,38 +107,60 @@ public class ResultSetUtil {
 	 * @throws SQLException
 	 */
 	public static Object[] getResultSetArray(List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
-		int count = resultsetMetadatas.size();
-		Object[] array = new Object[count];
-		
-		for(short i=0;i<count;i++) {
+		Object[] array = new Object[resultsetMetadatas.size()];
+		for(short i=0;i<resultsetMetadatas.size();i++) 
 			array[i] = resultsetMetadatas.get(i).getDBDataType().getValue((i+1), resultSet); 
-		}
 		return array;
 	}
 	
 	
 	/**
 	 * 获取ResultSet List Object[]
+	 * @param startRow 起始的行数, 值从1开始, 不能传入小于1的数字
+	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param resultsetMetadatas
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<Object[]> getResultSetListArray(List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
-		List<Object[]> arrayList = new ArrayList<Object[]>(16);
+	public static List<Object[]> getResultSetListArray(int startRow, int length, List<SqlResultsetMetadata> resultsetMetadatas, ResultSet resultSet) throws SQLException {
+		if(!move2StartRow(startRow, resultSet))
+			return Collections.emptyList();
 		
-		int count = resultsetMetadatas.size();
+		List<Object[]> arrayList = new ArrayList<Object[]>(length<1?10:length);
 		Object[] array = null;
 		SqlResultsetMetadata sqlResultsetMetadata = null;
 		do {
-			array = new Object[count];
-			for(short i=0;i<count;i++) {
+			array = new Object[resultsetMetadatas.size()];
+			for(short i=0;i<resultsetMetadatas.size();i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
 				array[i] = sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet); 
 			}
 			arrayList.add(array);
-		}while(resultSet.next());
-		
+			length--;
+		}while(resultSet.next() && length != 0);
 		return arrayList;
+	}
+	
+	/**
+	 * 移动到起始行
+	 * @param startRow
+	 * @param resultSet
+	 * @return 是否存在数据
+	 * @throws SQLException
+	 */
+	private static boolean move2StartRow(int startRow, ResultSet resultSet) throws SQLException{
+		if(startRow < 1)
+			throw new SQLException("查询的起始行数不能小于1");
+		if(startRow == 1)
+			return true;
+		
+		startRow--;
+		while(resultSet.next()) {
+			startRow--;
+			if(startRow == 0)
+				return true;
+		}
+		return false;
 	}
 }
