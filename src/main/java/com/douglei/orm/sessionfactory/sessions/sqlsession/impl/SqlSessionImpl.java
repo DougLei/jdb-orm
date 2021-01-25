@@ -170,7 +170,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public List<Map<String, Object>> queryLimit(String sql, int startRow, int length, List<Object> parameters){
+	public List<Map<String, Object>> limitQuery(String sql, int startRow, int length, List<Object> parameters){
 		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeLimitQueryResultList(startRow, length, parameters);
@@ -184,20 +184,20 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	}
 	
 	@Override
-	public <T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length){
-		return queryLimit(targetClass, sql, startRow, length, null);
+	public <T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length){
+		return limitQuery(targetClass, sql, startRow, length, null);
 	}
 	
 	@Override
-	public <T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters){
-		List<Map<String, Object>> listMap = queryLimit(sql, startRow, length, parameters);
+	public <T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters){
+		List<Map<String, Object>> listMap = limitQuery(sql, startRow, length, parameters);
 		if(listMap.isEmpty())
 			return Collections.emptyList();
 		return listMap2listClass(targetClass, listMap);
 	}
 	
 	@Override
-	public List<Object[]> queryLimit_(String sql, int startRow, int length, List<Object> parameters){
+	public List<Object[]> limitQuery_(String sql, int startRow, int length, List<Object> parameters){
 		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeLimitQueryResultList_(startRow, length, parameters);
@@ -227,10 +227,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private PageResult pageQuery_(Class targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		if(pageNum < 0) 
-			pageNum = 1;
-		if(pageSize < 0)
-			pageSize = 10;
+		if(pageNum < 0) pageNum = 1;
+		if(pageSize < 0) pageSize = 10;
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
 		PageSqlStatement statement = new PageSqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sql);
@@ -364,10 +362,8 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private PageResult pageRecursiveQuery_(Class targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters) {
-		if(pageNum < 0) 
-			pageNum = 1;
-		if(pageSize < 0) 
-			pageSize = 10;
+		if(pageNum < 0) pageNum = 1;
+		if(pageSize < 0) pageSize = 10;
 		pkColumnName = pkColumnName.toUpperCase();
 		parentPkColumnName = parentPkColumnName.toUpperCase();
 		if(deep <= 0)

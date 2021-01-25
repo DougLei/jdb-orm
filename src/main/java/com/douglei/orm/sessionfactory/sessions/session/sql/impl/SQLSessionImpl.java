@@ -98,21 +98,21 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryLimit(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
+		return super.limitQuery(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public <T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryLimit(targetClass, executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
+		return super.limitQuery(targetClass, executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override
-	public List<Object[]> queryLimit_(String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public List<Object[]> limitQuery_(String namespace, String name, int startRow, int length, Object sqlParameter) {
 		SqlExecuteHandler executeHandler = getSqlExecuteHandler(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.queryLimit_(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
+		return super.limitQuery_(executeHandler.getCurrentSql(), startRow, length, executeHandler.getCurrentParameterValues());
 	}
 
 	@Override

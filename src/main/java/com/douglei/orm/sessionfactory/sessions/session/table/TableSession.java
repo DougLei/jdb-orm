@@ -189,7 +189,7 @@ public interface TableSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
-	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length);
+	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length);
 	/**
 	 * 执行限制查询
 	 * @param targetClass
@@ -199,7 +199,7 @@ public interface TableSession {
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
+	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 分页查询

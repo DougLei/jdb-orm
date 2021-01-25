@@ -134,8 +134,8 @@ public interface SQLSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<列名:值>的map集合
 	 */
-	default List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length) {
-		return queryLimit(namespace, name, startRow, length, null);
+	default List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length) {
+		return limitQuery(namespace, name, startRow, length, null);
 	}
 	/**
 	 * 限制查询
@@ -146,7 +146,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return 返回<列名:值>的map集合
 	 */
-	List<Map<String, Object>> queryLimit(String namespace, String name, int startRow, int length, Object sqlParameter);
+	List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
 	 * 限制查询
@@ -157,8 +157,8 @@ public interface SQLSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
-	default <T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length) {
-		return queryLimit(targetClass, namespace, name, startRow, length, null);
+	default <T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length) {
+		return limitQuery(targetClass, namespace, name, startRow, length, null);
 	}
 	/**
 	 * 限制查询
@@ -170,7 +170,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> List<T> queryLimit(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter);
+	<T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
 	 * 限制查询
@@ -181,8 +181,8 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
-	default List<Object[]> queryLimit_(String namespace, String name, int startRow, int length) {
-		return queryLimit_(namespace, name, startRow, length, null);
+	default List<Object[]> limitQuery_(String namespace, String name, int startRow, int length) {
+		return limitQuery_(namespace, name, startRow, length, null);
 	}
 	/**
 	 * 限制查询
@@ -193,7 +193,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return 返回<值>的数组
 	 */
-	List<Object[]> queryLimit_(String namespace, String name, int startRow, int length, Object sqlParameter);
+	List<Object[]> limitQuery_(String namespace, String name, int startRow, int length, Object sqlParameter);
 	
 	/**
 	 * 查询结果数据总数量

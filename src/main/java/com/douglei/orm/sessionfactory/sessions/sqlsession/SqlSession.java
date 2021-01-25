@@ -116,8 +116,8 @@ public interface SqlSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<列名:值>的map集合
 	 */
-	default List<Map<String, Object>> queryLimit(String sql, int startRow, int length) {
-		return queryLimit(sql, startRow, length, null);
+	default List<Map<String, Object>> limitQuery(String sql, int startRow, int length) {
+		return limitQuery(sql, startRow, length, null);
 	}
 	/**
 	 * 执行限制查询
@@ -127,7 +127,7 @@ public interface SqlSession {
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
 	 */
-	List<Map<String, Object>> queryLimit(String sql, int startRow, int length, List<Object> parameters);
+	List<Map<String, Object>> limitQuery(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 执行限制查询
@@ -137,7 +137,7 @@ public interface SqlSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 
 	 */
-	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length);
+	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length);
 	/**
 	 * 执行限制查询
 	 * @param targetClass
@@ -147,7 +147,7 @@ public interface SqlSession {
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> queryLimit(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
+	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 执行限制查询
@@ -156,8 +156,8 @@ public interface SqlSession {
 	 * @param length 长度, 小于1时会修正为1
 	 * @return 返回<值>的数组
 	 */
-	default List<Object[]> queryLimit_(String sql, int startRow, int length) {
-		return queryLimit_(sql, startRow, length, null);
+	default List<Object[]> limitQuery_(String sql, int startRow, int length) {
+		return limitQuery_(sql, startRow, length, null);
 	}
 	/**
 	 * 执行限制查询
@@ -167,7 +167,7 @@ public interface SqlSession {
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
 	 */
-	List<Object[]> queryLimit_(String sql, int startRow, int length, List<Object> parameters);
+	List<Object[]> limitQuery_(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
 	 * 查询结果数据总数量
