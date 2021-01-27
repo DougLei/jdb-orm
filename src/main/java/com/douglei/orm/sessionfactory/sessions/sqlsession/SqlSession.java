@@ -14,7 +14,7 @@ import com.douglei.orm.sql.statement.InsertResult;
 public interface SqlSession {
 	
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param sql
 	 * @return 返回<列名:值>的list-map集合
 	 */
@@ -22,7 +22,7 @@ public interface SqlSession {
 		return query(sql, null);
 	}
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的list-map集合
@@ -30,14 +30,14 @@ public interface SqlSession {
 	List<Map<String, Object>> query(String sql, List<Object> parameters);
 	
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param targetClass
 	 * @param sql
 	 * @return 
 	 */
 	<T> List<T> query(Class<T> targetClass, String sql);
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param targetClass
 	 * @param sql
 	 * @param parameters 传入的参数
@@ -46,7 +46,7 @@ public interface SqlSession {
 	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param sql
 	 * @return 返回<值>的list-数组集合
 	 */
@@ -54,7 +54,7 @@ public interface SqlSession {
 		return query_(sql, null);
 	}
 	/**
-	 * 执行批量查询
+	 * 查询
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的list-数组集合
@@ -62,7 +62,7 @@ public interface SqlSession {
 	List<Object[]> query_(String sql, List<Object> parameters);
 	
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param sql
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -70,7 +70,7 @@ public interface SqlSession {
 		return uniqueQuery(sql, null);
 	}
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
@@ -78,14 +78,14 @@ public interface SqlSession {
 	Map<String, Object> uniqueQuery(String sql, List<Object> parameters);
 	
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param targetClass
 	 * @param sql
 	 * @return 
 	 */
 	<T> T uniqueQuery(Class<T> targetClass, String sql);
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param targetClass
 	 * @param sql
 	 * @param parameters 传入的参数
@@ -94,7 +94,7 @@ public interface SqlSession {
 	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
 	
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param sql
 	 * @return 返回<值>的数组
 	 */
@@ -102,7 +102,7 @@ public interface SqlSession {
 		return uniqueQuery_(sql, null);
 	}
 	/**
-	 * 执行唯一查询
+	 * 唯一查询
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
@@ -110,7 +110,7 @@ public interface SqlSession {
 	Object[] uniqueQuery_(String sql, List<Object> parameters);
 	
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
@@ -120,7 +120,7 @@ public interface SqlSession {
 		return limitQuery(sql, startRow, length, null);
 	}
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
@@ -130,7 +130,7 @@ public interface SqlSession {
 	List<Map<String, Object>> limitQuery(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param targetClass
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
@@ -139,7 +139,7 @@ public interface SqlSession {
 	 */
 	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length);
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param targetClass
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
@@ -150,7 +150,7 @@ public interface SqlSession {
 	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
@@ -160,7 +160,7 @@ public interface SqlSession {
 		return limitQuery_(sql, startRow, length, null);
 	}
 	/**
-	 * 执行限制查询
+	 * 限制查询
 	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
@@ -170,7 +170,7 @@ public interface SqlSession {
 	List<Object[]> limitQuery_(String sql, int startRow, int length, List<Object> parameters);
 	
 	/**
-	 * 查询结果数据总数量
+	 * 总数量查询
 	 * @param sql
 	 * @return
 	 */
@@ -178,7 +178,7 @@ public interface SqlSession {
 		return countQuery(sql, null);
 	}
 	/**
-	 * 查询结果数据总数量
+	 * 总数量查询
 	 * @param sql
 	 * @param parameters
 	 * @return
@@ -339,7 +339,7 @@ public interface SqlSession {
 	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
 	
 	/**
-	 * 执行插入操作
+	 * 插入数据
 	 * @param sql
 	 * @param returnID
 	 * @return 
@@ -348,7 +348,7 @@ public interface SqlSession {
 		return executeInsert(sql, null, returnID);
 	}
 	/**
-	 * 执行插入操作
+	 * 插入数据
 	 * @param sql
 	 * @param parameters
 	 * @param returnID
@@ -357,7 +357,7 @@ public interface SqlSession {
 	InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID);
 	
 	/**
-	 * 执行增删改查操作
+	 * 增删改数据
 	 * @param sql
 	 * @return 返回影响的行数
 	 */
@@ -365,7 +365,7 @@ public interface SqlSession {
 		return executeUpdate(sql, null);
 	}
 	/**
-	 * 执行增删改查操作
+	 * 增删改数据
 	 * @param sql
 	 * @param parameters
 	 * @return 返回影响的行数
