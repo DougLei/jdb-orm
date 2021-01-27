@@ -30,9 +30,9 @@ public class ConnectionWrapper {
 			logger.debug("实例化{}", getClass().getName());
 		
 		try {
-			this.transactionIsolationLevel = transactionIsolationLevel;
 			this.connection = dataSource.getConnection();
 			setIsBeginTransaction(isBeginTransaction);
+			this.transactionIsolationLevel = transactionIsolationLevel;
 			if(isBeginTransaction && transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) 
 				this.connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
 		} catch (Exception e) {
