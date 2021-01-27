@@ -13,7 +13,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSql;
 public class IncludeSqlNode extends AbstractNestingNode {
 	private static final long serialVersionUID = -688837224487092120L;
 	
-	private SqlContentMetadata content;
+	private SqlContentMetadata content; // TODO 这里需要优化, 反序列化时会创建重复实例
 	public IncludeSqlNode(SqlContentMetadata content) {
 		this.content = content;
 		this.sqlNodes = content.getSqlNodes();

@@ -11,21 +11,21 @@ import com.douglei.orm.sql.SqlStatement;
  * 
  * @author DougLei
  */
-public class ExecutableSqlHolderEntity {
-	private ExecutableSqlHolder executableSqlHolder;
+public class ExecutableSqlEntity {
+	private ExecutableSqls executableSqls;
 	private String name;
 	private ContentType type;
 	private SqlStatement sql;
 	private List<SqlParameterMetadata> parameters;
 	private List<Object> parameterValues;
 	
-	public ExecutableSqlHolderEntity(ExecutableSqlHolder executableSqlHolder) {
-		this.executableSqlHolder = executableSqlHolder;
-		this.name = executableSqlHolder.getCurrentName();
-		this.type = executableSqlHolder.getCurrentType();
-		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executableSqlHolder.getCurrentSql());
-		this.parameters = executableSqlHolder.getCurrentParameters();
-		this.parameterValues = executableSqlHolder.getCurrentParameterValues();
+	public ExecutableSqlEntity(ExecutableSqls executableSqls) {
+		this.executableSqls = executableSqls;
+		this.name = executableSqls.getCurrentName();
+		this.type = executableSqls.getCurrentType();
+		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executableSqls.getCurrentSql());
+		this.parameters = executableSqls.getCurrentParameters();
+		this.parameterValues = executableSqls.getCurrentParameterValues();
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class ExecutableSqlHolderEntity {
 	 * @return
 	 */
 	public int executableSqlCount() {
-		return executableSqlHolder.executableSqlCount();
+		return executableSqls.executableSqlCount();
 	}
 	
 	/**
@@ -97,12 +97,12 @@ public class ExecutableSqlHolderEntity {
 	 * @return
 	 */
 	public boolean next() {
-		if(this.executableSqlHolder.next()) {
-			this.name = executableSqlHolder.getCurrentName();
-			this.type = executableSqlHolder.getCurrentType();
-			this.sql.reset(executableSqlHolder.getCurrentSql());
-			this.parameters = executableSqlHolder.getCurrentParameters();
-			this.parameterValues = executableSqlHolder.getCurrentParameterValues();
+		if(this.executableSqls.next()) {
+			this.name = executableSqls.getCurrentName();
+			this.type = executableSqls.getCurrentType();
+			this.sql.reset(executableSqls.getCurrentSql());
+			this.parameters = executableSqls.getCurrentParameters();
+			this.parameterValues = executableSqls.getCurrentParameterValues();
 			return true;
 		}
 		return false;

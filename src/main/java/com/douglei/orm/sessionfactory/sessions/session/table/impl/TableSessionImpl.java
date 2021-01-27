@@ -14,7 +14,6 @@ import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
-import com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AlreadyDeletedException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Identity;
@@ -22,6 +21,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Ope
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UnsupportUpdatePersistentWithoutPrimaryKeyException;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.statement.InsertResult;
@@ -266,15 +266,15 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	}
 	
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
-		ExecutableSqlHolder executableSqlHolder = persistentObject.getExecutableSqlHolder();
+		ExecutableTableSql executableTableSql = persistentObject.getExecutableTableSql();
 		if(persistentObject.getOperationState() == OperationState.INSERT && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
 			TableMetadata tableMetadata = persistentObject.getTableMetadata();
-			InsertResult result = super.executeInsert(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
+			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
 			// 将执行insert语句后生成的序列值, 赋给源实例
 			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next(), result.getId());
 		}else {
-			super.executeUpdate(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+			super.executeUpdate(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues());
 		}
 	}
 	

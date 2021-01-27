@@ -8,18 +8,19 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
- * 可执行sql的持有器
+ * 可执行sql的
  * @author DougLei
  */
-public class ExecutableSqlHolder extends SqlContentExtractor implements com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder{
+public class ExecutableSqls extends SqlContentExtractor implements IExecutableSql{
 	private int executableSqlCount; // 可执行的sql的数量
 	private int currentIndex; // 当前执行的sql的下标, 从0开始
 	private List<ExecutableSql> executableSqls;
 	
-	public ExecutableSqlHolder(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+	public ExecutableSqls(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = getContents(purposeEntity.getPurpose(), name, sqlMetadata.getContents());
 		
 		executableSqls = new ArrayList<ExecutableSql>(executableSqlCount = contents.size());

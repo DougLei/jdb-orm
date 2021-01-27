@@ -30,8 +30,8 @@ import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlHolder;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlHolderEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqls;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPurposeEntity;
 
 /**
@@ -281,15 +281,15 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定namespace和name的sql映射执行实体实例
+	 * 获取指定namespace和name的可执行sql实体
 	 * @param purposeEntity 创建对应的用途实例传入, 或使用已有的默认实例, 例 {@link QueryPurposeEntity}
 	 * @param namespace
 	 * @param name 
 	 * @param sqlParameter 输入参数
 	 * @return
 	 */
-	public ExecutableSqlHolderEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
+	public ExecutableSqlEntity getExecutableSqlEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		return new ExecutableSqlHolderEntity(new ExecutableSqlHolder(purposeEntity, sqlMetadata, name, sqlParameter));
+		return new ExecutableSqlEntity(new ExecutableSqls(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
 }

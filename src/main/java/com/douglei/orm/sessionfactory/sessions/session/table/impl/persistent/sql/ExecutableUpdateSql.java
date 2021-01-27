@@ -12,10 +12,10 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class UpdateExecutableSqlHolder extends TableExecutableSqlHolder{
+public class ExecutableUpdateSql extends ExecutableTableSql{
 	private boolean updateNullValue;
 	
-	public UpdateExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
+	public ExecutableUpdateSql(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
 		setBaseInfo(tableMetadata, objectMap);
 		this.updateNullValue = updateNullValue;
 		initial();

@@ -3,13 +3,13 @@ package com.douglei.orm.sessionfactory.sessions.session;
 import java.util.List;
 
 /**
- * 可执行sql的持有器
+ * 可执行的sql接口
  * @author DougLei
  */
-public interface ExecutableSqlHolder {
+public interface IExecutableSql {
 	
 	/**
-	 * 可执行的sql语句的数量
+	 * 可执行sql的数量
 	 * @return
 	 */
 	default int executableSqlCount() {
@@ -25,7 +25,7 @@ public interface ExecutableSqlHolder {
 	}
 	
 	/**
-	 * 获取当前要执行的sql语句
+	 * 获取当前可执行的sql语句
 	 * @return
 	 */
 	String getCurrentSql();

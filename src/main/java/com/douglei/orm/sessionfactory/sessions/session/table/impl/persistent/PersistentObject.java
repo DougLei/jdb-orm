@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.DeleteExecutableSqlHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.InsertExecutableSqlHolder;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.UpdateExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableDeleteSql;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableInsertSql;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableUpdateSql;
 
 /**
  * 
@@ -57,15 +57,15 @@ public class PersistentObject extends AbstractPersistentObject{
 		return id;
 	}
 	
-	// 获取可执行的sql持有器
-	public ExecutableSqlHolder getExecutableSqlHolder() {
+	// 获取可执行的sql
+	public ExecutableTableSql getExecutableTableSql() {
 		switch(operationState) {
 			case INSERT:
-				return new InsertExecutableSqlHolder(tableMetadata, objectMap, originObject);
+				return new ExecutableInsertSql(tableMetadata, objectMap, originObject);
 			case DELETE:
-				return new DeleteExecutableSqlHolder(tableMetadata, objectMap);
+				return new ExecutableDeleteSql(tableMetadata, objectMap);
 			case UPDATE:
-				return new UpdateExecutableSqlHolder(tableMetadata, objectMap, updateNullValue);
+				return new ExecutableUpdateSql(tableMetadata, objectMap, updateNullValue);
 		}
 		return null;
 	}

@@ -13,10 +13,10 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class InsertExecutableSqlHolder extends TableExecutableSqlHolder{
+public class ExecutableInsertSql extends ExecutableTableSql{
 	private Object originObject;
 	
-	public InsertExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap, Object originObject) {
+	public ExecutableInsertSql(TableMetadata tableMetadata, Map<String, Object> objectMap, Object originObject) {
 		setBaseInfo(tableMetadata, objectMap);
 		this.originObject = originObject;
 		initial();

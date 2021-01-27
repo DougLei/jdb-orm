@@ -17,9 +17,9 @@ public class ExecutableSqlNode {
 	private List<SqlParameterMetadata> parameters; // sql参数集合
 	private List<Object> parameterValues; // 执行sql语句对应的参数值集合
 	
-	public ExecutableSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String previousAlias) {
-		if(sqlParameterByDefinedOrders != null) {
-			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
+	public ExecutableSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParametersByDefinedOrder, Object sqlParameter, String previousAlias) {
+		if(sqlParametersByDefinedOrder != null) {
+			for (SqlParameterMetadata parameter : sqlParametersByDefinedOrder) {
 				if(parameter.isPlaceholder()) {
 					if(purposeEntity.isGetParameterValues()) {
 						if(parameterValues == null) 
@@ -33,7 +33,7 @@ public class ExecutableSqlNode {
 			}
 		}
 		this.content = content;
-		this.parameters = purposeEntity.isGetParameters()?sqlParameterByDefinedOrders:null;
+		this.parameters = purposeEntity.isGetParameters()?sqlParametersByDefinedOrder:null;
 	}
 	
 	public ExecutableSqlNode(String finalContent, List<SqlParameterMetadata> parameters, List<Object> parameterValues) {

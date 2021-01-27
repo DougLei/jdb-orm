@@ -4,19 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
 import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-public abstract class TableExecutableSqlHolder implements ExecutableSqlHolder {
+public abstract class ExecutableTableSql implements IExecutableSql {
 	protected TableMetadata tableMetadata;
 	protected Map<String, Object> objectMap;
 	
-	protected TableExecutableSqlHolder() {}
-	protected TableExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+	protected ExecutableTableSql() {}
+	protected ExecutableTableSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		setBaseInfo(tableMetadata, objectMap);
 		initial();
 	}

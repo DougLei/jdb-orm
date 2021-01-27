@@ -26,10 +26,8 @@ public class ExecutableSql {
 	public ExecutableSql(PurposeEntity purposeEntity, ContentMetadata contentMetadata, Object sqlParameter) {
 		StringBuilder sqlContent = new StringBuilder();
 		
-		List<SqlNode> sqlNodes = contentMetadata.getSqlNodes();
-		
 		ExecutableSqlNode rootExecutableSqlNode = null;
-		for (SqlNode sqlNode : sqlNodes) {
+		for (SqlNode sqlNode : contentMetadata.getSqlNodes()) {
 			if(sqlNode.matching(sqlParameter)) {
 				rootExecutableSqlNode = sqlNode.getExecutableSqlNode(purposeEntity, sqlParameter);
 				if(rootExecutableSqlNode.existsParameters()) {
