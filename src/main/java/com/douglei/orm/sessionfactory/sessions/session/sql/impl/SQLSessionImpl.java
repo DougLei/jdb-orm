@@ -283,7 +283,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 				byte sequence = 1;
 				do {
 					if(returnResultSet) {
-						outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getResultSetListMap(callableStatement.getResultSet()));
+						outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getListMap(callableStatement.getResultSet()));
 					}else {
 						if(callableStatement.getUpdateCount() == -1)
 							break;
@@ -296,8 +296,13 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 	@Override
 	public void close() {
-		if(!sqlMetadataCache.isEmpty())
-			sqlMetadataCache.clear();
-		super.close();
+		if(!isClosed) {
+			if(logger.isDebugEnabled()) 
+				logger.debug("close {}", getClass().getName());
+			
+			if(sqlMetadataCache.size() > 0)
+				sqlMetadataCache.clear();
+			super.close();
+		}
 	}
 }

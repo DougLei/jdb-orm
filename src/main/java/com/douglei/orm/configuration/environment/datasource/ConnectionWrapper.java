@@ -16,47 +16,49 @@ import com.douglei.orm.sql.statement.impl.StatementHandlerImpl;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
- * java.sql.Connection包装类
+ * java.sql.Connection 包装类
  * @author DougLei
  */
 public class ConnectionWrapper {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionWrapper.class);
-	private boolean beginTransaction;
-	private TransactionIsolationLevel transactionIsolationLevel;
-	private boolean finishTransaction;// 事物是否结束
-	private boolean isClosed;// 连接是否关闭
+	private boolean isBeginTransaction; // 是否开启事物
+	private TransactionIsolationLevel transactionIsolationLevel; // 事物的隔离级别
 	private Connection connection;
 	
-	public ConnectionWrapper(DataSource dataSource, boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		try {
+	public ConnectionWrapper(DataSource dataSource, boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		if(logger.isDebugEnabled())
 			logger.debug("实例化{}", getClass().getName());
-			
-			this.beginTransaction = beginTransaction;
+		
+		try {
+			setIsBeginTransaction(isBeginTransaction);
 			this.transactionIsolationLevel = transactionIsolationLevel;
 			this.connection = dataSource.getConnection();
-			if(transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) 
-				connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
-
-			processIsBeginTransaction();
-		} catch (SQLException e) {
-			throw new ConnectionWrapperException("从数据源["+dataSource.getClass().getName()+"]获取Connection时出现异常", e);
+			if(isBeginTransaction && transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) 
+				this.connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
+		} catch (Exception e) {
+			throw new ConnectionWrapperException("获取Connection时出现异常", e);
 		}
 	}
 	
-	// 处理是否开启事物
-	private void processIsBeginTransaction() throws SQLException {
-		if(beginTransaction) {
-			if(connection.getAutoCommit()) {
+	// 设置是否开启事务
+	private void setIsBeginTransaction(boolean isBeginTransaction) throws SQLException {
+		if(this.isBeginTransaction && isBeginTransaction) 
+			return;
+		
+		this.isBeginTransaction = isBeginTransaction;
+		if(isBeginTransaction) {
+			if(connection.getAutoCommit()) 
 				connection.setAutoCommit(false);
-			}
 		}else {
-			if(!connection.getAutoCommit()) {
+			if(!connection.getAutoCommit()) 
 				connection.setAutoCommit(true);
-			}
-			finishTransaction = true;// 因为不开启事物, 则事物标识为结束
 		}
 	}
 	
+	/**
+	 * 获取数据库原生连接实例
+	 * @return
+	 */
 	public Connection getConnection() {
 		return connection;
 	}
@@ -82,66 +84,44 @@ public class ConnectionWrapper {
 		}
 	}
 
+	/**
+	 * 提交, 遇到异常时会记录日志, 并自动回滚
+	 */
 	public void commit() {
-		if(beginTransaction && !finishTransaction) {
-			logger.debug("commit");
+		if(isBeginTransaction) {
 			try {
+				logger.debug("commit");
 				connection.commit();
-				finishTransaction = true;
 			} catch (SQLException e) {
-				logger.error("commit 时出现异常, 进行rollback, 异常信息为: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("commit 时出现异常, 自动进行rollback, 异常信息为: {}", ExceptionUtil.getExceptionDetailMessage(e));
 				rollback();
-			} finally {
-				close();
 			}
-		} else {
-			logger.debug("当前连接没有开启事物, commit无效");
 		}
 	}
 
+	/**
+	 * 回滚, 遇到异常时会记录日志
+	 */
 	public void rollback() {
-		if(beginTransaction && !finishTransaction) {
-			logger.debug("rollback");
+		if(isBeginTransaction) {
 			try {
+				logger.debug("rollback");
 				connection.rollback();
-				finishTransaction = true;
 			} catch (SQLException e) {
 				logger.error("rollback 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				throw new ConnectionWrapperException("rollback 时出现异常", e);
-			} finally {
-				close();
-			}
-		} else {
-			logger.debug("当前连接没有开启事物, rollback无效");
+			} 
 		}
 	}
 	
+	/**
+	 * 关闭, 遇到异常时会记录日志
+	 */
 	public void close() {
-		if(!isClosed) {
-			try {
-				connection.close();
-				isClosed = true;
-			} catch (SQLException e) {
-				logger.error("close connection 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
-				throw new ConnectionWrapperException("close connection 时出现异常", e);
-			}
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			logger.error("close connection 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
 		}
-	}
-	
-	/**
-	 * 是否结束事物
-	 * @return
-	 */
-	public boolean isFinishTransaction() {
-		return finishTransaction;
-	}
-	
-	/**
-	 * 连接是否关闭
-	 * @return
-	 */
-	public boolean isClosed() {
-		return isClosed;
 	}
 	
 	/**
@@ -149,41 +129,33 @@ public class ConnectionWrapper {
 	 * @return
 	 */
 	public boolean isBeginTransaction() {
-		return beginTransaction;
+		return isBeginTransaction;
 	}
 	
 	/**
 	 * 开启事物
 	 */
 	public void beginTransaction() {
-		if(isClosed) {
-			throw new ConnectionWrapperException("连接已经关闭, 无法开启事物");
-		}
-		
-		this.beginTransaction = true;
 		try {
-			processIsBeginTransaction();
-			this.finishTransaction= false;
+			setIsBeginTransaction(true);
 		} catch (SQLException e) {
 			throw new ConnectionWrapperException("开启事物时出现异常", e);
 		}
 	}
-
+	
 	/**
-	 * 设置事物的隔离级别, 设置事物的隔离级别, 传入null则使用jdbc驱动中的默认隔离级别
-	 * @param transactionIsolationLevel
+	 * 更新事物的隔离级别
+	 * @param transactionIsolationLevel 传入null时会使用之前的隔离级别
 	 */
-	public void setTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
-		if(isClosed) 
-			throw new ConnectionWrapperException("连接已经关闭, 无法设置事物的隔离级别");
-		if(transactionIsolationLevel == null || transactionIsolationLevel == TransactionIsolationLevel.DEFAULT || this.transactionIsolationLevel == transactionIsolationLevel) 
+	public void updateTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
+		if(!isBeginTransaction || transactionIsolationLevel == null || transactionIsolationLevel == TransactionIsolationLevel.DEFAULT || this.transactionIsolationLevel == transactionIsolationLevel) 
 			return;
 		
-		this.transactionIsolationLevel = transactionIsolationLevel;
 		try {
+			this.transactionIsolationLevel = transactionIsolationLevel;
 			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
 		} catch (SQLException e) {
-			throw new ConnectionWrapperException("设置事物的隔离级别时出现异常", e);
+			throw new ConnectionWrapperException("更新事物的隔离级别时出现异常", e);
 		}
 	}
 }

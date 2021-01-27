@@ -51,20 +51,20 @@ public class DataSourceWrapper {
 	
 	/**
 	 * 获取连接
-	 * @param beginTransaction 是否开启事物
+	 * @param isBeginTransaction 是否开启事物
 	 * @return
 	 */
-	public ConnectionWrapper getConnection(boolean beginTransaction) {
-		return getConnection(beginTransaction, null);
+	public ConnectionWrapper getConnection(boolean isBeginTransaction) {
+		return getConnection(isBeginTransaction, null);
 	}
 	
 	/**
 	 * 获取连接
-	 * @param beginTransaction 是否开启事物
+	 * @param isBeginTransaction 是否开启事物
 	 * @param transactionIsolationLevel 事物隔离级别, 如果为空, 则使用jdbc默认的隔离级别
 	 * @return
 	 */
-	public ConnectionWrapper getConnection(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return new ConnectionWrapper(dataSource, beginTransaction, transactionIsolationLevel);
+	public ConnectionWrapper getConnection(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return new ConnectionWrapper(dataSource, isBeginTransaction, transactionIsolationLevel);
 	}
 }

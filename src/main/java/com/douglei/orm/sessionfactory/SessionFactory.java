@@ -45,32 +45,26 @@ public class SessionFactory {
 	public Session openSession() {
 		return openSession(true);
 	}
-
 	/**
 	 * 开启Session实例
-	 * @param beginTransaction 是否开启事物
+	 * @param isBeginTransaction 是否开启事物
 	 * @return
 	 */
-	public Session openSession(boolean beginTransaction) {
-		return openSession(beginTransaction, null);
+	public Session openSession(boolean isBeginTransaction) {
+		return openSession(isBeginTransaction, null);
 	}
-
 	/**
 	 * 开启Session实例
-	 * @param beginTransaction 是否开启事物
+	 * @param isBeginTransaction 是否开启事物
 	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
 	 * @return
 	 */
-	public Session openSession(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		if(logger.isDebugEnabled()) {
-			logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, beginTransaction, transactionIsolationLevel);
-		}
-		return new SessionImpl(getConnectionWrapper(beginTransaction, transactionIsolationLevel), environment);
+	public Session openSession(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		logger.debug("open {} 实例, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", SessionImpl.class, isBeginTransaction, transactionIsolationLevel);
+		return new SessionImpl(getConnectionWrapper(isBeginTransaction, transactionIsolationLevel), environment);
 	}
-	
-	// 获取数据库连接
-	private ConnectionWrapper getConnectionWrapper(boolean beginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return environment.getDataSourceWrapper().getConnection(beginTransaction, transactionIsolationLevel);
+	private ConnectionWrapper getConnectionWrapper(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return environment.getDataSourceWrapper().getConnection(isBeginTransaction, transactionIsolationLevel);
 	}
 	
 	/**

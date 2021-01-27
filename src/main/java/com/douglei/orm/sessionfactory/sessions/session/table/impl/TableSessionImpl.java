@@ -241,21 +241,20 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		objectMaps.forEach(objectMap -> delete_(table, objectMap));
 	}
 
-		
+	// 刷新持久化对象到数据库
 	private void flushPersistentObjectCache() throws SessionExecutionException {
-		if(!tableMetadataCache.isEmpty())
+		if(tableMetadataCache.size() > 0)
 			tableMetadataCache.clear();
 		
-		if(enableTalbeSessionCache && !persistentObjectCache.isEmpty()) {
+		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
 			Map<Identity, PersistentObject> map = null;
 			Set<String> codes = persistentObjectCache.keySet();
 			try {
 				for (String code : codes) {
 					map = persistentObjectCache.get(code);
-					if(!map.isEmpty()) {
-						for(PersistentObject persistentObject: map.values()) {
+					if(map.size() > 0) {
+						for(PersistentObject persistentObject: map.values()) 
 							executePersistentObject(persistentObject);
-						}
 					}
 				}
 			} catch(SessionExecutionException see){

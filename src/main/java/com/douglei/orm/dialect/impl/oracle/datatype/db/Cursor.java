@@ -29,8 +29,6 @@ public class Cursor extends DBDataType{
 	
 	@Override
 	public List<Map<String, Object>> getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException {
-		try(ResultSet rs = (ResultSet) callableStatement.getObject(parameterIndex)){
-			return ResultSetUtil.getResultSetListMap(rs);
-		}
+		return ResultSetUtil.getListMap((ResultSet) callableStatement.getObject(parameterIndex));
 	}
 }

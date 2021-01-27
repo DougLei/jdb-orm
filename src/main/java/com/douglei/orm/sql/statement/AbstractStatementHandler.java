@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
-import com.douglei.tools.utils.CloseUtil;
 import com.douglei.tools.utils.ExceptionUtil;
 
 /**
@@ -25,7 +24,6 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	
 	protected String sql;// 执行的sql语句
 	protected ReturnID returnID;
-	private boolean isClosed;// 是否关闭
 	
 	private List<SqlResultsetMetadata> resultsetMetadatas; // 结果集的元数据
 	
@@ -67,7 +65,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
+	protected final List<Map<String, Object>> executeQuery(ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) 
 				return ResultSetUtil.getResultSetListMap(1, -1, resultsetMetadatas, resultSet);
@@ -75,7 +73,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
@@ -87,7 +85,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected List<Map<String, Object>> executeLimitQuery(int startRow, int length, ResultSet resultSet) throws SQLException {
+	protected final List<Map<String, Object>> executeLimitQuery(int startRow, int length, ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				if(startRow < 1) startRow=1;
@@ -98,7 +96,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
@@ -108,7 +106,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected Map<String, Object> executeUniqueQuery(ResultSet resultSet) throws SQLException {
+	protected final Map<String, Object> executeUniqueQuery(ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				Map<String, Object> result = ResultSetUtil.getResultSetMap(resultsetMetadatas, resultSet);
@@ -120,7 +118,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
@@ -130,7 +128,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected List<Object[]> executeQuery_(ResultSet resultSet) throws SQLException {
+	protected final List<Object[]> executeQuery_(ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) 
 				return ResultSetUtil.getResultSetListArray(1, -1, resultsetMetadatas, resultSet);
@@ -138,7 +136,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
@@ -150,7 +148,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected List<Object[]> executeLimitQuery_(int startRow, int length, ResultSet resultSet) throws SQLException {
+	protected final List<Object[]> executeLimitQuery_(int startRow, int length, ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				if(startRow < 1) startRow=1;
@@ -161,7 +159,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
@@ -171,7 +169,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException
 	 */
-	protected Object[] executeUniqueQuery_(ResultSet resultSet) throws SQLException {
+	protected final Object[] executeUniqueQuery_(ResultSet resultSet) throws SQLException {
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				Object[] result = ResultSetUtil.getResultSetArray(resultsetMetadatas, resultSet);
@@ -183,29 +181,18 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			CloseUtil.closeDBConn(resultSet);
+			resultSet.close();
 		}
 	}
 	
 	@Override
-	public boolean isClosed() {
-		return isClosed;
-	} 
-	
-	@Override
-	public void close() {
-		if(!isClosed) {
-			isClosed = true;
-			if(resultsetMetadatas != null && !resultsetMetadatas.isEmpty()) 
+	public final void close() {
+		try {
+			if(resultsetMetadatas != null && resultsetMetadatas.size() > 0) 
 				resultsetMetadatas.clear();
-			
-			Statement statement = getStatement();
-			try {
-				statement.close();
-			} catch (SQLException e) {
-				logger.error("关闭[{}]时出现异常: {}", statement.getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
-				throw new CloseStatementException(statement, e);
-			}
+			getStatement().close();
+		} catch (SQLException e) {
+			logger.error("关闭[{}]时出现异常: {}", getStatement().getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
 		}
 	}
 	
@@ -215,7 +202,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException 
 	 */
-	protected int getOracleSeqCurval(Statement statement) throws SQLException {
+	protected final int getOracleSeqCurval(Statement statement) throws SQLException {
 		if(logger.isDebugEnabled())
 			logger.debug("查询ORACLE序列值SQL = select {}.currval from dual", returnID.getOracleSequenceName());
 		

@@ -60,18 +60,6 @@ public class ResultSetUtil {
 	
 	/**
 	 * 获取ResultSet ListMap
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException 
-	 */
-	public static List<Map<String, Object>> getResultSetListMap(ResultSet resultSet) throws SQLException {
-		if(resultSet == null || !resultSet.next()) 
-			return Collections.emptyList();
-		return getResultSetListMap(1, -1, getSqlResultSetMetadata(resultSet), resultSet);
-	}
-	
-	/**
-	 * 获取ResultSet ListMap
 	 * @param startRow 起始的行数, 值从1开始, 不能传入小于1的数字
 	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param resultsetMetadatas
@@ -162,5 +150,26 @@ public class ResultSetUtil {
 				return true;
 		}
 		return false;
+	}
+	
+	
+	// ------------------------------------------------------------------------------------------------------------------
+	/**
+	 * 直接从ResultSet中获取ListMap
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException 
+	 */
+	public static List<Map<String, Object>> getListMap(ResultSet resultSet) throws SQLException {
+		if(resultSet == null)
+			return Collections.emptyList();
+		
+		try {
+			if(resultSet.next()) 
+				return getResultSetListMap(1, -1, getSqlResultSetMetadata(resultSet), resultSet);
+			return Collections.emptyList();
+		} finally {
+			resultSet.close();
+		}
 	}
 }

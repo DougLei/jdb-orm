@@ -86,13 +86,7 @@ public interface StatementHandler {
 	}
 	
 	/**
-	 * 关闭
+	 * 关闭, 遇到异常时会记录日志
 	 */
 	void close();
-	
-	/**
-	 * 是否关闭
-	 * @return
-	 */
-	boolean isClosed();
 }

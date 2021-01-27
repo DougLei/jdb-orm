@@ -506,12 +506,9 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			if(logger.isDebugEnabled()) 
 				logger.debug("close {}", getClass().getName());
 			
-			if(enableStatementCache && statementHandlerCache != null) {
-				if(!statementHandlerCache.isEmpty()) {
-					statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
-					statementHandlerCache.clear();
-				}
-				statementHandlerCache = null;
+			if(enableStatementCache && statementHandlerCache != null && statementHandlerCache.size() > 0) {
+				statementHandlerCache.forEach((key, statementHandler) -> statementHandler.close());
+				statementHandlerCache.clear();
 			}
 			isClosed = true;
 		}
