@@ -5,11 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.DeleteExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.InsertExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute.UpdateExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id.Identity;
+import com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.DeleteExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.InsertExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.UpdateExecutableSqlHolder;
 
 /**
  * 
@@ -58,15 +57,15 @@ public class PersistentObject extends AbstractPersistentObject{
 		return id;
 	}
 	
-	// 获取执行器实例
-	public ExecuteHandler getExecuteHandler() {
+	// 获取可执行的sql持有器
+	public ExecutableSqlHolder getExecutableSqlHolder() {
 		switch(operationState) {
 			case INSERT:
-				return new InsertExecuteHandler(tableMetadata, objectMap, originObject);
+				return new InsertExecutableSqlHolder(tableMetadata, objectMap, originObject);
 			case DELETE:
-				return new DeleteExecuteHandler(tableMetadata, objectMap);
+				return new DeleteExecutableSqlHolder(tableMetadata, objectMap);
 			case UPDATE:
-				return new UpdateExecuteHandler(tableMetadata, objectMap, updateNullValue);
+				return new UpdateExecutableSqlHolder(tableMetadata, objectMap, updateNullValue);
 		}
 		return null;
 	}

@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
+package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 
 import java.util.List;
 
@@ -11,21 +11,21 @@ import com.douglei.orm.sql.SqlStatement;
  * 
  * @author DougLei
  */
-public class SqlExecutionEntity {
-	private SqlExecuteHandler sqlExecutionHandler;
+public class ExecutableSqlHolderEntity {
+	private ExecutableSqlHolder executableSqlHolder;
 	private String name;
 	private ContentType type;
 	private SqlStatement sql;
 	private List<SqlParameterMetadata> parameters;
 	private List<Object> parameterValues;
 	
-	public SqlExecutionEntity(SqlExecuteHandler sqlExecutionHandler) {
-		this.sqlExecutionHandler = sqlExecutionHandler;
-		this.name = sqlExecutionHandler.getCurrentName();
-		this.type = sqlExecutionHandler.getCurrentType();
-		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), sqlExecutionHandler.getCurrentSql());
-		this.parameters = sqlExecutionHandler.getCurrentParameters();
-		this.parameterValues = sqlExecutionHandler.getCurrentParameterValues();
+	public ExecutableSqlHolderEntity(ExecutableSqlHolder executableSqlHolder) {
+		this.executableSqlHolder = executableSqlHolder;
+		this.name = executableSqlHolder.getCurrentName();
+		this.type = executableSqlHolder.getCurrentType();
+		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executableSqlHolder.getCurrentSql());
+		this.parameters = executableSqlHolder.getCurrentParameters();
+		this.parameterValues = executableSqlHolder.getCurrentParameterValues();
 	}
 	
 	/**
@@ -85,11 +85,11 @@ public class SqlExecutionEntity {
 	}
 	
 	/**
-	 * 获取要执行的sql数量
+	 * 获取可执行的sql数量
 	 * @return
 	 */
-	public int executeSqlCount() {
-		return sqlExecutionHandler.executeSqlCount();
+	public int executableSqlCount() {
+		return executableSqlHolder.executableSqlCount();
 	}
 	
 	/**
@@ -97,12 +97,12 @@ public class SqlExecutionEntity {
 	 * @return
 	 */
 	public boolean next() {
-		if(this.sqlExecutionHandler.next()) {
-			this.name = sqlExecutionHandler.getCurrentName();
-			this.type = sqlExecutionHandler.getCurrentType();
-			this.sql.reset(sqlExecutionHandler.getCurrentSql());
-			this.parameters = sqlExecutionHandler.getCurrentParameters();
-			this.parameterValues = sqlExecutionHandler.getCurrentParameterValues();
+		if(this.executableSqlHolder.next()) {
+			this.name = executableSqlHolder.getCurrentName();
+			this.type = executableSqlHolder.getCurrentType();
+			this.sql.reset(executableSqlHolder.getCurrentSql());
+			this.parameters = executableSqlHolder.getCurrentParameters();
+			this.parameterValues = executableSqlHolder.getCurrentParameterValues();
 			return true;
 		}
 		return false;

@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
@@ -14,7 +14,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public class TrimSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -6238903487680223625L;
+	private static final long serialVersionUID = -8625372817050604570L;
 	
 	private String prefix;
 	private String suffix;
@@ -50,26 +50,26 @@ public class TrimSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
+	public ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
 		StringBuilder sqlContentBuilder = new StringBuilder();
 		List<SqlParameterMetadata> parameters = null;
 		List<Object> parameterValues = null;
 		
-		ExecuteSqlNode executeSqlNode = null;
+		ExecutableSqlNode executableSqlNode = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter, previousAlias)) {
-				executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, sqlParameter, previousAlias);
-				if(executeSqlNode.existsParameters()) {
+				executableSqlNode = sqlNode.getExecutableSqlNode(purposeEntity, sqlParameter, previousAlias);
+				if(executableSqlNode.existsParameters()) {
 					if(parameters == null)
 						parameters = new ArrayList<SqlParameterMetadata>();
-					parameters.addAll(executeSqlNode.getParameters());
+					parameters.addAll(executableSqlNode.getParameters());
 				}
-				if(executeSqlNode.existsParameterValues()) {
+				if(executableSqlNode.existsParameterValues()) {
 					if(parameterValues == null) 
 						parameterValues = new ArrayList<Object>();
-					parameterValues.addAll(executeSqlNode.getParameterValues());
+					parameterValues.addAll(executableSqlNode.getParameterValues());
 				}
-				sqlContentBuilder.append(executeSqlNode.getContent()).append(" ");
+				sqlContentBuilder.append(executableSqlNode.getContent()).append(" ");
 			}
 		}
 		
@@ -95,6 +95,6 @@ public class TrimSqlNode extends AbstractNestingNode {
 			}
 			sqlContent = prefix + sqlContent + suffix;
 		}
-		return new ExecuteSqlNode(sqlContent, parameters, parameterValues);
+		return new ExecutableSqlNode(sqlContent, parameters, parameterValues);
 	}
 }

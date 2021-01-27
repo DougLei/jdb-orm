@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.id;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
 import java.util.Collection;
 import java.util.Map;

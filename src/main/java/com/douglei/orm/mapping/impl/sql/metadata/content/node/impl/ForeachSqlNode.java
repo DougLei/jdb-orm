@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
@@ -21,7 +21,7 @@ import com.douglei.tools.utils.datatype.converter.ConverterUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 6724629483615446127L;
+	private static final long serialVersionUID = 2284133202284123881L;
 	
 	private String collection;
 	private String alias;
@@ -106,37 +106,37 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
+	public ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
 		Object[] array = getArray(sqlParameter, previousAlias);
 		List<String> contentList = null;
 		List<SqlParameterMetadata> parameters = null;
 		List<Object> parameterValues = null;
 		
-		ExecuteSqlNode executeSqlNode = null;
+		ExecutableSqlNode executableSqlNode = null;
 		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], this.alias)) {
-					executeSqlNode = sqlNode.getExecuteSqlNode(purposeEntity, array[i], this.alias);
-					if(executeSqlNode.existsParameters()) {
+					executableSqlNode = sqlNode.getExecutableSqlNode(purposeEntity, array[i], this.alias);
+					if(executableSqlNode.existsParameters()) {
 						if(parameters == null)
 							parameters = new ArrayList<SqlParameterMetadata>();
-						parameters.addAll(executeSqlNode.getParameters());
+						parameters.addAll(executableSqlNode.getParameters());
 					}
-					if(executeSqlNode.existsParameterValues()) {
+					if(executableSqlNode.existsParameterValues()) {
 						if(parameterValues == null) 
 							parameterValues = new ArrayList<Object>();
-						parameterValues.addAll(executeSqlNode.getParameterValues());
+						parameterValues.addAll(executableSqlNode.getParameterValues());
 					}
 					
 					if(contentList == null) 
 						contentList = new ArrayList<String>(10);
-					contentList.add(executeSqlNode.getContent());
+					contentList.add(executableSqlNode.getContent());
 				}
 			}
 		}
 		
 		if(contentList == null) 
-			return ExecuteSqlNode.emptyExecuteSqlNode();
+			return ExecutableSqlNode.emptyExecutableSqlNode();
 		
 		StringBuilder sqlContent = new StringBuilder(100);
 		sqlContent.append(open);
@@ -152,7 +152,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 		}
 		
 		sqlContent.append(close);
-		return new ExecuteSqlNode(sqlContent.toString(), parameters, parameterValues);
+		return new ExecutableSqlNode(sqlContent.toString(), parameters, parameterValues);
 	}
 	
 	@Override

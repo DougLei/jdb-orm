@@ -11,13 +11,13 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 可执行的sql node
  * @author DougLei
  */
-public class ExecuteSqlNode {
-	private static final ExecuteSqlNode EMPTY_EXECUTE_SQL_NODE = new ExecuteSqlNode("", null, null);
+public class ExecutableSqlNode {
+	private static final ExecutableSqlNode EMPTY_EXECUTABLE_SQL_NODE = new ExecutableSqlNode("", null, null);
 	private String content;
 	private List<SqlParameterMetadata> parameters; // sql参数集合
 	private List<Object> parameterValues; // 执行sql语句对应的参数值集合
 	
-	public ExecuteSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String previousAlias) {
+	public ExecutableSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParameterByDefinedOrders, Object sqlParameter, String previousAlias) {
 		if(sqlParameterByDefinedOrders != null) {
 			for (SqlParameterMetadata parameter : sqlParameterByDefinedOrders) {
 				if(parameter.isPlaceholder()) {
@@ -36,18 +36,18 @@ public class ExecuteSqlNode {
 		this.parameters = purposeEntity.isGetParameters()?sqlParameterByDefinedOrders:null;
 	}
 	
-	public ExecuteSqlNode(String finalContent, List<SqlParameterMetadata> parameters, List<Object> parameterValues) {
+	public ExecutableSqlNode(String finalContent, List<SqlParameterMetadata> parameters, List<Object> parameterValues) {
 		this.content = finalContent;
 		this.parameters = parameters;
 		this.parameterValues = parameterValues;
 	}
 
 	/**
-	 * 获取一个空的ExecuteSqlNode实例
+	 * 获取一个空的ExecutableSqlNode实例
 	 * @return
 	 */
-	public static ExecuteSqlNode emptyExecuteSqlNode() {
-		return EMPTY_EXECUTE_SQL_NODE;
+	public static ExecutableSqlNode emptyExecutableSqlNode() {
+		return EMPTY_EXECUTABLE_SQL_NODE;
 	}
 	
 	public String getContent() {

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecuteSqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
@@ -19,7 +19,7 @@ import com.douglei.tools.utils.StringUtil;
  * @author DougLei
  */
 public class TextSqlNode implements SqlNode {
-	private static final long serialVersionUID = 5680225153097060912L;
+	private static final long serialVersionUID = -3678999940049069721L;
 	
 	private String content;
 	private List<SqlParameterMetadata> parameters;// sql参数, 按照配置中定义的顺序记录
@@ -107,8 +107,8 @@ public class TextSqlNode implements SqlNode {
 	}
 	
 	@Override
-	public ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
-		return new ExecuteSqlNode(purposeEntity, content, parameters, sqlParameter, alias);
+	public ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String alias) {
+		return new ExecutableSqlNode(purposeEntity, content, parameters, sqlParameter, alias);
 	}
 
 	@Override

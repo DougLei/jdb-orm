@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,10 +12,10 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class UpdateExecuteHandler extends TableExecuteHandler{
+public class UpdateExecutableSqlHolder extends TableExecutableSqlHolder{
 	private boolean updateNullValue;
 	
-	public UpdateExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
+	public UpdateExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
 		setBaseInfo(tableMetadata, objectMap);
 		this.updateNullValue = updateNullValue;
 		initial();

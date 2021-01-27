@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -13,10 +13,10 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class InsertExecuteHandler extends TableExecuteHandler{
+public class InsertExecutableSqlHolder extends TableExecutableSqlHolder{
 	private Object originObject;
 	
-	public InsertExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap, Object originObject) {
+	public InsertExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap, Object originObject) {
 		setBaseInfo(tableMetadata, objectMap);
 		this.originObject = originObject;
 		initial();

@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,9 +12,9 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class DeleteExecuteHandler extends TableExecuteHandler{
+public class DeleteExecutableSqlHolder extends TableExecutableSqlHolder{
 	
-	public DeleteExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+	public DeleteExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		super(tableMetadata, objectMap);
 	}
 

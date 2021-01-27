@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute;
+package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,37 +8,34 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
- * 
+ * 可执行sql的持有器
  * @author DougLei
  */
-public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHandler{
-	private int executeSqlCount; // 要执行的sql的数量
-	private int executeSqlIndex; // 执行的sql的下标, 从0开始
-	private List<ExecuteSql> executeSqls;
+public class ExecutableSqlHolder extends SqlContentExtractor implements com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder{
+	private int executableSqlCount; // 可执行的sql的数量
+	private int currentIndex; // 当前执行的sql的下标, 从0开始
+	private List<ExecutableSql> executableSqls;
 	
-	public SqlExecuteHandler(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+	public ExecutableSqlHolder(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contents = getContents(purposeEntity.getPurpose(), name, sqlMetadata.getContents());
 		
-		executeSqlCount = contents.size();
-		executeSqls = new ArrayList<ExecuteSql>(executeSqlCount);
-		
+		executableSqls = new ArrayList<ExecutableSql>(executableSqlCount = contents.size());
 		for (ContentMetadata content : contents) 
-			executeSqls.add(new ExecuteSql(purposeEntity, content, sqlParameter));
+			executableSqls.add(new ExecutableSql(purposeEntity, content, sqlParameter));
 	}
 	
 	@Override
-	public int executeSqlCount() {
-		return executeSqlCount;
+	public int executableSqlCount() {
+		return executableSqlCount;
 	}
 
 	@Override
 	public boolean next() {
-		executeSqlIndex++;
-		return executeSqlIndex < executeSqlCount;
+		currentIndex++;
+		return currentIndex < executableSqlCount;
 	}
 	
 	/**
@@ -46,7 +43,7 @@ public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHan
 	 * @return
 	 */
 	public String getCurrentName() {
-		return executeSqls.get(executeSqlIndex).getName(); 
+		return executableSqls.get(currentIndex).getName(); 
 	}
 	
 	/**
@@ -54,12 +51,12 @@ public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHan
 	 * @return
 	 */
 	public ContentType getCurrentType() {
-		return executeSqls.get(executeSqlIndex).getType(); 
+		return executableSqls.get(currentIndex).getType(); 
 	}
 	
 	@Override
 	public String getCurrentSql() {
-		return executeSqls.get(executeSqlIndex).getContent();
+		return executableSqls.get(currentIndex).getContent();
 	}
 
 	/**
@@ -67,12 +64,12 @@ public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHan
 	 * @return
 	 */
 	public List<SqlParameterMetadata> getCurrentParameters() {
-		return executeSqls.get(executeSqlIndex).getParameters();
+		return executableSqls.get(currentIndex).getParameters();
 	}
 	
 	@Override
 	public List<Object> getCurrentParameterValues() {
-		return executeSqls.get(executeSqlIndex).getParameterValues();
+		return executableSqls.get(currentIndex).getParameterValues();
 	}
 	
 	/**
@@ -80,6 +77,6 @@ public class SqlExecuteHandler extends SqlContentExtractor implements ExecuteHan
 	 * @return
 	 */
 	public IncrementIdValueConfig getCurrentIncrementIdValueConfig() {
-		return executeSqls.get(executeSqlIndex).getIncrementIdValueConfig();
+		return executableSqls.get(currentIndex).getIncrementIdValueConfig();
 	}
 }

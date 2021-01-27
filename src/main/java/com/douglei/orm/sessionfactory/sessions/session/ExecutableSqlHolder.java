@@ -1,18 +1,18 @@
-package com.douglei.orm.sessionfactory.sessions.session.execute;
+package com.douglei.orm.sessionfactory.sessions.session;
 
 import java.util.List;
 
 /**
- * 
+ * 可执行sql的持有器
  * @author DougLei
  */
-public interface ExecuteHandler {
+public interface ExecutableSqlHolder {
 	
 	/**
-	 * 要执行的sql语句的数量
+	 * 可执行的sql语句的数量
 	 * @return
 	 */
-	default int executeSqlCount() {
+	default int executableSqlCount() {
 		return 1;
 	}
 	

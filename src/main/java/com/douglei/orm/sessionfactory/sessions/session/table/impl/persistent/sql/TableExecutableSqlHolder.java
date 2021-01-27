@@ -1,22 +1,22 @@
-package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.execute;
+package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.execute.ExecuteHandler;
+import com.douglei.orm.sessionfactory.sessions.session.ExecutableSqlHolder;
 import com.douglei.tools.utils.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-public abstract class TableExecuteHandler implements ExecuteHandler {
+public abstract class TableExecutableSqlHolder implements ExecutableSqlHolder {
 	protected TableMetadata tableMetadata;
 	protected Map<String, Object> objectMap;
 	
-	protected TableExecuteHandler() {}
-	protected TableExecuteHandler(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+	protected TableExecutableSqlHolder() {}
+	protected TableExecutableSqlHolder(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		setBaseInfo(tableMetadata, objectMap);
 		initial();
 	}

@@ -29,10 +29,9 @@ import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.sessionfactory.sessions.session.MappingMismatchingException;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecuteHandler;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.execute.SqlExecutionEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlHolderEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPurposeEntity;
 
 /**
@@ -289,8 +288,8 @@ public class MappingHandler {
 	 * @param sqlParameter 输入参数
 	 * @return
 	 */
-	public SqlExecutionEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
+	public ExecutableSqlHolderEntity getSqlMappingExecutionEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		return new SqlExecutionEntity(new SqlExecuteHandler(purposeEntity, sqlMetadata, name, sqlParameter));
+		return new ExecutableSqlHolderEntity(new ExecutableSqlHolder(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
 }

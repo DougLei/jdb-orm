@@ -43,8 +43,8 @@ public interface SqlNode extends Serializable{
 	 * @param sqlParameter
 	 * @return
 	 */
-	default ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter) {
-		return getExecuteSqlNode(purposeEntity, sqlParameter, null);
+	default ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter) {
+		return getExecutableSqlNode(purposeEntity, sqlParameter, null);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public interface SqlNode extends Serializable{
 	 * @param previousAlias 上一层的sql参数名前缀, 即别名alias
 	 * @return
 	 */
-	ExecuteSqlNode getExecuteSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias);
+	ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias);
 	
 	/**
 	 * 验证参数
