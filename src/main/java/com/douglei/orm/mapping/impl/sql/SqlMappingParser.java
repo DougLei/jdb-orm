@@ -48,7 +48,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 		
 		resolvingContents(sqlNode);
 		
-		return new SqlMapping(sqlMetadata, getSqlMappingProperty(rootElement.getElementsByTagName("property")));
+		return new SqlMapping(sqlMetadata, getSqlMappingPropertyByDocument(rootElement.getElementsByTagName("property")));
 	}
 	
 	/**
@@ -120,7 +120,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 	 * @param propertyNodeList
 	 * @return
 	 */
-	private MappingProperty getSqlMappingProperty(NodeList propertyNodeList) {
+	private MappingProperty getSqlMappingPropertyByDocument(NodeList propertyNodeList) {
 		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MappingTypeConstants.SQL);
 		if(propertyNodeList != null && propertyNodeList.getLength() > 0) {
 			Node propertyNode = propertyNodeList.item(0);

@@ -25,7 +25,7 @@ public abstract class MappingParser<T extends Mapping> {
 	 * @param type
 	 * @return
 	 */
-	protected MappingProperty getMappingProperty4Dom4j(Element rootElement, String code, String type) {
+	protected final MappingProperty getMappingPropertyByDom4j(Element rootElement, String code, String type) {
 		MappingProperty property = new MappingProperty(code, type);
 		Element propertyElement = rootElement.element("property");
 		if(propertyElement != null)

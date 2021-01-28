@@ -26,6 +26,6 @@ class ProcedureMappingParser extends MappingParser<ProcedureMapping>{
 		
 		Element procedureElement = Dom4jUtil.getElement(MappingTypeConstants.PROCEDURE, rootElement);
 		ProcedureMetadata procedureMetadata = (ProcedureMetadata) procedureMetadataParser.parse(procedureElement);
-		return new ProcedureMapping(procedureMetadata, getMappingProperty4Dom4j(rootElement, procedureMetadata.getCode(), MappingTypeConstants.PROCEDURE));
+		return new ProcedureMapping(procedureMetadata, getMappingPropertyByDom4j(rootElement, procedureMetadata.getCode(), MappingTypeConstants.PROCEDURE));
 	}
 }

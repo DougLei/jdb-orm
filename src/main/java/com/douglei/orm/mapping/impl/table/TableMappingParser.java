@@ -62,7 +62,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 		setColumnValidator(tableElement.element("validators"));
 		
-		return new TableMapping(tableMetadata, getMappingProperty4Dom4j(rootElement, tableMetadata.getCode(), MappingTypeConstants.TABLE));
+		return new TableMapping(tableMetadata, getMappingPropertyByDom4j(rootElement, tableMetadata.getCode(), MappingTypeConstants.TABLE));
 	}
 	
 	/**

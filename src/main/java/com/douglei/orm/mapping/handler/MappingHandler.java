@@ -243,8 +243,6 @@ public class MappingHandler {
 	
 	/**
 	 * 获取指定code的映射, 如不存在则返回null; 
-	 * <p>
-	 * 注意: 建议先调用getMappingProperty(String)进行预处理, 判断资源是否存在, 再调用getMapping(String)方法, 减少不必要的性能消耗
 	 * @param code 
 	 * @return
 	 */
