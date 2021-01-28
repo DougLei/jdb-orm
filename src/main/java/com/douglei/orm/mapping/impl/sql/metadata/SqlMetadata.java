@@ -27,7 +27,7 @@ public class SqlMetadata extends AbstractMetadata{
 		if(contents == null) {
 			contents = new ArrayList<ContentMetadata>();
 		}else if(contents.contains(contentMetadata)){
-			throw new RepeatedContentNameException(name, contentMetadata.getName());
+			throw new RepeatedContentNameException(contentMetadata.getName());
 		}
 		contents.add(contentMetadata);
 	}
