@@ -26,12 +26,8 @@ public class SqlMetadata extends AbstractMetadata{
 	public void addContentMetadata(ContentMetadata contentMetadata) {
 		if(contents == null) {
 			contents = new ArrayList<ContentMetadata>();
-		}else {
-			String contentName = contentMetadata.getName();
-			contents.forEach(content -> {
-				if(content.getName().equals(contentName)) 
-					throw new RepeatedContentNameException(contentName);
-			});
+		}else if(contents.contains(contentMetadata)){
+			throw new RepeatedContentNameException(name, contentMetadata.getName());
 		}
 		contents.add(contentMetadata);
 	}

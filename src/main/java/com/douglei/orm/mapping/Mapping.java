@@ -10,16 +10,16 @@ import com.douglei.orm.mapping.type.MappingTypeConstants;
  * @author DougLei
  */
 public abstract class Mapping implements Serializable{
-	private static final long serialVersionUID = 7284961759669114076L;
+	private static final long serialVersionUID = -8788464014576761104L;
 	
 	private String type;
 	private AbstractMetadata metadata;
 	private transient MappingProperty property;
 	
-	public Mapping(String type, AbstractMetadata metadata) {
+	protected Mapping(String type, AbstractMetadata metadata) {
 		this(type, metadata, null);
 	}
-	public Mapping(String type, AbstractMetadata metadata, MappingProperty property) {
+	protected Mapping(String type, AbstractMetadata metadata, MappingProperty property) {
 		this.type = type;
 		this.metadata = metadata;
 		this.property = property==null?new MappingProperty(metadata.getCode(), type):property;
