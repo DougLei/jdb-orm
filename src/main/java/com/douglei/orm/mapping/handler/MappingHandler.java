@@ -30,8 +30,8 @@ import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqls;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqls;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPurposeEntity;
 
 /**
@@ -242,26 +242,27 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取指定code的映射, 如不存在则返回null; 
+	 * 获取指定code和type的映射 
 	 * @param code 
+	 * @param type
 	 * @return
 	 */
-	public Mapping getMapping(String code) {
-		return mappingContainer.getMapping(code);
+	public Mapping getMapping(String code, String type) {
+		Mapping mapping =  mappingContainer.getMapping(code);
+		if(mapping == null)
+			throw new NullPointerException("不存在code为"+code+"的mapping");
+		if(type.equals(mapping.getType()))
+			return mapping;
+		throw new MappingMismatchingException(code, type);
 	}
 	
 	/**
-	 * 获取code对应的表元数据实例
-	 * @param code 值分两种, 1.对应类的全路径(com.test.SysUser); 2.对应的表名, 表名必须全大写(SYS_USER); 如果在映射文件中配置了class, 则必须传入类的全路径; 否则只能传入表名
+	 * 获取表元数据实例
+	 * @param code 值分两种, 1.对应类的全路径(com.test.SysUser); 2.对应的表名, 表名必须全大写(SYS_USER); 如果在映射文件中配置了class, 则必须传入类的全路径; 否则必须传入表名
 	 * @return
 	 */
 	public TableMetadata getTableMetadata(String code) {
-		MappingProperty mappingProperty = mappingContainer.getMappingProperty(code);
-		if(mappingProperty == null)
-			throw new NullPointerException("不存在code为"+code+"的mapping");
-		if(!MappingTypeConstants.TABLE.equals(mappingProperty.getType())) 
-			throw new MappingMismatchingException("code为"+code+"的mapping不是["+MappingTypeConstants.TABLE+"]类型");
-		return (TableMetadata) mappingContainer.getMapping(code).getMetadata();
+		return (TableMetadata) getMapping(code, MappingTypeConstants.TABLE).getMetadata();
 	}
 	
 	/**
@@ -270,12 +271,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public SqlMetadata getSqlMetadata(String namespace) {
-		MappingProperty mappingProperty = mappingContainer.getMappingProperty(namespace);
-		if(mappingProperty == null)
-			throw new NullPointerException("不存在code为"+namespace+"的mapping");
-		if(!MappingTypeConstants.SQL.equals(mappingProperty.getType())) 
-			throw new MappingMismatchingException("code为"+namespace+"的mapping不是["+MappingTypeConstants.SQL+"]类型");
-		return (SqlMetadata) mappingContainer.getMapping(namespace).getMetadata();
+		return (SqlMetadata) getMapping(namespace, MappingTypeConstants.SQL).getMetadata();
 	}
 	
 	/**

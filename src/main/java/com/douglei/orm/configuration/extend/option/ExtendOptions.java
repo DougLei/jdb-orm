@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.dom4j.Element;
 
-import com.douglei.tools.utils.StringUtil;
-
 /**
  * 
  * @author DougLei
@@ -13,7 +11,7 @@ import com.douglei.tools.utils.StringUtil;
 public class ExtendOptions {
 
 	/**
-	 * 扩展性处理
+	 * 扩展项处理
 	 * @param element
 	 */
 	@SuppressWarnings("unchecked")
@@ -25,8 +23,7 @@ public class ExtendOptions {
 			return;
 		
 		options.forEach(option -> {
-			String enabled = option.attributeValue("enabled");
-			if(StringUtil.isEmpty(enabled) || Boolean.parseBoolean(enabled))
+			if(!"false".equalsIgnoreCase(option.attributeValue("enabled")))
 				Type.get(option.attributeValue("type")).handle(option.attributeValue("value"));
 		});
 	}
