@@ -242,7 +242,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 							if(!sqlParameterMetadata.isPlaceholder())
 								continue;
 							
-							logger.debug("传入的sql参数为: index={}, parameter={}", index, sqlParameterMetadata);
+							logger.debug("执行的sql参数值为: index={}, parameter={}", index, sqlParameterMetadata);
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) 
 								sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
 							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {

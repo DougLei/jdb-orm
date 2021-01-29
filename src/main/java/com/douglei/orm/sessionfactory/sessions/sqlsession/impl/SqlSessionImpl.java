@@ -58,7 +58,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	 */
 	private StatementHandler getStatementHandler(String sql, List<Object> parameters, ReturnID returnID){
 		logger.debug("执行的sql语句为: {}", sql);
-		logger.debug("传入的sql参数为: {}", parameters);
+		logger.debug("执行的sql参数值集合为: {}", parameters);
 		
 		StatementHandler statementHandler = null;
 		if(enableStatementCache) {
