@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
+import com.douglei.tools.utils.JdkSerializeUtil;
 
 import redis.clients.jedis.Jedis;
 
@@ -29,7 +29,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 		if(logger.isDebugEnabled() && exMappingProperty != null) 
 			logger.debug("覆盖code为[{}]的映射属性: {}", mappingProperty.getCode(), exMappingProperty);
 		
-		connection.set(getCode4Property(mappingProperty.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mappingProperty));
+		connection.set(getCode4Property(mappingProperty.getCode()).getBytes(), JdkSerializeUtil.serialize2ByteArray(mappingProperty));
 		return exMappingProperty;
 	}
 	
@@ -38,7 +38,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 			return null;
 		
 		code = getCode4Property(code);
-		MappingProperty mappingProperty = JdkSerializeProcessor.deserializeFromByteArray(MappingProperty.class, connection.get(code.getBytes()));
+		MappingProperty mappingProperty = JdkSerializeUtil.deserializeFromByteArray(MappingProperty.class, connection.get(code.getBytes()));
 		connection.del(code);
 		return mappingProperty;
 	}
@@ -47,7 +47,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 		byte[] mpfbyte = connection.get(getCode4Property(code).getBytes());
 		if(mpfbyte == null || mpfbyte.length == 0) 
 			return null;
-		return JdkSerializeProcessor.deserializeFromByteArray(MappingProperty.class, mpfbyte);
+		return JdkSerializeUtil.deserializeFromByteArray(MappingProperty.class, mpfbyte);
 	}
 	
 	public Mapping addMapping(Mapping mapping, Jedis connection) {
@@ -55,7 +55,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 		if(logger.isDebugEnabled() && exMapping != null) 
 			logger.debug("覆盖code为[{}]的映射: {}", mapping.getCode(), exMapping);
 		
-		connection.set(getCode(mapping.getCode()).getBytes(), JdkSerializeProcessor.serialize2ByteArray(mapping));
+		connection.set(getCode(mapping.getCode()).getBytes(), JdkSerializeUtil.serialize2ByteArray(mapping));
 		return exMapping;
 	}
 	
@@ -64,7 +64,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 			return null;
 		
 		code = getCode(code);
-		Mapping mapping = JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
+		Mapping mapping = JdkSerializeUtil.deserializeFromByteArray(Mapping.class, connection.get(code.getBytes()));
 		connection.del(code);
 		return mapping;
 	}
@@ -73,7 +73,7 @@ class RedisMappingContainerHandler extends RedisHandler {
 		byte[] mpbyte = connection.get(getCode(code).getBytes());
 		if(mpbyte == null || mpbyte.length == 0) 
 			return null;
-		return JdkSerializeProcessor.deserializeFromByteArray(Mapping.class, mpbyte);
+		return JdkSerializeUtil.deserializeFromByteArray(Mapping.class, mpbyte);
 	}
 	
 	public boolean exists(String code, Jedis connection) {

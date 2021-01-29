@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.metadata.validator.impl.NotBlankValidator;
 import com.douglei.orm.mapping.metadata.validator.impl.RegexValidator;
-import com.douglei.tools.utils.reflect.ClassLoadUtil;
+import com.douglei.tools.utils.reflect.ClassUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -29,7 +29,7 @@ public class ValidatorContainer {
 	public static Validator getValidatorInstance(String name, String configValue) {
 		Class<? extends Validator> validatorClass = container.get(name);
 		if(validatorClass == null) 
-			container.put(name, (validatorClass = ClassLoadUtil.loadClass(name)));
+			container.put(name, (validatorClass = ClassUtil.loadClass(name)));
 		return ((Validator) ConstructorUtil.newInstance(validatorClass)).init(configValue);
 	}
 }

@@ -51,14 +51,14 @@ public class SqlParameterConfigHolder implements Serializable{
 	public SqlParameterConfigHolder(String prefix, String suffix, String split, DefaultValueHandler defaultValueHandler) {
 		this.prefixLength = prefix.length();
 		
-		this.prefix = RegularExpressionUtil.transferKey(prefix);
+		this.prefix = RegularExpressionUtil.addBackslash4Key(prefix);
 		this.prefixPattern = Pattern.compile(this.prefix, Pattern.MULTILINE);
 		if(prefix.equals(suffix)) {
 			this.suffix = this.prefix;
 			this.suffixPattern = this.prefixPattern;
 			this.psRelation = SAME;
 		}else {
-			this.suffix = RegularExpressionUtil.transferKey(suffix);
+			this.suffix = RegularExpressionUtil.addBackslash4Key(suffix);
 			this.suffixPattern = Pattern.compile(this.suffix, Pattern.MULTILINE);
 			this.psRelation = DIFFERENT;
 			if(prefix.indexOf(suffix) != -1) {
@@ -68,7 +68,7 @@ public class SqlParameterConfigHolder implements Serializable{
 			}
 		}
 		
-		this.split = RegularExpressionUtil.transferKey(split);
+		this.split = RegularExpressionUtil.addBackslash4Key(split);
 		this.defaultValueHandler = defaultValueHandler;
 	}
 	

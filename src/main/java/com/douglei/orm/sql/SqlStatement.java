@@ -6,14 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.orm.sql.pagequery.PageSqlStatement;
 
 /**
  * sql解析器
  * @author DougLei
  */
 public class SqlStatement {
-	private static final Logger logger = LoggerFactory.getLogger(PageSqlStatement.class);
+	private static final Logger logger = LoggerFactory.getLogger(SqlStatement.class);
 	protected SqlStatementHandler sqlStatementHandler;
 	
 	/**
@@ -45,7 +44,7 @@ public class SqlStatement {
 		extractOrderByClause();
 		
 		if(logger.isDebugEnabled()) {
-			logger.debug("完成 {} 实例化, originSql is: {}", SqlStatement.class.getName(), newSql);
+			logger.debug("完成 {} 实例化, originSql is: {}", getClass().getName(), newSql);
 			logger.debug("with clause sql is: {}", withClause);
 			logger.debug("sql is: {}", sql);
 			logger.debug("orderByClause is: {}", orderByClause);

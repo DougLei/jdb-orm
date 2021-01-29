@@ -3,7 +3,7 @@ package com.douglei.orm.util;
 import org.dom4j.Element;
 
 /**
- * 
+ * dom4j工具类
  * @author DougLei
  */
 public class Dom4jUtil {

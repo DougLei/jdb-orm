@@ -2,13 +2,13 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.tools.utils.IdentityUtil;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -113,7 +113,7 @@ public class Identity {
 	 */
 	private boolean allowNullId() {
 		if(tableMetadata != null && tableMetadata.getPrimaryKeyHandler() != null) {
-			this.id = IdentityUtil.getUUID();
+			this.id = UUID.randomUUID().toString();
 			logger.debug("当有主键处理器的时候, 可以不用传入id值, 暂时提供一个随机的id值[{}]使用", id);
 			return true;
 		}

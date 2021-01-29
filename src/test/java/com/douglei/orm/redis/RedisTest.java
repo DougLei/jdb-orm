@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.douglei.orm.mapping.container.impl.redis.RedisMappingContainer;
 import com.douglei.orm.session.SysUser;
-import com.douglei.tools.utils.serialize.JdkSerializeProcessor;
+import com.douglei.tools.utils.JdkSerializeUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -50,8 +50,8 @@ public class RedisTest {
 		Jedis jedis = jedisPool.getResource();
 		SysUser user = new SysUser();
 		System.out.println(user);
-		jedis.set("user".getBytes(), JdkSerializeProcessor.serialize2ByteArray(user));
-		SysUser user2 = JdkSerializeProcessor.deserializeFromByteArray(SysUser.class, jedis.get("user".getBytes()));
+		jedis.set("user".getBytes(), JdkSerializeUtil.serialize2ByteArray(user));
+		SysUser user2 = JdkSerializeUtil.deserializeFromByteArray(SysUser.class, jedis.get("user".getBytes()));
 		System.out.println(user2);
 	}
 	

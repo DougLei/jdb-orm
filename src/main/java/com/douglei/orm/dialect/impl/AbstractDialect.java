@@ -6,8 +6,8 @@ import com.douglei.orm.dialect.datatype.DataTypeContainer;
 import com.douglei.orm.dialect.object.DBObjectHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.tools.instances.resource.scanner.impl.ClassScanner;
-import com.douglei.tools.utils.reflect.ClassLoadUtil;
+import com.douglei.tools.instances.scanner.impl.ClassScanner;
+import com.douglei.tools.utils.reflect.ClassUtil;
 import com.douglei.tools.utils.reflect.ConstructorUtil;
 
 /**
@@ -33,7 +33,7 @@ public abstract class AbstractDialect implements Dialect{
 		ClassScanner scanner = new ClassScanner();
 		scanner.scan(basePackage + "db").forEach(clazz ->{
 			try {
-				dataTypeContainer.register((DataType)ClassLoadUtil.loadClass(clazz).getDeclaredMethod("getSingleton").invoke(null));
+				dataTypeContainer.register((DataType)ClassUtil.loadClass(clazz).getDeclaredMethod("getSingleton").invoke(null));
 			} catch (Exception e) {
 				e.printStackTrace();
 			} 

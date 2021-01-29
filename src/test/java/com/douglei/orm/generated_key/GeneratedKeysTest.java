@@ -4,10 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.UUID;
 
 import org.junit.Test;
-
-import com.douglei.tools.utils.IdentityUtil;
 
 public class GeneratedKeysTest {
 	
@@ -25,7 +24,7 @@ public class GeneratedKeysTest {
 		// 获取自定义主键值
 	    Connection conn = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=jbpm", "sa", "root");
 	    Statement statement = conn.createStatement();
-	    statement.execute("insert into UUID_TABLE values('"+IdentityUtil.get32UUID()+"', 'NAME')", Statement.RETURN_GENERATED_KEYS);
+	    statement.execute("insert into UUID_TABLE values('"+UUID.randomUUID().toString()+"', 'NAME')", Statement.RETURN_GENERATED_KEYS);
 	    
 	    ResultSet rs = statement.getGeneratedKeys();
 	    if(rs.next())

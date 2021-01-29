@@ -50,7 +50,7 @@ public class SqlParameterMetadata implements Metadata{
 	
 	public SqlParameterMetadata(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
 		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
-		this.configText = RegularExpressionUtil.includeKey(configText)?RegularExpressionUtil.transferKey(configText):configText;
+		this.configText = RegularExpressionUtil.includeKey(configText)?RegularExpressionUtil.addBackslash4Key(configText):configText;
 
 		Map<String, String> propertyMap = resolvingPropertyMap(configText, sqlParameterConfigHolder);
 		setDBDataType(propertyMap);

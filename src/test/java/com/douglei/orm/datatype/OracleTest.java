@@ -8,13 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.IdentityUtil;
+import ch.qos.logback.core.util.CloseUtil;
 
 public class OracleTest {
 	private Connection conn;
@@ -25,7 +25,7 @@ public class OracleTest {
 	@Test
 	public void closeThenCommitTest() throws Exception {
 		insertPst = conn.prepareStatement("insert into sys_user(id) values(?)");
-		insertPst.setString(1, IdentityUtil.get32UUID());
+		insertPst.setString(1, UUID.randomUUID().toString());
 		insertPst.executeUpdate();
 		insertPst.close();
 		

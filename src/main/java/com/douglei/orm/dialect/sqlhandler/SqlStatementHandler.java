@@ -319,7 +319,7 @@ public abstract class SqlStatementHandler {
 	 * @param statement
 	 * @return
 	 */
-	public String getRecursiveSql(RecursiveSqlStatement statement) {
+	public final String getRecursiveSql(RecursiveSqlStatement statement) {
 		StringBuilder recursiveQuerySql = statement.getRecursiveQuerySqlCache();
 		if(recursiveQuerySql == null) {
 			recursiveQuerySql = new StringBuilder(86 + statement.length());
@@ -346,7 +346,7 @@ public abstract class SqlStatementHandler {
 	 * @param recursiveQuerySql
 	 * @param statement
 	 */
-	public void appendConditionSql2RecursiveSql(StringBuilder recursiveQuerySql, RecursiveSqlStatement statement) { 
+	public final void appendConditionSql2RecursiveSql(StringBuilder recursiveQuerySql, RecursiveSqlStatement statement) { 
 		recursiveQuerySql.append('(');
 		int parentValueListSize = statement.parentValueListSize();
 		if(statement.parentValueExistNull()) {

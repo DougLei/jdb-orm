@@ -10,7 +10,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.tools.instances.resource.scanner.impl.ResourceScanner;
+import com.douglei.tools.instances.scanner.impl.ResourceScanner;
 
 /**
  * 映射导入的数据上下文

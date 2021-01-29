@@ -8,13 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.UUID;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.IdentityUtil;
+import ch.qos.logback.core.util.CloseUtil;
 
 public class MySqlTest {
 	private Connection conn;
@@ -26,7 +26,7 @@ public class MySqlTest {
 	public void closeThenCommitTest() throws Exception {
 		conn.setAutoCommit(false);
 		insertPst = conn.prepareStatement("insert into sys_user(id) values(?)");
-		insertPst.setString(1, IdentityUtil.get32UUID());
+		insertPst.setString(1, UUID.randomUUID().toString());
 		insertPst.executeUpdate();
 		System.out.println(insertPst.isClosed());
 		insertPst.close();
