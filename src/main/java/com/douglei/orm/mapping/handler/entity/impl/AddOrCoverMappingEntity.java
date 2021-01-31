@@ -12,9 +12,9 @@ import com.douglei.orm.mapping.handler.entity.MappingOP;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
-import com.douglei.tools.utils.CloseUtil;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.CloseUtil;
+import com.douglei.tools.ExceptionUtil;
+import com.douglei.tools.scanner.impl.ResourceScanner;
 
 /**
  * 

@@ -6,7 +6,7 @@ import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 表元数据解析

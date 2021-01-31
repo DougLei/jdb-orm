@@ -14,7 +14,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserContainer;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * <sql-content>

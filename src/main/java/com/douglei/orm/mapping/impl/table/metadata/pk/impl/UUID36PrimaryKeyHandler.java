@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandler;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 

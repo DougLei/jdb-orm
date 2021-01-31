@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.douglei.orm.mapping.container.impl.redis.RedisMappingContainer;
 import com.douglei.orm.session.SysUser;
-import com.douglei.tools.utils.JdkSerializeUtil;
+import com.douglei.tools.JdkSerializeUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

@@ -8,7 +8,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ForeachSqlNod
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParser;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserException;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

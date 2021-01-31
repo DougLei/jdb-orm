@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.mini.app.crypto.Decryptor;
-import com.douglei.tools.instances.file.reader.PropertiesReader;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.file.reader.PropertiesReader;
 
 /**
  * <properties>节点

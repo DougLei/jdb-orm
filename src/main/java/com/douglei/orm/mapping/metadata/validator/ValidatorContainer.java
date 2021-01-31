@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.metadata.validator.impl.NotBlankValidator;
 import com.douglei.orm.mapping.metadata.validator.impl.RegexValidator;
-import com.douglei.tools.utils.reflect.ClassUtil;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ClassUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
 
 /**
  * 验证器容器

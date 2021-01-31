@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
-import com.douglei.tools.instances.ognl.OgnlHandler;
+import com.douglei.tools.ognl.OgnlHandler;
 
 /**
  * 

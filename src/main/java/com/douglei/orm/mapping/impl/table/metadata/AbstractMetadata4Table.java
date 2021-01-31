@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.impl.table.metadata;
 
 import com.douglei.orm.mapping.metadata.AbstractDatabaseObjectMetadata;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

@@ -7,7 +7,7 @@ import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * view元数据解析

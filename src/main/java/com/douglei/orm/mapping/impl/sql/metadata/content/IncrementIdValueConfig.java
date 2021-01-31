@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content;
 
-import com.douglei.tools.instances.ognl.OgnlHandler;
+import com.douglei.tools.ognl.OgnlHandler;
 
 /**
  * 自增主键值的配置

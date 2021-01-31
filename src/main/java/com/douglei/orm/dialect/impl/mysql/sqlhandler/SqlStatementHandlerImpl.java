@@ -7,7 +7,7 @@ import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.Constraint;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

@@ -2,8 +2,8 @@ package com.douglei.orm.mapping;
 
 import java.io.Serializable;
 
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
  * 
@@ -32,13 +32,13 @@ public class MappingProperty implements Serializable{
 	 * @param extendExpr mapping的扩展属性, 可由第三方扩展
 	 */
 	public void setValues(String order, String supportCover, String supportDelete, String extendExpr) {
-		if(VerifyTypeMatchUtil.isInteger(order))
+		if(DataTypeValidateUtil.isInteger(order))
 			this.order = Integer.parseInt(order);
 		
-		if(VerifyTypeMatchUtil.isBoolean(supportCover))
+		if(DataTypeValidateUtil.isBoolean(supportCover))
 			this.supportCover = Boolean.parseBoolean(supportCover);
 		
-		if(VerifyTypeMatchUtil.isBoolean(supportDelete))
+		if(DataTypeValidateUtil.isBoolean(supportDelete))
 			this.supportDelete = Boolean.parseBoolean(supportDelete);
 		
 		if(StringUtil.notEmpty(extendExpr))

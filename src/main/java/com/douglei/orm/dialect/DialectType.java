@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.douglei.orm.dialect.impl.mysql.MySqlDialect;
 import com.douglei.orm.dialect.impl.oracle.OracleDialect;
 import com.douglei.orm.dialect.impl.sqlserver.SqlServerDialect;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
 
 /**
  * 

@@ -6,8 +6,8 @@ import java.util.Map;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.UUID32PrimaryKeyHandler;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.UUID36PrimaryKeyHandler;
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
 
 /**
  * 

@@ -13,8 +13,8 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.tools.instances.ognl.OgnlHandler;
-import com.douglei.tools.utils.datatype.converter.ConverterUtil;
+import com.douglei.tools.datatype.DataTypeConvertUtil;
+import com.douglei.tools.ognl.OgnlHandler;
 
 /**
  * 
@@ -67,7 +67,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			
 			Iterator<?> it = tc.iterator();
 			Object obj = it.next();
-			if(ConverterUtil.isSimpleType(obj)) {
+			if(DataTypeConvertUtil.isSimpleType(obj)) {
 				Object[] array = new Object[tc.size()];
 				Map<String, Object> map = null;
 				int index = 0;

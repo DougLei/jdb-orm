@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.impl.view.metadata;
 
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.metadata.AbstractDatabaseObjectMetadata;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

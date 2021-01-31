@@ -25,8 +25,8 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql
 import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
 import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.statement.InsertResult;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 

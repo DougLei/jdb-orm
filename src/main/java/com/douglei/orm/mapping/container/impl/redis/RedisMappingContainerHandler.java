@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.tools.utils.JdkSerializeUtil;
+import com.douglei.tools.JdkSerializeUtil;
 
 import redis.clients.jedis.Jedis;
 

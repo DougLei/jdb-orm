@@ -31,7 +31,7 @@ import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.pagequery.PageResult;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 

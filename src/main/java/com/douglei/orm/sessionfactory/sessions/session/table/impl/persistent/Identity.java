@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 持久化对象

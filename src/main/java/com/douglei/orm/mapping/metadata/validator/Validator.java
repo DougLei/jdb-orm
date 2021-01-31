@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.metadata.validator;
 
 import java.io.Serializable;
 
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 验证器

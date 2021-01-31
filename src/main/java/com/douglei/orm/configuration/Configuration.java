@@ -14,8 +14,8 @@ import com.douglei.orm.configuration.properties.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.util.Dom4jUtil;
-import com.douglei.tools.utils.ExceptionUtil;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.ExceptionUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

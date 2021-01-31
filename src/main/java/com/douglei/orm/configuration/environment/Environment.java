@@ -25,9 +25,9 @@ import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.util.Dom4jUtil;
-import com.douglei.tools.instances.scanner.impl.ResourceScanner;
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.scanner.impl.ResourceScanner;
 
 /**
  * 

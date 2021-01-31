@@ -4,7 +4,7 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 列元数据

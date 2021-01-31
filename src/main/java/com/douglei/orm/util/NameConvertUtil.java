@@ -1,6 +1,6 @@
 package com.douglei.orm.util;
 
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 命名转换工具类

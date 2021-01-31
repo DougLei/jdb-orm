@@ -26,12 +26,12 @@ import com.douglei.orm.sql.recursivequery.RecursiveSqlStatement;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
 import com.douglei.orm.sql.statement.StatementHandler;
-import com.douglei.tools.utils.ExceptionUtil;
-import com.douglei.tools.utils.naming.converter.ConverterUtil;
-import com.douglei.tools.utils.naming.converter.impl.ColumnName2PropertyNameConverter;
-import com.douglei.tools.utils.naming.converter.impl.PropertyName2ColumnNameConverter;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.ExceptionUtil;
+import com.douglei.tools.naming.converter.ConverterUtil;
+import com.douglei.tools.naming.converter.impl.ColumnName2PropertyNameConverter;
+import com.douglei.tools.naming.converter.impl.PropertyName2ColumnNameConverter;
+import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 执行sql语句的session实现类
@@ -280,7 +280,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(deep <= 0)
 			deep = -1;
 		if(targetClass != null)
-			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+			childNodeName = DataTypeConvertUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
 		if(parameters == null)
 			parameters = new ArrayList<Object>();
 		logger.debug("开始执行递归查询, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
@@ -369,7 +369,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(deep <= 0)
 			deep = -1;
 		if(targetClass != null)
-			childNodeName = ConverterUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
+			childNodeName = DataTypeConvertUtil.convert(childNodeName, PropertyName2ColumnNameConverter.class);
 		if(parameters == null)
 			parameters = new ArrayList<Object>();
 		logger.debug("开始执行分页递归查询, pageNum={}, pageSize={}, deep={}, pkColumnName={}, parentPkColumnName={}, parentValue={}, childNodeName={}", pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName);
@@ -460,7 +460,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	@SuppressWarnings("unchecked")
 	private <T> T map2Class(String[] resultMapColumnKeys, Class<T> targetClass, Map<String, Object> map) {
 		for (String columnKey : resultMapColumnKeys) {
-			map.put(ConverterUtil.convert(columnKey, ColumnName2PropertyNameConverter.class), map.remove(columnKey));
+			map.put(DataTypeConvertUtil.convert(columnKey, ColumnName2PropertyNameConverter.class), map.remove(columnKey));
 		}
 		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), map);
 	}

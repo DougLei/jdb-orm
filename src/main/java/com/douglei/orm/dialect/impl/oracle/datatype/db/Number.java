@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.impl.AbstractDecimal;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
  * 
@@ -49,6 +49,6 @@ public class Number extends AbstractDecimal{
 	@Override
 	protected boolean validateType(Object value) {
 		Class<?> valueClass = value.getClass();
-		return valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte || valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || VerifyTypeMatchUtil.isDouble(value.toString());
+		return valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte || valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || DataTypeValidateUtil.isDouble(value.toString());
 	}
 }

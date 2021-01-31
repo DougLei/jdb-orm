@@ -7,7 +7,7 @@ import com.douglei.orm.dialect.datatype.db.util.DBDataTypeWrapper;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 列元数据解析

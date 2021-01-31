@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.CloseUtil;
 
 public class SqlServerTest {
 	private Connection conn;

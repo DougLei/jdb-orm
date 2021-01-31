@@ -1,7 +1,7 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.db;
 
 import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

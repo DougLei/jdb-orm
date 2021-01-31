@@ -13,9 +13,9 @@ import com.douglei.orm.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.DefaultValueHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
 
 /**
  * <environment>节点下所有的<property>节点
@@ -90,12 +90,12 @@ public class EnvironmentProperty {
 	}
 
 	void setEnableStatementCache(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(DataTypeValidateUtil.isBoolean(value)) {
 			this.enableStatementCache = Boolean.parseBoolean(value);
 		}
 	}
 	void setEnableTableSessionCache(String value) {
-		if(VerifyTypeMatchUtil.isBoolean(value)) {
+		if(DataTypeValidateUtil.isBoolean(value)) {
 			this.enableTableSessionCache = Boolean.parseBoolean(value);
 		}
 	}

@@ -9,7 +9,7 @@ import java.util.Date;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.utils.datatype.dateformat.DateFormatUtil;
+import com.douglei.tools.datatype.DateFormatUtil;
 
 /**
  * 

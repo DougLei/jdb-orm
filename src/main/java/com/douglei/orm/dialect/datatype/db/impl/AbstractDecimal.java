@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
  * 
@@ -40,7 +40,7 @@ public abstract class AbstractDecimal extends DBDataType {
 			preparedStatement.setFloat(parameterIndex, (float)value);
 		}else if(value instanceof BigDecimal) {
 			preparedStatement.setBigDecimal(parameterIndex, (BigDecimal)value);
-		}else if(VerifyTypeMatchUtil.isDouble(value.toString())){
+		}else if(DataTypeValidateUtil.isDouble(value.toString())){
 			preparedStatement.setBigDecimal(parameterIndex, new BigDecimal(value.toString()));
 		}else {
 			super.setValue_(preparedStatement, parameterIndex, value);
@@ -82,6 +82,6 @@ public abstract class AbstractDecimal extends DBDataType {
 	 */
 	protected boolean validateType(Object value) {
 		Class<?> valueClass = value.getClass();
-		return valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || VerifyTypeMatchUtil.isDouble(value.toString());
+		return valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || DataTypeValidateUtil.isDouble(value.toString());
 	}
 }

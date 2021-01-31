@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.CloseUtil;
 
 /**
  * 

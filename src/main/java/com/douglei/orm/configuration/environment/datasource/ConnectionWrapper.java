@@ -13,7 +13,7 @@ import com.douglei.orm.sql.ReturnID;
 import com.douglei.orm.sql.statement.StatementHandler;
 import com.douglei.orm.sql.statement.impl.PreparedStatementHandlerImpl;
 import com.douglei.orm.sql.statement.impl.StatementHandlerImpl;
-import com.douglei.tools.utils.ExceptionUtil;
+import com.douglei.tools.ExceptionUtil;
 
 /**
  * java.sql.Connection 包装类

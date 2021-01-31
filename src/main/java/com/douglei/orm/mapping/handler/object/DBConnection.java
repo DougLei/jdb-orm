@@ -13,7 +13,7 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryConnection;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.CloseUtil;
 
 /**
  * 

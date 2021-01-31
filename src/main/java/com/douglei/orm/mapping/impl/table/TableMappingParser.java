@@ -36,7 +36,7 @@ import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
 import com.douglei.orm.mapping.type.MappingTypeConstants;
 import com.douglei.orm.util.Dom4jUtil;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

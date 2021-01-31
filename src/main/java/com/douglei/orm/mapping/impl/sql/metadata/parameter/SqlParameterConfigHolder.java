@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.parameter;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-import com.douglei.tools.utils.RegularExpressionUtil;
+import com.douglei.tools.RegularExpressionUtil;
 
 /**
  * sql参数相关的配置

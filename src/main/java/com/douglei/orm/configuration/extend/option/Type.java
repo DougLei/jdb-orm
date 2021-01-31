@@ -2,8 +2,8 @@ package com.douglei.orm.configuration.extend.option;
 
 import com.douglei.orm.mapping.type.MappingType;
 import com.douglei.orm.mapping.type.MappingTypeContainer;
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.ConstructorUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.reflect.ConstructorUtil;
 
 /**
  * 扩展项类型

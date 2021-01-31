@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.utils.CloseUtil;
+import com.douglei.tools.CloseUtil;
 
 /**
  * 

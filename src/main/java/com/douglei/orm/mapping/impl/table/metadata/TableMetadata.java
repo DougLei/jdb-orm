@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.impl.table.exception.IndexConfigurationException;
 import com.douglei.orm.mapping.impl.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandler;
 import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 表元数据

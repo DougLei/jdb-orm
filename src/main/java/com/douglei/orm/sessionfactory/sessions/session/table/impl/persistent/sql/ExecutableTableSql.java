@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

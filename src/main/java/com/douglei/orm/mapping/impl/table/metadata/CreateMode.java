@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.table.metadata;
 
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 

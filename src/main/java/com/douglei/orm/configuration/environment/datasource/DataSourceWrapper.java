@@ -7,8 +7,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 

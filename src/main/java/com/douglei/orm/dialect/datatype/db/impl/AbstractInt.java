@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.utils.datatype.VerifyTypeMatchUtil;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
  * 
@@ -23,7 +23,7 @@ public abstract class AbstractInt extends DBDataType {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == int.class || valueClass == long.class || valueClass == short.class || valueClass == byte.class){
 			setIntValue(preparedStatement, parameterIndex, value);
-		}else if(VerifyTypeMatchUtil.isInteger(value.toString())){
+		}else if(DataTypeValidateUtil.isInteger(value.toString())){
 			setIntValue(preparedStatement, parameterIndex, parseIntValue(value.toString()));
 		}else {
 			super.setValue_(preparedStatement, parameterIndex, value);
@@ -49,7 +49,7 @@ public abstract class AbstractInt extends DBDataType {
 	@Override
 	public final ValidationResult validate(String name, Object value, int length, int precision) {
 		Class<?> valueClass = value.getClass();
-		if(valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte || VerifyTypeMatchUtil.isInteger(value.toString())) {
+		if(valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte || DataTypeValidateUtil.isInteger(value.toString())) {
 			String string = value.toString();
 			if(string.length() > length) 
 				return new ValidationResult(name, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, string.length());

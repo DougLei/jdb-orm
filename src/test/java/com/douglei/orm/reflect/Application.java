@@ -3,7 +3,7 @@ package com.douglei.orm.reflect;
 import java.io.File;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.tools.utils.JdkSerializeUtil;
+import com.douglei.tools.JdkSerializeUtil;
 
 public class Application {
 	public static void main(String[] args) throws Exception {

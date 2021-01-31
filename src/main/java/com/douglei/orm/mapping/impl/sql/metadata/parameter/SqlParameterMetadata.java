@@ -13,11 +13,11 @@ import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
-import com.douglei.tools.instances.ognl.OgnlHandler;
-import com.douglei.tools.utils.RegularExpressionUtil;
-import com.douglei.tools.utils.StringUtil;
-import com.douglei.tools.utils.datatype.converter.ConverterUtil;
-import com.douglei.tools.utils.reflect.IntrospectorUtil;
+import com.douglei.tools.RegularExpressionUtil;
+import com.douglei.tools.StringUtil;
+import com.douglei.tools.datatype.DataTypeConvertUtil;
+import com.douglei.tools.ognl.OgnlHandler;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * sql参数元数据
@@ -195,7 +195,7 @@ public class SqlParameterMetadata implements Metadata{
 		if(sqlParameter != null) {
 			if(sqlParameter instanceof Map<?, ?> && singleName) {
 				value = ((Map<?, ?>)sqlParameter).get(name); 
-			}else if(ConverterUtil.isSimpleType(sqlParameter)){
+			}else if(DataTypeConvertUtil.isSimpleType(sqlParameter)){
 				value = sqlParameter;
 			}else {
 				value = OgnlHandler.getSingleton().getObjectValue(name, sqlParameter);

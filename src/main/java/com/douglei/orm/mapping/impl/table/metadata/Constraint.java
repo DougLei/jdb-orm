@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
-import com.douglei.tools.utils.StringUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 列约束
