@@ -1,28 +1,28 @@
-package com.douglei.orm.mapping.type;
+package com.douglei.orm.metadata.type;
 
 /**
- * 映射类型名称的常量
+ * 元数据类型名称的常量类
  * @author DougLei
  */
-public class MappingTypeConstants {
+public class MetadataTypeNameConstants {
 	
 	/**
-	 * 表类型: table
+	 * 表: table
 	 */
 	public static final String TABLE = "table";
 	
 	/**
-	 * sql类型: sql
+	 * sql: sql
 	 */
 	public static final String SQL = "sql";
 	
 	/**
-	 * 存储过程类型: procedure
+	 * 存储过程: procedure
 	 */
 	public static final String PROCEDURE = "procedure";
 	
 	/**
-	 * 视图类型: view
+	 * 视图: view
 	 */
 	public static final String VIEW = "view";
 }

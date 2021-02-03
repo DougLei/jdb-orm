@@ -27,10 +27,6 @@ import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
 import com.douglei.orm.sql.statement.StatementHandler;
 import com.douglei.tools.ExceptionUtil;
-import com.douglei.tools.naming.converter.ConverterUtil;
-import com.douglei.tools.naming.converter.impl.ColumnName2PropertyNameConverter;
-import com.douglei.tools.naming.converter.impl.PropertyName2ColumnNameConverter;
-import com.douglei.tools.reflect.ConstructorUtil;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
@@ -89,7 +85,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeQueryResultList(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) {
@@ -117,7 +113,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeQueryResultList_(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) {
@@ -132,7 +128,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeQueryUniqueResult(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) {
@@ -160,7 +156,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeQueryUniqueResult_(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) {
@@ -175,7 +171,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeLimitQueryResultList(startRow, length, parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) 
@@ -202,7 +198,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeLimitQueryResultList_(startRow, length, parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("在查询数据时出现异常", e);
 		} finally {
 			if(!enableStatementCache) 
@@ -486,7 +482,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		try {
 			return statementHandler.executeUpdate(parameters);
 		} catch (StatementExecutionException e) {
-			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("execute update sql时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new SessionExecutionException("execute update sql时出现异常", e);
 		} finally {
 			if(!enableStatementCache) {

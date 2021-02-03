@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.procedure.parser;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.impl.view.metadata.parser.ViewMetadataParser;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 
 /**
  * procedure元数据解析
@@ -13,7 +13,7 @@ public class ProcedureMetadataParser extends ViewMetadataParser {
 
 	@Override
 	protected String elementName() {
-		return MappingTypeConstants.PROCEDURE;
+		return MetadataTypeNameConstants.PROCEDURE;
 	}
 
 	@Override

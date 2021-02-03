@@ -3,17 +3,17 @@ package com.douglei.orm.mapping.impl.procedure;
 import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 
 /**
  * 
  * @author DougLei
  */
-public class ProcedureMappingType extends MappingType{
+public class ProcedureMappingType extends MetadataType{
 	
 	public ProcedureMappingType() {
-		super(MappingTypeConstants.PROCEDURE, ".pmp.xml", 30, true);
+		super(MetadataTypeNameConstants.PROCEDURE, ".pmp.xml", 30, true);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package com.douglei.orm.configuration.extend.option;
 
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
+import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.metadata.type.MetadataTypeContainer;
 import com.douglei.tools.StringUtil;
-import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ClassUtil;
 
 /**
  * 扩展项类型
@@ -17,7 +17,7 @@ enum Type {
 	MAPPING_TYPE {
 		@Override
 		void handle(String value) {
-			MappingTypeContainer.register((MappingType)ConstructorUtil.newInstance(value));
+			MetadataTypeContainer.register((MetadataType)ClassUtil.newInstance(value));
 		}
 	};
 	

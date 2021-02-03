@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.container.impl;
+package com.douglei.orm.mapping.container;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.orm.mapping.container.MappingContainer;
 
 /**
  * 使用当前系统的内存空间作为映射容器

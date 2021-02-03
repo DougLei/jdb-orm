@@ -28,7 +28,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqls;
@@ -150,13 +150,13 @@ public class MappingHandler {
 	// 创建对象
 	private void createObject(String type, AbstractMetadata metadata, AbstractMetadata exMetadata) throws Exception {
 		switch(type) {
-			case MappingTypeConstants.TABLE:
+			case MetadataTypeNameConstants.TABLE:
 				ObjectHandlerPackageContext.getTableObjectHandler().create((TableMetadata)metadata, (TableMetadata)exMetadata);
 				break;
-			case MappingTypeConstants.VIEW:
+			case MetadataTypeNameConstants.VIEW:
 				ObjectHandlerPackageContext.getViewObjectHandler().create((ViewMetadata)metadata, (ViewMetadata)exMetadata);
 				break;
-			case MappingTypeConstants.PROCEDURE:
+			case MetadataTypeNameConstants.PROCEDURE:
 				ObjectHandlerPackageContext.getProcedureObjectHandler().create((ProcedureMetadata)metadata, (ProcedureMetadata)exMetadata);
 				break;
 		}
@@ -187,13 +187,13 @@ public class MappingHandler {
 	// 删除对象
 	private void deleteObject(MappingEntity mappingEntity, AbstractMetadata exMetadata) throws SQLException {
 		switch(mappingEntity.getType().getName()) {
-			case MappingTypeConstants.TABLE:
+			case MetadataTypeNameConstants.TABLE:
 				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata(), null);
 				break;
-			case MappingTypeConstants.VIEW:
+			case MetadataTypeNameConstants.VIEW:
 				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode(), (ViewMetadata)exMetadata);
 				break;
-			case MappingTypeConstants.PROCEDURE:
+			case MetadataTypeNameConstants.PROCEDURE:
 				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode(), (ProcedureMetadata)exMetadata);
 				break;
 		}
@@ -262,7 +262,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public TableMetadata getTableMetadata(String code) {
-		return (TableMetadata) getMapping(code, MappingTypeConstants.TABLE).getMetadata();
+		return (TableMetadata) getMapping(code, MetadataTypeNameConstants.TABLE).getMetadata();
 	}
 	
 	/**
@@ -271,7 +271,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public SqlMetadata getSqlMetadata(String namespace) {
-		return (SqlMetadata) getMapping(namespace, MappingTypeConstants.SQL).getMetadata();
+		return (SqlMetadata) getMapping(namespace, MetadataTypeNameConstants.SQL).getMetadata();
 	}
 	
 	/**

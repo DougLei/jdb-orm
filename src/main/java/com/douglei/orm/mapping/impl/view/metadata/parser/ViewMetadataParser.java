@@ -6,7 +6,7 @@ import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.parser.MetadataParser;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.tools.StringUtil;
 
 /**
@@ -38,7 +38,7 @@ public class ViewMetadataParser implements MetadataParser<Element, ViewMetadata>
 	 * @return
 	 */
 	protected String elementName() {
-		return MappingTypeConstants.VIEW;
+		return MetadataTypeNameConstants.VIEW;
 	}
 	
 	/**

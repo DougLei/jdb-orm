@@ -13,6 +13,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
+import com.douglei.orm.configuration.Dom4jUtil;
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.MappingParser;
@@ -34,8 +35,7 @@ import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHan
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.util.Dom4jUtil;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.tools.StringUtil;
 
 /**
@@ -53,7 +53,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 		Document document = MappingParserContext.getSAXReader().read(input);
 		Element rootElement = document.getRootElement();
 		
-		Element tableElement = Dom4jUtil.getElement(MappingTypeConstants.TABLE, rootElement);
+		Element tableElement = Dom4jUtil.getElement(MetadataTypeNameConstants.TABLE, rootElement);
 		tableMetadata = tableMetadataParser.parse(tableElement);
 		
 		addColumnMetadata(getColumnElements(tableElement));
@@ -62,7 +62,7 @@ class TableMappingParser extends MappingParser<TableMapping>{
 		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
 		setColumnValidator(tableElement.element("validators"));
 		
-		return new TableMapping(tableMetadata, getMappingPropertyByDom4j(rootElement, tableMetadata.getCode(), MappingTypeConstants.TABLE));
+		return new TableMapping(tableMetadata, getMappingPropertyByDom4j(rootElement, tableMetadata.getCode(), MetadataTypeNameConstants.TABLE));
 	}
 	
 	/**

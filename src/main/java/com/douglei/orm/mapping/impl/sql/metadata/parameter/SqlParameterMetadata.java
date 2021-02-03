@@ -8,15 +8,15 @@ import com.douglei.orm.dialect.datatype.db.util.DBDataTypeUtil;
 import com.douglei.orm.dialect.datatype.db.util.DBDataTypeWrapper;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.mapping.metadata.validator.impl._DataTypeValidator;
 import com.douglei.orm.mapping.metadata.validator.impl._NullableValidator;
+import com.douglei.orm.metadata.Metadata;
+import com.douglei.tools.OgnlUtil;
 import com.douglei.tools.RegularExpressionUtil;
 import com.douglei.tools.StringUtil;
 import com.douglei.tools.datatype.DataTypeConvertUtil;
-import com.douglei.tools.ognl.OgnlHandler;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
@@ -198,7 +198,7 @@ public class SqlParameterMetadata implements Metadata{
 			}else if(DataTypeConvertUtil.isSimpleType(sqlParameter)){
 				value = sqlParameter;
 			}else {
-				value = OgnlHandler.getSingleton().getObjectValue(name, sqlParameter);
+				value = OgnlUtil.getSingleton().getObjectValue(name, sqlParameter);
 			}
 		}
 		
@@ -209,7 +209,7 @@ public class SqlParameterMetadata implements Metadata{
 				IntrospectorUtil.setProperyValue(sqlParameter, name, value);
 			}else {
 				int dot = name.lastIndexOf(".");
-				IntrospectorUtil.setProperyValue(OgnlHandler.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
+				IntrospectorUtil.setProperyValue(OgnlUtil.getSingleton().getObjectValue(name.substring(0, dot), sqlParameter), this.name.substring(dot+1), value);
 			}
 		}
 		return value;

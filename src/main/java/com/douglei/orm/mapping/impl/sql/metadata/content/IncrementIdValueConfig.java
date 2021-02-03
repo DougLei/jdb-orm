@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content;
 
-import com.douglei.tools.ognl.OgnlHandler;
+import com.douglei.tools.OgnlUtil;
 
 /**
  * 自增主键值的配置
@@ -39,6 +39,6 @@ public class IncrementIdValueConfig {
 	public Object getTargetObject(Object sqlParameter) {
 		if(prefix == null) 
 			return sqlParameter;
-		return OgnlHandler.getSingleton().getObjectValue(prefix, sqlParameter);
+		return OgnlUtil.getSingleton().getObjectValue(prefix, sqlParameter);
 	}
 }

@@ -192,7 +192,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 				resultsetMetadatas.clear();
 			getStatement().close();
 		} catch (SQLException e) {
-			logger.error("关闭[{}]时出现异常: {}", getStatement().getClass().getName(), ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("关闭[{}]时出现异常: {}", getStatement().getClass().getName(), ExceptionUtil.getStackTrace(e));
 		}
 	}
 	

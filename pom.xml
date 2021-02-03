@@ -18,6 +18,11 @@
 			<artifactId>jmini-app-crypto</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>1.12</version>
+		</dependency>
 	
 		<dependency>
 		    <groupId>dom4j</groupId>
@@ -29,24 +34,12 @@
 		    <artifactId>jaxen</artifactId>
 		    <version>1.2.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.douglei</groupId>
-			<artifactId>ji18n</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 			
 		<!-- 需要使用到验证器功能时, 需要引入下面这个依赖 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.58</version>
-			<optional>true</optional>
-		</dependency>
-		<!-- 需要使用本框架提供的redis支持, 保存映射时, , 需要引入该依赖 -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.9.3</version>
 			<optional>true</optional>
 		</dependency>
 		

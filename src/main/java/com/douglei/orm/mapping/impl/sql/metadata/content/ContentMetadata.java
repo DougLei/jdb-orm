@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.metadata.Metadata;
+import com.douglei.orm.metadata.Metadata;
 
 /**
  * content元数据

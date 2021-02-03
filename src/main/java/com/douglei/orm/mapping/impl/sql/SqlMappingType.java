@@ -3,17 +3,17 @@ package com.douglei.orm.mapping.impl.sql;
 import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 
 /**
  * 
  * @author DougLei
  */
-public class SqlMappingType extends MappingType{
+public class SqlMappingType extends MetadataType{
 	
 	public SqlMappingType() {
-		super(MappingTypeConstants.SQL, ".smp.xml", 40, false);
+		super(MetadataTypeNameConstants.SQL, ".smp.xml", 40, false);
 	}
 
 	@Override

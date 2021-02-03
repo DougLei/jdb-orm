@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.handler.entity;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
+import com.douglei.orm.metadata.type.MetadataType;
 
 /**
  * 
@@ -9,7 +9,7 @@ import com.douglei.orm.mapping.type.MappingType;
  */
 public abstract class MappingEntity {
 	protected String code; // 映射的编码
-	protected MappingType type; // 映射的类型
+	protected MetadataType type; // 映射的类型
 	protected int order; // 映射的顺序
 	protected Mapping mapping; // mapping实例
 	protected boolean opDatabaseObject; // 是否操作数据库对象
@@ -23,7 +23,7 @@ public abstract class MappingEntity {
 	public final String getCode() {
 		return code;
 	}
-	public final MappingType getType() {
+	public final MetadataType getType() {
 		return type;
 	}
 	public final int getOrder() {

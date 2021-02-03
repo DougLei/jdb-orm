@@ -14,8 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.qos.logback.core.util.CloseUtil;
-
 public class OracleTest {
 	private Connection conn;
 	private PreparedStatement insertPst;
@@ -135,6 +133,5 @@ public class OracleTest {
 	@After
 	public void after() throws Exception {
 //		System.err.println("\n执行insert影响的行数 = "+insertPst.executeUpdate());
-		CloseUtil.closeDBConn(rs, insertPst, selectPst, conn);
 	}
 }

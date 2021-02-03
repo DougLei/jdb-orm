@@ -26,7 +26,7 @@ public class DataSourceWrapper {
 		
 		if(propertyMap != null) {
 			logger.debug("开始给数据源 {} 的属性设置值", dataSource.getClass().getName());
-			IntrospectorUtil.setProperyValues(dataSource, propertyMap);
+			IntrospectorUtil.setValues(propertyMap, dataSource);
 			propertyMap.clear();
 			logger.debug("结束给数据源 {} 的属性设置值", dataSource.getClass());
 		}
@@ -37,7 +37,7 @@ public class DataSourceWrapper {
 	 * @throws Exception 
 	 */
 	public void close() throws Exception {
-		if(dataSource != null && StringUtil.notEmpty(closeMethodName)) 
+		if(dataSource != null && StringUtil.unEmpty(closeMethodName)) 
 			dataSource.getClass().getMethod(closeMethodName).invoke(dataSource);
 	}	
 	

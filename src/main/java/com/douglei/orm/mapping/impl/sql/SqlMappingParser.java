@@ -22,7 +22,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.parser.content.ContentMetadataP
 import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
 import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
 import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.tools.StringUtil;
 
 /**
@@ -40,7 +40,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 		Document sqlDocument = MappingParserContext.getDocumentBuilder().parse(input);
 		Element rootElement = sqlDocument.getDocumentElement();
 		
-		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(MappingTypeConstants.SQL));
+		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(MetadataTypeNameConstants.SQL));
 		this.sqlMetadata = sqlMetadataParser.parse(sqlNode);
 		
 		setParameterValidator(sqlNode);
@@ -121,7 +121,7 @@ class SqlMappingParser extends MappingParser<SqlMapping>{
 	 * @return
 	 */
 	private MappingProperty getSqlMappingPropertyByDocument(NodeList propertyNodeList) {
-		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MappingTypeConstants.SQL);
+		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MetadataTypeNameConstants.SQL);
 		if(propertyNodeList != null && propertyNodeList.getLength() > 0) {
 			Node propertyNode = propertyNodeList.item(0);
 			if(propertyNode.hasAttributes()) {

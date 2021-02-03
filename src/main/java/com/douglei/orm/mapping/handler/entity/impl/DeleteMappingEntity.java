@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.handler.entity.impl;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingOP;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
+import com.douglei.orm.metadata.type.MetadataTypeContainer;
 
 /**
  * 
@@ -20,7 +20,7 @@ public class DeleteMappingEntity extends MappingEntity{
 	}
 	
 	public void setType(String type) {
-		super.type = MappingTypeContainer.getMappingTypeByName(type);
+		super.type = MetadataTypeContainer.getMappingTypeByName(type);
 	}
 	public void setOrder(int order) {
 		super.order = order;

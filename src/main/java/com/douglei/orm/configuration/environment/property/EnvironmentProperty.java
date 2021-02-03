@@ -8,14 +8,14 @@ import java.util.Map;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.DialectContainer;
 import com.douglei.orm.dialect.DialectKey;
+import com.douglei.orm.mapping.container.ApplicationMappingContainer;
 import com.douglei.orm.mapping.container.MappingContainer;
-import com.douglei.orm.mapping.container.impl.ApplicationMappingContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.DefaultValueHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.tools.StringUtil;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
-import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ClassUtil;
 
 /**
  * <environment>节点下所有的<property>节点
@@ -100,26 +100,26 @@ public class EnvironmentProperty {
 		}
 	}
 	void setCreateMode(String value) {
-		if(StringUtil.notEmpty(value)) 
+		if(StringUtil.unEmpty(value)) 
 			this.createMode = CreateMode.toValue(value);
 	}
 	void setSqlParameterPrefix(String value) {
-		if(StringUtil.notEmpty(value))
+		if(StringUtil.unEmpty(value))
 			this.sqlParameterPrefix = value;
 	}
 	void setSqlParameterSuffix(String value) {
-		if(StringUtil.notEmpty(value))
+		if(StringUtil.unEmpty(value))
 			this.sqlParameterSuffix = value;
 	}
 	void setSqlParameterSplit(String value) {
-		if(StringUtil.notEmpty(value))
+		if(StringUtil.unEmpty(value))
 			this.sqlParameterSplit = value;
 	}
 	void setSqlParameterDefaultValueHandler(String value) {
 		if(StringUtil.isEmpty(value))
 			this.sqlParameterDefaultValueHandler = new DefaultValueHandler();
 		else
-			this.sqlParameterDefaultValueHandler = (DefaultValueHandler) ConstructorUtil.newInstance(value);
+			this.sqlParameterDefaultValueHandler = (DefaultValueHandler) ClassUtil.newInstance(value);
 	}
 
 	/**

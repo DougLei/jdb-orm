@@ -3,17 +3,17 @@ package com.douglei.orm.mapping.impl.view;
 import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 
 /**
  * 
  * @author DougLei
  */
-public class ViewMappingType extends MappingType{
+public class ViewMappingType extends MetadataType{
 	
 	public ViewMappingType() {
-		super(MappingTypeConstants.VIEW, ".vmp.xml", 20, true);
+		super(MetadataTypeNameConstants.VIEW, ".vmp.xml", 20, true);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.Dom4jUtil;
 import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.ExternalDataSource;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
@@ -23,11 +24,10 @@ import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
-import com.douglei.orm.util.Dom4jUtil;
+import com.douglei.orm.metadata.type.MetadataTypeContainer;
 import com.douglei.tools.StringUtil;
-import com.douglei.tools.reflect.ConstructorUtil;
-import com.douglei.tools.scanner.impl.ResourceScanner;
+import com.douglei.tools.file.scanner.impl.ResourceScanner;
+import com.douglei.tools.reflect.ClassUtil;
 
 /**
  * 
@@ -94,7 +94,7 @@ public class Environment {
 			if(StringUtil.isEmpty(clazz)) 
 				throw new NullPointerException("<datasource>元素的class属性不能为空");
 			
-			datasource = ConstructorUtil.newInstance(clazz);
+			datasource = ClassUtil.newInstance(clazz);
 			if(!(datasource instanceof DataSource)) 
 				throw new ClassCastException("<datasource>元素的class, 必须实现 "+DataSource.class.getName()+" 接口");
 			
@@ -151,7 +151,7 @@ public class Environment {
 					path.append(",").append(p.getValue());
 				});
 				
-				List<String> list = new ResourceScanner(MappingTypeContainer.getFileSuffixes().toArray(new String[MappingTypeContainer.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
+				List<String> list = new ResourceScanner(MetadataTypeContainer.getFileSuffixes().toArray(new String[MetadataTypeContainer.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
 				if(!list.isEmpty()) {
 					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
 					for (String file : list) 

@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+	框架的根配置
+	* id: 唯一标识, 可理解框架SessionFactory的唯一标识; 可不配置, 框架自动生成UUID
+ -->
 <configuration id="default">
 	<environment>
-		<!-- 是否开启Statement缓存, 即对执行对象缓存, 默认值为true  -->
-		<!-- <property name="enableStatementCache" value="true" /> -->
-		<!-- 是否开启TableSession缓存, 即对表对象缓存, 默认值为false, 如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存  -->
-		<!-- <property name="enableTableSessionCache" value="false" /> -->
+		<!-- 
+			是否开启Statement缓存, 即对执行对象缓存, 默认值为true
+		-->
+		<property name="enableStatementCache" value="true" />
 		
-		<!-- 没有默认值, 可以不配置, 具体参考《table映射配置结构设计.tmp.xml》文件中的createMode属性描述, 该属性值为全局配置, 如果配置了该属性值, 则会覆盖所有映射的createMode配置值 -->
-		<!-- <property name="createMode" value="" /> -->
+		<!-- 
+			是否开启TableSession缓存, 即对表对象缓存, 默认值为false; 
+			如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存(不支持自增列的情况)
+		 -->
+		<property name="enableTableSessionCache" value="false" />
 		
-		<!-- sql语句中, 声明参数时的前缀, 默认为#{ -->
-		<!-- <property name="sqlParameterPrefix" value="#{" /> -->
-		<!-- sql语句中, 声明参数时的后缀, 默认为} -->
-		<!-- <property name="sqlParameterSuffix" value="#" /> -->
-		<!-- sql语句中, 参数中各个配置的分隔符, 默认为, -->
-		<!-- <property name="sqlParameterSplit" value="," /> -->
-		<!-- sql语句中, 参数defaultValue配置的处理器, 默认为com.douglei.orm.core.metadata.sql.parameter.DefaultValueHandler, 也可以继承com.douglei.orm.core.metadata.sql.parameter.DefaultValueHandler并重写其getDefaultValue()方法, 并在这里配置实现类的全路径即可; 注意, 实现类必须生成serialVersionUID值 -->
-		<!-- <property name="sqlParameterDefaultValueHandler" value="com.douglei.orm.core.metadata.sql.parameter.DefaultValueHandler" /> -->
+		<!-- 
+			全局的映射创建模式; 可不配置, 没有默认值; 如果配置了, 则会覆盖所有映射中配置的createMode值(覆盖不了配置了strict=true的映射)
+			具体value参考《table映射配置结构设计.tmp.xml》文件中的createMode属性描述; 
+		-->
+		<property name="globalCreateMode" value="" />
 		
+		<!-- 
+			数据源配置
+			* class: 数据源类全路径
+			* closeMethod: 数据源关闭方法名, 可不配置
+		 -->
 		<datasource class="com.alibaba.druid.pool.DruidDataSource" closeMethod="">
+			<!-- 
+				以下配置具体数据源中的属性和属性值; 框架会通过反射机制, 创建数据源实例, 并给属性赋值; 这里是用阿里的Druid数据源作为示例
+			-->
 			<property name="driverClassName" value="${jdbc.driver.class}"/>
 			<property name="url" value="${jdbc.url}"/>
 			<property name="username" value="${jdbc.username}"/>
@@ -32,20 +45,50 @@
 			<property name="maxPoolPreparedStatementPerConnectionSize" value="100" />
 		</datasource>
 		
-		<mappings scanAll="false"><!-- 是否扫描所有, 包括扫描所有jar包中的数据, 默认值为false -->
-			<mapping path="mappings/sql/sql.smp.xml" />
-			<mapping path="mappings/table" />
-		</mappings>
+		<!-- 
+			mapping配置
+			* enableProperty: 是否启用映射属性, 默认值为false; 属性是指在各种mapping文件中, 配置的<property>元素, 如果启用了, 框架会将这些信息也存入到容器中
+			* enableTable: 是否启用表映射, 默认值为true
+			* enableSQL: 是否启用SQL映射, 默认值为true
+			* enableProcedure: 是否启用存储过程映射, 默认值为false
+			* enableView: 是否启用视图映射, 默认值为false
+		-->
+		<mapping enableProperty="" enableTable="" enableSQL="" enableProcedure="" enableView="">
+			<!-- 
+				内置的sql映射配置 
+				* parameterPrefix: 声明参数时的前缀, 默认为#{
+				* parameterSuffix: 声明参数时的后缀, 默认为}
+				* parameterSplit: 参数中各个配置的分隔符, 默认为,
+				* parameterDefaultValueHandler: 参数的默认值处理器, 默认为{com.douglei.orm.core.metadata.sql.parameter.DefaultValueHandler}类; 也可继承并重写默认类, 这里配置新类的全路径即可
+			-->
+			<sql parameterPrefix="" parameterSuffix="" parameterSplit="" parameterDefaultValueHandler="" />
+			
+			<!-- 
+				mapping注册器的配置; 可配置多组
+				* class: 映射类型的类的全路径; 继承并实现MappingType, 即可扩展新的映射类型
+			 -->
+			<register class="" />
+		
+			<!-- 
+				mapping扫描器的配置; 可配置多组
+				* path: 要扫描的路径, 基于java resource; 可以是目录, 也可以具体到文件
+				* scanAll: 是否扫描所有, 包括扫描所有jar包, 默认值为false
+			 -->			
+			<scanner path="mappings/sql/sql.smp.xml" scanAll="false"/>
+		</mapping>
+		
+		<!-- 
+			属性文件配置; 框架会扫描并加载属性文件中的配置信息, 用户可在当前配置文件中通过占位符使用配置文件中的值
+			* placeholderPrefix: 占位符前缀; 默认为${
+			* placeholderSuffix: 占位符后缀; 默认为}
+		 -->
+		<properties placeholderPrefix="${" placeholderSuffix="}">
+			<!-- 
+				具体要扫描的资源文件配置; 可配置多组
+				* path: 要扫描的路径, 基于java resource; 可以是目录, 也可以具体到文件
+				* decryptValue: 是否对配置文件中的数据进行解密, 默认值为false
+			 -->
+			<resource path="jdbc.properties" decryptValue="false"/>
+		</properties>
 	</environment>
-	
-	<properties placeholderPrefix="${" placeholderSuffix="}">
-		<resource path="jdbc.properties" decryptValue="true"/><!-- decryptValue标识是否对配置文件中的数据进行解密, 默认值为false  -->
-	</properties>
-	
-	<!-- 扩展项配置 -->
-	<extend-options>
-		<!-- type为扩展项类型, 目前包括的类型值有: mappingType; 区分大小写 -->
-		<!-- enabled为该扩展项是否有效, 可为空, 默认为true; 如果为false, 则框架不会处理该扩展项 -->
-		<option type="mappingType" enabled="true" value="" /><!-- value配置自定义实现的映射类型类的全路径 -->
-	</extend-options>
 </configuration>

@@ -13,7 +13,6 @@ import com.douglei.orm.configuration.extend.option.ExtendOptions;
 import com.douglei.orm.configuration.properties.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
-import com.douglei.orm.util.Dom4jUtil;
 import com.douglei.tools.ExceptionUtil;
 import com.douglei.tools.StringUtil;
 
@@ -51,27 +50,23 @@ public class Configuration {
 			if(logger.isDebugEnabled()) 
 				logger.debug("开始初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class);
 			
-			Properties properties = null; // 对应<properties>元素, 在框架加载完成后即销毁
 			try {
 				Document xmlDocument = new SAXReader().read(inputstream);
 				Element root = xmlDocument.getRootElement();
 				setId(root.attributeValue("id"));
-				properties = new Properties(root.element("properties"));
 				new ExtendOptions().handle(root.element("extend-options"));
-				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), properties, externalDataSource, mappingContainer);
+				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), new Properties(root.element("properties")), externalDataSource, mappingContainer);
 				this.sessionFactory = new SessionFactory(this, environment);
 			} catch (Exception e) {
-				logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例时, 出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getExceptionDetailMessage(e));
 				try {
+					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例时, 出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getStackTrace(e));
 					destroy_();
 				} catch (Exception e1) {
-					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例出现异常后, 在进行自动销毁时, 又出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getExceptionDetailMessage(e1));
+					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例出现异常后, 在进行自动销毁时, 又出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getStackTrace(e1));
 					e.addSuppressed(e1);
 				}
 				throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
 			} finally {
-				if(properties != null)
-					properties.clear();
 				if(logger.isDebugEnabled()) 
 					logger.debug("结束初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class.getName());
 			}
@@ -86,7 +81,7 @@ public class Configuration {
 		try {
 			destroy_();
 		} catch (Exception e) {
-			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
 		}
 	}

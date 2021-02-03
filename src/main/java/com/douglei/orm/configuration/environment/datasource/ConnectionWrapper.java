@@ -93,7 +93,7 @@ public class ConnectionWrapper {
 				logger.debug("commit");
 				connection.commit();
 			} catch (SQLException e) {
-				logger.error("commit 时出现异常, 自动进行rollback, 异常信息为: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("commit 时出现异常, 自动进行rollback, 异常信息为: {}", ExceptionUtil.getStackTrace(e));
 				rollback();
 			}
 		}
@@ -108,7 +108,7 @@ public class ConnectionWrapper {
 				logger.debug("rollback");
 				connection.rollback();
 			} catch (SQLException e) {
-				logger.error("rollback 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+				logger.error("rollback 时出现异常: {}", ExceptionUtil.getStackTrace(e));
 			} 
 		}
 	}
@@ -120,7 +120,7 @@ public class ConnectionWrapper {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			logger.error("close connection 时出现异常: {}", ExceptionUtil.getExceptionDetailMessage(e));
+			logger.error("close connection 时出现异常: {}", ExceptionUtil.getStackTrace(e));
 		}
 	}
 	

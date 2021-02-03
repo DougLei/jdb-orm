@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingOP;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
+import com.douglei.orm.metadata.type.MetadataTypeContainer;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.tools.CloseUtil;
 import com.douglei.tools.ExceptionUtil;
-import com.douglei.tools.scanner.impl.ResourceScanner;
+import com.douglei.tools.file.scanner.impl.ResourceScanner;
 
 /**
  * 
@@ -31,14 +31,14 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	}
 	public AddOrCoverMappingEntity(String filepath, boolean opDatabaseObject) {
 		this.filepath = filepath;
-		super.type = MappingTypeContainer.getMappingTypeByFile(filepath);
+		super.type = MetadataTypeContainer.getMappingTypeByFile(filepath);
 		super.opDatabaseObject = opDatabaseObject;
 	}
 	
 	/**
 	 * 
 	 * @param content
-	 * @param type 通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
+	 * @param type 通过 {@link MetadataTypeNameConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
 	 */
 	public AddOrCoverMappingEntity(String content, String type) {
 		this(content, type, true);
@@ -46,12 +46,12 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	/**
 	 * 
 	 * @param content
-	 * @param type 通过 {@link MappingTypeConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
+	 * @param type 通过 {@link MetadataTypeNameConstants}, 传入框架支持的映射类型名 , 或传入自定义且完成注册({@link MappingTypeHandler.register(MappingType)})的映射类型名
 	 * @param opDatabaseObject
 	 */
 	public AddOrCoverMappingEntity(String content, String type, boolean opDatabaseObject) {
 		this.content = content;
-		super.type = MappingTypeContainer.getMappingTypeByName(type);
+		super.type = MetadataTypeContainer.getMappingTypeByName(type);
 		super.opDatabaseObject = opDatabaseObject;
 	}
 	

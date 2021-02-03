@@ -13,7 +13,7 @@ public class Application {
 //		System.out.println(clz.getMethod("singleInstance").invoke(null));
 //		System.out.println(clz.getMethod("singleInstance").invoke(null));
 		
-		TableMetadata table = JdkSerializeUtil.deserializeFromFile(TableMetadata.class, new File("C:\\Users\\Administrator.USER-20190410XF\\Desktop\\SMT_BASE_CFG_PROPERTY_ARR.orm"));
+		TableMetadata table = JdkSerializeUtil.deserialize4File(TableMetadata.class, new File("C:\\Users\\Administrator.USER-20190410XF\\Desktop\\SMT_BASE_CFG_PROPERTY_ARR.orm"));
 		System.out.println(table);
 	}
 }

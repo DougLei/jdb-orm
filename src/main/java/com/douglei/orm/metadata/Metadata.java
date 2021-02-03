@@ -1,12 +1,12 @@
-package com.douglei.orm.mapping;
+package com.douglei.orm.metadata;
 
 import java.io.Serializable;
 
 /**
- * 
+ * 元数据
  * @author DougLei
  */
-public interface Mapping extends Serializable{
+public interface Metadata extends Serializable{
 	
 	/**
 	 * 获取id

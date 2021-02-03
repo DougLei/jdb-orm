@@ -1,4 +1,4 @@
-package com.douglei.orm.util;
+package com.douglei.orm.configuration;
 
 import org.dom4j.Element;
 

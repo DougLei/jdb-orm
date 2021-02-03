@@ -13,8 +13,8 @@ import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.tools.OgnlUtil;
 import com.douglei.tools.datatype.DataTypeConvertUtil;
-import com.douglei.tools.ognl.OgnlHandler;
 
 /**
  * 
@@ -51,7 +51,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			if(collection.startsWith(previousAlias+'.'))
 				collection = collection.substring(previousAlias.length()+1);
 		}
-		return OgnlHandler.getSingleton().getObjectValue(collection, sqlParameter);
+		return OgnlUtil.getSingleton().getObjectValue(collection, sqlParameter);
 	}
 	
 	/**

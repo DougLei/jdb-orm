@@ -41,12 +41,12 @@ public class Properties {
 	 */
 	private void processPlaceholderCharacter(Element element) {
 		String placeholderCharacter = element.attributeValue("placeholderPrefix");
-		if(StringUtil.notEmpty(placeholderCharacter)) 
+		if(StringUtil.unEmpty(placeholderCharacter)) 
 			placeholderPrefix = placeholderCharacter;
 		logger.debug("placeholderPrefix is {}", placeholderPrefix);
 		
 		placeholderCharacter = element.attributeValue("placeholderSuffix");
-		if(StringUtil.notEmpty(placeholderCharacter)) 
+		if(StringUtil.unEmpty(placeholderCharacter)) 
 			placeholderSuffix = placeholderCharacter;
 		logger.debug("placeholderSuffix is {}", placeholderSuffix);
 	}
@@ -64,9 +64,9 @@ public class Properties {
 		PropertiesReader reader;;
 		for (Element element : resourceElements) {
 			path = element.attributeValue("path");
-			if(StringUtil.notEmpty(path) && path.endsWith(".properties")) {
+			if(StringUtil.unEmpty(path) && path.endsWith(".properties")) {
 				reader = new PropertiesReader(path);
-				if(reader.ready()) {
+				if(!reader.isEmpty()) {
 					decryptValue = Boolean.parseBoolean(element.attributeValue("decryptValue"));
 					for (Entry<Object, Object> entry : reader.entrySet()) {
 						if(logger.isDebugEnabled()) 
@@ -102,7 +102,7 @@ public class Properties {
 	 */
 	public String getValue(String key) {
 		String value = null;
-		if(StringUtil.notEmpty(key) && !properties.isEmpty()) 
+		if(StringUtil.unEmpty(key) && !properties.isEmpty()) 
 			value = properties.get(key);
 		logger.debug("key is {}, getValue is {}", key, value);
 		return value;

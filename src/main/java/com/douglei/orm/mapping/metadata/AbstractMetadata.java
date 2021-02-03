@@ -1,11 +1,12 @@
 package com.douglei.orm.mapping.metadata;
 
+import com.douglei.orm.metadata.Metadata;
+
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractMetadata implements Metadata{
-	private static final long serialVersionUID = -2348381079483167958L;
 	protected String name; // 名
 	protected String oldName;// 旧名
 	

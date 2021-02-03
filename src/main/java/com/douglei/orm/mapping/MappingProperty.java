@@ -10,8 +10,6 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * @author DougLei
  */
 public class MappingProperty implements Serializable{
-	private static final long serialVersionUID = 4994319037542802481L;
-	
 	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
 	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
 	private int order; // mapping的排序值
@@ -41,7 +39,7 @@ public class MappingProperty implements Serializable{
 		if(DataTypeValidateUtil.isBoolean(supportDelete))
 			this.supportDelete = Boolean.parseBoolean(supportDelete);
 		
-		if(StringUtil.notEmpty(extendExpr))
+		if(StringUtil.unEmpty(extendExpr))
 			this.extendExpr = extendExpr;
 	}
 	

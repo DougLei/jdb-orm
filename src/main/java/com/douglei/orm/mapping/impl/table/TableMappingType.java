@@ -3,17 +3,17 @@ package com.douglei.orm.mapping.impl.table;
 import java.io.InputStream;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeConstants;
+import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 
 /**
  * 
  * @author DougLei
  */
-public class TableMappingType extends MappingType{
+public class TableMappingType extends MetadataType{
 	
 	public TableMappingType() {
-		super(MappingTypeConstants.TABLE, ".tmp.xml", 10, true);
+		super(MetadataTypeNameConstants.TABLE, ".tmp.xml", 10, true);
 	}
 
 	@Override
