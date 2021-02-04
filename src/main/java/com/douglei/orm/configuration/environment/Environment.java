@@ -44,8 +44,8 @@ import com.douglei.tools.reflect.IntrospectorUtil;
  */
 public class Environment {
 	private static final Logger logger = LoggerFactory.getLogger(Environment.class);
-	private EnvironmentProperty environmentProperty;
-	private DataSourceWrapper dataSourceWrapper;
+	private EnvironmentProperty property;
+	private DataSourceWrapper dataSource;
 	private Dialect dialect;
 	private MappingHandler mappingHandler;
 	
@@ -54,13 +54,13 @@ public class Environment {
 		logger.debug("开始处理<environment>");
 		
 		// 设置environment下的所有property
-		setEnvironmentProperties(environmentElement.elements("property"), properties);
+		setProperties(environmentElement.elements("property"), properties);
 		
 		// 设置数据源
 		setDataSource(exDataSource==null?Dom4jUtil.getElement("datasource", environmentElement):exDataSource, properties);
 		
 		// 设置方言
-		this.dialect = DialectContainer.get(new DatabaseMetadataEntity(dataSourceWrapper.getConnection(false, null).getConnection()));
+		this.dialect = DialectContainer.get(new DatabaseMetadataEntity(dataSource.getConnection(false, null).getConnection()));
 		
 		// 设置MappingHandler
 		setMappingHandler(environmentElement.element("mapping"), mappingContainer);
@@ -88,9 +88,9 @@ public class Environment {
 	
 	
 	// 设置environment下的所有property
-	private void setEnvironmentProperties(List<Element> propertyElementList, Properties properties) throws Exception {
+	private void setProperties(List<Element> propertyElementList, Properties properties) throws Exception {
 		logger.debug("开始处理<environment>下的<property>");
-		this.environmentProperty = new EnvironmentProperty(propertyElementListToPropertyMap(propertyElementList, properties));
+		this.property = new EnvironmentProperty(propertyElementListToPropertyMap(propertyElementList, properties));
 		logger.debug("结束处理<environment>下的<property>");
 	}
 	
@@ -102,7 +102,7 @@ public class Environment {
 		
 		if(object instanceof ExternalDataSource) {
 			logger.debug("start: 使用外部的数据源");
-			this.dataSourceWrapper = new DataSourceWrapper(((ExternalDataSource)object).getDataSource(), ((ExternalDataSource)object).getCloseMethodName());
+			this.dataSource = new DataSourceWrapper(((ExternalDataSource)object).getDataSource(), ((ExternalDataSource)object).getCloseMethodName());
 			logger.debug("end: 使用外部的数据源");
 		}else {
 			logger.debug("start: 使用<datasource>数据源");
@@ -120,7 +120,7 @@ public class Environment {
 				throw new OrmException("<datasource>中必须配置必要的数据库连接参数");
 			IntrospectorUtil.setValues(propertyMap, datasource);
 			
-			this.dataSourceWrapper = new DataSourceWrapper((DataSource)datasource, ((Element) object).attributeValue("closeMethod"));
+			this.dataSource = new DataSourceWrapper((DataSource)datasource, ((Element) object).attributeValue("closeMethod"));
 			logger.debug("end: 使用<datasource>数据源");
 		}
 		logger.debug("处理数据源结束");
@@ -143,7 +143,7 @@ public class Environment {
 			mappingContainer = new ApplicationMappingContainer();
 		else
 			mappingContainer.clear();
-		this.mappingHandler = new MappingHandler(configuration, typeContainer, mappingContainer, dataSourceWrapper);
+		this.mappingHandler = new MappingHandler(configuration, typeContainer, mappingContainer, dataSource);
 		
 		// 扫描配置的映射
 		scanMappings(typeContainer, mappingElement.elements("scanner"));
@@ -157,8 +157,8 @@ public class Environment {
 				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProperty")), 
 				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableTable")), 
 				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableSql")), 
-				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")), 
 				"true".equalsIgnoreCase(mappingElement.attributeValue("enableView")), 
+				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")), 
 				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableQuerySql")));
 		
 		// 设置内置的sql映射配置
@@ -184,10 +184,10 @@ public class Environment {
 			typeContainer.register(new TableMappingType());
 		if(configuration.isEnableSql()) // sql
 			typeContainer.register(new SqlMappingType());
-		if(configuration.isEnableProcedure()) // procedure
-			typeContainer.register(new ProcedureMappingType());
 		if(configuration.isEnableView()) // view
 			typeContainer.register(new ViewMappingType());
+		if(configuration.isEnableProcedure()) // procedure
+			typeContainer.register(new ProcedureMappingType());
 		if(configuration.isEnableQuerySql()) // query-sql
 			typeContainer.register(new QuerySqlMapping());
 		
@@ -225,9 +225,9 @@ public class Environment {
 	 */
 	public void destroy() throws Exception {
 		logger.debug("开始销毁[com.douglei.orm.configuration.environment.Environment]实例");
-		if(dataSourceWrapper != null) {
-			dataSourceWrapper.close();
-			dataSourceWrapper = null;
+		if(dataSource != null) {
+			dataSource.close();
+			dataSource = null;
 		}
 		if(mappingHandler != null) {
 			mappingHandler.uninstall();
@@ -236,16 +236,32 @@ public class Environment {
 		logger.debug("结束销毁[com.douglei.orm.configuration.environment.Environment]实例");
 	}
 	
-	// -------------------------------------------------------------
-	public EnvironmentProperty getEnvironmentProperty() {
-		return environmentProperty;
+	
+	/**
+	 * 获取环境属性
+	 * @return
+	 */
+	public EnvironmentProperty getProperty() {
+		return property;
 	}
-	public DataSourceWrapper getDataSourceWrapper() {
-		return dataSourceWrapper;
+	/**
+	 * 获取数据源
+	 * @return
+	 */
+	public DataSourceWrapper getDataSource() {
+		return dataSource;
 	}
+	/**
+	 * 获取方言
+	 * @return
+	 */
 	public Dialect getDialect() {
 		return dialect;
 	}
+	/**
+	 * 获取映射处理器
+	 * @return
+	 */
 	public MappingHandler getMappingHandler() {
 		return mappingHandler;
 	}

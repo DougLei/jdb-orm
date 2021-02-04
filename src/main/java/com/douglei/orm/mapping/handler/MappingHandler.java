@@ -45,13 +45,20 @@ public class MappingHandler {
 	private MappingConfiguration configuration; // 映射配置
 	private MappingTypeContainer typeContainer; // 映射类型容器
 	private MappingContainer container; // 映射容器
-	private DataSourceWrapper dataSourceWrapper;
+	private DataSourceWrapper dataSource;
 	
-	public MappingHandler(MappingConfiguration configuration, MappingTypeContainer typeContainer, MappingContainer container, DataSourceWrapper dataSourceWrapper) {
+	/**
+	 * 
+	 * @param configuration 映射配置
+	 * @param typeContainer 映射类型容器
+	 * @param container 映射容器
+	 * @param dataSource 数据源
+	 */
+	public MappingHandler(MappingConfiguration configuration, MappingTypeContainer typeContainer, MappingContainer container, DataSourceWrapper dataSource) {
 		this.configuration = configuration;
 		this.typeContainer = typeContainer;
 		this.container = container;
-		this.dataSourceWrapper = dataSourceWrapper;
+		this.dataSource = dataSource;
 	}
 	
 	// 解析映射实体
@@ -297,7 +304,9 @@ public class MappingHandler {
 	 * 卸载映射处理器
 	 */
 	public void uninstall() {
-		container.clear();
-		container = null;
+		if(container != null) {
+			container.clear();
+			container = null;
+		}
 	}
 }

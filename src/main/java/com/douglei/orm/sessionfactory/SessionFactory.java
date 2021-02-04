@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
-import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.Session;
@@ -61,10 +60,7 @@ public class SessionFactory {
 	public Session openSession(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
 		logger.debug("openSession, 获取connection实例, 是否开启事务: {}, 事物的隔离级别: {}", isBeginTransaction, transactionIsolationLevel);
 		EnvironmentContext.setEnvironment(environment);
-		return new SessionImpl(getConnectionWrapper(isBeginTransaction, transactionIsolationLevel));
-	}
-	private ConnectionWrapper getConnectionWrapper(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return environment.getDataSourceWrapper().getConnection(isBeginTransaction, transactionIsolationLevel);
+		return new SessionImpl(environment.getDataSource().getConnection(isBeginTransaction, transactionIsolationLevel), environment);
 	}
 	
 	/**
@@ -87,8 +83,9 @@ public class SessionFactory {
 	
 	/**
 	 * 销毁
+	 * @throws Exception 
 	 */
-	public void destroy() {
+	public void destroy() throws Exception {
 		if(environment != null) {
 			environment.destroy();
 			environment = null;

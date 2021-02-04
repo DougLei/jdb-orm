@@ -12,7 +12,7 @@ import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 public interface Dialect {
 	
 	/**
-	 * 
+	 * 获取方言类型
 	 * @return
 	 */
 	DialectType getType();

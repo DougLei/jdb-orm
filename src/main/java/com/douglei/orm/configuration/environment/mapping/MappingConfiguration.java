@@ -10,8 +10,8 @@ public class MappingConfiguration {
 	private boolean enableProperty; 
 	private boolean enableTable; 
 	private boolean enableSql;
-	private boolean enableProcedure;
 	private boolean enableView; 
+	private boolean enableProcedure;
 	private boolean enableQuerySql;
 	
 	private SqlMappingConfiguration sqlMappingConfiguration; // 内置的sql映射配置
@@ -21,16 +21,16 @@ public class MappingConfiguration {
 	 * @param enableProperty 是否启用映射属性
 	 * @param enableTable 是否启用表映射
 	 * @param enableSql 是否启用sql映射
-	 * @param enableProcedure 是否启用存储过程映射
 	 * @param enableView 是否启用视图映射
+	 * @param enableProcedure 是否启用存储过程映射
 	 * @param enableQuerySql 是否启用query-sql映射
 	 */
-	public MappingConfiguration(boolean enableProperty, boolean enableTable, boolean enableSql, boolean enableProcedure, boolean enableView, boolean enableQuerySql) {
+	public MappingConfiguration(boolean enableProperty, boolean enableTable, boolean enableSql, boolean enableView, boolean enableProcedure, boolean enableQuerySql) {
 		this.enableProperty = enableProperty;
 		this.enableTable = enableTable;
 		this.enableSql = enableSql;
-		this.enableProcedure = enableProcedure;
 		this.enableView = enableView;
+		this.enableProcedure = enableProcedure;
 		this.enableQuerySql = enableQuerySql;
 	}
 	
@@ -64,18 +64,18 @@ public class MappingConfiguration {
 		return enableSql;
 	}
 	/**
-	 * 是否启用存储过程映射
-	 * @return
-	 */
-	public boolean isEnableProcedure() {
-		return enableProcedure;
-	}
-	/**
 	 * 是否启用视图映射
 	 * @return
 	 */
 	public boolean isEnableView() {
 		return enableView;
+	}
+	/**
+	 * 是否启用存储过程映射
+	 * @return
+	 */
+	public boolean isEnableProcedure() {
+		return enableProcedure;
 	}
 	/**
 	 * 是否启用query-sql映射

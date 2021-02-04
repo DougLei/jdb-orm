@@ -2,6 +2,7 @@ package com.douglei.orm.sessionfactory.sessions;
 
 import java.sql.Connection;
 
+import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.mapping.handler.MappingHandler;
@@ -23,10 +24,13 @@ public class SessionImpl implements Session {
 
 	protected boolean isClosed; // session是否关闭
 	protected ConnectionWrapper connection;
+	protected Environment environment;
 	protected MappingHandler mappingHandler;
 	
-	public SessionImpl(ConnectionWrapper connection) {
+	public SessionImpl(ConnectionWrapper connection, Environment environment) {
 		this.connection = connection;
+		this.environment = environment;
+		this.mappingHandler = environment.getMappingHandler();
 	}
 	
 	// 验证session是否被关闭

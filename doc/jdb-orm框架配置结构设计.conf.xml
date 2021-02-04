@@ -52,11 +52,11 @@
 			* enableProperty: 是否启用映射属性, 默认值为false; 属性是指在各种mapping文件中, 配置的<property>元素, 如果启用了, 框架会将这些信息也存入到容器中
 			* enableTable: 是否启用表映射, 默认值为true
 			* enableSql: 是否启用sql映射, 默认值为true
-			* enableProcedure: 是否启用存储过程映射, 默认值为false
 			* enableView: 是否启用视图映射, 默认值为false
+			* enableProcedure: 是否启用存储过程映射, 默认值为false
 			* enableQuerySql: 是否启用query-sql映射, 默认值为true
 		-->
-		<mapping enableProperty="" enableTable="" enableSql="" enableProcedure="" enableView="" enableQuerySql="">
+		<mapping enableProperty="" enableTable="" enableSql="" enableView="" enableProcedure="" enableQuerySql="">
 			<!-- 
 				内置的sql映射配置; enableSql=true时才会生效
 				* parameterPrefix: 声明参数时的前缀, 默认为#{
