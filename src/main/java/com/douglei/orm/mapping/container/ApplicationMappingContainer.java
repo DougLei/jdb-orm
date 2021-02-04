@@ -10,21 +10,13 @@ import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingProperty;
 
 /**
- * 使用当前系统的内存空间作为映射容器
+ * 
  * @author DougLei
  */
-public class ApplicationMappingContainer extends MappingContainer {
+public class ApplicationMappingContainer implements MappingContainer {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingContainer.class);
 	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
 	private Map<String, MappingProperty> mappingProperties = new HashMap<String, MappingProperty>(64);
-	
-	@Override
-	public void clear() {
-		if(!mappings.isEmpty())
-			mappings.clear();
-		if(!mappingProperties.isEmpty())
-			mappingProperties.clear();
-	}
 	
 	@Override
 	public MappingProperty addMappingProperty(MappingProperty mappingProperty) {
@@ -71,5 +63,13 @@ public class ApplicationMappingContainer extends MappingContainer {
 	@Override
 	public boolean exists(String code) {
 		return mappings.containsKey(code);
+	}
+	
+	@Override
+	public void clear() {
+		if(!mappings.isEmpty())
+			mappings.clear();
+		if(!mappingProperties.isEmpty())
+			mappingProperties.clear();
 	}
 }

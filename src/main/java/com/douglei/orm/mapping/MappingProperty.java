@@ -15,7 +15,7 @@ public class MappingProperty implements Serializable{
 	private int order; // mapping的排序值
 	private boolean supportCover=true; // mapping是否支持被覆盖
 	private boolean supportDelete=true; // mapping是否支持被删除
-	private String extendExpr; // mapping的扩展属性, 可由第三方扩展
+	private String extend; // mapping的扩展属性, 可由第三方扩展
 	
 	public MappingProperty(String code, String type) {
 		this.code = code;
@@ -27,9 +27,9 @@ public class MappingProperty implements Serializable{
 	 * @param order mapping的排序值, 默认0
 	 * @param supportCover mapping是否支持被覆盖, 默认true
 	 * @param supportDelete mapping是否支持被删除, 默认true
-	 * @param extendExpr mapping的扩展属性, 可由第三方扩展
+	 * @param extend mapping的扩展属性, 可由第三方扩展
 	 */
-	public void setValues(String order, String supportCover, String supportDelete, String extendExpr) {
+	public void setValues(String order, String supportCover, String supportDelete, String extend) {
 		if(DataTypeValidateUtil.isInteger(order))
 			this.order = Integer.parseInt(order);
 		
@@ -39,8 +39,8 @@ public class MappingProperty implements Serializable{
 		if(DataTypeValidateUtil.isBoolean(supportDelete))
 			this.supportDelete = Boolean.parseBoolean(supportDelete);
 		
-		if(StringUtil.unEmpty(extendExpr))
-			this.extendExpr = extendExpr;
+		if(StringUtil.unEmpty(extend))
+			this.extend = extend;
 	}
 	
 	public String getCode() {
@@ -58,12 +58,12 @@ public class MappingProperty implements Serializable{
 	public boolean supportDelete() {
 		return supportDelete;
 	}
-	public String getExtendExpr() {
-		return extendExpr;
+	public String getExtend() {
+		return extend;
 	}
 	
 	@Override
 	public String toString() {
-		return "MappingProperty [code=" + code + ", type=" + type + ", order=" + order + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extendExpr=" + extendExpr + "]";
+		return "MappingProperty [code=" + code + ", type=" + type + ", order=" + order + ", supportCover=" + supportCover + ", supportDelete=" + supportDelete + ", extend=" + extend + "]";
 	}
 }

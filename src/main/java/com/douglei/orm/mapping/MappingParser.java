@@ -11,15 +11,15 @@ import org.dom4j.Element;
 public abstract class MappingParser<T extends Mapping> {
 	
 	/**
-	 * 解析出mapping实例
+	 * 解析出MappingEntity
 	 * @param input
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract T parse(InputStream input) throws Exception;
+	public abstract MappingEntity<T> parse(InputStream input) throws Exception;
 	
 	/**
-	 * 获取表映射属性实例
+	 * 使用Dom4j, 获取MappingProperty
 	 * @param rootElement
 	 * @param code
 	 * @param type

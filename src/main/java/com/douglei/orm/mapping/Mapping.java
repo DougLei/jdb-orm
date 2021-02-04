@@ -9,13 +9,13 @@ import java.io.Serializable;
 public interface Mapping extends Serializable{
 	
 	/**
-	 * 获取id
+	 * 获取编码
 	 * @return
 	 */
-	String getId();
+	String getCode();
 	
 	/**
-	 * 获取type
+	 * 获取类型
 	 * @return
 	 */
 	String getType();

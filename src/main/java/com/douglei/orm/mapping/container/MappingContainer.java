@@ -7,32 +7,28 @@ import com.douglei.orm.mapping.MappingProperty;
  * 映射容器
  * @author DougLei
  */
-public abstract class MappingContainer {
-	protected String id; // 
-	protected boolean enableProperty; // 是否启用映射属性
-	
-	
+public interface MappingContainer {
 	
 	/**
 	 * 添加映射属性, 如果存在相同id的映射属性, 将其cover; 如果不存在相同id的映射属性, 将其add
 	 * @param property
 	 * @return 如果存在相同id的映射属性, 返回被覆盖的映射属性实例, 否则返回null; 如果未启用映射属性, 也返回null
 	 */
-	public abstract MappingProperty addMappingProperty(MappingProperty property);
+	MappingProperty addMappingProperty(MappingProperty property);
 	
 	/**
 	 * 删除映射属性
 	 * @param id
 	 * @return 返回被删除的映射属性实例, 如果没有映射属性, 返回null; 如果未启用映射属性, 也返回null
 	 */
-	public abstract MappingProperty deleteMappingProperty(String id);
+	MappingProperty deleteMappingProperty(String id);
 	
 	/**
 	 * 获取映射属性
 	 * @param id
 	 * @return 如果没有查询到, 返回null; 如果未启用映射属性, 也返回null
 	 */
-	public abstract MappingProperty getMappingProperty(String id);
+	MappingProperty getMappingProperty(String id);
 	
 	
 	
@@ -41,21 +37,21 @@ public abstract class MappingContainer {
 	 * @param mapping
 	 * @return 如果存在相同id的映射, 返回被覆盖的映射实例, 否则返回null
 	 */
-	public abstract Mapping addMapping(Mapping mapping);
+	Mapping addMapping(Mapping mapping);
 	
 	/**
 	 * 删除映射
 	 * @param id
 	 * @return 返回被删除的映射实例, 如果没有映射, 返回null
 	 */
-	public abstract Mapping deleteMapping(String id);
+	Mapping deleteMapping(String id);
 	
 	/**
 	 * 获取映射
 	 * @param id
 	 * @return 如果没有查询到, 返回null
 	 */
-	public abstract Mapping getMapping(String id);
+	Mapping getMapping(String id);
 	
 	
 	
@@ -64,10 +60,10 @@ public abstract class MappingContainer {
 	 * @param id
 	 * @return
 	 */
-	public abstract boolean exists(String id);
+	boolean exists(String id);
 	
 	/**
 	 * 清空容器
 	 */
-	public abstract void clear();
+	void clear();
 }
