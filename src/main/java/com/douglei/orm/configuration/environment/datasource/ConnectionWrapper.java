@@ -36,7 +36,7 @@ public class ConnectionWrapper {
 			if(isBeginTransaction && transactionIsolationLevel != null && transactionIsolationLevel != TransactionIsolationLevel.DEFAULT) 
 				this.connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
 		} catch (Exception e) {
-			throw new ConnectionWrapperException("获取Connection时出现异常", e);
+			throw new ConnectionException("获取Connection时出现异常", e);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public class ConnectionWrapper {
 				return new PreparedStatementHandlerImpl(connection, sql, returnID);
 			}
 		} catch (SQLException e) {
-			throw new ConnectionWrapperException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);
+			throw new ConnectionException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class ConnectionWrapper {
 		try {
 			setIsBeginTransaction(true);
 		} catch (SQLException e) {
-			throw new ConnectionWrapperException("开启事物时出现异常", e);
+			throw new ConnectionException("开启事物时出现异常", e);
 		}
 	}
 	
@@ -155,7 +155,7 @@ public class ConnectionWrapper {
 			this.transactionIsolationLevel = transactionIsolationLevel;
 			connection.setTransactionIsolation(transactionIsolationLevel.getLevel());
 		} catch (SQLException e) {
-			throw new ConnectionWrapperException("更新事物的隔离级别时出现异常", e);
+			throw new ConnectionException("更新事物的隔离级别时出现异常", e);
 		}
 	}
 }
