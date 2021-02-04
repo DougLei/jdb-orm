@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
 
 /**
- * 
+ * 方言实例容器
  * @author DougLei
  */
 public class DialectContainer {

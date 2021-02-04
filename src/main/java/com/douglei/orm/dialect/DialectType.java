@@ -17,13 +17,13 @@ public enum DialectType {
 	ORACLE("ORACLE", OracleDialect.class, 11),
 	SQLSERVER("SQLSERVER", SqlServerDialect.class, 11, 12);
 	
-	private String name; // 必须是全大写
-	private Class<? extends Dialect> targetClass;
+	private String name; 
+	private Class<? extends Dialect> clazz;
 	private int[] supportDatabaseMajorVersions;
 	
-	private DialectType(String name, Class<? extends Dialect> targetClass, int... supportDatabaseMajorVersions) {
-		this.name = name; // 这里name通过传入的形式, 方便后续扩展同数据库不同版本的枚举
-		this.targetClass = targetClass;
+	private DialectType(String name, Class<? extends Dialect> clazz, int... supportDatabaseMajorVersions) {
+		this.name = name.toUpperCase(); // 这里name通过传入的形式, 方便后续扩展同数据库不同版本的枚举
+		this.clazz = clazz;
 		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
 
@@ -32,7 +32,7 @@ public enum DialectType {
 	 * @return
 	 */
 	public Dialect newInstance(){
-		return (Dialect) ClassUtil.newInstance(targetClass);
+		return (Dialect) ClassUtil.newInstance(clazz);
 	}
 	
 	/**
@@ -45,15 +45,15 @@ public enum DialectType {
 	
 	/**
 	 * 当前方言是否支持参数中的数据库
-	 * @param key
+	 * @param entity
 	 * @return
 	 */
-	public boolean support(DatabaseMetadataEntity key) {
-		if(!name.equals(key.getName())) 
+	public boolean support(DatabaseMetadataEntity entity) {
+		if(!name.equals(entity.getName())) 
 			return false;
 		
 		for(int version : supportDatabaseMajorVersions) {
-			if(version == key.getDatabaseMajorVersion())
+			if(version == entity.getDatabaseMajorVersion())
 				return true;
 		}
 		return false;
