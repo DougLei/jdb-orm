@@ -8,45 +8,36 @@ import com.douglei.tools.StringUtil;
  */
 public enum CreateMode {
 	/**
-	 * 不进行任何处理
+	 * 不处理模式
 	 */
 	NONE,
 	/**
-	 * 【默认】如果存在, 则跳过; 如果不存在, 则创建
+	 * 创建模式; 如果没有就创建, 有就不处理
 	 */
 	CREATE,
 	/**
-	 * 如果存在, 则先删除, 再创建; 如果不存在, 则直接创建
+	 * 删除再创建模式; 如果存在就先删除, 再创建, 否则就直接创建; 适合用于重置表
 	 */
 	DROP_CREATE,
 	/**
-	 * 动态更新, 系统会将当前的配置和数据库中对应的对象比对, 将最新的结构同步到数据库中
+	 * 动态模式; 会根据映射结构的变化, 去动态更新数据库对象的结构
 	 */
-	DYNAMIC_UPDATE;
+	DYNAMIC;
 	
 	/**
-	 * 根据字符串值, 获取对应的创建模式
+	 * 根据字符串值, 获取对应的创建模式; 没有匹配时会返回null
 	 * @param value
 	 * @return
 	 */
 	public static CreateMode toValue(String value) {
-		if(StringUtil.notEmpty(value)) {
-			value = value.toUpperCase();
-			CreateMode[] cms = CreateMode.values();
-			for (CreateMode cm : cms) {
-				if(cm.name().equals(value)) {
-					return cm;
-				}
-			}
+		if(StringUtil.isEmpty(value))
+			return null;
+		
+		value = value.toUpperCase();
+		for (CreateMode cm : CreateMode.values()) {
+			if(cm.name().equals(value)) 
+				return cm;
 		}
 		return null;
-	}
-	
-	/**
-	 * 获取默认的创建模式
-	 * @return
-	 */
-	public static CreateMode defaultCreateMode() {
-		return CREATE;
 	}
 }

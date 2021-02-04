@@ -1,11 +1,12 @@
 package com.douglei.orm.mapping.handler;
 
+import com.douglei.orm.configuration.OrmException;
+
 /**
  * 操作mapping异常
  * @author DougLei
  */
-public class MappingHandlerException extends Exception{
-	private static final long serialVersionUID = -7900015489952818822L;
+public class MappingHandlerException extends OrmException{
 	
 	public MappingHandlerException(String message) {
 		super(message);

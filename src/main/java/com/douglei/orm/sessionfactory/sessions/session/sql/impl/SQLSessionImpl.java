@@ -11,8 +11,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.environment.Environment;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
@@ -41,8 +41,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private static final Logger logger = LoggerFactory.getLogger(SQLSessionImpl.class);
 	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
 	
-	public SQLSessionImpl(ConnectionWrapper connection, Environment environment) {
-		super(connection, environment);
+	public SQLSessionImpl(ConnectionWrapper connection) {
+		super(connection);
 	}
 	
 	private SqlMetadata getSqlMetadata(String namespace) {

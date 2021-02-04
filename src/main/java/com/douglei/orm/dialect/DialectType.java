@@ -2,10 +2,11 @@ package com.douglei.orm.dialect;
 
 import java.util.Arrays;
 
+import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
 import com.douglei.orm.dialect.impl.mysql.MySqlDialect;
 import com.douglei.orm.dialect.impl.oracle.OracleDialect;
 import com.douglei.orm.dialect.impl.sqlserver.SqlServerDialect;
-import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ClassUtil;
 
 /**
  * 
@@ -30,8 +31,8 @@ public enum DialectType {
 	 * 创建方言实例
 	 * @return
 	 */
-	public Dialect newDialectInstance(){
-		return (Dialect) ConstructorUtil.newInstance(targetClass);
+	public Dialect newInstance(){
+		return (Dialect) ClassUtil.newInstance(targetClass);
 	}
 	
 	/**
@@ -47,7 +48,7 @@ public enum DialectType {
 	 * @param key
 	 * @return
 	 */
-	public boolean support(DialectKey key) {
+	public boolean support(DatabaseMetadataEntity key) {
 		if(!name.equals(key.getName())) 
 			return false;
 		

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
@@ -19,7 +19,6 @@ import com.douglei.tools.StringUtil;
  * @author DougLei
  */
 public class TextSqlNode implements SqlNode {
-	private static final long serialVersionUID = -3678999940049069721L;
 	
 	private String content;
 	private List<SqlParameterMetadata> parameters;// sql参数, 按照配置中定义的顺序记录

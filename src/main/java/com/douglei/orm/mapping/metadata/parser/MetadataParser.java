@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.metadata.parser;
 
 import org.dom4j.Element;
 
-import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
 import com.douglei.orm.metadata.Metadata;
 

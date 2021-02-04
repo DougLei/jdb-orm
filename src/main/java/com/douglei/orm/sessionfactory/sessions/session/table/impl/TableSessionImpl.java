@@ -39,8 +39,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private final Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
 	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
 	
-	public TableSessionImpl(ConnectionWrapper connection, Environment environment) {
-		super(connection, environment);
+	public TableSessionImpl(ConnectionWrapper connection) {
+		super(connection);
 		this.enableTalbeSessionCache = environment.getEnvironmentProperty().enableTableSessionCache();
 		logger.debug("是否开启TableSession缓存: {}", enableTalbeSessionCache);
 		if(enableTalbeSessionCache) 

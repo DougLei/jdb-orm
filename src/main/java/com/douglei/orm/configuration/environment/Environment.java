@@ -1,33 +1,42 @@
 package com.douglei.orm.configuration.environment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.Dom4jUtil;
-import com.douglei.orm.configuration.EnvironmentContext;
 import com.douglei.orm.configuration.ExternalDataSource;
+import com.douglei.orm.configuration.OrmException;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.property.EnvironmentProperty;
-import com.douglei.orm.configuration.properties.Properties;
-import com.douglei.orm.dialect.DialectKey;
+import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
+import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
+import com.douglei.orm.configuration.environment.mapping.SqlMappingConfiguration;
+import com.douglei.orm.configuration.environment.mapping.SqlMappingParameterDefaultValueHandler;
+import com.douglei.orm.dialect.Dialect;
+import com.douglei.orm.dialect.DialectContainer;
+import com.douglei.orm.mapping.container.ApplicationMappingContainer;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
-import com.douglei.orm.metadata.type.MetadataTypeContainer;
+import com.douglei.orm.mapping.impl.procedure.ProcedureMappingType;
+import com.douglei.orm.mapping.impl.query.sql.QuerySqlMapping;
+import com.douglei.orm.mapping.impl.sql.SqlMappingType;
+import com.douglei.orm.mapping.impl.table.TableMappingType;
+import com.douglei.orm.mapping.impl.view.ViewMappingType;
+import com.douglei.orm.mapping.type.MappingType;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.tools.StringUtil;
 import com.douglei.tools.file.scanner.impl.ResourceScanner;
 import com.douglei.tools.reflect.ClassUtil;
+import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
  * 
@@ -35,170 +44,208 @@ import com.douglei.tools.reflect.ClassUtil;
  */
 public class Environment {
 	private static final Logger logger = LoggerFactory.getLogger(Environment.class);
-	private Properties properties;
-	private DataSourceWrapper dataSourceWrapper;
 	private EnvironmentProperty environmentProperty;
+	private DataSourceWrapper dataSourceWrapper;
+	private Dialect dialect;
 	private MappingHandler mappingHandler;
 	
 	@SuppressWarnings("unchecked")
-	public Environment(String id, Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
-		logger.debug("开始处理<environment>元素");
-		this.properties = properties;
-		setDataSourceWrapper(exDataSource==null?Dom4jUtil.getElement("datasource", environmentElement):exDataSource);// 处理配置的数据源
-		setEnvironmentProperties(id, environmentElement.elements("property"), mappingContainer);// 处理environment下的所有property元素
-		addMapping(environmentElement.element("mappings"));// 处理配置的映射文件
-		logger.debug("处理<environment>元素结束");
+	public Environment(Element environmentElement, Properties properties, ExternalDataSource exDataSource, MappingContainer mappingContainer) throws Exception {
+		logger.debug("开始处理<environment>");
+		
+		// 设置environment下的所有property
+		setEnvironmentProperties(environmentElement.elements("property"), properties);
+		
+		// 设置数据源
+		setDataSource(exDataSource==null?Dom4jUtil.getElement("datasource", environmentElement):exDataSource, properties);
+		
+		// 设置方言
+		this.dialect = DialectContainer.get(new DatabaseMetadataEntity(dataSourceWrapper.getConnection(false, null).getConnection()));
+		
+		// 设置MappingHandler
+		setMappingHandler(environmentElement.element("mapping"), mappingContainer);
+		
+		logger.debug("结束处理<environment>");
 	}
 	
-	/**
-	 * 将elements的键值对, 组成map
-	 * @param elements
-	 * @return
-	 */
-	private Map<String, String> elementListToPropertyMap(List<Element> elements){
-		if(elements.isEmpty())
-			return Collections.emptyMap();
+	
+	// 将<property>集合, 转换成map
+	private Map<String, String> propertyElementListToPropertyMap(List<Element> propertyElementList, Properties properties){
+		if(propertyElementList.isEmpty())
+			return null;
 		
 		Map<String, String> propertyMap = new HashMap<String, String>();
-		for (Element elem : elements) 
+		for (Element elem : propertyElementList) 
 			propertyMap.put(elem.attributeValue("name"), getValue(elem.attributeValue("value"), properties));
 		return propertyMap;
 	}
-	private String getValue(String key, Properties properties) {
-		String value = properties.getValue(key);
+	private String getValue(String kv, Properties properties) {
+		String value = properties.getValue(kv);
 		if(value == null) 
-			return key;
+			return kv;
 		return value;
 	}
 	
-	/**
-	 * 处理environment下的datasource元素
-	 * @param object
-	 */
+	
+	// 设置environment下的所有property
+	private void setEnvironmentProperties(List<Element> propertyElementList, Properties properties) throws Exception {
+		logger.debug("开始处理<environment>下的<property>");
+		this.environmentProperty = new EnvironmentProperty(propertyElementListToPropertyMap(propertyElementList, properties));
+		logger.debug("结束处理<environment>下的<property>");
+	}
+	
+	
+	// 设置数据源
 	@SuppressWarnings("unchecked")
-	private void setDataSourceWrapper(Object object) {
-		logger.debug("开始处理数据源");
-		Object datasource = null;
-		String closeMethod = null;
-		Map<String, String> propertyMap = null;
+	private void setDataSource(Object object, Properties properties) {
+		logger.debug("开始设置数据源");
 		
 		if(object instanceof ExternalDataSource) {
-			logger.debug("开始处理外部传入的数据源");
-			datasource = ((ExternalDataSource)object).getDataSource();
-			closeMethod = ((ExternalDataSource)object).getCloseMethodName();
-			logger.debug("处理外部传入的数据源结束");
+			logger.debug("start: 使用外部的数据源");
+			this.dataSourceWrapper = new DataSourceWrapper(((ExternalDataSource)object).getDataSource(), ((ExternalDataSource)object).getCloseMethodName());
+			logger.debug("end: 使用外部的数据源");
 		}else {
-			logger.debug("开始处理<environment>下的<datasource>元素");
-			Element element = (Element) object;
-			String clazz = element.attributeValue("class");
+			logger.debug("start: 使用<datasource>数据源");
+			
+			String clazz = ((Element) object).attributeValue("class");
 			if(StringUtil.isEmpty(clazz)) 
-				throw new NullPointerException("<datasource>元素的class属性不能为空");
+				throw new OrmException("<datasource>的class属性值不能为空");
 			
-			datasource = ClassUtil.newInstance(clazz);
+			Object datasource= ClassUtil.newInstance(clazz);
 			if(!(datasource instanceof DataSource)) 
-				throw new ClassCastException("<datasource>元素的class, 必须实现 "+DataSource.class.getName()+" 接口");
+				throw new OrmException("<datasource>的class属性值, 必须实现["+DataSource.class.getName()+"]接口");
 			
-			closeMethod = element.attributeValue("closeMethod");
+			Map<String, String> propertyMap = propertyElementListToPropertyMap(((Element) object).elements("property"), properties);
+			if(propertyMap==null) 
+				throw new OrmException("<datasource>中必须配置必要的数据库连接参数");
+			IntrospectorUtil.setValues(propertyMap, datasource);
 			
-			propertyMap = elementListToPropertyMap(element.elements("property"));
-			if(propertyMap.isEmpty()) 
-				throw new NullPointerException("<datasource>元素下，必须配置必要的数据库连接参数");
-			
-			logger.debug("处理<environment>下的<datasource>元素结束");
+			this.dataSourceWrapper = new DataSourceWrapper((DataSource)datasource, ((Element) object).attributeValue("closeMethod"));
+			logger.debug("end: 使用<datasource>数据源");
 		}
-		
-		dataSourceWrapper = new DataSourceWrapper((DataSource)datasource, closeMethod, propertyMap);
 		logger.debug("处理数据源结束");
 	}
 	
 	
-	
-	
-	/**
-	 * 处理environment下的所有property元素
-	 * @param id
-	 * @param elements
-	 * @param mappingContainer
-	 * @throws Exception
-	 */
-	private void setEnvironmentProperties(String id, List<Element> elements, MappingContainer mappingContainer) throws Exception {
-		logger.debug("开始处理<environment>下的所有property元素");
-		Map<String, String> propertyMap = elementListToPropertyMap(elements);
-		DialectKey key = new DialectKey(dataSourceWrapper.getConnection(false, null).getConnection());
-		this.environmentProperty = new EnvironmentProperty(id, propertyMap, key, mappingContainer);
-		EnvironmentContext.setProperty(environmentProperty);
-		logger.debug("处理<environment>下的所有property元素结束");
+	// 设置MappingHandler
+	@SuppressWarnings("unchecked")
+	private void setMappingHandler(Element mappingElement, MappingContainer mappingContainer) {
+		logger.debug("开始处理<environment>下的<mapping>");
+		
+		// 解析映射配置
+		MappingConfiguration configuration = parseMappingConfiguration(mappingElement);
+		
+		// 注册映射类型
+		MappingTypeContainer typeContainer = registerMappingType(configuration, mappingElement.elements("register"));
+		
+		// 创建MappingHandler; 创建容器或清空容器
+		if(mappingContainer == null)
+			mappingContainer = new ApplicationMappingContainer();
+		else
+			mappingContainer.clear();
+		this.mappingHandler = new MappingHandler(configuration, typeContainer, mappingContainer, dataSourceWrapper);
+		
+		// 扫描配置的映射
+		scanMappings(typeContainer, mappingElement.elements("scanner"));
+		
+		logger.debug("结束处理<environment>下的<mapping>");
 	}
 	
-	/**
-	 * 处理environment下的mappings元素, 扫描并添加映射
-	 * @param element
-	 * @throws Exception 
-	 */
-	@SuppressWarnings("unchecked")
-	private void addMapping(Element element) throws Exception {
-		logger.debug("开始处理<environment>下的<mappings>元素");
-		this.mappingHandler = new MappingHandler(environmentProperty.getMappingContainer(), dataSourceWrapper);
+	// 解析映射配置
+	private MappingConfiguration parseMappingConfiguration(Element mappingElement) {
+		MappingConfiguration configuration = new MappingConfiguration(
+				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProperty")), 
+				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableTable")), 
+				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableSql")), 
+				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")), 
+				"true".equalsIgnoreCase(mappingElement.attributeValue("enableView")), 
+				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableQuerySql")));
 		
-		environmentProperty.getMappingContainer().clear();
-		
-		if(element != null) {
-			List<Attribute> paths = element.selectNodes("mapping/@path");
-			
-			if(!paths.isEmpty()) {
-				StringBuilder path = new StringBuilder(paths.size() * 20);
-				paths.forEach(p -> {
-					path.append(",").append(p.getValue());
-				});
-				
-				List<String> list = new ResourceScanner(MetadataTypeContainer.getFileSuffixes().toArray(new String[MetadataTypeContainer.getFileSuffixes().size()])).multiScan("true".equalsIgnoreCase(element.attributeValue("scanAll")), path.substring(1).split(","));
-				if(!list.isEmpty()) {
-					List<MappingEntity> mappingEntities = new ArrayList<MappingEntity>(list.size());
-					for (String file : list) 
-						mappingEntities.add(new AddOrCoverMappingEntity(file));
-					this.mappingHandler.execute(mappingEntities);
-				}
-			}
+		// 设置内置的sql映射配置
+		if(configuration.isEnableSql()) {
+			Element sqlMappingElement = mappingElement.element("sql");
+			configuration.setSqlMappingConfiguration(new SqlMappingConfiguration(
+					sqlMappingElement.attributeValue("parameterPrefix", "#{"), 
+					sqlMappingElement.attributeValue("parameterSuffix", "}"), 
+					sqlMappingElement.attributeValue("parameterSplit", ","), 
+					(SqlMappingParameterDefaultValueHandler)ClassUtil.newInstance(sqlMappingElement.attributeValue("parameterDefaultValueHandler", SqlMappingParameterDefaultValueHandler.class.getName()))));
 		}
-		logger.debug("处理<environment>下的<mappings>元素结束");
+		
+		logger.debug("解析出的映射配置信息: {}", configuration);
+		return configuration;
+	}
+	
+	// 注册映射类型
+	private MappingTypeContainer registerMappingType(MappingConfiguration configuration, List<Element> registerElements) {
+		MappingTypeContainer typeContainer = new MappingTypeContainer();
+		
+		// 先注册内置的映射类型
+		if(configuration.isEnableTable()) // table
+			typeContainer.register(new TableMappingType());
+		if(configuration.isEnableSql()) // sql
+			typeContainer.register(new SqlMappingType());
+		if(configuration.isEnableProcedure()) // procedure
+			typeContainer.register(new ProcedureMappingType());
+		if(configuration.isEnableView()) // view
+			typeContainer.register(new ViewMappingType());
+		if(configuration.isEnableQuerySql()) // query-sql
+			typeContainer.register(new QuerySqlMapping());
+		
+		// 注册配置的映射类型
+		if(registerElements.size() > 0) {
+			for (Element elem : registerElements) 
+				typeContainer.register((MappingType)ClassUtil.newInstance(elem.attributeValue("class")));
+		}
+		
+		return typeContainer;
 	}
 
+	// 扫描配置的映射
+	private void scanMappings(MappingTypeContainer typeContainer, List<Element> scannerElements) {
+		if(scannerElements.isEmpty())
+			return;
+		
+		EnvironmentContext.setEnvironment(this);
+		
+		List<MappingEntity> entities = new ArrayList<MappingEntity>();
+		ResourceScanner scanner = new ResourceScanner(typeContainer.getFileSuffixes());
+		for (Element elem : scannerElements) {
+			for(String file : scanner.scan("true".equalsIgnoreCase(elem.attributeValue("scanAll")), elem.attributeValue("path"))) 
+				entities.add(new AddOrCoverMappingEntity(file));
+		}
+			
+		if(entities.size() > 0) {
+			this.mappingHandler.execute(entities);
+		}
+	}
+	
 	/**
-	 * 销毁
+	 * 销毁Environment
 	 * @throws Exception 
 	 */
 	public void destroy() throws Exception {
-		if(logger.isDebugEnabled()) 
-			logger.debug("{} 开始 destroy", getClass().getName());
-		if(dataSourceWrapper != null) 
+		logger.debug("开始销毁[com.douglei.orm.configuration.environment.Environment]实例");
+		if(dataSourceWrapper != null) {
 			dataSourceWrapper.close();
-		if(environmentProperty != null && environmentProperty.getMappingContainer() != null) 
-			environmentProperty.getMappingContainer().clear();
-		if(logger.isDebugEnabled()) 
-			logger.debug("{} 结束 destroy", getClass().getName());
+			dataSourceWrapper = null;
+		}
+		if(mappingHandler != null) {
+			mappingHandler.uninstall();
+			mappingHandler = null;
+		}
+		logger.debug("结束销毁[com.douglei.orm.configuration.environment.Environment]实例");
 	}
 	
 	// -------------------------------------------------------------
-	/**
-	 * 获取数据源包装类
-	 * @return
-	 */
 	public EnvironmentProperty getEnvironmentProperty() {
 		return environmentProperty;
 	}
-	
-	/**
-	 * 获取环境属性实例
-	 * @return
-	 */
 	public DataSourceWrapper getDataSourceWrapper() {
 		return dataSourceWrapper;
 	}
-	
-	/**
-	 * 获取映射处理器
-	 * @return
-	 */
+	public Dialect getDialect() {
+		return dialect;
+	}
 	public MappingHandler getMappingHandler() {
 		return mappingHandler;
 	}

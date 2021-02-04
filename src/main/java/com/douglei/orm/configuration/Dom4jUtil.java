@@ -11,13 +11,13 @@ public class Dom4jUtil {
 	/**
 	 * 获取指定name的元素, 如果不存在则抛出异常
 	 * @param name
-	 * @param element
+	 * @param parent
 	 * @return
 	 */
-	public static Element getElement(String name, Element element) {
-		Element targetElement = element.element(name);
+	public static Element getElement(String name, Element parent) {
+		Element targetElement = parent.element(name);
 		if(targetElement == null) 
-			throw new NullPointerException("没有配置<"+name+">元素");
+			throw new NullPointerException("必须配置<"+name+">");
 		return targetElement;
 	}
 }

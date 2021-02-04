@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.container.MappingContainer;
@@ -28,6 +29,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
+import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
@@ -40,11 +42,15 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPur
  */
 public class MappingHandler {
 	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
-	private MappingContainer mappingContainer;
+	private MappingConfiguration configuration; // 映射配置
+	private MappingTypeContainer typeContainer; // 映射类型容器
+	private MappingContainer container; // 映射容器
 	private DataSourceWrapper dataSourceWrapper;
 	
-	public MappingHandler(MappingContainer mappingContainer, DataSourceWrapper dataSourceWrapper) {
-		this.mappingContainer = mappingContainer;
+	public MappingHandler(MappingConfiguration configuration, MappingTypeContainer typeContainer, MappingContainer container, DataSourceWrapper dataSourceWrapper) {
+		this.configuration = configuration;
+		this.typeContainer = typeContainer;
+		this.container = container;
 		this.dataSourceWrapper = dataSourceWrapper;
 	}
 	
@@ -285,5 +291,13 @@ public class MappingHandler {
 	public ExecutableSqlEntity getExecutableSqlEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		return new ExecutableSqlEntity(new ExecutableSqls(purposeEntity, sqlMetadata, name, sqlParameter));
+	}
+
+	/**
+	 * 卸载映射处理器
+	 */
+	public void uninstall() {
+		container.clear();
+		container = null;
 	}
 }

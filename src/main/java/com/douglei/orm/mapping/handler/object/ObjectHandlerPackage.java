@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.handler.object;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.mapping.handler.object.procedure.ProcedureObjectHandler;
 import com.douglei.orm.mapping.handler.object.table.TableObjectHandler;

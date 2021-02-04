@@ -1,6 +1,6 @@
 package com.douglei.orm.dialect.object;
 
-import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.tools.StringUtil;

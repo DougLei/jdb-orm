@@ -2,8 +2,6 @@ package com.douglei.orm.sessionfactory.sessions;
 
 import java.sql.Connection;
 
-import com.douglei.orm.configuration.EnvironmentContext;
-import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.mapping.handler.MappingHandler;
@@ -25,14 +23,10 @@ public class SessionImpl implements Session {
 
 	protected boolean isClosed; // session是否关闭
 	protected ConnectionWrapper connection;
-	protected Environment environment;
 	protected MappingHandler mappingHandler;
 	
-	public SessionImpl(ConnectionWrapper connection, Environment environment) {
+	public SessionImpl(ConnectionWrapper connection) {
 		this.connection = connection;
-		this.environment = environment;
-		this.mappingHandler = environment.getMappingHandler();
-		EnvironmentContext.setProperty(environment.getEnvironmentProperty());
 	}
 	
 	// 验证session是否被关闭
@@ -45,7 +39,7 @@ public class SessionImpl implements Session {
 	public final SqlSession getSqlSession() {
 		validateSessionIsClosed();
 		if(SqlSession == null) 
-			SqlSession = new SqlSessionImpl(connection, environment);
+			SqlSession = new SqlSessionImpl(connection);
 		return SqlSession;
 	}
 
@@ -53,7 +47,7 @@ public class SessionImpl implements Session {
 	public final TableSession getTableSession() {
 		validateSessionIsClosed();
 		if(TableSession == null) 
-			TableSession = new TableSessionImpl(connection, environment);
+			TableSession = new TableSessionImpl(connection);
 		return TableSession;
 	}
 
@@ -61,7 +55,7 @@ public class SessionImpl implements Session {
 	public final SQLSession getSQLSession() {
 		validateSessionIsClosed();
 		if(SQLSession == null) 
-			SQLSession = new SQLSessionImpl(connection, environment);
+			SQLSession = new SQLSessionImpl(connection);
 		return SQLSession;
 	}
 	

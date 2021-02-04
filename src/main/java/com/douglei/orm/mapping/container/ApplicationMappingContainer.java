@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.MappingProperty;
  * 使用当前系统的内存空间作为映射容器
  * @author DougLei
  */
-public class ApplicationMappingContainer implements MappingContainer {
+public class ApplicationMappingContainer extends MappingContainer {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationMappingContainer.class);
 	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
 	private Map<String, MappingProperty> mappingProperties = new HashMap<String, MappingProperty>(64);

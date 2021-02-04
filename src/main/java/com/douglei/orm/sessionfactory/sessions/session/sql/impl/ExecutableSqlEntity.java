@@ -2,7 +2,7 @@ package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 
 import java.util.List;
 
-import com.douglei.orm.configuration.EnvironmentContext;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.sql.SqlStatement;

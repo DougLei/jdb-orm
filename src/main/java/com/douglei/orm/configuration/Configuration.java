@@ -1,117 +1,45 @@
 package com.douglei.orm.configuration;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
-import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.extend.option.ExtendOptions;
-import com.douglei.orm.configuration.properties.Properties;
+import com.douglei.orm.configuration.environment.Properties;
 import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.ExceptionUtil;
-import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class Configuration {
-	public static final String DEFAULT_CONFIGURATION_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径
+	public static final String DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径(基于java resource)
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
-	private InputStream inputstream; // 配置文件的流对象
 	
-	private String id;
-	private Environment environment;
-	private ExternalDataSource externalDataSource; // 外部的数据源
+	private String id;// 配置的id; 优先级高于配置文件中的id
+	private ExternalDataSource externalDataSource; // 外部的数据源; 优先级高于配置文件中的数据源
 	private MappingContainer mappingContainer; // 映射容器
-	private SessionFactory sessionFactory;
 	
-	public Configuration() {
-		inputstream = Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
-	}
-	public Configuration(String configurationFilePath) {
-		inputstream = Configuration.class.getClassLoader().getResourceAsStream(configurationFilePath);
-	}
-	public Configuration(InputStream configurationInputStream) {
-		inputstream = configurationInputStream;
-	}
 	
 	/**
-	 * 构建SessionFactory实例, 同一个Configuration只能构建出一个SessionFactory实例
-	 * @return
-	 */
-	public SessionFactory buildSessionFactory() {
-		if(sessionFactory == null) {
-			if(logger.isDebugEnabled()) 
-				logger.debug("开始初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class);
-			
-			try {
-				Document xmlDocument = new SAXReader().read(inputstream);
-				Element root = xmlDocument.getRootElement();
-				setId(root.attributeValue("id"));
-				new ExtendOptions().handle(root.element("extend-options"));
-				this.environment = new Environment(id, Dom4jUtil.getElement("environment", root), new Properties(root.element("properties")), externalDataSource, mappingContainer);
-				this.sessionFactory = new SessionFactory(this, environment);
-			} catch (Exception e) {
-				try {
-					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例时, 出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getStackTrace(e));
-					destroy_();
-				} catch (Exception e1) {
-					logger.error("初始化jdb-orm框架的配置信息, 构建[{}]实例出现异常后, 在进行自动销毁时, 又出现异常: {}", SessionFactory.class.getName(), ExceptionUtil.getStackTrace(e1));
-					e.addSuppressed(e1);
-				}
-				throw new ConfigurationInitializeException("jdb-orm框架初始化时出现异常", e);
-			} finally {
-				if(logger.isDebugEnabled()) 
-					logger.debug("结束初始化jdb-orm框架的配置信息, 构建[{}]实例", SessionFactory.class.getName());
-			}
-		}
-		return sessionFactory;	
-	}
-	
-	/**
-	 * 销毁
-	 */
-	public void destroy() {
-		try {
-			destroy_();
-		} catch (Exception e) {
-			logger.error("jdb-orm框架在销毁时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new DestroyException("jdb-orm框架在销毁时出现异常", e);
-		}
-	}
-	private void destroy_() throws Exception { 
-		if(environment != null)
-			environment.destroy();
-	}
-	
-	/**
-	 * 获取id
-	 * @return
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	/**
-	 * 设置id
+	 * 设置配置的id; 优先级高于配置文件中的id
 	 * @param id
 	 */
 	public void setId(String id) {
-		if(this.id == null) {
-			if(StringUtil.isEmpty(id)) 
-				throw new NullPointerException("["+getClass().getName() + "]的id属性值不能为空");
-			this.id = id;
-		}
+		this.id = id;
 	}
 	
 	/**
-	 * 设置外部的数据源
+	 * 设置外部的数据源; 优先级高于配置文件中的数据源
 	 * @param exDataSource
 	 */
 	public void setExternalDataSource(ExternalDataSource exDataSource) {
@@ -119,10 +47,94 @@ public class Configuration {
 	}
 	
 	/**
-	 * 设置映射的存储容器
+	 * 设置映射容器; 不配置时框架会使用默认容器
 	 * @param mappingContainer
 	 */
 	public void setMappingContainer(MappingContainer mappingContainer) {
 		this.mappingContainer = mappingContainer;
+	}
+	
+	
+	/**
+	 * 在默认路径(基于java resource)下寻找配置文件, 构建SessionFactory实例
+	 * @return
+	 */
+	public SessionFactory buildSessionFactory() {
+		logger.debug("在默认路径(基于java resource)下寻找配置文件, 构建SessionFactory实例: [{}]", DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH);
+		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH));
+	}
+	
+	/**
+	 * 根据指定的文件(基于java resource), 构建SessionFactory实例
+	 * @param classpathFile
+	 * @return
+	 */
+	public SessionFactory buildSessionFactory(String classpathFile) {
+		logger.debug("根据指定的文件(基于java resource), 构建SessionFactory实例: [{}]", classpathFile);
+		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(classpathFile));
+	}
+	
+	/**
+	 * 根据指定的配置内容, 构建SessionFactory实例
+	 * @param content
+	 * @return
+	 */
+	public SessionFactory buildSessionFactoryByContent(String content) {
+		logger.debug("根据指定的配置内容, 构建SessionFactory实例: \n{}", content);
+		return buildSessionFactory_(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+	}
+	
+	/**
+	 * 通过读取流中的数据, 构建SessionFactory实例
+	 * @param input
+	 * @return
+	 */
+	public SessionFactory buildSessionFactory(InputStream input) {
+		logger.debug("通过读取流中的数据, 构建SessionFactory实例");
+		return buildSessionFactory_(input);
+	}
+	
+	// 构建SessionFactory实例
+	private SessionFactory buildSessionFactory_(InputStream input) {
+		Environment environment = null;
+		try {
+			logger.debug("开始读取jdb-orm框架的配置信息, 构建[com.douglei.orm.sessionfactory.SessionFactory]实例");
+			Element configurationElement = new SAXReader().read(input).getRootElement();
+			
+			// 设置配置id
+			if(id == null) {
+				id = configurationElement.attributeValue("id");
+				if(id == null)
+					id = UUID.randomUUID().toString();
+			}
+			
+			// 解析<environment>
+			Element environmentElement = Dom4jUtil.getElement("environment", configurationElement);
+			Properties properties = new Properties(environmentElement.element("properties"));
+			environment = new Environment(environmentElement, properties, externalDataSource, mappingContainer);
+			
+			// 构建SessionFactory实例
+			logger.debug("结束读取jdb-orm框架的配置信息, 完成构建[com.douglei.orm.sessionfactory.SessionFactory]实例");
+			return new SessionFactory(id, environment);
+		} catch (Exception e) {
+			try {
+				logger.error("结束读取jdb-orm框架的配置信息, 构建[com.douglei.orm.sessionfactory.SessionFactory]实例时出现异常, 框架进行回退操作: \n{}", ExceptionUtil.getStackTrace(e));
+				if(environment != null)
+					environment.destroy();
+			} catch (Exception e1) {
+				logger.error("结束读取jdb-orm框架的配置信息, 构建[com.douglei.orm.sessionfactory.SessionFactory]实例出现异常后, 框架进行回退操作时又出现异常: \n{}", ExceptionUtil.getStackTrace(e1));
+				e.addSuppressed(e1);
+			}
+			throw new OrmException("构建[com.douglei.orm.sessionfactory.SessionFactory]实例时出现异常", e);
+		} finally {
+			try {
+				logger.debug("finally: 开始关闭读取jdb-orm框架的配置信息的流对象");
+				input.close();
+				logger.debug("finally: 结束关闭读取jdb-orm框架的配置信息的流对象");
+			} catch (IOException e) {
+				logger.error("关闭读取jdb-orm框架的配置信息的流对象时出现异常: \n{}", ExceptionUtil.getStackTrace(e));
+				throw new OrmException("关闭读取jdb-orm框架的配置信息的流对象时出现异常", e);
+			}
+		}
 	}
 }

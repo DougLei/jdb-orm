@@ -3,6 +3,8 @@ package com.douglei.orm.dialect;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
+
 /**
  * 
  * @author DougLei
@@ -12,24 +14,24 @@ public class DialectContainer {
 	
 	/**
 	 * 获取方言实例
-	 * @param key
+	 * @param entity
 	 * @return
 	 */
-	public static Dialect get(DialectKey key) {
+	public static Dialect get(DatabaseMetadataEntity entity) {
 		if(instanceContainer.size() > 0) {
 			for(Dialect dialect : instanceContainer) {
-				if(dialect.getType().support(key))
+				if(dialect.getType().support(entity))
 					return dialect;
 			}
 		}
 		
 		for(DialectType dialectType : DialectType.values()) {
-			if(dialectType.support(key)) {
-				Dialect dialect = dialectType.newDialectInstance();
+			if(dialectType.support(entity)) {
+				Dialect dialect = dialectType.newInstance();
 				instanceContainer.add(dialect);
 				return dialect;
 			}
 		}
-		throw new NullPointerException("框架目前不支持"+key+"的数据库");
+		throw new NullPointerException("框架目前不支持"+entity+"的数据库");
 	}
 }
