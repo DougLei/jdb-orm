@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<!-- 属性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
-	<property order="0" supportCover="true" supportDelete="true" extendExpr="" />
+	<property order="0" supportCover="true" supportDelete="true" extend="" />
 	
-	<sql namespace="com.test" oldNamespace="">
+	<!-- 
+		sql映射配置; 仿mybatis
+		* name: sql映射名
+		* oldName: 旧sql映射名; 如果配置, 框架会删除旧映射名的sql
+	 -->
+	<sql name="com.test" oldName="">
+	
+	
 		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->
+		
+		<!-- 
+			可引用的sql内容配置; 只能通过include使用, 不能直接被框架调用
+			* name: sql名称, 文件内唯一
+		 -->
 		<sql-content name="rs">
-			select * from test
-			<include ref-name="xx" />
+			<!-- 输入具体的sql内容 -->
 		</sql-content>
 		
-		<!-- type值目前包括: insert, delete, update, select, declare, procedure -->
+		<!-- type值目前包括:  -->
 		<!-- 
 			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
 			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id
@@ -25,11 +36,30 @@
 			mysql/sqlserver配置insert sql
 				insert into sys_user(name, age, sex) values(#{name}, #{age, dataType=number}, #{sex} ) -- 不需要配置自增相关的东西
 		 -->
-		<content name="" type="insert" key="id" oracleSequenceName="">
+		
+		<!-- 
+			sql内容配置
+			* name: sql名称, 文件内唯一
+			* type: sql类型, 必填; 可使用的值有: insert, delete, update, select, declare, procedure
+			
+			针对type=insert时生效; 其目的是: 调用该sql内容会传入一个对象, 框架执行insert语句后得到生成自增主键id值, 根据这两个配置, 框架会将                       为了将insert生成的自增主键值, 传给调用sql时传入的对象中
+			* key: 当调用该sql内容传入一个对象时, 
+			* sequenceName: 
+		 --> 
+		<content name="" type="insert" key="id" sequenceName="">
 			select * from sys_user 
 			
 			<include ref-name="rs" />
 			
+			
+			
+			
+			
+			
+			
+			
+		<!--  -->
+		<include ref-name="xx" />	
 		<!-- 
 			<where>
 				<if test="age != null and age == 23">

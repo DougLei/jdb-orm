@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
 	<!-- 属性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
-	<property order="0" supportCover="true" supportDelete="true" extendExpr="" />
+	<property order="0" supportCover="true" supportDelete="true" extend="" />
 
 	<!-- 该映射主要用在数据库中创建, 修改或删除视图, 不提供被调用的能力 -->
 	<!-- name必须和视图脚本的名称一致, oldName记录之前的name, 框架会将oldName对应的视图删除 -->
