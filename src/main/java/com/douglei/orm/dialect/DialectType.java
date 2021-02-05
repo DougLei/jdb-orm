@@ -22,7 +22,7 @@ public enum DialectType {
 	private int[] supportDatabaseMajorVersions;
 	
 	private DialectType(String name, Class<? extends Dialect> clazz, int... supportDatabaseMajorVersions) {
-		this.name = name.toUpperCase(); // 这里name通过传入的形式, 方便后续扩展同数据库不同版本的枚举
+		this.name = name.toUpperCase(); // 这里name通过传入的形式, 方便后续扩展同数据库名, 不同版本的枚举
 		this.clazz = clazz;
 		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
