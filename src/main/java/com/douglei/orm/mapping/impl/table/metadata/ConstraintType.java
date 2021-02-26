@@ -1,7 +1,5 @@
 package com.douglei.orm.mapping.impl.table.metadata;
 
-import com.douglei.tools.StringUtil;
-
 /**
  * 
  * @author DougLei
@@ -29,35 +27,36 @@ public enum ConstraintType {
 	 */
 	FOREIGN_KEY("FK", "FOREIGN KEY", false);
 	
-	private String constraintPrefix;
+	private String namePrefix;
 	private String sqlStatement;
-	private boolean supportComposite;// 是否支持复合约束
-	private ConstraintType(String constraintPrefix, String sqlStatement, boolean supportComposite) {
-		this.constraintPrefix = constraintPrefix;
+	private boolean supportMultiColumn;// 约束是否支持绑定多个列
+	private ConstraintType(String namePrefix, String sqlStatement, boolean supportMultiColumn) {
+		this.namePrefix = namePrefix;
 		this.sqlStatement = sqlStatement;
-		this.supportComposite = supportComposite;
+		this.supportMultiColumn = supportMultiColumn;
 	}
 	
-	public String getConstraintPrefix() {
-		return constraintPrefix;
+	/**
+	 * 获取约束名的前缀
+	 * @return
+	 */
+	public String getNamePrefix() {
+		return namePrefix;
 	}
+	
+	/**
+	 * 获取约束对应的sql语句
+	 * @return
+	 */
 	public String getSqlStatement() {
 		return sqlStatement;
 	}
-	public boolean supportComposite() {
-		return supportComposite;
-	}
-
-	public static ConstraintType toValue(String type) {
-		if(StringUtil.notEmpty(type)) {
-			type = type.toUpperCase();
-			ConstraintType[] cts = ConstraintType.values();
-			for (ConstraintType ct : cts) {
-				if(ct.name().equals(type)) {
-					return ct;
-				}
-			}
-		}
-		return null;
+	
+	/**
+	 * 约束是否支持绑定多个列
+	 * @return
+	 */
+	public boolean supportMultiColumn() {
+		return supportMultiColumn;
 	}
 }

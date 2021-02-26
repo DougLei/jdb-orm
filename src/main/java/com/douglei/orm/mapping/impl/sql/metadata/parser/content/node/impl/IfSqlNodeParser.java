@@ -19,7 +19,7 @@ public class IfSqlNodeParser extends SqlNodeParser {
 	public SqlNode parse(Node node) throws SqlNodeParserException {
 		String expression = getAttributeValue(node.getAttributes().getNamedItem("test"));
 		if(StringUtil.isEmpty(expression)) 
-			throw new SqlNodeParserException("<if>元素中的test属性值不能为空");
+			throw new SqlNodeParserException("<if>中的test属性值不能为空");
 		
 		IfSqlNode ifSqlNode = new IfSqlNode(expression);
 		setChildrenSqlNodes(ifSqlNode, node);

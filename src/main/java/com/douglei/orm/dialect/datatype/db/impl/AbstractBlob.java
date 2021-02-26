@@ -12,18 +12,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.CloseUtil;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractBlob extends DBDataType{
-	private static final long serialVersionUID = -75803985360741822L;
 
-	protected AbstractBlob(int sqlType) {
-		super(sqlType);
+	protected AbstractBlob(String name, int sqlType) {
+		super(name, sqlType);
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public abstract class AbstractBlob extends DBDataType{
 	}
 	
 	@Override
-	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public final void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		if(!(value instanceof byte[])) 
 			value = value.toString().getBytes(StandardCharsets.UTF_8);
 		byte[] byteArray = (byte[]) value;
@@ -61,9 +59,8 @@ public abstract class AbstractBlob extends DBDataType{
 		if(input == null) 
 			return null;
 		
-		ByteArrayOutputStream output = null;
 		try {
-			output = new ByteArrayOutputStream();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
 			int length;
 			byte[] b = new byte[1024];
 			while((length = input.read(b)) != -1) 
@@ -72,7 +69,11 @@ public abstract class AbstractBlob extends DBDataType{
 		} catch (IOException e) {
 			throw new ReadDataStreamException("读取二进制流(blob)类型的数据时出现异常", e);
 		} finally {
-			CloseUtil.closeDBConn(input);
+			try {
+				input.close();
+			} catch (IOException e) {
+				throw new ReadDataStreamException("读取二进制流(blob)类型的数据, 关闭输入流时出现异常", e);
+			}
 		}
 	}
 	

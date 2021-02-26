@@ -24,7 +24,7 @@ public class SetSqlNodeParser extends SqlNodeParser {
 	@Override
 	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParserException {
 		if(children.getType() != SqlNodeType.IF) 
-			throw new SqlNodeParserException("<set>元素中, 只能使用<if>元素; 也不支持在<set>元素中, 直接编写sql语句");
+			throw new SqlNodeParserException("<set>中, 只能使用<if>; 也不支持在<set>中, 直接编写sql语句");
 	}
 
 	@Override

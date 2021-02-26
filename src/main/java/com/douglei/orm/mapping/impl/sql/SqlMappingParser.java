@@ -1,139 +1,138 @@
 package com.douglei.orm.mapping.impl.sql;
 
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.MappingParser;
+import com.douglei.orm.mapping.MappingSubject;
+import com.douglei.orm.mapping.MappingTypeNameConstants;
 import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.SqlMetadataParser;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.ContentMetadataParser;
-import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
-import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
-import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
-import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
-import com.douglei.tools.StringUtil;
+import com.douglei.orm.mapping.metadata.MetadataParseException;
+import com.douglei.orm.mapping.validator.Validator;
+import com.douglei.orm.mapping.validator.ValidatorParserContainer;
+import com.douglei.orm.mapping.validator.ValidatorUtil;
 
 /**
  * 
  * @author DougLei
  */
-class SqlMappingParser extends MappingParser<SqlMapping>{
+class SqlMappingParser extends MappingParser {
 	private static SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
 	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
 	private SqlMetadata sqlMetadata;
 	
 	@Override
-	public SqlMapping parse(InputStream input) throws Exception {
-		Document sqlDocument = MappingParserContext.getDocumentBuilder().parse(input);
-		Element rootElement = sqlDocument.getDocumentElement();
+	public MappingSubject parse(InputStream input) throws Exception {
+		Element rootElement = MappingParserContext.getDocumentBuilder().parse(input).getDocumentElement();
 		
-		Node sqlNode = getSqlNode(rootElement.getElementsByTagName(MetadataTypeNameConstants.SQL));
-		this.sqlMetadata = sqlMetadataParser.parse(sqlNode);
+		// 解析SqlMetadata
+		NodeList sqlNodeList = rootElement.getElementsByTagName(MappingTypeNameConstants.SQL);
+		if(sqlNodeList == null || sqlNodeList.getLength() == 0) 
+			throw new MetadataParseException("必须配置<sql>");
+		Node sqlNode = sqlNodeList.item(0);
+		sqlMetadata = sqlMetadataParser.parse(sqlNode);
 		
-		setParameterValidator(sqlNode);
+		// 记录配置的验证器Map集合
+		setValidators(sqlNode);
+		// 记录配置的验证器Map集合
 		MappingParserContext.setSqlContents(sqlNode);
 		
-		resolvingContents(sqlNode);
+		// 添加content
+		addContents(sqlNode);
 		
-		return new SqlMapping(sqlMetadata, getSqlMappingPropertyByDocument(rootElement.getElementsByTagName("property")));
+		return buildMappingSubjectByDocumentBuilder(new SqlMapping(sqlMetadata), rootElement);
 	}
 	
 	/**
-	 * 获取唯一的<sql>元素
-	 * @param sqlNodeList
-	 * @return
-	 */
-	private Node getSqlNode(NodeList sqlNodeList) {
-		if(sqlNodeList == null || sqlNodeList.getLength() == 0) 
-			throw new MetadataParseException("没有配置<sql>元素");
-		if(sqlNodeList.getLength() > 1) 
-			throw new MetadataParseException("<sql>元素最多只能配置一个");
-		return sqlNodeList.item(0);
-	}
-	
-	/**
-	 * 设置配置的参数验证器
+	 * 记录配置的验证器Map集合
 	 * @param sqlNode
 	 * @throws XPathExpressionException 
 	 */
-	private void setParameterValidator(Node sqlNode) throws XPathExpressionException {
-		Map<String, ValidateHandler> validateHandlerMap = null;
-		NodeList validatorNodeList = MappingParserContext.getValidatorNodeList(sqlNode);
-		if(validatorNodeList != null && validatorNodeList.getLength() > 0) {
-			NamedNodeMap attributes = null;
-			String name = null;
-			Node attribute = null;
-			for(int i=0;i<validatorNodeList.getLength();i++) {
-				attributes = validatorNodeList.item(i).getAttributes();
-				name = attributes.getNamedItem("name").getNodeValue();
-				if(StringUtil.isEmpty(name)) 
-					throw new MetadataParseException("<validator>元素中的name属性值不能为空");
-					
-				ValidateHandler validateHandler = new ValidateHandler(name);
-				if(attributes.getLength() > 1) {
-					for(int j=0;j<attributes.getLength();j++) {
-						attribute = attributes.item(j);
-						if(!"name".equals(attribute.getNodeName()))
-							validateHandler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getNodeName(), attribute.getNodeValue()));
-					}
-				}
+	private void setValidators(Node sqlNode) throws XPathExpressionException{
+		NodeList list = MappingParserContext.getValidatorNodeList(sqlNode);
+		if(list.getLength() == 0)
+			return;
+		
+		List<Validator> validators = null;
+		for(int i=0;i<list.getLength();i++) {
+			NamedNodeMap attributeMap = list.item(i).getAttributes();
+			if(attributeMap.getLength() < 2) 
+				continue;
+			
+			for(int j=0;j<attributeMap.getLength();j++) {
+				Node attribute = attributeMap.item(j);
+				if("name".equals(attribute.getNodeName()))
+					continue;
 				
-				if(validateHandlerMap == null)
-					validateHandlerMap = new HashMap<String, ValidateHandler>();
-				validateHandlerMap.put(validateHandler.getName(), validateHandler);
+				Validator validator = ValidatorParserContainer.get(attribute.getNodeName()).parse(attribute.getNodeValue());
+				if(validator == null)
+					continue;
+				
+				if(validators == null)
+					validators = new ArrayList<Validator>(attributeMap.getLength()-1);
+				validators.add(validator);
 			}
+			
+			if(validators == null)
+				continue;
+			
+			ValidatorUtil.sortByPriority(validators);
+			sqlMetadata.addValidators(attributeMap.getNamedItem("name").getNodeValue(), validators);
+			validators = null;
 		}
-		if(validateHandlerMap == null) 
-			validateHandlerMap = Collections.emptyMap();
-		MappingParserContext.setSqlValidateHandlers(validateHandlerMap);
+	}
+	
+	/**
+	 * 添加content
+	 * @param sqlNode
+	 * @throws XPathExpressionException 
+	 */
+	private void addContents(Node sqlNode) throws XPathExpressionException {
+		NodeList contentNodeList = MappingParserContext.getContentNodeList(sqlNode);
+		if(contentNodeList.getLength() == 0) 
+			throw new MetadataParseException("<sql>中至少要配置一个<content>");
+		
+		List<ContentMetadata> contents = new ArrayList<ContentMetadata>(contentNodeList.getLength());
+		for (int i=0;i<contentNodeList.getLength();i++) {
+			ContentMetadata content = contentMetadataParser.parse(contentNodeList.item(i));
+			if(contents.contains(content))
+				throw new MetadataParseException("<sql>中配置了重复name["+content.getName()+"]的<content>");
+			contents.add(content);
+		} 
+		sqlMetadata.setContents(contents);
 	}
 
-	/**
-	 * 解析配置的 content
-	 * @param sqlNode
-	 * @throws XPathExpressionException 
-	 */
-	private void resolvingContents(Node sqlNode) throws XPathExpressionException {
-		NodeList contentNodeList = MappingParserContext.getContentNodeList(sqlNode);
-		if(contentNodeList == null || contentNodeList.getLength() == 0) 
-			throw new MetadataParseException("至少要配置一个<content>元素");
-		
-		for (int i=0;i<contentNodeList.getLength();i++) 
-			sqlMetadata.addContentMetadata(contentMetadataParser.parse(contentNodeList.item(i)));
-	}
 	
-	/**
-	 * 获取sql映射属性实例
-	 * @param propertyNodeList
-	 * @return
-	 */
-	private MappingProperty getSqlMappingPropertyByDocument(NodeList propertyNodeList) {
-		MappingProperty property = new MappingProperty(sqlMetadata.getCode(), MetadataTypeNameConstants.SQL);
-		if(propertyNodeList != null && propertyNodeList.getLength() > 0) {
-			Node propertyNode = propertyNodeList.item(0);
-			if(propertyNode.hasAttributes()) {
-				NamedNodeMap attributeMap = propertyNode.getAttributes();
-				property.setValues(getValue(attributeMap.getNamedItem("order")), getValue(attributeMap.getNamedItem("supportCover")), getValue(attributeMap.getNamedItem("supportDelete")), getValue(attributeMap.getNamedItem("extendExpr")));
-			}
-		}
-		return property;
-	}
-	private String getValue(Node attributeNode) {
-		if(attributeNode == null)
-			return null;
-		return attributeNode.getNodeValue();
-	}
+//	public static void main(String[] args) throws Exception {
+//		Element rootElement = MappingParserContext.getDocumentBuilder().parse(new FileInputStream(new File("D:\\workspace4\\jdb-orm\\doc\\sql映射配置结构设计.smp.xml"))).getDocumentElement();
+//		NodeList sqlNodeList = rootElement.getElementsByTagName(MappingTypeNameConstants.SQL);
+//		if(sqlNodeList == null || sqlNodeList.getLength() == 0) 
+//			throw new MetadataParseException("必须配置<sql>");
+//		Node sqlNode = sqlNodeList.item(0);
+//		NodeList contentNodeList = MappingParserContext.getContentNodeList(sqlNode);
+//		List<ContentMetadata> contents = new ArrayList<ContentMetadata>(contentNodeList.getLength());
+//		for (int i=0;i<contentNodeList.getLength();i++) {
+//			ContentMetadata content = contentMetadataParser.parse(contentNodeList.item(i));
+//		}
+//		XPathExpression validatorNodeExpression = XPathFactory.newInstance().newXPath().compile("validators/validator[@name!='']");
+//		NodeList list = (NodeList) validatorNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
+//		NamedNodeMap attributes = list.item(0).getAttributes();
+//		for(int j=0;j<attributes.getLength();j++) {
+//			Node attribute = attributes.item(j);
+//			System.out.println(attribute.getNodeName() + "\t\t" + attribute.getNodeValue());
+//		}
+//	}
 }

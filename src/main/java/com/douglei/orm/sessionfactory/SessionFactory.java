@@ -3,6 +3,7 @@ package com.douglei.orm.sessionfactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.OrmException;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
@@ -83,12 +84,15 @@ public class SessionFactory {
 	
 	/**
 	 * 销毁
-	 * @throws Exception 
 	 */
-	public void destroy() throws Exception {
+	public void destroy() {
 		if(environment != null) {
-			environment.destroy();
-			environment = null;
+			try {
+				environment.destroy();
+				environment = null;
+			} catch (Exception e) {
+				throw new OrmException("销毁[com.douglei.orm.sessionfactory.SessionFactory]实例时出现异常", e);
+			}
 		}
 	}
 }

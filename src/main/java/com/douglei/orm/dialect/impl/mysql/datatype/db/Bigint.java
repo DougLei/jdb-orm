@@ -12,7 +12,6 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Bigint extends AbstractInt{
-	private static final long serialVersionUID = 3400951240148537497L;
 	private static final Bigint singleton = new Bigint();
 	public static Bigint getSingleton() {
 		return singleton;
@@ -22,7 +21,7 @@ public class Bigint extends AbstractInt{
 	}
 	
 	protected Bigint() {
-		super(-5, 19);
+		super("BIGINT", -5, 19);
 	}
 	
 	@Override

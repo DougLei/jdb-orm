@@ -2,8 +2,6 @@ package com.douglei.orm.configuration.environment;
 
 import java.util.Map;
 
-import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-
 /**
  * 
  * @author DougLei

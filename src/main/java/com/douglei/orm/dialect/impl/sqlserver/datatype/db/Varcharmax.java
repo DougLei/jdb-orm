@@ -1,14 +1,13 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.db;
 
 import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public class Varcharmax extends AbstractCharacter{
-	private static final long serialVersionUID = 8074576046918825812L;
 	private static final Varcharmax singleton = new Varcharmax();
 	public static Varcharmax getSingleton() {
 		return singleton;
@@ -18,8 +17,7 @@ public class Varcharmax extends AbstractCharacter{
 	}
 	
 	private Varcharmax() {
-		super(12);
-		super.name = "VARCHAR(MAX)";
+		super("VARCHAR(MAX)", 12);
 	}
 	
 	@Override

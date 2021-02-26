@@ -1,152 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<!-- 属性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
+	<!-- 映射的属性配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
 	<property order="0" supportCover="true" supportDelete="true" extend="" />
 	
 	<!-- 
-		sql映射配置; 仿mybatis
-		* name: sql映射名
-		* oldName: 旧sql映射名; 如果配置, 框架会删除旧映射名的sql
+		sql映射配置
+		* namespace: 映射名
+		* oldNamespace: 旧映射名; 如果配置, 框架会删除旧映射名的sql
 	 -->
-	<sql name="com.test" oldName="">
-	
-	
-		<!-- 这个是可以被其他<content>元素通过<include ref-name="">来引用的 -->
-		
+	<sql namespace="com.test" oldNamespace="">
 		<!-- 
-			可引用的sql内容配置; 只能通过include使用, 不能直接被框架调用
+			可引用的sql内容配置; 只能通过include使用, 不能直接被框架调用; 可配置多组
 			* name: sql名称, 文件内唯一
 		 -->
 		<sql-content name="rs">
-			<!-- 输入具体的sql内容 -->
+			<!-- sql内容 -->
 		</sql-content>
 		
-		<!-- type值目前包括:  -->
 		<!-- 
-			当type=insert时, 且插入的表的主键为自增列时, 可以通过以下配置, 获得刚刚插入数据的主键值
-			key: 针对传入参数中, 要给哪个属性赋生成的自增主键值, 可以为ognl表达式, 例如 user.id, 代表传入对象中user属性中的id
-			oracleSequenceName: 当数据库是oracle时, 必须要配置序列名, 反之配置了序列名也不会有任何问题, 框架在执行时不会使用, 也不会出现异常
-			其中key的优先级高于sequence, 即配置了sequence而没有配置key, 则配置也是无效的
-			如果不配置, 则不会返回自增主键值
-			
-			举例:
-			oracle配置insert sql
-				insert into sys_user(id, name, age, sex) values(序列名.nextval, #{name}, #{age, dataType=number}, #{sex} )
-				
-			mysql/sqlserver配置insert sql
-				insert into sys_user(name, age, sex) values(#{name}, #{age, dataType=number}, #{sex} ) -- 不需要配置自增相关的东西
-		 -->
-		
-		<!-- 
-			sql内容配置
+			sql内容配置; 可配置多组
 			* name: sql名称, 文件内唯一
-			* type: sql类型, 必填; 可使用的值有: insert, delete, update, select, declare, procedure
+			* type: sql类型, 必填; 可使用的值有: INSERT, DELETE, UPDATE, SELECT, DECLARE, PROCEDURE; 不区分大小写
 			
-			针对type=insert时生效; 其目的是: 调用该sql内容会传入一个对象, 框架执行insert语句后得到生成自增主键id值, 根据这两个配置, 框架会将                       为了将insert生成的自增主键值, 传给调用sql时传入的对象中
-			* key: 当调用该sql内容传入一个对象时, 
-			* sequenceName: 
+			以下两个参数, 针对type=INSERT, 且插入的数据表为自增主键时生效; 其作用为: 调用该sql时会传入一个对象, 框架执行insert语句后可得到数据库生成的自增主键id值, 根据这两个配置, 框架会将生成的自增主键值, 赋给调用sql时传入的对象的属性中
+			* key: 指定传入的对象中, 要接收自增主键值的属性名 
+			* sequence: 如果是ORACLE数据库, 配置相应的序列名(即insert中写到的序列名)
 		 --> 
-		<content name="" type="insert" key="id" sequenceName="">
+		<content name="" type="insert" key="id" sequence="">
+			
+			<!-- 普通的sql语句 -->
 			select * from sys_user 
 			
-			<include ref-name="rs" />
+			<!-- 动态追加sql语句 -->
+			<!-- 
+				条件标签
+				* test: 配置ognl表达式, 如果满足条件则会追加if中的内容
+			 -->
+			<if test="">
+			</if>
 			
+			<!-- where标签; 功能与mybatis的where标签相同 -->
+			<where></where>
 			
+			<!-- set标签; 功能与mybatis的set标签相同 -->
+			<set></set>
 			
+			<!-- trim标签; 功能与mybatis的trim标签相同 -->
+			<trim prefix="" prefixOverride="" suffix="" suffixOverride=""></trim>
 			
-			
-			
-			
-			
-		<!--  -->
-		<include ref-name="xx" />	
-		<!-- 
-			<where>
-				<if test="age != null and age == 23">
-					
-					sql参数的属性配置, 参考《table映射配置结构设计.tmp.xml》中<column>的配置					
-					and name = #{name, description=姓名, dbType=VARCHAR, dataType=string, placeholder=false, prefix=', suffix=', nullable=true, defaultValue=dv, validate=fales, legnth=10, precision=2}
-				</if>
-				<if test="age != null">
-					and name = 'DougLei'
-				</if>
-			</where>
-		-->	
-			
-		 <!-- 
-			<set>
-				<if test="age != null and age == 23">
-					name = #{name},
-				</if>
-				<if test="age == null">
-					name = 'DougLei',
-				</if>
-				<if test="age == null">
-					name = 'DougLei222',
-				</if>
-			</set>
-		-->	
-		
-		<!-- 	
-			<trim prefix="where" prefixoverride="" suffix="" suffixoverride="">
-				<if test="name == '哈哈'">
-					b
-				</if>
-			</trim> 
-		-->
-		
-		<!-- 
+			<!-- switch标签; 功能与mybatis的choose标签相同 -->
 			<switch>
-				<if test="age == null">
-					name = 'age is null',
-				</if>
-				<if test="age == null">
-					name = 'age not null',
-				</if>
-				<else>
-					and else 
-				</else>
+				<if></if><!-- 功能与mybatis的when标签相同 -->
+				<else></else><!-- 功能与mybatis的otherwise标签相同 -->
 			</switch>
-		-->
-		
-		<!-- 
-			<foreach collection="users" alias="user" open="where id in (" separator="," close=")">
-				<if test="user.id == 1">
-					#{user.id, dataType=string}
-				</if>
-			</foreach>
-		-->	
-		
-			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")">
-				<if test="userId == 1">
-					#{userId, dataType=string}
-				</if>
-			</foreach>
 			
+			<!-- 
+				foreach标签; 功能与mybatis的foreach标签相同, 没有index属性
+				* alias: 等同于mybatis foreach中的item
+			 -->
+			<foreach collection="userIds" alias="userId" open="where id in (" separator="," close=")"></foreach>
+			
+			<!-- 
+				引用标签;
+				* ref-name: 引用指定name的sql-content 
+			-->
+			<include ref-name="" />
+			
+			<!-- 
+				sql参数配置; #{开头, }结尾, 中间用,分割, 第一个必须是参数名; 其中开头,结尾,分隔符都可以在《jdb-orm框架配置结构设计.conf.xml》中进行配置修改
+				
+				* 数据类型相关配置, 参考《table映射配置结构设计.tmp.xml》中的column配置; 若type=PROCEDURE时, 建议使用dbType
+				* mode: 针对type=PROCEDURE时生效; in(输入参数), out(输出参数), inout(输入输出参数); 不区分大小写, 默认值为in
+				* dbType:  ...; 当type=PROCEDURE时, 必须使用dbType, 不能使用dataType
+				* dataType: ...
+				* length: ...
+				* precision: ...
+				 
+				* defaultValue: 参数默认值
+				* nullable: 参数是否可为空
+				
+				* placeholder: 是否使用占位符, 默认为true
+				* prefix: 非占位符时的前缀字符
+				* suffix: 非占位符时的前缀字符
+				
+				* description: 参数描述
+			 -->
+			#{name, mode=in, dbType=DATE, dataType=string, length=30, precision=1, defaultValue=dv, nullable=true, placeholder=false, prefix=', suffix=', description=}
 		
 		</content>
-		<!-- 
-			dbType的值必须是全大写, 框架是区分大小写的, 且必须配置, 没有默认值, 目前支持的类型有:
-			
-				mysql数据库: BIGINT, CHAR, DATETIME, DATE, DECIMAL, INT, MEDIUMBLOB, MEDIUMTEXT, SMALLINT, VARCHAR
-				
-				oracle数据库: BLOB, CHAR, CLOB, CURSOR, DATE, NCHAR, NUMBER, NVARCHAR2, VARCHAR2
-				
-				sqlserver数据库: BIGINT, CHAR, DATETIME, DATE, DECIMAL, INT, NCHAR, NVARCHAR, SMALLINT, VARBINARY(MAX), VARCHAR, VARCHAR(MAX)
-				
-			或则也可以自定义, 继承com.douglei.orm.dialect.datatype.db.DBDataType类, 这里配置自定义类的全路径即可; 
-			特别注意, 自定义的数据库数据类型, 类的类名即类型名, 具体可参考框架已经实现的类, 例如: com.douglei.orm.dialect.impl.sqlserver.datatype.db.Bigint
-		 -->
-	<!-- 	
-		<content name="execProcedure" type="procedure">
-			{call test_procedure (
-				#{id, dbType=VARCHAR, mode=in},
-				#{name, dbType=VARCHAR, mode=out}
-			)}
-		</content>
-	-->	
 	
-		<!-- 验证器配置, 参考《table映射配置结构设计.tmp.xml》中的验证器配置结构 -->
-		<validators></validators>
+		<!-- 验证器配置, 参考《table映射配置结构设计.tmp.xml》中的验证器配置结构; 其中的name值由列名改为这里的参数名 -->
+		<validators><validator name=" "></validator></validators>
 	</sql>
 </mapping-configuration>

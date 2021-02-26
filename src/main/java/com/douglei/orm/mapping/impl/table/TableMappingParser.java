@@ -2,378 +2,362 @@ package com.douglei.orm.mapping.impl.table;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 
 import com.douglei.orm.configuration.Dom4jUtil;
+import com.douglei.orm.configuration.environment.CreateMode;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
-import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
+import com.douglei.orm.dialect.DatabaseNameConstants;
+import com.douglei.orm.dialect.datatype.DataTypeClassification;
+import com.douglei.orm.dialect.datatype.db.DBDataTypeEntity;
+import com.douglei.orm.dialect.datatype.db.DBDataTypeUtil;
 import com.douglei.orm.mapping.MappingParser;
-import com.douglei.orm.mapping.impl.MappingImportDataContext;
+import com.douglei.orm.mapping.MappingSubject;
+import com.douglei.orm.mapping.MappingTypeNameConstants;
 import com.douglei.orm.mapping.impl.MappingParserContext;
-import com.douglei.orm.mapping.impl.table.exception.ConstraintConfigurationException;
-import com.douglei.orm.mapping.impl.table.exception.PrimaryKeyHandlerConfigurationException;
-import com.douglei.orm.mapping.impl.table.exception.RepeatedPrimaryKeyException;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.Constraint;
+import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintType;
-import com.douglei.orm.mapping.impl.table.metadata.Index;
+import com.douglei.orm.mapping.impl.table.metadata.PrimaryKeyHandlerMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.parser.ColumnMetadataParser;
-import com.douglei.orm.mapping.impl.table.metadata.parser.TableMetadataParser;
-import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandler;
-import com.douglei.orm.mapping.impl.table.metadata.pk.PrimaryKeyHandlerContext;
-import com.douglei.orm.mapping.impl.table.metadata.pk.impl.SequencePrimaryKeyHandler;
-import com.douglei.orm.mapping.metadata.parser.MetadataParseException;
-import com.douglei.orm.mapping.metadata.validator.ValidateHandler;
-import com.douglei.orm.mapping.metadata.validator.ValidatorContainer;
-import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
+import com.douglei.orm.mapping.impl.table.pk.PrimaryKeyHandler;
+import com.douglei.orm.mapping.impl.table.pk.PrimaryKeyHandlerContainer;
+import com.douglei.orm.mapping.impl.table.pk.SequencePrimaryKeyHandler;
+import com.douglei.orm.mapping.metadata.AbstractMetadataParser;
+import com.douglei.orm.mapping.metadata.MetadataParseException;
+import com.douglei.orm.mapping.validator.Validator;
+import com.douglei.orm.mapping.validator.ValidatorParserContainer;
+import com.douglei.orm.mapping.validator.ValidatorUtil;
+import com.douglei.orm.sql.statement.util.NameConvertUtil;
 import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-class TableMappingParser extends MappingParser<TableMapping>{
+class TableMappingParser extends MappingParser{
 	private static TableMetadataParser tableMetadataParser = new TableMetadataParser();
 	private static ColumnMetadataParser columnMetadataParser = new ColumnMetadataParser();
-	
+	private static ConstraintMetadataParser constraintMetadataParser = new ConstraintMetadataParser();
+
 	private TableMetadata tableMetadata;
 	
 	@Override
-	public TableMapping parse(InputStream input) throws Exception {
-		Document document = MappingParserContext.getSAXReader().read(input);
-		Element rootElement = document.getRootElement();
+	public MappingSubject parse(InputStream input) throws Exception {
+		Element rootElement = MappingParserContext.getSAXReader().read(input).getRootElement();
 		
-		Element tableElement = Dom4jUtil.getElement(MetadataTypeNameConstants.TABLE, rootElement);
+		// 解析TableMetadata
+		Element tableElement = Dom4jUtil.getElement(MappingTypeNameConstants.TABLE, rootElement);
 		tableMetadata = tableMetadataParser.parse(tableElement);
 		
-		addColumnMetadata(getColumnElements(tableElement));
-		addConstraint(tableElement.element("constraints"));
-		addIndex(tableElement.element("indexes"));
-		setPrimaryKeyHandler(tableElement.element("primaryKeyHandler"));
-		setColumnValidator(tableElement.element("validators"));
+		addColumns(tableElement.element("columns"));
+		addConstraints(tableElement);
+		addValidators(tableElement.element("validators"));
 		
-		return new TableMapping(tableMetadata, getMappingPropertyByDom4j(rootElement, tableMetadata.getCode(), MetadataTypeNameConstants.TABLE));
+		return buildMappingSubjectByDom4j(new TableMapping(tableMetadata), rootElement);
 	}
 	
 	/**
-	 * 获取column元素集合
-	 * @param tableElement
-	 * @return
-	 * @throws DocumentException 
+	 * 添加列
+	 * @param element
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<Element> getColumnElements(Element tableElement) throws DocumentException {
-		List<Element> columnElements = null;
+	@SuppressWarnings("unchecked")
+	private void addColumns(Element element) {
+		if(element == null)
+			throw new MetadataParseException("<table>下必须配置<columns>");
 		
-		// 解析<columns>
-		Element columnsElement = tableElement.element("columns");
-		List<Element> localColumnElements = columnsElement==null?Collections.emptyList():columnsElement.elements("column");
-		
-		// 解析<import-columns>
-		Element importColumnsElement = tableElement.element("import-columns");
-		if(importColumnsElement != null) {
-			List<Element> importColumnElements = getImportColumnElements(importColumnsElement);
-			if(importColumnElements != null) {
-				columnElements = new ArrayList((localColumnElements.isEmpty()?0:localColumnElements.size()) + importColumnElements.size());
-				addToColumnElements(localColumnElements, columnElements);
-				addToColumnElements(importColumnElements, columnElements);
-			}
-		}
-		
-		if(columnElements == null) 
-			columnElements = localColumnElements;
+		List<Element> columnElements = element.elements("column");
 		if(columnElements.isEmpty()) 
-			throw new NullPointerException("<columns>元素下至少配置一个<column>元素, 或通过<import-columns path=\"\">导入列");
-		return columnElements;
-	}
-
-	/**
-	 * 获取导入的column元素集合
-	 * @param importColumnElement
-	 * @return
-	 * @throws DocumentException 
-	 */
-	private List<Element> getImportColumnElements(Element importColumnElement) throws DocumentException {
-		String importColumnFilePath = importColumnElement.attributeValue("path");
-		if(StringUtil.notEmpty(importColumnFilePath)) 
-			return MappingImportDataContext.getImportColumnElements(importColumnFilePath);
-		return null;
-	}
-	
-	/**
-	 * 将sourceColumnElements集合中的数据, 添加到columnElements
-	 * @param sourceColumnElements
-	 * @param columnElements
-	 */
-	private void addToColumnElements(List<Element> sourceColumnElements, List<Element> columnElements) {
-		if(sourceColumnElements.isEmpty()) 
-			return;
-		for (Element sce : sourceColumnElements) 
-			columnElements.add(sce);
-	}
-
-	/**
-	 * 添加列元数据
-	 * @param columnsElement
-	 * @throws MetadataParseException 
-	 */
-	private void addColumnMetadata(List<Element> columnElements) throws MetadataParseException {
-		ColumnMetadata columnMetadata = null;
-		for (Element element : columnElements) {
-			columnMetadata = columnMetadataParser.parse(element);
-			if(columnMetadata.isPrimaryKey() && tableMetadata.getPrimaryKeyColumns_() != null) 
-				throw new RepeatedPrimaryKeyException("主键配置重复, 通过<column>只能将单个列配置为主键, 如果需要配置联合主键, 请通过<constraint type='primary_key'>元素配置");
-			tableMetadata.addColumn(columnMetadata);
+			throw new MetadataParseException("<table><columns>下至少配置一个<column>");
+		
+		List<ColumnMetadata> columns = new ArrayList<ColumnMetadata>(columnElements.size());
+		for (Element columnElement : columnElements) {
+			ColumnMetadata column = columnMetadataParser.parse(tableMetadata, columnElement);
+			if(columns.indexOf(column) >=0) 
+				throw new MetadataParseException(tableMetadata.getName()+"表中存在重复的列名"+column.getName());
+			columns.add(column);
 		}
-		tableMetadata.sync();
+		tableMetadata.setColumns(columns);
 	}
 	
 	/**
 	 * 添加约束
-	 * @param constraintsElement
+	 * @param tableElement
 	 */
 	@SuppressWarnings("unchecked")
-	private void addConstraint(Element constraintsElement) {
-		if(constraintsElement != null) {
-			List<Element> elements = constraintsElement.elements("constraint");
-			if(elements.isEmpty())
-				return;
-			
-			ConstraintType constraintType = null;
-			List<Attribute> columnNames = null;
-			Constraint constraint = null;
-			ColumnMetadata columnMetadata = null;
-			
-			for (Element constraintElement : elements) {
-				columnNames = constraintElement.selectNodes("column/@name");
-				if(columnNames.isEmpty()) 
-					throw new NullPointerException(constraintElement.asXML() + " 中没有配置任何<column name=\"xxx\">元素");
-				
-				constraintType = ConstraintType.toValue(constraintElement.attributeValue("type"));
-				if(constraintType == null) 
-					throw new NullPointerException("<constraint>元素中的type属性值错误:["+constraintElement.attributeValue("type")+"], 目前支持的值包括: " + Arrays.toString(ConstraintType.values()));
-				if(columnNames.size() > 1 && !constraintType.supportComposite()) 
-					throw new ConstraintConfigurationException("不支持给多个列添加复合["+constraintType.name()+"]约束");
-				
-				constraint = new Constraint(constraintType, tableMetadata.getName());
-				switch(constraintType) {
-					case PRIMARY_KEY:
-						for(Attribute columnName: columnNames) {
-							columnMetadata = getColumnByName(columnName.getValue());
-							columnMetadata.setPrimaryKeyConstraint(true);
-							constraint.addColumn(columnMetadata);
-						}
-						break;
-					case UNIQUE:
-						for(Attribute columnName: columnNames) {
-							columnMetadata = getColumnByName(columnName.getValue());
-							isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-							columnMetadata.setUniqueConstraint(true);
-							constraint.addColumn(columnMetadata);
-						}
-						break;
-					case DEFAULT_VALUE:
-						columnMetadata = getColumnByName(columnNames.get(0).getValue());
-						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.setDefaultValue(constraintElement.attributeValue("value"));
-						if(columnMetadata.getDefaultValue() == null) {
-							throw new NullPointerException("配置默认值约束, 默认值不能为空");
-						}
-						constraint.addColumn(columnMetadata);
-						break;
-					case CHECK:
-						columnMetadata = getColumnByName(columnNames.get(0).getValue());
-						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.setCheckConstraint(constraintElement.attributeValue("expression"));
-						if(columnMetadata.getCheck() == null) {
-							throw new NullPointerException("配置检查约束, 检查约束的表达式不能为空");
-						}
-						constraint.addColumn(columnMetadata);
-						break;
-					case FOREIGN_KEY:
-						columnMetadata = getColumnByName(columnNames.get(0).getValue());
-						isAlreadyExistsPrimaryKeyConstraint(columnMetadata, constraintType);
-						columnMetadata.setForeginKeyConstraint(constraintElement.attributeValue("fkTableName"), constraintElement.attributeValue("fkColumnName"));
-						if(columnMetadata.getFkTableName() == null) {
-							throw new NullPointerException("配置外键约束, 关联的表名和列名均不能为空");
-						}
-						constraint.addColumn(columnMetadata);
-						break;
-				}
-				tableMetadata.addConstraint(constraint);
-			}
-		}
-	}
-	
-	// 根据列名获取列对象
-	private ColumnMetadata getColumnByName(String name) {
-		ColumnMetadata column = tableMetadata.getColumns().get(name.toUpperCase());
-		if(column == null)
-			throw new NullPointerException("不存在name为["+name+"]的列");
-		return column;
-	}
-	
-	// 验证指定列是否已经存在主键约束
-	private void isAlreadyExistsPrimaryKeyConstraint(ColumnMetadata column, ConstraintType ct) {
-		if(column.isPrimaryKey()) 
-			throw new ConstraintConfigurationException("列["+column.getName()+"]为主键列, 禁止配置["+ct.name()+"]约束");
-	}
-	
-	/**
-	 * 添加索引
-	 * @param indexesElement
-	 */
-	@SuppressWarnings("unchecked")
-	private void addIndex(Element indexesElement) {
-		if(indexesElement != null) {
-			List<Element> indexElements = indexesElement.elements("index");
-			if(indexElements.isEmpty())
-				return;
-			
-			String indexName, createSqlStatement, dropSqlStatement;
-			String currentDialect = EnvironmentContext.getDialect().getType().getName();
-			
-			for (Element indexElement : indexElements) {
-				if(StringUtil.isEmpty(indexName = indexElement.attributeValue("name")))
-					throw new NullPointerException("索引名不能为空");
-				
-				createSqlStatement = getIndexSqlStatement("create", indexElement, currentDialect, indexName);
-				dropSqlStatement = getIndexSqlStatement("drop", indexElement, currentDialect, indexName);
-				tableMetadata.addIndex(new Index(tableMetadata.getName(), indexName, createSqlStatement, dropSqlStatement));
-			}
-		}
-	}
-	
-	// 获取索引指定key的sql语句
-	@SuppressWarnings("unchecked")
-	private String getIndexSqlStatement(String key, Element indexElement, String currentDialect, String indexName) {
-		List<Element> sqlElements = indexElement.elements(key + "Sql");
-		if(!sqlElements.isEmpty()) {
-			String tmp;
-			for (Element sqlElement : sqlElements) {
-				tmp = sqlElement.attributeValue("dialect");
-				if((StringUtil.isEmpty(tmp) || tmp.toUpperCase().indexOf(currentDialect) != -1) && StringUtil.notEmpty(tmp = sqlElement.getTextTrim()))
-					return tmp;
-			}
-		}
-		throw new NullPointerException("索引" + indexName + "的 "+key+"Sql语句不能为空");
-	}
-	
-	/**
-	 * 设置主键处理器
-	 * @param primaryKeyHandlerElement
-	 */
-	private void setPrimaryKeyHandler(Element primaryKeyHandlerElement) {
-		if(tableMetadata.getPrimaryKeyColumns_() != null && primaryKeyHandlerElement != null) {
-			// 获取主键处理器
-			PrimaryKeyHandler primaryKeyHandler = PrimaryKeyHandlerContext.getHandler(primaryKeyHandlerElement.attributeValue("type"));
-			if(primaryKeyHandler != null) {
-				if(!primaryKeyHandler.supportMultiColumns() && tableMetadata.getPrimaryKeyColumns_().size() > 1) 
-					throw new PrimaryKeyHandlerConfigurationException("["+primaryKeyHandler.getClass().getName() +"]主键处理器不支持处理多个主键, 表=["+tableMetadata.getName()+"], 主键=["+tableMetadata.getPrimaryKeyColumns_().keySet()+"]");
-				tableMetadata.setPrimaryKeyHandler(primaryKeyHandler);
-				
-				// 如果是序列类型, 则去解析<sequence>元素
-				if(primaryKeyHandler instanceof SequencePrimaryKeyHandler) 
-					setPrimaryKeySequence(primaryKeyHandlerElement.element("sequence"));
-			}
-		}
-	}
-	
-	/**
-	 * 设置主键序列配置对象
-	 * @param sequenceElement
-	 */
-	private void setPrimaryKeySequence(Element sequenceElement) {
-		// 因为主键序列只支持单列主键, 所以这里获取唯一的主键列, 并将其标识为主键序列
-		ColumnMetadata primaryKeyColumn = tableMetadata.getPrimaryKeyColumns_().get(tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next());
-		primaryKeyColumn.setPrimaryKeySequence();
+	private void addConstraints(Element tableElement) {
+		Element element = tableElement.element("constraints");
+		if(element == null)
+			return;
 		
-		// 创建主键序列对象(根据配置创建对象或创建默认的对象)
-		String sequenceName = null;
-		String createSqlStatement = null;
-		String dropSqlStatement = null;
-		if(sequenceElement != null) {
-			sequenceName = sequenceElement.attributeValue("name");
-			
-			Element elem = sequenceElement.element("createSql");
-			createSqlStatement = elem==null?null:elem.getTextTrim();
-			
-			elem = sequenceElement.element("dropSql");
-			dropSqlStatement = elem==null?null:elem.getTextTrim();
-		}
-		PrimaryKeySequence primaryKeySequence = 
-				EnvironmentContext.getDialect().getObjectHandler().createPrimaryKeySequence(
-						sequenceName, createSqlStatement, dropSqlStatement, tableMetadata.getName(), primaryKeyColumn);
-		tableMetadata.setPrimaryKeySequence(primaryKeySequence);
-	}
-	
-	/**
-	 * 设置配置的列验证器
-	 * @param validatorsElement
-	 */
-	private void setColumnValidator(Element validatorsElement) {
-		Map<String, ValidateHandler> validateHandlerMap = getValidateHandlerMap(validatorsElement);
-		boolean existsPrimaryKeyHandler = tableMetadata.getPrimaryKeyHandler() != null;
-		tableMetadata.getDeclareColumns().forEach(column -> {
-			tableMetadata.addValidateColumn(column.setValidateHandler(existsPrimaryKeyHandler, validateHandlerMap.isEmpty()?null:validateHandlerMap.get(column.getName())));
-		});
-	}
-	
-	/**
-	 * 获取配置的ValidateHandler集合
-	 * @param validatorsElement
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private Map<String, ValidateHandler> getValidateHandlerMap(Element validatorsElement) {
-		if(validatorsElement != null) {
-			List<Element> validatorElements = validatorsElement.selectNodes("validator[@name!='']");
-			if(!validatorElements.isEmpty()) {
-				Map<String, ValidateHandler> validatorMap = null;
-				
-				ValidateHandler validateHandler = null;
-				for (Element validatorElement : validatorElements) {
-					validateHandler = getValidateHandler(validatorElement);
-					
-					if(validatorMap == null)
-						validatorMap = new HashMap<String, ValidateHandler>();
-					validatorMap.put(validateHandler.getName(), validateHandler);
-				}
-				return validatorMap;
-			}
-		}
-		return Collections.emptyMap();
-	}
-	
-	/**
-	 * 获取validateHandler实例
-	 * @param validatorElement
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private ValidateHandler getValidateHandler(Element validatorElement) {
-		String name = validatorElement.attributeValue("name");
-		if(StringUtil.isEmpty(name)) 
-			throw new NullPointerException("<validator>元素中的name属性值不能为空");
+		List<Element> constraintElements = element.elements("constraint");
+		if(constraintElements.isEmpty())
+			return;
 		
-		ValidateHandler handler = new ValidateHandler(getColumnByName(name).getName());
-		List<Attribute> attributes = validatorElement.attributes();
-		if(attributes.size() > 1) {
-			attributes.forEach(attribute -> {
-				if(!"name".equals(attribute.getName())) 
-					handler.addValidator(ValidatorContainer.getValidatorInstance(attribute.getName(), attribute.getValue()));
-			});
+		ConstraintMetadata primaryKeyConstraint = null;
+		List<ConstraintMetadata> constraints = new ArrayList<ConstraintMetadata>(constraintElements.size());
+		for (Element constraintElement : constraintElements) {
+			ConstraintMetadata constraint = constraintMetadataParser.parse(tableMetadata, constraintElement);
+			if(constraints.indexOf(constraint) >=0) 
+				throw new MetadataParseException(tableMetadata.getName()+"表中存在重复的约束名"+constraint.getName());
+			
+			if(constraint.getType() == ConstraintType.PRIMARY_KEY) {
+				if(primaryKeyConstraint != null)
+					throw new MetadataParseException(tableMetadata.getName()+"表中配置了多个主键约束");
+				primaryKeyConstraint = constraint;
+			}
+			constraints.add(constraint);
 		}
-		return handler;
+		tableMetadata.setConstraints(constraints);
+		
+		// 如果存在主键约束, 设置主键处理器
+		if(primaryKeyConstraint != null)
+			setPrimaryKeyHandlerMetadata(tableElement.element("primaryKeyHandler"), primaryKeyConstraint);
+	}
+	
+	/**
+	 * 设置主键处理器元数据
+	 * @param element
+	 * @param primaryKeyConstraint
+	 */
+	private void setPrimaryKeyHandlerMetadata(Element element, ConstraintMetadata primaryKeyConstraint) {
+		if(element == null)
+			return;
+		
+		PrimaryKeyHandler handler = PrimaryKeyHandlerContainer.get(element.attributeValue("type"));
+		if(!handler.supportCompositeKeys() && primaryKeyConstraint.getColumnNames().size() > 1) 
+			throw new MetadataParseException(tableMetadata.getName()+"表中的"+handler.getType() +"主键处理器不支持处理联合主键");
+		
+		// 如果是序列主键处理器, 且是Oracle数据库, 则处理下序列名
+		String value = element.attributeValue("value");
+		if(handler.getClass() == SequencePrimaryKeyHandler.class && EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
+			int maxLength = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getNameMaxLength();
+			
+			// 未配置序列名, 则自动生成一个序列名
+			if(StringUtil.isEmpty(value)) {
+				value = "SEQ_" + tableMetadata.getName();
+				if(value.length() > maxLength) {
+					StringBuilder sb = new StringBuilder(value.length());
+					sb.append("SEQ_");
+					constraintMetadataParser.appendCompressedName(sb, tableMetadata.getName());
+					value = sb.toString();
+				}
+			}
+			if(value.length() > maxLength)
+				throw new MetadataParseException("数据库序列名["+value+"]长度超长, 长度应小于等于"+maxLength);
+		}
+		tableMetadata.setPrimaryKeyHandlerMetadata(new PrimaryKeyHandlerMetadata(handler.getType(), value));
+	}
+	
+	/**
+	 * 添加验证器
+	 * @param element
+	 */
+	@SuppressWarnings("unchecked")
+	private void addValidators(Element element) {
+		if(element == null)
+			return;
+		
+		List<Element> validatorElements = element.selectNodes("validator[@name!='']");
+		if(validatorElements.isEmpty())
+			return;
+		
+		List<Validator> validators = null;
+		for (Element validatorElement : validatorElements) {
+			ColumnMetadata columnMetadata = tableMetadata.getColumnMapByName().get(validatorElement.attributeValue("name"));
+			if(columnMetadata == null)
+				throw new MetadataParseException(tableMetadata.getName()+"表中不存在名为"+validatorElement.attributeValue("name")+"的列, 无法为其添加验证器");
+			
+			// 获取验证器配置, 如果只有一个name配置, 则直接忽略
+			List<Attribute> attributes = ((List<Attribute>)validatorElement.attributes());
+			if(attributes.size() == 1)
+				continue;
+			
+			// 解析ValidatorMetadata集合
+			for (Attribute attribute : attributes) {
+				if("name".equals(attribute.getName()))
+					continue;
+				
+				Validator validator = ValidatorParserContainer.get(attribute.getName()).parse(attribute.getValue());
+				if(validator == null)
+					continue;
+				
+				if(validators == null)
+					validators = new ArrayList<Validator>(attributes.size()-1);
+				validators.add(validator);
+			}
+			
+			if(validators == null) 
+				continue;
+			
+			ValidatorUtil.sortByPriority(validators);
+			columnMetadata.setValidators(validators);
+			validators = null;
+		}
+	}
+}
+
+/**
+ * TableMetadata解析器
+ * @author DougLei
+ */
+class TableMetadataParser extends AbstractMetadataParser{
+
+	/**
+	 * 解析TableMetadata
+	 * @param element
+	 * @return
+	 * @throws MetadataParseException
+	 */
+	public TableMetadata parse(Element element) throws MetadataParseException{
+		// 解析name和oldName
+		String name = getName(element);
+		String oldName = getOldName(name, element);
+		
+		CreateMode createMode = getCreateMode(element);
+		return new TableMetadata(name, oldName, element.attributeValue("class"), createMode);
+	}
+} 
+
+/**
+ * ColumnMetadata解析器
+ * @author DougLei
+ */
+class ColumnMetadataParser extends AbstractMetadataParser{
+	
+	/**
+	 * 解析ColumnMetadata
+	 * @param tableMetadata
+	 * @param element
+	 * @return
+	 * @throws MetadataParseException
+	 */
+	public ColumnMetadata parse(TableMetadata tableMetadata, Element element) throws MetadataParseException{
+		// 解析name和oldName
+		String name = getName(element);
+		String oldName = getOldName(name, element);
+		
+		// 解析property
+		String property = null;
+		if(tableMetadata.getClassName() != null) {
+			property = element.attributeValue("property");
+			if(property == null)
+				property = NameConvertUtil.column2Property(name);
+		}
+		
+		// 解析DBDataTypeEntity
+		String typeName = element.attributeValue("dbType");
+		DataTypeClassification classification = DataTypeClassification.DB;
+		
+		if(StringUtil.isEmpty(typeName)) {
+			typeName = element.attributeValue("dataType");
+			if(StringUtil.isEmpty(typeName))
+				typeName = "string";
+			classification = DataTypeClassification.MAPPING;
+		}
+		DBDataTypeEntity dataTypeEntity = DBDataTypeUtil.get(classification, typeName, element.attributeValue("length"), element.attributeValue("precision"));
+		
+		// 创建ColumnMetadata实例
+		return new ColumnMetadata(name, oldName, property, dataTypeEntity.getDBDataType(), dataTypeEntity.getLength(), dataTypeEntity.getPrecision(),
+				!"false".equalsIgnoreCase(element.attributeValue("nullable")),
+				element.attributeValue("description"));
+	}
+}
+
+/**
+ * ConstraintMetadata解析器
+ * @author DougLei
+ */
+class ConstraintMetadataParser {
+	
+	/**
+	 * 解析ConstraintMetadata
+	 * @param tableMetadata
+	 * @param element
+	 * @return
+	 * @throws MetadataParseException
+	 */
+	@SuppressWarnings("unchecked")
+	public ConstraintMetadata parse(TableMetadata tableMetadata, Element element) throws MetadataParseException{
+		List<Attribute> attributes = element.selectNodes("column/@name");
+		if(attributes.isEmpty()) 
+			throw new MetadataParseException("<table><constraints><constraint>下至少配置一个<column>");
+		
+		ConstraintType type = ConstraintType.valueOf(element.attributeValue("type").toUpperCase());
+		if(attributes.size() > 1 && !type.supportMultiColumn()) 
+			throw new MetadataParseException(type.name()+"约束不支持绑定多个列");
+		
+		// 记录当前约束要绑定的列名集合
+		List<String> columnNames = new ArrayList<String>(attributes.size());
+		for (Attribute attribute : attributes) {
+			String columnName = attribute.getValue().toUpperCase();
+			if(!tableMetadata.getColumnMapByName().containsKey(columnName))
+				throw new MetadataParseException(tableMetadata.getName()+"表中不存在名为"+columnName+"的列, 无法为其设置"+type.name()+"约束");
+			if(columnNames.indexOf(columnName) >= 0) 
+				throw new MetadataParseException(tableMetadata.getName()+"表中的"+type.name()+"约束, 存在重复的列名" + columnName);
+			columnNames.add(columnName);
+		}
+		
+		// 解析name
+		int maxLength = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getNameMaxLength();
+		String name = element.attributeValue("name");
+		if(StringUtil.isEmpty(name)) {
+			StringBuilder sb = new StringBuilder(columnNames.size()*30);
+			sb.append(type.getNamePrefix()).append('_').append(tableMetadata.getName()).append('_');
+			for (int i=0;i<columnNames.size();i++) {
+				sb.append(columnNames.get(i));
+				if(i < columnNames.size()-1)
+					sb.append('_');
+			}
+			
+			// 自动生成的约束名长度大于数据库限制的长度, 进行压缩
+			if(sb.length() > maxLength) {
+				sb.setLength(3);
+				appendCompressedName(sb, tableMetadata.getName());
+				for (int i=0;i<columnNames.size();i++) 
+					appendCompressedName(sb, columnNames.get(i));
+			}
+			name = sb.toString();
+		}
+		if(name.length() > maxLength)
+			throw new MetadataParseException("数据库约束名["+name+"]长度超长, 长度应小于等于"+maxLength);
+		
+		
+		// 创建ConstraintMetadata实例, 并根据类型设置相应的值
+		ConstraintMetadata constraint = new ConstraintMetadata(name.toUpperCase(), type, columnNames);
+		switch(type) {
+			case PRIMARY_KEY:
+			case UNIQUE:
+				break;
+			case DEFAULT_VALUE:
+			case CHECK:
+				constraint.setValue(element.attributeValue("value"));
+				break;
+			case FOREIGN_KEY:
+				constraint.setFkValue(element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"));
+				break;
+		}
+		return constraint;
+	}
+	
+	/**
+	 * append压缩后的name
+	 * @param sb
+	 * @param name
+	 */
+	public void appendCompressedName(StringBuilder sb, String name) {
+		for(String chunk : name.split("_")) {
+			if(chunk.length() == 0)
+				continue;
+			
+			sb.append(chunk.charAt(0));
+			
+			if(chunk.length() > 2)
+				sb.append(chunk.charAt(chunk.length()-1));
+		}
+		sb.append(name.length());
 	}
 }

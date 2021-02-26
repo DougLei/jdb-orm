@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
-import com.douglei.orm.mapping.impl.table.metadata.Constraint;
+import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
 import com.douglei.tools.StringUtil;
@@ -57,7 +57,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String createDefaultValue(Constraint constraint) {
+	protected String createDefaultValue(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
 		tmpSql.append(" set default ").append(constraint.getDefaultValue());
@@ -65,21 +65,21 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 
 	@Override
-	protected String dropPrimaryKey(Constraint constraint) {
+	protected String dropPrimaryKey(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop primary key ");
 		return tmpSql.toString();
 	}
 
 	@Override
-	protected String dropUnique(Constraint constraint) {
+	protected String dropUnique(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop index ").append(constraint.getName());
 		return tmpSql.toString();
 	}
 
 	@Override
-	protected String dropDefaultValue(Constraint constraint) {
+	protected String dropDefaultValue(ConstraintMetadata constraint) {
 		if(StringUtil.isEmpty(constraint.getConstraintColumnNames())) {
 			throw new NullPointerException("在mysql数据库中删除列的默认值时, 必须传入相应的列名");
 		}
@@ -90,17 +90,17 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 	
 	@Override
-	protected String dropCheck(Constraint constraint) {
+	protected String dropCheck(ConstraintMetadata constraint) {
 		return dropCK_FK(constraint);
 	}
 	
 	@Override
-	protected String dropForeignKey(Constraint constraint) {
+	protected String dropForeignKey(ConstraintMetadata constraint) {
 		return dropCK_FK(constraint);
 	}
 	
 	/**获取删除检查约束、外键约束的sql语句*/
-	private String dropCK_FK(Constraint constraint) {
+	private String dropCK_FK(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
 		return tmpSql.toString();

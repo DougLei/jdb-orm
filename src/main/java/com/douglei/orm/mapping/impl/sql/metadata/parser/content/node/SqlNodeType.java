@@ -14,6 +14,7 @@ public enum SqlNodeType {
 	private SqlNodeType(String name) {
 		this.nodeName = name;
 	}
+	
 	public String getNodeName() {
 		return nodeName;
 	}

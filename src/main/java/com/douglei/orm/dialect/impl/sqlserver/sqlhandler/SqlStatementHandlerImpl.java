@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.Constraint;
+import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
 
@@ -89,7 +89,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String createDefaultValue(Constraint constraint) {
+	protected String createDefaultValue(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName());
 		tmpSql.append(" default ").append(constraint.getDefaultValue());

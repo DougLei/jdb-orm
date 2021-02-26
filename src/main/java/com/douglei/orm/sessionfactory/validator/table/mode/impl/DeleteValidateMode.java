@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.validator.table.mode.Mode;
 import com.douglei.orm.sessionfactory.validator.table.mode.ValidateMode;
 

@@ -11,7 +11,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.OgnlUtil;
 import com.douglei.tools.datatype.DataTypeConvertUtil;
@@ -21,7 +21,6 @@ import com.douglei.tools.datatype.DataTypeConvertUtil;
  * @author DougLei
  */
 public class ForeachSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 2284133202284123881L;
 	
 	private String collection;
 	private String alias;
@@ -102,7 +101,7 @@ public class ForeachSqlNode extends AbstractNestingNode {
 			return !((Collection<?>) collectionObject).isEmpty();
 		if(collectionObject.getClass().isArray()) 
 			return ((Object[]) collectionObject).length > 0;
-		throw new IllegalArgumentException("目前<foreach>元素中的collection属性, 只支持["+Collection.class.getName()+"类型]和[数组类型]的数据");
+		throw new IllegalArgumentException("目前<foreach>中的collection属性, 只支持["+Collection.class.getName()+"类型]和[数组类型]的数据");
 	}
 	
 	@Override

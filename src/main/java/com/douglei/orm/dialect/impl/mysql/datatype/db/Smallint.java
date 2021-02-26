@@ -12,7 +12,6 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Smallint extends AbstractInt{
-	private static final long serialVersionUID = -5426624634254372838L;
 	private static final Smallint singleton = new Smallint();
 	public static Smallint getSingleton() {
 		return singleton;
@@ -22,7 +21,7 @@ public class Smallint extends AbstractInt{
 	}
 	
 	protected Smallint() {
-		super(5, 5);
+		super("SMALLINT", 5, 5);
 	}
 	
 	@Override

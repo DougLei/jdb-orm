@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
+import com.douglei.orm.configuration.environment.mapping.SqlMappingConfiguration;
+import com.douglei.orm.configuration.environment.mapping.SqlMappingParameterPSRelation;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterConfigHolder;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserException;
 import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
-import com.douglei.tools.StringUtil;
 
 /**
  * 
@@ -29,56 +29,53 @@ public class TextSqlNode implements SqlNode {
 	}
 	// 从content中解析出parameter集合
 	private void resolvingParameters() {
-		if(StringUtil.isEmpty(content)) 
-			return;
-		
-		SqlParameterConfigHolder sqlParameterConfigHolder = EnvironmentContext.getProperty().getSqlParameterConfigHolder();
-		Matcher perfixMatcher = sqlParameterConfigHolder.getPrefixPattern().matcher(content);
-		if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.SAME) {
+		SqlMappingConfiguration config = EnvironmentContext.getEnvironment().getMappingHandler().getMappingConfiguration().getSqlMappingConfiguration();
+		Matcher perfixMatcher = config.getParameterPrefixPattern().matcher(content);
+		if(config.getRelationship() == SqlMappingParameterPSRelation.SAME) {
 			int startIndex;
 			while(perfixMatcher.find()) {
 				startIndex = perfixMatcher.start();
 				if(perfixMatcher.find()) {
-					addSqlParameter(content.substring(startIndex + sqlParameterConfigHolder.getPrefixLength(), perfixMatcher.start()), sqlParameterConfigHolder);
+					addSqlParameter(content.substring(startIndex + config.getParameterPrefixLength(), perfixMatcher.start()), config.getParameterSplit());
 				}else {
-					throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(少一个), 请检查");
+					throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(少一个), 请检查");
 				}
 			}
 			if(perfixMatcher.find())
-				throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"]标识符不匹配(多一个), 请检查");
+				throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(多一个), 请检查");
 		}else {
-			Matcher suffixMatcher = sqlParameterConfigHolder.getSuffixPattern().matcher(content);
-			if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.DIFFERENT){
+			Matcher suffixMatcher = config.getParameterSuffixPattern().matcher(content);
+			if(config.getRelationship() == SqlMappingParameterPSRelation.DIFFERENT){
 				while(perfixMatcher.find()) {
 					if(suffixMatcher.find()) {
-						addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+						addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 					}else {
-						throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 					}
 				}
 				if(suffixMatcher.find())
-					throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
-			}else if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.SUFFIX_IN_PREFIX){
+					throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+			}else if(config.getRelationship() == SqlMappingParameterPSRelation.SUFFIX_IN_PREFIX){
 				while(perfixMatcher.find()) {
 					if(suffixMatcher.find() && suffixMatcher.find()) {
-						addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+						addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 					}else {
-						throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 					}
 				}
 				if(suffixMatcher.find())
-					throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
-			}else if(sqlParameterConfigHolder.getPsRelation() == SqlParameterConfigHolder.PREFIX_IN_SUFFIX){
+					throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+			}else if(config.getRelationship() == SqlMappingParameterPSRelation.PREFIX_IN_SUFFIX){
 				if(perfixMatcher.find()) {
 					do {
 						if(suffixMatcher.find()) {
-							addSqlParameter(content.substring(perfixMatcher.start() + sqlParameterConfigHolder.getPrefixLength(), suffixMatcher.start()), sqlParameterConfigHolder);
+							addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 						}else {
-							throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少少一个), 请检查");
+							throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 						}
 					} while(perfixMatcher.find() && perfixMatcher.find());
 					if(suffixMatcher.find())
-						throw new IllegalArgumentException("content=["+content+"], 参数配置异常, ["+sqlParameterConfigHolder.getPrefix()+"和"+sqlParameterConfigHolder.getSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
 				}
 			}
 		}
@@ -86,7 +83,7 @@ public class TextSqlNode implements SqlNode {
 		if(parameters != null) {
 			for (SqlParameterMetadata parameter : parameters) {
 				if(parameter.isPlaceholder()) {
-					content = content.replaceAll(sqlParameterConfigHolder.getPrefix() + parameter.getConfigText() + sqlParameterConfigHolder.getSuffix(), "?");
+					content = content.replaceAll(config.getParameterPrefix() + parameter.getConfigText() + config.getParameterSuffix(), "?");
 				}else{
 					content = content.replaceAll(parameter.getConfigText(), parameter.getName());
 				}
@@ -94,10 +91,10 @@ public class TextSqlNode implements SqlNode {
 		}
 	}
 	// 添加 sql parameter
-	private void addSqlParameter(String configText, SqlParameterConfigHolder sqlParameterConfigHolder) {
+	private void addSqlParameter(String configText, String split) {
 		if(parameters == null) 
 			parameters = new ArrayList<SqlParameterMetadata>();
-		parameters.add(new SqlParameterMetadata(configText, sqlParameterConfigHolder));
+		parameters.add(new SqlParameterMetadata(configText, split));
 	}
 	
 	@Override

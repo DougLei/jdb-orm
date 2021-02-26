@@ -9,7 +9,7 @@ import com.douglei.tools.OgnlUtil;
 public class IncrementIdValueConfig {
 	private String prefix; // 如果key为ognl表达式, 则这里记录前缀, 例如 user.id, 代表传入对象中user属性中的id
 	private String key;
-	private String oracleSequenceName;
+	private String sequence;
 	
 	public IncrementIdValueConfig(String key) {
 		int dot = key.lastIndexOf(".");
@@ -20,15 +20,15 @@ public class IncrementIdValueConfig {
 			this.key = key.substring(dot+1);
 		}
 	}
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
 	
 	public String getKey() {
 		return key;
 	}
-	public String getOracleSequenceName() {
-		return oracleSequenceName;
-	}
-	public void setOracleSequenceName(String oracleSequenceName) {
-		this.oracleSequenceName = oracleSequenceName;
+	public String getSequence() {
+		return sequence;
 	}
 
 	/**
@@ -39,6 +39,6 @@ public class IncrementIdValueConfig {
 	public Object getTargetObject(Object sqlParameter) {
 		if(prefix == null) 
 			return sqlParameter;
-		return OgnlUtil.getSingleton().getObjectValue(prefix, sqlParameter);
+		return OgnlUtil.getObjectValue(prefix, sqlParameter);
 	}
 }

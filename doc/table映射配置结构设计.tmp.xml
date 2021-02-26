@@ -8,82 +8,98 @@
 		* extend: mapping的扩展属性, 可由第三方扩展
 	-->
 	<property order="0" supportCover="true" supportDelete="true" extend="" />
-
+	
 	<!-- 
-		createMode的值包括: none, create, drop_create(可用来重置表), dynamic_update, 默认为create
+		表信息配置:
+		* name: 表名, 建议使用全大写, 如果是小写, 框架会自动转成大写
+		* oldName: 旧表名, 当createMode为dynamic模式时, 可配置旧表名, 框架会自动同步数据库中对应的表结构, 且同步后在下次启动框架时需要删除该配置, 否则框架仍会尝试同步进而抛出异常; 其他模式无效
+		* class: 与表映射的类路径, 可不配置, 框架支持map形式的映射
 		
-		none模式下, 需要用户自己在数据库创建表, 这里映射文件只是起到一个映射的作用, 所以在此模式下, 无论对该映射执行add或delete操作, 都不会影响到数据库中对应的表
-		
-		代码逻辑上：
-		如果一开始就使用的是dynamic_update模式, 后续可以改成任何模式值, 但是要注意的是, 不要通过drop_create的模式来修改表结构, 只能使用dynamic_update的模式来修改表结构
-		如果一开始使用的不是dynamic_update模式, 后续就绝对不要使用dynamic_update模式, 这时就可以使用drop_create的模式来修改表结构
-		
-		jdb-orm框架配置中全局的tableCreateMode同理
-	-->
-	<!-- strict的值应为true/false, 默认值为false; 它用来标识是否对本映射的createMode值进行强控制, 如果进行强控制, 则本映射的createMode值可以覆盖全局的tableCreateMode -->
-	<!-- 如果strict的值配置了true, 而没有配置createMode, 则使用createMode的默认值create -->
+		* createMode: 创建模式, 参考《jdb-orm框架配置结构设计.conf.xml》中globalCreateMode的配置; 默认值为create
+		* strict: 是否强限制createMode, 默认值为false; 值为true时, 会覆盖globalCreateMode的配置
+	 -->
 	<table name="SYS_USER" oldName="" class="com.douglei.orm.session.SysUser" createMode="create" strict="false">
 		<columns>
-			<!--
-				dbType的值参考《sql映射配置结构设计.smp.xml》中存储过程的dbType的配置
+			<!-- 
+				列信息配置:
+				* name: 列名, 建议使用全大写, 如果是小写, 框架会自动转成大写
+				* oldName: 旧列名, 当createMode为dynamic模式时, 可配置旧列名, 框架会自动同步数据库中对应的表结构, 且同步后在下次启动框架时需要删除该配置, 否则框架仍会尝试同步进而抛出异常; 其他模式无效
+				* property: 列对应类的属性名, 当table配置了class时生效; 可不配置, 默认框架会将列名转换为属性名, 例如: USER_NAME => userName; 具体转换规则可查看类: NameConvertUtil
 				
-				dataType的值包括: string, nstring, char, nchar, number, snumber, datetime, clob, blob, 默认值为string, 或者继承com.douglei.orm.dialect.datatype.mapping.MappingDataType类, 实现自定义的类型, 这里配置自定义类的全路径
-				dataType的值必须遵照上面列举的配置值, 框架是区分大小写的
+				* dbType: (数据库)数据类型; 目前支持的值有: 
+				** SQLSERVER: VARCHAR, NVARCHAR, CHAR, NCHAR, SMALLINT, INT, BIGINT, DECIMAL, NUMERIC, DATE, DATETIME, TEXT, VARCHAR(MAX), VARBINARY(MAX)
+				** ORACLE: VARCHAR2, NVARCHAR2, CHAR, NCHAR, NUMBER, DATE
+				** MYSQL: VARCHAR, CHAR, SMALLINT, INT, BIGINT, DECIMAL, DATE, DATETIME, MEDIUMBLOB, MEDIUMTEXT
+				* dataType: (映射)数据类型; 目前支持的值有: string, nstring, char, nchar, number, snumber, datetime, blob, clob	
+				*
+				** dbType和dataType互斥, dbType的优先级高于dataType; dbType没有默认值, dataType的默认值为string; 类型的配置值区分大小写
+				*
+				* length: 数据类型的长度
+				* precision: 数据类型的精度
 				
-				dbType和dataType互斥, dbType的优先级高于dataType; dbType没有默认值, dataType的默认值为string
-				dbType通常情况下无法实现跨库, 例如sqlserver和mysql的VARCHAR, 与oracle的VARCHAR2
-				
-				nullable默认值为true, validate默认值为false; sql参数使用相同逻辑
-			-->
-			<column name="ID" oldName="IDENTITY" property="id" dbType="VARCHAR" dataType="string" primaryKey="true" length="30" precision="" nullable="true" unique="" defaultValue="" check="" fkTableName="" fkColumnName="" validate="true" />
-			<column name="NANE" property="name" dataType="string" length="30" validate="true" unique="true" description="姓名" />
-			<column name="AGE" property="age" dataType="number" />
-			<column name="SEX" property="sex" dataType="string" />
+				* nullable: 是否可为空, 默认为true
+				* description: 描述
+			 -->
+			<column name="USER_NAME" oldName="" property="userName" dbType="DATE" dataType="string" length="30" precision="" nullable="true" description=""/>
 		</columns>
 
+		<!-- 约束配置 -->
 		<constraints>
-			<!-- type = PRIMARY_KEY, UNIQUE, DEFAULT_VALUE(value), CHECK(expression), FOREIGN_KEY(fkTableName, fkColumnName) -->
-			<constraint type="" value="" expression="" fkTableName="" fkColumnName="">
-				<column name="" /><!-- 注意: 这里配置的是列名, 不配置属性名, 因为是给列加约束 -->
+			<!-- 
+				具体约束配置:
+				* name: 约束名, 建议使用全大写, 如果是小写, 框架会自动转成大写; 若不配置, 框架会自动生成; 如果自动生成的名称长度超长, 则只能手动设置name来解决
+				* type: 约束类型, 目前支持的值有:
+				* 
+				** PRIMARY_KEY: 主键约束, 支持配置联合主键约束
+				** UNIQUE: 唯一约束, 支持配置联合唯一约束
+				* 
+				** DEFAULT_VALUE: 默认值约束, 具体的默认值配置到value属性中
+				** CHECK: 检查约束, 具体的检查表达式配置到value属性中
+				* 
+				** FOREIGN_KEY: 外键约束, 具体的信息配置到fkTableName和fkColumnName属性中
+				*
+				** 约束类型的配置值不区分大小写
+			 -->
+			<constraint name="" type="" value="" fkTableName="" fkColumnName="">
+				<!-- 
+					配置相关的列信息, 可配置多组
+					* name: 约束的列名, 建议使用全大写, 如果是小写, 框架会自动转成大写
+				 -->
+				<column name="" />
 			</constraint>
 		</constraints>
 		
-		<indexes>
-			<index name=""><!-- 这个名字配置索引名, 必须配置, 应该与下面createSql和dropSql中索引名一致; 这个地方配置索引名只是在框架中做一个key标识, 与发出的sql语句没有实质关系 -->
-				<createSql dialect=""></createSql><!-- dialect标识该语句属于哪种数据库, 如果不配置, 则默认是当前SessionFactory的dialect; 可以配置多个值, 用[,]分割开; 目前可以配置的值包括: oracle, mysql, sqlserver, 不区分大小写 -->
-				<dropSql dialect=""></dropSql>
-			</index>
-		</indexes>
-		
-		<!-- 对主键的处理器, 如果不配置, 或不配置type均不起作用, type值包括: uuid36, sequence, 或自定义的类(实现 {@link PrimaryKeyHandler} 接口), 并在这里配置实现类的全路径 -->
-		<primaryKeyHandler type="sequence">
-			<!-- 序列, 当上面的类型是sequence时, 该配置才生效 -->
-			<!-- name序列名, 如果不指定, 则系统自动生成一个 -->
-			<!-- 该序列会在表create时跟着create, 在表drop时跟着drop, 其余时候, 不会有任何处理 -->
-			<!-- 主要针对oracle数据库, 可以自定义创建和删除序列的sql语句 -->
-			<sequence name="">
-				<createSql></createSql><!-- 如果不配置, 则使用系统默认的创建语句 -->
-				<dropSql></dropSql><!-- 如果不配置, 则使用系统默认的删除语句 -->
-			</sequence>
-		</primaryKeyHandler>
-		
-		<!-- 验证器配置 -->
-		<validators>
-			<!--
-				注意：table或sql, 配置的验证参数, 均只在验证器(com.douglei.orm.sessionfactory.validator.DataValidator)中被使用; 例如验证参数是否必填(nullable=false)等; 
-					  直接使用TableSession或SQLSession时, 传入的数据是不会被验证的; 例如给非空字段插入null值等; 所以在实际使用前, 要么通过验证器, 要么自行验证, 传入的数据验证通过后, 再去调用TableSession或SQLSession的方法
+		<!-- 
+			主键处理器(自动设置主键值)
+			* type: 主键处理器的类型, 区分大小写
+			* value: 主键处理器需要的值
 			
-				配置结构描述: 
-				1.name: 参数名, 指定给哪个参数名添加验证器, 如果该参数的validate为false, 又这里配置了验证器, 框架会自动将该参数的validate值改为true; 即想要对一个参数设置验证, 有两种方式, 第一种是将参数的validate值设置为true, 或者在这里配置验证器都可以
-				                  如果是列, 则配置name值(即列名, 不是property的值); 如果是sql参数, 则配置sql参数名; 这里要注意大小写和你定义时写的大小写必须一致
-				2.验证器名称=验证器配置值, 可以配置多个验证器
-				
-				目前提供的验证器
-				notBlank: 验证指定的参数值是否为空字符串,  若是则验证失败; 其配置任何值都可以, 因为该验证器不会使用配置值, 不过建议配置为true或1
-				regex: 正则表达式, 可以配置json数组或json对象
-				也可以自己继承 com.douglei.orm.mapping.metadata.validator, 实现自定义的验证器, 并在这里通过: 类的全路径=验证器配置值, 来配置验证器
+			** 目前支持的类型值有: 
+			** UUID: 36位uuid; 不需要value值
+			** SEQUENCE: 自增序列; 针对ORACLE数据库, 需要value值, 从value中获取自增序列的名称; 具体逻辑参考constraint的name属性; 创建序列和删除序列的语句均由框架处理, 如需调整可去数据库中调整
+		 -->
+		<primaryKeyHandler type="SEQUENCE" value="" />
+		
+		<!-- 
+			验证器配置; 即使用DataValidator时是否会验证该列值
+		 -->
+		<validators>
+			<!-- 
+				具体验证器配置
+				* name: 要验证的列名, 建议使用全大写, 如果是小写, 框架会自动转成大写
+				** 如果只配置了name, 后面没有配置任何验证器, 则会被框架忽略
+				* 
+				* 目前支持的验证器(验证器类型名称区分大小写; 框架会按照验证器的优先级顺序, 从小到大进行验证):
+				*
+				* enableNotNull: 是否启用不为null验证器, true/false; 优先级为0
+				*
+				* enableDataType: 是否启用数据类型验证器(使用列的数据类型进行验证), true/false; 优先级为10
+				*
+				* enableNotBlank: 是否启用不为空字符(串)验证器, true/false; 优先级为20
+				*
+				* 自定义验证器: 实现Validator接口, 并在这里配置类的全路径
 			 -->
-			<validator name="NAME" notBlank="true" regex="{'express':'express是必须配置的, 其他可以选择配置','multiline':'默认false','message':'默认值为: 匹配正则表达式失败','i18nCode':'默认值为: jdb.data.validator.regex.matching.fail'}" />
+			<validator name="NAME" enableNotNull="true" enableNotBlank="true" enableDataType="true" />
 		</validators>
 	</table>
 </mapping-configuration>

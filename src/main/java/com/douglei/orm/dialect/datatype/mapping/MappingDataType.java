@@ -1,6 +1,6 @@
 package com.douglei.orm.dialect.datatype.mapping;
 
-import com.douglei.orm.dialect.datatype.Classification;
+import com.douglei.orm.dialect.datatype.DataTypeClassification;
 import com.douglei.orm.dialect.datatype.DataType;
 import com.douglei.orm.dialect.datatype.db.DBDataType;
 
@@ -11,8 +11,8 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
 public abstract class MappingDataType extends DataType{
 	
 	@Override
-	public final Classification getClassification() {
-		return Classification.MAPPING;
+	public final DataTypeClassification getClassification() {
+		return DataTypeClassification.MAPPING;
 	}
 
 	/**

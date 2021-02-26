@@ -7,7 +7,6 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractClob;
  * @author DougLei
  */
 public class Mediumtext extends AbstractClob {
-	private static final long serialVersionUID = -6980584558705621024L;
 	private static final Mediumtext singleton = new Mediumtext();
 	public static Mediumtext getSingleton() {
 		return singleton;
@@ -17,6 +16,6 @@ public class Mediumtext extends AbstractClob {
 	}
 	
 	private Mediumtext() {
-		super(-1);
+		super("MEDIUMTEXT", -1);
 	}
 }

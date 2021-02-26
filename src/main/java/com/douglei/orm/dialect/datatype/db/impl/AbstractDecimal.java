@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
@@ -15,10 +15,9 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * @author DougLei
  */
 public abstract class AbstractDecimal extends DBDataType {
-	private static final long serialVersionUID = -2887834254624286175L;
 
-	protected AbstractDecimal(int sqlType) {
-		super(sqlType, 38, 38);
+	protected AbstractDecimal(String name, int sqlType) {
+		super(name, sqlType, 38, 38);
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public abstract class AbstractDecimal extends DBDataType {
 	}
 	
 	@Override
-	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == double.class || value instanceof Double) {
 			preparedStatement.setDouble(parameterIndex, (double)value);
@@ -40,10 +39,10 @@ public abstract class AbstractDecimal extends DBDataType {
 			preparedStatement.setFloat(parameterIndex, (float)value);
 		}else if(value instanceof BigDecimal) {
 			preparedStatement.setBigDecimal(parameterIndex, (BigDecimal)value);
-		}else if(DataTypeValidateUtil.isDouble(value.toString())){
+		}else if(DataTypeValidateUtil.isNumber(value.toString())){
 			preparedStatement.setBigDecimal(parameterIndex, new BigDecimal(value.toString()));
 		}else {
-			super.setValue_(preparedStatement, parameterIndex, value);
+			super.setValue(preparedStatement, parameterIndex, value);
 		}
 	}
 	
@@ -82,6 +81,11 @@ public abstract class AbstractDecimal extends DBDataType {
 	 */
 	protected boolean validateType(Object value) {
 		Class<?> valueClass = value.getClass();
-		return valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || DataTypeValidateUtil.isDouble(value.toString());
+		return valueClass == double.class 
+				|| value instanceof Double 
+				|| valueClass == float.class 
+				|| value instanceof Float 
+				|| value instanceof BigDecimal 
+				|| DataTypeValidateUtil.isNumber(value.toString());
 	}
 }

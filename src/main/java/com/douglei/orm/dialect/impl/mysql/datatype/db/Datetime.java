@@ -8,7 +8,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 import com.douglei.tools.datatype.DateFormatUtil;
 
 /**
@@ -16,7 +17,6 @@ import com.douglei.tools.datatype.DateFormatUtil;
  * @author DougLei
  */
 public class Datetime extends DBDataType{
-	private static final long serialVersionUID = 2100812854275653786L;
 	private static final Datetime singleton = new Datetime();
 	public static Datetime getSingleton() {
 		return singleton;
@@ -26,7 +26,7 @@ public class Datetime extends DBDataType{
 	}
 	
 	protected Datetime() {
-		super(93);
+		super("DATETIME", 93);
 	}
 	
 	@Override
@@ -35,11 +35,11 @@ public class Datetime extends DBDataType{
 	}
 	
 	@Override
-	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		if(DateFormatUtil.verifyIsDate(value)) {
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+		if(DataTypeValidateUtil.isDate(value)) {
 			preparedStatement.setTimestamp(parameterIndex, DateFormatUtil.parseSqlTimestamp(value));
 		} else {
-			super.setValue_(preparedStatement, parameterIndex, value);
+			super.setValue(preparedStatement, parameterIndex, value);
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class Datetime extends DBDataType{
 	
 	@Override
 	public ValidationResult validate(String name, Object value, int length, int precision) {
-		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) 
+		if(value instanceof Date || DataTypeValidateUtil.isDate(value)) 
 			return null;
 		return new ValidationResult(name, "数据值类型错误, 应为日期类型", "jdb.data.validator.value.datatype.error.date");
 	}

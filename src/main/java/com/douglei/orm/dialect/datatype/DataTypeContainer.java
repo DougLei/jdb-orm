@@ -18,14 +18,15 @@ public class DataTypeContainer {
 	/**
 	 * 注册类型
 	 * @param dataType
+	 * @return 
 	 */
 	public DataType register(DataType dataType) {
-		String name = dataType.getName();
-		if(container.containsKey(name))
-			throw new DataTypeException("已经存在名为 ["+name+"] 的数据类型");
-		container.put(name, dataType);
+		String key = dataType.getClassification().name() + "." +dataType.getName();
+		if(container.containsKey(key))
+			throw new DataTypeException(dataType.getClassification().name() + "分类中已经存在名为 ["+dataType.getName()+"] 的数据类型");
+		container.put(key, dataType);
 		
-		if(dataType.getClassification() == Classification.DB) 
+		if(dataType.getClassification() == DataTypeClassification.DB) 
 			register2ExtendContainer((DBDataType)dataType);
 		return dataType;
 	}
@@ -39,16 +40,17 @@ public class DataTypeContainer {
 	}
 	
 	/**
-	 * 获取指定类型名称的数据类型
+	 * 获取指定分类和名称的数据类型
+	 * @param classification 
 	 * @param name 
 	 */
-	public DataType get(String name) {
-		DataType dataType = container.get(name);
+	public DataType get(DataTypeClassification classification, String name) {
+		DataType dataType = container.get(classification.name() + "." +name);
 		if(dataType == null) {
 			try {
 				dataType = register((DataType) Class.forName(name).newInstance());
 			} catch (Exception e) {
-				throw new DataTypeException("在获取名为["+name+"]的数据类型时出现异常, 请检查类型名称, 或自定义数据类型实现类的路径是否正确", e);
+				throw new DataTypeException("获取分类为["+classification.name()+"], 名为["+name+"]的数据类型时出现异常, 请检查类型名称, 或自定义数据类型实现类的路径是否正确", e);
 			}
 		}
 		return dataType;
@@ -56,7 +58,7 @@ public class DataTypeContainer {
 	
 	// ----------------------------------------------------------------------
 	/**
-	 * 根据传入参数的Class, 获取对应的DBDataType
+	 * 根据传入参数的class, 获取对应的DBDataType
 	 * @param value
 	 */
 	public DBDataType getDBDataTypeByObject(Object value) {

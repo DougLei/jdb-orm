@@ -3,15 +3,15 @@ package com.douglei.orm.mapping.handler.object.table;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import com.douglei.orm.configuration.environment.CreateMode;
 import com.douglei.orm.dialect.object.pk.sequence.PrimaryKeySequence;
 import com.douglei.orm.mapping.handler.object.DBConnection;
 import com.douglei.orm.mapping.handler.object.ObjectHandler;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.Constraint;
-import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-import com.douglei.orm.mapping.impl.table.metadata.Index;
+import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.IndexMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 
 /**
@@ -34,26 +34,26 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	}
 	
 	// 创建约束
-	private void createConstraint(Constraint constraint) throws SQLException {
+	private void createConstraint(ConstraintMetadata constraint) throws SQLException {
 		connection.executeSql(sqlStatementHandler.createConstraint(constraint));
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.dropConstraint(constraint), connection);
 	}
-	private void createConstraints(Collection<Constraint> constraints) throws SQLException {
+	private void createConstraints(Collection<ConstraintMetadata> constraints) throws SQLException {
 		if(constraints != null) {
-			for (Constraint constraint : constraints) {
+			for (ConstraintMetadata constraint : constraints) {
 				createConstraint(constraint);
 			}
 		}
 	}
 	
 	// 创建索引
-	private void createIndex(Index index) throws SQLException {
+	private void createIndex(IndexMetadata index) throws SQLException {
 		connection.executeSql(index.getCreateSqlStatement());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, index.getDropSqlStatement(), connection);
 	}
-	private void createIndexes(Collection<Index> indexes) throws SQLException {
+	private void createIndexes(Collection<IndexMetadata> indexes) throws SQLException {
 		if(indexes != null) {
-			for (Index index : indexes) {
+			for (IndexMetadata index : indexes) {
 				createIndex(index);
 			}
 		}
@@ -120,8 +120,8 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	}
 	
 	// 判断是否更新了约束
-	private boolean isUpdateConstraints(Collection<Constraint> constraints, TableMetadata oldTable) {
-		Collection<Constraint> oldConstraints = oldTable.getConstraints();
+	private boolean isUpdateConstraints(Collection<ConstraintMetadata> constraints, TableMetadata oldTable) {
+		Collection<ConstraintMetadata> oldConstraints = oldTable.getConstraints();
 		if(constraints == null) {
 			if(oldConstraints != null) {
 				return true;
@@ -130,7 +130,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 			if(oldConstraints == null || constraints.size() != oldConstraints.size()) {
 				return true;
 			}
-			for (Constraint constraint : constraints) {
+			for (ConstraintMetadata constraint : constraints) {
 				if(oldTable.getConstraint(constraint.getName()) == null) {
 					return true;
 				}
@@ -139,8 +139,8 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 		return false;
 	}
 	// 判断是否更新了索引
-	private boolean isUpdateIndexes(Collection<Index> indexes, TableMetadata oldTable) {
-		Collection<Index> oldIndexes = oldTable.getIndexes();
+	private boolean isUpdateIndexes(Collection<IndexMetadata> indexes, TableMetadata oldTable) {
+		Collection<IndexMetadata> oldIndexes = oldTable.getIndexes();
 		if(indexes == null) {
 			if(oldIndexes != null) {
 				return true;
@@ -149,7 +149,7 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 			if(oldIndexes == null || indexes.size() != oldIndexes.size()) {
 				return true;
 			}
-			for (Index index : indexes) {
+			for (IndexMetadata index : indexes) {
 				if(oldTable.getIndex(index.getName()) == null) {
 					return true;
 				}
@@ -245,26 +245,26 @@ public class TableObjectHandler extends ObjectHandler<TableMetadata, TableMetada
 	}
 	
 	// 删除索引
-	private void dropIndex(Index index) throws SQLException {
+	private void dropIndex(IndexMetadata index) throws SQLException {
 		connection.executeSql(index.getDropSqlStatement());
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, index.getCreateSqlStatement(), connection);
 	}
-	private void dropIndexes(Collection<Index> indexes) throws SQLException {
+	private void dropIndexes(Collection<IndexMetadata> indexes) throws SQLException {
 		if(indexes != null) {
-			for (Index index : indexes) {
+			for (IndexMetadata index : indexes) {
 				dropIndex(index);
 			}
 		}
 	}
 	
 	// 删除约束
-	private void dropConstraint(Constraint constraint) throws SQLException {
+	private void dropConstraint(ConstraintMetadata constraint) throws SQLException {
 		connection.executeSql(sqlStatementHandler.dropConstraint(constraint));
 		RollbackRecorder.record(RollbackExecMethod.EXEC_DDL_SQL, sqlStatementHandler.createConstraint(constraint), connection);
 	}
-	private void dropConstraints(Collection<Constraint> constraints) throws SQLException {
+	private void dropConstraints(Collection<ConstraintMetadata> constraints) throws SQLException {
 		if(constraints != null) {
-			for (Constraint constraint : constraints) {
+			for (ConstraintMetadata constraint : constraints) {
 				dropConstraint(constraint);
 			}
 		}

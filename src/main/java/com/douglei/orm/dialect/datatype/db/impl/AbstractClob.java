@@ -10,28 +10,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.dialect.datatype.db.wrapper.ClobWrapper;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
-import com.douglei.tools.CloseUtil;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractClob extends DBDataType {
-	private static final long serialVersionUID = 2804823832195239605L;
 
-	protected AbstractClob(int sqlType) {
-		super(sqlType);
+	protected AbstractClob(String name, int sqlType) {
+		super(name, sqlType);
 	}
 	
 	@Override
 	public final Class<?>[] supportClasses() {
-		return new Class<?>[] {ClobWrapper.class};
+		return new Class<?>[] {ClobData.class};
 	}
 
 	@Override
-	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public final void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		if(!(value instanceof String))
 			value = value.toString();
 		String clob = (String)value;
@@ -61,25 +58,27 @@ public abstract class AbstractClob extends DBDataType {
 		if(reader == null) 
 			return null;
 		
-		StringWriter writer = null;
 		try {
-			writer = new StringWriter();
+			StringWriter writer = new StringWriter();
 			int length;
 			char[] ch = new char[512];
-			while((length = reader.read(ch)) != -1) {
+			while((length = reader.read(ch)) != -1) 
 				writer.write(ch, 0, length);
-			}
 			return writer.toString();
 		} catch (IOException e) {
 			throw new ReadDataStreamException("读取大字符(clob)类型的数据时出现异常", e);
 		} finally {
-			CloseUtil.closeDBConn(reader, writer);
+			try {
+				reader.close();
+			} catch (IOException e) {
+				throw new ReadDataStreamException("读取大字符(clob)类型的数据, 关闭输入流时出现异常", e);
+			}
 		}
 	}
 
 	@Override
 	public final ValidationResult validate(String name, Object value, int length, int precision) {
-		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof ClobWrapper) 
+		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof ClobData) 
 			return null;
 		return new ValidationResult(name, "数据值类型错误, 应为字符类型", "jdb.data.validator.value.datatype.error.string");
 	}

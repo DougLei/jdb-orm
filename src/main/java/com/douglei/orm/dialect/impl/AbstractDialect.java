@@ -3,7 +3,6 @@ package com.douglei.orm.dialect.impl;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.datatype.DataType;
 import com.douglei.orm.dialect.datatype.DataTypeContainer;
-import com.douglei.orm.dialect.object.DBObjectHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.tools.file.scanner.impl.ClassScanner;
@@ -15,13 +14,11 @@ import com.douglei.tools.reflect.ClassUtil;
  */
 public abstract class AbstractDialect implements Dialect{
 	private DataTypeContainer dataTypeContainer = new DataTypeContainer();
-	private DBObjectHandler objectHandler;
 	private SqlStatementHandler sqlStatementHandler;
 	private SqlQueryHandler sqlQueryHandler;
 	
 	protected AbstractDialect() {
 		initDataTypeContainer();
-		this.objectHandler = createObjectHandler();
 		this.sqlStatementHandler = createSqlStatementHandler();
 		this.sqlQueryHandler = createSqlQueryHandler(this.sqlStatementHandler);
 	}
@@ -42,7 +39,6 @@ public abstract class AbstractDialect implements Dialect{
 		});
 	}
 
-	protected abstract DBObjectHandler createObjectHandler();
 	protected abstract SqlStatementHandler createSqlStatementHandler();
 	protected abstract SqlQueryHandler createSqlQueryHandler(SqlStatementHandler sqlStatementHandler);
 
@@ -51,11 +47,6 @@ public abstract class AbstractDialect implements Dialect{
 		return dataTypeContainer;
 	}
 	
-	@Override
-	public final DBObjectHandler getObjectHandler() {
-		return objectHandler;
-	}
-
 	@Override
 	public final SqlStatementHandler getSqlStatementHandler() {
 		return sqlStatementHandler;

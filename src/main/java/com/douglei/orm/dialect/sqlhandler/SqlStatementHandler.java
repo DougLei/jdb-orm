@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
-import com.douglei.orm.mapping.impl.table.metadata.Constraint;
+import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.recursivequery.RecursiveSqlStatement;
@@ -207,7 +207,7 @@ public abstract class SqlStatementHandler {
 	 * @param constraint
 	 * @return
 	 */
-	public String createConstraint(Constraint constraint) {
+	public String createConstraint(ConstraintMetadata constraint) {
 		switch(constraint.getConstraintType()) {
 			case PRIMARY_KEY:
 			case UNIQUE:
@@ -222,23 +222,23 @@ public abstract class SqlStatementHandler {
 		throw new IllegalArgumentException("没有处理到的约束: " + constraint.getConstraintType());
 	}
 	/**获取创建主键约束、唯一约束的sql语句*/
-	protected String createPK_UQ(Constraint constraint) {
+	protected String createPK_UQ(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
 		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(")");
 		return tmpSql.toString();
 	}
 	/**获取创建默认值约束的sql语句*/
-	protected abstract String createDefaultValue(Constraint constraint);
+	protected abstract String createDefaultValue(ConstraintMetadata constraint);
 	/**获取创建检查约束的sql语句*/
-	protected String createCheck(Constraint constraint) {
+	protected String createCheck(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
 		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getCheck()).append(")");
 		return tmpSql.toString();
 	}
 	/**获取创建外键约束的sql语句*/
-	protected String createForeignKey(Constraint constraint) {
+	protected String createForeignKey(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(120);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
 		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(") ");
@@ -251,7 +251,7 @@ public abstract class SqlStatementHandler {
 	 * @param constraint
 	 * @return
 	 */
-	public String dropConstraint(Constraint constraint) {
+	public String dropConstraint(ConstraintMetadata constraint) {
 		switch(constraint.getConstraintType()) {
 			case PRIMARY_KEY:
 				return dropPrimaryKey(constraint);
@@ -267,29 +267,29 @@ public abstract class SqlStatementHandler {
 		throw new IllegalArgumentException("没有处理到的约束: " + constraint.getConstraintType());
 	}
 	/**通用的 获取drop constraint的sql语句*/
-	private String commonDropConstraint(Constraint constraint) {
+	private String commonDropConstraint(ConstraintMetadata constraint) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop constraint ").append(constraint.getName());
 		return tmpSql.toString();
 	}
 	/**获取删除主键约束的sql语句*/
-	protected String dropPrimaryKey(Constraint constraint) {
+	protected String dropPrimaryKey(ConstraintMetadata constraint) {
 		return commonDropConstraint(constraint);
 	}
 	/**获取删除唯一约束的sql语句*/
-	protected String dropUnique(Constraint constraint) {
+	protected String dropUnique(ConstraintMetadata constraint) {
 		return commonDropConstraint(constraint);
 	}
 	/**获取删除默认值约束的sql语句*/
-	protected String dropDefaultValue(Constraint constraint) {
+	protected String dropDefaultValue(ConstraintMetadata constraint) {
 		return commonDropConstraint(constraint);
 	}
 	/**获取删除检查约束的sql语句*/
-	protected String dropCheck(Constraint constraint) {
+	protected String dropCheck(ConstraintMetadata constraint) {
 		return commonDropConstraint(constraint);
 	}
 	/**获取删除外键约束的sql语句*/
-	protected String dropForeignKey(Constraint constraint) {
+	protected String dropForeignKey(ConstraintMetadata constraint) {
 		return commonDropConstraint(constraint);
 	}
 	

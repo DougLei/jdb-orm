@@ -30,7 +30,7 @@ public class TrimSqlNodeParser extends SqlNodeParser {
 	@Override
 	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParserException {
 		if(children.getType() != SqlNodeType.IF)
-			throw new SqlNodeParserException("<trim>元素中, 只能使用<if>元素; 也不支持在<trim>元素中, 直接编写sql语句");
+			throw new SqlNodeParserException("<trim>中, 只能使用<if>; 也不支持在<trim>中, 直接编写sql语句");
 	}
 
 	@Override

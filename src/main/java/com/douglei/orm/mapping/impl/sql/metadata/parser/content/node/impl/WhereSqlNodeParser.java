@@ -24,7 +24,7 @@ public class WhereSqlNodeParser extends SqlNodeParser {
 	@Override
 	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParserException {
 		if(children.getType() != SqlNodeType.IF) 
-			throw new SqlNodeParserException("<where>元素中, 只能使用<if>元素; 也不支持在<where>元素中, 直接编写sql语句");
+			throw new SqlNodeParserException("<where>中, 只能使用<if>; 也不支持在<where>中, 直接编写sql语句");
 	}
 
 	@Override

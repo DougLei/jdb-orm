@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
@@ -12,21 +12,20 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * @author DougLei
  */
 public abstract class AbstractInt extends DBDataType {
-	private static final long serialVersionUID = -1328013077879682555L;
 
-	protected AbstractInt(int sqlType, int maxLength) {
-		super(sqlType, maxLength);
+	protected AbstractInt(String name, int sqlType, int maxLength) {
+		super(name, sqlType, maxLength);
 	}
 
 	@Override
-	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public final void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == int.class || valueClass == long.class || valueClass == short.class || valueClass == byte.class){
 			setIntValue(preparedStatement, parameterIndex, value);
 		}else if(DataTypeValidateUtil.isInteger(value.toString())){
 			setIntValue(preparedStatement, parameterIndex, parseIntValue(value.toString()));
 		}else {
-			super.setValue_(preparedStatement, parameterIndex, value);
+			super.setValue(preparedStatement, parameterIndex, value);
 		}
 	}
 	

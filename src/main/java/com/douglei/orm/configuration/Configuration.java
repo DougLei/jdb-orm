@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.Properties;
-import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.MappingContainer;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.tools.ExceptionUtil;
 
@@ -66,12 +66,12 @@ public class Configuration {
 	
 	/**
 	 * 根据指定的文件(基于java resource), 构建SessionFactory实例
-	 * @param classpathFile
+	 * @param resource
 	 * @return
 	 */
-	public SessionFactory buildSessionFactory(String classpathFile) {
-		logger.debug("根据指定的文件(基于java resource), 构建SessionFactory实例: [{}]", classpathFile);
-		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(classpathFile));
+	public SessionFactory buildSessionFactory(String resource) {
+		logger.debug("根据指定的文件(基于java resource), 构建SessionFactory实例: [{}]", resource);
+		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(resource));
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public class Configuration {
 	 * @return
 	 */
 	public SessionFactory buildSessionFactory(InputStream input) {
-		logger.debug("通过读取流中的数据, 构建SessionFactory实例");
+		logger.debug("通过读取流中的数据, 构建SessionFactory实例: [{}]", input);
 		return buildSessionFactory_(input);
 	}
 	

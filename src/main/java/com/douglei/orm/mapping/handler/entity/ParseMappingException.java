@@ -7,7 +7,6 @@ import com.douglei.orm.mapping.handler.MappingHandlerException;
  * @author DougLei
  */
 public class ParseMappingException extends MappingHandlerException{
-	private static final long serialVersionUID = -8282266997013748439L;
 	
 	public ParseMappingException(String message) {
 		super(message);

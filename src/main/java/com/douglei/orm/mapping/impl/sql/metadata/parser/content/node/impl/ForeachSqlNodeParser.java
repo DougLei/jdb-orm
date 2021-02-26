@@ -22,12 +22,12 @@ public class ForeachSqlNodeParser extends SqlNodeParser {
 		
 		String collection = getAttributeValue(attributeMap.getNamedItem("collection"));
 		if(StringUtil.isEmpty(collection)) {
-			throw new SqlNodeParserException("<foreach>元素中的collection属性值不能为空");
+			throw new SqlNodeParserException("<foreach>中的collection属性值不能为空");
 		}
 		
 		String alias = getAttributeValue(attributeMap.getNamedItem("alias"));
 		if(StringUtil.isEmpty(alias)) 
-			throw new SqlNodeParserException("<foreach>元素中的alias属性值不能为空");
+			throw new SqlNodeParserException("<foreach>中的alias属性值不能为空");
 		
 		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(collection.trim(), alias.trim(),
 				getAttributeValue(attributeMap.getNamedItem("open")),

@@ -11,7 +11,6 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Text extends DBDataType{
-	private static final long serialVersionUID = -7001568276853005822L;
 	private static final Text singleton = new Text();
 	public static Text getSingleton() {
 		return singleton;
@@ -21,7 +20,7 @@ public class Text extends DBDataType{
 	}
 	
 	private Text() {
-		super(-1);
+		super("TEXT", -1);
 	}
 	
 	@Override

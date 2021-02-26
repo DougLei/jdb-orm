@@ -16,7 +16,7 @@ public class InputSqlParameter {
 	
 	public InputSqlParameter(Object value) {
 		this.value = value;
-		this.dbDataType = EnvironmentContext.getDialect().getDataTypeContainer().getDBDataTypeByObject(value);
+		this.dbDataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().getDBDataTypeByObject(value);
 	}
 	public InputSqlParameter(Object value, DBDataType dbDataType) {
 		this.value = value;
@@ -24,13 +24,17 @@ public class InputSqlParameter {
 	}
 	
 	/**
-	 * 
+	 * 设置值
 	 * @param index
 	 * @param preparedStatement
 	 * @throws SQLException
 	 */
 	public void setValue(int index, PreparedStatement preparedStatement) throws SQLException {
-		dbDataType.setValue(preparedStatement, index, value);
+		if(value == null) {
+			preparedStatement.setNull(index, dbDataType.getSqlType());
+		}else {
+			dbDataType.setValue(preparedStatement, index, value);
+		}
 	}
 	
 	@Override

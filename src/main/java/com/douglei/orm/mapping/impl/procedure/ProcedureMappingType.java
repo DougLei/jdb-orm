@@ -2,10 +2,9 @@ package com.douglei.orm.mapping.impl.procedure;
 
 import java.io.InputStream;
 
-import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.metadata.type.MetadataType;
-import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
+import com.douglei.orm.mapping.MappingSubject;
+import com.douglei.orm.mapping.MappingType;
+import com.douglei.orm.mapping.MappingTypeNameConstants;
 
 /**
  * 
@@ -14,11 +13,11 @@ import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 public class ProcedureMappingType extends MappingType{
 	
 	public ProcedureMappingType() {
-		super(MetadataTypeNameConstants.PROCEDURE, ".pmp.xml", 30, true);
+		super(MappingTypeNameConstants.PROCEDURE, ".pmp.xml", 30, true);
 	}
 
 	@Override
-	public Mapping parse(InputStream input) throws Exception{
+	public MappingSubject parse(InputStream input) throws Exception{
 		return new ProcedureMappingParser().parse(input);
 	}
 }

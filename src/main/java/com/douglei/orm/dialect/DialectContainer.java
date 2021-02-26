@@ -1,33 +1,37 @@
 package com.douglei.orm.dialect;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
 
 /**
  * 方言实例容器
  * @author DougLei
  */
 public class DialectContainer {
-	private static final List<Dialect> instanceContainer = new ArrayList<Dialect>(DialectType.values().length);
+	private static final List<Dialect> instanceContainer = new ArrayList<Dialect>(DatabaseType.values().length);
 	
 	/**
 	 * 获取方言实例
-	 * @param entity
+	 * @param connection
 	 * @return
+	 * @throws SQLException 
 	 */
-	public static Dialect get(DatabaseMetadataEntity entity) {
+	public static Dialect get(Connection connection) throws SQLException {
+		DatabaseEntity entity = new DatabaseEntity(connection);
+		
 		if(instanceContainer.size() > 0) {
 			for(Dialect dialect : instanceContainer) {
-				if(dialect.getType().support(entity))
+				if(dialect.getDatabaseType().support(entity))
 					return dialect;
 			}
 		}
 		
-		for(DialectType dialectType : DialectType.values()) {
-			if(dialectType.support(entity)) {
-				Dialect dialect = dialectType.newInstance();
+		for(DatabaseType databaseType : DatabaseType.values()) {
+			if(databaseType.support(entity)) {
+				Dialect dialect = databaseType.getDialectInstance();
 				instanceContainer.add(dialect);
 				return dialect;
 			}

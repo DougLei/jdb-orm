@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<!-- 属性信息的具体配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
+	<!-- 映射的属性配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
 	<property order="0" supportCover="true" supportDelete="true" extend="" />
 
-	<!-- 该映射主要用在数据库中创建, 修改或删除视图, 不提供被调用的能力 -->
-	<!-- name必须和视图脚本的名称一致, oldName记录之前的name, 框架会将oldName对应的视图删除 -->
 	<!-- 
-		createMode和strict, 参考《table映射配置结构设计.tmp.xml》文件中的createMode和strict属性描述
-		但是这里 createMode 可以有的值只能有create, drop_create, 默认为create
-		
-		如果配置的是另外两个模式, 则会自动将其转换为create或drop_create
-				  none ==> create
-		dynamic_update ==> drop_create
+		视图映射, 主要用在数据库中创建, 修改或删除视图, 不提供调用视图的功能; 所有配置可参考《table映射配置结构设计.tmp.xml》中的table配置
+		* 特别说明:
+		* name: 必须和脚本中的视图名称一致, 建议全大写; 否则框架会转换为大写
+		* createMode: 和table不同的是, 不支持dynamic_update模式, 默认为create; 如果配置为dynamic_update, 则框架会转换为drop_create
 	 -->
 	<view name="" oldName="" createMode="" strict="false">
-		<!-- 这里写具体视图的脚本 -->
+		<!-- 创建视图的脚本 -->
 	</view>
 </mapping-configuration>

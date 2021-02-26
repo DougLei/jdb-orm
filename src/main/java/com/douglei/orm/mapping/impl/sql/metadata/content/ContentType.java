@@ -12,13 +12,4 @@ public enum ContentType {
 	
 	DECLARE,
 	PROCEDURE;
-	
-	public static ContentType toValue(String type) {
-		type = type.toUpperCase();
-		for (ContentType contentType : ContentType.values()) {
-			if(contentType.name().equals(type)) 
-				return contentType;
-		}
-		return null;
-	}
 }

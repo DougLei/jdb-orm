@@ -3,8 +3,8 @@ package com.douglei.orm.mapping.handler.rollback;
 import java.sql.SQLException;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingContainer;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.orm.mapping.container.MappingContainer;
 import com.douglei.orm.mapping.handler.object.DBConnection;
 
 /**

@@ -1,42 +1,62 @@
 package com.douglei.orm.mapping.impl.sql.metadata;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
+import com.douglei.orm.mapping.validator.Validator;
 
 /**
- * sql元数据
+ * 
  * @author DougLei
  */
 public class SqlMetadata extends AbstractMetadata{
-	private static final long serialVersionUID = -5098712069064894057L;
 	private List<ContentMetadata> contents;
+	private Map<String, SqlContentMetadata> sqlContents;
+	private Map<String, List<Validator>> validatorMap;
 	
 	public SqlMetadata(String namespace, String oldNamespace) {
-		super.name = namespace;
-		super.oldName = oldNamespace;
+		this.name = namespace;
+		this.oldName = oldNamespace;
 	}
-
-	/**
-	 * 添加 sql content
-	 * @param sqlContentMetadata
-	 */
-	public void addContentMetadata(ContentMetadata contentMetadata) {
-		if(contents == null) {
-			contents = new ArrayList<ContentMetadata>();
-		}else if(contents.contains(contentMetadata)){
-			throw new RepeatedContentNameException(contentMetadata.getName());
-		}
-		contents.add(contentMetadata);
+	public void setContents(List<ContentMetadata> contents) {
+		this.contents = contents;
+	}
+	public void addSqlContents(String name, SqlContentMetadata sqlContent) {
+		if(this.sqlContents == null)
+			this.sqlContents = new HashMap<String, SqlContentMetadata>();
+		this.sqlContents.put(name, sqlContent);
+	}
+	public void addValidators(String name, List<Validator> validators) {
+		if(this.validatorMap == null)
+			this.validatorMap = new HashMap<String, List<Validator>>();
+		this.validatorMap.put(name, validators);
 	}
 	
 	/**
-	 * 获取数据库对象集合, 如果没有则返回null
+	 * 获取ContentMetadata集合
 	 * @return
 	 */
 	public List<ContentMetadata> getContents() {
 		return contents;
+	}
+	
+	/**
+	 * 获取SqlContentMetadata集合
+	 * @return
+	 */
+	public Map<String, SqlContentMetadata> getSqlContents() {
+		return sqlContents;
+	}
+	
+	/**
+	 * 获取ValidatorMap集合
+	 * @return
+	 */
+	public Map<String, List<Validator>> getValidatorMap() {
+		return validatorMap;
 	}
 }

@@ -2,10 +2,9 @@ package com.douglei.orm.mapping.impl.table;
 
 import java.io.InputStream;
 
-import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.metadata.type.MetadataType;
-import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
+import com.douglei.orm.mapping.MappingSubject;
+import com.douglei.orm.mapping.MappingType;
+import com.douglei.orm.mapping.MappingTypeNameConstants;
 
 /**
  * 
@@ -14,11 +13,11 @@ import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 public class TableMappingType extends MappingType{
 	
 	public TableMappingType() {
-		super(MetadataTypeNameConstants.TABLE, ".tmp.xml", 10, true);
+		super(MappingTypeNameConstants.TABLE, ".tmp.xml", 10, true);
 	}
 
 	@Override
-	public Mapping parse(InputStream input) throws Exception {
+	public MappingSubject parse(InputStream input) throws Exception {
 		return new TableMappingParser().parse(input);
 	}
 }

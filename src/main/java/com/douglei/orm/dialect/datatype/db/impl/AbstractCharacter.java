@@ -6,20 +6,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class AbstractCharacter extends DBDataType {
-	private static final long serialVersionUID = -6610022383230396501L;
 
-	protected AbstractCharacter(int sqlType) {
-		super(sqlType);
+	protected AbstractCharacter(String name, int sqlType) {
+		super(name, sqlType);
 	}
-	protected AbstractCharacter(int sqlType, int maxLength) {
-		super(sqlType, maxLength);
+	protected AbstractCharacter(String name, int sqlType, int maxLength) {
+		super(name, sqlType, maxLength);
 	}
 	
 	@Override
@@ -33,7 +32,7 @@ public abstract class AbstractCharacter extends DBDataType {
 	}
 	
 	@Override
-	protected final void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public final void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		preparedStatement.setString(parameterIndex, value.toString());
 	}
 	

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SqlContentExtractor;
 

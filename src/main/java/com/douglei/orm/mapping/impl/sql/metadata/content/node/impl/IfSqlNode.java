@@ -8,7 +8,6 @@ import com.douglei.tools.OgnlUtil;
  * @author DougLei
  */
 public class IfSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = 504149933956674908L;
 	
 	private String expression;
 	private boolean expressionFlag; // 标识是否处理过expression

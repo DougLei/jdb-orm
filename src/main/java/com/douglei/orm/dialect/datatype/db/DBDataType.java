@@ -6,41 +6,39 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.douglei.orm.dialect.datatype.Classification;
 import com.douglei.orm.dialect.datatype.DataType;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Bigint;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.dialect.datatype.DataTypeClassification;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
- * 数据库的数据类型; 自定义的扩展类型, 类的类名即类型名, 具体可参考框架已经实现的类, 例如 {@link Bigint}
+ * 数据库的数据类型
  * @author DougLei
  */
 public abstract class DBDataType extends DataType implements Serializable{
-	private static final long serialVersionUID = -6142370632027959328L;
 	private static final int NO_LIMIT = -1; // 对长度(或精度)没有限制
 	
-	protected String name;// 类型的名称, 必须是大写!
-	protected int sqlType;// @see java.sql.Types
+	protected final String name;// 类型的名称
+	protected final int sqlType;// @see java.sql.Types
 	
-	private int maxLength;// 最大长度
-	private int maxPrecision;// 最大精度
+	private int maxLength;// 类型支持的最大长度
+	private int maxPrecision;// 类型支持的最大精度
 	
-	protected DBDataType(int sqlType) {
-		this(sqlType, NO_LIMIT, NO_LIMIT);
+	protected DBDataType(String name, int sqlType) {
+		this(name, sqlType, NO_LIMIT, NO_LIMIT);
 	}
-	protected DBDataType(int sqlType, int maxLength) {
-		this(sqlType, maxLength, NO_LIMIT);
+	protected DBDataType(String name, int sqlType, int maxLength) {
+		this(name, sqlType, maxLength, NO_LIMIT);
 	}
-	protected DBDataType(int sqlType, int maxLength, int maxPrecision) {
-		this.name = getClass().getSimpleName().toUpperCase();
+	protected DBDataType(String name, int sqlType, int maxLength, int maxPrecision) {
+		this.name = name;
 		this.sqlType = sqlType;
 		this.maxLength = maxLength;
 		this.maxPrecision = maxPrecision;
 	}
 	
 	@Override
-	public final Classification getClassification() {
-		return Classification.DB;
+	public final DataTypeClassification getClassification() {
+		return DataTypeClassification.DB;
 	}
 	
 	@Override
@@ -119,22 +117,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		if(value == null) {
-			preparedStatement.setNull(parameterIndex, sqlType);
-		}else {
-			setValue_(preparedStatement, parameterIndex, value);
-		}
-	}
-	
-	/**
-	 * 给 {@link PreparedStatement} 设置对应的参数值
-	 * @param preparedStatement
-	 * @param parameterIndex
-	 * @param value 不为null
-	 * @throws SQLException
-	 */
-	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 setValue_(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
+		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 setValue(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
 	}
 	
 	/**
@@ -145,7 +128,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public Object getValue(int columnIndex, ResultSet resultSet) throws SQLException{
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 getValue(int, ResultSet)方法");
+		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 getValue(int, ResultSet)方法");
 	}
 	
 	/**
@@ -156,7 +139,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public Object getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException{
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 getValue(int, CallableStatement)方法");
+		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 getValue(int, CallableStatement)方法");
 	}
 	
 	/**
@@ -168,7 +151,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @return 返回null表示验证通过
 	 */
 	public ValidationResult validate(String name, Object value, int length, int precision){
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型无法执行 validate(String, Object, int, int)方法");
+		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 validate(String, Object, int, int)方法");
 	}
 	
 	@Override

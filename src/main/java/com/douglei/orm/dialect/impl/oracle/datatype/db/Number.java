@@ -11,8 +11,7 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * 
  * @author DougLei
  */
-public class Number extends AbstractDecimal{
-	private static final long serialVersionUID = 3801515554935666998L;
+public class Number extends AbstractDecimal {
 	private static final Number singleton = new Number();
 	public static Number getSingleton() {
 		return singleton;
@@ -22,7 +21,7 @@ public class Number extends AbstractDecimal{
 	}
 	
 	private Number() {
-		super(2);
+		super("NUMBER", 2);
 	}
 	
 	@Override
@@ -31,7 +30,7 @@ public class Number extends AbstractDecimal{
 	}
 	
 	@Override
-	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 		Class<?> valueClass = value.getClass();
 		if(valueClass == int.class || value instanceof Integer) {
 			preparedStatement.setInt(parameterIndex, (int)value);
@@ -42,13 +41,26 @@ public class Number extends AbstractDecimal{
 		}else if(valueClass == byte.class || value instanceof Byte) {
 			preparedStatement.setByte(parameterIndex, (byte)value);
 		}else {
-			super.setValue_(preparedStatement, parameterIndex, valueClass);
+			super.setValue(preparedStatement, parameterIndex, valueClass);
 		}
 	}
 	
 	@Override
 	protected boolean validateType(Object value) {
 		Class<?> valueClass = value.getClass();
-		return valueClass == int.class || value instanceof Integer || valueClass == long.class || value instanceof Long || valueClass == short.class || value instanceof Short || valueClass == byte.class || value instanceof Byte || valueClass == double.class || value instanceof Double || valueClass == float.class || value instanceof Float || value instanceof BigDecimal || DataTypeValidateUtil.isDouble(value.toString());
+		return valueClass == int.class 
+				|| value instanceof Integer 
+				|| valueClass == long.class 
+				|| value instanceof Long 
+				|| valueClass == short.class 
+				|| value instanceof Short 
+				|| valueClass == byte.class 
+				|| value instanceof Byte 
+				|| valueClass == double.class 
+				|| value instanceof Double 
+				|| valueClass == float.class 
+				|| value instanceof Float 
+				|| value instanceof BigDecimal 
+				|| DataTypeValidateUtil.isNumber(value.toString());
 	}
 }

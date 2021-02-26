@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * 

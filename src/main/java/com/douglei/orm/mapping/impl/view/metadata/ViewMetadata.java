@@ -1,23 +1,20 @@
 package com.douglei.orm.mapping.impl.view.metadata;
 
-import com.douglei.orm.mapping.impl.table.metadata.CreateMode;
-import com.douglei.orm.mapping.metadata.AbstractDatabaseObjectMetadata;
-import com.douglei.tools.StringUtil;
+import com.douglei.orm.configuration.environment.CreateMode;
+import com.douglei.orm.mapping.metadata.AbstractMetadata;
 
 /**
  * 
  * @author DougLei
  */
-public class ViewMetadata extends AbstractDatabaseObjectMetadata {
-	private static final long serialVersionUID = -4631261045702701161L;
-	
+public class ViewMetadata extends AbstractMetadata {
 	private CreateMode createMode; // 创建模式
 	private String script; // 脚本内容
 	
 	public ViewMetadata(String name, String oldName, CreateMode createMode, String script) {
-		super(name);
-		super.name = name;
-		super.oldName = StringUtil.isEmpty(oldName)?name:oldName;
+		this.name = name;
+		this.oldName = oldName;
+		
 		this.createMode = createMode;
 		this.script = script;
 	}

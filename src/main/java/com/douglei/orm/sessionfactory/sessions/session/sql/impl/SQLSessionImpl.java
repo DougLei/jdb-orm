@@ -11,14 +11,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMode;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.Mode;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.ProcedurePurposeEntity;
@@ -238,14 +237,22 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						outParameterIndex = new short[callableSqlParameters.size()];
 						
 						short index = 1;
+						Object value = null;
 						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
 							if(!sqlParameterMetadata.isPlaceholder())
 								continue;
 							
 							logger.debug("执行的sql参数值为: index={}, parameter={}", index, sqlParameterMetadata);
-							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) 
-								sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, sqlParameterMetadata.getValue(sqlParameter));
-							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
+							if(sqlParameterMetadata.getMode() != Mode.OUT) {
+								value = sqlParameterMetadata.getValue(sqlParameter);
+								if(value == null) {
+									callableStatement.setNull(index, sqlParameterMetadata.getDBDataType().getSqlType());
+								}else {
+									sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, value);
+								}
+							}
+							
+							if(sqlParameterMetadata.getMode() != Mode.IN) {
 								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataType().getSqlType());
 								outParameterIndex[outParameterCount] = index;
 								outParameterCount++;

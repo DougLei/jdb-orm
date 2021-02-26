@@ -15,24 +15,22 @@ import com.douglei.orm.configuration.Dom4jUtil;
 import com.douglei.orm.configuration.ExternalDataSource;
 import com.douglei.orm.configuration.OrmException;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
-import com.douglei.orm.configuration.environment.datasource.DatabaseMetadataEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.configuration.environment.mapping.SqlMappingConfiguration;
 import com.douglei.orm.configuration.environment.mapping.SqlMappingParameterDefaultValueHandler;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.DialectContainer;
-import com.douglei.orm.mapping.container.ApplicationMappingContainer;
-import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.MappingContainer;
+import com.douglei.orm.mapping.MappingContainerImpl;
+import com.douglei.orm.mapping.MappingType;
+import com.douglei.orm.mapping.MappingTypeContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.impl.procedure.ProcedureMappingType;
-import com.douglei.orm.mapping.impl.query.sql.QuerySqlMapping;
 import com.douglei.orm.mapping.impl.sql.SqlMappingType;
 import com.douglei.orm.mapping.impl.table.TableMappingType;
 import com.douglei.orm.mapping.impl.view.ViewMappingType;
-import com.douglei.orm.mapping.type.MappingType;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.tools.StringUtil;
 import com.douglei.tools.file.scanner.impl.ResourceScanner;
 import com.douglei.tools.reflect.ClassUtil;
@@ -60,7 +58,7 @@ public class Environment {
 		setDataSource(exDataSource==null?Dom4jUtil.getElement("datasource", environmentElement):exDataSource, properties);
 		
 		// 设置方言
-		this.dialect = DialectContainer.get(new DatabaseMetadataEntity(dataSource.getConnection(false, null).getConnection()));
+		this.dialect = DialectContainer.get(dataSource.getConnection(false, null).getConnection());
 		
 		// 设置MappingHandler
 		setMappingHandler(environmentElement.element("mapping"), mappingContainer);
@@ -140,7 +138,7 @@ public class Environment {
 		
 		// 创建MappingHandler; 创建容器或清空容器
 		if(mappingContainer == null)
-			mappingContainer = new ApplicationMappingContainer();
+			mappingContainer = new MappingContainerImpl();
 		else
 			mappingContainer.clear();
 		this.mappingHandler = new MappingHandler(configuration, typeContainer, mappingContainer, dataSource);
@@ -158,8 +156,7 @@ public class Environment {
 				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableTable")), 
 				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableSql")), 
 				"true".equalsIgnoreCase(mappingElement.attributeValue("enableView")), 
-				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")), 
-				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableQuerySql")));
+				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")));
 		
 		// 设置内置的sql映射配置
 		if(configuration.isEnableSql()) {
@@ -188,8 +185,6 @@ public class Environment {
 			typeContainer.register(new ViewMappingType());
 		if(configuration.isEnableProcedure()) // procedure
 			typeContainer.register(new ProcedureMappingType());
-		if(configuration.isEnableQuerySql()) // query-sql
-			typeContainer.register(new QuerySqlMapping());
 		
 		// 注册配置的映射类型
 		if(registerElements.size() > 0) {

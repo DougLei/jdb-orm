@@ -24,7 +24,7 @@ public class SwitchSqlNodeParser extends SqlNodeParser {
 	@Override
 	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParserException {
 		if(children.getType() != SqlNodeType.IF && children.getType() != SqlNodeType.ELSE) 
-			throw new SqlNodeParserException("<switch>元素中, 只能使用<if>元素或<else>元素; 也不支持在<switch>元素中, 直接编写sql语句");
+			throw new SqlNodeParserException("<switch>中, 只能使用<if>或<else>; 也不支持在<switch>中, 直接编写sql语句");
 	}
 
 	@Override

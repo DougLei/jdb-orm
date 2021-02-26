@@ -46,7 +46,7 @@ public abstract class SqlNodeParser {
 		NodeList childrens = currentNode.getChildNodes();
 		int cl = childrens.getLength();
 		if(cl == 0) 
-			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">元素中不存在任何元素配置");
+			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">中不存在任何配置");
 		
 		SqlNode c_sn = null;
 		for(int i=0;i<cl;i++) {
@@ -59,7 +59,7 @@ public abstract class SqlNodeParser {
 		}
 		
 		if(!current.existsSqlNode())
-			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">元素中不存在任何元素配置");
+			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">中不存在任何配置");
 	}
 	
 	/**

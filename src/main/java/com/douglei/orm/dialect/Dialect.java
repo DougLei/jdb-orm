@@ -1,7 +1,6 @@
 package com.douglei.orm.dialect;
 
 import com.douglei.orm.dialect.datatype.DataTypeContainer;
-import com.douglei.orm.dialect.object.DBObjectHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 
@@ -12,10 +11,10 @@ import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 public interface Dialect {
 	
 	/**
-	 * 获取方言类型
+	 * 获取数据库类型
 	 * @return
 	 */
-	DialectType getType();
+	DatabaseType getDatabaseType();
 	
 	/**
 	 * 获取数据类型容器
@@ -23,12 +22,6 @@ public interface Dialect {
 	 */
 	DataTypeContainer getDataTypeContainer();
 	
-	/**
-	 * 获取数据库对象处理器
-	 * @return
-	 */
-	DBObjectHandler getObjectHandler();
-
 	/**
 	 * 获取sql语句处理器
 	 * @return

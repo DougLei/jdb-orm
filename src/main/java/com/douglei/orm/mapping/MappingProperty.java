@@ -2,7 +2,6 @@ package com.douglei.orm.mapping;
 
 import java.io.Serializable;
 
-import com.douglei.tools.StringUtil;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
@@ -10,11 +9,12 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * @author DougLei
  */
 public class MappingProperty implements Serializable{
-	private String code; // mapping的唯一标识, 与对应mapping的code值完全一样
-	private String type; // mapping的类型, 值来自 {@link MappingTypeConstants} 中的映射类型名, 或自定义且完成注册的映射类型名
+	private String code; // mapping的唯一编码, 与对应mapping的编码一样
+	private String type; // mapping的类型
+	
 	private int order; // mapping的排序值
-	private boolean supportCover=true; // mapping是否支持被覆盖
-	private boolean supportDelete=true; // mapping是否支持被删除
+	private boolean supportCover; // mapping是否支持被覆盖
+	private boolean supportDelete; // mapping是否支持被删除
 	private String extend; // mapping的扩展属性, 可由第三方扩展
 	
 	public MappingProperty(String code, String type) {
@@ -23,25 +23,21 @@ public class MappingProperty implements Serializable{
 	}
 	
 	/**
-	 * 设置值
+	 * 设置属性值
 	 * @param order mapping的排序值, 默认0
-	 * @param supportCover mapping是否支持被覆盖, 默认true
-	 * @param supportDelete mapping是否支持被删除, 默认true
+	 * @param supportCover mapping是否支持被覆盖
+	 * @param supportDelete mapping是否支持被删除
 	 * @param extend mapping的扩展属性, 可由第三方扩展
 	 */
-	public void setValues(String order, String supportCover, String supportDelete, String extend) {
+	void setValues(String order, String supportCover, String supportDelete, String extend) {
 		if(DataTypeValidateUtil.isInteger(order))
 			this.order = Integer.parseInt(order);
 		
-		if(DataTypeValidateUtil.isBoolean(supportCover))
-			this.supportCover = Boolean.parseBoolean(supportCover);
-		
-		if(DataTypeValidateUtil.isBoolean(supportDelete))
-			this.supportDelete = Boolean.parseBoolean(supportDelete);
-		
-		if(StringUtil.unEmpty(extend))
-			this.extend = extend;
+		this.supportCover = !"false".equalsIgnoreCase(supportCover);
+		this.supportDelete = !"false".equalsIgnoreCase(supportDelete);
+		this.extend = extend;
 	}
+	
 	
 	public String getCode() {
 		return code;

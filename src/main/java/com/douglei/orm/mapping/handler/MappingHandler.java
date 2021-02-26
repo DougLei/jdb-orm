@@ -13,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingContainer;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.MappingTypeContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
 import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
@@ -29,7 +30,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
-import com.douglei.orm.mapping.type.MappingTypeContainer;
 import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
@@ -308,5 +308,13 @@ public class MappingHandler {
 			container.clear();
 			container = null;
 		}
+	}
+
+	/**
+	 * 获取映射的配置信息
+	 * @return
+	 */
+	public MappingConfiguration getMappingConfiguration() {
+		return configuration;
 	}
 }

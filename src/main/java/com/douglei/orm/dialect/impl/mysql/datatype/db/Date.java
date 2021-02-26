@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.tools.datatype.DataTypeValidateUtil;
 import com.douglei.tools.datatype.DateFormatUtil;
 
 /**
@@ -14,7 +15,6 @@ import com.douglei.tools.datatype.DateFormatUtil;
  * @author DougLei
  */
 public class Date extends DBDataType {
-	private static final long serialVersionUID = -3578773401783487238L;
 	private static final Date singleton = new Date();
 	public static Date getSingleton() {
 		return singleton;
@@ -24,15 +24,15 @@ public class Date extends DBDataType {
 	}
 	
 	protected Date() {
-		super(91);
+		super("DATE", 91);
 	}
 	
 	@Override
-	protected void setValue_(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		if(DateFormatUtil.verifyIsDate(value)) {
+	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
+		if(DataTypeValidateUtil.isDate(value)) {
 			preparedStatement.setDate(parameterIndex, DateFormatUtil.parseSqlDate(value));
 		} else {
-			super.setValue_(preparedStatement, parameterIndex, value);
+			super.setValue(preparedStatement, parameterIndex, value);
 		}
 	}
 
@@ -48,7 +48,7 @@ public class Date extends DBDataType {
 	
 	@Override
 	public ValidationResult validate(String name, Object value, int length, int precision) {
-		if(value instanceof Date || DateFormatUtil.verifyIsDate(value)) 
+		if(value instanceof Date || DataTypeValidateUtil.isDate(value)) 
 			return null;
 		return new ValidationResult(name, "数据值类型错误, 应为日期类型", "jdb.data.validator.value.datatype.error.date");
 	}

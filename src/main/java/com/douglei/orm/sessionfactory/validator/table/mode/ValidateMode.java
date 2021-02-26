@@ -3,7 +3,7 @@ package com.douglei.orm.sessionfactory.validator.table.mode;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 
 /**
  * table数据的验证模式

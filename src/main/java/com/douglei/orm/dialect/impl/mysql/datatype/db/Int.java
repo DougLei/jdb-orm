@@ -12,7 +12,6 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Int extends AbstractInt{
-	private static final long serialVersionUID = 7272989288308702154L;
 	private static final Int singleton = new Int();
 	public static Int getSingleton() {
 		return singleton;
@@ -22,7 +21,7 @@ public class Int extends AbstractInt{
 	}
 	
 	protected Int() {
-		super(4, 10);
+		super("INT", 4, 10);
 	}
 	
 	@Override

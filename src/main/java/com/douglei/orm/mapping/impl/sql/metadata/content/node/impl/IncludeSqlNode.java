@@ -11,14 +11,16 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSql;
  * @author DougLei
  */
 public class IncludeSqlNode extends AbstractNestingNode {
-	private static final long serialVersionUID = -688837224487092120L;
 	
-	private SqlContentMetadata content; // TODO 这里需要优化, 反序列化时会创建重复实例
-	public IncludeSqlNode(SqlContentMetadata content) {
-		this.content = content;
-		this.sqlNodes = content.getSqlNodes();
+	private String refName; 
+	public IncludeSqlNode(String refName) {
+		this.refName = refName;
 	}
-	
+
+	public String getRefName() {
+		return refName;
+	}
+
 	@Override
 	public ExecutableSqlNode getExecutableSqlNode(PurposeEntity purposeEntity, Object sqlParameter, String previousAlias) {
 		ExecutableSql executableSql = new ExecutableSql(purposeEntity, content, sqlParameter);

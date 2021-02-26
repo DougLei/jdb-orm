@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.mapping.metadata.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
@@ -14,7 +14,6 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * @author DougLei
  */
 public abstract class AbstractNestingNode implements SqlNode{
-	private static final long serialVersionUID = 3469227270109745494L;
 	
 	protected List<SqlNode> sqlNodes;// 内部的node集合
 	
