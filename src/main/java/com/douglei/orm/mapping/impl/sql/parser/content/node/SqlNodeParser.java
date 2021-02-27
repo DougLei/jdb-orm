@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.impl.sql.metadata.parser.content.node;
+package com.douglei.orm.mapping.impl.sql.parser.content.node;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -15,7 +15,7 @@ public abstract class SqlNodeParser {
 	/**
 	 * 
 	 * @param node
-	 * @return
+	 * @return 返回null, 会忽略当前SqlNode
 	 * @throws SqlNodeParserException
 	 */
 	public abstract SqlNode parse(Node node) throws SqlNodeParserException;

@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.impl.sql.metadata.parser.content;
+package com.douglei.orm.mapping.impl.sql.parser.content;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -6,12 +6,12 @@ import org.w3c.dom.NodeList;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.DatabaseNameConstants;
-import com.douglei.orm.mapping.impl.MappingParserContext;
+import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
 import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserContainer;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserContainer;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.tools.StringUtil;
 
@@ -32,8 +32,8 @@ public class SqlContentMetadataParser {
 		String name = getName(node, attributeMap.getNamedItem("name"));
 		
 		// 如果是sql-content, 先去容器中查找是否存在, 如果存在则直接返回, 否则就向下进行解析
-		if("sql-content".equals(node.getNodeName()) && MappingParserContext.existsSqlContent(name)) 
-			return MappingParserContext.getSqlContent(name);
+		if("sql-content".equals(node.getNodeName()) && MappingParseToolContext.getMappingParseTool().getSqlContentMap().get(name) instanceof SqlContentMetadata) 
+			return MappingParseToolContext.getMappingParseTool().getSqlContent(name);
 		
 		ContentType type = parseContentType(attributeMap);
 		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(type, attributeMap);

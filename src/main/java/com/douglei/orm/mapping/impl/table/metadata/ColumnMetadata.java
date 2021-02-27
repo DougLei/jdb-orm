@@ -16,10 +16,9 @@ public class ColumnMetadata extends AbstractMetadata {
 	private int length;// 长度
 	private int precision;// 精度
 	private boolean nullable;// 是否可为空
-	private String description;// 描述
 	private List<Validator> validators; // 验证器集合
 	
-	public ColumnMetadata(String name, String oldName, String property, DBDataType dbDataType, int length, int precision, boolean nullable, String description) {
+	public ColumnMetadata(String name, String oldName, String property, DBDataType dbDataType, int length, int precision, boolean nullable) {
 		this.name = name;
 		this.oldName = oldName;
 		this.property = property;
@@ -29,12 +28,10 @@ public class ColumnMetadata extends AbstractMetadata {
 		this.precision = precision;
 		
 		this.nullable = nullable;
-		this.description = description;
 	}
 	public void setValidators(List<Validator> validators) {
 		this.validators = validators;
 	}
-
 
 	@Override
 	public String getCode() {
@@ -62,9 +59,6 @@ public class ColumnMetadata extends AbstractMetadata {
 	}
 	public boolean isNullable() {
 		return nullable;
-	}
-	public String getDescription() {
-		return description;
 	}
 	public List<Validator> getValidators() {
 		return validators;

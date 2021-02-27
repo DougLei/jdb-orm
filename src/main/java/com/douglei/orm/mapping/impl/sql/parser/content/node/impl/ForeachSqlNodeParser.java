@@ -1,13 +1,13 @@
-package com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.impl;
+package com.douglei.orm.mapping.impl.sql.parser.content.node.impl;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ForeachSqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParser;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeParserException;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParser;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserException;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
 import com.douglei.tools.StringUtil;
 
 /**
@@ -29,10 +29,19 @@ public class ForeachSqlNodeParser extends SqlNodeParser {
 		if(StringUtil.isEmpty(alias)) 
 			throw new SqlNodeParserException("<foreach>中的alias属性值不能为空");
 		
-		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(collection.trim(), alias.trim(),
-				getAttributeValue(attributeMap.getNamedItem("open")),
-				getAttributeValue(attributeMap.getNamedItem("separator")),
-				getAttributeValue(attributeMap.getNamedItem("close")));
+		// 解析open
+		String open = getAttributeValue(attributeMap.getNamedItem("open"));
+		open = open==null?" ":" "+open+" ";
+		
+		// 解析separator
+		String separator = getAttributeValue(attributeMap.getNamedItem("separator"));
+		separator = separator==null?" ":separator;
+		
+		// 解析close
+		String close = getAttributeValue(attributeMap.getNamedItem("close"));
+		close = close==null?" ":" "+close+" ";
+		
+		ForeachSqlNode foreachSqlNode = new ForeachSqlNode(collection.trim(), alias.trim(), open, separator, close);
 		setChildrenSqlNodes(foreachSqlNode, node);
 		return foreachSqlNode;
 	}

@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.impl.sql;
+package com.douglei.orm.mapping.impl.sql.parser;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,14 +11,16 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
-import com.douglei.orm.mapping.impl.MappingParserContext;
+import com.douglei.orm.mapping.impl.sql.SqlMapping;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadataParser;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.SqlMetadataParser;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.ContentMetadataParser;
+import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
+import com.douglei.orm.mapping.impl.sql.parser.content.ContentMetadataParser;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.orm.mapping.validator.Validator;
 import com.douglei.orm.mapping.validator.ValidatorParserContainer;
@@ -36,7 +38,7 @@ class SqlMappingParser extends MappingParser {
 	
 	@Override
 	public MappingSubject parse(InputStream input) throws Exception {
-		Element rootElement = MappingParserContext.getDocumentBuilder().parse(input).getDocumentElement();
+		Element rootElement = MappingParseToolContext.getMappingParseTool().getDocumentBuilder().parse(input).getDocumentElement();
 		
 		// 解析SqlMetadata
 		NodeList sqlNodeList = rootElement.getElementsByTagName(MappingTypeNameConstants.SQL);
@@ -46,23 +48,32 @@ class SqlMappingParser extends MappingParser {
 		sqlMetadata = sqlMetadataParser.parse(sqlNode);
 		
 		// 记录配置的验证器Map集合
-		setValidators(sqlNode);
-		// 记录配置的验证器Map集合
-		MappingParserContext.setSqlContents(sqlNode);
+		addValidators(sqlNode);
+		
+		// 记录配置的sql-content Map集合
+		boolean existsSqlContentMap = MappingParseToolContext.getMappingParseTool().setSqlContentMap(sqlNode);
 		
 		// 添加content
 		addContents(sqlNode);
+		
+		// 添加sql-content
+		if(existsSqlContentMap) {
+			MappingParseToolContext.getMappingParseTool().getSqlContentMap().values().forEach(obj -> {
+				if(obj instanceof SqlContentMetadata)
+					sqlMetadata.addSqlContent((SqlContentMetadata)obj);
+			});
+		}
 		
 		return buildMappingSubjectByDocumentBuilder(new SqlMapping(sqlMetadata), rootElement);
 	}
 	
 	/**
-	 * 记录配置的验证器Map集合
+	 * 添加验证器Map集合
 	 * @param sqlNode
 	 * @throws XPathExpressionException 
 	 */
-	private void setValidators(Node sqlNode) throws XPathExpressionException{
-		NodeList list = MappingParserContext.getValidatorNodeList(sqlNode);
+	private void addValidators(Node sqlNode) throws XPathExpressionException{
+		NodeList list = MappingParseToolContext.getMappingParseTool().getValidatorNodeList(sqlNode);
 		if(list.getLength() == 0)
 			return;
 		
@@ -101,7 +112,7 @@ class SqlMappingParser extends MappingParser {
 	 * @throws XPathExpressionException 
 	 */
 	private void addContents(Node sqlNode) throws XPathExpressionException {
-		NodeList contentNodeList = MappingParserContext.getContentNodeList(sqlNode);
+		NodeList contentNodeList = MappingParseToolContext.getMappingParseTool().getContentNodeList(sqlNode);
 		if(contentNodeList.getLength() == 0) 
 			throw new MetadataParseException("<sql>中至少要配置一个<content>");
 		

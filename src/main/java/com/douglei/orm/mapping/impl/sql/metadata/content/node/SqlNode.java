@@ -2,7 +2,8 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node;
 
 import java.io.Serializable;
 
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
+import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
@@ -10,7 +11,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
  * 
  * @author DougLei
  */
-public interface SqlNode extends Serializable{
+public interface SqlNode extends Metadata{
 	
 	/**
 	 * 获取sql节点类型

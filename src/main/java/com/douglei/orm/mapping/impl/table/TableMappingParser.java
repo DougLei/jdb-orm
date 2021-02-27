@@ -14,10 +14,10 @@ import com.douglei.orm.dialect.DatabaseNameConstants;
 import com.douglei.orm.dialect.datatype.DataTypeClassification;
 import com.douglei.orm.dialect.datatype.db.DBDataTypeEntity;
 import com.douglei.orm.dialect.datatype.db.DBDataTypeUtil;
+import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
-import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintType;
@@ -47,7 +47,7 @@ class TableMappingParser extends MappingParser{
 	
 	@Override
 	public MappingSubject parse(InputStream input) throws Exception {
-		Element rootElement = MappingParserContext.getSAXReader().read(input).getRootElement();
+		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		
 		// 解析TableMetadata
 		Element tableElement = Dom4jUtil.getElement(MappingTypeNameConstants.TABLE, rootElement);
@@ -262,8 +262,7 @@ class ColumnMetadataParser extends AbstractMetadataParser{
 		
 		// 创建ColumnMetadata实例
 		return new ColumnMetadata(name, oldName, property, dataTypeEntity.getDBDataType(), dataTypeEntity.getLength(), dataTypeEntity.getPrecision(),
-				!"false".equalsIgnoreCase(element.attributeValue("nullable")),
-				element.attributeValue("description"));
+				!"false".equalsIgnoreCase(element.attributeValue("nullable")));
 	}
 }
 

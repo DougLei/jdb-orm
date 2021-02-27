@@ -5,10 +5,10 @@ import java.io.InputStream;
 import org.dom4j.Element;
 
 import com.douglei.orm.configuration.Dom4jUtil;
+import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
-import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadataParser;
 
@@ -21,7 +21,7 @@ class ViewMappingParser extends MappingParser{
 	
 	@Override
 	public MappingSubject parse(InputStream input) throws Exception {
-		Element rootElement = MappingParserContext.getSAXReader().read(input).getRootElement();
+		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		ViewMetadata viewMetadata = viewMetadataParser.parse(Dom4jUtil.getElement(MappingTypeNameConstants.VIEW, rootElement));
 		return buildMappingSubjectByDom4j(new ViewMapping(viewMetadata), rootElement);
 	}

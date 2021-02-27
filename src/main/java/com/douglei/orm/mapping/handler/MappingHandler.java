@@ -14,6 +14,7 @@ import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingContainer;
+import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingProperty;
 import com.douglei.orm.mapping.MappingTypeContainer;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
@@ -24,7 +25,6 @@ import com.douglei.orm.mapping.handler.object.ObjectHandlerPackageContext;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
-import com.douglei.orm.mapping.impl.MappingParserContext;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -155,7 +155,7 @@ public class MappingHandler {
 		} finally {
 			RollbackRecorder.clear();
 			ObjectHandlerPackageContext.destroy();
-			MappingParserContext.destroy();
+			MappingParseToolContext.destroy();
 			logger.debug("操作映射结束");
 		}
 	}

@@ -38,9 +38,8 @@
 				* precision: 数据类型的精度
 				
 				* nullable: 是否可为空, 默认为true
-				* description: 描述
 			 -->
-			<column name="USER_NAME" oldName="" property="userName" dbType="DATE" dataType="string" length="30" precision="" nullable="true" description=""/>
+			<column name="USER_NAME" oldName="" property="userName" dbType="DATE" dataType="string" length="30" precision="" nullable="true"/>
 		</columns>
 
 		<!-- 约束配置 -->

@@ -15,7 +15,7 @@ import com.douglei.orm.mapping.validator.Validator;
  */
 public class SqlMetadata extends AbstractMetadata{
 	private List<ContentMetadata> contents;
-	private Map<String, SqlContentMetadata> sqlContents;
+	private Map<String, SqlContentMetadata> sqlContentMap;
 	private Map<String, List<Validator>> validatorMap;
 	
 	public SqlMetadata(String namespace, String oldNamespace) {
@@ -25,10 +25,10 @@ public class SqlMetadata extends AbstractMetadata{
 	public void setContents(List<ContentMetadata> contents) {
 		this.contents = contents;
 	}
-	public void addSqlContents(String name, SqlContentMetadata sqlContent) {
-		if(this.sqlContents == null)
-			this.sqlContents = new HashMap<String, SqlContentMetadata>();
-		this.sqlContents.put(name, sqlContent);
+	public void addSqlContent(SqlContentMetadata sqlContent) {
+		if(this.sqlContentMap == null)
+			this.sqlContentMap = new HashMap<String, SqlContentMetadata>();
+		this.sqlContentMap.put(sqlContent.getName(), sqlContent);
 	}
 	public void addValidators(String name, List<Validator> validators) {
 		if(this.validatorMap == null)
@@ -45,11 +45,11 @@ public class SqlMetadata extends AbstractMetadata{
 	}
 	
 	/**
-	 * 获取SqlContentMetadata集合
+	 * 获取SqlContentMetadata的Map集合
 	 * @return
 	 */
-	public Map<String, SqlContentMetadata> getSqlContents() {
-		return sqlContents;
+	public Map<String, SqlContentMetadata> getSqlContentMap() {
+		return sqlContentMap;
 	}
 	
 	/**

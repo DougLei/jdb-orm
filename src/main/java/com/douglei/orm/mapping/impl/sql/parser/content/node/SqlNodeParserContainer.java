@@ -1,4 +1,4 @@
-package com.douglei.orm.mapping.impl.sql.metadata.parser.content.node;
+package com.douglei.orm.mapping.impl.sql.parser.content.node;
 
 import java.util.HashMap;
 import java.util.Map;

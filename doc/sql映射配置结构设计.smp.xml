@@ -81,11 +81,9 @@
 				
 				* placeholder: 是否使用占位符, 默认为true
 				* prefix: 非占位符时的前缀字符
-				* suffix: 非占位符时的前缀字符
-				
-				* description: 参数描述
+				* suffix: 非占位符时的后缀字符
 			 -->
-			#{name, mode=in, dbType=DATE, dataType=string, length=30, precision=1, defaultValue=dv, nullable=true, placeholder=false, prefix=', suffix=', description=}
+			#{name, mode=in, dbType=DATE, dataType=string, length=30, precision=1, defaultValue=dv, nullable=true, placeholder=false, prefix=', suffix='}
 		
 		</content>
 	

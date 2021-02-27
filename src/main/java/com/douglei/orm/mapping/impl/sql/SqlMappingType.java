@@ -5,6 +5,7 @@ import java.io.InputStream;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingType;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.impl.sql.parser.SqlMappingParser;
 
 /**
  * 

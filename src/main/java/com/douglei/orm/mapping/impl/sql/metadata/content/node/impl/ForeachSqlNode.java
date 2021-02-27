@@ -10,7 +10,7 @@ import java.util.Map;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.parser.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.validator.ValidationResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.OgnlUtil;
@@ -32,9 +32,9 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	public ForeachSqlNode(String collection, String alias, String open, String separator, String close) {
 		this.collection = collection;
 		this.alias = alias;
-		this.open = open==null?" ":" "+open+" ";
-		this.separator = separator==null?" ":separator;
-		this.close = close==null?" ":" "+close+" ";
+		this.open = open;
+		this.separator = separator;
+		this.close = close;
 	}
 	
 	// 获取要foreach的集合/数组对象

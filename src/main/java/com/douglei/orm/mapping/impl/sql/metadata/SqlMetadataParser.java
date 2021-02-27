@@ -1,9 +1,8 @@
-package com.douglei.orm.mapping.impl.sql.metadata.parser;
+package com.douglei.orm.mapping.impl.sql.metadata;
 
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.tools.StringUtil;
 
