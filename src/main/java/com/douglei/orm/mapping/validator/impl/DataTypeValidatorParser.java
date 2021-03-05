@@ -29,7 +29,7 @@ public class DataTypeValidatorParser implements ValidatorParser {
 			
 		return new Validator(getPriority(), null) {
 			@Override
-			public ValidateFailResult execute(ValidatedData data) {
+			public ValidateFailResult validate(ValidatedData data) {
 				if(data.getValue() == null)
 					return null;
 				return data.getDBDataType().validate(data.getName(), data.getValue(), data.getLength(), data.getPrecision());

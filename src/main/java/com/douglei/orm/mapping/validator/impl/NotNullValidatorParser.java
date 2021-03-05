@@ -29,7 +29,7 @@ public class NotNullValidatorParser implements ValidatorParser {
 		
 		return new Validator(getPriority(), null) {
 			@Override
-			public ValidateFailResult execute(ValidatedData data) {
+			public ValidateFailResult validate(ValidatedData data) {
 				if(data.getValue() == null && !data.isNullable())
 					return new ValidateFailResult(data.getName(), "不能为空", "jdb.data.validator.notnull");
 				return null;
