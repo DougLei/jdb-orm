@@ -14,9 +14,6 @@ public class Null extends DBDataType{
 	public static Null getSingleton() {
 		return singleton;
 	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
 	private Null() {
 		super(null, 0);

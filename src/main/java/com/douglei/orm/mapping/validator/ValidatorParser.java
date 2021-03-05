@@ -26,7 +26,7 @@ public interface ValidatorParser {
 	
 	/**
 	 * 
-	 * @param value 配置文件中, 验证器类型名=后面配置的值
+	 * @param value 配置文件中, 验证器类型名=后配置的值
 	 * @return 返回null, 框架会忽略当前配置的验证器
 	 * @throws MetadataParseException
 	 */
