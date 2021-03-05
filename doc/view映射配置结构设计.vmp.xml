@@ -7,7 +7,7 @@
 		视图映射, 主要用在数据库中创建, 修改或删除视图, 不提供调用视图的功能; 所有配置可参考《table映射配置结构设计.tmp.xml》中的table配置
 		* 特别说明:
 		* name: 必须和脚本中的视图名称一致, 建议全大写; 否则框架会转换为大写
-		* createMode: 和table不同的是, 不支持dynamic_update模式, 默认为create; 如果配置为dynamic_update, 则框架会转换为drop_create
+		* createMode: 和table不同的是, 只支持none和drop_create两种模式, 默认为drop_create模式, 如果配置其他模式, 则框架会修正为drop_create模式
 	 -->
 	<view name="" oldName="" createMode="" strict="false">
 		<!-- 创建视图的脚本 -->

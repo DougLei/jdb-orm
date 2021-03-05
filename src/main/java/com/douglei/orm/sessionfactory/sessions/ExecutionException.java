@@ -1,11 +1,12 @@
 package com.douglei.orm.sessionfactory.sessions;
 
+import com.douglei.orm.configuration.OrmException;
+
 /**
  * 执行异常
  * @author DougLei
  */
-public class ExecutionException extends RuntimeException {
-	private static final long serialVersionUID = -1375667180941960582L;
+public class ExecutionException extends OrmException {
 	
 	public ExecutionException(String message) {
 		super(message);

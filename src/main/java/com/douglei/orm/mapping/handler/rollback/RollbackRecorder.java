@@ -35,9 +35,9 @@ public class RollbackRecorder {
 	}
 	
 	/**
-	 * 清空记录
+	 * 
 	 */
-	public static void clear() {
+	public static void destroy() {
 		recorder.remove();
 	}
 }

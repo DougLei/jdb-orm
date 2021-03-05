@@ -12,15 +12,8 @@ import com.douglei.orm.dialect.datatype.db.DBDataType;
  * @author DougLei
  */
 public class Numeric extends DBDataType{
-	private static final Numeric singleton = new Numeric();
-	public static Numeric getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Numeric() {
+	public Numeric() {
 		super("NUMERIC", 2);
 	}
 	

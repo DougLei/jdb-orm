@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.StatementHandler;
 import com.douglei.orm.sql.statement.impl.PreparedStatementHandlerImpl;
 import com.douglei.orm.sql.statement.impl.StatementHandlerImpl;
@@ -67,17 +67,17 @@ public class ConnectionWrapper {
 	 * 创建StatementHandler实例
 	 * @param sql
 	 * @param parameters
-	 * @param returnID 是否需要返回自增的主键值, 适用于insert语句, 传入null, 则表示不需要
+	 * @param autoIncrementID 是否需要返回自增的主键值, 适用于insert语句, 传入null, 则表示不需要
 	 * @return
 	 */
-	public StatementHandler createStatementHandler(String sql, List<Object> parameters, ReturnID returnID) {
+	public StatementHandler createStatementHandler(String sql, List<Object> parameters, AutoIncrementID autoIncrementID) {
 		try {
 			if(parameters==null || parameters.isEmpty()) {
 				logger.debug("没有参数, 创建StatementHandlerImpl实例");
-				return new StatementHandlerImpl(connection, sql, returnID);
+				return new StatementHandlerImpl(connection, sql, autoIncrementID);
 			}else {
 				logger.debug("有参数, 创建PreparedStatementHandler实例");
-				return new PreparedStatementHandlerImpl(connection, sql, returnID);
+				return new PreparedStatementHandlerImpl(connection, sql, autoIncrementID);
 			}
 		} catch (SQLException e) {
 			throw new ConnectionException("创建"+StatementHandler.class.getName()+"实例时出现异常", e);

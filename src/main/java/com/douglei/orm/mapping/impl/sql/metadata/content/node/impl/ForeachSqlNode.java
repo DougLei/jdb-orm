@@ -11,7 +11,7 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.tools.OgnlUtil;
 import com.douglei.tools.datatype.DataTypeConvertUtil;
@@ -155,9 +155,9 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String previousAlias) {
+	public ValidateFailResult validateParameter(Object sqlParameter, String previousAlias) {
 		Object[] array = getArray(sqlParameter, previousAlias);
-		ValidationResult result = null;
+		ValidateFailResult result = null;
 		for(int i=0;i<array.length;i++) {
 			for (SqlNode sqlNode : sqlNodes) {
 				if(sqlNode.matching(array[i], this.alias) && (result = sqlNode.validateParameter(array[i], this.alias)) != null) 

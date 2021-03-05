@@ -30,7 +30,7 @@ public class ViewMetadataParser extends AbstractMetadataParser {
 			throw new MetadataParseException("<"+element.getName()+">中的脚本内容不能为空");
 		
 		CreateMode createMode = getCreateMode(element);
-		if(createMode == CreateMode.DYNAMIC)
+		if(createMode != CreateMode.NONE && createMode != CreateMode.DROP_CREATE)
 			createMode = CreateMode.DROP_CREATE;
 		
 		return newInstance(name, oldName, createMode, script);

@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SqlContentExtractor;
 
@@ -27,8 +27,8 @@ public class SqlValidator extends SqlContentExtractor{
 	 * @param sqlParameter
 	 * @return
 	 */
-	public ValidationResult validate(Object sqlParameter) {
-		ValidationResult result = null;
+	public ValidateFailResult validate(Object sqlParameter) {
+		ValidateFailResult result = null;
 		for (ContentValidator cvalidator : contentValidators) {
 			result = cvalidator.validate(sqlParameter);
 			if(result != null) 

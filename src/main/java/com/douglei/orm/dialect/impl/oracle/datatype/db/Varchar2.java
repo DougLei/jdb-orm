@@ -8,15 +8,8 @@ import com.douglei.tools.StringUtil;
  * @author DougLei
  */
 public class Varchar2 extends AbstractCharacter{
-	private static final Varchar2 singleton = new Varchar2();
-	public static Varchar2 getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Varchar2() {
+	public Varchar2() {
 		super("VARCHAR2", 12, 4000);
 	}
 	

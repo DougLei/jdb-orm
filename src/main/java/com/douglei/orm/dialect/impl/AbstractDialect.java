@@ -3,7 +3,6 @@ package com.douglei.orm.dialect.impl;
 import com.douglei.orm.dialect.Dialect;
 import com.douglei.orm.dialect.datatype.DataType;
 import com.douglei.orm.dialect.datatype.DataTypeContainer;
-import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.tools.file.scanner.impl.ClassScanner;
 import com.douglei.tools.reflect.ClassUtil;
@@ -14,34 +13,16 @@ import com.douglei.tools.reflect.ClassUtil;
  */
 public abstract class AbstractDialect implements Dialect{
 	private DataTypeContainer dataTypeContainer = new DataTypeContainer();
-	private SqlStatementHandler sqlStatementHandler;
-	private SqlQueryHandler sqlQueryHandler;
+	protected SqlStatementHandler sqlStatementHandler;
 	
 	protected AbstractDialect() {
-		initDataTypeContainer();
-		this.sqlStatementHandler = createSqlStatementHandler();
-		this.sqlQueryHandler = createSqlQueryHandler(this.sqlStatementHandler);
-	}
-	
-	// 初始化数据类型容器
-	private void initDataTypeContainer() {
+		// 初始化数据类型容器
 		String basePackage = getClass().getPackage().getName() + ".datatype.";
 		ClassScanner scanner = new ClassScanner();
-		scanner.scan(basePackage + "db").forEach(clazz ->{
-			try {
-				dataTypeContainer.register((DataType)ClassUtil.loadClass2(clazz).getDeclaredMethod("getSingleton").invoke(null));
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-		});
-		scanner.scan(basePackage + "mapping").forEach(clazz ->{
-			dataTypeContainer.register((DataType)ClassUtil.newInstance(clazz));
-		});
+		scanner.scan(basePackage + "db").forEach(clazz -> dataTypeContainer.register((DataType)ClassUtil.newInstance(clazz)));
+		scanner.scan(basePackage + "mapping").forEach(clazz -> dataTypeContainer.register((DataType)ClassUtil.newInstance(clazz)));
 	}
-
-	protected abstract SqlStatementHandler createSqlStatementHandler();
-	protected abstract SqlQueryHandler createSqlQueryHandler(SqlStatementHandler sqlStatementHandler);
-
+	
 	@Override
 	public final DataTypeContainer getDataTypeContainer() {
 		return dataTypeContainer;
@@ -50,10 +31,5 @@ public abstract class AbstractDialect implements Dialect{
 	@Override
 	public final SqlStatementHandler getSqlStatementHandler() {
 		return sqlStatementHandler;
-	}
-
-	@Override
-	public final SqlQueryHandler getSqlQueryHandler() {
-		return sqlQueryHandler;
 	}
 }

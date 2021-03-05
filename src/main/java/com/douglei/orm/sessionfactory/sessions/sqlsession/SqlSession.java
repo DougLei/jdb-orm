@@ -3,7 +3,7 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.pagequery.PageResult;
 import com.douglei.orm.sql.statement.InsertResult;
 
@@ -226,135 +226,22 @@ public interface SqlSession {
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
 	/**
-	 * 递归查询
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param sql
-	 * @return
-	 */
-	default List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql){
-		return recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, null);
-	}
-	/**
-	 * 递归查询
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
-	
-	/**
-	 * 递归查询
-	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql);
-	/**
-	 * 递归查询
-	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
-	
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param sql
-	 * @return
-	 */
-	default PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql){
-		return pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, sql, null);
-	}
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
-	
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param targetClass
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param sql
-	 * @return
-	 */
-	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql);
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param targetClass
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
-	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String sql, List<Object> parameters);
-	
-	/**
 	 * 插入数据
 	 * @param sql
-	 * @param returnID
+	 * @param autoIncrementID
 	 * @return 
 	 */
-	default InsertResult executeInsert(String sql, ReturnID returnID) {
-		return executeInsert(sql, null, returnID);
+	default InsertResult executeInsert(String sql, AutoIncrementID autoIncrementID) {
+		return executeInsert(sql, null, autoIncrementID);
 	}
 	/**
 	 * 插入数据
 	 * @param sql
 	 * @param parameters
-	 * @param returnID
+	 * @param autoIncrementID
 	 * @return 
 	 */
-	InsertResult executeInsert(String sql, List<Object> parameters, ReturnID returnID);
+	InsertResult executeInsert(String sql, List<Object> parameters, AutoIncrementID autoIncrementID);
 	
 	/**
 	 * 增删改数据

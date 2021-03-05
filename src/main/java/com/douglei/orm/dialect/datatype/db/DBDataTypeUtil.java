@@ -1,19 +1,20 @@
 package com.douglei.orm.dialect.datatype.db;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
-import com.douglei.orm.dialect.datatype.DataTypeClassification;
 import com.douglei.orm.dialect.datatype.DataType;
+import com.douglei.orm.dialect.datatype.DataTypeClassification;
+import com.douglei.orm.dialect.datatype.DataTypeContainer;
 import com.douglei.orm.dialect.datatype.mapping.MappingDataType;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
- * 数据库数据类型辅助类
+ * 
  * @author DougLei
  */
 public class DBDataTypeUtil {
 
 	/**
-	 * 获取数据库数据类型包装类
+	 * 
 	 * @param classification 数据类型分类
 	 * @param confTypeName 配置的数据类型name
 	 * @param confLength 配置的长度
@@ -29,9 +30,10 @@ public class DBDataTypeUtil {
 		if(precision < 0)
 			precision = 0;
 		
-		DataType dataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().get(classification, confTypeName);
+		DataTypeContainer container = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer();
+		DataType dataType = container.get(classification, confTypeName);
 		if(classification == DataTypeClassification.DB) 
 			return new DBDataTypeEntity((DBDataType)dataType, length, precision);
-		return new DBDataTypeEntity(((MappingDataType)dataType).mappedDBDataType(length, precision), length, precision);
+		return new DBDataTypeEntity(container.getDBDataTypeByName(((MappingDataType)dataType).mappedDBDataType(length, precision)), length, precision);
 	}
 }

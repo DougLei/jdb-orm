@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 
 /**
@@ -57,21 +57,21 @@ public abstract class AbstractDecimal extends DBDataType {
 	}
 	
 	@Override
-	public final ValidationResult validate(String name, Object value, int length, int precision) {
+	public final ValidateFailResult validate(String name, Object value, int length, int precision) {
 		if(validateType(value)) {
 			String string = value.toString();
 			if(string.length()-1 > length)
-				return new ValidationResult(name, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, (string.length() - 1));
+				return new ValidateFailResult(name, "数据值长度超长, 设置长度为%d, 实际长度为%d", "jdb.data.validator.value.digital.length.overlength", length, (string.length() - 1));
 			
 			int dotIndex = string.indexOf("."); 
 			if(dotIndex != -1) {
 				int pl = string.substring(dotIndex+1).length();
 				if(pl > precision) 
-					return new ValidationResult(name, "数据值精度超长, 设置精度为%d, 实际精度为%d", "jdb.data.validator.value.digital.precision.overlength", precision, pl);
+					return new ValidateFailResult(name, "数据值精度超长, 设置精度为%d, 实际精度为%d", "jdb.data.validator.value.digital.precision.overlength", precision, pl);
 			}
 			return null;
 		}
-		return new ValidationResult(name, "数据值类型错误, 应为浮点类型", "jdb.data.validator.value.datatype.error.double"); 
+		return new ValidateFailResult(name, "数据值类型错误, 应为浮点类型", "jdb.data.validator.value.datatype.error.double"); 
 	}
 	
 	/**

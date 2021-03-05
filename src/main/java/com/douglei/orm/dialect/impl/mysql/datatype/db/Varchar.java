@@ -7,15 +7,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
  * @author DougLei
  */
 public class Varchar extends AbstractCharacter{
-	private static final Varchar singleton = new Varchar();
-	public static Varchar getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Varchar() {
+	public Varchar() {
 		super("VARCHAR", 12, 1024);
 	}
 	

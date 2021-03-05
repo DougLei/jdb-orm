@@ -10,18 +10,20 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.environment.CreateMode;
 import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingContainer;
 import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingProperty;
-import com.douglei.orm.mapping.MappingTypeContainer;
+import com.douglei.orm.mapping.MappingType;
+import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
+import com.douglei.orm.mapping.handler.entity.DeleteMappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
 import com.douglei.orm.mapping.handler.entity.ParseMappingException;
-import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
-import com.douglei.orm.mapping.handler.entity.impl.DeleteMappingEntity;
-import com.douglei.orm.mapping.handler.object.ObjectHandlerPackageContext;
+import com.douglei.orm.mapping.handler.object.DBObjectHandlerContext;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecMethod;
 import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
@@ -29,8 +31,8 @@ import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
+import com.douglei.orm.mapping.metadata.AbstractDBObjectMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
-import com.douglei.orm.metadata.type.MetadataTypeNameConstants;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqls;
@@ -43,20 +45,17 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPur
 public class MappingHandler {
 	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
 	private MappingConfiguration configuration; // 映射配置
-	private MappingTypeContainer typeContainer; // 映射类型容器
 	private MappingContainer container; // 映射容器
 	private DataSourceWrapper dataSource;
 	
 	/**
 	 * 
 	 * @param configuration 映射配置
-	 * @param typeContainer 映射类型容器
 	 * @param container 映射容器
 	 * @param dataSource 数据源
 	 */
-	public MappingHandler(MappingConfiguration configuration, MappingTypeContainer typeContainer, MappingContainer container, DataSourceWrapper dataSource) {
+	public MappingHandler(MappingConfiguration configuration, MappingContainer container, DataSourceWrapper dataSource) {
 		this.configuration = configuration;
-		this.typeContainer = typeContainer;
 		this.container = container;
 		this.dataSource = dataSource;
 	}
@@ -66,24 +65,22 @@ public class MappingHandler {
 		MappingProperty property;
 		for(MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
-			switch (mappingEntity.getOp()) {
-				case ADD_OR_COVER: // 解析映射, 并判断是否存在同code映射, 如果存在, 还要保证之前的映射可以被覆盖
+			switch (mappingEntity.getMode()) {
+				case ADD_OR_COVER: 
 					((AddOrCoverMappingEntity)mappingEntity).parseMapping();
-					property = mappingContainer.getMappingProperty(mappingEntity.getCode());
+					
+					property = container.getMappingProperty(mappingEntity.getCode());
 					if(property != null && !property.supportCover())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
 					break;
-				case DELETE: // 判断是否存在指定code的映射, 再判断存在的映射是否可以被删除, 最后获取supportOpDatabaseObject为true的类型的映射即可
-					property = mappingContainer.getMappingProperty(mappingEntity.getCode());
+				case DELETE: 
+					property = container.getMappingProperty(mappingEntity.getCode());
 					if(property == null)
 						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
 					if(!property.supportDelete())
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
 					
-					((DeleteMappingEntity)mappingEntity).setType(property.getType());
-					((DeleteMappingEntity)mappingEntity).setOrder(property.getOrder());
-					if(mappingEntity.getType().supportOpDatabaseObject()) 
-						((DeleteMappingEntity)mappingEntity).setMapping(mappingContainer.getMapping(mappingEntity.getCode()));
+					((DeleteMappingEntity)mappingEntity).setMappingPropertyValue(property);
 					break;
 			}
 		}
@@ -96,134 +93,158 @@ public class MappingHandler {
 	private static final Comparator<MappingEntity> comparator = new Comparator<MappingEntity>() {
 		@Override
 		public int compare(MappingEntity o1, MappingEntity o2) {
-			if(o1.getOp().getPriority() < o2.getOp().getPriority())
+			if(o1.getMode().getPriority() < o2.getMode().getPriority())
 				return -1;
-			if(o1.getOp().getPriority() > o2.getOp().getPriority())
+			if(o1.getMode().getPriority() > o2.getMode().getPriority())
 				return 1;
-			return o1.getOp().compare4Sort(o1, o2);
+			return o1.getMode().sort(o1, o2);
 		}
 	};
 	
 	/**
 	 * 操作映射
 	 * @param mappingEntities
-	 * @throws MappingHandlerException 
+	 * @throws MappingHandleException 
 	 */
-	public void execute(MappingEntity... mappingEntities) throws MappingHandlerException {
+	public void execute(MappingEntity... mappingEntities) throws MappingHandleException {
 		execute(Arrays.asList(mappingEntities));
 	}
 	
 	/**
 	 * 操作映射
 	 * @param mappingEntities
-	 * @throws MappingHandlerException 
+	 * @throws MappingHandleException 
 	 */
-	public void execute(List<MappingEntity> mappingEntities) throws MappingHandlerException {
+	public void execute(List<MappingEntity> mappingEntities) throws MappingHandleException {
 		logger.debug("操作映射开始");
 		try {
 			parseMappingEntities(mappingEntities);
 			
-			ObjectHandlerPackageContext.initialize(dataSourceWrapper);
-			Mapping exMapping = null;
-			for (MappingEntity mappingEntity : mappingEntities) {
-				logger.debug("操作: {}", mappingEntity);
+			DBObjectHandlerContext.init(dataSource);
+			
+			for (MappingEntity entity : mappingEntities) {
+				logger.debug("操作: {}", entity);
 				
-				switch (mappingEntity.getOp()) {
+				switch (entity.getMode()) {
 					case ADD_OR_COVER: 
-						exMapping = addMapping(mappingEntity);
+						Mapping coveredMapping = addMapping((AddOrCoverMappingEntity)entity);
 						
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
-							createObject(mappingEntity.getType().getName(), mappingEntity.getMapping().getMetadata(), exMapping==null?null:exMapping.getMetadata());
+						if(entity.opDatabaseObject() && entity.getType().supportOpDatabaseObject()) 
+							createDBObject(entity.getType(), (AbstractDBObjectMetadata)((AddOrCoverMappingEntity)entity).getMapping().getMetadata(), coveredMapping==null?null:coveredMapping.getMetadata());
 						break;
 					case DELETE: 
-						exMapping = deleteMapping(mappingEntity.getCode());
+						Mapping deletedMapping = deleteMapping(entity.getCode());
 						
-						if(mappingEntity.opDatabaseObject() && mappingEntity.getType().supportOpDatabaseObject()) 
-							deleteObject(mappingEntity, exMapping.getMetadata());
+						if(entity.opDatabaseObject() && entity.getType().supportOpDatabaseObject()) 
+							deleteDBObject(entity.getType().getName(), (AbstractDBObjectMetadata)deletedMapping.getMetadata());
 						break;
 				}
 			}
-		} catch (Exception executeException) {
+		} catch (Exception e) {
 			try {
-				logger.debug("操作映射时出现异常, 开始回滚: {}", executeException);
+				logger.error("操作映射时出现异常, 开始回滚: {}", e);
 				rollback();
-			} catch (Exception rollbackException) {
-				logger.debug("回滚时又出现异常, 很绝望: {}", rollbackException);
-				executeException.addSuppressed(rollbackException);
+			} catch (Exception r) {
+				logger.error("回滚时又出现异常: {}", r);
+				e.addSuppressed(r);
 			}
-			throw new MappingHandlerException("在操作映射时出现异常", executeException);
+			throw new MappingHandleException("在操作映射时出现异常", e);
 		} finally {
-			RollbackRecorder.clear();
-			ObjectHandlerPackageContext.destroy();
 			MappingParseToolContext.destroy();
+			DBObjectHandlerContext.destroy();
+			RollbackRecorder.destroy();
 			logger.debug("操作映射结束");
 		}
 	}
 	
-	// 创建对象
-	private void createObject(String type, AbstractMetadata metadata, AbstractMetadata exMetadata) throws Exception {
+	/**
+	 * 添加或覆盖映射; 如果是添加, 返回null, 如果是覆盖, 返回被覆盖的mapping;
+	 * @param entity
+	 * @return
+	 */
+	private Mapping addMapping(AddOrCoverMappingEntity entity) {
+		MappingProperty coveredMappingProperty = container.addMappingProperty(entity.getMappingProperty());
+		if (coveredMappingProperty == null) {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, entity.getMappingProperty().getCode(), null);
+		}else {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, coveredMappingProperty, null);
+		}
+		
+		Mapping coveredMapping = container.addMapping(entity.getMapping());
+		if (coveredMapping == null) {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, entity.getMapping().getCode(), null);
+		}else {
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, coveredMapping, null);
+		}
+		
+		// 如果改了名字, 上面的coveredMapping是无法覆盖的, 这里进行删除
+		if(entity.getMapping().getMetadata().isUpdateName()) 
+			return deleteMapping(entity.getMapping().getMetadata().getOldName());
+		return coveredMapping;
+	}
+	
+	/**
+	 * 创建对象
+	 * @param entity
+	 * @param coveredMetadata 
+	 * @throws Exception
+	 */
+	private void createDBObject(MappingType type, AbstractDBObjectMetadata addMetadata, AbstractMetadata coveredMetadata) throws Exception {
+		if(addMetadata.getCreateMode() == CreateMode.NONE)
+			return;
+		
+		switch(type.getName()) {
+			case MappingTypeNameConstants.TABLE:
+				DBObjectHandlerContext.getTableObjectHandler().create((TableMetadata)addMetadata, (TableMetadata)coveredMetadata);
+				break;
+			case MappingTypeNameConstants.VIEW:
+				DBObjectHandlerContext.getViewObjectHandler().create((ViewMetadata)addMetadata, (ViewMetadata)coveredMetadata);
+				break;
+			case MappingTypeNameConstants.PROCEDURE:
+				DBObjectHandlerContext.getProcedureObjectHandler().create((ProcedureMetadata)addMetadata, (ProcedureMetadata)coveredMetadata);
+				break;
+		}
+	}
+	
+	/**
+	 * 删除映射; 返回被删除的映射实例, 如果没有映射, 返回null
+	 * @param code
+	 * @return
+	 */
+	private Mapping deleteMapping(String code) {
+		MappingProperty deletedMappingProperty = container.deleteMappingProperty(code);
+		if(deletedMappingProperty != null) 
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, deletedMappingProperty, null);
+		
+		Mapping deletedMapping = container.deleteMapping(code);
+		if(deletedMapping != null) 
+			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, deletedMapping, null);
+		return deletedMapping;
+	}
+	
+	/**
+	 * 删除对象
+	 * @param type
+	 * @param deletedMetadata
+	 * @throws SQLException
+	 */
+	private void deleteDBObject(String type, AbstractDBObjectMetadata deletedMetadata) throws SQLException {
+		if(deletedMetadata.getCreateMode() == CreateMode.NONE)
+			return;
+		
 		switch(type) {
-			case MetadataTypeNameConstants.TABLE:
-				ObjectHandlerPackageContext.getTableObjectHandler().create((TableMetadata)metadata, (TableMetadata)exMetadata);
+			case MappingTypeNameConstants.TABLE:
+				DBObjectHandlerContext.getTableObjectHandler().delete((TableMetadata)deletedMetadata);
 				break;
-			case MetadataTypeNameConstants.VIEW:
-				ObjectHandlerPackageContext.getViewObjectHandler().create((ViewMetadata)metadata, (ViewMetadata)exMetadata);
+			case MappingTypeNameConstants.VIEW:
+				DBObjectHandlerContext.getViewObjectHandler().delete((ViewMetadata)deletedMetadata);
 				break;
-			case MetadataTypeNameConstants.PROCEDURE:
-				ObjectHandlerPackageContext.getProcedureObjectHandler().create((ProcedureMetadata)metadata, (ProcedureMetadata)exMetadata);
-				break;
-		}
-	}
-	
-	// 添加或覆盖映射; 如果是添加, 返回null, 如果是覆盖, 返回被覆盖的mapping;
-	private Mapping addMapping(MappingEntity entity) {
-		Mapping mapping = entity.getMapping();
-		MappingProperty exMappingProperty = mappingContainer.addMappingProperty(mapping.getProperty());
-		if (exMappingProperty == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, mapping.getCode(), null);
-		}else {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, exMappingProperty, null);
-		}
-		
-		Mapping exMapping = mappingContainer.addMapping(mapping);
-		if (exMapping == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING, mapping.getCode(), null);
-		}else {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
-		}
-		
-		if(mapping.getMetadata().isUpdateName()) 
-			exMapping = deleteMapping(mapping.getMetadata().getOldName());
-		return exMapping;
-	}
-	
-	// 删除对象
-	private void deleteObject(MappingEntity mappingEntity, AbstractMetadata exMetadata) throws SQLException {
-		switch(mappingEntity.getType().getName()) {
-			case MetadataTypeNameConstants.TABLE:
-				ObjectHandlerPackageContext.getTableObjectHandler().delete((TableMetadata)mappingEntity.getMapping().getMetadata(), null);
-				break;
-			case MetadataTypeNameConstants.VIEW:
-				ObjectHandlerPackageContext.getViewObjectHandler().delete(mappingEntity.getCode(), (ViewMetadata)exMetadata);
-				break;
-			case MetadataTypeNameConstants.PROCEDURE:
-				ObjectHandlerPackageContext.getProcedureObjectHandler().delete(mappingEntity.getCode(), (ProcedureMetadata)exMetadata);
+			case MappingTypeNameConstants.PROCEDURE:
+				DBObjectHandlerContext.getProcedureObjectHandler().delete((ProcedureMetadata)deletedMetadata);
 				break;
 		}
 	}
 
-	// 删除映射; 返回被删除的映射实例, 如果没有映射, 返回null
-	private Mapping deleteMapping(String code) {
-		MappingProperty exMappingProperty = mappingContainer.deleteMappingProperty(code);
-		if(exMappingProperty != null) 
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, exMappingProperty, null);
-		
-		Mapping exMapping = mappingContainer.deleteMapping(code);
-		if(exMapping != null) 
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING, exMapping, null);
-		return exMapping;
-	}
-	
 	/**
 	 * 回滚
 	 * @throws SQLException 
@@ -232,7 +253,7 @@ public class MappingHandler {
 		LinkedList<RollbackExecutor> list = RollbackRecorder.getRollbackExecutorList();
 		if(list != null) {
 			while(!list.isEmpty())
-				list.removeLast().executeRollback(mappingContainer);
+				list.removeLast().executeRollback(container);
 		}
 	}
 	
@@ -242,7 +263,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public boolean exists(String code) {
-		return mappingContainer.exists(code);
+		return container.exists(code);
 	}
 	
 	/**
@@ -251,7 +272,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public MappingProperty getMappingProperty(String code) {
-		return mappingContainer.getMappingProperty(code);
+		return container.getMappingProperty(code);
 	}
 	
 	/**
@@ -261,12 +282,12 @@ public class MappingHandler {
 	 * @return
 	 */
 	public Mapping getMapping(String code, String type) {
-		Mapping mapping =  mappingContainer.getMapping(code);
+		Mapping mapping =  container.getMapping(code);
 		if(mapping == null)
 			throw new NullPointerException("不存在code为"+code+"的mapping");
 		if(type.equals(mapping.getType()))
 			return mapping;
-		throw new MappingMismatchingException(code, type);
+		throw new MappingHandleException("code为"+code+"的mapping不是["+type+"]类型");
 	}
 	
 	/**
@@ -275,7 +296,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public TableMetadata getTableMetadata(String code) {
-		return (TableMetadata) getMapping(code, MetadataTypeNameConstants.TABLE).getMetadata();
+		return (TableMetadata) getMapping(code, MappingTypeNameConstants.TABLE).getMetadata();
 	}
 	
 	/**
@@ -284,7 +305,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public SqlMetadata getSqlMetadata(String namespace) {
-		return (SqlMetadata) getMapping(namespace, MetadataTypeNameConstants.SQL).getMetadata();
+		return (SqlMetadata) getMapping(namespace, MappingTypeNameConstants.SQL).getMetadata();
 	}
 	
 	/**
@@ -299,6 +320,14 @@ public class MappingHandler {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		return new ExecutableSqlEntity(new ExecutableSqls(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
+	
+	/**
+	 * 获取映射的配置信息
+	 * @return
+	 */
+	public MappingConfiguration getMappingConfiguration() {
+		return configuration;
+	}
 
 	/**
 	 * 卸载映射处理器
@@ -308,13 +337,5 @@ public class MappingHandler {
 			container.clear();
 			container = null;
 		}
-	}
-
-	/**
-	 * 获取映射的配置信息
-	 * @return
-	 */
-	public MappingConfiguration getMappingConfiguration() {
-		return configuration;
 	}
 }

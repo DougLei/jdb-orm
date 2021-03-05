@@ -11,7 +11,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.TableSessionImpl;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 
 /**
  * 
@@ -36,14 +36,14 @@ public class SessionImpl implements Session {
 	// 验证session是否被关闭
 	private void validateSessionIsClosed() {
 		if(isClosed) 
-			throw new SessionIsClosedException();
+			throw new SessionExecutionException("session连接已经关闭");
 	}
 	
 	@Override
 	public final SqlSession getSqlSession() {
 		validateSessionIsClosed();
 		if(SqlSession == null) 
-			SqlSession = new SqlSessionImpl(connection);
+			SqlSession = new SqlSessionImpl(connection, environment);
 		return SqlSession;
 	}
 
@@ -51,7 +51,7 @@ public class SessionImpl implements Session {
 	public final TableSession getTableSession() {
 		validateSessionIsClosed();
 		if(TableSession == null) 
-			TableSession = new TableSessionImpl(connection);
+			TableSession = new TableSessionImpl(connection, environment);
 		return TableSession;
 	}
 
@@ -59,7 +59,7 @@ public class SessionImpl implements Session {
 	public final SQLSession getSQLSession() {
 		validateSessionIsClosed();
 		if(SQLSession == null) 
-			SQLSession = new SQLSessionImpl(connection);
+			SQLSession = new SQLSessionImpl(connection, environment);
 		return SQLSession;
 	}
 	

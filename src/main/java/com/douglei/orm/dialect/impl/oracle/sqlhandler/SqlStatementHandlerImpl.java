@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
-import com.douglei.tools.StringUtil;
 
 /**
  * 
@@ -21,11 +21,6 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// query
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String queryNameExists() {
-		return "select count(1) from user_objects where object_name =?";
-	}
-
-	@Override
 	public String queryTableExists() {
 		return "select count(1) from user_objects where object_name =? and object_type = 'TABLE'";
 	}
@@ -36,40 +31,38 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 
 	@Override
-	public String queryProcExists() {
+	public String queryProcedureExists() {
 		return "select count(1) from user_objects where object_name =? and object_type = 'PROCEDURE'";
-	}
-	
-	@Override
-	public String queryViewScript() {
-		return "select text_length, text from user_views where view_name=?";
-	}
-	
-	@Override
-	public String queryProcedureScript() {
-		return "select text from user_source where type='PROCEDURE' and name=? order by line";
 	}
 	
 	// --------------------------------------------------------------------------------------------
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String createDefaultValue(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" modify ").append(constraint.getConstraintColumnNames());
-		tmpSql.append(" default ").append(constraint.getDefaultValue());
-		return tmpSql.toString();
+	protected String createDefaultValue(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" modify ").append(constraint.getColumnNameList().get(0)).append(" default ").append(constraint.getDefaultValue());
+		return sql.toString();
 	}
 
 	@Override
-	protected String dropDefaultValue(ConstraintMetadata constraint) {
-		if(StringUtil.isEmpty(constraint.getConstraintColumnNames())) {
-			throw new NullPointerException("在oracle数据库中删除列的默认值时, 必须传入相应的列名");
-		}
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" modify ").append(constraint.getConstraintColumnNames());
-		tmpSql.append(" default null");
-		return tmpSql.toString();
+	protected String dropDefaultValue(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" modify ").append(constraint.getColumnNameList().get(0)).append(" default null");
+		return sql.toString();
+	}
+	
+	// --------------------------------------------------------------------------------------------
+	// 自增主键
+	// --------------------------------------------------------------------------------------------
+	@Override
+	public String createAutoincrementPrimaryKey(TableMetadata table) {
+		return "create sequence "+table.getAutoincrementPrimaryKey().getSequenceName()+" nocache";
+	}
+	
+	@Override
+	public String dropAutoincrementPrimaryKey(TableMetadata table) {
+		return "drop sequence " + table.getAutoincrementPrimaryKey().getSequenceName();
 	}
 	
 	// --------------------------------------------------------------------------------------------

@@ -1,8 +1,6 @@
 package com.douglei.orm.dialect.impl.oracle.datatype.mapping;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.dialect.datatype.mapping.impl.AbstractCharDataType;
-import com.douglei.orm.dialect.impl.oracle.datatype.db.Char;
 
 /**
  * 
@@ -11,7 +9,7 @@ import com.douglei.orm.dialect.impl.oracle.datatype.db.Char;
 public class CharDataType extends AbstractCharDataType {
 
 	@Override
-	public DBDataType mappedDBDataType(int length, int precision) {
-		return Char.getSingleton();
+	public String mappedDBDataType(int length, int precision) {
+		return "CHAR";
 	}
 }

@@ -8,7 +8,8 @@ import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.DataType;
 import com.douglei.orm.dialect.datatype.DataTypeClassification;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.dialect.datatype.DataTypeException;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 
 /**
  * 数据库的数据类型
@@ -117,7 +118,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public void setValue(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 setValue(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
+		throw new DataTypeException("["+getClass().getName()+"] 类型不支持执行 setValue(PreparedStatement, int, Object)方法; 传入的value为 [" + value + "]");
 	}
 	
 	/**
@@ -128,7 +129,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public Object getValue(int columnIndex, ResultSet resultSet) throws SQLException{
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 getValue(int, ResultSet)方法");
+		throw new DataTypeException("["+getClass().getName()+"] 类型不支持执行 getValue(int, ResultSet)方法");
 	}
 	
 	/**
@@ -139,7 +140,7 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @throws SQLException
 	 */
 	public Object getValue(int parameterIndex, CallableStatement callableStatement) throws SQLException{
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 getValue(int, CallableStatement)方法");
+		throw new DataTypeException("["+getClass().getName()+"] 类型不支持执行 getValue(int, CallableStatement)方法");
 	}
 	
 	/**
@@ -148,10 +149,10 @@ public abstract class DBDataType extends DataType implements Serializable{
 	 * @param value
 	 * @param length
 	 * @param precision
-	 * @return 返回null表示验证通过
+	 * @return 
 	 */
-	public ValidationResult validate(String name, Object value, int length, int precision){
-		throw new IllegalArgumentException("["+getClass().getName()+"] 类型不支持执行 validate(String, Object, int, int)方法");
+	public ValidateFailResult validate(String name, Object value, int length, int precision){
+		throw new DataTypeException("["+getClass().getName()+"] 类型不支持执行 validate(String, Object, int, int)方法");
 	}
 	
 	@Override

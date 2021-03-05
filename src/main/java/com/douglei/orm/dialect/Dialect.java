@@ -1,7 +1,6 @@
 package com.douglei.orm.dialect;
 
 import com.douglei.orm.dialect.datatype.DataTypeContainer;
-import com.douglei.orm.dialect.sqlhandler.SqlQueryHandler;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 
 /**
@@ -27,9 +26,4 @@ public interface Dialect {
 	 * @return
 	 */
 	SqlStatementHandler getSqlStatementHandler();
-	/**
-	 * 获取sql查询处理器
-	 * @return
-	 */
-	SqlQueryHandler getSqlQueryHandler();
 }

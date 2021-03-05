@@ -22,7 +22,7 @@ import com.douglei.tools.ExceptionUtil;
  * @author DougLei
  */
 public class Configuration {
-	public static final String DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径(基于java resource)
+	public static final String DEFAULT_CONFIGURATION_FILE_PATH = "jdb-orm.conf.xml"; // 默认的配置文件路径(基于java resource)
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
 	private String id;// 配置的id; 优先级高于配置文件中的id
@@ -60,18 +60,18 @@ public class Configuration {
 	 * @return
 	 */
 	public SessionFactory buildSessionFactory() {
-		logger.debug("在默认路径(基于java resource)下寻找配置文件, 构建SessionFactory实例: [{}]", DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH);
-		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_CLASSPATH_FILE_PATH));
+		logger.debug("在默认路径(基于java resource)下寻找配置文件, 构建SessionFactory实例: [{}]", DEFAULT_CONFIGURATION_FILE_PATH);
+		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH));
 	}
 	
 	/**
 	 * 根据指定的文件(基于java resource), 构建SessionFactory实例
-	 * @param resource
+	 * @param filepath
 	 * @return
 	 */
-	public SessionFactory buildSessionFactory(String resource) {
-		logger.debug("根据指定的文件(基于java resource), 构建SessionFactory实例: [{}]", resource);
-		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(resource));
+	public SessionFactory buildSessionFactory(String filepath) {
+		logger.debug("根据指定的文件(基于java resource), 构建SessionFactory实例: [{}]", filepath);
+		return buildSessionFactory_(Configuration.class.getClassLoader().getResourceAsStream(filepath));
 	}
 	
 	/**

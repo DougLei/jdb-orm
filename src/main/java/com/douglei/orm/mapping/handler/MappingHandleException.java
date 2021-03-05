@@ -6,12 +6,12 @@ import com.douglei.orm.configuration.OrmException;
  * 操作mapping异常
  * @author DougLei
  */
-public class MappingHandlerException extends OrmException{
+public class MappingHandleException extends OrmException{
 	
-	public MappingHandlerException(String message) {
+	public MappingHandleException(String message) {
 		super(message);
 	}
-	public MappingHandlerException(String message, Throwable t) {
+	public MappingHandleException(String message, Throwable t) {
 		super(message, t);
 	}
 }

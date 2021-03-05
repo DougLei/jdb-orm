@@ -12,15 +12,8 @@ import com.douglei.tools.datatype.DataTypeValidateUtil;
  * @author DougLei
  */
 public class Number extends AbstractDecimal {
-	private static final Number singleton = new Number();
-	public static Number getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Number() {
+	public Number() {
 		super("NUMBER", 2);
 	}
 	

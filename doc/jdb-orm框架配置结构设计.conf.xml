@@ -6,22 +6,11 @@
 <configuration id="default">
 	<environment>
 		<!-- 
-			是否开启Statement缓存, 即对sql执行对象缓存, 默认值为true
-		-->
-		<property name="enableStatementCache" value="true" />
-		
-		<!-- 
-			是否开启TableSession缓存, 即对表对象缓存, 默认值为false; 
-			如果开启了表缓存, 在对表实例保存时, 只能在session提交后, 才能从表实例中获取自动生成的id值, 解决办法是自主生成id值存入表实例中再保存(不支持自增列的情况)
-		 -->
-		<property name="enableTableSessionCache" value="false" />
-		
-		<!-- 
 			全局的映射创建模式; 可不配置, 没有默认值; 如果配置了, 则会覆盖所有映射中配置的createMode值(覆盖不了配置了strict=true的映射); 创建模式主要是解决对数据库对象的操作, 例如表, 存储过程, 视图等
 			none: 不处理模式
 			create: 创建模式; 如果没有就创建, 有就不处理
 			drop_create: 删除再创建模式; 如果存在就先删除, 再创建, 否则就直接创建; 适合用于重置表
-			dynamic: 动态模式; 会根据映射结构的变化, 去动态更新数据库对象的结构
+			dynamic: 动态模式; 会根据映射结构的变化, 去动态更新数据库对象的结构; 适用于动态建模功能
 		-->
 		<property name="globalCreateMode" value="" />
 		
@@ -49,13 +38,8 @@
 		
 		<!-- 
 			mapping配置
-			* enableProperty: 是否启用映射属性, 默认值为false; 属性是指在各种mapping文件中, 配置的<property>, 如果启用了, 框架会将这些信息也存入到容器中
-			* enableTable: 是否启用表映射, 默认值为true
-			* enableSql: 是否启用sql映射, 默认值为true
-			* enableView: 是否启用视图映射, 默认值为false
-			* enableProcedure: 是否启用存储过程映射, 默认值为false
 		-->
-		<mapping enableProperty="" enableTable="" enableSql="" enableView="" enableProcedure="">
+		<mapping>
 			<!-- 
 				内置的sql映射配置; enableSql=true时才会生效
 				* parameterPrefix: 声明参数时的前缀, 默认为#{
@@ -66,8 +50,8 @@
 			<sql parameterPrefix="" parameterSuffix="" parameterSplit="" parameterDefaultValueHandler="" />
 			
 			<!-- 
-				mapping注册器的配置; 可配置多组
-				* class: 映射类型的类的全路径; 继承并实现MappingType, 即可扩展新的映射类型
+				mapping注册器的配置, 可扩展新的映射类型; 可配置多组
+				* class: 扩展映射类型的类的全路径; 继承并实现MappingType
 			 -->
 			<register class="" />
 		

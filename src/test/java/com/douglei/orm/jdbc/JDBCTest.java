@@ -2,6 +2,11 @@ package com.douglei.orm.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.junit.Test;
 
 public class JDBCTest {
 	
@@ -74,76 +79,91 @@ public class JDBCTest {
 ////		pst.executeUpdate();
 //	}
 //	
-//	@Test
-//	public void oracle() throws Exception {
-//		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
-//		String username = "douglei";
-//		String pwd = "root";
+	@Test
+	public void oracle() throws Exception {
+		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
+		String username = "douglei";
+		String pwd = "root";
+		
+		Connection connection = DriverManager.getConnection(url, username, pwd);
+		PreparedStatement pst = connection.prepareStatement("select t.CLAIM_TIME from BPM_RU_ASSIGNEE t WHERE ID=1");
+		ResultSet resultset = pst.executeQuery();
+		System.out.println(resultset.getMetaData().getColumnName(1));
+		System.out.println(resultset.getMetaData().getColumnType(1));
+		
 //		
-//		Connection connection = DriverManager.getConnection(url, username, pwd);
-////		PreparedStatement pst = connection.prepareStatement("insert into SYS_USER2(id,age) values(?, ?)");
-////		
-////		pst.setString(1, IdentityUtil.get32UUID());
-////		pst.setObject(2, null);
-////		pst.executeUpdate();
-////		connection.commit();
-//		
-//		
+//		pst.setString(1, IdentityUtil.get32UUID());
+//		pst.setObject(2, null);
+//		pst.executeUpdate();
+//		connection.commit();
+		
+		
 //		connection.setAutoCommit(true);
 //		connection.setAutoCommit(false);
 //		connection.setAutoCommit(true);
 //		connection.setAutoCommit(false);
 //		
 //		connection.commit();
-//		
-//	}
+		
+	}
 //	
 //	@Test
 //	public void mssql() throws Exception {
 //		
 //	}
 	
-	public static void main(String[] args) {
-		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
-		String username = "sa";
+	public static void main(String[] args) throws Exception {
+		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
+		String username = "douglei";
 		String pwd = "root";
 		
-		new Thread("111") {
-			@Override
-			public void run() {
-				try {
-					Connection connection = DriverManager.getConnection(url, username, pwd);
-					connection.setAutoCommit(false);
-					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					connection.createStatement().executeUpdate("update sys_user set name = '石磊aaaaa' where id=1");
-					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
+		Connection connection = DriverManager.getConnection(url, username, pwd);
+		PreparedStatement pst = connection.prepareStatement("select t.CLAIM_TIME from BPM_RU_ASSIGNEE t WHERE ID=1");
+		ResultSet resultset = pst.executeQuery();
+		System.out.println(resultset.getMetaData().getColumnName(1));
+		System.out.println(resultset.getMetaData().getColumnType(1));
+		
+		
+//		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
+//		String username = "sa";
+//		String pwd = "root";
+//		
+//		new Thread("111") {
+//			@Override
+//			public void run() {
+//				try {
+//					Connection connection = DriverManager.getConnection(url, username, pwd);
+//					connection.setAutoCommit(false);
+//					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
+//					connection.createStatement().executeUpdate("update sys_user set name = '石磊aaaaa' where id=1");
+//					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
+////					System.out.println(getName() + "未提交");
+////					connection.commit();
+////					System.out.println(getName() + "提交了");
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//		}.start();
+//		
+//		new Thread("2222") {
+//			@Override
+//			public void run() {
+//				try {
+//					Connection connection = DriverManager.getConnection(url, username, pwd);
+//					connection.setAutoCommit(false);
+//					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
+//					connection.createStatement().executeUpdate("update sys_user set name = '石磊bbbbb' where id=1");
+//					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
 //					System.out.println(getName() + "未提交");
 //					connection.commit();
 //					System.out.println(getName() + "提交了");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}.start();
-		
-		new Thread("2222") {
-			@Override
-			public void run() {
-				try {
-					Connection connection = DriverManager.getConnection(url, username, pwd);
-					connection.setAutoCommit(false);
-					System.out.println("更新前查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					connection.createStatement().executeUpdate("update sys_user set name = '石磊bbbbb' where id=1");
-					System.out.println("更新后查询: " + new User(getName(), connection.createStatement().executeQuery("select * from sys_user where id=1")));
-					System.out.println(getName() + "未提交");
-					connection.commit();
-					System.out.println(getName() + "提交了");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}.start();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//		}.start();
 	}
 }

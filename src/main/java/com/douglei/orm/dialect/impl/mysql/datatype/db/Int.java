@@ -12,15 +12,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Int extends AbstractInt{
-	private static final Int singleton = new Int();
-	public static Int getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	protected Int() {
+	public Int() {
 		super("INT", 4, 10);
 	}
 	

@@ -25,12 +25,8 @@ import com.douglei.orm.mapping.MappingContainerImpl;
 import com.douglei.orm.mapping.MappingType;
 import com.douglei.orm.mapping.MappingTypeContainer;
 import com.douglei.orm.mapping.handler.MappingHandler;
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.handler.entity.MappingEntity;
-import com.douglei.orm.mapping.handler.entity.impl.AddOrCoverMappingEntity;
-import com.douglei.orm.mapping.impl.procedure.ProcedureMappingType;
-import com.douglei.orm.mapping.impl.sql.SqlMappingType;
-import com.douglei.orm.mapping.impl.table.TableMappingType;
-import com.douglei.orm.mapping.impl.view.ViewMappingType;
 import com.douglei.tools.StringUtil;
 import com.douglei.tools.file.scanner.impl.ResourceScanner;
 import com.douglei.tools.reflect.ClassUtil;
@@ -134,84 +130,61 @@ public class Environment {
 		MappingConfiguration configuration = parseMappingConfiguration(mappingElement);
 		
 		// 注册映射类型
-		MappingTypeContainer typeContainer = registerMappingType(configuration, mappingElement.elements("register"));
+		registerMappingType(mappingElement.elements("register"));
 		
 		// 创建MappingHandler; 创建容器或清空容器
 		if(mappingContainer == null)
 			mappingContainer = new MappingContainerImpl();
 		else
 			mappingContainer.clear();
-		this.mappingHandler = new MappingHandler(configuration, typeContainer, mappingContainer, dataSource);
+		this.mappingHandler = new MappingHandler(configuration, mappingContainer, dataSource);
 		
 		// 扫描配置的映射
-		scanMappings(typeContainer, mappingElement.elements("scanner"));
+		scanMappings(mappingElement.elements("scanner"));
 		
 		logger.debug("结束处理<environment>下的<mapping>");
 	}
 	
 	// 解析映射配置
 	private MappingConfiguration parseMappingConfiguration(Element mappingElement) {
-		MappingConfiguration configuration = new MappingConfiguration(
-				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProperty")), 
-				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableTable")), 
-				!"false".equalsIgnoreCase(mappingElement.attributeValue("enableSql")), 
-				"true".equalsIgnoreCase(mappingElement.attributeValue("enableView")), 
-				"true".equalsIgnoreCase(mappingElement.attributeValue("enableProcedure")));
+		MappingConfiguration configuration = new MappingConfiguration();
 		
 		// 设置内置的sql映射配置
-		if(configuration.isEnableSql()) {
-			Element sqlMappingElement = mappingElement.element("sql");
-			configuration.setSqlMappingConfiguration(new SqlMappingConfiguration(
-					sqlMappingElement.attributeValue("parameterPrefix", "#{"), 
-					sqlMappingElement.attributeValue("parameterSuffix", "}"), 
-					sqlMappingElement.attributeValue("parameterSplit", ","), 
-					(SqlMappingParameterDefaultValueHandler)ClassUtil.newInstance(sqlMappingElement.attributeValue("parameterDefaultValueHandler", SqlMappingParameterDefaultValueHandler.class.getName()))));
-		}
+		Element sqlMappingElement = mappingElement.element("sql");
+		configuration.setSqlMappingConfiguration(new SqlMappingConfiguration(
+				sqlMappingElement.attributeValue("parameterPrefix", "#{"), 
+				sqlMappingElement.attributeValue("parameterSuffix", "}"), 
+				sqlMappingElement.attributeValue("parameterSplit", ","), 
+				(SqlMappingParameterDefaultValueHandler)ClassUtil.newInstance(sqlMappingElement.attributeValue("parameterDefaultValueHandler", SqlMappingParameterDefaultValueHandler.class.getName()))));
 		
 		logger.debug("解析出的映射配置信息: {}", configuration);
 		return configuration;
 	}
 	
-	// 注册映射类型
-	private MappingTypeContainer registerMappingType(MappingConfiguration configuration, List<Element> registerElements) {
-		MappingTypeContainer typeContainer = new MappingTypeContainer();
-		
-		// 先注册内置的映射类型
-		if(configuration.isEnableTable()) // table
-			typeContainer.register(new TableMappingType());
-		if(configuration.isEnableSql()) // sql
-			typeContainer.register(new SqlMappingType());
-		if(configuration.isEnableView()) // view
-			typeContainer.register(new ViewMappingType());
-		if(configuration.isEnableProcedure()) // procedure
-			typeContainer.register(new ProcedureMappingType());
-		
-		// 注册配置的映射类型
+	// 注册配置的映射类型
+	private void registerMappingType(List<Element> registerElements) {
 		if(registerElements.size() > 0) {
 			for (Element elem : registerElements) 
-				typeContainer.register((MappingType)ClassUtil.newInstance(elem.attributeValue("class")));
+				MappingTypeContainer.register((MappingType)ClassUtil.newInstance(elem.attributeValue("class")));
 		}
-		
-		return typeContainer;
 	}
 
 	// 扫描配置的映射
-	private void scanMappings(MappingTypeContainer typeContainer, List<Element> scannerElements) {
+	private void scanMappings(List<Element> scannerElements) {
 		if(scannerElements.isEmpty())
 			return;
 		
 		EnvironmentContext.setEnvironment(this);
 		
 		List<MappingEntity> entities = new ArrayList<MappingEntity>();
-		ResourceScanner scanner = new ResourceScanner(typeContainer.getFileSuffixes());
+		ResourceScanner scanner = new ResourceScanner(MappingTypeContainer.getFileSuffixes());
 		for (Element elem : scannerElements) {
 			for(String file : scanner.scan("true".equalsIgnoreCase(elem.attributeValue("scanAll")), elem.attributeValue("path"))) 
 				entities.add(new AddOrCoverMappingEntity(file));
 		}
 			
-		if(entities.size() > 0) {
+		if(entities.size() > 0) 
 			this.mappingHandler.execute(entities);
-		}
 	}
 	
 	/**

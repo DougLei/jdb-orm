@@ -6,7 +6,7 @@ package com.douglei.orm.sql.statement;
  */
 public class InsertResult {
 	private int row; // 影响的行数 
-	private int id; // 自增的主键值
+	private int autoIncrementIDValue; // 自增的主键值
 	
 	public int getRow() {
 		return row;
@@ -14,10 +14,10 @@ public class InsertResult {
 	public void setRow(int row) {
 		this.row = row;
 	}
-	public int getId() {
-		return id;
+	public int getAutoIncrementIDValue() {
+		return autoIncrementIDValue;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setAutoIncrementIDValue(int autoIncrementIDValue) {
+		this.autoIncrementIDValue = autoIncrementIDValue;
 	}
 }

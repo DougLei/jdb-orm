@@ -36,7 +36,7 @@
 				*
 				* length: 数据类型的长度
 				* precision: 数据类型的精度
-				
+				*
 				* nullable: 是否可为空, 默认为true
 			 -->
 			<column name="USER_NAME" oldName="" property="userName" dbType="DATE" dataType="string" length="30" precision="" nullable="true"/>
@@ -50,16 +50,24 @@
 				* type: 约束类型, 目前支持的值有:
 				* 
 				** PRIMARY_KEY: 主键约束, 支持配置联合主键约束
+				*** isAutoIncrement: 是否将主键设为自增列, 默认为false
+				*** sequenceName: 针对ORACLE数据库, 需要序列名, 从sequenceName中获取序列的名称; 序列名的处理逻辑,  参考constraint的name属性; 创建序列和删除序列的语句均由框架处理, 如需调整可去数据库中调整
+				*
 				** UNIQUE: 唯一约束, 支持配置联合唯一约束
 				* 
-				** DEFAULT_VALUE: 默认值约束, 具体的默认值配置到value属性中
-				** CHECK: 检查约束, 具体的检查表达式配置到value属性中
+				** DEFAULT_VALUE: 默认值约束
+				*** defaultValue: 默认值
+				*
+				** CHECK: 检查约束
+				*** check: 检查约束表达式
 				* 
-				** FOREIGN_KEY: 外键约束, 具体的信息配置到fkTableName和fkColumnName属性中
+				** FOREIGN_KEY: 外键约束
+				*** table: 外键关联的表名
+				*** column: 外键关联的列名
 				*
 				** 约束类型的配置值不区分大小写
 			 -->
-			<constraint name="" type="" value="" fkTableName="" fkColumnName="">
+			<constraint name="" type="" isAutoIncrement="" sequenceName="" defaultValue="" check="" table="" column="">
 				<!-- 
 					配置相关的列信息, 可配置多组
 					* name: 约束的列名, 建议使用全大写, 如果是小写, 框架会自动转成大写
@@ -67,17 +75,6 @@
 				<column name="" />
 			</constraint>
 		</constraints>
-		
-		<!-- 
-			主键处理器(自动设置主键值)
-			* type: 主键处理器的类型, 区分大小写
-			* value: 主键处理器需要的值
-			
-			** 目前支持的类型值有: 
-			** UUID: 36位uuid; 不需要value值
-			** SEQUENCE: 自增序列; 针对ORACLE数据库, 需要value值, 从value中获取自增序列的名称; 具体逻辑参考constraint的name属性; 创建序列和删除序列的语句均由框架处理, 如需调整可去数据库中调整
-		 -->
-		<primaryKeyHandler type="SEQUENCE" value="" />
 		
 		<!-- 
 			验证器配置; 即使用DataValidator时是否会验证该列值
@@ -88,15 +85,13 @@
 				* name: 要验证的列名, 建议使用全大写, 如果是小写, 框架会自动转成大写
 				** 如果只配置了name, 后面没有配置任何验证器, 则会被框架忽略
 				* 
-				* 目前支持的验证器(验证器类型名称区分大小写; 框架会按照验证器的优先级顺序, 从小到大进行验证):
+				* 目前支持的验证器(验证器类型名称区分大小写; 框架会按照验证器的优先级(priority)顺序, 从小到大进行验证):
 				*
 				* enableNotNull: 是否启用不为null验证器, true/false; 优先级为0
 				*
 				* enableDataType: 是否启用数据类型验证器(使用列的数据类型进行验证), true/false; 优先级为10
 				*
-				* enableNotBlank: 是否启用不为空字符(串)验证器, true/false; 优先级为20
-				*
-				* 自定义验证器: 实现Validator接口, 并在这里配置类的全路径
+				* 自定义验证器: 实现ValidatorParser接口, 并在这里配置类的全路径
 			 -->
 			<validator name="NAME" enableNotNull="true" enableNotBlank="true" enableDataType="true" />
 		</validators>

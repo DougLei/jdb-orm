@@ -10,7 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
 import com.douglei.tools.ExceptionUtil;
@@ -23,13 +23,13 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStatementHandler.class);
 	
 	protected String sql;// 执行的sql语句
-	protected ReturnID returnID;
+	protected AutoIncrementID autoIncrementID;
 	
 	private List<SqlResultsetMetadata> resultsetMetadatas; // 结果集的元数据
 	
-	protected AbstractStatementHandler(String sql, ReturnID returnID) {
+	protected AbstractStatementHandler(String sql, AutoIncrementID autoIncrementID) {
 		this.sql = sql;
-		this.returnID = returnID;
+		this.autoIncrementID = autoIncrementID;
 	}
 	
 	/**
@@ -202,12 +202,12 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	 * @return
 	 * @throws SQLException 
 	 */
-	protected final int getOracleSeqCurval(Statement statement) throws SQLException {
+	protected final int getOracleSeqCurrval(Statement statement) throws SQLException {
 		if(logger.isDebugEnabled())
-			logger.debug("查询ORACLE序列值SQL = select {}.currval from dual", returnID.getOracleSequenceName());
+			logger.debug("查询ORACLE序列值SQL = select {}.currval from dual", autoIncrementID.getSequenceName());
 		
 		int seqVal = -1;
-		ResultSet rs = statement.executeQuery("select " + returnID.getOracleSequenceName() + ".currval from dual");
+		ResultSet rs = statement.executeQuery("select " + autoIncrementID.getSequenceName() + ".currval from dual");
 		if(rs.next())
 			seqVal = rs.getInt(1);
 		

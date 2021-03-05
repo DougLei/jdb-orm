@@ -6,7 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
+import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
@@ -17,59 +19,64 @@ public class AbstractPersistentObject {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPersistentObject.class);
 	
 	protected TableMetadata tableMetadata;
-	protected Object originObject;// 要持久化操作的源对象
-	protected Map<String, Object> objectMap;// 将源对象转换为map集合
+	protected Object originObject;// 要要操作的源数据实例
+	protected Map<String, Object> objectMap;// 将源数据转换为map集合
 	
-	public AbstractPersistentObject(TableMetadata tableMetadata) {
+	protected AbstractPersistentObject(TableMetadata tableMetadata) {
 		this.tableMetadata = tableMetadata;
-	}
-	public AbstractPersistentObject(TableMetadata tableMetadata, Object originObject) {
-		this(tableMetadata);
-		setOriginObject(originObject);
-	}
-	
-	public TableMetadata getTableMetadata() {
-		return tableMetadata;
-	}
-	public Object getOriginObject() {
-		return originObject;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void setOriginObject(Object originObject) {
-		if(originObject instanceof Map) {
-			logger.debug("originObject is Map type, 从该map中, 筛选出相关列的数据信息");
-			objectMap = filterColumnMetadatasPropertyMap(tableMetadata, (Map<String, Object>)originObject);
-		}else {
-			logger.debug("originObject is Object type [{}], 从该object中, 通过java内省机制, 获取相关列的数据信息", originObject.getClass());
-			objectMap = IntrospectorUtil.getProperyValues(originObject, tableMetadata.getColumns_().keySet());
-		}
-		if(logger.isDebugEnabled()) 
-			logger.debug("获取的最终objectMap为: {}", objectMap);
-		if(objectMap.isEmpty()) 
-			throw new NullPointerException("要操作的数据不能为空");
-		this.originObject = originObject;
 	}
 	
 	/**
-	 * 从originPropertyMap集合中, 筛选出相关列的数据信息
-	 * @param tableMetadata
-	 * @param originPropertyMap 
-	 * @return
+	 * 设置要操作的源数据实例
+	 * @param originObject
 	 */
-	private Map<String, Object> filterColumnMetadatasPropertyMap(TableMetadata tableMetadata, Map<String, Object> originPropertyMap) {
-		int columnSize = tableMetadata.getDeclareColumns().size();
-		Map<String, Object> objectMap = new HashMap<String, Object>(columnSize);
+	@SuppressWarnings("unchecked")
+	public void setOriginObject(Object originObject) {
+		logger.debug("解析originObject, 获取objectMap");
+		if(originObject instanceof Map) {
+			logger.debug("originObject is Map");
+			objectMap = extract(tableMetadata.getColumnMap4Code(), (Map<String, Object>)originObject);
+		}else {
+			logger.debug("originObject is Object");
+			objectMap = IntrospectorUtil.getValues(tableMetadata.getColumnMap4Code().keySet(), originObject);
+		}
+		
+		logger.debug("解析originObject, 获取的objectMap为: {}", objectMap);
+		if(objectMap.isEmpty()) 
+			throw new SessionExecutionException("要操作的数据不能为空");
+		this.originObject = originObject;
+	}
+	
+	// 从originObject中提取出相关的objectMap集合
+	private Map<String, Object> extract(Map<String, ColumnMetadata> columnMapByCode, Map<String, Object> originObject) {
+		Map<String, Object> objectMap = new HashMap<String, Object>();
 		
 		int index = 1;
-		for (String originPMkey : originPropertyMap.keySet()) {
-			if(tableMetadata.getColumns_().containsKey(originPMkey)) {
-				objectMap.put(originPMkey, originPropertyMap.get(originPMkey));
-				if(index == columnSize) 
+		for (String key : originObject.keySet()) {
+			if(columnMapByCode.containsKey(key)) {
+				objectMap.put(key, originObject.get(key));
+				
+				if(index == columnMapByCode.size()) 
 					break;
 				index++;
 			}
 		}
 		return objectMap;
+	}
+	
+	/**
+	 * 获取TableMetadata实例
+	 * @return
+	 */
+	public TableMetadata getTableMetadata() {
+		return tableMetadata;
+	}
+	
+	/**
+	 * 获取要操作的源数据实例
+	 * @return
+	 */
+	public Object getOriginObject() {
+		return originObject;
 	}
 }

@@ -7,9 +7,23 @@ package com.douglei.orm.mapping.impl.table.metadata;
 public enum ConstraintType {
 
 	/**
+	 * 自增主键约束
+	 */
+	AUTO_INCREMENT_PRIMARY_KEY("PK", "PRIMARY KEY", false) {
+		@Override
+		public boolean isPrimaryKey() {
+			return true;
+		}
+	},
+	/**
 	 * 主键约束
 	 */
-	PRIMARY_KEY("PK", "PRIMARY KEY", true),
+	PRIMARY_KEY("PK", "PRIMARY KEY", true) {
+		@Override
+		public boolean isPrimaryKey() {
+			return true;
+		}
+	},
 	/**
 	 * 唯一值约束
 	 */
@@ -28,12 +42,20 @@ public enum ConstraintType {
 	FOREIGN_KEY("FK", "FOREIGN KEY", false);
 	
 	private String namePrefix;
-	private String sqlStatement;
+	private String sqlKey;
 	private boolean supportMultiColumn;// 约束是否支持绑定多个列
-	private ConstraintType(String namePrefix, String sqlStatement, boolean supportMultiColumn) {
+	private ConstraintType(String namePrefix, String sqlKey, boolean supportMultiColumn) {
 		this.namePrefix = namePrefix;
-		this.sqlStatement = sqlStatement;
+		this.sqlKey = sqlKey;
 		this.supportMultiColumn = supportMultiColumn;
+	}
+	
+	/**
+	 * 是否主键约束
+	 * @return
+	 */
+	public boolean isPrimaryKey() {
+		return false;
 	}
 	
 	/**
@@ -45,11 +67,11 @@ public enum ConstraintType {
 	}
 	
 	/**
-	 * 获取约束对应的sql语句
+	 * 获取约束对应的sql语句关键字
 	 * @return
 	 */
-	public String getSqlStatement() {
-		return sqlStatement;
+	public String getSqlKey() {
+		return sqlKey;
 	}
 	
 	/**

@@ -5,40 +5,28 @@ import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
-import com.douglei.tools.StringUtil;
 
 /**
- * 
+ * 可执行的表SQL
  * @author DougLei
  */
 public abstract class ExecutableTableSql implements IExecutableSql {
-	protected TableMetadata tableMetadata;
+	protected TableMetadata tableMetadata; 
 	protected Map<String, Object> objectMap;
 	
-	protected ExecutableTableSql() {}
-	protected ExecutableTableSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
-		setBaseInfo(tableMetadata, objectMap);
-		initial();
-	}
+	protected String sql; // 要执行的sql
+	protected List<Object> parameters; // 执行sql需要的参数集合
 	
 	/**
-	 * 设置基础信息
+	 * 
 	 * @param tableMetadata
 	 * @param objectMap
 	 */
-	protected void setBaseInfo(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+	protected ExecutableTableSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		this.tableMetadata = tableMetadata;
 		this.objectMap = objectMap;
 	}
-	
-	/**
-	 * 初始化
-	 */
-	protected abstract void initial();
-	
-	protected String sql;
-	protected List<Object> parameters;
-	
+
 	@Override
 	public String getCurrentSql() {
 		return sql;
@@ -47,10 +35,5 @@ public abstract class ExecutableTableSql implements IExecutableSql {
 	@Override
 	public List<Object> getCurrentParameterValues() {
 		return parameters;
-	}
-	
-	@Override
-	public String toString() {
-		return "TableExecuteHandler [sql=" + (StringUtil.isEmpty(sql)?"sql is null":sql) + ", parameters=" + (parameters==null || parameters.isEmpty()?"parameters is null":parameters.toString()) + "]";
 	}
 }

@@ -7,7 +7,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
+import com.douglei.orm.dialect.DatabaseNameConstants;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.AbstractStatementHandler;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
@@ -18,8 +20,8 @@ import com.douglei.orm.sql.statement.StatementExecutionException;
  */
 public class StatementHandlerImpl extends AbstractStatementHandler {
 	private Statement statement;
-	public StatementHandlerImpl(Connection connection, String sql, ReturnID returnID) throws SQLException {
-		super(sql, returnID);
+	public StatementHandlerImpl(Connection connection, String sql, AutoIncrementID autoIncrementID) throws SQLException {
+		super(sql, autoIncrementID);
 		this.statement = connection.createStatement();
 	}
 	
@@ -96,16 +98,16 @@ public class StatementHandlerImpl extends AbstractStatementHandler {
 	
 	@Override
 	public InsertResult executeInsert(List<Object> parameters) throws StatementExecutionException {
-		InsertResult result = new InsertResult();
 		try {
-			if(returnID.getOracleSequenceName() == null) {
+			InsertResult result = new InsertResult();
+			if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
+				result.setRow(statement.executeUpdate(sql));
+				result.setAutoIncrementIDValue(getOracleSeqCurrval(statement));
+			}else {
 				result.setRow(statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS));
 				ResultSet id = statement.getGeneratedKeys();
 				if(id.next())
-					result.setId(id.getInt(1));
-			}else {
-				result.setRow(statement.executeUpdate(sql));
-				result.setId(getOracleSeqCurval(statement));
+					result.setAutoIncrementIDValue(id.getInt(1));
 			}
 			return result;
 		} catch (Exception e) {

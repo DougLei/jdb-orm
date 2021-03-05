@@ -7,15 +7,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
  * @author DougLei
  */
 public class Char extends AbstractCharacter{
-	private static final Char singleton = new Char();
-	public static Char getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Char() {
+	public Char() {
 		super("CHAR", 1, 255);
 	}
 	

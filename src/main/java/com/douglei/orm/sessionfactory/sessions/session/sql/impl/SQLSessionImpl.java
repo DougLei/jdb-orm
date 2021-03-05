@@ -11,13 +11,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.Mode;
+import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.ProcedurePurposeEntity;
@@ -25,8 +26,8 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPur
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.UpdatePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.pagequery.PageResult;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
@@ -40,8 +41,8 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private static final Logger logger = LoggerFactory.getLogger(SQLSessionImpl.class);
 	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
 	
-	public SQLSessionImpl(ConnectionWrapper connection) {
-		super(connection);
+	public SQLSessionImpl(ConnectionWrapper connection, Environment environment) {
+		super(connection, environment);
 	}
 	
 	private SqlMetadata getSqlMetadata(String namespace) {
@@ -164,7 +165,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		int updateRowCount = 0;
 		do {
 			if(executableSqls.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executableSqls.getCurrentIncrementIdValueConfig()) != null) {
-				insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
+				insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new AutoIncrementID(incrementIdValueConfig.getOracleSequenceName()));
 				updateRowCount += insertResult.getRow();
 				IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
 			}else {
@@ -196,7 +197,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			executableSqls = new ExecutableSqls(UpdatePurposeEntity.getSingleton(), sqlMetadata, name, sqlParameter);
 			do {
 				if(executableSqls.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executableSqls.getCurrentIncrementIdValueConfig()) != null) {
-					insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new ReturnID(incrementIdValueConfig.getOracleSequenceName()));
+					insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new AutoIncrementID(incrementIdValueConfig.getOracleSequenceName()));
 					updateRowCount += insertResult.getRow();
 					IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
 				}else {
@@ -286,10 +287,10 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 
 			// 处理直接返回 ResultSet
 			private void processDirectlyReturnResultSet(Map<String, Object> outMap, CallableStatement callableStatement, boolean returnResultSet) throws SQLException {
-				byte sequence = 1;
+				int sequence = 1;
 				do {
 					if(returnResultSet) {
-						outMap.put(PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX + sequence++, ResultSetUtil.getListMap(callableStatement.getResultSet()));
+						outMap.put("_procedure_resultset_" + sequence++, ResultSetUtil.getListMap(callableStatement.getResultSet()));
 					}else {
 						if(callableStatement.getUpdateCount() == -1)
 							break;

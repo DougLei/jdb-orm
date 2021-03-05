@@ -40,9 +40,9 @@ public class TextSqlNode implements SqlNode {
 	}
 
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String alias) {
+	public ValidateFailResult validateParameter(Object sqlParameter, String alias) {
 		if(parameters != null) {
-			ValidationResult result = null;
+			ValidateFailResult result = null;
 			for (SqlParameterMetadata parameter : parameters) {
 				if((result = parameter.validate(sqlParameter, alias)) != null) 
 					return result;

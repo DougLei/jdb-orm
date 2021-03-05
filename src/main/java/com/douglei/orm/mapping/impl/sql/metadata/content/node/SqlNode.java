@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
 import com.douglei.orm.mapping.metadata.Metadata;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
@@ -62,7 +62,7 @@ public interface SqlNode extends Metadata{
 	 * @param sqlParameter
 	 * @return
 	 */
-	default ValidationResult validateParameter(Object sqlParameter) {
+	default ValidateFailResult validateParameter(Object sqlParameter) {
 		return validateParameter(sqlParameter, null);
 	}
 	
@@ -72,5 +72,5 @@ public interface SqlNode extends Metadata{
 	 * @param previousAlias 上一层的sql参数名前缀, 即别名alias
 	 * @return
 	 */
-	ValidationResult validateParameter(Object sqlParameter, String previousAlias);
+	ValidateFailResult validateParameter(Object sqlParameter, String previousAlias);
 }

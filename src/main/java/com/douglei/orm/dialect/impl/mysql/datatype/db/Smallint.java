@@ -12,15 +12,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Smallint extends AbstractInt{
-	private static final Smallint singleton = new Smallint();
-	public static Smallint getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	protected Smallint() {
+	public Smallint() {
 		super("SMALLINT", 5, 5);
 	}
 	

@@ -11,27 +11,35 @@ import com.douglei.orm.mapping.metadata.Metadata;
 public class ConstraintMetadata implements Metadata{
 	private String name; // 约束名
 	private ConstraintType type; // 约束类型
-	private List<String> columnNames; // 列名集合
+	private List<String> columnNameList; // 约束的列名集合
 	
-	private String value;// 默认值或检查约束表达式
-	private String fkTableName;// 外键约束关联的表名
-	private String fkColumnName;// 外键约束关联的列名
+	private String sequenceName; // oracle中自增主键的序列名
+	private String defaultValue;// 默认值约束的值
+	private String check; // 检查约束的值
+	private String table;// 外键约束关联的表名
+	private String column;// 外键约束关联的列名
 	
 	public ConstraintMetadata(String name, ConstraintType type, List<String> columnNames) {
 		this.name = name;
 		this.type = type;
-		this.columnNames = columnNames;
+		this.columnNameList = columnNames;
 	}
-	public void setValue(String value) {
-		this.value = value;
+	public void setSequenceName(String sequenceName) {
+		this.sequenceName = sequenceName;
 	}
-	public void setFkValue(String fkTableName, String fkColumnName) {
-		this.fkTableName = fkTableName;
-		this.fkColumnName = fkColumnName;
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+	public void setCheck(String check) {
+		this.check = check;
+	}
+	public void setTableAndColumn(String table, String column) {
+		this.table = table;
+		this.column = column;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		return name.equals(((ConstraintMetadata)obj).name);
 	}
 	
@@ -41,16 +49,22 @@ public class ConstraintMetadata implements Metadata{
 	public ConstraintType getType() {
 		return type;
 	}
-	public List<String> getColumnNames() {
-		return columnNames;
+	public List<String> getColumnNameList() {
+		return columnNameList;
 	}
-	public String getValue() {
-		return value;
+	public String getSequenceName() {
+		return sequenceName;
 	}
-	public String getFkTableName() {
-		return fkTableName;
+	public String getDefaultValue() {
+		return defaultValue;
 	}
-	public String getFkColumnName() {
-		return fkColumnName;
+	public String getCheck() {
+		return check;
+	}
+	public String getTable() {
+		return table;
+	}
+	public String getColumn() {
+		return column;
 	}
 }

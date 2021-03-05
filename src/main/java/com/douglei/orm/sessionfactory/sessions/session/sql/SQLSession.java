@@ -11,7 +11,6 @@ import com.douglei.orm.sql.pagequery.PageResult;
  * @author DougLei
  */
 public interface SQLSession {
-	public static final String PROCEDURE_DIRECTLY_RETURN_RESULTSET_NAME_PREFIX = "_procedure_resultset_";
 	
 	/**
 	 * 查询
@@ -259,131 +258,6 @@ public interface SQLSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 递归查询
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return
-	 */
-	default List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
-	}
-	/**
-	 * 递归查询
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @param sqlParameter
-	 * @return
-	 */
-	List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 递归查询
-	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return
-	 */
-	default <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
-	}
-	/**
-	 * 递归查询
-	 * @param targetClass
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @param sqlParameter
-	 * @return
-	 */
-	<T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return
-	 */
-	default PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
-	}
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @param sqlParameter
-	 * @return
-	 */
-	PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
-	
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param targetClass
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return
-	 */
-	default <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name){
-		return pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, namespace, name, null);
-	}
-	/**
-	 * 分页递归查询, 只对根数据(即第一层的数据)进行分页
-	 * @param targetClass
-	 * @param pageNum
-	 * @param pageSize
-	 * @param deep 递归的深度, 小于等于0表示为无限递归
-	 * @param pkColumnName 存储主键的列名
-	 * @param parentPkColumnName 存储父级主键的列名
-	 * @param parentValue 递归语句中, 父主键的值, 可以是单个值, 也可以是数组, 也可以是List, 如果传入null, 则表示查询parentPkColumnName is null的数据
-	 * @param childNodeName 父级存储子集的节点名称; 传入对应targetClass中存储子集合的属性名, 且该字集合的数据类型, 目前只支持为java.util.List
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @param sqlParameter
-	 * @return
-	 */
-	<T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter);
-	
 	
 	/**
 	 * 增删改数据

@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 
 /**
  * 
@@ -77,9 +77,9 @@ public abstract class AbstractClob extends DBDataType {
 	}
 
 	@Override
-	public final ValidationResult validate(String name, Object value, int length, int precision) {
+	public final ValidateFailResult validate(String name, Object value, int length, int precision) {
 		if(value instanceof String || value.getClass() == char.class || value instanceof Character || value instanceof ClobData) 
 			return null;
-		return new ValidationResult(name, "数据值类型错误, 应为字符类型", "jdb.data.validator.value.datatype.error.string");
+		return new ValidateFailResult(name, "数据值类型错误, 应为字符类型", "jdb.data.validator.value.datatype.error.string");
 	}
 }

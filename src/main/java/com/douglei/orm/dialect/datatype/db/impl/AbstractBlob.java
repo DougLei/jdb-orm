@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 
 /**
  * 
@@ -78,9 +78,9 @@ public abstract class AbstractBlob extends DBDataType{
 	}
 	
 	@Override
-	public final ValidationResult validate(String name, Object value, int length, int precision) {
+	public final ValidateFailResult validate(String name, Object value, int length, int precision) {
 		if(value instanceof byte[]) 
 			return null;
-		return new ValidationResult(name, "数据值类型错误, 应为字节数组类型", "jdb.data.validator.value.datatype.error.bytearray");
+		return new ValidateFailResult(name, "数据值类型错误, 应为字节数组类型", "jdb.data.validator.value.datatype.error.bytearray");
 	}
 }

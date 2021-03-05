@@ -1,8 +1,6 @@
 package com.douglei.orm.dialect.impl.sqlserver.datatype.mapping;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.dialect.datatype.mapping.impl.AbstractClobDataType;
-import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varcharmax;
 
 /**
  * 
@@ -11,7 +9,7 @@ import com.douglei.orm.dialect.impl.sqlserver.datatype.db.Varcharmax;
 public class ClobDataType extends AbstractClobDataType {
 
 	@Override
-	public DBDataType mappedDBDataType(int length, int precision) {
-		return Varcharmax.getSingleton();
+	public String mappedDBDataType(int length, int precision) {
+		return "VARCHAR(MAX)";
 	}
 }

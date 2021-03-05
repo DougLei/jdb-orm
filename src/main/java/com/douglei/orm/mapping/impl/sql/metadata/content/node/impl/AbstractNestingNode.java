@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
@@ -73,8 +73,8 @@ public abstract class AbstractNestingNode implements SqlNode{
 	}
 
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String previousAlias) {
-		ValidationResult result = null;
+	public ValidateFailResult validateParameter(Object sqlParameter, String previousAlias) {
+		ValidateFailResult result = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter, previousAlias) && (result = sqlNode.validateParameter(sqlParameter, previousAlias)) != null) 
 				return result;

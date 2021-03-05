@@ -1,43 +1,46 @@
 package com.douglei.orm.mapping.handler.entity;
 
-import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.metadata.type.MetadataType;
+import com.douglei.orm.mapping.MappingType;
 
 /**
  * 
  * @author DougLei
  */
 public abstract class MappingEntity {
-	protected String code; // 映射的编码
-	protected MetadataType type; // 映射的类型
-	protected int order; // 映射的顺序
-	protected Mapping mapping; // mapping实例
+	protected MappingType type; // 映射的类型
 	protected boolean opDatabaseObject; // 是否操作数据库对象
 	
 	/**
-	 * 获取对映射进行的操作
+	 * 获取操作映射的模式
 	 * @return
 	 */
-	public abstract MappingOP getOp();
+	public abstract Mode getMode();
 	
-	public final String getCode() {
-		return code;
-	}
-	public final MetadataType getType() {
+	/**
+	 * 获取映射类型
+	 * @return
+	 */
+	public final MappingType getType() {
 		return type;
 	}
-	public final int getOrder() {
-		return order;
-	}
-	public final Mapping getMapping() {
-		return mapping;
-	}
+	
+	/**
+	 * 是否操作数据库对象
+	 * @return
+	 */
 	public final boolean opDatabaseObject() {
 		return opDatabaseObject;
 	}
 	
-	@Override
-	public final String toString() {
-		return getClass().getSimpleName() + " [code=" + code + "]";
-	}
+	/**
+	 * 获取映射code
+	 * @return
+	 */
+	public abstract String getCode();
+	
+	/**
+	 * 获取操作映射的顺序
+	 * @return
+	 */
+	public abstract int getOrder();
 }

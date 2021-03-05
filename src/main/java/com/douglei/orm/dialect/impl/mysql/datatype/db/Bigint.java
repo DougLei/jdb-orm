@@ -12,15 +12,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractInt;
  * @author DougLei
  */
 public class Bigint extends AbstractInt{
-	private static final Bigint singleton = new Bigint();
-	public static Bigint getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	protected Bigint() {
+	public Bigint() {
 		super("BIGINT", -5, 19);
 	}
 	

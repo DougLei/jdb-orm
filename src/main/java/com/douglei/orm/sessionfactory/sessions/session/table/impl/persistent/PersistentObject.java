@@ -1,9 +1,5 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableDeleteSql;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableInsertSql;
@@ -15,53 +11,38 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql
  * @author DougLei
  */
 public class PersistentObject extends AbstractPersistentObject{
-	private Identity id;
-	private OperationState operationState;
+	private Operation operation;
 	private boolean updateNullValue; // 修改时使用
 	
-	public PersistentObject(TableMetadata tableMetadata, Object originObject, OperationState operationState, boolean updateNullValue) {
-		super(tableMetadata, originObject);
-		setOperationState(operationState);
-		setUpdateNullValue(updateNullValue);
+	/**
+	 * 
+	 * @param tableMetadata 
+	 * @param originObject 要操作的源数据实例
+	 * @param operation  
+	 */
+	public PersistentObject(TableMetadata tableMetadata, Object originObject, Operation operation) {
+		super(tableMetadata);
+		super.setOriginObject(originObject);
+		this.operation = operation;
 	}
 	
-	public OperationState getOperationState() {
-		return operationState;
-	}
-	public void setOperationState(OperationState operationState) {
-		this.operationState = operationState;
-	}
+	/**
+	 * 设置是否更新null值; operation == Operation.UPDATE时生效
+	 * @param updateNullValue
+	 */
 	public void setUpdateNullValue(boolean updateNullValue) {
-		if(operationState == OperationState.UPDATE)
+		if(operation == Operation.UPDATE)
 			this.updateNullValue = updateNullValue;
 	}
 	
-	public Identity getId() {
-		if(id == null) {
-			if(tableMetadata.getPrimaryKeyColumns_() == null) {
-				this.id = new Identity(objectMap);// 不存在主键配置时, 就将整个对象做为id
-			}else {
-				Set<String> primaryKeyColumnMetadataCodes = tableMetadata.getPrimaryKeyColumns_().keySet();
-				Object id;
-				if(primaryKeyColumnMetadataCodes.size() == 1) {
-					id = objectMap.get(primaryKeyColumnMetadataCodes.iterator().next());
-				}else {
-					Map<String, Object> idMap = new HashMap<String, Object>(primaryKeyColumnMetadataCodes.size());
-					for (String pkCode : primaryKeyColumnMetadataCodes) 
-						idMap.put(pkCode, objectMap.get(pkCode));
-					id = idMap;
-				}
-				this.id = new Identity(id, tableMetadata);
-			}
-		}
-		return id;
-	}
-	
-	// 获取可执行的sql
+	/**
+	 * 获取ExecutableTableSql实例
+	 * @return
+	 */
 	public ExecutableTableSql getExecutableTableSql() {
-		switch(operationState) {
+		switch(operation) {
 			case INSERT:
-				return new ExecutableInsertSql(tableMetadata, objectMap, originObject);
+				return new ExecutableInsertSql(tableMetadata, objectMap);
 			case DELETE:
 				return new ExecutableDeleteSql(tableMetadata, objectMap);
 			case UPDATE:
@@ -70,8 +51,16 @@ public class PersistentObject extends AbstractPersistentObject{
 		return null;
 	}
 	
+	/**
+	 * 获取具体的操作
+	 * @return
+	 */
+	public Operation getOperation() {
+		return operation;
+	}
+	
 	@Override
 	public String toString() {
-		return "PersistentObject [id=" + id + ", operationState=" + operationState + ", originObject=" + originObject + "]";
+		return "PersistentObject [operation=" + operation + ", originObject=" + originObject + "]";
 	}
 }

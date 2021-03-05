@@ -5,11 +5,11 @@ package com.douglei.orm.mapping;
  * @author DougLei
  */
 public class MappingSubject {
-	private MappingProperty mappingProperty;
+	private MappingProperty property;
 	private Mapping mapping;
 	
-	public MappingSubject(MappingProperty mappingProperty, Mapping mapping) {
-		this.mappingProperty = mappingProperty;
+	MappingSubject(MappingProperty property, Mapping mapping) {
+		this.property = property;
 		this.mapping = mapping;
 	}
 	
@@ -18,7 +18,7 @@ public class MappingSubject {
 	 * @return
 	 */
 	public MappingProperty getMappingProperty() {
-		return mappingProperty;
+		return property;
 	}
 	/**
 	 * 获取映射实例

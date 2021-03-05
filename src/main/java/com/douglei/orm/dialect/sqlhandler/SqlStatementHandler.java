@@ -1,10 +1,9 @@
 package com.douglei.orm.dialect.sqlhandler;
 
-import java.util.Collection;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.douglei.orm.configuration.OrmException;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
@@ -22,11 +21,6 @@ public abstract class SqlStatementHandler {
 	// query
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * 获取 查询指定name是否存在的sql语句, 目前是查询表名, 视图名, 存储过程名的集合
-	 */
-	public abstract String queryNameExists();
-	
-	/**
 	 * 获取 查询表名是否存在的sql语句
 	 * @return
 	 */
@@ -42,43 +36,7 @@ public abstract class SqlStatementHandler {
 	 * 获取 查询存储过程名是否存在的sql语句
 	 * @return
 	 */
-	public abstract String queryProcExists();
-	
-	/**
-	 * 获取 查询视图的脚本
-	 * @return
-	 */
-	public abstract String queryViewScript();
-	
-	/**
-	 * 获取 查询存储过程的脚本
-	 * @return
-	 */
-	public abstract String queryProcedureScript();
-	
-	// --------------------------------------------------------------------------------------------
-	// view
-	// --------------------------------------------------------------------------------------------
-	/**
-	 * 获取drop view的sql语句
-	 * @param viewName
-	 * @return
-	 */
-	public String dropView(String viewName) {
-		return "drop view " + viewName;
-	}
-	
-	// --------------------------------------------------------------------------------------------
-	// procedure
-	// --------------------------------------------------------------------------------------------
-	/**
-	 * 获取drop procedure的sql语句
-	 * @param procName
-	 * @return
-	 */
-	public String dropProcedure(String procName) {
-		return "drop procedure " + procName;
-	}
+	public abstract String queryProcedureExists();
 	
 	// --------------------------------------------------------------------------------------------
 	// table
@@ -93,31 +51,18 @@ public abstract class SqlStatementHandler {
 		sql.append("create table ").append(table.getName());
 		sql.append("(");
 		
-		Collection<ColumnMetadata> columns = table.getDeclareColumns();
-		for (ColumnMetadata column : columns) {
+		for (ColumnMetadata column : table.getColumns()) {
 			sql.append(column.getName()).append(" ");
 			sql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
-			if(column.isPrimaryKeySequence()) {
-				sql.append(primaryKeySequenceSqlKeyword()).append(" ");
-			}
-			if(!column.isNullable()) {
+			if(!column.isNullable()) 
 				sql.append("not null");
-			}
-			sql.append(",");
+			sql.append(',');
 		}
 		sql.setLength(sql.length()-1);
 		sql.append(")");
 		return sql.toString();
 	}
 	
-	/**
-	 * 主键序列的sql关键字
-	 * @return
-	 */
-	protected String primaryKeySequenceSqlKeyword() {
-		return "";
-	}
-
 	/**
 	 * 获取drop table的sql语句
 	 * @param tableName
@@ -128,14 +73,14 @@ public abstract class SqlStatementHandler {
 	}
 	
 	/**
-	 * 获取rename 表名的sql语句
-	 * @param originTableName
-	 * @param targetTableName
+	 * 获取修改表名的sql语句
+	 * @param oldTableName
+	 * @param newTableName
 	 * @return
 	 */
-	public String renameTable(String originTableName, String targetTableName) {
+	public String renameTable(String oldTableName, String newTableName) {
 		StringBuilder tmpSql = new StringBuilder(80);
-		tmpSql.append("alter table ").append(originTableName).append(" rename to ").append(targetTableName);
+		tmpSql.append("alter table ").append(oldTableName).append(" rename to ").append(newTableName);
 		return tmpSql.toString();
 	}
 	
@@ -143,7 +88,7 @@ public abstract class SqlStatementHandler {
 	// column
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * 获取create column的sql语句
+	 * 获取创建列的sql语句
 	 * @param tableName
 	 * @param column
 	 * @return
@@ -152,14 +97,13 @@ public abstract class SqlStatementHandler {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" add ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
-		if(!column.isNullable()) {
+		if(!column.isNullable()) 
 			tmpSql.append("not null");
-		}
 		return tmpSql.toString();
 	}
 	
 	/**
-	 * 获取drop column的sql语句
+	 * 获取删除列的sql语句
 	 * @param tableName
 	 * @param columnName
 	 * @return
@@ -171,15 +115,15 @@ public abstract class SqlStatementHandler {
 	}
 	
 	/**
-	 * 获取rename 列名的sql语句
+	 * 获取修改列名的sql语句
 	 * @param tableName
-	 * @param originColumnName
-	 * @param targetColumnName
+	 * @param oldColumnName
+	 * @param newColumnName
 	 * @return
 	 */
-	public String renameColumn(String tableName, String originColumnName, String targetColumnName) {
+	public String renameColumn(String tableName, String oldColumnName, String newColumnName) {
 		StringBuilder tmpSql = new StringBuilder(80);
-		tmpSql.append("alter table ").append(tableName).append(" rename column ").append(originColumnName).append(" to ").append(targetColumnName);
+		tmpSql.append("alter table ").append(tableName).append(" rename column ").append(oldColumnName).append(" to ").append(newColumnName);
 		return tmpSql.toString();
 	}
 	
@@ -189,13 +133,12 @@ public abstract class SqlStatementHandler {
 	 * @param column
 	 * @return
 	 */
-	public String modifyColumn(String tableName, ColumnMetadata column) {
+	public String updateColumn(String tableName, ColumnMetadata column) {
 		StringBuilder tmpSql = new StringBuilder(100);
 		tmpSql.append("alter table ").append(tableName).append(" modify ").append(column.getName()).append(" ");
 		tmpSql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
-		if(!column.isNullable()) {
+		if(!column.isNullable()) 
 			tmpSql.append("not null");
-		}
 		return tmpSql.toString();
 	}
 	
@@ -203,95 +146,146 @@ public abstract class SqlStatementHandler {
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * 获取create constraint的sql语句
+	 * 获取创建约束的sql语句
+	 * @param tableName
 	 * @param constraint
 	 * @return
 	 */
-	public String createConstraint(ConstraintMetadata constraint) {
-		switch(constraint.getConstraintType()) {
+	public String createConstraint(String tableName, ConstraintMetadata constraint) {
+		switch(constraint.getType()) {
+			case AUTO_INCREMENT_PRIMARY_KEY:
 			case PRIMARY_KEY:
 			case UNIQUE:
-				return createPK_UQ(constraint);
+				return createPK_UQ(tableName, constraint);
 			case DEFAULT_VALUE:
-				return createDefaultValue(constraint);
+				return createDefaultValue(tableName, constraint);
 			case CHECK:
-				return createCheck(constraint);
+				return createCheck(tableName, constraint);
 			case FOREIGN_KEY:
-				return createForeignKey(constraint);
+				return createForeignKey(tableName, constraint);
 		}
-		throw new IllegalArgumentException("没有处理到的约束: " + constraint.getConstraintType());
+		throw new OrmException("(create)不支持的约束类型: " + constraint.getType());
 	}
 	/**获取创建主键约束、唯一约束的sql语句*/
-	protected String createPK_UQ(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
-		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(")");
-		return tmpSql.toString();
+	protected String createPK_UQ(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(120);
+		sql.append("alter table ").append(tableName).append(" add constraint ").append(constraint.getName()).append(" ");
+		sql.append(constraint.getType().getSqlKey()).append(" (");
+		constraint.getColumnNameList().forEach(columnName -> sql.append(columnName).append(','));
+		sql.setLength(sql.length()-1);
+		sql.append(')');
+		return sql.toString();
 	}
 	/**获取创建默认值约束的sql语句*/
-	protected abstract String createDefaultValue(ConstraintMetadata constraint);
+	protected abstract String createDefaultValue(String tableName, ConstraintMetadata constraint);
 	/**获取创建检查约束的sql语句*/
-	protected String createCheck(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
-		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getCheck()).append(")");
-		return tmpSql.toString();
+	protected String createCheck(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(120);
+		sql.append("alter table ").append(tableName).append(" add constraint ").append(constraint.getName()).append(" ");
+		sql.append(constraint.getType().getSqlKey()).append(" (").append(constraint.getCheck()).append(")");
+		return sql.toString();
 	}
 	/**获取创建外键约束的sql语句*/
-	protected String createForeignKey(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(120);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" add constraint ").append(constraint.getName()).append(" ");
-		tmpSql.append(constraint.getConstraintType().getSqlStatement()).append(" (").append(constraint.getConstraintColumnNames()).append(") ");
-		tmpSql.append("references ").append(constraint.getFkTableName()).append("(").append(constraint.getFkColumnName()).append(")");
-		return tmpSql.toString();
+	protected String createForeignKey(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(120);
+		sql.append("alter table ").append(tableName).append(" add constraint ").append(constraint.getName()).append(" ");
+		sql.append(constraint.getType().getSqlKey()).append(" (").append(constraint.getColumnNameList().get(0)).append(") ");
+		sql.append("references ").append(constraint.getTable()).append("(").append(constraint.getColumn()).append(")");
+		return sql.toString();
 	}
 
 	/**
-	 * 获取drop constraint的sql语句
+	 * 获取删除约束的sql语句
+	 * @param tableName
 	 * @param constraint
 	 * @return
 	 */
-	public String dropConstraint(ConstraintMetadata constraint) {
-		switch(constraint.getConstraintType()) {
+	public String dropConstraint(String tableName, ConstraintMetadata constraint) {
+		switch(constraint.getType()) {
+			case AUTO_INCREMENT_PRIMARY_KEY:
 			case PRIMARY_KEY:
-				return dropPrimaryKey(constraint);
+				return dropPrimaryKey(tableName, constraint);
 			case UNIQUE:
-				return dropUnique(constraint);
+				return dropUnique(tableName, constraint);
 			case DEFAULT_VALUE:
-				return dropDefaultValue(constraint);
+				return dropDefaultValue(tableName, constraint);
 			case CHECK:
-				return dropCheck(constraint);
+				return dropCheck(tableName, constraint);
 			case FOREIGN_KEY:
-				return dropForeignKey(constraint);
+				return dropForeignKey(tableName, constraint);
 		}
-		throw new IllegalArgumentException("没有处理到的约束: " + constraint.getConstraintType());
-	}
-	/**通用的 获取drop constraint的sql语句*/
-	private String commonDropConstraint(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop constraint ").append(constraint.getName());
-		return tmpSql.toString();
+		throw new OrmException("(drop)不支持的约束类型: " + constraint.getType());
 	}
 	/**获取删除主键约束的sql语句*/
-	protected String dropPrimaryKey(ConstraintMetadata constraint) {
-		return commonDropConstraint(constraint);
+	protected String dropPrimaryKey(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" drop constraint ").append(constraint.getName());
+		return sql.toString();
 	}
 	/**获取删除唯一约束的sql语句*/
-	protected String dropUnique(ConstraintMetadata constraint) {
-		return commonDropConstraint(constraint);
+	protected String dropUnique(String tableName, ConstraintMetadata constraint) {
+		return dropPrimaryKey(tableName, constraint);
 	}
 	/**获取删除默认值约束的sql语句*/
-	protected String dropDefaultValue(ConstraintMetadata constraint) {
-		return commonDropConstraint(constraint);
+	protected String dropDefaultValue(String tableName, ConstraintMetadata constraint) {
+		return dropPrimaryKey(tableName, constraint);
 	}
 	/**获取删除检查约束的sql语句*/
-	protected String dropCheck(ConstraintMetadata constraint) {
-		return commonDropConstraint(constraint);
+	protected String dropCheck(String tableName, ConstraintMetadata constraint) {
+		return dropPrimaryKey(tableName, constraint);
 	}
 	/**获取删除外键约束的sql语句*/
-	protected String dropForeignKey(ConstraintMetadata constraint) {
-		return commonDropConstraint(constraint);
+	protected String dropForeignKey(String tableName, ConstraintMetadata constraint) {
+		return dropPrimaryKey(tableName, constraint);
 	}
+	
+	// --------------------------------------------------------------------------------------------
+	// 自增主键
+	// --------------------------------------------------------------------------------------------
+	/**
+	 * 获取创建自增主键的sql语句; 返回null表示不需要创建自增主键
+	 * @param table
+	 * @return
+	 */
+	public String createAutoincrementPrimaryKey(TableMetadata table) {
+		return null;
+	}
+	
+	/**
+	 * 获取删除自增主键的sql语句; 返回null表示不需要删除自增主键
+	 * @param table
+	 * @return
+	 */
+	public String dropAutoincrementPrimaryKey(TableMetadata table) {
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	// --------------------------------------------------------------------------------------------

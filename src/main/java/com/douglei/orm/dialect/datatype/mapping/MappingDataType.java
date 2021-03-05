@@ -1,8 +1,7 @@
 package com.douglei.orm.dialect.datatype.mapping;
 
-import com.douglei.orm.dialect.datatype.DataTypeClassification;
 import com.douglei.orm.dialect.datatype.DataType;
-import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.dialect.datatype.DataTypeClassification;
 
 /**
  * 映射的数据类型, 与数据库数据类型的映射
@@ -16,10 +15,10 @@ public abstract class MappingDataType extends DataType{
 	}
 
 	/**
-	 * 映射的数据库数据类型, 数字类型会需要根据长度和精度决定最终返回哪种数据库数据类型, 所以需要length和precision两个参数
+	 * 映射的DB数据类型名称
 	 * @param length
 	 * @param precision
 	 * @return
 	 */
-	public abstract DBDataType mappedDBDataType(int length, int precision);
+	public abstract String mappedDBDataType(int length, int precision);
 }

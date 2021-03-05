@@ -58,6 +58,18 @@ public class DataTypeContainer {
 	
 	// ----------------------------------------------------------------------
 	/**
+	 * 获取指定name的DBDataType
+	 * @param name
+	 * @return
+	 */
+	public DBDataType getDBDataTypeByName(String name) {
+		DataType dataType = container.get(DataTypeClassification.DB.name() + "." +name);
+		if(dataType == null)
+			throw new DataTypeException("不存在name=["+name+"]的数据类型");
+		return (DBDataType) dataType;
+	}
+	
+	/**
 	 * 根据传入参数的class, 获取对应的DBDataType
 	 * @param value
 	 */

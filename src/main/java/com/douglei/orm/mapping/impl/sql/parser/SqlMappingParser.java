@@ -23,14 +23,13 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.parser.content.ContentMetadataParser;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.orm.mapping.validator.Validator;
-import com.douglei.orm.mapping.validator.ValidatorParserContainer;
 import com.douglei.orm.mapping.validator.ValidatorUtil;
 
 /**
  * 
  * @author DougLei
  */
-class SqlMappingParser extends MappingParser {
+public class SqlMappingParser extends MappingParser {
 	private static SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
 	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
@@ -88,7 +87,7 @@ class SqlMappingParser extends MappingParser {
 				if("name".equals(attribute.getNodeName()))
 					continue;
 				
-				Validator validator = ValidatorParserContainer.get(attribute.getNodeName()).parse(attribute.getNodeValue());
+				Validator validator = ValidatorUtil.get(attribute.getNodeName()).parse(attribute.getNodeValue());
 				if(validator == null)
 					continue;
 				
@@ -100,8 +99,8 @@ class SqlMappingParser extends MappingParser {
 			if(validators == null)
 				continue;
 			
-			ValidatorUtil.sortByPriority(validators);
-			sqlMetadata.addValidators(attributeMap.getNamedItem("name").getNodeValue(), validators);
+			ValidatorUtil.sort(validators);
+			sqlMetadata.putValidators(attributeMap.getNamedItem("name").getNodeValue(), validators);
 			validators = null;
 		}
 	}

@@ -1,7 +1,7 @@
 package com.douglei.orm.sessionfactory.sessions.session.sql;
 
 /**
- * sql的用途
+ *
  * @author DougLei
  */
 public enum Purpose {

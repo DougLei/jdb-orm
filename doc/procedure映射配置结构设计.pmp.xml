@@ -5,6 +5,6 @@
 	
 	<!-- 参考《view映射配置结构设计.vmp.xml》中的属性配置说明 -->
 	<procedure name="" oldName="" createMode="" strict="false">
-		<!-- 创建视图的脚本 -->
+		<!-- 创建存储过程的脚本 -->
 	</procedure>
 </mapping-configuration>

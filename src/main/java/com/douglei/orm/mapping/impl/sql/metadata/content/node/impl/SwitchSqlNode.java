@@ -3,7 +3,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.ExecutableSqlNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
 
 /**
@@ -27,7 +27,7 @@ public class SwitchSqlNode extends AbstractNestingNode {
 	}
 	
 	@Override
-	public ValidationResult validateParameter(Object sqlParameter, String previousAlias) {
+	public ValidateFailResult validateParameter(Object sqlParameter, String previousAlias) {
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter, previousAlias)) {
 				return sqlNode.validateParameter(sqlParameter, previousAlias);

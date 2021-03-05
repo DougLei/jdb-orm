@@ -1,21 +1,12 @@
 package com.douglei.orm.mapping.impl.sql.metadata.parameter;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.dialect.datatype.DataTypeClassification;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.dialect.datatype.db.DBDataTypeEntity;
-import com.douglei.orm.dialect.datatype.db.DBDataTypeUtil;
-import com.douglei.orm.mapping.MappingParseToolContext;
-import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.metadata.Metadata;
-import com.douglei.orm.mapping.validator.Validator;
-import com.douglei.orm.mapping.validator.ValidatorParser;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.tools.OgnlUtil;
-import com.douglei.tools.RegularExpressionUtil;
-import com.douglei.tools.StringUtil;
 import com.douglei.tools.datatype.DataTypeConvertUtil;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
@@ -29,7 +20,8 @@ public class SqlParameterMetadata implements Metadata{
 	
 	private String name;// 参数名
 	private Mode mode;// 输入输出类型
-	private DBDataType dbDataType;// 数据类型
+	private String dbDataType;// 数据类型
+	private transient DBDataType DBDataType; // 数据类型
 	private int length;// 长度
 	private int precision;// 精度
 	
@@ -49,8 +41,9 @@ public class SqlParameterMetadata implements Metadata{
 	public void setMode(Mode mode) {
 		this.mode = mode;
 	}
-	public void setDBDataType(DBDataType dbDataType) {
-		this.dbDataType = dbDataType;
+	public void setDBDataType(DBDataType DBDataType) {
+		this.dbDataType = DBDataType.getName();
+		this.DBDataType = DBDataType;
 	}
 	public void setLength(int length) {
 		this.length = length;
@@ -155,7 +148,7 @@ public class SqlParameterMetadata implements Metadata{
 	 * @param alias
 	 * @return
 	 */
-	public ValidationResult validate(Object sqlParameter, String alias) {
+	public ValidateFailResult validate(Object sqlParameter, String alias) {
 		if(validate) 
 			return validateHandler.validate(getValue_(sqlParameter, alias));
 		return null;
@@ -171,7 +164,9 @@ public class SqlParameterMetadata implements Metadata{
 		return name;
 	}
 	public DBDataType getDBDataType() {
-		return dbDataType;
+		if(DBDataType == null)
+			DBDataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().getDBDataTypeByName(dbDataType);
+		return DBDataType;
 	}
 	public int getLength() {
 		return length;

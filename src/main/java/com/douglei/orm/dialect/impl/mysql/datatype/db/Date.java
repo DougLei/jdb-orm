@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.tools.datatype.DataTypeValidateUtil;
 import com.douglei.tools.datatype.DateFormatUtil;
 
@@ -15,15 +15,8 @@ import com.douglei.tools.datatype.DateFormatUtil;
  * @author DougLei
  */
 public class Date extends DBDataType {
-	private static final Date singleton = new Date();
-	public static Date getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	protected Date() {
+	public Date() {
 		super("DATE", 91);
 	}
 	
@@ -47,9 +40,9 @@ public class Date extends DBDataType {
 	}
 	
 	@Override
-	public ValidationResult validate(String name, Object value, int length, int precision) {
+	public ValidateFailResult validate(String name, Object value, int length, int precision) {
 		if(value instanceof Date || DataTypeValidateUtil.isDate(value)) 
 			return null;
-		return new ValidationResult(name, "数据值类型错误, 应为日期类型", "jdb.data.validator.value.datatype.error.date");
+		return new ValidateFailResult(name, "数据值类型错误, 应为日期类型", "jdb.data.validator.value.datatype.error.date");
 	}
 }

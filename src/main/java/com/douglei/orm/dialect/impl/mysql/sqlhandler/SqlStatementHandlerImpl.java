@@ -4,10 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
+import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
+import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sql.pagequery.PageSqlStatement;
 import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
-import com.douglei.tools.StringUtil;
 
 /**
  * 
@@ -20,15 +21,6 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// query
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String queryNameExists() {
-		return "select count(1) from (" + 
-				"	select table_name name_ from information_schema.tables where table_schema = (select database())" + 
-				"	union" + 
-				"	select routine_name name_ from information_schema.routines where routine_schema = (select database())" + 
-				") a where a.name_ = ?";
-	}
-
-	@Override
 	public String queryTableExists() {
 		return "select count(1) from information_schema.tables where table_schema = (select database()) and table_name = ? and table_type='BASE TABLE'";
 	}
@@ -39,71 +31,66 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	}
 	
 	@Override
-	public String queryProcExists() {
+	public String queryProcedureExists() {
 		return "select count(1) from information_schema.routines where routine_schema = (select database()) and routine_type='PROCEDURE' and routine_name = ?";
-	}
-	
-	@Override
-	public String queryViewScript() {
-		return "select view_definition from information_schema.VIEWS where table_schema = (select database()) and table_name = ? ";
-	}
-	
-	@Override
-	public String queryProcedureScript() {
-		return "show create procedure "; // 后面加上存储过程名
 	}
 	
 	// --------------------------------------------------------------------------------------------
 	// constraint
 	// --------------------------------------------------------------------------------------------
 	@Override
-	protected String createDefaultValue(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
-		tmpSql.append(" set default ").append(constraint.getDefaultValue());
-		return tmpSql.toString();
+	protected String createDefaultValue(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" alter column ").append(constraint.getColumnNameList().get(0)).append(" set default ").append(constraint.getDefaultValue());
+		return sql.toString();
 	}
 
 	@Override
-	protected String dropPrimaryKey(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop primary key ");
-		return tmpSql.toString();
+	protected String dropPrimaryKey(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" drop primary key");
+		return sql.toString();
 	}
 
 	@Override
-	protected String dropUnique(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop index ").append(constraint.getName());
-		return tmpSql.toString();
+	protected String dropUnique(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" drop index ").append(constraint.getName());
+		return sql.toString();
 	}
 
 	@Override
-	protected String dropDefaultValue(ConstraintMetadata constraint) {
-		if(StringUtil.isEmpty(constraint.getConstraintColumnNames())) {
-			throw new NullPointerException("在mysql数据库中删除列的默认值时, 必须传入相应的列名");
-		}
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" alter column ").append(constraint.getConstraintColumnNames());
-		tmpSql.append(" set default null");
-		return tmpSql.toString();
+	protected String dropDefaultValue(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" alter column ").append(constraint.getColumnNameList().get(0)).append(" set default null");
+		return sql.toString();
 	}
 	
 	@Override
-	protected String dropCheck(ConstraintMetadata constraint) {
-		return dropCK_FK(constraint);
+	protected String dropCheck(String tableName, ConstraintMetadata constraint) {
+		StringBuilder sql = new StringBuilder(100);
+		sql.append("alter table ").append(tableName).append(" drop ").append(constraint.getType().getSqlKey()).append(" ").append(constraint.getName());
+		return sql.toString();
 	}
 	
 	@Override
-	protected String dropForeignKey(ConstraintMetadata constraint) {
-		return dropCK_FK(constraint);
+	protected String dropForeignKey(String tableName, ConstraintMetadata constraint) {
+		return dropCheck(tableName, constraint);
 	}
 	
-	/**获取删除检查约束、外键约束的sql语句*/
-	private String dropCK_FK(ConstraintMetadata constraint) {
-		StringBuilder tmpSql = new StringBuilder(100);
-		tmpSql.append("alter table ").append(constraint.getTableName()).append(" drop ").append(constraint.getConstraintType().getSqlStatement()).append(" ").append(constraint.getName());
-		return tmpSql.toString();
+	// --------------------------------------------------------------------------------------------
+	// 自增主键
+	// --------------------------------------------------------------------------------------------
+	@Override
+	public String createAutoincrementPrimaryKey(TableMetadata table) {
+		ColumnMetadata column = table.getColumnMap4Name().get(table.getAutoincrementPrimaryKey().getColumn());
+		return "alter table "+table.getName()+" change column "+column.getName()+" "+column.getName()+" "+column.getDBDataType().getName()+" auto_increment";
+	}
+	
+	@Override
+	public String dropAutoincrementPrimaryKey(TableMetadata table) {
+		ColumnMetadata column = table.getColumnMap4Name().get(table.getAutoincrementPrimaryKey().getColumn());
+		return "alter table "+table.getName()+" change column "+column.getName()+" "+column.getName()+" "+column.getDBDataType().getName();
 	}
 	
 	// --------------------------------------------------------------------------------------------

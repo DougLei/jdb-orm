@@ -15,7 +15,7 @@ public class SqlResultsetMetadata {
 	
 	public SqlResultsetMetadata(String columnName, int columnType, String columnTypeName) {
 		this.columnName = columnName;
-		this.dbDataType = EnvironmentContext.getDialect().getDataTypeContainer().getDBDataTypeByColumnType(columnType);
+		this.dbDataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().getDBDataTypeByColumnType(columnType);
 	}
 
 	public String getColumnName() {

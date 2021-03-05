@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.configuration.environment.EnvironmentContext;
+import com.douglei.orm.dialect.DatabaseNameConstants;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.AbstractStatementHandler;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
@@ -21,9 +23,11 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 	private PreparedStatement preparedStatement;
 
-	public PreparedStatementHandlerImpl(Connection connection, String sql, ReturnID returnID) throws SQLException {
-		super(sql, returnID);
-		this.preparedStatement = (returnID != null && returnID.getOracleSequenceName() == null) ? connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS) : connection.prepareStatement(sql) ;
+	public PreparedStatementHandlerImpl(Connection connection, String sql, AutoIncrementID autoIncrementID) throws SQLException {
+		super(sql, autoIncrementID);
+		this.preparedStatement = 
+				(autoIncrementID!=null && !EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) 
+						?connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS):connection.prepareStatement(sql) ;
 	}
 	
 	/**
@@ -111,12 +115,12 @@ public class PreparedStatementHandlerImpl extends AbstractStatementHandler{
 			setParameters(parameters);
 			result.setRow(preparedStatement.executeUpdate());
 			
-			if(returnID.getOracleSequenceName() == null) {
+			if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
+				result.setAutoIncrementIDValue(getOracleSeqCurrval(preparedStatement.getConnection().createStatement()));
+			}else {
 				ResultSet id = preparedStatement.getGeneratedKeys();
 				if(id.next())
-					result.setId(id.getInt(1));
-			}else {
-				result.setId(getOracleSeqCurval(preparedStatement.getConnection().createStatement()));
+					result.setAutoIncrementIDValue(id.getInt(1));
 			}
 			return result;
 		} catch (Exception e) {

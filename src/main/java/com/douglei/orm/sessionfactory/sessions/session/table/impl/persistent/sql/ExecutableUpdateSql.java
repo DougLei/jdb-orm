@@ -1,6 +1,7 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,27 +17,31 @@ public class ExecutableUpdateSql extends ExecutableTableSql{
 	private boolean updateNullValue;
 	
 	public ExecutableUpdateSql(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {
-		setBaseInfo(tableMetadata, objectMap);
+		super(tableMetadata, objectMap);
 		this.updateNullValue = updateNullValue;
-		initial();
+		installSQL();
 	}
 
-	@Override
-	protected void initial() {
+	/**
+	 * 组装UpdateSQL
+	 */
+	protected void installSQL() {
 		StringBuilder updateSql = new StringBuilder(300);
 		updateSql.append("update ").append(tableMetadata.getName()).append(" set ");
 		
-		parameters = new ArrayList<Object>(objectMap.size());
-		Map<String, ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns_();
+		super.parameters = new ArrayList<Object>(objectMap.size());
+		
+		// 获取主键列名集合
+		List<String> primaryKeyColumnNames = tableMetadata.getPrimaryKeyConstraint().getColumnNameList();
 		
 		// 拼装update set sql语句
 		ColumnMetadata column = null;
 		for (Entry<String, Object> entry : objectMap.entrySet()) {
-			if(primaryKeyColumns.containsKey(entry.getKey()))
-				continue;
-			
 			if(updateNullValue || entry.getValue() != null) {
-				column = tableMetadata.getColumns_().get(entry.getKey());
+				column = tableMetadata.getColumnMap4Code().get(entry.getKey());
+				if(primaryKeyColumnNames.contains(column.getName())) // 主键数据不在这里处理
+					continue;
+				
 				updateSql.append(column.getName()).append("=?,");
 				parameters.add(new InputSqlParameter(entry.getValue(), column.getDBDataType()));
 			}
@@ -45,17 +50,16 @@ public class ExecutableUpdateSql extends ExecutableTableSql{
 		
 		// 拼装where sql语句
 		updateSql.append(" where ");
-		Object value = null;
-		for (ColumnMetadata pkColumn : primaryKeyColumns.values()) {
-			value = objectMap.get(pkColumn.getCode());
+		for (String columnName : primaryKeyColumnNames) {
+			updateSql.append(columnName).append("=?");
 			
-			updateSql.append(pkColumn.getName()).append("=?");
-			parameters.add(new InputSqlParameter(value, pkColumn.getDBDataType()));
+			column = tableMetadata.getColumnMap4Name().get(columnName);
+			parameters.add(new InputSqlParameter(objectMap.get(column.getCode()), column.getDBDataType()));
 			
 			updateSql.append(" and ");
 		}
 		updateSql.setLength(updateSql.length()-5);
 		
-		this.sql = updateSql.toString();
+		super.sql = updateSql.toString();
 	}
 }

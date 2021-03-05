@@ -1,8 +1,6 @@
 package com.douglei.orm.dialect.impl.oracle.datatype.mapping;
 
-import com.douglei.orm.dialect.datatype.db.DBDataType;
 import com.douglei.orm.dialect.datatype.mapping.impl.AbstractDatetimeDataType;
-import com.douglei.orm.dialect.impl.oracle.datatype.db.Date;
 
 /**
  * 
@@ -11,7 +9,7 @@ import com.douglei.orm.dialect.impl.oracle.datatype.db.Date;
 public class DatetimeDataType extends AbstractDatetimeDataType {
 
 	@Override
-	public DBDataType mappedDBDataType(int length, int precision) {
-		return Date.getSingleton();
+	public String mappedDBDataType(int length, int precision) {
+		return "DATE";
 	}
 }

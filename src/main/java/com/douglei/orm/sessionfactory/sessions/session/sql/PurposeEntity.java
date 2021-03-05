@@ -1,7 +1,7 @@
 package com.douglei.orm.sessionfactory.sessions.session.sql;
 
 /**
- * sql的用途实体
+ * 
  * @author DougLei
  */
 public abstract class PurposeEntity {

@@ -18,18 +18,14 @@ import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.impl.table.metadata.AutoincrementPrimaryKey;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintType;
-import com.douglei.orm.mapping.impl.table.metadata.PrimaryKeyHandlerMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.impl.table.pk.PrimaryKeyHandler;
-import com.douglei.orm.mapping.impl.table.pk.PrimaryKeyHandlerContainer;
-import com.douglei.orm.mapping.impl.table.pk.SequencePrimaryKeyHandler;
 import com.douglei.orm.mapping.metadata.AbstractMetadataParser;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.orm.mapping.validator.Validator;
-import com.douglei.orm.mapping.validator.ValidatorParserContainer;
 import com.douglei.orm.mapping.validator.ValidatorUtil;
 import com.douglei.orm.sql.statement.util.NameConvertUtil;
 import com.douglei.tools.StringUtil;
@@ -97,61 +93,53 @@ class TableMappingParser extends MappingParser{
 		if(constraintElements.isEmpty())
 			return;
 		
-		ConstraintMetadata primaryKeyConstraint = null;
+		boolean existsPK = false;
 		List<ConstraintMetadata> constraints = new ArrayList<ConstraintMetadata>(constraintElements.size());
 		for (Element constraintElement : constraintElements) {
 			ConstraintMetadata constraint = constraintMetadataParser.parse(tableMetadata, constraintElement);
 			if(constraints.indexOf(constraint) >=0) 
 				throw new MetadataParseException(tableMetadata.getName()+"表中存在重复的约束名"+constraint.getName());
 			
-			if(constraint.getType() == ConstraintType.PRIMARY_KEY) {
-				if(primaryKeyConstraint != null)
+			if(constraint.getType().isPrimaryKey()) {
+				if(existsPK)
 					throw new MetadataParseException(tableMetadata.getName()+"表中配置了多个主键约束");
-				primaryKeyConstraint = constraint;
+				existsPK = true;
+				
+				// 记录自增主键关联的列名
+				if(constraint.getType() == ConstraintType.AUTO_INCREMENT_PRIMARY_KEY)
+					tableMetadata.setAutoincrementPrimaryKey(new AutoincrementPrimaryKey(constraint.getColumnNameList().get(0), constraint.getSequenceName()));
 			}
 			constraints.add(constraint);
 		}
-		tableMetadata.setConstraints(constraints);
 		
-		// 如果存在主键约束, 设置主键处理器
-		if(primaryKeyConstraint != null)
-			setPrimaryKeyHandlerMetadata(tableElement.element("primaryKeyHandler"), primaryKeyConstraint);
+		// 针对处理主键约束和默认值约束: 两种约束互斥, 且会影响column的nullable值; 其他三种约束不做处理
+		boolean pk = false, df = false; // 当前列是否存在pk约束, 默认值约束
+		for(ColumnMetadata column: tableMetadata.getColumns()) {
+			for(ConstraintMetadata constraint: constraints) {
+				if(constraint.getType() == ConstraintType.PRIMARY_KEY) {
+					if(constraint.getColumnNameList().contains(column.getName())) {
+						if(df)
+							throw new MetadataParseException(tableMetadata.getName()+"表中的"+column.getName()+"列, 同时存在主键约束和默认值约束");
+						pk = true;
+						column.setNullable(false);
+					}
+				}else if(constraint.getType() == ConstraintType.DEFAULT_VALUE) {
+					if(constraint.getColumnNameList().contains(column.getName())) {
+						if(pk)
+							throw new MetadataParseException(tableMetadata.getName()+"表中的"+column.getName()+"列, 同时存在主键约束和默认值约束");
+						df = true;
+						column.setNullable(true);
+					}
+				}
+			}
+			pk = df = false;
+		}
+		
+		// 记录约束
+		tableMetadata.setConstraints(constraints);
 	}
 	
 	/**
-	 * 设置主键处理器元数据
-	 * @param element
-	 * @param primaryKeyConstraint
-	 */
-	private void setPrimaryKeyHandlerMetadata(Element element, ConstraintMetadata primaryKeyConstraint) {
-		if(element == null)
-			return;
-		
-		PrimaryKeyHandler handler = PrimaryKeyHandlerContainer.get(element.attributeValue("type"));
-		if(!handler.supportCompositeKeys() && primaryKeyConstraint.getColumnNames().size() > 1) 
-			throw new MetadataParseException(tableMetadata.getName()+"表中的"+handler.getType() +"主键处理器不支持处理联合主键");
-		
-		// 如果是序列主键处理器, 且是Oracle数据库, 则处理下序列名
-		String value = element.attributeValue("value");
-		if(handler.getClass() == SequencePrimaryKeyHandler.class && EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
-			int maxLength = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getNameMaxLength();
-			
-			// 未配置序列名, 则自动生成一个序列名
-			if(StringUtil.isEmpty(value)) {
-				value = "SEQ_" + tableMetadata.getName();
-				if(value.length() > maxLength) {
-					StringBuilder sb = new StringBuilder(value.length());
-					sb.append("SEQ_");
-					constraintMetadataParser.appendCompressedName(sb, tableMetadata.getName());
-					value = sb.toString();
-				}
-			}
-			if(value.length() > maxLength)
-				throw new MetadataParseException("数据库序列名["+value+"]长度超长, 长度应小于等于"+maxLength);
-		}
-		tableMetadata.setPrimaryKeyHandlerMetadata(new PrimaryKeyHandlerMetadata(handler.getType(), value));
-	}
-	
 	/**
 	 * 添加验证器
 	 * @param element
@@ -167,7 +155,7 @@ class TableMappingParser extends MappingParser{
 		
 		List<Validator> validators = null;
 		for (Element validatorElement : validatorElements) {
-			ColumnMetadata columnMetadata = tableMetadata.getColumnMapByName().get(validatorElement.attributeValue("name"));
+			ColumnMetadata columnMetadata = tableMetadata.getColumnMap4Name().get(validatorElement.attributeValue("name"));
 			if(columnMetadata == null)
 				throw new MetadataParseException(tableMetadata.getName()+"表中不存在名为"+validatorElement.attributeValue("name")+"的列, 无法为其添加验证器");
 			
@@ -181,7 +169,7 @@ class TableMappingParser extends MappingParser{
 				if("name".equals(attribute.getName()))
 					continue;
 				
-				Validator validator = ValidatorParserContainer.get(attribute.getName()).parse(attribute.getValue());
+				Validator validator = ValidatorUtil.get(attribute.getName()).parse(attribute.getValue());
 				if(validator == null)
 					continue;
 				
@@ -193,7 +181,7 @@ class TableMappingParser extends MappingParser{
 			if(validators == null) 
 				continue;
 			
-			ValidatorUtil.sortByPriority(validators);
+			ValidatorUtil.sort(validators);
 			columnMetadata.setValidators(validators);
 			validators = null;
 		}
@@ -286,21 +274,23 @@ class ConstraintMetadataParser {
 			throw new MetadataParseException("<table><constraints><constraint>下至少配置一个<column>");
 		
 		ConstraintType type = ConstraintType.valueOf(element.attributeValue("type").toUpperCase());
-		if(attributes.size() > 1 && !type.supportMultiColumn()) 
-			throw new MetadataParseException(type.name()+"约束不支持绑定多个列");
+		if(type == ConstraintType.PRIMARY_KEY && "true".equalsIgnoreCase(element.attributeValue("isAutoIncrement")))
+			type = ConstraintType.AUTO_INCREMENT_PRIMARY_KEY;
+		if((attributes.size() > 1 && !type.supportMultiColumn()) ) 
+			throw new MetadataParseException(type.getSqlKey()+"约束不支持绑定多个列");
 		
 		// 记录当前约束要绑定的列名集合
 		List<String> columnNames = new ArrayList<String>(attributes.size());
 		for (Attribute attribute : attributes) {
 			String columnName = attribute.getValue().toUpperCase();
-			if(!tableMetadata.getColumnMapByName().containsKey(columnName))
+			if(!tableMetadata.getColumnMap4Name().containsKey(columnName))
 				throw new MetadataParseException(tableMetadata.getName()+"表中不存在名为"+columnName+"的列, 无法为其设置"+type.name()+"约束");
 			if(columnNames.indexOf(columnName) >= 0) 
 				throw new MetadataParseException(tableMetadata.getName()+"表中的"+type.name()+"约束, 存在重复的列名" + columnName);
 			columnNames.add(columnName);
 		}
 		
-		// 解析name
+		// 解析约束名, 未配置时自动生成一个
 		int maxLength = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getNameMaxLength();
 		String name = element.attributeValue("name");
 		if(StringUtil.isEmpty(name)) {
@@ -328,15 +318,36 @@ class ConstraintMetadataParser {
 		// 创建ConstraintMetadata实例, 并根据类型设置相应的值
 		ConstraintMetadata constraint = new ConstraintMetadata(name.toUpperCase(), type, columnNames);
 		switch(type) {
+			case AUTO_INCREMENT_PRIMARY_KEY:
+				// 如果是Oracle数据库, 解析序列名, 未配置时自动生成一个
+				if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
+					String sequenceName = element.attributeValue("sequenceName");
+					
+					if(StringUtil.isEmpty(sequenceName)) {
+						sequenceName = "SEQ_" + tableMetadata.getName();
+						if(sequenceName.length() > maxLength) {
+							StringBuilder sb = new StringBuilder(sequenceName.length());
+							sb.append("SEQ_");
+							appendCompressedName(sb, tableMetadata.getName());
+							sequenceName = sb.toString();
+						}
+					}
+					if(sequenceName.length() > maxLength)
+						throw new MetadataParseException("Oracle数据库序列名["+sequenceName+"]长度超长, 长度应小于等于"+maxLength);
+					constraint.setSequenceName(sequenceName);
+				}
+				break;
 			case PRIMARY_KEY:
 			case UNIQUE:
 				break;
 			case DEFAULT_VALUE:
+				constraint.setDefaultValue(element.attributeValue("defaultValue"));
+				break;
 			case CHECK:
-				constraint.setValue(element.attributeValue("value"));
+				constraint.setCheck(element.attributeValue("check"));
 				break;
 			case FOREIGN_KEY:
-				constraint.setFkValue(element.attributeValue("fkTableName"), element.attributeValue("fkColumnName"));
+				constraint.setTableAndColumn(element.attributeValue("table"), element.attributeValue("column"));
 				break;
 		}
 		return constraint;
@@ -347,7 +358,7 @@ class ConstraintMetadataParser {
 	 * @param sb
 	 * @param name
 	 */
-	public void appendCompressedName(StringBuilder sb, String name) {
+	private void appendCompressedName(StringBuilder sb, String name) {
 		for(String chunk : name.split("_")) {
 			if(chunk.length() == 0)
 				continue;

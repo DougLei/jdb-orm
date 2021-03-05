@@ -4,28 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
-import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.AlreadyDeletedException;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Identity;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.OperationState;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Operation;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.RepeatedPersistentObjectException;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.UnsupportUpdatePersistentWithoutPrimaryKeyException;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.impl.SqlSessionImpl;
-import com.douglei.orm.sql.ReturnID;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
+import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
-import com.douglei.tools.reflect.ConstructorUtil;
+import com.douglei.tools.reflect.ClassUtil;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
@@ -34,38 +28,17 @@ import com.douglei.tools.reflect.IntrospectorUtil;
  */
 public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private static final Logger logger = LoggerFactory.getLogger(TableSessionImpl.class);
+	private Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
 	
-	private boolean enableTalbeSessionCache;// 是否启用TableSession缓存
-	private final Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
-	private Map<String, Map<Identity, PersistentObject>> persistentObjectCache;
-	
-	public TableSessionImpl(ConnectionWrapper connection) {
-		super(connection);
-		this.enableTalbeSessionCache = environment.getEnvironmentProperty().enableTableSessionCache();
-		logger.debug("是否开启TableSession缓存: {}", enableTalbeSessionCache);
-		if(enableTalbeSessionCache) 
-			persistentObjectCache= new HashMap<String, Map<Identity, PersistentObject>>(8);
+	public TableSessionImpl(ConnectionWrapper connection, Environment environment) {
+		super(connection, environment);
 	}
 	
 	/**
-	 * 获取缓存集合
+	 * 获取TableMetadata实例
 	 * @param code
-	 * @param cacheMap
 	 * @return
 	 */
-	private Map<Identity, PersistentObject> getCache(String code){
-		if(enableTalbeSessionCache) {
-			logger.debug("获取code={}的持久化缓存集合", code);
-			Map<Identity, PersistentObject> cache = persistentObjectCache.get(code);
-			if(cache == null) {
-				cache = new HashMap<Identity, PersistentObject>(8);
-				persistentObjectCache.put(code, cache);
-			}
-			return cache;
-		}
-		return null;
-	}
-	
 	private TableMetadata getTableMetadata(String code) {
 		TableMetadata tableMetadata = null;
 		if(tableMetadataCache.isEmpty() || (tableMetadata = tableMetadataCache.get(code)) == null) {
@@ -75,26 +48,16 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		return tableMetadata;
 	}
 	
+	// -----------------------------------------------------------------------------------------------
+	// 保存
+	// -----------------------------------------------------------------------------------------------
 	/**
-	 * 将要【保存的持久化对象】放到缓存中
-	 * @param persistent
+	 * 保存对象
+	 * @param tableMetadata
+	 * @param object
 	 */
-	private void putInsertPersistentObjectCache(PersistentObject persistent) {
-		if(enableTalbeSessionCache) {
-			String code = persistent.getTableMetadata().getCode();
-			Map<Identity, PersistentObject> cache = getCache(code);
-			
-			if(!cache.isEmpty() && cache.containsKey(persistent.getId())) 
-				throw new RepeatedPersistentObjectException("保存的对象["+code+"]出现重复的id值: existsObject=["+cache.get(persistent.getId())+"], thisObject=["+persistent+"]");
-			cache.put(persistent.getId(), persistent);
-		}else {
-			executePersistentObject(persistent);
-		}
-	}
-	
-	private void save_(TableMetadata table, Object object) {
-		PersistentObject persistent = new PersistentObject(table, object, OperationState.INSERT, false);
-		putInsertPersistentObjectCache(persistent);
+	private void save_(TableMetadata tableMetadata, Object object) {
+		executePersistentObject(new PersistentObject(tableMetadata, object, Operation.INSERT));
 	}
 	
 	@Override
@@ -104,8 +67,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void save(List<? extends Object> objects) {
-		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> save_(table, object));
+		TableMetadata tableMetadata = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> save_(tableMetadata, object));
 	}
 	
 	@Override
@@ -115,48 +78,26 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void save(String tableName, List<Map<String, Object>> objectMaps) {
-		TableMetadata table = getTableMetadata(tableName.toUpperCase());
-		objectMaps.forEach(objectMap -> save_(table, objectMap));
+		TableMetadata tableMetadata = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> save_(tableMetadata, objectMap));
 	}
 	
-	
+	// -----------------------------------------------------------------------------------------------
+	// 修改
+	// -----------------------------------------------------------------------------------------------
 	/**
-	 * 将要【修改的持久化对象】放到缓存中
-	 * @param object
+	 * 修改对象
 	 * @param tableMetadata
+	 * @param object
 	 * @param updateNullValue
-	 * @param cache
 	 */
-	private void putUpdatePersistentObjectCache(Object object, TableMetadata tableMetadata, boolean updateNullValue, Map<Identity, PersistentObject> cache) {
-		if(tableMetadata.getPrimaryKeyColumns_() == null) 
-			throw new UnsupportUpdatePersistentWithoutPrimaryKeyException(tableMetadata.getCode()); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
+	private void update_(TableMetadata tableMetadata, Object object, boolean updateNullValue) {
+		if(tableMetadata.getPrimaryKeyConstraint() == null) 
+			throw new SessionExecutionException("不支持update没有主键的表数据 ["+tableMetadata.getCode()+"]"); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
 		
-		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.UPDATE, updateNullValue);
-		if(enableTalbeSessionCache) {
-			if(!cache.isEmpty() && cache.containsKey(persistentObject.getId())) {
-				logger.debug("缓存中存在要修改的数据持久化对象");
-				persistentObject = cache.get(persistentObject.getId());
-				switch(persistentObject.getOperationState()) {
-					case INSERT:
-					case UPDATE:
-						persistentObject.setOriginObject(object);
-						persistentObject.setUpdateNullValue(updateNullValue);
-						break;
-					case DELETE:
-						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行update");
-				}
-			}else {
-				logger.debug("缓存中不存在要修改的数据持久化对象");
-				cache.put(persistentObject.getId(), persistentObject);
-			}
-		}else {
-			executePersistentObject(persistentObject);
-		}
-	}
-	
-	// update方法的内部实现
-	private void update_(TableMetadata table, Object object, boolean updateNullValue) {
-		putUpdatePersistentObjectCache(object, table, updateNullValue, getCache(table.getCode()));
+		PersistentObject persistent = new PersistentObject(tableMetadata, object, Operation.UPDATE);
+		persistent.setUpdateNullValue(updateNullValue);
+		executePersistentObject(persistent);
 	}
 	
 	@Override
@@ -166,8 +107,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void update(List<? extends Object> objects, boolean updateNullValue) {
-		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> update_(table, object, updateNullValue));
+		TableMetadata tableMetadata = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> update_(tableMetadata, object, updateNullValue));
 	}
 	
 	@Override
@@ -177,46 +118,20 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void update(String tableName, List<Map<String, Object>> objectMaps, boolean updateNullValue) {
-		TableMetadata table = getTableMetadata(tableName.toUpperCase());
-		objectMaps.forEach(objectMap -> update_(table, objectMap, updateNullValue));
+		TableMetadata tableMetadata = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> update_(tableMetadata, objectMap, updateNullValue));
 	}
 	
-
+	// -----------------------------------------------------------------------------------------------
+	// 删除
+	// -----------------------------------------------------------------------------------------------
 	/**
-	 * 将要【删除的持久化对象】放到缓存中
-	 * @param object
+	 * 删除对象
 	 * @param tableMetadata
-	 * @param cache
+	 * @param object
 	 */
-	private void putDeletePersistentObjectCache(Object object, TableMetadata tableMetadata, Map<Identity, PersistentObject> cache) {
-		PersistentObject persistentObject = new PersistentObject(tableMetadata, object, OperationState.DELETE, false);
-		if(enableTalbeSessionCache) {
-			if(!cache.isEmpty() && cache.containsKey(persistentObject.getId())) {
-				logger.debug("缓存中存在要删除的数据持久化对象");
-				persistentObject = cache.get(persistentObject.getId());
-				switch(persistentObject.getOperationState()) {
-					case INSERT:
-						logger.debug("将create状态的数据直接从cache中移除, 完成delete");
-						cache.remove(persistentObject.getId());
-						return;
-					case UPDATE:
-						logger.debug("将update状态的数据, 改成delete状态, 完成delete");
-						persistentObject.setOperationState(OperationState.DELETE);
-						return;
-					case DELETE:
-						throw new AlreadyDeletedException("持久化对象["+persistentObject.toString()+"]已经被删除, 无法进行delete");
-				}
-			}else {
-				logger.debug("缓存中不存在要删除的数据持久化对象");
-				cache.put(persistentObject.getId(), persistentObject);
-			}
-		}else {
-			executePersistentObject(persistentObject);
-		}
-	}
-	
-	private void delete_(TableMetadata table, Object object) {
-		putDeletePersistentObjectCache(object, table, getCache(table.getCode()));
+	private void delete_(TableMetadata tableMetadata, Object object) {
+		executePersistentObject(new PersistentObject(tableMetadata, object, Operation.DELETE));
 	}
 
 	@Override
@@ -226,8 +141,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void delete(List<? extends Object> objects) {
-		TableMetadata table = getTableMetadata(objects.get(0).getClass().getName());
-		objects.forEach(object -> delete_(table, object));
+		TableMetadata tableMetadata = getTableMetadata(objects.get(0).getClass().getName());
+		objects.forEach(object -> delete_(tableMetadata, object));
 	}
 	
 	@Override
@@ -237,55 +152,39 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	
 	@Override
 	public void delete(String tableName, List<Map<String, Object>> objectMaps) {
-		TableMetadata table = getTableMetadata(tableName.toUpperCase());
-		objectMaps.forEach(objectMap -> delete_(table, objectMap));
+		TableMetadata tableMetadata = getTableMetadata(tableName.toUpperCase());
+		objectMaps.forEach(objectMap -> delete_(tableMetadata, objectMap));
 	}
 
-	// 刷新持久化对象到数据库
-	private void flushPersistentObjectCache() throws SessionExecutionException {
-		if(tableMetadataCache.size() > 0)
-			tableMetadataCache.clear();
-		
-		if(enableTalbeSessionCache && persistentObjectCache.size() > 0) {
-			Map<Identity, PersistentObject> map = null;
-			Set<String> codes = persistentObjectCache.keySet();
-			try {
-				for (String code : codes) {
-					map = persistentObjectCache.get(code);
-					if(map.size() > 0) {
-						for(PersistentObject persistentObject: map.values()) 
-							executePersistentObject(persistentObject);
-					}
-				}
-			} catch(SessionExecutionException see){
-				throw see;
-			}finally {
-				persistentObjectCache.clear();
-			}
-		}
-	}
-	
+	// -----------------------------------------------------------------------------------------------
+	// 执行
+	// -----------------------------------------------------------------------------------------------
 	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
+		TableMetadata tableMetadata = persistentObject.getTableMetadata();
+		
 		ExecutableTableSql executableTableSql = persistentObject.getExecutableTableSql();
-		if(persistentObject.getOperationState() == OperationState.INSERT && persistentObject.getTableMetadata().getPrimaryKeySequence() != null) {
+		if(persistentObject.getOperation() == Operation.INSERT && tableMetadata.getAutoincrementPrimaryKey() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
-			TableMetadata tableMetadata = persistentObject.getTableMetadata();
-			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new ReturnID(tableMetadata.getPrimaryKeySequence().getName()));
+			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new AutoIncrementID(tableMetadata.getAutoincrementPrimaryKey().getSequenceName()));
 			// 将执行insert语句后生成的序列值, 赋给源实例
-			IntrospectorUtil.setProperyValue(persistentObject.getOriginObject(), tableMetadata.getPrimaryKeyColumns_().keySet().iterator().next(), result.getId());
+			String code = tableMetadata.getColumnMap4Name().get(tableMetadata.getAutoincrementPrimaryKey().getColumn()).getCode();
+			IntrospectorUtil.setValue(code, result.getAutoIncrementIDValue(), persistentObject.getOriginObject());
 		}else {
 			super.executeUpdate(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues());
 		}
 	}
-	
+
+	// -----------------------------------------------------------------------------------------------
+	// 查询
+	// -----------------------------------------------------------------------------------------------
 	@Override
 	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
 		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
-		List<T> listT = new ArrayList<T>(resultListMap.size());
-		for (Map<String, Object> resultMap : resultListMap) {
-			listT.add(map2Class(tableMetadata, targetClass, resultMap));
-		}
-		return listT;
+		List<T> targetList = new ArrayList<T>(resultListMap.size());
+		for (Map<String, Object> resultMap : resultListMap) 
+			targetList.add(map2Class(tableMetadata, targetClass, resultMap));
+		
+		return targetList;
 	}
 
 	@Override
@@ -302,28 +201,27 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> T map2Class(TableMetadata tableMetadata, Class<T> targetClass, Map<String, Object> resultMap) {
-		ColumnMetadata column = null;
-		Set<String> codes = tableMetadata.getColumns_().keySet();
-		for (String code : codes) {
-			column = tableMetadata.getColumns_().get(code);
+		tableMetadata.getColumnMap4Code().forEach((code, column) -> {
 			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
-		}
-		return (T) IntrospectorUtil.setProperyValues(ConstructorUtil.newInstance(targetClass), resultMap);
+		});
+		
+		Object object = ClassUtil.newInstance(targetClass);
+		IntrospectorUtil.setValues(resultMap, object);
+		return (T) object;
 	}
-	
+
+	// -----------------------------------------------------------------------------------------------
+	// 关闭
+	// -----------------------------------------------------------------------------------------------
 	@Override
 	public void close() {
 		if(!isClosed) {
 			if(logger.isDebugEnabled()) 
 				logger.debug("close {}", getClass().getName());
 			
-			try {
-				flushPersistentObjectCache();
-			} catch(SessionExecutionException e){
-				throw e;
-			}finally {
-				super.close();
-			}
+			if(tableMetadataCache.size() > 0) 
+				tableMetadataCache.clear();
+			super.close();
 		}
 	}
 }

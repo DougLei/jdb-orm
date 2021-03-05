@@ -7,15 +7,8 @@ import com.douglei.orm.dialect.datatype.db.impl.AbstractCharacter;
  * @author DougLei
  */
 public class NVarchar extends AbstractCharacter{
-	private static final NVarchar singleton = new NVarchar();
-	public static NVarchar getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private NVarchar() {
+	public NVarchar() {
 		super("NVARCHAR", -9, 4000);
 	}
 }

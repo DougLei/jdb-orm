@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 
 /**
  * 
@@ -22,8 +22,8 @@ class ContentValidator {
 	 * @param sqlParameter
 	 * @return
 	 */
-	public ValidationResult validate(Object sqlParameter) {
-		ValidationResult result = null;
+	public ValidateFailResult validate(Object sqlParameter) {
+		ValidateFailResult result = null;
 		for (SqlNode sqlNode : sqlNodes) {
 			if(sqlNode.matching(sqlParameter)) {
 				if((result = sqlNode.validateParameter(sqlParameter)) != null) 

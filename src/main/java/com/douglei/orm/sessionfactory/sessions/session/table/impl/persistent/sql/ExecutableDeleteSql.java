@@ -1,7 +1,6 @@
 package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
@@ -16,29 +15,34 @@ public class ExecutableDeleteSql extends ExecutableTableSql{
 	
 	public ExecutableDeleteSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		super(tableMetadata, objectMap);
+		installSQL();
 	}
 
-	@Override
-	protected void initial() {
+	/**
+	 * 组装DeleteSQL
+	 */
+	private void installSQL() {
 		StringBuilder deleteSql = new StringBuilder(300);
 		deleteSql.append("delete ").append(tableMetadata.getName()).append(" where ");
 		
-		if(tableMetadata.getPrimaryKeyColumns_() == null) {
+		if(tableMetadata.getPrimaryKeyConstraint() == null) {
 			setWhereSqlStatementWhenUnExistsPrimaryKeys(deleteSql);
 		}else {
 			setWhereSqlStatementWhenExistsPrimaryKeys(deleteSql);
 		}
-		this.sql = deleteSql.toString();
+		super.sql = deleteSql.toString();
 	}
 	
 	// 当存在primaryKey时, 拼装where sql语句
 	private void setWhereSqlStatementWhenExistsPrimaryKeys(StringBuilder deleteSql) {
-		Collection<ColumnMetadata> primaryKeyColumns = tableMetadata.getPrimaryKeyColumns_().values();
-		parameters = new ArrayList<Object>(primaryKeyColumns.size());
+		super.parameters = new ArrayList<Object>(tableMetadata.getPrimaryKeyConstraint().getColumnNameList().size());
 		
-		for (ColumnMetadata pkColumn : primaryKeyColumns) {
-			deleteSql.append(pkColumn.getName()).append("=?");
-			parameters.add(new InputSqlParameter(objectMap.get(pkColumn.getCode()), pkColumn.getDBDataType()));
+		ColumnMetadata column = null;
+		for (String columnName : tableMetadata.getPrimaryKeyConstraint().getColumnNameList()) {
+			deleteSql.append(columnName).append("=?");
+			
+			column = tableMetadata.getColumnMap4Name().get(columnName);
+			parameters.add(new InputSqlParameter(objectMap.get(column.getCode()), column.getDBDataType()));
 			
 			deleteSql.append(" and ");
 		}
@@ -47,11 +51,10 @@ public class ExecutableDeleteSql extends ExecutableTableSql{
 	
 	// 当不存在primaryKey时, 拼装where sql语句; 将所有列值组装成条件
 	private void setWhereSqlStatementWhenUnExistsPrimaryKeys(StringBuilder deleteSql) {
-		Collection<ColumnMetadata> columns = tableMetadata.getColumns_().values();
-		parameters = new ArrayList<Object>(columns.size());
+		super.parameters = new ArrayList<Object>(tableMetadata.getColumns().size());
 		
 		Object value = null;
-		for (ColumnMetadata column : columns) {
+		for (ColumnMetadata column : tableMetadata.getColumns()) {
 			value = objectMap.get(column.getCode());
 			
 			if(value == null) {

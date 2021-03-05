@@ -14,15 +14,8 @@ import com.douglei.orm.sql.statement.util.ResultSetUtil;
  * @author DougLei
  */
 public class Cursor extends DBDataType{
-	private static final Cursor singleton = new Cursor();
-	public static Cursor getSingleton() {
-		return singleton;
-	}
-	public Object readResolve() {
-		return singleton;
-	}
 	
-	private Cursor() {
+	public Cursor() {
 		super("CURSOR", -10);
 	}
 	

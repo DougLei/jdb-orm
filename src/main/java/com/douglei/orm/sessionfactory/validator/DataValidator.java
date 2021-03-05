@@ -7,11 +7,11 @@ import java.util.Map;
 import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.mapping.validator.ValidationResult;
+import com.douglei.orm.mapping.validator.ValidateFailResult;
 import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
-import com.douglei.orm.sessionfactory.validator.table.mode.ValidateMode;
+import com.douglei.orm.sessionfactory.validator.table.handler.ValidateHandler;
 
 /**
  * 
@@ -30,11 +30,11 @@ public class DataValidator {
 	 * <p>
 	 * 在配置文件中配置了class时使用该方法
 	 * @param object
-	 * @param validateMode
+	 * @param validateHandler
 	 * @return
 	 */
-	public ValidationResult validate4TableMapping(Object object, ValidateMode validateMode) {
-		return validate4TableMapping_(object.getClass().getName(), object, validateMode);
+	public ValidateFailResult validate4TableMapping(Object object, ValidateHandler validateHandler) {
+		return validate4TableMapping_(object.getClass().getName(), object, validateHandler);
 	}
 	/**
 	 * 验证表映射数据
@@ -42,16 +42,16 @@ public class DataValidator {
 	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param object
-	 * @param validateMode
+	 * @param validateHandler
 	 * @return
 	 */
-	public ValidationResult validate4TableMapping(String tableName, Object object, ValidateMode validateMode) {
-		return validate4TableMapping_(tableName.toUpperCase(), object, validateMode);
+	public ValidateFailResult validate4TableMapping(String tableName, Map<String, Object> objectMap, ValidateHandler validateHandler) {
+		return validate4TableMapping_(tableName.toUpperCase(), objectMap, validateHandler);
 	}
 	// 验证表映射数据
-	private ValidationResult validate4TableMapping_(String code, Object object, ValidateMode validateMode) {
+	private ValidateFailResult validate4TableMapping_(String code, Object object, ValidateHandler validateHandler) {
 		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
-		return new PersistentObjectValidator(tableMetadata, validateMode).doValidate(object);
+		return new PersistentObjectValidator(tableMetadata, validateHandler).validate(object);
 	}
 	
 	/**
@@ -59,11 +59,11 @@ public class DataValidator {
 	 * <p>
 	 * 在配置文件中配置了class时使用该方法
 	 * @param objects
-	 * @param validateMode
+	 * @param validateHandler
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(List<? extends Object> objects, ValidateMode validateMode){
-		return validate4TableMapping_(objects.get(0).getClass().getName(), objects, validateMode);
+	public List<ValidateFailResult> validate4TableMapping(List<? extends Object> objects, ValidateHandler validateHandler){
+		return validate4TableMapping_(objects.get(0).getClass().getName(), objects, validateHandler);
 	}
 	
 	/**
@@ -72,31 +72,29 @@ public class DataValidator {
 	 * 在配置文件中没有配置class时使用该方法
 	 * @param tableName
 	 * @param objects
-	 * @param validateMode
+	 * @param validateHandler
 	 * @return
 	 */
-	public List<ValidationResult> validate4TableMapping(String tableName, List<Map<String, Object>> objectMaps, ValidateMode validateMode){
-		return validate4TableMapping_(tableName.toUpperCase(), objectMaps, validateMode);
+	public List<ValidateFailResult> validate4TableMapping(String tableName, List<Map<String, Object>> objectMaps, ValidateHandler validateHandler){
+		return validate4TableMapping_(tableName.toUpperCase(), objectMaps, validateHandler);
 	}
 	// 验证表映射数据
-	public List<ValidationResult> validate4TableMapping_(String code, List<? extends Object> objects, ValidateMode validateMode){
+	public List<ValidateFailResult> validate4TableMapping_(String code, List<? extends Object> objects, ValidateHandler validateHandler){
 		TableMetadata tableMetadata = mappingHandler.getTableMetadata(code);
-		PersistentObjectValidator persistentObjectValidator = new PersistentObjectValidator(tableMetadata, objects.size(), validateMode);
+		PersistentObjectValidator validator = new PersistentObjectValidator(tableMetadata, validateHandler);
 		
-		List<ValidationResult> validationResults = null;
-		ValidationResult validationResult;
-		short index = 0;
-		for (Object object : objects) {
-			validationResult = persistentObjectValidator.doValidate(object);
-			if(validationResult != null) {
-				validationResult.setIndex(index);
-				if(validationResults == null) 
-					validationResults = new ArrayList<ValidationResult>(objects.size());
-				validationResults.add(validationResult);
-			}
-			index++;
+		List<ValidateFailResult> failResults = null;
+		for(int i=0;i<objects.size();i++) {
+			ValidateFailResult failResult = validator.validate(objects.get(i));
+			if(failResult == null)
+				continue;
+			
+			failResult.setIndex(i);
+			if(failResults == null) 
+				failResults = new ArrayList<ValidateFailResult>(objects.size());
+			failResults.add(failResult);
 		}
-		return validationResults;
+		return failResults;
 	}
 	
 	// ------------------------------------------------------------------------------------------------------
@@ -113,7 +111,7 @@ public class DataValidator {
 	 * @param object
 	 * @return
 	 */
-	public ValidationResult validate4SqlMapping(Purpose purpose, String namespace, String name, Object object) {
+	public ValidateFailResult validate4SqlMapping(Purpose purpose, String namespace, String name, Object object) {
 		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		return new SqlValidator(purpose, sqlMetadata, name).validate(object);
 	}
@@ -131,19 +129,19 @@ public class DataValidator {
 	 * @param objects
 	 * @return
 	 */
-	public List<ValidationResult> validates4SqlMapping(Purpose purpose, String namespace, String name, List<? extends Object> objects){
+	public List<ValidateFailResult> validates4SqlMapping(Purpose purpose, String namespace, String name, List<? extends Object> objects){
 		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		SqlValidator sqlValidator = new SqlValidator(purpose, sqlMetadata, name);
 		
-		List<ValidationResult> validationResults = null;
-		ValidationResult validationResult;
+		List<ValidateFailResult> validationResults = null;
+		ValidateFailResult validationResult;
 		short index = 0;
 		for (Object object : objects) {
 			validationResult = sqlValidator.validate(object);
 			if(validationResult != null) {
 				validationResult.setIndex(index);
 				if(validationResults == null) 
-					validationResults = new ArrayList<ValidationResult>(objects.size());
+					validationResults = new ArrayList<ValidateFailResult>(objects.size());
 				validationResults.add(validationResult);
 			}
 			index++;
