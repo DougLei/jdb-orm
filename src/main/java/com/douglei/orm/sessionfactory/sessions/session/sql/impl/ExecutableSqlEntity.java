@@ -3,8 +3,9 @@ package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 import java.util.List;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
+import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
 import com.douglei.orm.sql.SqlStatement;
 
 /**
@@ -12,24 +13,51 @@ import com.douglei.orm.sql.SqlStatement;
  * @author DougLei
  */
 public class ExecutableSqlEntity {
-	private ExecutableSqls executableSqls;
+	private ExecutableSqlHolder executableSqlHolder;
 	private String name;
 	private ContentType type;
 	private SqlStatement sql;
-	private List<SqlParameterMetadata> parameters;
+	private List<SqlParameterNode> parameters;
 	private List<Object> parameterValues;
+	private AutoIncrementIDMetadata autoIncrementID;
 	
-	public ExecutableSqlEntity(ExecutableSqls executableSqls) {
-		this.executableSqls = executableSqls;
-		this.name = executableSqls.getCurrentName();
-		this.type = executableSqls.getCurrentType();
-		this.sql = new SqlStatement(EnvironmentContext.getDialect().getSqlStatementHandler(), executableSqls.getCurrentSql());
-		this.parameters = executableSqls.getCurrentParameters();
-		this.parameterValues = executableSqls.getCurrentParameterValues();
+	public ExecutableSqlEntity(ExecutableSqlHolder executableSqlHolder) {
+		this.executableSqlHolder = executableSqlHolder;
+		this.name = executableSqlHolder.getCurrentName();
+		this.type = executableSqlHolder.getCurrentType();
+		this.sql = new SqlStatement(EnvironmentContext.getEnvironment().getDialect().getSqlStatementHandler(), executableSqlHolder.getCurrentSql());
+		this.parameters = executableSqlHolder.getCurrentParameters();
+		this.parameterValues = executableSqlHolder.getCurrentParameterValues();
+		this.autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID();
 	}
 	
 	/**
-	 * 获取当前执行sql的名称
+	 * 获取可执行的sql数量
+	 * @return
+	 */
+	public int executableSqlCount() {
+		return executableSqlHolder.executableSqlCount();
+	}
+	
+	/**
+	 * 是否还有下一个要执行的sql, 如果有, 则移动到下一个sql
+	 * @return
+	 */
+	public boolean next() {
+		if(this.executableSqlHolder.next()) {
+			this.name = executableSqlHolder.getCurrentName();
+			this.type = executableSqlHolder.getCurrentType();
+			this.sql.reset(executableSqlHolder.getCurrentSql());
+			this.parameters = executableSqlHolder.getCurrentParameters();
+			this.parameterValues = executableSqlHolder.getCurrentParameterValues();
+			this.autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 获取sql的名称
 	 * @return
 	 */
 	public String getName() {
@@ -72,7 +100,7 @@ public class ExecutableSqlEntity {
 	 * 获取sql参数集合
 	 * @return 可能为null
 	 */
-	public List<SqlParameterMetadata> getParameters(){
+	public List<SqlParameterNode> getParameters(){
 		return parameters;
 	}
 	
@@ -85,26 +113,10 @@ public class ExecutableSqlEntity {
 	}
 	
 	/**
-	 * 获取可执行的sql数量
+	 * 获取sql自增主键值(配置)
 	 * @return
 	 */
-	public int executableSqlCount() {
-		return executableSqls.executableSqlCount();
-	}
-	
-	/**
-	 * 是否还有下一个要执行的sql, 如果有, 则移动到下一个sql
-	 * @return
-	 */
-	public boolean next() {
-		if(this.executableSqls.next()) {
-			this.name = executableSqls.getCurrentName();
-			this.type = executableSqls.getCurrentType();
-			this.sql.reset(executableSqls.getCurrentSql());
-			this.parameters = executableSqls.getCurrentParameters();
-			this.parameterValues = executableSqls.getCurrentParameterValues();
-			return true;
-		}
-		return false;
+	public AutoIncrementIDMetadata getCurrentAutoIncrementID() {
+		return autoIncrementID;
 	}
 }

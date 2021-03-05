@@ -6,26 +6,27 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
-import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
 
 /**
- * 可执行sql的
+ * 
  * @author DougLei
  */
-public class ExecutableSqls extends SqlContentExtractor implements IExecutableSql{
+public class ExecutableSqlHolder extends SqlContentExtractor implements IExecutableSql{
 	private int executableSqlCount; // 可执行的sql的数量
 	private int currentIndex; // 当前执行的sql的下标, 从0开始
 	private List<ExecutableSql> executableSqls;
 	
-	public ExecutableSqls(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
-		List<ContentMetadata> contents = getContents(purposeEntity.getPurpose(), name, sqlMetadata.getContents());
+	public ExecutableSqlHolder(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+		List<ContentMetadata> contentMetadatas = getContentMetadatas(purposeEntity.getPurpose(), name, sqlMetadata.getContents());
 		
-		executableSqls = new ArrayList<ExecutableSql>(executableSqlCount = contents.size());
-		for (ContentMetadata content : contents) 
-			executableSqls.add(new ExecutableSql(purposeEntity, content, sqlParameter));
+		this.executableSqlCount = contentMetadatas.size();
+		this.executableSqls = new ArrayList<ExecutableSql>(executableSqlCount);
+		for (ContentMetadata contentMetadata : contentMetadatas) 
+			this.executableSqls.add(new ExecutableSql(purposeEntity, contentMetadata, sqlParameter));
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class ExecutableSqls extends SqlContentExtractor implements IExecutableSq
 	 * 获取当前sql参数集合
 	 * @return
 	 */
-	public List<SqlParameterMetadata> getCurrentParameters() {
+	public List<SqlParameterNode> getCurrentParameters() {
 		return executableSqls.get(currentIndex).getParameters();
 	}
 	
@@ -74,10 +75,10 @@ public class ExecutableSqls extends SqlContentExtractor implements IExecutableSq
 	}
 	
 	/**
-	 * 获取当前sql自增主键值的配置
+	 * 获取当前sql自增主键值(配置)
 	 * @return
 	 */
-	public IncrementIdValueConfig getCurrentIncrementIdValueConfig() {
-		return executableSqls.get(currentIndex).getIncrementIdValueConfig();
+	public AutoIncrementIDMetadata getCurrentAutoIncrementID() {
+		return executableSqls.get(currentIndex).getAutoIncrementID();
 	}
 }

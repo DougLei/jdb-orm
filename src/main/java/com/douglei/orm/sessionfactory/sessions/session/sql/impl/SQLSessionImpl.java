@@ -15,15 +15,15 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.Mode;
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterMode;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.ProcedurePurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.QueryPurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose.UpdatePurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.ProcedurePurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.QueryPurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.UpdatePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
@@ -54,124 +54,98 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 		return sqlMetadata;
 	}
 	
-	// 获取ExecutableSqls
-	private ExecutableSqls getExecutableSqls(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter) {
+	// 获取ExecutableSqlHolder
+	private ExecutableSqlHolder getExecutableSqlHolder(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		return new ExecutableSqls(purposeEntity, sqlMetadata, name, sqlParameter);
+		return new ExecutableSqlHolder(purposeEntity, sqlMetadata, name, sqlParameter);
 	}
 
 	@Override
 	public List<Map<String, Object>> query(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.query(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.query(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
 	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.query(targetClass, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.query(targetClass, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
 	public List<Object[]> query_(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.query_(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.query_(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public Map<String, Object> uniqueQuery(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.uniqueQuery(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.uniqueQuery(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.uniqueQuery(targetClass, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.uniqueQuery(targetClass, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
 	public Object[] uniqueQuery_(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.uniqueQuery_(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.uniqueQuery_(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
 	public List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery(executableSqls.getCurrentSql(), startRow, length, executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.limitQuery(executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public <T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery(targetClass, executableSqls.getCurrentSql(), startRow, length, executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.limitQuery(targetClass, executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public List<Object[]> limitQuery_(String namespace, String name, int startRow, int length, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery_(executableSqls.getCurrentSql(), startRow, length, executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.limitQuery_(executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public long countQuery(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.countQuery(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.countQuery(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.pageQuery(pageNum, pageSize, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.pageQuery(pageNum, pageSize, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
 	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.pageQuery(targetClass, pageNum, pageSize, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.pageQuery(targetClass, pageNum, pageSize, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
-	@Override
-	public List<Map<String, Object>> recursiveQuery(int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.recursiveQuery(deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
-	}
-
-	@Override
-	public <T> List<T> recursiveQuery(Class<T> targetClass, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.recursiveQuery(targetClass, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
-	}
-	
-	@Override
-	public PageResult<Map<String, Object>> pageRecursiveQuery(int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.pageRecursiveQuery(pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
-	}
-
-	@Override
-	public <T> PageResult<T> pageRecursiveQuery(Class<T> targetClass, int pageNum, int pageSize, int deep, String pkColumnName, String parentPkColumnName, Object parentValue, String childNodeName, String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = getExecutableSqls(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.pageRecursiveQuery(targetClass, pageNum, pageSize, deep, pkColumnName, parentPkColumnName, parentValue, childNodeName, executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
-	}
-
 	// 执行update, 传入的sqlParameter为null或对象
 	private int executeUpdate_(String namespace, String name, Object sqlParameter) {
-		IncrementIdValueConfig incrementIdValueConfig;
-		InsertResult insertResult;
-		
-		ExecutableSqls executableSqls = getExecutableSqls(UpdatePurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(UpdatePurposeEntity.getSingleton(), namespace, name, sqlParameter);
 		int updateRowCount = 0;
+		AutoIncrementIDMetadata autoIncrementID = null;
 		do {
-			if(executableSqls.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executableSqls.getCurrentIncrementIdValueConfig()) != null) {
-				insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new AutoIncrementID(incrementIdValueConfig.getOracleSequenceName()));
+			if(executableSqlHolder.getCurrentType() == ContentType.INSERT && (autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID()) != null) {
+				InsertResult insertResult = super.executeInsert(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues(), new AutoIncrementID(autoIncrementID.getSequence()));
 				updateRowCount += insertResult.getRow();
-				IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
+				IntrospectorUtil.setValue(autoIncrementID.getKey(), insertResult.getAutoIncrementIDValue(), autoIncrementID.getTargetObject(sqlParameter));
 			}else {
-				updateRowCount += super.executeUpdate(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+				updateRowCount += super.executeUpdate(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 			}
-		}while(executableSqls.next());
+		}while(executableSqlHolder.next());
 		return updateRowCount;
 	}
 	
@@ -187,45 +161,43 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	
 	@Override
 	public int executeUpdates(String namespace, String name, List<? extends Object> sqlParameters) {
-		IncrementIdValueConfig incrementIdValueConfig;
-		InsertResult insertResult;
-		
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		int updateRowCount = 0;
-		ExecutableSqls executableSqls = null;
+		AutoIncrementIDMetadata autoIncrementID = null;
+		ExecutableSqlHolder executableSqlHolder = null;
 		for (Object sqlParameter : sqlParameters) {
-			executableSqls = new ExecutableSqls(UpdatePurposeEntity.getSingleton(), sqlMetadata, name, sqlParameter);
+			executableSqlHolder = new ExecutableSqlHolder(UpdatePurposeEntity.getSingleton(), sqlMetadata, name, sqlParameter);
 			do {
-				if(executableSqls.getCurrentType() == ContentType.INSERT && (incrementIdValueConfig = executableSqls.getCurrentIncrementIdValueConfig()) != null) {
-					insertResult = super.executeInsert(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues(), new AutoIncrementID(incrementIdValueConfig.getOracleSequenceName()));
+				if(executableSqlHolder.getCurrentType() == ContentType.INSERT && (autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID()) != null) {
+					InsertResult insertResult = super.executeInsert(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues(), new AutoIncrementID(autoIncrementID.getSequence()));
 					updateRowCount += insertResult.getRow();
-					IntrospectorUtil.setProperyValue(incrementIdValueConfig.getTargetObject(sqlParameter), incrementIdValueConfig.getKey(), insertResult.getId());
+					IntrospectorUtil.setValue(autoIncrementID.getKey(), insertResult.getAutoIncrementIDValue(), autoIncrementID.getTargetObject(sqlParameter));
 				}else {
-					updateRowCount += super.executeUpdate(executableSqls.getCurrentSql(), executableSqls.getCurrentParameterValues());
+					updateRowCount += super.executeUpdate(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 				}
-			}while(executableSqls.next());
+			}while(executableSqlHolder.next());
 		}
 		return updateRowCount;
 	}
 
 	@Override
 	public Object executeProcedure(String namespace, String name, Object sqlParameter) {
-		ExecutableSqls executableSqls = new ExecutableSqls(ProcedurePurposeEntity.getSingleton(), getSqlMetadata(namespace), name, null);
-		return executeProcedure(executableSqls.getCurrentSql(), executableSqls.getCurrentParameters(), sqlParameter);
+		ExecutableSqlHolder executableSqlHolder = new ExecutableSqlHolder(ProcedurePurposeEntity.getSingleton(), getSqlMetadata(namespace), name, null);
+		return executeProcedure(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameters(), sqlParameter);
 	}
 	
 	@Override
 	public List<Object> executeProcedures(String namespace, String name, List<? extends Object> sqlParameters) {
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
 		List<Object> objects = new ArrayList<Object>(sqlParameters.size());
-		ExecutableSqls executableSqls = new ExecutableSqls(ProcedurePurposeEntity.getSingleton(), sqlMetadata, name, null);
+		ExecutableSqlHolder executableSqlHolder = new ExecutableSqlHolder(ProcedurePurposeEntity.getSingleton(), sqlMetadata, name, null);
 		for (Object sqlParameter : sqlParameters) 
-			objects.add(executeProcedure(executableSqls.getCurrentSql(), executableSqls.getCurrentParameters(), sqlParameter));
+			objects.add(executeProcedure(executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameters(), sqlParameter));
 		return objects;
 	}
 	
 	// 执行存储过程
-	private Object executeProcedure(String callableSqlContent, List<SqlParameterMetadata> callableSqlParameters, Object sqlParameter) {
+	private Object executeProcedure(String callableSqlContent, List<SqlParameterNode> callableSqlParameters, Object sqlParameter) {
 		return super.executeProcedure(new ProcedureExecutor() {
 			@Override
 			public Object execute(Connection connection) throws ProcedureExecutionException {
@@ -239,12 +211,12 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						
 						short index = 1;
 						Object value = null;
-						for (SqlParameterMetadata sqlParameterMetadata : callableSqlParameters) {
+						for (SqlParameterNode sqlParameterMetadata : callableSqlParameters) {
 							if(!sqlParameterMetadata.isPlaceholder())
 								continue;
 							
 							logger.debug("执行的sql参数值为: index={}, parameter={}", index, sqlParameterMetadata);
-							if(sqlParameterMetadata.getMode() != Mode.OUT) {
+							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) {
 								value = sqlParameterMetadata.getValue(sqlParameter);
 								if(value == null) {
 									callableStatement.setNull(index, sqlParameterMetadata.getDBDataType().getSqlType());
@@ -253,7 +225,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 								}
 							}
 							
-							if(sqlParameterMetadata.getMode() != Mode.IN) {
+							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
 								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataType().getSqlType());
 								outParameterIndex[outParameterCount] = index;
 								outParameterCount++;
@@ -262,20 +234,20 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 						}
 					}
 					
-					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对procedureSupportDirectlyReturnResultSet=true的数据库有用
-					boolean procedureSupportDirectlyReturnResultSet = EnvironmentContext.getDialect().getObjectHandler().supportProcedureDirectlyReturnResultSet();
-					if(outParameterCount > 0 || procedureSupportDirectlyReturnResultSet) {
+					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对supportProcedureDirectlyReturnResultSet=true的数据库有用
+					boolean supportProcedureDirectlyReturnResultSet = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().supportProcedureDirectlyReturnResultSet();
+					if(outParameterCount > 0 || supportProcedureDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(8);
 						
 						if(outParameterCount > 0) {
-							SqlParameterMetadata sqlParameterMetadata = null;
+							SqlParameterNode sqlParameterMetadata = null;
 							for(short i=0;i<outParameterCount;i++) {
 								sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]-1);
 								outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
 							}
 						}
 						
-						if(procedureSupportDirectlyReturnResultSet) 
+						if(supportProcedureDirectlyReturnResultSet) 
 							processDirectlyReturnResultSet(outMap, callableStatement, returnResultSet);
 						return outMap;
 					}

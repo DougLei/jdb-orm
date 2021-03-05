@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.Purpose;
 
 /**
- * sql content元数据的提取器
+ * 
  * @author DougLei
  */
 public abstract class SqlContentExtractor {
@@ -21,8 +21,8 @@ public abstract class SqlContentExtractor {
 	 * @param contents
 	 * @return
 	 */
-	protected final List<ContentMetadata> getContents(Purpose purpose, String name, List<ContentMetadata> contents){
-		List<ContentMetadata> list = getContents_(purpose, name, contents);
+	protected final List<ContentMetadata> getContentMetadatas(Purpose purpose, String name, List<ContentMetadata> contents){
+		List<ContentMetadata> list = getContentMetadatas_(purpose, name, contents);
 		if(list.isEmpty())
 			throw new NullPointerException("不存在任何可以执行的sql语句");
 		validate(purpose, list);
@@ -33,7 +33,7 @@ public abstract class SqlContentExtractor {
 	// 若name为null, 则根据purpose决定获取content的方式: 
 	// 	1. purpose为UPDATE时, 返回所有sql content.
 	// 	2. purpose为QUERY/PROCEDURE时, 返回第一个sql content; 
-	private List<ContentMetadata> getContents_(Purpose purpose, String name, List<ContentMetadata> contents) {
+	private List<ContentMetadata> getContentMetadatas_(Purpose purpose, String name, List<ContentMetadata> contents) {
 		if(name == null) {
 			if(purpose == Purpose.UPDATE)
 				return contents;

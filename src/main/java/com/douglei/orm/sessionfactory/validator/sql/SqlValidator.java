@@ -6,8 +6,8 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.validator.ValidateFailResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SqlContentExtractor;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.Purpose;
 
 /**
  * sql参数验证器

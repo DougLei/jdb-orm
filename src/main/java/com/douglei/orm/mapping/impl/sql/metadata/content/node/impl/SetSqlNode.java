@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 
 /**
  * 
@@ -9,7 +9,7 @@ import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
 public class SetSqlNode extends TrimSqlNode {
 
 	public SetSqlNode() {
-		super("set", null, null, ",");
+		super("set", null, null, new String[] {","});
 	}
 
 	@Override

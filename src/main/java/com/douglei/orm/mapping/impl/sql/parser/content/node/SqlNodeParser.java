@@ -4,6 +4,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.AbstractNestingNode;
 
 /**

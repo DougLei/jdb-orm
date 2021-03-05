@@ -1,4 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql;
+package com.douglei.orm.sessionfactory.sessions.session.sql.purpose;
 
 /**
  *

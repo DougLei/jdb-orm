@@ -3,7 +3,6 @@ package com.douglei.orm.mapping.impl.sql.metadata.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.metadata.Metadata;
 
@@ -15,13 +14,13 @@ public class ContentMetadata implements Metadata{
 	
 	protected String name;
 	protected ContentType type;
-	private IncrementIdValueConfig incrementIdValueConfig;
+	private AutoIncrementIDMetadata autoIncrementID;
 	private List<SqlNode> sqlNodes;
 	
-	public ContentMetadata(String name, ContentType type, IncrementIdValueConfig incrementIdValueConfig) {
+	public ContentMetadata(String name, ContentType type, AutoIncrementIDMetadata autoIncrementID) {
 		this.name = name;
 		this.type = type;
-		this.incrementIdValueConfig = incrementIdValueConfig;
+		this.autoIncrementID = autoIncrementID;
 	}
 
 	public void addSqlNode(SqlNode sqlNode) {
@@ -44,7 +43,7 @@ public class ContentMetadata implements Metadata{
 	public List<SqlNode> getSqlNodes() {
 		return sqlNodes;
 	}
-	public IncrementIdValueConfig getIncrementIdValueConfig() {
-		return incrementIdValueConfig;
+	public AutoIncrementIDMetadata getAutoIncrementID() {
+		return autoIncrementID;
 	}
 }

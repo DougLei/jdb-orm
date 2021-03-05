@@ -8,7 +8,7 @@ import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.validator.ValidateFailResult;
-import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.Purpose;
 import com.douglei.orm.sessionfactory.validator.sql.SqlValidator;
 import com.douglei.orm.sessionfactory.validator.table.PersistentObjectValidator;
 import com.douglei.orm.sessionfactory.validator.table.handler.ValidateHandler;

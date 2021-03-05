@@ -4,10 +4,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TrimSqlNode;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParser;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserException;
-import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeType;
 
 /**
  * 

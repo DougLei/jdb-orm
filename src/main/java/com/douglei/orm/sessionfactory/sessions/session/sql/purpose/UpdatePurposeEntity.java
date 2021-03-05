@@ -1,7 +1,4 @@
-package com.douglei.orm.sessionfactory.sessions.session.sql.impl.purpose;
-
-import com.douglei.orm.sessionfactory.sessions.session.sql.Purpose;
-import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+package com.douglei.orm.sessionfactory.sessions.session.sql.purpose;
 
 /**
  * 

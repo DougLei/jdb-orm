@@ -1,17 +1,18 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content;
 
+import com.douglei.orm.mapping.metadata.Metadata;
 import com.douglei.tools.OgnlUtil;
 
 /**
- * 自增主键值的配置
+ * 
  * @author DougLei
  */
-public class IncrementIdValueConfig {
+public class AutoIncrementIDMetadata implements Metadata{
 	private String prefix; // 如果key为ognl表达式, 则这里记录前缀, 例如 user.id, 代表传入对象中user属性中的id
 	private String key;
 	private String sequence;
 	
-	public IncrementIdValueConfig(String key) {
+	public AutoIncrementIDMetadata(String key) {
 		int dot = key.lastIndexOf(".");
 		if(dot == -1) {
 			this.key = key;

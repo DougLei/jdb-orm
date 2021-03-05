@@ -6,7 +6,7 @@ package com.douglei.orm.mapping.impl.sql.metadata.content;
  */
 public class SqlContentMetadata extends ContentMetadata{
 
-	public SqlContentMetadata(String name, ContentType type, IncrementIdValueConfig incrementIdValueConfig) {
+	public SqlContentMetadata(String name, ContentType type, AutoIncrementIDMetadata incrementIdValueConfig) {
 		super(name, type, incrementIdValueConfig);
 	}
 }

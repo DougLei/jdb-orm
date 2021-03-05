@@ -8,7 +8,7 @@ import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.DatabaseNameConstants;
 import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.IncrementIdValueConfig;
+import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserContainer;
@@ -36,8 +36,8 @@ public class SqlContentMetadataParser {
 			return MappingParseToolContext.getMappingParseTool().getSqlContent(name);
 		
 		ContentType type = parseContentType(attributeMap);
-		IncrementIdValueConfig incrementIdValueConfig = getIncrementIdValueConfig(type, attributeMap);
-		SqlContentMetadata metadata = new SqlContentMetadata(name, type, incrementIdValueConfig);
+		AutoIncrementIDMetadata autoIncrementID = getAutoIncrementID(type, attributeMap);
+		SqlContentMetadata metadata = new SqlContentMetadata(name, type, autoIncrementID);
 		
 		NodeList children = node.getChildNodes();
 		for(int i=0;i<children.getLength();i++) {
@@ -77,7 +77,7 @@ public class SqlContentMetadataParser {
 	 * @param attributeMap
 	 * @return
 	 */
-	private IncrementIdValueConfig getIncrementIdValueConfig(ContentType type, NamedNodeMap attributeMap) {
+	private AutoIncrementIDMetadata getAutoIncrementID(ContentType type, NamedNodeMap attributeMap) {
 		if(type != ContentType.INSERT)
 			return null;
 		
@@ -85,14 +85,14 @@ public class SqlContentMetadataParser {
 		if(key == null || StringUtil.isEmpty(key.getNodeValue()))
 			return null;
 			
-		IncrementIdValueConfig config = new IncrementIdValueConfig(key.getNodeValue());
+		AutoIncrementIDMetadata metadata = new AutoIncrementIDMetadata(key.getNodeValue());
 		
 		if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
 			Node sequence = attributeMap.getNamedItem("sequence");
 			if(sequence == null || StringUtil.isEmpty(sequence.getNodeValue()))
 				throw new MetadataParseException("在oracle数据库中执行insert类型的sql, 并期待返回自增主键值时, 必须配置sequence");
-			config.setSequence(sequence.getNodeValue());
+			metadata.setSequence(sequence.getNodeValue());
 		}
-		return config;
+		return metadata;
 	}
 }

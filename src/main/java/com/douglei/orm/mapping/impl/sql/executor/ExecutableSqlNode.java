@@ -1,10 +1,10 @@
-package com.douglei.orm.mapping.impl.sql.metadata.content.node;
+package com.douglei.orm.mapping.impl.sql.executor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.douglei.orm.mapping.impl.sql.metadata.parameter.SqlParameterMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.sql.PurposeEntity;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 
 /**
@@ -14,12 +14,12 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
 public class ExecutableSqlNode {
 	private static final ExecutableSqlNode EMPTY_EXECUTABLE_SQL_NODE = new ExecutableSqlNode("", null, null);
 	private String content;
-	private List<SqlParameterMetadata> parameters; // sql参数集合
+	private List<SqlParameterNode> parameters; // sql参数集合
 	private List<Object> parameterValues; // 执行sql语句对应的参数值集合
 	
-	public ExecutableSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterMetadata> sqlParametersByDefinedOrder, Object sqlParameter, String previousAlias) {
+	public ExecutableSqlNode(PurposeEntity purposeEntity, String content, List<SqlParameterNode> sqlParametersByDefinedOrder, Object sqlParameter, String previousAlias) {
 		if(sqlParametersByDefinedOrder != null) {
-			for (SqlParameterMetadata parameter : sqlParametersByDefinedOrder) {
+			for (SqlParameterNode parameter : sqlParametersByDefinedOrder) {
 				if(parameter.isPlaceholder()) {
 					if(purposeEntity.isGetParameterValues()) {
 						if(parameterValues == null) 
@@ -36,7 +36,7 @@ public class ExecutableSqlNode {
 		this.parameters = purposeEntity.isGetParameters()?sqlParametersByDefinedOrder:null;
 	}
 	
-	public ExecutableSqlNode(String finalContent, List<SqlParameterMetadata> parameters, List<Object> parameterValues) {
+	public ExecutableSqlNode(String finalContent, List<SqlParameterNode> parameters, List<Object> parameterValues) {
 		this.content = finalContent;
 		this.parameters = parameters;
 		this.parameterValues = parameterValues;
@@ -53,7 +53,7 @@ public class ExecutableSqlNode {
 	public String getContent() {
 		return content;
 	}
-	public List<SqlParameterMetadata> getParameters(){
+	public List<SqlParameterNode> getParameters(){
 		return parameters;
 	}
 	public boolean existsParameters() {
