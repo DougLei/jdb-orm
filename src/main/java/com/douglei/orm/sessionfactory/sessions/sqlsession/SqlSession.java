@@ -3,8 +3,8 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
 import java.util.List;
 import java.util.Map;
 
-import com.douglei.orm.sql.AutoIncrementID;
-import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.query.page.PageResult;
+import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
 
 /**

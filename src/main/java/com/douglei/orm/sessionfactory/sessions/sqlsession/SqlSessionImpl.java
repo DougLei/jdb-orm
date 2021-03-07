@@ -14,9 +14,9 @@ import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
 import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 import com.douglei.orm.sessionfactory.sessions.SessionImpl;
-import com.douglei.orm.sql.AutoIncrementID;
-import com.douglei.orm.sql.pagequery.PageResult;
-import com.douglei.orm.sql.pagequery.PageSqlStatement;
+import com.douglei.orm.sql.query.page.PageResult;
+import com.douglei.orm.sql.query.page.PageSqlStatement;
+import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
 import com.douglei.orm.sql.statement.StatementHandler;
@@ -173,7 +173,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 	
 	@Override
 	public long countQuery(String sql, List<Object> parameters) {
-		PageSqlStatement statement = new PageSqlStatement(environment.getDialect().getSqlStatementHandler(), sql);
+		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getSqlStatementHandler().extractOrderByClause());
 		return Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString());
 	}
 
@@ -192,12 +192,12 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(pageSize < 0) pageSize = 10;
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
-		PageSqlStatement statement = new PageSqlStatement(environment.getDialect().getSqlStatementHandler(), sql);
+		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getSqlStatementHandler().extractOrderByClause());
 		long count = Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
-			List list = query(statement.getPageQuerySql(pageResult.getPageNum(), pageResult.getPageSize()), parameters);
+			List list = query(statement.getPageQuerySql(environment.getDialect().getSqlStatementHandler(), pageResult.getPageNum(), pageResult.getPageSize()), parameters);
 			if(targetClass != null && !list.isEmpty()) 
 				list = listMap2listClass(targetClass, list);
 			pageResult.setResultDatas(list);

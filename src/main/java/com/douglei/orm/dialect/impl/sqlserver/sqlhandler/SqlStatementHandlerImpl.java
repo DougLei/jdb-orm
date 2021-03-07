@@ -7,8 +7,7 @@ import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sql.pagequery.PageSqlStatement;
-import com.douglei.orm.sql.pagerecursivequery.PageRecursiveSqlStatement;
+import com.douglei.orm.sql.query.page.PageSqlStatement;
 
 /**
  * 
@@ -102,30 +101,27 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// sql拼装
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public boolean needExtractOrderByClause() {
+	public boolean extractOrderByClause() {
 		return true;
 	}
 
 	@Override
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		int maxIndex = pageNum*pageSize;
+		StringBuilder pageQuerySql = new StringBuilder(340 + statement.getTotalLength());
 		
-		StringBuilder pageQuerySql = new StringBuilder(340 + statement.length());
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
+		
+		int maxIndex = pageNum*pageSize;
 		pageQuerySql.append("SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");
 		pageQuerySql.append(maxIndex);
 		pageQuerySql.append(" ROW_NUMBER() OVER(").append((statement.getOrderByClause()==null?"ORDER BY CURRENT_TIMESTAMP":statement.getOrderByClause())).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
-		pageQuerySql.append(statement.getSql());
+		pageQuerySql.append(statement.getQuerySQL());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
-		if(statement instanceof PageRecursiveSqlStatement) { // 分页递归查询
-			pageQuerySql.append(" WHERE ");
-			appendConditionSql2RecursiveSql(pageQuerySql, (PageRecursiveSqlStatement)statement);
-		}
 		pageQuerySql.append(" ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
 		pageQuerySql.append(maxIndex-pageSize);
-		if(logger.isDebugEnabled()) 
-			logger.debug("{} 进行分页查询的sql语句为: {}", getClass().getName(), pageQuerySql);
+		
+		logger.debug("进行分页查询的sql语句为: {}", pageQuerySql);	
 		return pageQuerySql.toString();
 	}
 }

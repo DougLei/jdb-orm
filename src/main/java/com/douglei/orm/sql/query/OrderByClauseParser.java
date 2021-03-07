@@ -1,4 +1,4 @@
-package com.douglei.orm.sql;
+package com.douglei.orm.sql.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
  * order by子句解析器
  * @author DougLei
  */
-class OrderByClauseResolver{
-	private static final Logger logger = LoggerFactory.getLogger(OrderByClauseResolver.class);
+class OrderByClauseParser{
+	private static final Logger logger = LoggerFactory.getLogger(OrderByClauseParser.class);
 	
 	// 记录解析出的每个单词的长度
 	private int wordLength;
@@ -32,24 +32,24 @@ class OrderByClauseResolver{
 	 * 从sql对象中提取order by子句
 	 * @param statement
 	 */
-	public void extractOrderByClause(SqlStatement statement) {
-		String sql = statement.getSql();
-		index = sql.length()-1;
+	public void extractOrderByClause(QuerySqlStatement statement) {
+		String querySQL = statement.getQuerySQL();
+		index = querySQL.length()-1;
 		
 		for(;index>-1;index--) {
-			c = sql.charAt(index);
+			c = querySQL.charAt(index);
 			
 			if(statement.isBlank(c)) {
 				if(wordLength > 0) { // 证明有单词, 要判断它是否关键字
 					if(KeyWord.lengthSatisfied(wordLength)) {
 						cs = new char[wordLength];
 						for(int i=0;i<wordLength;i++)
-							cs[i] = sql.charAt(index+i+1);
+							cs[i] = querySQL.charAt(index+i+1);
 						kw = KeyWord.toValue(cs);
 						
 						if(kw != null) {
 							logger.debug("找到关键字: {}", kw);
-							kw.extractOrderBy(sql, index, statement);
+							kw.extractOrderBy(querySQL, index, statement);
 							break;
 						}
 					}
@@ -81,15 +81,15 @@ enum KeyWord {
 	BY{ // 可以是order by或group by
 		
 		@Override
-		public void extractOrderBy(String sql, int index, SqlStatement statement) {
+		public void extractOrderBy(String sql, int index, QuerySqlStatement statement) {
 			char c;
 			for(;index>-1;index--) {
 				c = sql.charAt(index);
 				if(!statement.isBlank(c)) {
 					if(c == 'R' || c == 'r') { // order的最后一个字符
 						index-=4;
-						statement.setSql(sql.substring(0, index));
-						statement.setOrderByClause(sql.substring(index));
+						statement.querySQL = sql.substring(0, index);
+						statement.orderByClause = sql.substring(index);
 					}
 					break;
 				}
@@ -150,6 +150,6 @@ enum KeyWord {
 	 * @param index
 	 * @param statement
 	 */
-	public void extractOrderBy(String sql, int index, SqlStatement statement) {
+	public void extractOrderBy(String sql, int index, QuerySqlStatement statement) {
 	}
 }

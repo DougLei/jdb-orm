@@ -1,4 +1,4 @@
-package com.douglei.orm.sql.pagequery;
+package com.douglei.orm.sql.query.page;
 
 import java.util.Collections;
 import java.util.List;

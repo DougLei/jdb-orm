@@ -28,8 +28,8 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.UpdatePurpose
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
-import com.douglei.orm.sql.AutoIncrementID;
-import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.query.page.PageResult;
+import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
 import com.douglei.tools.reflect.IntrospectorUtil;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.query.page.PageResult;
 
 /**
  * 和数据库交互的session接口

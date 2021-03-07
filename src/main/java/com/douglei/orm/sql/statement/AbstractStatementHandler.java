@@ -10,7 +10,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.entity.SqlResultsetMetadata;
 import com.douglei.orm.sql.statement.util.ResultSetUtil;
 import com.douglei.tools.ExceptionUtil;

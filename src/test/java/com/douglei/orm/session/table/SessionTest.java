@@ -13,7 +13,7 @@ import com.douglei.orm.mapping.handler.MappingHandleException;
 import com.douglei.orm.session.SysUser;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.sessions.Session;
-import com.douglei.orm.sql.pagequery.PageResult;
+import com.douglei.orm.sql.query.page.PageResult;
 
 public class SessionTest {
 	

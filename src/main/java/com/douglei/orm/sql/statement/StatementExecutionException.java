@@ -2,12 +2,13 @@ package com.douglei.orm.sql.statement;
 
 import java.util.List;
 
+import com.douglei.orm.configuration.OrmException;
+
 /**
  * 
  * @author DougLei
  */
-public class StatementExecutionException extends Exception{
-	private static final long serialVersionUID = 2087124488420345593L;
+public class StatementExecutionException extends OrmException{
 	
 	public StatementExecutionException(String message) {
 		super(message);

@@ -17,7 +17,7 @@ import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Ope
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
-import com.douglei.orm.sql.AutoIncrementID;
+import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.tools.reflect.ClassUtil;
 import com.douglei.tools.reflect.IntrospectorUtil;

@@ -1,12 +1,12 @@
 package com.douglei.orm.sessionfactory.sessions.sqlsession;
 
-import com.douglei.orm.sessionfactory.sessions.ExecutionException;
+import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
 
 /**
  * 
  * @author DougLei
  */
-public class ProcedureExecutionException extends ExecutionException{
+public class ProcedureExecutionException extends SessionExecutionException{
 	
 	public ProcedureExecutionException(String message) {
 		super(message);

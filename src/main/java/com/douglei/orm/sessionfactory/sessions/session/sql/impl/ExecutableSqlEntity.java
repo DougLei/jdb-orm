@@ -2,11 +2,9 @@ package com.douglei.orm.sessionfactory.sessions.session.sql.impl;
 
 import java.util.List;
 
-import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
-import com.douglei.orm.sql.SqlStatement;
 
 /**
  * 
@@ -16,7 +14,7 @@ public class ExecutableSqlEntity {
 	private ExecutableSqlHolder executableSqlHolder;
 	private String name;
 	private ContentType type;
-	private SqlStatement sql;
+	private String sql;
 	private List<ParameterNode> parameters;
 	private List<Object> parameterValues;
 	private AutoIncrementIDMetadata autoIncrementID;
@@ -25,7 +23,7 @@ public class ExecutableSqlEntity {
 		this.executableSqlHolder = executableSqlHolder;
 		this.name = executableSqlHolder.getCurrentName();
 		this.type = executableSqlHolder.getCurrentType();
-		this.sql = new SqlStatement(EnvironmentContext.getEnvironment().getDialect().getSqlStatementHandler(), executableSqlHolder.getCurrentSql());
+		this.sql = executableSqlHolder.getCurrentSql();
 		this.parameters = executableSqlHolder.getCurrentParameters();
 		this.parameterValues = executableSqlHolder.getCurrentParameterValues();
 		this.autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID();
@@ -47,7 +45,7 @@ public class ExecutableSqlEntity {
 		if(this.executableSqlHolder.next()) {
 			this.name = executableSqlHolder.getCurrentName();
 			this.type = executableSqlHolder.getCurrentType();
-			this.sql.reset(executableSqlHolder.getCurrentSql());
+			this.sql = executableSqlHolder.getCurrentSql();
 			this.parameters = executableSqlHolder.getCurrentParameters();
 			this.parameterValues = executableSqlHolder.getCurrentParameterValues();
 			this.autoIncrementID = executableSqlHolder.getCurrentAutoIncrementID();
@@ -73,27 +71,11 @@ public class ExecutableSqlEntity {
 	}
 	
 	/**
-	 * 获取with子句, 如果是select类型的sql
-	 * @return
-	 */
-	public String getWithClause() {
-		return sql.getWithClause();
-	}
-	
-	/**
 	 * 获取sql语句
 	 * @return
 	 */
 	public String getSql() {
-		return sql.getSql();
-	}
-	
-	/**
-	 * 获取order by子句, 如果是select类型的sql
-	 * @return
-	 */
-	public String getOrderByClause() {
-		return sql.getOrderByClause();
+		return sql;
 	}
 	
 	/**

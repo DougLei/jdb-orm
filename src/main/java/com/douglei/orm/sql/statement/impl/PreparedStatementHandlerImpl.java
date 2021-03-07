@@ -10,8 +10,8 @@ import java.util.Map;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.DatabaseNameConstants;
-import com.douglei.orm.sql.AutoIncrementID;
 import com.douglei.orm.sql.statement.AbstractStatementHandler;
+import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
 import com.douglei.orm.sql.statement.StatementExecutionException;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;

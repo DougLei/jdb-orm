@@ -1,4 +1,4 @@
-package com.douglei.orm.sql;
+package com.douglei.orm.sql.statement;
 
 /**
  * 
