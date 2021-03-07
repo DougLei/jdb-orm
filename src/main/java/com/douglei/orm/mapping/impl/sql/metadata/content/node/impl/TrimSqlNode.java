@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 
 /**
  * 
@@ -23,5 +23,18 @@ public class TrimSqlNode extends AbstractNestingNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.TRIM;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+	public String getSuffix() {
+		return suffix;
+	}
+	public String[] getPrefixOverride() {
+		return prefixOverride;
+	}
+	public String[] getSuffixOverride() {
+		return suffixOverride;
 	}
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
 import com.douglei.orm.sql.SqlStatement;
 
 /**
@@ -17,7 +17,7 @@ public class ExecutableSqlEntity {
 	private String name;
 	private ContentType type;
 	private SqlStatement sql;
-	private List<SqlParameterNode> parameters;
+	private List<ParameterNode> parameters;
 	private List<Object> parameterValues;
 	private AutoIncrementIDMetadata autoIncrementID;
 	
@@ -100,7 +100,7 @@ public class ExecutableSqlEntity {
 	 * 获取sql参数集合
 	 * @return 可能为null
 	 */
-	public List<SqlParameterNode> getParameters(){
+	public List<ParameterNode> getParameters(){
 		return parameters;
 	}
 	

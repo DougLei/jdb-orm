@@ -14,11 +14,12 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.mapping.impl.sql.executor.content.node.impl.ParameterNodeExecutor;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterMode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterMode;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.ProcedurePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
@@ -197,53 +198,54 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	// 执行存储过程
-	private Object executeProcedure(String callableSqlContent, List<SqlParameterNode> callableSqlParameters, Object sqlParameter) {
+	private Object executeProcedure(String sql, List<ParameterNode> parameters, Object sqlParameter) {
 		return super.executeProcedure(new ProcedureExecutor() {
 			@Override
 			public Object execute(Connection connection) throws ProcedureExecutionException {
-				try (CallableStatement callableStatement = connection.prepareCall(callableSqlContent)){
-					logger.debug("执行的存储过程sql语句为: {}", callableSqlContent);
+				try (CallableStatement callableStatement = connection.prepareCall(sql)){
+					logger.debug("调用存储过程的sql语句为: {}", sql);
 					
-					short outParameterCount = 0;
-					short[] outParameterIndex = null;
-					if(callableSqlParameters != null) {
-						outParameterIndex = new short[callableSqlParameters.size()];
+					int outParameterCount = 0;
+					int[][] outParameterIndex = null;
+					if(parameters != null) {
+						outParameterIndex = new int[parameters.size()][];
 						
-						short index = 1;
-						Object value = null;
-						for (SqlParameterNode sqlParameterMetadata : callableSqlParameters) {
-							if(!sqlParameterMetadata.isPlaceholder())
-								continue;
-							
-							logger.debug("执行的sql参数值为: index={}, parameter={}", index, sqlParameterMetadata);
-							if(sqlParameterMetadata.getMode() != SqlParameterMode.OUT) {
-								value = sqlParameterMetadata.getValue(sqlParameter);
-								if(value == null) {
-									callableStatement.setNull(index, sqlParameterMetadata.getDBDataType().getSqlType());
-								}else {
-									sqlParameterMetadata.getDBDataType().setValue(callableStatement, index, value);
+						int index = 0, parameterIndex = 1;
+						for (ParameterNode parameter : parameters) {
+							logger.debug("执行时的sql参数: parameter={}", parameter);
+							if(parameter.isPlaceholder()) {
+								if(parameter.getMode() != ParameterMode.OUT) {
+									Object value = ParameterNodeExecutor.SINGLETON.getValue(parameter, sqlParameter, null);
+									logger.debug("执行时的sql参数值: parameterIndex={}, value={}", parameterIndex, value);
+									
+									if(value == null) {
+										callableStatement.setNull(parameterIndex, parameter.getDBDataType().getSqlType());
+									}else {
+										parameter.getDBDataType().setValue(callableStatement, parameterIndex, value);
+									}
 								}
-							}
-							
-							if(sqlParameterMetadata.getMode() != SqlParameterMode.IN) {
-								callableStatement.registerOutParameter(index, sqlParameterMetadata.getDBDataType().getSqlType());
-								outParameterIndex[outParameterCount] = index;
-								outParameterCount++;
+								
+								if(parameter.getMode() != ParameterMode.IN) {
+									callableStatement.registerOutParameter(parameterIndex, parameter.getDBDataType().getSqlType());
+									outParameterIndex[outParameterCount] = new int[] {index, parameterIndex};
+									outParameterCount++;
+								}
+								parameterIndex++;
 							}
 							index++;
 						}
 					}
 					
-					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对supportProcedureDirectlyReturnResultSet=true的数据库有用
+					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对supportProcedureDirectlyReturnResultSet=true的数据库有效
 					boolean supportProcedureDirectlyReturnResultSet = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || supportProcedureDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(8);
 						
 						if(outParameterCount > 0) {
-							SqlParameterNode sqlParameterMetadata = null;
-							for(short i=0;i<outParameterCount;i++) {
-								sqlParameterMetadata = callableSqlParameters.get(outParameterIndex[i]-1);
-								outMap.put(sqlParameterMetadata.getName(), sqlParameterMetadata.getDBDataType().getValue(outParameterIndex[i], callableStatement));
+							ParameterNode parameter = null;
+							for(int i=0;i<outParameterCount;i++) {
+								parameter = parameters.get(outParameterIndex[i][0]);
+								outMap.put(parameter.getName(), parameter.getDBDataType().getValue(outParameterIndex[i][1], callableStatement));
 							}
 						}
 						

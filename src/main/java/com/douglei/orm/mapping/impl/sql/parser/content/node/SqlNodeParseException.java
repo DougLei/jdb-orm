@@ -6,9 +6,9 @@ import com.douglei.orm.mapping.metadata.MetadataParseException;
  * 
  * @author DougLei
  */
-public class SqlNodeParserException extends MetadataParseException{
+public class SqlNodeParseException extends MetadataParseException{
 
-	public SqlNodeParserException(String message) {
+	public SqlNodeParseException(String message) {
 		super(message);
 	}
 }

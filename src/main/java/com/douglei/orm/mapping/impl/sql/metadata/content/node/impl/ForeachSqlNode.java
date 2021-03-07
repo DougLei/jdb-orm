@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 
 /**
  * 
@@ -25,5 +25,21 @@ public class ForeachSqlNode extends AbstractNestingNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.FOREACH;
+	}
+
+	public String getCollection() {
+		return collection;
+	}
+	public String getAlias() {
+		return alias;
+	}
+	public String getOpen() {
+		return open;
+	}
+	public String getSeparator() {
+		return separator;
+	}
+	public String getClose() {
+		return close;
 	}
 }

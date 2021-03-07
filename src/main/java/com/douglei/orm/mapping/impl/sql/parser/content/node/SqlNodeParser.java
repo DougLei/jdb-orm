@@ -3,8 +3,9 @@ package com.douglei.orm.mapping.impl.sql.parser.content.node;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.mapping.impl.sql.SqlNodeContainer;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.AbstractNestingNode;
 
 /**
@@ -15,17 +16,17 @@ public abstract class SqlNodeParser {
 	
 	/**
 	 * 
-	 * @param node
-	 * @return 返回null, 会忽略当前SqlNode
-	 * @throws SqlNodeParserException
-	 */
-	public abstract SqlNode parse(Node node) throws SqlNodeParserException;
-	
-	/**
-	 * 当前解析器可以解析的节点类型
 	 * @return
 	 */
-	public abstract SqlNodeType getNodeType();
+	public abstract SqlNodeType getType();
+	
+	/**
+	 * 
+	 * @param node
+	 * @return 返回null, 会忽略当前SqlNode
+	 * @throws SqlNodeParseException
+	 */
+	public abstract SqlNode parse(Node node) throws SqlNodeParseException;
 	
 	/**
 	 * 获取属性值
@@ -47,11 +48,11 @@ public abstract class SqlNodeParser {
 		NodeList childrens = currentNode.getChildNodes();
 		int cl = childrens.getLength();
 		if(cl == 0) 
-			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">中不存在任何配置");
+			throw new SqlNodeParseException("<"+current.getType().getName()+">中不存在任何配置");
 		
 		SqlNode c_sn = null;
 		for(int i=0;i<cl;i++) {
-			c_sn = SqlNodeParserContainer.parse(childrens.item(i));
+			c_sn = SqlNodeContainer.parse(childrens.item(i));
 			if(c_sn == null)
 				continue;
 			
@@ -60,14 +61,14 @@ public abstract class SqlNodeParser {
 		}
 		
 		if(!current.existsSqlNode())
-			throw new SqlNodeParserException("<"+current.getType().getNodeName()+">中不存在任何配置");
+			throw new SqlNodeParseException("<"+current.getType().getName()+">中不存在任何配置");
 	}
 	
 	/**
 	 * 验证sql子节点, 如果验证失败则抛出异常
 	 * @param children
-	 * @throws SqlNodeParserException
+	 * @throws SqlNodeParseException
 	 */
-	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParserException{
+	protected void validateChildrenSqlNode(SqlNode children) throws SqlNodeParseException{
 	}
 }

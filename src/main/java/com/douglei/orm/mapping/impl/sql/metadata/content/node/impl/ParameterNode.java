@@ -2,19 +2,18 @@ package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.datatype.db.DBDataType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
-import com.douglei.orm.mapping.metadata.Metadata;
 
 /**
  * 
  * @author DougLei
  */
-public class SqlParameterNode implements SqlNode{
+public class ParameterNode implements SqlNode{
 	private transient String configText;
 	
 	private String name;// 参数名
-	private SqlParameterMode mode;// 输入输出类型
+	private ParameterMode mode;// 输入输出类型
 	private String dbDataType;// 数据类型
 	private transient DBDataType DBDataType; // 数据类型
 	private int length;// 长度
@@ -27,13 +26,13 @@ public class SqlParameterNode implements SqlNode{
 	private String prefix;// 非占位符时的前缀字符
 	private String suffix;// 非占位符时的后缀字符
 	
-	public SqlParameterNode(String configText) {
+	public ParameterNode(String configText) {
 		this.configText = configText;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public void setMode(SqlParameterMode mode) {
+	public void setMode(ParameterMode mode) {
 		this.mode = mode;
 	}
 	public void setDBDataType(DBDataType DBDataType) {
@@ -70,7 +69,7 @@ public class SqlParameterNode implements SqlNode{
 	public String getConfigText() {
 		return configText;
 	}
-	public SqlParameterMode getMode() {
+	public ParameterMode getMode() {
 		return mode;
 	}
 	public String getName() {
@@ -104,12 +103,7 @@ public class SqlParameterNode implements SqlNode{
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		return name.equals(((SqlParameterNode) obj).name);
-	}
-
-	@Override
 	public String toString() {
-		return "SqlParameterMetadata [name=" + name + ", dbDataType=" + dbDataType + "]";
+		return "[name=" + name + ", mode="+mode+", dbDataType=" + dbDataType + "]";
 	}
 }

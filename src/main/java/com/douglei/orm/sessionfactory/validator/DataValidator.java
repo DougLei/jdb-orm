@@ -133,19 +133,16 @@ public class DataValidator {
 		SqlMetadata sqlMetadata = mappingHandler.getSqlMetadata(namespace);
 		SqlValidator sqlValidator = new SqlValidator(purpose, sqlMetadata, name);
 		
-		List<ValidateFailResult> validationResults = null;
-		ValidateFailResult validationResult;
-		short index = 0;
-		for (Object object : objects) {
-			validationResult = sqlValidator.validate(object);
-			if(validationResult != null) {
-				validationResult.setIndex(index);
-				if(validationResults == null) 
-					validationResults = new ArrayList<ValidateFailResult>(objects.size());
-				validationResults.add(validationResult);
+		List<ValidateFailResult> failResults = null;
+		for(int i=0;i<objects.size();i++) {
+			ValidateFailResult failResult = sqlValidator.validate(objects.get(i));
+			if(failResult != null) {
+				failResult.setIndex(i);
+				if(failResults == null) 
+					failResults = new ArrayList<ValidateFailResult>(objects.size());
+				failResults.add(failResult);
 			}
-			index++;
 		}
-		return validationResults;
+		return failResults;
 	}
 }

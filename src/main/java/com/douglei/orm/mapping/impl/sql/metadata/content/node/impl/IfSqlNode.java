@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 
 /**
  * 
@@ -8,7 +8,6 @@ import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
  */
 public class IfSqlNode extends AbstractNestingNode {
 	private String expression;
-	private boolean expressionFlag; // 标识是否处理过expression
 	public IfSqlNode(String expression) {
 		this.expression = expression;
 	}
@@ -16,5 +15,9 @@ public class IfSqlNode extends AbstractNestingNode {
 	@Override
 	public SqlNodeType getType() {
 		return SqlNodeType.IF;
+	}
+
+	public String getExpression() {
+		return expression;
 	}
 }

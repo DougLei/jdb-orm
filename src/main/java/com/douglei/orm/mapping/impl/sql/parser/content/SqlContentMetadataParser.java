@@ -7,11 +7,11 @@ import org.w3c.dom.NodeList;
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.DatabaseNameConstants;
 import com.douglei.orm.mapping.MappingParseToolContext;
-import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
+import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserContainer;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.tools.StringUtil;
 
@@ -41,7 +41,7 @@ public class SqlContentMetadataParser {
 		
 		NodeList children = node.getChildNodes();
 		for(int i=0;i<children.getLength();i++) {
-			SqlNode sqlNode = SqlNodeParserContainer.parse(children.item(i));
+			SqlNode sqlNode = SqlNodeContainer.parse(children.item(i));
 			if(sqlNode != null) 
 				metadata.addSqlNode(sqlNode);
 		}

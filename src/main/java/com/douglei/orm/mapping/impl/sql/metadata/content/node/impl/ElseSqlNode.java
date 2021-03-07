@@ -1,6 +1,6 @@
 package com.douglei.orm.mapping.impl.sql.metadata.content.node.impl;
 
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 
 /**
  * 

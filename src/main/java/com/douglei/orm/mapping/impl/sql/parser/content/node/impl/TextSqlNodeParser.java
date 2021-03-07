@@ -15,14 +15,14 @@ import com.douglei.orm.dialect.datatype.DataTypeClassification;
 import com.douglei.orm.dialect.datatype.db.DBDataTypeEntity;
 import com.douglei.orm.dialect.datatype.db.DBDataTypeUtil;
 import com.douglei.orm.mapping.MappingParseToolContext;
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterMode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterMode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.TextSqlNode;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParser;
-import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserException;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParseException;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.tools.RegularExpressionUtil;
 import com.douglei.tools.StringUtil;
@@ -32,20 +32,20 @@ import com.douglei.tools.StringUtil;
  * @author DougLei
  */
 public class TextSqlNodeParser extends SqlNodeParser {
-	private static SqlParameterMetadataParser sqlParameterMetadataParser = new SqlParameterMetadataParser();
+	private static ParameterNodeParser parameterNodeParser = new ParameterNodeParser();
 	
 	@Override
-	public SqlNode parse(Node node) throws SqlNodeParserException {
-		String content = node.getNodeValue();
-		if(StringUtil.isEmpty(content)) 
+	public SqlNode parse(Node node) throws SqlNodeParseException {
+		String sql = node.getNodeValue();
+		if(StringUtil.isEmpty(sql)) 
 			return null;
 		
-		TextSqlNodeEntity entity = new TextSqlNodeEntity(content);
-		return new TextSqlNode(entity.getContent(), entity.getParameters());
+		TextSqlNodeEntity entity = new TextSqlNodeEntity(sql);
+		return new TextSqlNode(entity.getSql(), entity.getParameters());
 	}
 	
 	@Override
-	public SqlNodeType getNodeType() {
+	public SqlNodeType getType() {
 		return SqlNodeType.TEXT;
 	}
 	
@@ -54,73 +54,73 @@ public class TextSqlNodeParser extends SqlNodeParser {
 	 * @author DougLei
 	 */
 	private class TextSqlNodeEntity {
-		private String content;
-		private List<SqlParameterNode> parameters;
+		private String sql;
+		private List<ParameterNode> parameters;
 		
-		public TextSqlNodeEntity(String content) {
-			this.content = content.trim();
+		public TextSqlNodeEntity(String sql) {
+			this.sql = sql.trim();
 			parseParameters();
 		}
 
 		// 从content中解析出parameter集合
 		private void parseParameters() {
 			SqlMappingConfiguration config = EnvironmentContext.getEnvironment().getMappingHandler().getMappingConfiguration().getSqlMappingConfiguration();
-			Matcher perfixMatcher = config.getParameterPrefixPattern().matcher(content);
+			Matcher perfixMatcher = config.getParameterPrefixPattern().matcher(sql);
 			if(config.getRelationship() == SqlMappingParameterPSRelation.SAME) {
 				int startIndex;
 				while(perfixMatcher.find()) {
 					startIndex = perfixMatcher.start();
 					if(perfixMatcher.find()) {
-						addSqlParameter(content.substring(startIndex + config.getParameterPrefixLength(), perfixMatcher.start()), config.getParameterSplit());
+						addSqlParameter(sql.substring(startIndex + config.getParameterPrefixLength(), perfixMatcher.start()), config.getParameterSplit());
 					}else {
-						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(少一个), 请检查");
+						throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(少一个), 请检查");
 					}
 				}
 				if(perfixMatcher.find())
-					throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(多一个), 请检查");
+					throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterPrefix()+"]标识符不匹配(多一个), 请检查");
 			}else {
-				Matcher suffixMatcher = config.getParameterSuffixPattern().matcher(content);
+				Matcher suffixMatcher = config.getParameterSuffixPattern().matcher(sql);
 				if(config.getRelationship() == SqlMappingParameterPSRelation.DIFFERENT){
 					while(perfixMatcher.find()) {
 						if(suffixMatcher.find()) {
-							addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
+							addSqlParameter(sql.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 						}else {
-							throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
+							throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 						}
 					}
 					if(suffixMatcher.find())
-						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+						throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
 				}else if(config.getRelationship() == SqlMappingParameterPSRelation.SUFFIX_IN_PREFIX){
 					while(perfixMatcher.find()) {
 						if(suffixMatcher.find() && suffixMatcher.find()) {
-							addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
+							addSqlParameter(sql.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 						}else {
-							throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
+							throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 						}
 					}
 					if(suffixMatcher.find())
-						throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+						throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
 				}else if(config.getRelationship() == SqlMappingParameterPSRelation.PREFIX_IN_SUFFIX){
 					if(perfixMatcher.find()) {
 						do {
 							if(suffixMatcher.find()) {
-								addSqlParameter(content.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
+								addSqlParameter(sql.substring(perfixMatcher.start() + config.getParameterPrefixLength(), suffixMatcher.start()), config.getParameterSplit());
 							}else {
-								throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
+								throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterSuffix()+"]标识符不匹配(至少少一个), 请检查");
 							}
 						} while(perfixMatcher.find() && perfixMatcher.find());
 						if(suffixMatcher.find())
-							throw new SqlNodeParserException("content=["+content+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
+							throw new SqlNodeParseException("sql=["+sql+"], 参数配置异常, ["+config.getParameterPrefix()+"和"+config.getParameterSuffix()+"]标识符不匹配(至少多一个或少一个), 请检查");
 					}
 				}
 			}
 			
 			if(parameters != null) {
-				for (SqlParameterNode parameter : parameters) {
+				for (ParameterNode parameter : parameters) {
 					if(parameter.isPlaceholder()) {
-						content = content.replaceAll(config.getParameterPrefix() + parameter.getConfigText() + config.getParameterSuffix(), "?");
+						sql = sql.replaceAll(config.getParameterPrefix() + parameter.getConfigText() + config.getParameterSuffix(), "?");
 					}else{
-						content = content.replaceAll(parameter.getConfigText(), parameter.getName());
+						sql = sql.replaceAll(parameter.getConfigText(), parameter.getName());
 					}
 				}
 			}
@@ -128,35 +128,28 @@ public class TextSqlNodeParser extends SqlNodeParser {
 		// 添加 sql parameter
 		private void addSqlParameter(String configText, String split) {
 			if(parameters == null) 
-				parameters = new ArrayList<SqlParameterNode>();
-			parameters.add(sqlParameterMetadataParser.parse(configText, split));
+				parameters = new ArrayList<ParameterNode>();
+			parameters.add(parameterNodeParser.parse(configText, split));
 		}
 		
-		public String getContent() {
-			return content;
+		public String getSql() {
+			return sql;
 		}
-		public List<SqlParameterNode> getParameters() {
+		public List<ParameterNode> getParameters() {
 			return parameters;
 		} 
 	}
 }
 
 /**
- * 
+ * SqlParameterMetadata解析器
  * @author DougLei
  */
-class SqlParameterMetadataParser {
+class ParameterNodeParser {
 
-	/**
-	 * 解析SqlParameterMetadata
-	 * @param configText
-	 * @param split
-	 * @return
-	 * @throws MetadataParseException
-	 */
-	public SqlParameterNode parse(String configText, String split) throws MetadataParseException{
+	public ParameterNode parse(String configText, String split) throws MetadataParseException{
 		// 设置配置的内容, 如果存在正则表达式的关键字, 则增加\转义
-		SqlParameterNode sql = new SqlParameterNode(RegularExpressionUtil.includeKey(configText)?RegularExpressionUtil.addBackslash4Key(configText):configText);
+		ParameterNode sql = new ParameterNode(RegularExpressionUtil.includeKey(configText)?RegularExpressionUtil.addBackslash4Key(configText):configText);
 		
 		// 解析参数配置的属性
 		Map<String, String> propertyMap = parsePropertyMap(configText, split);
@@ -220,7 +213,7 @@ class SqlParameterMetadataParser {
 	 * @param metadata
 	 * @param propertyMap
 	 */
-	private void setDBDataType(SqlParameterNode metadata, Map<String, String> propertyMap) {
+	private void setDBDataType(ParameterNode metadata, Map<String, String> propertyMap) {
 		String typeName = propertyMap.get("dbtype");
 		DataTypeClassification classification = DataTypeClassification.DB;
 		
@@ -229,9 +222,9 @@ class SqlParameterMetadataParser {
 				throw new NullPointerException("存储过程中, 参数["+metadata.getName()+"]的dbType不能为空");
 			
 			if(propertyMap.get("mode") == null) {
-				metadata.setMode(SqlParameterMode.IN);
+				metadata.setMode(ParameterMode.IN);
 			}else {
-				metadata.setMode(SqlParameterMode.valueOf(propertyMap.get("mode").toUpperCase()));
+				metadata.setMode(ParameterMode.valueOf(propertyMap.get("mode").toUpperCase()));
 			}
 		} else {
 			if(StringUtil.isEmpty(typeName)) {
@@ -254,21 +247,21 @@ class SqlParameterMetadataParser {
 	 * @param metadata
 	 * @param propertyMap
 	 */
-	private void setPlaceholder(SqlParameterNode metadata, Map<String, String> propertyMap) {
+	private void setPlaceholder(ParameterNode metadata, Map<String, String> propertyMap) {
 		metadata.setPlaceholder(!"false".equalsIgnoreCase(propertyMap.get("placeholder")));
 		if(!metadata.isPlaceholder()) {
 			setPrefix(metadata, propertyMap.get("prefix"));
 			setSuffix(metadata, propertyMap.get("suffix"));
 		}
 	}
-	private void setPrefix(SqlParameterNode metadata, String prefix) {
+	private void setPrefix(ParameterNode metadata, String prefix) {
 		if(StringUtil.isEmpty(prefix)) {
 			metadata.setPrefix(metadata.getDBDataType().isCharacterType()?"'":"");
 		}else {
 			metadata.setPrefix(prefix);
 		}
 	}
-	private void setSuffix(SqlParameterNode metadata, String suffix) {
+	private void setSuffix(ParameterNode metadata, String suffix) {
 		if(StringUtil.isEmpty(suffix)) {
 			metadata.setSuffix(metadata.getDBDataType().isCharacterType()?"'":"");
 		}else {

@@ -6,7 +6,7 @@ import java.util.List;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
@@ -26,7 +26,7 @@ public class ExecutableSqlHolder extends SqlContentExtractor implements IExecuta
 		this.executableSqlCount = contentMetadatas.size();
 		this.executableSqls = new ArrayList<ExecutableSql>(executableSqlCount);
 		for (ContentMetadata contentMetadata : contentMetadatas) 
-			this.executableSqls.add(new ExecutableSql(purposeEntity, contentMetadata, sqlParameter));
+			this.executableSqls.add(new ExecutableSql(purposeEntity, contentMetadata, sqlMetadata.getSqlContentMap(), sqlParameter));
 	}
 	
 	@Override
@@ -58,14 +58,14 @@ public class ExecutableSqlHolder extends SqlContentExtractor implements IExecuta
 	
 	@Override
 	public String getCurrentSql() {
-		return executableSqls.get(currentIndex).getContent();
+		return executableSqls.get(currentIndex).getSql();
 	}
 
 	/**
 	 * 获取当前sql参数集合
 	 * @return
 	 */
-	public List<SqlParameterNode> getCurrentParameters() {
+	public List<ParameterNode> getCurrentParameters() {
 		return executableSqls.get(currentIndex).getParameters();
 	}
 	

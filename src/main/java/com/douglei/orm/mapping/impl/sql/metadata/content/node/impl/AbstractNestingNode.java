@@ -29,4 +29,12 @@ public abstract class AbstractNestingNode implements SqlNode{
 	public boolean existsSqlNode() {
 		return sqlNodes != null;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<SqlNode> getSqlNodes() {
+		return sqlNodes;
+	}
 }

@@ -3,11 +3,11 @@ package com.douglei.orm.mapping.impl.sql.parser.content.node.impl;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import com.douglei.orm.mapping.impl.sql.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNodeType;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ForeachSqlNode;
 import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParser;
-import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParserException;
+import com.douglei.orm.mapping.impl.sql.parser.content.node.SqlNodeParseException;
 import com.douglei.tools.StringUtil;
 
 /**
@@ -17,17 +17,17 @@ import com.douglei.tools.StringUtil;
 public class ForeachSqlNodeParser extends SqlNodeParser {
 
 	@Override
-	public SqlNode parse(Node node) throws SqlNodeParserException {
+	public SqlNode parse(Node node) throws SqlNodeParseException {
 		NamedNodeMap attributeMap = node.getAttributes();
 		
 		String collection = getAttributeValue(attributeMap.getNamedItem("collection"));
 		if(StringUtil.isEmpty(collection)) {
-			throw new SqlNodeParserException("<foreach>中的collection属性值不能为空");
+			throw new SqlNodeParseException("<foreach>中的collection属性值不能为空");
 		}
 		
 		String alias = getAttributeValue(attributeMap.getNamedItem("alias"));
 		if(StringUtil.isEmpty(alias)) 
-			throw new SqlNodeParserException("<foreach>中的alias属性值不能为空");
+			throw new SqlNodeParseException("<foreach>中的alias属性值不能为空");
 		
 		// 解析open
 		String open = getAttributeValue(attributeMap.getNamedItem("open"));
@@ -47,7 +47,7 @@ public class ForeachSqlNodeParser extends SqlNodeParser {
 	}
 	
 	@Override
-	public SqlNodeType getNodeType() {
+	public SqlNodeType getType() {
 		return SqlNodeType.FOREACH;
 	}
 }

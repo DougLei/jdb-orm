@@ -1,7 +1,7 @@
 package com.douglei.orm.mapping.validator;
 
 import com.douglei.orm.dialect.datatype.db.DBDataType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.SqlParameterNode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 
 /**
@@ -36,15 +36,15 @@ public class ValidatedData {
 	/**
 	 * 设置验证的(sql参数)数据
 	 * @param value
-	 * @param sqlParameter
+	 * @param parameter
 	 */
-	public void setValue(Object value, SqlParameterNode sqlParameter) {
+	public void setValue(Object value, ParameterNode parameter) {
 		this.value = value;
-		this.name = sqlParameter.getName();
-		this.dbDataType = sqlParameter.getDBDataType();
-		this.length = sqlParameter.getLength();
-		this.precision = sqlParameter.getPrecision();
-		this.nullable = sqlParameter.isNullable();
+		this.name = parameter.getName();
+		this.dbDataType = parameter.getDBDataType();
+		this.length = parameter.getLength();
+		this.precision = parameter.getPrecision();
+		this.nullable = parameter.isNullable();
 	}
 	
 	/**

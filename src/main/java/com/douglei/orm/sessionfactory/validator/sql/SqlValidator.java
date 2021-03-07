@@ -17,9 +17,9 @@ public class SqlValidator extends SqlContentExtractor{
 	private List<ContentValidator> contentValidators;
 	
 	public SqlValidator(Purpose purpose, SqlMetadata sqlMetadata, String name) {
-		List<ContentMetadata> contents = getContents(purpose, name, sqlMetadata.getContents());
-		contentValidators = new ArrayList<ContentValidator>(contents.size());
-		contents.forEach(content -> contentValidators.add(new ContentValidator(content)));
+		List<ContentMetadata> contents = getContentMetadatas(purpose, name, sqlMetadata.getContents());
+		this.contentValidators = new ArrayList<ContentValidator>(contents.size());
+		contents.forEach(content -> contentValidators.add(new ContentValidator(content, sqlMetadata.getSqlContentMap(), sqlMetadata.getValidatorsMap())));
 	}
 	
 	/**
@@ -28,12 +28,11 @@ public class SqlValidator extends SqlContentExtractor{
 	 * @return
 	 */
 	public ValidateFailResult validate(Object sqlParameter) {
-		ValidateFailResult result = null;
-		for (ContentValidator cvalidator : contentValidators) {
-			result = cvalidator.validate(sqlParameter);
-			if(result != null) 
-				break;
+		for (ContentValidator validator : contentValidators) {
+			ValidateFailResult failResult = validator.validate(sqlParameter);
+			if(failResult != null) 
+				return failResult;
 		}
-		return result;
+		return null;
 	}
 }
