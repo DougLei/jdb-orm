@@ -50,7 +50,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 			if(column.getName().equals(autoincrementPrimaryKeyColumnName))
 				sql.append(" identity ");
 			if(!column.isNullable()) 
-				sql.append("not null");
+				sql.append(" not null");
 			sql.append(',');
 		}
 		sql.setLength(sql.length()-1);

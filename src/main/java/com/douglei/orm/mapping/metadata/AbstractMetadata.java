@@ -20,7 +20,7 @@ public abstract class AbstractMetadata implements Metadata{
 	 * 获取元数据的名称
 	 * @return
 	 */
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 	
@@ -28,7 +28,7 @@ public abstract class AbstractMetadata implements Metadata{
 	 * 获取元数据的旧名称
 	 * @return
 	 */
-	public final String getOldName() {
+	public String getOldName() {
 		return oldName;
 	}
 	
@@ -36,7 +36,7 @@ public abstract class AbstractMetadata implements Metadata{
 	 * 是否修改了名称; 即name与oldName不同
 	 * @return
 	 */
-	public final boolean isUpdateName() {
+	public boolean isUpdateName() {
 		return oldName != null && !name.equals(oldName);
 	}
 }

@@ -7,6 +7,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
+
 /**
  * 
  * @author DougLei
@@ -15,11 +17,12 @@ public abstract class MappingParser {
 	
 	/**
 	 * 解析出MappingSubject
+	 * @param entity
 	 * @param input
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract MappingSubject parse(InputStream input) throws Exception;
+	public abstract MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception;
 	
 	/**
 	 * 使用Dom4j构建映射主体实例

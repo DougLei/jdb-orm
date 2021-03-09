@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
 import com.douglei.orm.dialect.DatabaseNameConstants;
+import com.douglei.orm.mapping.impl.table.metadata.AutoincrementPrimaryKey;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sql.statement.entity.InputSqlParameter;
@@ -33,18 +34,18 @@ public class ExecutableInsertSql extends ExecutableTableSql{
 		valuesSQL.append(" values(");
 		
 		// Oracle数据库下, 自增序列拼接相关的SQL
-		if(tableMetadata.getAutoincrementPrimaryKey() != null && EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
-			insertSQL.append(tableMetadata.getAutoincrementPrimaryKey().getColumn()).append(',');
-			valuesSQL.append(tableMetadata.getAutoincrementPrimaryKey().getSequenceName()).append(".nextval,");
+		AutoincrementPrimaryKey apk = tableMetadata.getAutoincrementPrimaryKey();
+		if(apk != null && EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
+			insertSQL.append(apk.getColumn()).append(',');
+			valuesSQL.append(apk.getSequence()).append(".nextval,");
 		}
 		
-		ColumnMetadata column = null;
+		// 只保存不为空, 且非自增主键的值
 		for (Entry<String, Object> entry : objectMap.entrySet()) {
-			if(entry.getValue() == null)
-				continue; // 只保存不为空的值, 空值不处理
+			if(entry.getValue() == null || (apk != null && entry.getKey().equals(apk.getCode())))
+				continue; 
 			
-			column = tableMetadata.getColumnMap4Code().get(entry.getKey());
-			
+			ColumnMetadata column = tableMetadata.getColumnMap4Code().get(entry.getKey());
 			insertSQL.append(column.getName()).append(',');
 			valuesSQL.append("?,");
 			parameters.add(new InputSqlParameter(entry.getValue(), column.getDBDataType()));

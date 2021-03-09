@@ -13,7 +13,7 @@ public class ConstraintMetadata implements Metadata{
 	private ConstraintType type; // 约束类型
 	private List<String> columnNameList; // 约束的列名集合
 	
-	private String sequenceName; // oracle中自增主键的序列名
+	private String sequence; // oracle中自增主键的序列名
 	private String defaultValue;// 默认值约束的值
 	private String check; // 检查约束的值
 	private String table;// 外键约束关联的表名
@@ -24,8 +24,8 @@ public class ConstraintMetadata implements Metadata{
 		this.type = type;
 		this.columnNameList = columnNames;
 	}
-	public void setSequenceName(String sequenceName) {
-		this.sequenceName = sequenceName;
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
 	}
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
@@ -52,8 +52,8 @@ public class ConstraintMetadata implements Metadata{
 	public List<String> getColumnNameList() {
 		return columnNameList;
 	}
-	public String getSequenceName() {
-		return sequenceName;
+	public String getSequence() {
+		return sequence;
 	}
 	public String getDefaultValue() {
 		return defaultValue;

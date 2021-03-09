@@ -40,17 +40,17 @@ public class ColumnMetadata extends AbstractMetadata {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		return name.equals(((ColumnMetadata)obj).name);
+	}
+	
+	@Override
 	public String getCode() {
 		if(property == null) 
 			return name;
 		return property;
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		return name.equals(((ColumnMetadata)obj).name);
-	}
-
 	public DBDataType getDBDataType() {
 		if(DBDataType == null)
 			DBDataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().getDBDataTypeByName(dbDataType);

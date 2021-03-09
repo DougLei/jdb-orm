@@ -48,7 +48,7 @@ public abstract class SqlStatementHandler {
 		
 		for (ColumnMetadata column : table.getColumns()) {
 			sql.append(column.getName()).append(" ");
-			sql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(" ");
+			sql.append(column.getDBDataType().getSqlStatement(column.getLength(), column.getPrecision())).append(' ');
 			if(!column.isNullable()) 
 				sql.append("not null");
 			sql.append(',');

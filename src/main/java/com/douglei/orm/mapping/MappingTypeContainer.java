@@ -98,4 +98,13 @@ public class MappingTypeContainer {
 		}
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @param name
+	 */
+	public static void remove(String name) {
+		if(CONTAINER.containsKey(name))
+			CONTAINER.remove(name);
+	}
 }

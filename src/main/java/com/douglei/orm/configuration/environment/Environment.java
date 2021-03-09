@@ -151,11 +151,15 @@ public class Environment {
 		
 		// 设置内置的sql映射配置
 		Element sqlMappingElement = mappingElement.element("sql");
-		configuration.setSqlMappingConfiguration(new SqlMappingConfiguration(
-				sqlMappingElement.attributeValue("parameterPrefix", "#{"), 
-				sqlMappingElement.attributeValue("parameterSuffix", "}"), 
-				sqlMappingElement.attributeValue("parameterSplit", ","), 
-				(SqlMappingParameterDefaultValueHandler)ClassUtil.newInstance(sqlMappingElement.attributeValue("parameterDefaultValueHandler", SqlMappingParameterDefaultValueHandler.class.getName()))));
+		if(sqlMappingElement == null) {
+			configuration.setSqlMappingConfiguration(new SqlMappingConfiguration("#{", "}", ",", new SqlMappingParameterDefaultValueHandler()));
+		}else {
+			configuration.setSqlMappingConfiguration(new SqlMappingConfiguration(
+					sqlMappingElement.attributeValue("parameterPrefix", "#{"), 
+					sqlMappingElement.attributeValue("parameterSuffix", "}"), 
+					sqlMappingElement.attributeValue("parameterSplit", ","), 
+					(SqlMappingParameterDefaultValueHandler)ClassUtil.newInstance(sqlMappingElement.attributeValue("parameterDefaultValueHandler", SqlMappingParameterDefaultValueHandler.class.getName()))));
+		}
 		
 		logger.debug("解析出的映射配置信息: {}", configuration);
 		return configuration;

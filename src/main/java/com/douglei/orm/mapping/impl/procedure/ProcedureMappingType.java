@@ -5,6 +5,7 @@ import java.io.InputStream;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingType;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 
 /**
  * 
@@ -17,7 +18,7 @@ public class ProcedureMappingType extends MappingType{
 	}
 
 	@Override
-	public MappingSubject parse(InputStream input) throws Exception{
-		return new ProcedureMappingParser().parse(input);
+	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception{
+		return new ProcedureMappingParser().parse(entity, input);
 	}
 }

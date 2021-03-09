@@ -18,6 +18,7 @@ import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.impl.table.metadata.AutoincrementPrimaryKey;
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.ConstraintMetadata;
@@ -42,7 +43,7 @@ class TableMappingParser extends MappingParser{
 	private TableMetadata tableMetadata;
 	
 	@Override
-	public MappingSubject parse(InputStream input) throws Exception {
+	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		
 		// 解析TableMetadata
@@ -106,8 +107,10 @@ class TableMappingParser extends MappingParser{
 				existsPK = true;
 				
 				// 记录自增主键关联的列名
-				if(constraint.getType() == ConstraintType.AUTO_INCREMENT_PRIMARY_KEY)
-					tableMetadata.setAutoincrementPrimaryKey(new AutoincrementPrimaryKey(constraint.getColumnNameList().get(0), constraint.getSequenceName()));
+				if(constraint.getType() == ConstraintType.AUTO_INCREMENT_PRIMARY_KEY) {
+					ColumnMetadata column = tableMetadata.getColumnMap4Name().get(constraint.getColumnNameList().get(0));
+					tableMetadata.setAutoincrementPrimaryKey(new AutoincrementPrimaryKey(column.getName(), column.getCode(), constraint.getSequence()));
+				}
 			}
 			constraints.add(constraint);
 		}
@@ -321,20 +324,20 @@ class ConstraintMetadataParser {
 			case AUTO_INCREMENT_PRIMARY_KEY:
 				// 如果是Oracle数据库, 解析序列名, 未配置时自动生成一个
 				if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
-					String sequenceName = element.attributeValue("sequenceName");
+					String sequence = element.attributeValue("sequence");
 					
-					if(StringUtil.isEmpty(sequenceName)) {
-						sequenceName = "SEQ_" + tableMetadata.getName();
-						if(sequenceName.length() > maxLength) {
-							StringBuilder sb = new StringBuilder(sequenceName.length());
+					if(StringUtil.isEmpty(sequence)) {
+						sequence = "SEQ_" + tableMetadata.getName();
+						if(sequence.length() > maxLength) {
+							StringBuilder sb = new StringBuilder(sequence.length());
 							sb.append("SEQ_");
 							appendCompressedName(sb, tableMetadata.getName());
-							sequenceName = sb.toString();
+							sequence = sb.toString();
 						}
 					}
-					if(sequenceName.length() > maxLength)
-						throw new MetadataParseException("Oracle数据库序列名["+sequenceName+"]长度超长, 长度应小于等于"+maxLength);
-					constraint.setSequenceName(sequenceName);
+					if(sequence.length() > maxLength)
+						throw new MetadataParseException("Oracle数据库序列名["+sequence+"]长度超长, 长度应小于等于"+maxLength);
+					constraint.setSequence(sequence);
 				}
 				break;
 			case PRIMARY_KEY:

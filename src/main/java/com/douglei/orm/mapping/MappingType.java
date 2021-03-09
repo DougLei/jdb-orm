@@ -2,6 +2,8 @@ package com.douglei.orm.mapping;
 
 import java.io.InputStream;
 
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
+
 /**
  * 映射类型
  * @author DougLei
@@ -28,11 +30,12 @@ public abstract class MappingType {
 	
 	/**
 	 * 解析
-	 * @param input
+	 * @param entity
+ 	 * @param input
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract MappingSubject parse(InputStream input) throws Exception;
+	public abstract MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception;
 	
 	/**
 	 * 获取类型名称

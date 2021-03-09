@@ -165,7 +165,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		ExecutableTableSql executableTableSql = persistentObject.getExecutableTableSql();
 		if(persistentObject.getOperation() == Operation.INSERT && tableMetadata.getAutoincrementPrimaryKey() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
-			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new AutoIncrementID(tableMetadata.getAutoincrementPrimaryKey().getSequenceName()));
+			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new AutoIncrementID(tableMetadata.getAutoincrementPrimaryKey().getSequence()));
 			// 将执行insert语句后生成的序列值, 赋给源实例
 			String code = tableMetadata.getColumnMap4Name().get(tableMetadata.getAutoincrementPrimaryKey().getColumn()).getCode();
 			IntrospectorUtil.setValue(code, result.getAutoIncrementIDValue(), persistentObject.getOriginObject());

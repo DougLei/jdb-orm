@@ -56,12 +56,12 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// --------------------------------------------------------------------------------------------
 	@Override
 	public String createAutoincrementPrimaryKey(TableMetadata table) {
-		return "create sequence "+table.getAutoincrementPrimaryKey().getSequenceName()+" nocache";
+		return "create sequence "+table.getAutoincrementPrimaryKey().getSequence()+" nocache";
 	}
 	
 	@Override
 	public String dropAutoincrementPrimaryKey(TableMetadata table) {
-		return "drop sequence " + table.getAutoincrementPrimaryKey().getSequenceName();
+		return "drop sequence " + table.getAutoincrementPrimaryKey().getSequence();
 	}
 	
 	// --------------------------------------------------------------------------------------------

@@ -28,6 +28,7 @@ public enum DatabaseType {
 	private DatabaseType(String name, int nameMaxLength, boolean supportProcedureDirectlyReturnResultSet, Class<? extends Dialect> dialectClass, int... supportDatabaseMajorVersions) {
 		this.name = name.toUpperCase(); // 这里name通过传入的形式, 方便后续扩展同名但不同版本的数据库枚举
 		this.dialectClass = dialectClass;
+		this.nameMaxLength = nameMaxLength;
 		this.supportDatabaseMajorVersions = supportDatabaseMajorVersions;
 	}
 

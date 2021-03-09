@@ -115,7 +115,7 @@ public class MappingHandler {
 	 * @param mappingEntities
 	 * @throws MappingHandleException 
 	 */
-	public void execute(List<MappingEntity> mappingEntities) throws MappingHandleException {
+	public synchronized void execute(List<MappingEntity> mappingEntities) throws MappingHandleException {
 		logger.debug("操作映射开始");
 		try {
 			parseMappingEntities(mappingEntities);
@@ -279,15 +279,18 @@ public class MappingHandler {
 	 * 获取指定code和type的映射 
 	 * @param code 
 	 * @param type
+	 * @param validate 是否对获取的结果进行验证
 	 * @return
 	 */
-	public Mapping getMapping(String code, String type) {
+	public Mapping getMapping(String code, String type, boolean validate) {
 		Mapping mapping =  container.getMapping(code);
-		if(mapping == null)
-			throw new NullPointerException("不存在code为"+code+"的mapping");
-		if(type.equals(mapping.getType()))
-			return mapping;
-		throw new MappingHandleException("code为"+code+"的mapping不是["+type+"]类型");
+		if(validate) {
+			if(mapping == null)
+				throw new MappingHandleException("不存在code为"+code+"的mapping");
+			if(!type.equals(mapping.getType()))
+				throw new MappingHandleException("code为"+code+"的mapping不是["+type+"]类型");
+		}
+		return mapping;
 	}
 	
 	/**
@@ -296,7 +299,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public TableMetadata getTableMetadata(String code) {
-		return (TableMetadata) getMapping(code, MappingTypeNameConstants.TABLE).getMetadata();
+		return (TableMetadata) getMapping(code, MappingTypeNameConstants.TABLE, true).getMetadata();
 	}
 	
 	/**
@@ -305,7 +308,7 @@ public class MappingHandler {
 	 * @return
 	 */
 	public SqlMetadata getSqlMetadata(String namespace) {
-		return (SqlMetadata) getMapping(namespace, MappingTypeNameConstants.SQL).getMetadata();
+		return (SqlMetadata) getMapping(namespace, MappingTypeNameConstants.SQL, true).getMetadata();
 	}
 	
 	/**

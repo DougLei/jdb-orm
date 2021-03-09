@@ -150,7 +150,7 @@ public class TableObjectHandler extends DBObjectHandler{
 			switch(newConstraint.getType()) {
 				case AUTO_INCREMENT_PRIMARY_KEY:
 					if(EnvironmentContext.getEnvironment().getDialect().getDatabaseType().getName().equals(DatabaseNameConstants.ORACLE)) {
-						if(!newConstraint.getSequenceName().equals(oldConstraint.getSequenceName()))
+						if(!newConstraint.getSequence().equals(oldConstraint.getSequence()))
 							return true;
 					}
 					break;

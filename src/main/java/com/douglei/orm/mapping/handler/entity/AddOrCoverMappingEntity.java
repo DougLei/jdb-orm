@@ -21,7 +21,7 @@ import com.douglei.tools.file.scanner.impl.ResourceScanner;
 public class AddOrCoverMappingEntity extends MappingEntity {
 	private static final Logger logger = LoggerFactory.getLogger(AddOrCoverMappingEntity.class);
 
-	private String filepath; // 从文件获取映射
+	private String filepath; // 从文件获取映射(基于java resource)
 	private String content; // 从内容获取映射
 	private MappingProperty mappingProperty; // 映射属性实例
 	private Mapping mapping; // 映射实例
@@ -71,7 +71,7 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	public void parseMapping() throws ParseMappingException {
 		logger.debug("开始解析{}类型的映射", type.getName());
 		try (InputStream input = (filepath!=null)?ResourceScanner.read(filepath):new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))){
-			MappingSubject ms = super.type.parse(input);
+			MappingSubject ms = super.type.parse(this, input);
 			this.mappingProperty = ms.getMappingProperty();
 			this.mapping = ms.getMapping();
 			logger.debug("结束解析{}类型的映射", type.getName());

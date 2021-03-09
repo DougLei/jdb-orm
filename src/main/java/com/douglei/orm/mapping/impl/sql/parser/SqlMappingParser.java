@@ -15,6 +15,7 @@ import com.douglei.orm.mapping.MappingParseToolContext;
 import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
+import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.impl.sql.SqlMapping;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadataParser;
@@ -36,7 +37,7 @@ public class SqlMappingParser extends MappingParser {
 	private SqlMetadata sqlMetadata;
 	
 	@Override
-	public MappingSubject parse(InputStream input) throws Exception {
+	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getDocumentBuilder().parse(input).getDocumentElement();
 		
 		// 解析SqlMetadata

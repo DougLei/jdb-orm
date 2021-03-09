@@ -8,11 +8,13 @@ import com.douglei.orm.mapping.metadata.Metadata;
  */
 public class AutoincrementPrimaryKey implements Metadata{
 	private String column; // 列名
-	private String sequenceName; // 序列名
+	private String code; // 列code
+	private String sequence; // 序列名
 	
-	public AutoincrementPrimaryKey(String column, String sequenceName) {
+	public AutoincrementPrimaryKey(String column, String code, String sequence) {
 		this.column = column;
-		this.sequenceName = sequenceName;
+		this.code = code;
+		this.sequence = sequence;
 	}
 
 	/**
@@ -24,10 +26,18 @@ public class AutoincrementPrimaryKey implements Metadata{
 	}
 	
 	/**
+	 * 获取自增主键关联的列code
+	 * @return
+	 */
+	public String getCode() {
+		return code;
+	}
+
+	/**
 	 *  获取自增主键的序列名(针对Oracle数据库)
 	 * @return
 	 */
-	public String getSequenceName() {
-		return sequenceName;
+	public String getSequence() {
+		return sequence;
 	}
 }
