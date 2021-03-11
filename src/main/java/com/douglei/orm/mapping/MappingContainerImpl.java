@@ -12,11 +12,14 @@ import org.slf4j.LoggerFactory;
  */
 public class MappingContainerImpl implements MappingContainer {
 	private static final Logger logger = LoggerFactory.getLogger(MappingContainerImpl.class);
+	private Map<String, MappingProperty> mappingProperties;
 	private Map<String, Mapping> mappings = new HashMap<String, Mapping>(64);
-	private Map<String, MappingProperty> mappingProperties = new HashMap<String, MappingProperty>(64);
 	
 	@Override
 	public MappingProperty addMappingProperty(MappingProperty mappingProperty) {
+		if(mappingProperties == null)
+			mappingProperties = new HashMap<String, MappingProperty>(64);
+		
 		String code = mappingProperty.getCode();
 		MappingProperty exMappingProperty = mappingProperties.get(code);
 		if(logger.isDebugEnabled() && exMappingProperty != null) 
@@ -28,11 +31,17 @@ public class MappingContainerImpl implements MappingContainer {
 
 	@Override
 	public MappingProperty deleteMappingProperty(String code) {
+		if(mappingProperties == null)
+			mappingProperties = new HashMap<String, MappingProperty>(64);
+		
 		return mappingProperties.remove(code);
 	}
 
 	@Override
 	public MappingProperty getMappingProperty(String code) {
+		if(mappingProperties == null)
+			mappingProperties = new HashMap<String, MappingProperty>(64);
+		
 		return mappingProperties.get(code);
 	}
 	

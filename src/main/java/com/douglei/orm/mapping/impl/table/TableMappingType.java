@@ -12,6 +12,7 @@ import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
  * @author DougLei
  */
 public class TableMappingType extends MappingType{
+	private static TableMappingParser parser = new TableMappingParser();
 	
 	public TableMappingType() {
 		super(MappingTypeNameConstants.TABLE, ".tmp.xml", 10, true);
@@ -19,6 +20,6 @@ public class TableMappingType extends MappingType{
 
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
-		return new TableMappingParser().parse(entity, input);
+		return parser.parse(entity, input);
 	}
 }

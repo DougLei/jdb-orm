@@ -138,4 +138,11 @@ public class QuerySqlStatement {
 	public int getTotalLength() {
 		return (withClause==null?0:withClause.length()) + querySQL.length() + (orderByClause==null?0:orderByClause.length());
 	}
+
+	@Override
+	public String toString() {
+		return "[querySQL=" + querySQL + ", withClause=" + withClause + ", orderByClause=" + orderByClause + "]";
+	}
+	
+	
 }

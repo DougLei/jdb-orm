@@ -40,29 +40,28 @@ class TableMappingParser extends MappingParser{
 	private static ColumnMetadataParser columnMetadataParser = new ColumnMetadataParser();
 	private static ConstraintMetadataParser constraintMetadataParser = new ConstraintMetadataParser();
 
-	private TableMetadata tableMetadata;
-	
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		
 		// 解析TableMetadata
 		Element tableElement = Dom4jUtil.getElement(MappingTypeNameConstants.TABLE, rootElement);
-		tableMetadata = tableMetadataParser.parse(tableElement);
+		TableMetadata tableMetadata = tableMetadataParser.parse(tableElement);
 		
-		addColumns(tableElement.element("columns"));
-		addConstraints(tableElement);
-		addValidators(tableElement.element("validators"));
+		addColumns(tableMetadata, tableElement.element("columns"));
+		addConstraints(tableMetadata, tableElement);
+		addValidators(tableMetadata, tableElement.element("validators"));
 		
-		return buildMappingSubjectByDom4j(new TableMapping(tableMetadata), rootElement);
+		return buildMappingSubjectByDom4j(entity.isEnableProperty(), new TableMapping(tableMetadata), rootElement);
 	}
 	
 	/**
 	 * 添加列
+	 * @param tableMetadata
 	 * @param element
 	 */
 	@SuppressWarnings("unchecked")
-	private void addColumns(Element element) {
+	private void addColumns(TableMetadata tableMetadata, Element element) {
 		if(element == null)
 			throw new MetadataParseException("<table>下必须配置<columns>");
 		
@@ -82,10 +81,11 @@ class TableMappingParser extends MappingParser{
 	
 	/**
 	 * 添加约束
+	 * @param tableMetadata
 	 * @param tableElement
 	 */
 	@SuppressWarnings("unchecked")
-	private void addConstraints(Element tableElement) {
+	private void addConstraints(TableMetadata tableMetadata, Element tableElement) {
 		Element element = tableElement.element("constraints");
 		if(element == null)
 			return;
@@ -145,10 +145,11 @@ class TableMappingParser extends MappingParser{
 	/**
 	/**
 	 * 添加验证器
+	 * @param tableMetadata
 	 * @param element
 	 */
 	@SuppressWarnings("unchecked")
-	private void addValidators(Element element) {
+	private void addValidators(TableMetadata tableMetadata, Element element) {
 		if(element == null)
 			return;
 		

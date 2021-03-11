@@ -12,6 +12,7 @@ import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
  * @author DougLei
  */
 public class ProcedureMappingType extends MappingType{
+	private static ProcedureMappingParser parser = new ProcedureMappingParser();
 	
 	public ProcedureMappingType() {
 		super(MappingTypeNameConstants.PROCEDURE, ".pmp.xml", 30, true);
@@ -19,6 +20,6 @@ public class ProcedureMappingType extends MappingType{
 
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception{
-		return new ProcedureMappingParser().parse(entity, input);
+		return parser.parse(entity, input);
 	}
 }

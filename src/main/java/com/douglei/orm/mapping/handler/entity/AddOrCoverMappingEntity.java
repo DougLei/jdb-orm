@@ -93,7 +93,9 @@ public class AddOrCoverMappingEntity extends MappingEntity {
 	
 	@Override
 	public int getOrder() {
-		return mappingProperty.getOrder();
+		if(enableProperty)
+			return mappingProperty.getOrder();
+		return 0;
 	}
 	
 	/**

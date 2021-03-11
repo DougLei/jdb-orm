@@ -9,6 +9,7 @@ import com.douglei.orm.mapping.MappingType;
 public abstract class MappingEntity {
 	protected MappingType type; // 映射的类型
 	protected boolean opDatabaseObject; // 是否操作数据库对象
+	protected boolean enableProperty; // 是否启用MappingProperty; 没有启用MappingProperty的Mapping, 是无法被动态操作的
 	
 	/**
 	 * 获取操作映射的模式
@@ -32,6 +33,23 @@ public abstract class MappingEntity {
 		return opDatabaseObject;
 	}
 	
+	/**
+	 * 启用MappingProperty
+	 * @return
+	 */
+	public final MappingEntity enableProperty() {
+		this.enableProperty = true;
+		return this;
+	}
+	
+	/**
+	 * 是否启用MappingProperty
+	 * @return
+	 */
+	public final boolean isEnableProperty() {
+		return enableProperty;
+	}
+
 	/**
 	 * 获取映射code
 	 * @return

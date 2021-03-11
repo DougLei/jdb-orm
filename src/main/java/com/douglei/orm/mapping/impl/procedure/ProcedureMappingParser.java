@@ -24,6 +24,6 @@ class ProcedureMappingParser extends MappingParser{
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		ProcedureMetadata procedureMetadata = (ProcedureMetadata) procedureMetadataParser.parse(Dom4jUtil.getElement(MappingTypeNameConstants.PROCEDURE, rootElement));
-		return buildMappingSubjectByDom4j(new ProcedureMapping(procedureMetadata), rootElement);
+		return buildMappingSubjectByDom4j(entity.isEnableProperty(), new ProcedureMapping(procedureMetadata), rootElement);
 	}
 }

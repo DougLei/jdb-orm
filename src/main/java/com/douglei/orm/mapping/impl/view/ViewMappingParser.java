@@ -24,6 +24,6 @@ class ViewMappingParser extends MappingParser{
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
 		ViewMetadata viewMetadata = viewMetadataParser.parse(Dom4jUtil.getElement(MappingTypeNameConstants.VIEW, rootElement));
-		return buildMappingSubjectByDom4j(new ViewMapping(viewMetadata), rootElement);
+		return buildMappingSubjectByDom4j(entity.isEnableProperty(), new ViewMapping(viewMetadata), rootElement);
 	}
 }

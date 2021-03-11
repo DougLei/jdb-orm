@@ -62,26 +62,43 @@ public class MappingHandler {
 	
 	// 解析映射实体
 	private void parseMappingEntities(List<MappingEntity> mappingEntities) throws ParseMappingException {
-		MappingProperty property;
+		MappingProperty property = null;
 		for(MappingEntity mappingEntity : mappingEntities) {
 			logger.debug("解析: {}", mappingEntity);
 			switch (mappingEntity.getMode()) {
 				case ADD_OR_COVER: 
 					((AddOrCoverMappingEntity)mappingEntity).parseMapping();
 					
-					property = container.getMappingProperty(mappingEntity.getCode());
-					if(property != null && !property.supportCover())
+					// 启用属性
+					if(mappingEntity.isEnableProperty()) {
+						property = container.getMappingProperty(mappingEntity.getCode());
+						if(property != null && !property.supportCover())
+							throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
+						break;
+					}
+					
+					// 未启用属性
+					if(container.exists(mappingEntity.getCode())) 
 						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射已存在, 且禁止被覆盖");
 					break;
 				case DELETE: 
-					property = container.getMappingProperty(mappingEntity.getCode());
-					if(property == null)
-						throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
-					if(!property.supportDelete())
-						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
 					
-					((DeleteMappingEntity)mappingEntity).setMappingPropertyValue(property);
-					break;
+					// 启用属性
+					if(mappingEntity.isEnableProperty()) {
+						property = container.getMappingProperty(mappingEntity.getCode());
+						if(property == null)
+							throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
+						if(!property.supportDelete())
+							throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
+						
+						((DeleteMappingEntity)mappingEntity).setMappingPropertyValue(property);
+						break;
+					}
+					
+					// 未启用属性
+					if(container.exists(mappingEntity.getCode()))
+						throw new ParseMappingException("名为["+mappingEntity.getCode()+"]的映射禁止被删除");
+					throw new NullPointerException("不存在code为"+mappingEntity.getCode()+"的映射, 无法删除"); 
 			}
 		}
 		
@@ -133,7 +150,7 @@ public class MappingHandler {
 							createDBObject(entity.getType(), (AbstractDBObjectMetadata)((AddOrCoverMappingEntity)entity).getMapping().getMetadata(), coveredMapping==null?null:coveredMapping.getMetadata());
 						break;
 					case DELETE: 
-						Mapping deletedMapping = deleteMapping(entity.getCode());
+						Mapping deletedMapping = deleteMapping(entity.isEnableProperty(), entity.getCode());
 						
 						if(entity.opDatabaseObject() && entity.getType().supportOpDatabaseObject()) 
 							deleteDBObject(entity.getType().getName(), (AbstractDBObjectMetadata)deletedMapping.getMetadata());
@@ -163,11 +180,13 @@ public class MappingHandler {
 	 * @return
 	 */
 	private Mapping addMapping(AddOrCoverMappingEntity entity) {
-		MappingProperty coveredMappingProperty = container.addMappingProperty(entity.getMappingProperty());
-		if (coveredMappingProperty == null) {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, entity.getMappingProperty().getCode(), null);
-		}else {
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, coveredMappingProperty, null);
+		if(entity.isEnableProperty()) {
+			MappingProperty coveredMappingProperty = container.addMappingProperty(entity.getMappingProperty());
+			if (coveredMappingProperty == null) {
+				RollbackRecorder.record(RollbackExecMethod.EXEC_DELETE_MAPPING_PROPERTY, entity.getMappingProperty().getCode(), null);
+			}else {
+				RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, coveredMappingProperty, null);
+			}
 		}
 		
 		Mapping coveredMapping = container.addMapping(entity.getMapping());
@@ -179,7 +198,7 @@ public class MappingHandler {
 		
 		// 如果改了名字, 上面的coveredMapping是无法覆盖的, 这里进行删除
 		if(entity.getMapping().getMetadata().isUpdateName()) 
-			return deleteMapping(entity.getMapping().getMetadata().getOldName());
+			return deleteMapping(entity.isEnableProperty(), entity.getMapping().getMetadata().getOldName());
 		return coveredMapping;
 	}
 	
@@ -208,13 +227,16 @@ public class MappingHandler {
 	
 	/**
 	 * 删除映射; 返回被删除的映射实例, 如果没有映射, 返回null
+	 * @param enableProperty
 	 * @param code
 	 * @return
 	 */
-	private Mapping deleteMapping(String code) {
-		MappingProperty deletedMappingProperty = container.deleteMappingProperty(code);
-		if(deletedMappingProperty != null) 
-			RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, deletedMappingProperty, null);
+	private Mapping deleteMapping(boolean enableProperty, String code) {
+		if(enableProperty) {
+			MappingProperty deletedMappingProperty = container.deleteMappingProperty(code);
+			if(deletedMappingProperty != null) 
+				RollbackRecorder.record(RollbackExecMethod.EXEC_ADD_MAPPING_PROPERTY, deletedMappingProperty, null);
+		}
 		
 		Mapping deletedMapping = container.deleteMapping(code);
 		if(deletedMapping != null) 
@@ -258,7 +280,7 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 判断是否存在指定code的映射
+	 * 判断是否存在指定code的映射(非映射属性)
 	 * @param code
 	 * @return
 	 */

@@ -12,6 +12,7 @@ import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
  * @author DougLei
  */
 public class ViewMappingType extends MappingType{
+	private static ViewMappingParser parser = new ViewMappingParser();
 	
 	public ViewMappingType() {
 		super(MappingTypeNameConstants.VIEW, ".vmp.xml", 20, true);
@@ -19,6 +20,6 @@ public class ViewMappingType extends MappingType{
 
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
-		return new ViewMappingParser().parse(entity, input);
+		return parser.parse(entity, input);
 	}
 }

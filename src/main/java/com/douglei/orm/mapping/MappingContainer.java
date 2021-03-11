@@ -11,21 +11,27 @@ public interface MappingContainer {
 	 * @param property
 	 * @return 如果存在相同code的映射属性, 返回被覆盖的映射属性实例, 否则返回null
 	 */
-	MappingProperty addMappingProperty(MappingProperty property);
+	default MappingProperty addMappingProperty(MappingProperty property) {
+		return null;
+	}
 	
 	/**
 	 * 删除映射属性
 	 * @param code
 	 * @return 返回被删除的映射属性实例, 如果没有映射属性, 返回null
 	 */
-	MappingProperty deleteMappingProperty(String code);
+	default MappingProperty deleteMappingProperty(String code) {
+		return null;
+	}
 	
 	/**
 	 * 获取映射属性
 	 * @param code
 	 * @return 如果没有查询到, 返回null
 	 */
-	MappingProperty getMappingProperty(String code);
+	default MappingProperty getMappingProperty(String code) {
+		return null;
+	}
 	
 	
 	
@@ -53,7 +59,7 @@ public interface MappingContainer {
 	
 	
 	/**
-	 * 指定code的映射是否存在
+	 * 指定code的映射(非映射属性)是否存在
 	 * @param code
 	 * @return
 	 */

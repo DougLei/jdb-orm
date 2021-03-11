@@ -13,6 +13,7 @@ import com.douglei.orm.mapping.impl.sql.parser.SqlMappingParser;
  * @author DougLei
  */
 public class SqlMappingType extends MappingType{
+	private static SqlMappingParser parser = new SqlMappingParser();
 	
 	public SqlMappingType() {
 		super(MappingTypeNameConstants.SQL, ".smp.xml", 40, false);
@@ -20,6 +21,6 @@ public class SqlMappingType extends MappingType{
 
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
-		return new SqlMappingParser().parse(entity, input);
+		return parser.parse(entity, input);
 	}
 }

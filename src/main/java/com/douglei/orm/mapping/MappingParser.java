@@ -26,11 +26,15 @@ public abstract class MappingParser {
 	
 	/**
 	 * 使用Dom4j构建映射主体实例
+	 * @param enableProperty
 	 * @param mapping
 	 * @param element
 	 * @return
 	 */
-	protected final MappingSubject buildMappingSubjectByDom4j(Mapping mapping, Element rootElement) {
+	protected final MappingSubject buildMappingSubjectByDom4j(boolean enableProperty, Mapping mapping, Element rootElement) {
+		if(!enableProperty)
+			return new MappingSubject(null, mapping);
+		
 		MappingProperty property = new MappingProperty(mapping.getCode(), mapping.getType());
 		
 		// 解析MappingProperty配置
@@ -43,11 +47,15 @@ public abstract class MappingParser {
 	
 	/**
 	 * 使用DomcumentBuilder构建映射主体实例
+	 * @param enableProperty
 	 * @param mapping
 	 * @param propertyNodeList
 	 * @return
 	 */
-	protected final MappingSubject buildMappingSubjectByDocumentBuilder(Mapping mapping, org.w3c.dom.Element rootElement) {
+	protected final MappingSubject buildMappingSubjectByDocumentBuilder(boolean enableProperty, Mapping mapping, org.w3c.dom.Element rootElement) {
+		if(!enableProperty)
+			return new MappingSubject(null, mapping);
+		
 		MappingProperty property = new MappingProperty(mapping.getCode(), mapping.getType());
 		
 		// 解析MappingProperty配置
