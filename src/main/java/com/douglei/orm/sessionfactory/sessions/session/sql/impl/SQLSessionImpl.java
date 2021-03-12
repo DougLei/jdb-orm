@@ -12,20 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.EnvironmentContext;
-import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
 import com.douglei.orm.mapping.impl.sql.executor.content.node.impl.ParameterNodeExecutor;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.AutoIncrementIDMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
-import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
 import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterMode;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.impl.ParameterNode;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.ProcedurePurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.QueryPurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.UpdatePurposeEntity;
-import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutionException;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecuteException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.orm.sql.query.page.PageResult;
@@ -40,17 +39,22 @@ import com.douglei.tools.reflect.IntrospectorUtil;
  */
 public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private static final Logger logger = LoggerFactory.getLogger(SQLSessionImpl.class);
-	private final Map<String, SqlMetadata> sqlMetadataCache = new HashMap<String, SqlMetadata>(8);
+	private final Map<String, SqlMetadata> cache = new HashMap<String, SqlMetadata>(8);
 	
-	public SQLSessionImpl(ConnectionWrapper connection, Environment environment) {
+	public SQLSessionImpl(ConnectionEntity connection, Environment environment) {
 		super(connection, environment);
 	}
 	
+	/**
+	 * 获取sql元数据实例
+	 * @param namespace
+	 * @return
+	 */
 	private SqlMetadata getSqlMetadata(String namespace) {
-		SqlMetadata sqlMetadata = null;
-		if(sqlMetadataCache.isEmpty() || (sqlMetadata = sqlMetadataCache.get(namespace)) == null) {
+		SqlMetadata sqlMetadata = cache.get(namespace);
+		if(sqlMetadata == null) {
 			sqlMetadata= mappingHandler.getSqlMetadata(namespace);
-			sqlMetadataCache.put(namespace, sqlMetadata);
+			cache.put(namespace, sqlMetadata);
 		}
 		return sqlMetadata;
 	}
@@ -98,21 +102,21 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public List<Map<String, Object>> limitQuery(int startRow, int length, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery(executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
+		return super.limitQuery(startRow, length, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery(targetClass, executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
+		return super.limitQuery(targetClass, startRow, length, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
-	public List<Object[]> limitQuery_(String namespace, String name, int startRow, int length, Object sqlParameter) {
+	public List<Object[]> limitQuery_(int startRow, int length, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery_(executableSqlHolder.getCurrentSql(), startRow, length, executableSqlHolder.getCurrentParameterValues());
+		return super.limitQuery_(startRow, length, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
@@ -201,7 +205,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	private Object executeProcedure(String sql, List<ParameterNode> parameters, Object sqlParameter) {
 		return super.executeProcedure(new ProcedureExecutor() {
 			@Override
-			public Object execute(Connection connection) throws ProcedureExecutionException {
+			public Object execute(Connection connection) throws ProcedureExecuteException {
 				try (CallableStatement callableStatement = connection.prepareCall(sql)){
 					logger.debug("调用存储过程的sql语句为: {}", sql);
 					
@@ -237,7 +241,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					
 					boolean returnResultSet = callableStatement.execute();// 记录执行后, 是否返回结果集, 该参数值针对supportProcedureDirectlyReturnResultSet=true的数据库有效
-					boolean supportProcedureDirectlyReturnResultSet = EnvironmentContext.getEnvironment().getDialect().getDatabaseType().supportProcedureDirectlyReturnResultSet();
+					boolean supportProcedureDirectlyReturnResultSet = environment.getDialect().getDatabaseType().supportProcedureDirectlyReturnResultSet();
 					if(outParameterCount > 0 || supportProcedureDirectlyReturnResultSet) {
 						Map<String, Object> outMap = new HashMap<String, Object>(8);
 						
@@ -255,7 +259,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 					}
 					return null;
 				} catch(SQLException e){
-					throw new ProcedureExecutionException("调用并执行存储过程时出现异常", e);
+					throw new ProcedureExecuteException("调用并执行存储过程时出现异常", e);
 				}
 			}
 
@@ -281,8 +285,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 			if(logger.isDebugEnabled()) 
 				logger.debug("close {}", getClass().getName());
 			
-			if(sqlMetadataCache.size() > 0)
-				sqlMetadataCache.clear();
+			cache.clear();
 			super.close();
 		}
 	}

@@ -103,7 +103,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		
 		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
-		pageQuerySql.append(statement.getQuerySQL());
+		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
 		pageQuerySql.append(" LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);

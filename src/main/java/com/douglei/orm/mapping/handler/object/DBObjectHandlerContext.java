@@ -2,7 +2,7 @@ package com.douglei.orm.mapping.handler.object;
 
 import java.sql.SQLException;
 
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.datasource.DataSourceEntity;
 
 /**
  * 
@@ -15,7 +15,7 @@ public class DBObjectHandlerContext {
 	 * 
 	 * @param dataSource
 	 */
-	public static void init(DataSourceWrapper dataSource) {
+	public static void init(DataSourceEntity dataSource) {
 		OBJECT_HANDLERS_CONTEXT.set(new DBObjectHandlers(dataSource));
 	}
 	

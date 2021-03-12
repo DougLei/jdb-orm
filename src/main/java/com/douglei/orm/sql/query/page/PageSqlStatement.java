@@ -1,5 +1,8 @@
 package com.douglei.orm.sql.query.page;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.sql.query.QuerySqlStatement;
 
@@ -8,11 +11,12 @@ import com.douglei.orm.sql.query.QuerySqlStatement;
  * @author DougLei
  */
 public class PageSqlStatement extends QuerySqlStatement{
-
+	private static final Logger logger = LoggerFactory.getLogger(PageSqlStatement.class);
+	
 	/**
 	 * 
 	 * @param querySQL
-	 * @param extractOrderByClause 是否需要提取querySQL中最外层的order by子句
+	 * @param extractOrderByClause 是否需要提取sql中(最外层的)order by子句
 	 */
 	public PageSqlStatement(String querySQL, boolean extractOrderByClause) {
 		super(querySQL, extractOrderByClause);
@@ -26,7 +30,9 @@ public class PageSqlStatement extends QuerySqlStatement{
 		StringBuilder countSql = new StringBuilder(50 + getTotalLength());
 		if(getWithClause() != null)
 			countSql.append(getWithClause()).append(' ');
-		countSql.append("SELECT COUNT(1) FROM (").append(querySQL).append(") JDB_ORM_QC_");
+		countSql.append("SELECT COUNT(1) FROM (").append(sql).append(") JDB_ORM_QC_");
+		
+		logger.debug("进行分页查询前的count sql语句为: {}", countSql);	
 		return countSql.toString();
 		
 	}

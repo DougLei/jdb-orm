@@ -15,7 +15,7 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class ExecutableInsertSql extends ExecutableTableSql{
+public class ExecutableInsertSql extends AbstractExecutableTableSql{
 	
 	public ExecutableInsertSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		super(tableMetadata, objectMap);

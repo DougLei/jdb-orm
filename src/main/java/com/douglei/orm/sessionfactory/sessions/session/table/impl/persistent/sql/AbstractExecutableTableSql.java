@@ -10,7 +10,7 @@ import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
  * 可执行的表SQL
  * @author DougLei
  */
-public abstract class ExecutableTableSql implements IExecutableSql {
+public abstract class AbstractExecutableTableSql implements IExecutableSql {
 	protected TableMetadata tableMetadata; 
 	protected Map<String, Object> objectMap;
 	
@@ -22,7 +22,7 @@ public abstract class ExecutableTableSql implements IExecutableSql {
 	 * @param tableMetadata
 	 * @param objectMap
 	 */
-	protected ExecutableTableSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
+	protected AbstractExecutableTableSql(TableMetadata tableMetadata, Map<String, Object> objectMap) {
 		this.tableMetadata = tableMetadata;
 		this.objectMap = objectMap;
 	}

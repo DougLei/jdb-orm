@@ -4,6 +4,7 @@ import java.sql.Connection;
 
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
+import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQuerySession;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
 
@@ -32,6 +33,12 @@ public interface Session {
 	SQLSession getSQLSession();
 	
 	/**
+	 * 
+	 * @return
+	 */
+	SQLQuerySession getSQLQuerySession();
+	
+	/**
 	 * 提交, 遇到异常时会记录日志, 并自动回滚
 	 */
 	void commit();
@@ -49,7 +56,7 @@ public interface Session {
 	/**
 	 * 获取数据库原生连接; 该连接使用完成后<b>禁止直接关闭</b>, 其会随着session实例的关闭而关闭
 	 * <p>
-	 * 通过该Connection创建的其他对象<b>建议<b>手动关闭, 例如Statement
+	 * 通过该Connection创建的其他对象需要手动关闭, 例如Statement
 	 * @return
 	 */
 	Connection getConnection();
@@ -67,7 +74,7 @@ public interface Session {
 	
 	/**
 	 * 更新事物的隔离级别
-	 * @param transactionIsolationLevel 传入null时会使用之前的隔离级别
+	 * @param transactionIsolationLevel
 	 */
 	void updateTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel);
 }

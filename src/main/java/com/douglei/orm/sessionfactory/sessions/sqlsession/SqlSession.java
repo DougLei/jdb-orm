@@ -111,63 +111,63 @@ public interface SqlSession {
 	
 	/**
 	 * 限制查询
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @return 返回<列名:值>的map集合
 	 */
-	default List<Map<String, Object>> limitQuery(String sql, int startRow, int length) {
-		return limitQuery(sql, startRow, length, null);
+	default List<Map<String, Object>> limitQuery(int startRow, int length, String sql) {
+		return limitQuery(startRow, length, sql, null);
 	}
 	/**
 	 * 限制查询
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
 	 */
-	List<Map<String, Object>> limitQuery(String sql, int startRow, int length, List<Object> parameters);
+	List<Map<String, Object>> limitQuery(int startRow, int length, String sql, List<Object> parameters);
 	
 	/**
 	 * 限制查询
 	 * @param targetClass
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length);
+	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql);
 	/**
 	 * 限制查询
 	 * @param targetClass
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
+	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql, List<Object> parameters);
 	
 	/**
 	 * 限制查询
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @return 返回<值>的数组
 	 */
-	default List<Object[]> limitQuery_(String sql, int startRow, int length) {
-		return limitQuery_(sql, startRow, length, null);
+	default List<Object[]> limitQuery_(int startRow, int length, String sql) {
+		return limitQuery_(startRow, length, sql, null);
 	}
 	/**
 	 * 限制查询
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
 	 */
-	List<Object[]> limitQuery_(String sql, int startRow, int length, List<Object> parameters);
+	List<Object[]> limitQuery_(int startRow, int length, String sql, List<Object> parameters);
 	
 	/**
 	 * 总数量查询

@@ -9,35 +9,39 @@ import org.junit.Test;
 
 public class JDBCTest {
 	
-//	@Test
-//	public void test() throws Exception {
-//		Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=douglei", "sa", "root");
+	@Test
+	public void test() throws Exception {
+		Connection connection = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;DatabaseName=douglei", "sa", "root");
+		
+//		Statement st = connection.createStatement();
+//		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from LOG_SQL_1");
 //		
-////		Statement st = connection.createStatement();
-////		ResultSet rs = st.executeQuery("select 1.1 as bbbbb from LOG_SQL_1");
-////		
-////		System.out.println(rs.getMetaData().getColumnName(1));
-////		System.out.println(rs.getMetaData().getColumnType(1));
-////		System.out.println(rs.getMetaData().getColumnTypeName(1));
-//		
-//		connection.setAutoCommit(true);
-//		connection.setAutoCommit(false);
-//		connection.setAutoCommit(true);
-//		connection.setAutoCommit(false);
-//		
+//		System.out.println(rs.getMetaData().getColumnName(1));
+//		System.out.println(rs.getMetaData().getColumnType(1));
+//		System.out.println(rs.getMetaData().getColumnTypeName(1));
+		
+		System.out.println(connection.getTransactionIsolation());
+		
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		connection.setAutoCommit(true);
+		connection.setAutoCommit(false);
+		
+		
+		
+		connection.commit();
+		
+//		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
+		
+//		PreparedStatement pst = connection.prepareStatement("insert into log_operation(id, is_success) values (newid(), ?)");
+//		pst.setShort(1, (short)-1);
+//		pst.executeUpdate();
 //		connection.commit();
-//		
-////		st.executeUpdate("insert into sys_user(id, name) values (pkseq_sys_user.nextval, '哈哈')");
-//		
-////		PreparedStatement pst = connection.prepareStatement("insert into log_operation(id, is_success) values (newid(), ?)");
-////		pst.setShort(1, (short)-1);
-////		pst.executeUpdate();
-////		connection.commit();
-//		
-//		
-//		
-//		
-//	}
+		
+		
+		
+		
+	}
 //	
 //	@Test
 //	public void mysql() throws Exception {
@@ -111,16 +115,16 @@ public class JDBCTest {
 //		
 //	}
 	
-	public static void main(String[] args) throws Exception {
-		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
-		String username = "douglei";
-		String pwd = "root";
-		
-		Connection connection = DriverManager.getConnection(url, username, pwd);
-		PreparedStatement pst = connection.prepareStatement("select t.CLAIM_TIME from BPM_RU_ASSIGNEE t WHERE ID=1");
-		ResultSet resultset = pst.executeQuery();
-		System.out.println(resultset.getMetaData().getColumnName(1));
-		System.out.println(resultset.getMetaData().getColumnType(1));
+//	public static void main(String[] args) throws Exception {
+//		String url =  "jdbc:oracle:thin:@localhost:1521:ORCL";
+//		String username = "douglei";
+//		String pwd = "root";
+//		
+//		Connection connection = DriverManager.getConnection(url, username, pwd);
+//		PreparedStatement pst = connection.prepareStatement("select t.CLAIM_TIME from BPM_RU_ASSIGNEE t WHERE ID=1");
+//		ResultSet resultset = pst.executeQuery();
+//		System.out.println(resultset.getMetaData().getColumnName(1));
+//		System.out.println(resultset.getMetaData().getColumnType(1));
 		
 		
 //		String url =  "jdbc:sqlserver://localhost:1433;DatabaseName=douglei";
@@ -164,5 +168,5 @@ public class JDBCTest {
 //			}
 //			
 //		}.start();
-	}
+//	}
 }

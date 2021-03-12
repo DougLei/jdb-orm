@@ -13,7 +13,7 @@ import com.douglei.orm.sql.statement.entity.InputSqlParameter;
  * 
  * @author DougLei
  */
-public class ExecutableUpdateSql extends ExecutableTableSql{
+public class ExecutableUpdateSql extends AbstractExecutableTableSql{
 	private boolean updateNullValue;
 	
 	public ExecutableUpdateSql(TableMetadata tableMetadata, Map<String, Object> objectMap, boolean updateNullValue) {

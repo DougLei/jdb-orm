@@ -1,13 +1,12 @@
 package com.douglei.orm.sessionfactory.sessions;
 
-import java.sql.Connection;
-
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
 import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
-import com.douglei.orm.mapping.handler.MappingHandler;
 import com.douglei.orm.sessionfactory.sessions.session.sql.SQLSession;
 import com.douglei.orm.sessionfactory.sessions.session.sql.impl.SQLSessionImpl;
+import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQuerySession;
+import com.douglei.orm.sessionfactory.sessions.session.sqlquery.impl.SQLQuerySessionImpl;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.TableSessionImpl;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSession;
@@ -17,31 +16,19 @@ import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
  * 
  * @author DougLei
  */
-public class SessionImpl implements Session {
+public class SessionImpl extends AbstractSession implements Session {
 	private SqlSession SqlSession;
 	private TableSession TableSession;
 	private SQLSession SQLSession;
+	private SQLQuerySession SQLQuerySession;
 
-	protected boolean isClosed; // session是否关闭
-	protected ConnectionWrapper connection;
-	protected Environment environment;
-	protected MappingHandler mappingHandler;
-	
-	public SessionImpl(ConnectionWrapper connection, Environment environment) {
-		this.connection = connection;
-		this.environment = environment;
-		this.mappingHandler = environment.getMappingHandler();
-	}
-	
-	// 验证session是否被关闭
-	private void validateSessionIsClosed() {
-		if(isClosed) 
-			throw new SessionExecutionException("session连接已经关闭");
+	public SessionImpl(ConnectionEntity connection, Environment environment) {
+		super(connection, environment);
 	}
 	
 	@Override
 	public final SqlSession getSqlSession() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		if(SqlSession == null) 
 			SqlSession = new SqlSessionImpl(connection, environment);
 		return SqlSession;
@@ -49,7 +36,7 @@ public class SessionImpl implements Session {
 
 	@Override
 	public final TableSession getTableSession() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		if(TableSession == null) 
 			TableSession = new TableSessionImpl(connection, environment);
 		return TableSession;
@@ -57,16 +44,18 @@ public class SessionImpl implements Session {
 
 	@Override
 	public final SQLSession getSQLSession() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		if(SQLSession == null) 
 			SQLSession = new SQLSessionImpl(connection, environment);
 		return SQLSession;
 	}
 	
 	@Override
-	public final Connection getConnection() {
-		validateSessionIsClosed();
-		return connection.getConnection();
+	public SQLQuerySession getSQLQuerySession() {
+		validateIsClosed();
+		if(SQLQuerySession == null)
+			SQLQuerySession = new SQLQuerySessionImpl(connection, environment);
+		return SQLQuerySession;
 	}
 
 	@Override
@@ -76,33 +65,33 @@ public class SessionImpl implements Session {
 
 	@Override
 	public final void beginTransaction() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		connection.beginTransaction();
 	}
 	
 	@Override
 	public final void updateTransactionIsolationLevel(TransactionIsolationLevel transactionIsolationLevel) {
-		validateSessionIsClosed();
+		validateIsClosed();
 		connection.updateTransactionIsolationLevel(transactionIsolationLevel);
 	}
 	
 	@Override
 	public final void commit() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		closeSessions();
 		connection.commit();
 	}
 
 	@Override
 	public final void rollback(){
-		validateSessionIsClosed();
+		validateIsClosed();
 		closeSessions();
 		connection.rollback();
 	}
 
 	@Override
 	public void close() {
-		validateSessionIsClosed();
+		validateIsClosed();
 		closeSessions();
 		connection.close();
 		isClosed = true;
@@ -111,16 +100,20 @@ public class SessionImpl implements Session {
 	// 关闭所有session实例
 	private void closeSessions() {
 		if(SqlSession != null) {
-			((Session)SqlSession).close();
+			((AbstractSession)SqlSession).close();
 			SqlSession = null;
 		}
+		if(TableSession != null) {
+			((AbstractSession)TableSession).close();
+			TableSession = null;
+		}
 		if(SQLSession != null) {
-			((Session)SQLSession).close();
+			((AbstractSession)SQLSession).close();
 			SQLSession = null;
 		}
-		if(TableSession != null) {
-			((Session)TableSession).close();
-			TableSession = null;
+		if(SQLQuerySession != null) {
+			((AbstractSession)SQLQuerySession).close();
+			SQLQuerySession = null;
 		}
 	}
 }

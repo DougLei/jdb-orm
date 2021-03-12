@@ -9,7 +9,8 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.datasource.DataSourceEntity;
+import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.mapping.handler.MappingHandleException;
 import com.douglei.tools.ExceptionUtil;
@@ -24,8 +25,8 @@ public class DBConnection {
 	private Connection connection;
 	private SqlStatementHandler SQLStatementHandler;
 	
-	public DBConnection(DataSourceWrapper dataSource, SqlStatementHandler SQLStatementHandler){
-		this.connection = dataSource.getConnection(false).getConnection();
+	public DBConnection(DataSourceEntity dataSource, SqlStatementHandler SQLStatementHandler){
+		this.connection = dataSource.getConnection(false, TransactionIsolationLevel.DEFAULT).getConnection();
 		this.SQLStatementHandler = SQLStatementHandler;
 	}
 

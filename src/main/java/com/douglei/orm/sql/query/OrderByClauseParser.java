@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * order by子句解析器
+ * (最外层的)order by子句解析器
  * @author DougLei
  */
 class OrderByClauseParser{
@@ -29,27 +29,27 @@ class OrderByClauseParser{
 	
 	
 	/**
-	 * 从sql对象中提取order by子句
+	 * 从sql对象中提取(最外层的)order by子句
 	 * @param statement
 	 */
-	public void extractOrderByClause(QuerySqlStatement statement) {
-		String querySQL = statement.getQuerySQL();
-		index = querySQL.length()-1;
+	public void extract(QuerySqlStatement statement) {
+		String sql = statement.getSql();
+		index = sql.length()-1;
 		
 		for(;index>-1;index--) {
-			c = querySQL.charAt(index);
+			c = sql.charAt(index);
 			
 			if(statement.isBlank(c)) {
 				if(wordLength > 0) { // 证明有单词, 要判断它是否关键字
 					if(KeyWord.lengthSatisfied(wordLength)) {
 						cs = new char[wordLength];
 						for(int i=0;i<wordLength;i++)
-							cs[i] = querySQL.charAt(index+i+1);
+							cs[i] = sql.charAt(index+i+1);
 						kw = KeyWord.toValue(cs);
 						
 						if(kw != null) {
 							logger.debug("找到关键字: {}", kw);
-							kw.extractOrderBy(querySQL, index, statement);
+							kw.extractOrderBy(sql, index, statement);
 							break;
 						}
 					}
@@ -88,7 +88,7 @@ enum KeyWord {
 				if(!statement.isBlank(c)) {
 					if(c == 'R' || c == 'r') { // order的最后一个字符
 						index-=4;
-						statement.querySQL = sql.substring(0, index);
+						statement.sql = sql.substring(0, index);
 						statement.orderByClause = sql.substring(index);
 					}
 					break;

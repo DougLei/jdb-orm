@@ -9,13 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
+import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
+import com.douglei.orm.sessionfactory.sessions.SessionExecuteException;
 import com.douglei.orm.sessionfactory.sessions.session.table.TableSession;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.Operation;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.PersistentObject;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.AbstractExecutableTableSql;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.orm.sql.statement.AutoIncrementID;
 import com.douglei.orm.sql.statement.InsertResult;
@@ -28,22 +28,22 @@ import com.douglei.tools.reflect.IntrospectorUtil;
  */
 public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	private static final Logger logger = LoggerFactory.getLogger(TableSessionImpl.class);
-	private Map<String, TableMetadata> tableMetadataCache = new HashMap<String, TableMetadata>(8);
+	private Map<String, TableMetadata> cache = new HashMap<String, TableMetadata>(8);
 	
-	public TableSessionImpl(ConnectionWrapper connection, Environment environment) {
+	public TableSessionImpl(ConnectionEntity connection, Environment environment) {
 		super(connection, environment);
 	}
 	
 	/**
-	 * 获取TableMetadata实例
+	 * 获取table元数据实例
 	 * @param code
 	 * @return
 	 */
 	private TableMetadata getTableMetadata(String code) {
-		TableMetadata tableMetadata = null;
-		if(tableMetadataCache.isEmpty() || (tableMetadata = tableMetadataCache.get(code)) == null) {
+		TableMetadata tableMetadata = cache.get(code);
+		if(tableMetadata == null) {
 			tableMetadata = mappingHandler.getTableMetadata(code);
-			tableMetadataCache.put(code, tableMetadata);
+			cache.put(code, tableMetadata);
 		}
 		return tableMetadata;
 	}
@@ -93,7 +93,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	private void update_(TableMetadata tableMetadata, Object object, boolean updateNullValue) {
 		if(tableMetadata.getPrimaryKeyConstraint() == null) 
-			throw new SessionExecutionException("不支持update没有主键的表数据 ["+tableMetadata.getCode()+"]"); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
+			throw new SessionExecuteException("不支持update没有主键的表数据 ["+tableMetadata.getCode()+"]"); // 因为没法区分数据中哪些应该被update set, 哪些应该做where条件
 		
 		PersistentObject persistent = new PersistentObject(tableMetadata, object, Operation.UPDATE);
 		persistent.setUpdateNullValue(updateNullValue);
@@ -159,10 +159,10 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	// -----------------------------------------------------------------------------------------------
 	// 执行
 	// -----------------------------------------------------------------------------------------------
-	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecutionException {
+	private void executePersistentObject(PersistentObject persistentObject) throws SessionExecuteException {
 		TableMetadata tableMetadata = persistentObject.getTableMetadata();
 		
-		ExecutableTableSql executableTableSql = persistentObject.getExecutableTableSql();
+		AbstractExecutableTableSql executableTableSql = persistentObject.getExecutableTableSql();
 		if(persistentObject.getOperation() == Operation.INSERT && tableMetadata.getAutoincrementPrimaryKey() != null) {
 			// 如果是保存表数据, 且使用了序列作为主键值
 			InsertResult result = super.executeInsert(executableTableSql.getCurrentSql(), executableTableSql.getCurrentParameterValues(), new AutoIncrementID(tableMetadata.getAutoincrementPrimaryKey().getSequence()));
@@ -219,8 +219,7 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 			if(logger.isDebugEnabled()) 
 				logger.debug("close {}", getClass().getName());
 			
-			if(tableMetadataCache.size() > 0) 
-				tableMetadataCache.clear();
+			cache.clear();
 			super.close();
 		}
 	}

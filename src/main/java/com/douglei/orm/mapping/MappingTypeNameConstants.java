@@ -7,22 +7,27 @@ package com.douglei.orm.mapping;
 public class MappingTypeNameConstants {
 	
 	/**
-	 * 表: table
+	 * table
 	 */
 	public static final String TABLE = "table";
 	
 	/**
-	 * sql: sql
+	 * view
 	 */
-	public static final String SQL = "sql";
+	public static final String VIEW = "view";
 	
 	/**
-	 * 存储过程: procedure
+	 * procedure
 	 */
 	public static final String PROCEDURE = "procedure";
 	
 	/**
-	 * 视图: view
+	 * sql
 	 */
-	public static final String VIEW = "view";
+	public static final String SQL = "sql";
+	
+	/**
+	 * sql-query
+	 */
+	public static final String SQL_QUERY = "sql-query";
 }

@@ -259,14 +259,6 @@ public abstract class SqlStatementHandler {
 	// sql拼装
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * 是否需要提取order by子句
-	 * @return
-	 */
-	public boolean extractOrderByClause() {
-		return false;
-	}
-	
-	/**
 	 * 获取分页查询的sql语句
 	 * @param pageNum 
 	 * @param pageSize 

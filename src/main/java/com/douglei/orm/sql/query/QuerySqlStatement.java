@@ -11,50 +11,46 @@ import org.slf4j.LoggerFactory;
  */
 public class QuerySqlStatement {
 	private static final Logger logger = LoggerFactory.getLogger(QuerySqlStatement.class);
-	protected String querySQL; // sql语句
+	protected String sql; // sql语句
 	protected String withClause; // with子句
 	protected String orderByClause; // order by子句
 	
 	/**
 	 * 
-	 * @param querySQL
-	 * @param extractOrderByClause 是否需要提取querySQL中最外层的order by子句
+	 * @param sql
+	 * @param extractOrderByClause 是否需要提取sql中(最外层的)order by子句
 	 */
-	public QuerySqlStatement(String querySQL, boolean extractOrderByClause) {
-		this.querySQL = querySQL.trim();
+	public QuerySqlStatement(String sql, boolean extractOrderByClause) {
+		this.sql = sql.trim();
 		extractWithClause();
 		extractOrderByClause(extractOrderByClause);
-		
-		if(logger.isDebugEnabled()) {
-			logger.debug("querySQL={}", this.querySQL);
-			logger.debug("withClause={}", withClause);
-			logger.debug("orderByClause={}", orderByClause);
-		}
+
+		logger.debug("{}", this);
 	}
 	
 	// 提取with子句
 	private void extractWithClause() {
 		int withClauseEndIndex = withClauseEndIndex();
 		if(withClauseEndIndex > -1) {
-			this.querySQL = querySQL.substring(withClauseEndIndex);
-			this.withClause = querySQL.substring(0, withClauseEndIndex);
+			this.sql = sql.substring(withClauseEndIndex);
+			this.withClause = sql.substring(0, withClauseEndIndex);
 		}
 	}
 	
 	// 获取with子句的结束下标值, -1表示没有with子句
 	private int withClauseEndIndex() {
-		if(querySQL.substring(0, 4).equalsIgnoreCase("with")) { // 判断是否包含with子句
+		if(sql.substring(0, 4).equalsIgnoreCase("with")) { // 判断是否包含with子句
 			LinkedList<Character> parentheses = new LinkedList<Character>(); // 存储括号
 			parentheses.add('(');
 			
-			int index = querySQL.indexOf("(")+1;
-			int length = querySQL.length();
+			int index = sql.indexOf("(")+1;
+			int length = sql.length();
 			int i = index;
 			char c;
 			boolean isContinue = true;
 			do{
 				for(;i<length;i++) {
-					c = querySQL.charAt(i);
+					c = sql.charAt(i);
 					if(c == '(') {
 						parentheses.add(c);
 					}else if(c == ')') {
@@ -67,13 +63,13 @@ public class QuerySqlStatement {
 				}
 				
 				for(;i<length;i++) {
-					c = querySQL.charAt(i);
+					c = sql.charAt(i);
 					if(isBlank(c)) {
 						continue;
 					}else if(c == ')'){
-						throw new WithClauseException("语法错误, with子句的 [)] 不匹配, 请检查: " + querySQL);
+						throw new WithClauseException("语法错误, with子句的 [)] 不匹配, 请检查: " + sql);
 					}else {
-						if((c == 'a' || c == 'A') && (querySQL.charAt(i+1) == 's' || querySQL.charAt(i+1) == 'S')) { // 解决with查询中, 别名后用括号指定列名的sql, 例如 with qu(id, name) as (select ...)
+						if((c == 'a' || c == 'A') && (sql.charAt(i+1) == 's' || sql.charAt(i+1) == 'S')) { // 解决with查询中, 别名后用括号指定列名的sql, 例如 with qu(id, name) as (select ...)
 							i+=2;
 						}else if(c != ',') {
 							index = i++;
@@ -85,9 +81,9 @@ public class QuerySqlStatement {
 				
 				if(i == length) {
 					if(parentheses.isEmpty()) {
-						throw new WithClauseException("语法错误, 只有with子句, 请检查: " + querySQL);
+						throw new WithClauseException("语法错误, 只有with子句, 请检查: " + sql);
 					}
-					throw new WithClauseException("语法错误, with子句语的括号[(] 不匹配, 请检查: " + querySQL); 
+					throw new WithClauseException("语法错误, with子句语的括号[(] 不匹配, 请检查: " + sql); 
 				}
 			}while(isContinue);
 			return index;
@@ -95,10 +91,10 @@ public class QuerySqlStatement {
 		return -1;
 	}
 	
-	// 提取order by子句
+	// 提取sql中(最外层的)order by子句
 	private void extractOrderByClause(boolean extractOrderByClause) {
 		if(extractOrderByClause)
-			new OrderByClauseParser().extractOrderByClause(this);
+			new OrderByClauseParser().extract(this);
 	}
 	
 	/**
@@ -111,11 +107,11 @@ public class QuerySqlStatement {
 	}
 	
 	/**
-	 * 获取querySQL语句
+	 * 获取sql语句
 	 * @return
 	 */
-	public String getQuerySQL() {
-		return querySQL;
+	public String getSql() {
+		return sql;
 	}
 	/**
 	 * 获取with子句
@@ -132,17 +128,15 @@ public class QuerySqlStatement {
 		return orderByClause;
 	}
 	/**
-	 * 获取querySQL语句的总长度
+	 * 获取sql语句的总长度
 	 * @return
 	 */
 	public int getTotalLength() {
-		return (withClause==null?0:withClause.length()) + querySQL.length() + (orderByClause==null?0:orderByClause.length());
+		return (withClause==null?0:withClause.length()) + sql.length() + (orderByClause==null?0:orderByClause.length());
 	}
 
 	@Override
 	public String toString() {
-		return "[querySQL=" + querySQL + ", withClause=" + withClause + ", orderByClause=" + orderByClause + "]";
+		return "[sql=" + sql + ", withClause=" + withClause + ", orderByClause=" + orderByClause + "]";
 	}
-	
-	
 }

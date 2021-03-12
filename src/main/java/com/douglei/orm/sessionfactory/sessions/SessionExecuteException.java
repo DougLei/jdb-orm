@@ -6,12 +6,12 @@ import com.douglei.orm.configuration.OrmException;
  * session执行异常
  * @author DougLei
  */
-public class SessionExecutionException extends OrmException {
+public class SessionExecuteException extends OrmException {
 	
-	public SessionExecutionException(String message) {
+	public SessionExecuteException(String message) {
 		super(message);
 	}
-	public SessionExecutionException(String exceptionDescription, Throwable t) {
+	public SessionExecuteException(String exceptionDescription, Throwable t) {
 		super(exceptionDescription + ", " + t.getMessage(), t);
 	}
 }

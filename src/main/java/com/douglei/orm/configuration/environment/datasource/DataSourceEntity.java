@@ -8,22 +8,13 @@ import com.douglei.tools.StringUtil;
  * 
  * @author DougLei
  */
-public class DataSourceWrapper {
+public class DataSourceEntity {
 	private DataSource dataSource;
 	private String closeMethodName;
 	
-	public DataSourceWrapper(DataSource dataSource, String closeMethodName) {
+	public DataSourceEntity(DataSource dataSource, String closeMethodName) {
 		this.dataSource = dataSource;
 		this.closeMethodName = closeMethodName;
-	}
-	
-	/**
-	 * 获取连接
-	 * @param isBeginTransaction 是否开启事物
-	 * @return
-	 */
-	public ConnectionWrapper getConnection(boolean isBeginTransaction) {
-		return getConnection(isBeginTransaction, null);
 	}
 	
 	/**
@@ -32,16 +23,8 @@ public class DataSourceWrapper {
 	 * @param transactionIsolationLevel 事物隔离级别, 如果为空, 则使用jdbc默认的隔离级别
 	 * @return
 	 */
-	public ConnectionWrapper getConnection(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
-		return new ConnectionWrapper(dataSource, isBeginTransaction, transactionIsolationLevel);
-	}
-	
-	/**
-	 * 获取数据源实例
-	 * @return
-	 */
-	public DataSource getDataSource() {
-		return dataSource;
+	public ConnectionEntity getConnection(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
+		return new ConnectionEntity(dataSource, isBeginTransaction, transactionIsolationLevel);
 	}
 	
 	/**

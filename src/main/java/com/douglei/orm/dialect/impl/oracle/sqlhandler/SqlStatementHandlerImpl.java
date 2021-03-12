@@ -76,7 +76,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 		
 		int maxIndex = pageNum*pageSize;
 		pageQuerySql.append("SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT JDB_ORM_SECOND_QUERY_.*, ROWNUM RN FROM (");
-		pageQuerySql.append(statement.getQuerySQL());
+		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ WHERE ROWNUM <= ");
 		pageQuerySql.append(maxIndex);
 		pageQuerySql.append(" ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN > ");

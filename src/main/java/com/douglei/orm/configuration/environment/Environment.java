@@ -14,7 +14,8 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.Dom4jUtil;
 import com.douglei.orm.configuration.ExternalDataSource;
 import com.douglei.orm.configuration.OrmException;
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.datasource.DataSourceEntity;
+import com.douglei.orm.configuration.environment.datasource.TransactionIsolationLevel;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.configuration.environment.mapping.SqlMappingConfiguration;
 import com.douglei.orm.configuration.environment.mapping.SqlMappingParameterDefaultValueHandler;
@@ -39,7 +40,7 @@ import com.douglei.tools.reflect.IntrospectorUtil;
 public class Environment {
 	private static final Logger logger = LoggerFactory.getLogger(Environment.class);
 	private EnvironmentProperty property;
-	private DataSourceWrapper dataSource;
+	private DataSourceEntity dataSource;
 	private Dialect dialect;
 	private MappingHandler mappingHandler;
 	
@@ -54,7 +55,7 @@ public class Environment {
 		setDataSource(exDataSource==null?Dom4jUtil.getElement("datasource", environmentElement):exDataSource, properties);
 		
 		// 设置方言
-		this.dialect = DialectContainer.get(dataSource.getConnection(false, null).getConnection());
+		this.dialect = DialectContainer.get(dataSource.getConnection(false, TransactionIsolationLevel.DEFAULT).getConnection());
 		
 		// 设置MappingHandler
 		setMappingHandler(environmentElement.element("mapping"), mappingContainer);
@@ -96,7 +97,7 @@ public class Environment {
 		
 		if(object instanceof ExternalDataSource) {
 			logger.debug("start: 使用外部的数据源");
-			this.dataSource = new DataSourceWrapper(((ExternalDataSource)object).getDataSource(), ((ExternalDataSource)object).getCloseMethodName());
+			this.dataSource = new DataSourceEntity(((ExternalDataSource)object).getDataSource(), ((ExternalDataSource)object).getCloseMethodName());
 			logger.debug("end: 使用外部的数据源");
 		}else {
 			logger.debug("start: 使用<datasource>数据源");
@@ -114,7 +115,7 @@ public class Environment {
 				throw new OrmException("<datasource>中必须配置必要的数据库连接参数");
 			IntrospectorUtil.setValues(propertyMap, datasource);
 			
-			this.dataSource = new DataSourceWrapper((DataSource)datasource, ((Element) object).attributeValue("closeMethod"));
+			this.dataSource = new DataSourceEntity((DataSource)datasource, ((Element) object).attributeValue("closeMethod"));
 			logger.debug("end: 使用<datasource>数据源");
 		}
 		logger.debug("处理数据源结束");
@@ -220,7 +221,7 @@ public class Environment {
 	 * 获取数据源
 	 * @return
 	 */
-	public DataSourceWrapper getDataSource() {
+	public DataSourceEntity getDataSource() {
 		return dataSource;
 	}
 	/**

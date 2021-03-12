@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.impl.table.metadata.ColumnMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
-import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
+import com.douglei.orm.sessionfactory.sessions.SessionExecuteException;
 import com.douglei.tools.reflect.IntrospectorUtil;
 
 /**
@@ -43,7 +43,7 @@ public class AbstractPersistentObject {
 		
 		logger.debug("解析originObject, 获取的objectMap为: {}", objectMap);
 		if(objectMap.isEmpty()) 
-			throw new SessionExecutionException("要操作的数据不能为空");
+			throw new SessionExecuteException("要操作的数据不能为空");
 		this.originObject = originObject;
 	}
 	

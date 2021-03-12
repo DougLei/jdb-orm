@@ -11,9 +11,8 @@ import com.douglei.orm.mapping.metadata.Metadata;
  * @author DougLei
  */
 public class ContentMetadata implements Metadata{
-	
-	protected String name;
-	protected ContentType type;
+	private String name;
+	private ContentType type;
 	private AutoIncrementIDMetadata autoIncrementID;
 	private List<SqlNode> sqlNodes;
 	

@@ -18,7 +18,7 @@ public abstract class MappingType {
 	 * 
 	 * @param name 映射类型的名称, 必须全局唯一
 	 * @param fileSuffix 映射支持的文件后缀, 必须全局唯一
-	 * @param priority 优先级, AddOrCover时优先级越低越优先, Delete时优先级越高越优先, 在同时操作多种类型的映射时, 框架会按照优先级的顺序操作, <b>注意, 如果是第三方扩展的类型, 该值要求不能小于70</b>
+	 * @param priority 优先级, AddOrCover时优先级越低越优先, Delete时优先级越高越优先, 在同时操作多种类型的映射时, 框架会按照优先级的顺序操作, <b>注意, 如果是第三方扩展的类型, 该值要求不能小于60</b>
 	 * @param supportOpDatabaseObject 当前类型是否支持操作数据库对象, 例如操作表, 存储过程, 视图等<b>注意, 如果是第三方扩展的类型, 该值要求只能为false</b>
 	 */
 	public MappingType(String name, String fileSuffix, int priority, boolean supportOpDatabaseObject) {

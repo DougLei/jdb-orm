@@ -101,11 +101,6 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// sql拼装
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public boolean extractOrderByClause() {
-		return true;
-	}
-
-	@Override
 	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
 		StringBuilder pageQuerySql = new StringBuilder(340 + statement.getTotalLength());
 		
@@ -116,7 +111,7 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 		pageQuerySql.append("SELECT JDB_ORM_THIRD_QUERY_.* FROM (SELECT TOP ");
 		pageQuerySql.append(maxIndex);
 		pageQuerySql.append(" ROW_NUMBER() OVER(").append((statement.getOrderByClause()==null?"ORDER BY CURRENT_TIMESTAMP":statement.getOrderByClause())).append(") AS RN, JDB_ORM_SECOND_QUERY_.* FROM (");
-		pageQuerySql.append(statement.getQuerySQL());
+		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
 		pageQuerySql.append(" ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN >");
 		pageQuerySql.append(maxIndex-pageSize);

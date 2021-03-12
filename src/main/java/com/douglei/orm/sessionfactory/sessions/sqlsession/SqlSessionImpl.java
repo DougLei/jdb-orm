@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.Environment;
-import com.douglei.orm.configuration.environment.datasource.ConnectionWrapper;
-import com.douglei.orm.sessionfactory.sessions.SessionExecutionException;
-import com.douglei.orm.sessionfactory.sessions.SessionImpl;
+import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
+import com.douglei.orm.sessionfactory.sessions.AbstractSession;
+import com.douglei.orm.sessionfactory.sessions.SessionExecuteException;
 import com.douglei.orm.sql.query.page.PageResult;
 import com.douglei.orm.sql.query.page.PageSqlStatement;
 import com.douglei.orm.sql.statement.AutoIncrementID;
@@ -29,11 +29,11 @@ import com.douglei.tools.reflect.IntrospectorUtil;
  * 执行sql语句的session实现类
  * @author DougLei
  */
-public class SqlSessionImpl extends SessionImpl implements SqlSession{
+public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	private static final Logger logger = LoggerFactory.getLogger(SqlSessionImpl.class);
 	private Map<String, StatementHandler> statementHandlerCache;
 	
-	public SqlSessionImpl(ConnectionWrapper connection, Environment environment) {
+	public SqlSessionImpl(ConnectionEntity connection, Environment environment) {
 		super(connection, environment);
 	}
 	
@@ -73,7 +73,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeQueryResultList(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		} 
 	}
 	
@@ -97,7 +97,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeQueryResultList_(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		} 
 	}
 	
@@ -108,7 +108,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeQueryUniqueResult(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		}
 	}
 	
@@ -132,53 +132,53 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeQueryUniqueResult_(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		}
 	}
 	
 	@Override
-	public List<Map<String, Object>> limitQuery(String sql, int startRow, int length, List<Object> parameters){
+	public List<Map<String, Object>> limitQuery(int startRow, int length, String sql, List<Object> parameters){
 		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeLimitQueryResultList(startRow, length, parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		}
 	}
 	
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length){
-		return limitQuery(targetClass, sql, startRow, length, null);
+	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql){
+		return limitQuery(targetClass, startRow, length, sql, null);
 	}
 	
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters){
-		List<Map<String, Object>> listMap = limitQuery(sql, startRow, length, parameters);
+	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql, List<Object> parameters){
+		List<Map<String, Object>> listMap = limitQuery(startRow, length, sql, parameters);
 		if(listMap.isEmpty())
 			return Collections.emptyList();
 		return listMap2listClass(targetClass, listMap);
 	}
 	
 	@Override
-	public List<Object[]> limitQuery_(String sql, int startRow, int length, List<Object> parameters){
+	public List<Object[]> limitQuery_(int startRow, int length, String sql, List<Object> parameters){
 		StatementHandler statementHandler = getStatementHandler(sql, parameters, null);
 		try {
 			return statementHandler.executeLimitQueryResultList_(startRow, length, parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("在查询数据时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("在查询数据时出现异常", e);
+			throw new SessionExecuteException("在查询数据时出现异常", e);
 		}
 	}
 	
 	@Override
 	public long countQuery(String sql, List<Object> parameters) {
-		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getSqlStatementHandler().extractOrderByClause());
+		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getDatabaseType().extractOrderByClause());
 		return Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString());
 	}
 
 	/**
-	 * 分页查询 <内部方法, 不考虑泛型>
+	 * 分页查询; 内部方法, 不考虑泛型
 	 * @param targetClass
 	 * @param pageNum
 	 * @param pageSize
@@ -192,7 +192,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 		if(pageSize < 0) pageSize = 10;
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
-		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getSqlStatementHandler().extractOrderByClause());
+		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getDatabaseType().extractOrderByClause());
 		long count = Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
 		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
@@ -285,7 +285,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeInsert(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("executeInsert时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("executeInsert时出现异常", e);
+			throw new SessionExecuteException("executeInsert时出现异常", e);
 		}
 	}
 	
@@ -296,7 +296,7 @@ public class SqlSessionImpl extends SessionImpl implements SqlSession{
 			return statementHandler.executeUpdate(parameters);
 		} catch (StatementExecutionException e) {
 			logger.error("executeUpdate时出现异常: {}", ExceptionUtil.getStackTrace(e));
-			throw new SessionExecutionException("executeUpdate时出现异常", e);
+			throw new SessionExecuteException("executeUpdate时出现异常", e);
 		}
 	}
 	

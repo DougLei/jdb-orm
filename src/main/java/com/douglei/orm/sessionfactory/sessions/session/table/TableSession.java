@@ -184,22 +184,22 @@ public interface TableSession {
 	/**
 	 * 执行限制查询
 	 * @param targetClass
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length);
+	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql);
 	/**
 	 * 执行限制查询
 	 * @param targetClass
-	 * @param sql
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, String sql, int startRow, int length, List<Object> parameters);
+	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql, List<Object> parameters);
 	
 	/**
 	 * 分页查询

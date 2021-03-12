@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.impl.procedure.ProcedureMappingType;
 import com.douglei.orm.mapping.impl.sql.SqlMappingType;
+import com.douglei.orm.mapping.impl.sqlquery.SqlQueryMappingType;
 import com.douglei.orm.mapping.impl.table.TableMappingType;
 import com.douglei.orm.mapping.impl.view.ViewMappingType;
 
@@ -21,9 +22,10 @@ public class MappingTypeContainer {
 	static {
 		// 注册内置的映射类型
 		register(new TableMappingType());
-		register(new SqlMappingType());
 		register(new ViewMappingType());
 		register(new ProcedureMappingType());
+		register(new SqlMappingType());
+		register(new SqlQueryMappingType());
 	}
 	
 	/**

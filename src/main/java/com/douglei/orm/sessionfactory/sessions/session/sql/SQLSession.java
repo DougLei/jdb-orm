@@ -16,7 +16,7 @@ public interface SQLSession {
 	 * 查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<列名:值>的list-map集合
+	 * @return 
 	 */
 	default List<Map<String, Object>> query(String namespace, String name) {
 		return query(namespace, name, null);
@@ -27,7 +27,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<列名:值>的list-map集合
+	 * @return 
 	 */
 	List<Map<String, Object>> query(String namespace, String name, Object sqlParameter);
 	
@@ -36,7 +36,7 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<列名:值>的list-map集合
+	 * @return 
 	 */
 	default <T> List<T> query(Class<T> targetClass, String namespace, String name) {
 		return query(targetClass, namespace, name, null);
@@ -47,7 +47,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<列名:值>的list-map集合
+	 * @return 
 	 */
 	<T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter);
 	
@@ -55,7 +55,7 @@ public interface SQLSession {
 	 * 查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<值>的list-数组集合
+	 * @return 
 	 */
 	default List<Object[]> query_(String namespace, String name) {
 		return query_(namespace, name, null);
@@ -65,7 +65,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<值>的list-数组集合
+	 * @return 
 	 */
 	List<Object[]> query_(String namespace, String name, Object sqlParameter);
 	
@@ -73,7 +73,7 @@ public interface SQLSession {
 	 * 唯一查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<列名:值>的map集合
+	 * @return 
 	 */
 	default Map<String, Object> uniqueQuery(String namespace, String name) {
 		return uniqueQuery(namespace, name, null);
@@ -83,7 +83,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<列名:值>的map集合
+	 * @return 
 	 */
 	Map<String, Object> uniqueQuery(String namespace, String name, Object sqlParameter);
 	
@@ -92,7 +92,7 @@ public interface SQLSession {
 	 * @param targetClass
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<列名:值>的map集合
+	 * @return 
 	 */
 	default <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
 		return uniqueQuery(targetClass, namespace, name, null);
@@ -103,7 +103,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<列名:值>的map集合
+	 * @return 
 	 */
 	<T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter);
 	
@@ -111,7 +111,7 @@ public interface SQLSession {
 	 * 唯一查询
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
-	 * @return 返回<值>的数组
+	 * @return 
 	 */
 	default Object[] uniqueQuery_(String namespace, String name) {
 		return uniqueQuery_(namespace, name, null);
@@ -121,78 +121,77 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<值>的数组
+	 * @return 
 	 */
 	Object[] uniqueQuery_(String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 限制查询
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
-	 * @return 返回<列名:值>的map集合
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @return 
 	 */
-	default List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length) {
-		return limitQuery(namespace, name, startRow, length, null);
+	default List<Map<String, Object>> limitQuery(int startRow, int length, String namespace, String name) {
+		return limitQuery(startRow, length, namespace, name, null);
 	}
 	/**
 	 * 限制查询
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<列名:值>的map集合
+	 * @return 
 	 */
-	List<Map<String, Object>> limitQuery(String namespace, String name, int startRow, int length, Object sqlParameter);
+	List<Map<String, Object>> limitQuery(int startRow, int length, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 限制查询
 	 * @param targetClass
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
 	 */
-	default <T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length) {
-		return limitQuery(targetClass, namespace, name, startRow, length, null);
+	default <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name) {
+		return limitQuery(targetClass, startRow, length, namespace, name, null);
 	}
 	/**
 	 * 限制查询
 	 * @param targetClass
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, String namespace, String name, int startRow, int length, Object sqlParameter);
+	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 限制查询
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
-	 * @param sqlParameter
-	 * @return 返回<值>的数组
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
+	 * @return 
 	 */
-	default List<Object[]> limitQuery_(String namespace, String name, int startRow, int length) {
-		return limitQuery_(namespace, name, startRow, length, null);
+	default List<Object[]> limitQuery_(int startRow, int length, String namespace, String name) {
+		return limitQuery_(startRow, length, namespace, name, null);
 	}
 	/**
 	 * 限制查询
-	 * @param namespace sql元素中的namespace属性值, 不能为空
-	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
+	 * @param namespace sql元素中的namespace属性值, 不能为空
+	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 返回<值>的数组
+	 * @return 
 	 */
-	List<Object[]> limitQuery_(String namespace, String name, int startRow, int length, Object sqlParameter);
+	List<Object[]> limitQuery_(int startRow, int length, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 总数量查询
@@ -263,7 +262,7 @@ public interface SQLSession {
 	 * 增删改数据
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
-	 * @return 影响的行数
+	 * @return 
 	 */
 	int executeUpdate(String namespace, String name);
 	/**
@@ -271,7 +270,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
-	 * @return 影响的行数
+	 * @return 
 	 */
 	int executeUpdate(String namespace, String name, Object sqlParameter);
 	/**
@@ -279,7 +278,7 @@ public interface SQLSession {
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的所有sql; 如果其中出现非{@link ContentType INSERT/DELETE/UPDATE/DECLARE}类型的sql语句, 则会抛出异常
 	 * @param sqlParameters
-	 * @return 影响的行数
+	 * @return 
 	 */
 	int executeUpdates(String namespace, String name, List<? extends Object> sqlParameters);
 	

@@ -3,7 +3,7 @@ package com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableDeleteSql;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableInsertSql;
-import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableTableSql;
+import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.AbstractExecutableTableSql;
 import com.douglei.orm.sessionfactory.sessions.session.table.impl.persistent.sql.ExecutableUpdateSql;
 
 /**
@@ -39,7 +39,7 @@ public class PersistentObject extends AbstractPersistentObject{
 	 * 获取ExecutableTableSql实例
 	 * @return
 	 */
-	public ExecutableTableSql getExecutableTableSql() {
+	public AbstractExecutableTableSql getExecutableTableSql() {
 		switch(operation) {
 			case INSERT:
 				return new ExecutableInsertSql(tableMetadata, objectMap);

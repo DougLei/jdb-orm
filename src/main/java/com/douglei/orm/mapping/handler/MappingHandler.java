@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.configuration.environment.CreateMode;
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.datasource.DataSourceEntity;
 import com.douglei.orm.configuration.environment.mapping.MappingConfiguration;
 import com.douglei.orm.mapping.Mapping;
 import com.douglei.orm.mapping.MappingContainer;
@@ -29,6 +29,7 @@ import com.douglei.orm.mapping.handler.rollback.RollbackExecutor;
 import com.douglei.orm.mapping.handler.rollback.RollbackRecorder;
 import com.douglei.orm.mapping.impl.procedure.metadata.ProcedureMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
+import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
 import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractDBObjectMetadata;
@@ -46,7 +47,7 @@ public class MappingHandler {
 	private static final Logger logger = LoggerFactory.getLogger(MappingHandler.class);
 	private MappingConfiguration configuration; // 映射配置
 	private MappingContainer container; // 映射容器
-	private DataSourceWrapper dataSource;
+	private DataSourceEntity dataSource;
 	
 	/**
 	 * 
@@ -54,7 +55,7 @@ public class MappingHandler {
 	 * @param container 映射容器
 	 * @param dataSource 数据源
 	 */
-	public MappingHandler(MappingConfiguration configuration, MappingContainer container, DataSourceWrapper dataSource) {
+	public MappingHandler(MappingConfiguration configuration, MappingContainer container, DataSourceEntity dataSource) {
 		this.configuration = configuration;
 		this.container = container;
 		this.dataSource = dataSource;
@@ -316,7 +317,7 @@ public class MappingHandler {
 	}
 	
 	/**
-	 * 获取表元数据实例
+	 * 获取table元数据实例
 	 * @param code 值分两种, 1.对应类的全路径(com.test.SysUser); 2.对应的表名, 表名必须全大写(SYS_USER); 如果在映射文件中配置了class, 则必须传入类的全路径; 否则必须传入表名
 	 * @return
 	 */
@@ -331,6 +332,15 @@ public class MappingHandler {
 	 */
 	public SqlMetadata getSqlMetadata(String namespace) {
 		return (SqlMetadata) getMapping(namespace, MappingTypeNameConstants.SQL, true).getMetadata();
+	}
+	
+	/**
+	 * 获取sql-query元数据实例
+	 * @param name
+	 * @return
+	 */
+	public SqlQueryMetadata getSqlQueryMetadata(String name) {
+		return (SqlQueryMetadata) getMapping(name, MappingTypeNameConstants.SQL_QUERY, true).getMetadata();
 	}
 	
 	/**

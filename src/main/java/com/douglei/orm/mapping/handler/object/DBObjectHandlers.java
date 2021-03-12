@@ -1,21 +1,21 @@
 package com.douglei.orm.mapping.handler.object;
 
 import com.douglei.orm.configuration.environment.EnvironmentContext;
-import com.douglei.orm.configuration.environment.datasource.DataSourceWrapper;
+import com.douglei.orm.configuration.environment.datasource.DataSourceEntity;
 
 /**
  * 
  * @author DougLei
  */
 class DBObjectHandlers {
-	private DataSourceWrapper dataSource;
+	private DataSourceEntity dataSource;
 	private DBConnection connection;
 	
 	private TableObjectHandler tableObjectHandler;
 	private ViewObjectHandler viewObjectHandler;
 	private ProcedureObjectHandler procedureObjectHandler;
 	
-	public DBObjectHandlers(DataSourceWrapper dataSource) {
+	public DBObjectHandlers(DataSourceEntity dataSource) {
 		this.dataSource = dataSource;
 	}
 	
