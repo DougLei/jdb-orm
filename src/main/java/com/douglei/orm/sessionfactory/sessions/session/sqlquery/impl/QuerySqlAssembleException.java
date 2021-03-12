@@ -6,9 +6,9 @@ import com.douglei.orm.sessionfactory.sessions.SessionExecuteException;
  * 
  * @author DougLei
  */
-public class SqlQueryAssembleException extends SessionExecuteException {
+public class QuerySqlAssembleException extends SessionExecuteException {
 
-	public SqlQueryAssembleException(String message) {
+	public QuerySqlAssembleException(String message) {
 		super(message);
 	}
 }

@@ -33,23 +33,23 @@ public interface SQLSession {
 	
 	/**
 	 * 查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
 	 */
-	default <T> List<T> query(Class<T> targetClass, String namespace, String name) {
-		return query(targetClass, namespace, name, null);
+	default <T> List<T> query(Class<T> clazz, String namespace, String name) {
+		return query(clazz, namespace, name, null);
 	}
 	/**
 	 * 查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter);
+	<T> List<T> query(Class<T> clazz, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 查询
@@ -89,23 +89,23 @@ public interface SQLSession {
 	
 	/**
 	 * 唯一查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
 	 */
-	default <T> T uniqueQuery(Class<T> targetClass, String namespace, String name) {
-		return uniqueQuery(targetClass, namespace, name, null);
+	default <T> T uniqueQuery(Class<T> clazz, String namespace, String name) {
+		return uniqueQuery(clazz, namespace, name, null);
 	}
 	/**
 	 * 唯一查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter);
+	<T> T uniqueQuery(Class<T> clazz, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 唯一查询
@@ -149,19 +149,19 @@ public interface SQLSession {
 	
 	/**
 	 * 限制查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
 	 */
-	default <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name) {
-		return limitQuery(targetClass, startRow, length, namespace, name, null);
+	default <T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String namespace, String name) {
+		return limitQuery(clazz, startRow, length, namespace, name, null);
 	}
 	/**
 	 * 限制查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
 	 * @param namespace sql元素中的namespace属性值, 不能为空
@@ -169,7 +169,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name, Object sqlParameter);
+	<T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 限制查询
@@ -236,19 +236,19 @@ public interface SQLSession {
 	
 	/**
 	 * 分页查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param pageNum
 	 * @param pageSize
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return
 	 */
-	default <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name) {
-		return pageQuery(targetClass, pageNum, pageSize, namespace, name, null);
+	default <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String namespace, String name) {
+		return pageQuery(clazz, pageNum, pageSize, namespace, name, null);
 	}
 	/**
 	 * 分页查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param pageNum
 	 * @param pageSize
 	 * @param namespace sql元素中的namespace属性值, 不能为空
@@ -256,7 +256,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
+	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 增删改数据

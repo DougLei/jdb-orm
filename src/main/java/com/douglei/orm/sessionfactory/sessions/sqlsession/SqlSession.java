@@ -31,19 +31,19 @@ public interface SqlSession {
 	
 	/**
 	 * 查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param sql
 	 * @return 
 	 */
-	<T> List<T> query(Class<T> targetClass, String sql);
+	<T> List<T> query(Class<T> clazz, String sql);
 	/**
 	 * 查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> List<T> query(Class<T> clazz, String sql, List<Object> parameters);
 	
 	/**
 	 * 查询
@@ -79,19 +79,19 @@ public interface SqlSession {
 	
 	/**
 	 * 唯一查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param sql
 	 * @return 
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql);
+	<T> T uniqueQuery(Class<T> clazz, String sql);
 	/**
 	 * 唯一查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters);
+	<T> T uniqueQuery(Class<T> clazz, String sql, List<Object> parameters);
 	
 	/**
 	 * 唯一查询
@@ -131,23 +131,23 @@ public interface SqlSession {
 	
 	/**
 	 * 限制查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
 	 * @param sql
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql);
+	<T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String sql);
 	/**
 	 * 限制查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
 	 * @param length 长度, 小于1时会修正为1
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
 	 */
-	<T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql, List<Object> parameters);
+	<T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String sql, List<Object> parameters);
 	
 	/**
 	 * 限制查询
@@ -207,23 +207,49 @@ public interface SqlSession {
 	
 	/**
 	 * 分页查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param pageNum
 	 * @param pageSize
 	 * @param sql
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql);
+	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql);
 	/**
 	 * 分页查询
-	 * @param targetClass
+	 * @param clazz
 	 * @param pageNum
 	 * @param pageSize
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters);
+	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql, List<Object> parameters);
+	
+	
+	// 递归查询
+	default List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql){
+		return recursiveQuery(parameter, sql, null);
+	}
+	List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql, List<Object> parameters);
+	
+	default <T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql){
+		return recursiveQuery(clazz, parameter, sql, null);
+	}
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql, List<Object> parameters);
+	
+	
+	// 分页递归查询
+	default List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql){
+		return pageRecursiveQuery(parameter, sql, null);
+	}
+	List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql, List<Object> parameters);
+	
+	default <T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql){
+		return pageRecursiveQuery(clazz, parameter, sql, null);
+	}
+	<T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql, List<Object> parameters);
+	
+	
 	
 	/**
 	 * 插入数据

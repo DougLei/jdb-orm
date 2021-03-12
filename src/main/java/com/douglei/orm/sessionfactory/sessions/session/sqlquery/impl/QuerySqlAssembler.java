@@ -11,8 +11,8 @@ import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
  * 
  * @author DougLei
  */
-public class SqlQueryAssembler {
-	private static final Logger logger = LoggerFactory.getLogger(SqlQueryAssembler.class);
+public class QuerySqlAssembler {
+	private static final Logger logger = LoggerFactory.getLogger(QuerySqlAssembler.class);
 	private SqlQueryMetadata metadata;
 	private List<AbstractParameter> parameters;
 	
@@ -22,7 +22,7 @@ public class SqlQueryAssembler {
 	 * @param parameters
 	 * @param container
 	 */
-	SqlQueryAssembler(SqlQueryMetadata metadata, List<AbstractParameter> parameters) {
+	QuerySqlAssembler(SqlQueryMetadata metadata, List<AbstractParameter> parameters) {
 		this.metadata = metadata;
 		this.parameters = parameters;
 	}
@@ -31,24 +31,24 @@ public class SqlQueryAssembler {
 	 * 装配
 	 * @return
 	 */
-	public SqlQueryEntity assembling() {
-		SqlQueryEntity entity = new SqlQueryEntity(metadata.getSql());
+	public ExecutableQuerySql assembling() {
+		ExecutableQuerySql sql = new ExecutableQuerySql(metadata.getSql());
 		
 		if(parameters != null) {
 			for(int i=0;i<parameters.size();i++) {
-				parameters.get(i).assembleSQL(entity, metadata);
+				parameters.get(i).assembleSQL(sql, metadata);
 				if(i < parameters.size()-1)
-					entity.appendConditionSQLNext(parameters.get(i).next);
+					sql.appendConditionSQLNext(parameters.get(i).next);
 			}
 		}
 		
 		// 验证是否没有传入必要的参数
 		metadata.getParameterMap().values().forEach(parameter -> {
-			if(parameter.isRequired() && !entity.existsInConditionSQL(parameter.getName()))
-				throw new SqlQueryAssembleException("装配code为["+metadata.getCode()+"]的query-sql时, 未传入必要的参数["+parameter.getName()+"]");
+			if(parameter.isRequired() && !sql.existsInConditionSQL(parameter.getName()))
+				throw new QuerySqlAssembleException("装配code为["+metadata.getCode()+"]的query-sql时, 未传入必要的参数["+parameter.getName()+"]");
 		});
 		
-		logger.debug("QuerySqlEntity={}", entity);
-		return entity;
+		logger.debug("ExecutableQuerySql={}", sql);
+		return sql;
 	}
 }

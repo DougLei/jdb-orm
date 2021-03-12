@@ -72,9 +72,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+	public <T> List<T> query(Class<T> clazz, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.query(targetClass, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+		return super.query(clazz, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
@@ -90,9 +90,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String namespace, String name, Object sqlParameter) {
+	public <T> T uniqueQuery(Class<T> clazz, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.uniqueQuery(targetClass, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+		return super.uniqueQuery(clazz, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	@Override
@@ -108,9 +108,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String namespace, String name, Object sqlParameter) {
+	public <T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.limitQuery(targetClass, startRow, length, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+		return super.limitQuery(clazz, startRow, length, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 
 	@Override
@@ -132,9 +132,9 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 	
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
+	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
-		return super.pageQuery(targetClass, pageNum, pageSize, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+		return super.pageQuery(clazz, pageNum, pageSize, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	// 执行update, 传入的sqlParameter为null或对象

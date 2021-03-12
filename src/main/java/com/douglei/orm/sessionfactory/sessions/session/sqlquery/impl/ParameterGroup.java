@@ -25,7 +25,7 @@ public class ParameterGroup extends AbstractParameter{
 	}
 
 	@Override
-	protected void assembleSQL(SqlQueryEntity entity, SqlQueryMetadata metadata) throws SqlQueryAssembleException {
+	protected void assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata) throws QuerySqlAssembleException {
 		if(parameters == null)
 			return;
 		

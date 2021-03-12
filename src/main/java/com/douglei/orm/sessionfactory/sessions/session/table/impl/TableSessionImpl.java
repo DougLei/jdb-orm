@@ -178,34 +178,34 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	// 查询
 	// -----------------------------------------------------------------------------------------------
 	@Override
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> resultListMap) {
-		TableMetadata tableMetadata = getTableMetadata(targetClass.getName());
+	protected <T> List<T> listMap2listClass(Class<T> clazz, List<Map<String, Object>> resultListMap) {
+		TableMetadata tableMetadata = getTableMetadata(clazz.getName());
 		List<T> targetList = new ArrayList<T>(resultListMap.size());
 		for (Map<String, Object> resultMap : resultListMap) 
-			targetList.add(map2Class(tableMetadata, targetClass, resultMap));
+			targetList.add(map2Class(tableMetadata, clazz, resultMap));
 		
 		return targetList;
 	}
 
 	@Override
-	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
-		return map2Class(getTableMetadata(targetClass.getName()), targetClass, resultMap);
+	protected <T> T map2Class(Class<T> clazz, Map<String, Object> resultMap) {
+		return map2Class(getTableMetadata(clazz.getName()), clazz, resultMap);
 	}
 	
 	/**
 	 * 将map转换为类
 	 * @param tableMetadata
-	 * @param targetClass
+	 * @param clazz
 	 * @param resultMap
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T map2Class(TableMetadata tableMetadata, Class<T> targetClass, Map<String, Object> resultMap) {
+	private <T> T map2Class(TableMetadata tableMetadata, Class<T> clazz, Map<String, Object> resultMap) {
 		tableMetadata.getColumnMap4Code().forEach((code, column) -> {
 			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
 		});
 		
-		Object object = ClassUtil.newInstance(targetClass);
+		Object object = ClassUtil.newInstance(clazz);
 		IntrospectorUtil.setValues(resultMap, object);
 		return (T) object;
 	}

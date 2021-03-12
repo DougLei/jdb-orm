@@ -24,5 +24,5 @@ public abstract class AbstractParameter {
 	 * @param entity
 	 * @param metadata
 	 */
-	protected abstract void assembleSQL(SqlQueryEntity entity, SqlQueryMetadata metadata);
+	protected abstract void assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata);
 }

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.douglei.orm.configuration.environment.Environment;
 import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
 import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
+import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQueryParameter;
 import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQuerySession;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.orm.sql.query.page.PageResult;
@@ -27,89 +28,89 @@ public class SQLQuerySessionImpl extends SqlSessionImpl implements SQLQuerySessi
 	}
 	
 	/**
-	 * 获取SqlQueryEntity实例
+	 * 获取ExecutableQuerySql实例
 	 * @param parameter
 	 * @return
 	 */
-	private SqlQueryEntity getSqlQueryEntity(SQLQueryParameter parameter) {
+	private ExecutableQuerySql getExecutableQuerySql(SQLQueryParameter parameter) {
 		SqlQueryMetadata metadata = cache.get(parameter.getName());
 		if(metadata == null) {
 			metadata= mappingHandler.getSqlQueryMetadata(parameter.getName());
 			cache.put(parameter.getName(), metadata);
 		}
-		return new SqlQueryAssembler(metadata, parameter.getParameters()).assembling();
+		return new QuerySqlAssembler(metadata, parameter.getParameters()).assembling();
 	}
 
 	@Override
 	public List<Map<String, Object>> query(SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.query(entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.query(entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> List<T> query(Class<T> targetClass, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.query(targetClass, entity.getSql(), entity.getParameterValues());
+	public <T> List<T> query(Class<T> clazz, SQLQueryParameter parameter) {
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.query(clazz, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public List<Object[]> query_(SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.query_(entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.query_(entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public Map<String, Object> uniqueQuery(SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.uniqueQuery(entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.uniqueQuery(entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.uniqueQuery(targetClass, entity.getSql(), entity.getParameterValues());
+	public <T> T uniqueQuery(Class<T> clazz, SQLQueryParameter parameter) {
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.uniqueQuery(clazz, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public Object[] uniqueQuery_(SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.uniqueQuery_(entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.uniqueQuery_(entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public List<Map<String, Object>> limitQuery(int startRow, int length, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.limitQuery(startRow, length, entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.limitQuery(startRow, length, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.limitQuery(targetClass, startRow, length, entity.getSql(), entity.getParameterValues());
+	public <T> List<T> limitQuery(Class<T> clazz, int startRow, int length, SQLQueryParameter parameter) {
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.limitQuery(clazz, startRow, length, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public List<Object[]> limitQuery_(int startRow, int length, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.limitQuery_(startRow, length, entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.limitQuery_(startRow, length, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public long countQuery(SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.countQuery(entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.countQuery(entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
 	public PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.pageQuery(pageNum, pageSize, entity.getSql(), entity.getParameterValues());
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.pageQuery(pageNum, pageSize, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, SQLQueryParameter parameter) {
-		SqlQueryEntity entity = getSqlQueryEntity(parameter);
-		return super.pageQuery(targetClass, pageNum, pageSize, entity.getSql(), entity.getParameterValues());
+	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, SQLQueryParameter parameter) {
+		ExecutableQuerySql entity = getExecutableQuerySql(parameter);
+		return super.pageQuery(clazz, pageNum, pageSize, entity.getCurrentSql(), entity.getCurrentParameterValues());
 	}
 
 	@Override

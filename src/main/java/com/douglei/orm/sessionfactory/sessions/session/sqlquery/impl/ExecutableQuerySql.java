@@ -5,12 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlMetadata;
+import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
 
 /**
  * 
  * @author DougLei
  */
-public class SqlQueryEntity {
+public class ExecutableQuerySql implements IExecutableSql{
 	private SqlMetadata sqlMetadata; // 原sql
 	private HashSet<String> conditionSQLMark; // 组装条件sql时, 记录每个条件的参数名(去重), 用来在最后验证是否没有传入必要的参数
 	private StringBuilder conditionSQL; // 条件sql
@@ -18,7 +19,7 @@ public class SqlQueryEntity {
 	private StringBuilder resultSQL; // (查询)结果sql
 	private StringBuilder orderbySQL; // 排序sql
 
-	SqlQueryEntity(SqlMetadata sqlMetadata) {
+	ExecutableQuerySql(SqlMetadata sqlMetadata) {
 		this.sqlMetadata = sqlMetadata;
 	}
 	
@@ -116,11 +117,8 @@ public class SqlQueryEntity {
 			orderbySQL.append(' ').append(order);
 	}
 	
-	/**
-	 * sql语句
-	 * @return
-	 */
-	public String getSql() {
+	@Override
+	public String getCurrentSql() {
 		StringBuilder sql = new StringBuilder(sqlMetadata.getTotalLength() + 500);
 		
 		// append with子句
@@ -148,11 +146,8 @@ public class SqlQueryEntity {
 		return sql.toString();
 	}
 	
-	/**
-	 * sql语句需要的参数值集合, 可为null
-	 * @return
-	 */
-	public List<Object> getParameterValues() {
+	@Override
+	public List<Object> getCurrentParameterValues() {
 		return parameterValues;
 	}
 

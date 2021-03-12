@@ -78,16 +78,16 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 	
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql) {
-		return query(targetClass, sql, null);
+	public <T> List<T> query(Class<T> clazz, String sql) {
+		return query(clazz, sql, null);
 	}
 
 	@Override
-	public <T> List<T> query(Class<T> targetClass, String sql, List<Object> parameters) {
+	public <T> List<T> query(Class<T> clazz, String sql, List<Object> parameters) {
 		List<Map<String, Object>> listMap = query(sql, parameters);
 		if(listMap.isEmpty())
 			return Collections.emptyList();
-		return listMap2listClass(targetClass, listMap);
+		return listMap2listClass(clazz, listMap);
 	}
 	
 	@Override
@@ -113,16 +113,16 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 	
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql) {
-		return uniqueQuery(targetClass, sql, null);
+	public <T> T uniqueQuery(Class<T> clazz, String sql) {
+		return uniqueQuery(clazz, sql, null);
 	}
 
 	@Override
-	public <T> T uniqueQuery(Class<T> targetClass, String sql, List<Object> parameters) {
+	public <T> T uniqueQuery(Class<T> clazz, String sql, List<Object> parameters) {
 		Map<String, Object> map = uniqueQuery(sql, parameters);
 		if(map == null)
 			return null;
-		return map2Class(targetClass, map);
+		return map2Class(clazz, map);
 	}
 	
 	@Override
@@ -148,16 +148,16 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 	
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql){
-		return limitQuery(targetClass, startRow, length, sql, null);
+	public <T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String sql){
+		return limitQuery(clazz, startRow, length, sql, null);
 	}
 	
 	@Override
-	public <T> List<T> limitQuery(Class<T> targetClass, int startRow, int length, String sql, List<Object> parameters){
+	public <T> List<T> limitQuery(Class<T> clazz, int startRow, int length, String sql, List<Object> parameters){
 		List<Map<String, Object>> listMap = limitQuery(startRow, length, sql, parameters);
 		if(listMap.isEmpty())
 			return Collections.emptyList();
-		return listMap2listClass(targetClass, listMap);
+		return listMap2listClass(clazz, listMap);
 	}
 	
 	@Override
@@ -177,17 +177,9 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		return Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString());
 	}
 
-	/**
-	 * 分页查询; 内部方法, 不考虑泛型
-	 * @param targetClass
-	 * @param pageNum
-	 * @param pageSize
-	 * @param sql
-	 * @param parameters
-	 * @return
-	 */
+	// 分页查询; 内部方法, 不考虑泛型
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private PageResult pageQuery_(Class targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
+	private PageResult pageQuery_(Class clazz, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		if(pageNum < 0) pageNum = 1;
 		if(pageSize < 0) pageSize = 10;
 		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
@@ -198,8 +190,8 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
 			List list = query(statement.getPageQuerySql(environment.getDialect().getSqlStatementHandler(), pageResult.getPageNum(), pageResult.getPageSize()), parameters);
-			if(targetClass != null && !list.isEmpty()) 
-				list = listMap2listClass(targetClass, list);
+			if(clazz != null && !list.isEmpty()) 
+				list = listMap2listClass(clazz, list);
 			pageResult.setResultDatas(list);
 		}
 		logger.debug("分页查询的结果: {}", pageResult);
@@ -214,38 +206,91 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql){
-		return pageQuery_(targetClass, pageNum, pageSize, sql, null);
+	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql){
+		return pageQuery_(clazz, pageNum, pageSize, sql, null);
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> PageResult<T> pageQuery(Class<T> targetClass, int pageNum, int pageSize, String sql, List<Object> parameters) {
-		return pageQuery_(targetClass, pageNum, pageSize, sql, parameters);
+	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql, List<Object> parameters) {
+		return pageQuery_(clazz, pageNum, pageSize, sql, parameters);
 	}
+	
+	
+	
+	
+	
+	
+	@Override
+	public List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql, List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql,
+			List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	@Override
+	public List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql,
+			List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql,
+			List<Object> parameters) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * listMap转换为listClass
-	 * @param targetClass
+	 * @param clazz
 	 * @param listMap
 	 * @return
 	 */
-	protected <T> List<T> listMap2listClass(Class<T> targetClass, List<Map<String, Object>> listMap) {
+	protected <T> List<T> listMap2listClass(Class<T> clazz, List<Map<String, Object>> listMap) {
 		List<T> targetList = new ArrayList<T>(listMap.size());
 		String[] columnNames = getColumnNames(listMap.get(0));
-		listMap.forEach(map -> targetList.add(map2Class(columnNames, targetClass, map)));
+		listMap.forEach(map -> targetList.add(map2Class(columnNames, clazz, map)));
 		return targetList;
 	}
 	
 	/**
 	 * 将map转换为类
-	 * @param targetClass
+	 * @param clazz
 	 * @param resultMap
 	 * @return
 	 */
-	protected <T> T map2Class(Class<T> targetClass, Map<String, Object> resultMap) {
+	protected <T> T map2Class(Class<T> clazz, Map<String, Object> resultMap) {
 		String[] columnNames = getColumnNames(resultMap);
-		return map2Class(columnNames, targetClass, resultMap);
+		return map2Class(columnNames, clazz, resultMap);
 	}
 	
 	/**
@@ -262,18 +307,18 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 	
 	/**
-	 * 将resultMap转为指定的targetClass实例
+	 * 将resultMap转为指定的clazz实例
 	 * @param columNames
-	 * @param targetClass
+	 * @param clazz
 	 * @param map
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T map2Class(String[] columNames, Class<T> targetClass, Map<String, Object> map) {
+	private <T> T map2Class(String[] columNames, Class<T> clazz, Map<String, Object> map) {
 		for (String columName : columNames) 
 			map.put(NameConvertUtil.column2Property(columName), map.remove(columName));
 		
-		Object object = ClassUtil.newInstance(targetClass);
+		Object object = ClassUtil.newInstance(clazz);
 		IntrospectorUtil.setValues(map, object);
 		return (T) object;
 	}
