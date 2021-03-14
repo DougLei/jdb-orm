@@ -4,7 +4,7 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
  * 
  * @author DougLei
  */
-public class PageRecursiveParameter extends RecursiveParameter{
+public class PageRecursiveEntity extends RecursiveEntity{
 	private int pageNum; // 页数
 	private int pageSize; // 一页显示的数量
 	
@@ -13,7 +13,7 @@ public class PageRecursiveParameter extends RecursiveParameter{
 	 * @param pageNum 页数
 	 * @param pageSize 一页显示的数量
 	 */
-	public PageRecursiveParameter(int pageNum, int pageSize) {
+	public PageRecursiveEntity(int pageNum, int pageSize) {
 		this.pageNum = pageNum<0?1:pageNum;
 		this.pageSize = pageSize<0?10:pageSize;
 	}

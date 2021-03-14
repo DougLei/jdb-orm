@@ -13,43 +13,43 @@ public interface SQLQuerySession {
 	
 	/**
 	 * 查询
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	List<Map<String, Object>> query(SQLQueryParameter parameter);
+	List<Map<String, Object>> query(SQLQueryEntity entity);
 	/**
 	 * 查询
 	 * @param clazz
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	<T> List<T> query(Class<T> clazz, SQLQueryParameter parameter);
+	<T> List<T> query(Class<T> clazz, SQLQueryEntity entity);
 	/**
 	 * 查询
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	List<Object[]> query_(SQLQueryParameter parameter);
+	List<Object[]> query_(SQLQueryEntity entity);
 	
 	/**
 	 * 唯一查询
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	Map<String, Object> uniqueQuery(SQLQueryParameter parameter);
+	Map<String, Object> uniqueQuery(SQLQueryEntity entity);
 	/**
 	 * 唯一查询
 	 * @param clazz
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	<T> T uniqueQuery(Class<T> clazz, SQLQueryParameter parameter);
+	<T> T uniqueQuery(Class<T> clazz, SQLQueryEntity entity);
 	/**
 	 * 唯一查询
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	Object[] uniqueQuery_(SQLQueryParameter parameter);
+	Object[] uniqueQuery_(SQLQueryEntity entity);
 	
 	/**
 	 *  限制查询
@@ -57,47 +57,47 @@ public interface SQLQuerySession {
 	 * @param length
 	 * @return
 	 */
-	List<Map<String, Object>> limitQuery(int startRow, int length, SQLQueryParameter parameter);
+	List<Map<String, Object>> limitQuery(int startRow, int length, SQLQueryEntity entity);
 	/**
 	 *  限制查询
 	 * @param clazz
 	 * @param startRow
 	 * @param length
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	<T> List<T> limitQuery(Class<T> clazz, int startRow, int length, SQLQueryParameter parameter);
+	<T> List<T> limitQuery(Class<T> clazz, int startRow, int length, SQLQueryEntity entity);
 	/**
 	 * 限制查询
 	 * @param startRow
 	 * @param length
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	List<Object[]> limitQuery_(int startRow, int length, SQLQueryParameter parameter);
+	List<Object[]> limitQuery_(int startRow, int length, SQLQueryEntity entity);
 	
 	/**
 	 * 总数量查询
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	long countQuery(SQLQueryParameter parameter);
+	long countQuery(SQLQueryEntity entity);
 	
 	/**
 	 * 分页查询
 	 * @param pageNum
 	 * @param pageSize
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, SQLQueryParameter parameter);
+	PageResult<Map<String, Object>> pageQuery(int pageNum, int pageSize, SQLQueryEntity entity);
 	/**
 	 * 分页查询
 	 * @param clazz
 	 * @param pageNum
 	 * @param pageSize
-	 * @param parameter
+	 * @param entity
 	 * @return
 	 */
-	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, SQLQueryParameter parameter);
+	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, SQLQueryEntity entity);
 }

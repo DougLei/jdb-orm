@@ -225,31 +225,81 @@ public interface SqlSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
-	
-	// 递归查询
-	default List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql){
+	/**
+	 * 递归查询
+	 * @param parameter
+	 * @param sql
+	 * @return
+	 */
+	default List<Map<String, Object>> recursiveQuery(RecursiveEntity parameter, String sql){
 		return recursiveQuery(parameter, sql, null);
 	}
-	List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql, List<Object> parameters);
+	/**
+	 * 递归查询
+	 * @param parameter
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	List<Map<String, Object>> recursiveQuery(RecursiveEntity parameter, String sql, List<Object> parameters);
 	
-	default <T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql){
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param parameter
+	 * @param sql
+	 * @return
+	 */
+	default <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql){
 		return recursiveQuery(clazz, parameter, sql, null);
 	}
-	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql, List<Object> parameters);
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param parameter
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql, List<Object> parameters);
 	
-	
-	// 分页递归查询
-	default List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql){
-		return pageRecursiveQuery(parameter, sql, null);
+	/**
+	 * 分页递归查询
+	 * @param entity
+	 * @param sql
+	 * @return
+	 */
+	default PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql){
+		return pageRecursiveQuery(entity, sql, null);
 	}
-	List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql, List<Object> parameters);
+	/**
+	 * 分页递归查询
+	 * @param entity
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters);
 	
-	default <T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql){
-		return pageRecursiveQuery(clazz, parameter, sql, null);
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param sql
+	 * @return
+	 */
+	default <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql){
+		return pageRecursiveQuery(clazz, entity, sql, null);
 	}
-	<T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql, List<Object> parameters);
-	
-	
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql, List<Object> parameters);
 	
 	/**
 	 * 插入数据

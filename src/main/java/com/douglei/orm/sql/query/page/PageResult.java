@@ -47,9 +47,8 @@ public class PageResult<T> {
 		if(count > 0) {
 			// 计算总页数
 			pageCount = (int)(count/pageSize);
-			if(count%pageSize != 0) {
+			if(count%pageSize != 0) 
 				pageCount++;
-			}
 
 			// 判断请求的页数是否大于总页数, 如果大于总页数, 则修正并记录日志
 			if(pageNum > pageCount) {
@@ -107,6 +106,6 @@ public class PageResult<T> {
 	public String toString() {
 		return "PageResult [pageNum=" + pageNum + ", pageSize=" + pageSize + ", count=" + count
 				+ ", pageCount=" + pageCount + ", resultDatas="
-				+ resultDatas + "]";
+				+ getResultDatas() + "]";
 	}
 }

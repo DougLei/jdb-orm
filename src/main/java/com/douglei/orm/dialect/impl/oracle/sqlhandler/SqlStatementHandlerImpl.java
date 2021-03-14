@@ -68,8 +68,8 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// sql拼装
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		StringBuilder pageQuerySql = new StringBuilder(300 + statement.getTotalLength());
+	public String getPageQuerySql(int pageNum, int pageSize, String extendConditionSQL, PageSqlStatement statement) {
+		StringBuilder pageQuerySql = new StringBuilder(500+ statement.getTotalLength());
 		
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
@@ -79,6 +79,11 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_ WHERE ROWNUM <= ");
 		pageQuerySql.append(maxIndex);
+		
+		// 追加扩展的条件sql
+		if(extendConditionSQL != null)
+			pageQuerySql.append(" AND ").append(extendConditionSQL);
+		
 		pageQuerySql.append(" ) JDB_ORM_THIRD_QUERY_ WHERE JDB_ORM_THIRD_QUERY_.RN > ");
 		pageQuerySql.append(maxIndex-pageSize);
 		

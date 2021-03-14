@@ -7,7 +7,7 @@ import com.douglei.orm.dialect.sqlhandler.SqlStatementHandler;
 import com.douglei.orm.sql.query.QuerySqlStatement;
 
 /**
- * 分页查询用的sql语句对象
+ * 
  * @author DougLei
  */
 public class PageSqlStatement extends QuerySqlStatement{
@@ -15,11 +15,11 @@ public class PageSqlStatement extends QuerySqlStatement{
 	
 	/**
 	 * 
-	 * @param querySQL
+	 * @param sql
 	 * @param extractOrderByClause 是否需要提取sql中(最外层的)order by子句
 	 */
-	public PageSqlStatement(String querySQL, boolean extractOrderByClause) {
-		super(querySQL, extractOrderByClause);
+	public PageSqlStatement(String sql, boolean extractOrderByClause) {
+		super(sql, extractOrderByClause);
 	}
 
 	/**
@@ -28,11 +28,11 @@ public class PageSqlStatement extends QuerySqlStatement{
 	 */
 	public String getCountSql() {
 		StringBuilder countSql = new StringBuilder(50 + getTotalLength());
-		if(getWithClause() != null)
-			countSql.append(getWithClause()).append(' ');
+		if(withClause != null)
+			countSql.append(withClause).append(' ');
 		countSql.append("SELECT COUNT(1) FROM (").append(sql).append(") JDB_ORM_QC_");
 		
-		logger.debug("进行分页查询前的count sql语句为: {}", countSql);	
+		logger.debug("分页查询前的count sql语句为: {}", countSql);	
 		return countSql.toString();
 		
 	}
@@ -45,6 +45,18 @@ public class PageSqlStatement extends QuerySqlStatement{
 	 * @return
 	 */
 	public String getPageQuerySql(SqlStatementHandler sqlStatementHandler, int pageNum, int pageSize) {
-		return sqlStatementHandler.getPageQuerySql(pageNum, pageSize, this);
+		return sqlStatementHandler.getPageQuerySql(pageNum, pageSize, null, this);
+	}
+	
+	/**
+	 * 获取分页递归查询的sql语句
+	 * @param sqlStatementHandler
+	 * @param pageNum 第几页
+	 * @param pageSize 一页显示的数量
+	 * @param recursiveConditionSQL 递归的条件sql
+	 * @return
+	 */
+	public String getPageQuerySql(SqlStatementHandler sqlStatementHandler, int pageNum, int pageSize, String recursiveConditionSQL) {
+		return sqlStatementHandler.getPageQuerySql(pageNum, pageSize, recursiveConditionSQL, this);
 	}
 }

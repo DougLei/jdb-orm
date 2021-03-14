@@ -51,6 +51,9 @@ public class ColumnMetadata extends AbstractMetadata {
 		return property;
 	}
 	
+	public String getProperty() {
+		return property;
+	}
 	public DBDataType getDBDataType() {
 		if(DBDataType == null)
 			DBDataType = EnvironmentContext.getEnvironment().getDialect().getDataTypeContainer().getDBDataTypeByName(dbDataType);

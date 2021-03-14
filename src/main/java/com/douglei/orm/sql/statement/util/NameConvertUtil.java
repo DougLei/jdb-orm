@@ -123,7 +123,6 @@ public class NameConvertUtil {
 		return sb.toString();
 	}
 	
-	
 	// 测试用main方法
 //	public static void main(String[] args) {
 //		System.out.println(column2Property("___"));

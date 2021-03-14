@@ -182,11 +182,9 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	private PageResult pageQuery_(Class clazz, int pageNum, int pageSize, String sql, List<Object> parameters) {
 		if(pageNum < 0) pageNum = 1;
 		if(pageSize < 0) pageSize = 10;
-		logger.debug("开始执行分页查询, pageNum={}, pageSize={}", pageNum, pageSize);
 		
 		PageSqlStatement statement = new PageSqlStatement(sql, environment.getDialect().getDatabaseType().extractOrderByClause());
 		long count = Long.parseLong(uniqueQuery_(statement.getCountSql(), parameters)[0].toString()); // 查询总数量
-		logger.debug("查询到的数据总量为:{}条", count);
 		PageResult pageResult = new PageResult(pageNum, pageSize, count);
 		if(count > 0) {
 			List list = query(statement.getPageQuerySql(environment.getDialect().getSqlStatementHandler(), pageResult.getPageNum(), pageResult.getPageSize()), parameters);
@@ -194,7 +192,6 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 				list = listMap2listClass(clazz, list);
 			pageResult.setResultDatas(list);
 		}
-		logger.debug("分页查询的结果: {}", pageResult);
 		return pageResult;
 	}
 	
@@ -216,58 +213,29 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		return pageQuery_(clazz, pageNum, pageSize, sql, parameters);
 	}
 	
-	
-	
-	
-	
-	
 	@Override
-	public List<Map<String, Object>> recursiveQuery(RecursiveParameter parameter, String sql, List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String sql, List<Object> parameters) {
+		return new RecursiveQuerier(entity, sql, parameters).execute(this);
 	}
 
 	@Override
-	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveParameter parameter, String sql,
-			List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String sql, List<Object> parameters) {
+		return new RecursiveQuerier(clazz, entity, sql, parameters).execute(this);
 	}
 	
-	
-	
 	@Override
-	public List<Map<String, Object>> pageRecursiveQuery(PageRecursiveParameter parameter, String sql,
-			List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters) {
+		return new PageRecursiveQuerier(entity, sql, parameters).execute(this);
 	}
 
 	@Override
-	public <T> List<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveParameter parameter, String sql,
-			List<Object> parameters) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql, List<Object> parameters) {
+		return new PageRecursiveQuerier(clazz, entity, sql, parameters).execute(this);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * listMap转换为listClass
@@ -277,8 +245,8 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	 */
 	protected <T> List<T> listMap2listClass(Class<T> clazz, List<Map<String, Object>> listMap) {
 		List<T> targetList = new ArrayList<T>(listMap.size());
-		String[] columnNames = getColumnNames(listMap.get(0));
-		listMap.forEach(map -> targetList.add(map2Class(columnNames, clazz, map)));
+		NamePair namePair = new NamePair(listMap.get(0));
+		listMap.forEach(map -> targetList.add(map2Class(namePair, clazz, map)));
 		return targetList;
 	}
 	
@@ -289,34 +257,22 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	 * @return
 	 */
 	protected <T> T map2Class(Class<T> clazz, Map<String, Object> resultMap) {
-		String[] columnNames = getColumnNames(resultMap);
-		return map2Class(columnNames, clazz, resultMap);
-	}
-	
-	/**
-	 * 获取结果集map的 Column名数组
-	 * @param resultMap
-	 * @return
-	 */
-	private String[] getColumnNames(Map<String, Object> resultMap) {
-		String[] columnNames = new String[resultMap.size()];
-		int index = 0;
-		for (String key : resultMap.keySet()) 
-			columnNames[index++] = key;
-		return columnNames;
+		NamePair namePair = new NamePair(resultMap);
+		return map2Class(namePair, clazz, resultMap);
 	}
 	
 	/**
 	 * 将resultMap转为指定的clazz实例
 	 * @param columNames
+	 * @param propertyNames
 	 * @param clazz
 	 * @param map
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> T map2Class(String[] columNames, Class<T> clazz, Map<String, Object> map) {
-		for (String columName : columNames) 
-			map.put(NameConvertUtil.column2Property(columName), map.remove(columName));
+	private <T> T map2Class(NamePair namePair, Class<T> clazz, Map<String, Object> map) {
+		while(namePair.next())
+			map.put(namePair.getProperty(), map.remove(namePair.getColumn()));
 		
 		Object object = ClassUtil.newInstance(clazz);
 		IntrospectorUtil.setValues(map, object);
@@ -363,5 +319,36 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 			}
 			isClosed = true;
 		}
+	}
+}
+
+/**
+ * 
+ * @author DougLei
+ */
+class NamePair {
+	private int index;
+	private String[] columns;
+	private String[] properties;
+	
+	public NamePair(Map<String, Object> resultMap) {
+		this.columns = new String[resultMap.size()];
+		this.properties = new String[resultMap.size()];
+		
+		for (String key : resultMap.keySet()) {
+			columns[index] = key;
+			properties[index] = NameConvertUtil.column2Property(key);
+			index++;
+		}
+	}
+	
+	public boolean next() { 
+		return --index >= 0;
+	}
+	public String getColumn() {
+		return columns[index];
+	}
+	public String getProperty() {
+		return properties[index];
 	}
 }

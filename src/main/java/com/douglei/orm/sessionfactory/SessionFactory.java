@@ -42,7 +42,7 @@ public class SessionFactory {
 	 * @return
 	 */
 	public Session openSession() {
-		return openSession(true, null);
+		return openSession(true, TransactionIsolationLevel.DEFAULT);
 	}
 	/**
 	 * 开启Session实例
@@ -50,12 +50,12 @@ public class SessionFactory {
 	 * @return
 	 */
 	public Session openSession(boolean isBeginTransaction) {
-		return openSession(isBeginTransaction, null);
+		return openSession(isBeginTransaction, TransactionIsolationLevel.DEFAULT);
 	}
 	/**
 	 * 开启Session实例
 	 * @param isBeginTransaction 是否开启事物
-	 * @param transactionIsolationLevel 事物隔离级别, 如果传入null, 则使用jdbc默认的隔离级别
+	 * @param transactionIsolationLevel 事物隔离级别
 	 * @return
 	 */
 	public Session openSession(boolean isBeginTransaction, TransactionIsolationLevel transactionIsolationLevel) {
@@ -91,7 +91,7 @@ public class SessionFactory {
 				environment.destroy();
 				environment = null;
 			} catch (Exception e) {
-				throw new OrmException("销毁[com.douglei.orm.sessionfactory.SessionFactory]实例时出现异常", e);
+				throw new OrmException("销毁SessionFactory实例时出现异常", e);
 			}
 		}
 	}

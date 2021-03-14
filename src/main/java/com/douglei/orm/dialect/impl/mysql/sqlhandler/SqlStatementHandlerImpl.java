@@ -96,15 +96,20 @@ public class SqlStatementHandlerImpl extends SqlStatementHandler{
 	// sql拼装
 	// --------------------------------------------------------------------------------------------
 	@Override
-	public String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement) {
-		StringBuilder pageQuerySql = new StringBuilder(180 + statement.getTotalLength());
-	
+	public String getPageQuerySql(int pageNum, int pageSize, String extendConditionSQL, PageSqlStatement statement) {
+		StringBuilder pageQuerySql = new StringBuilder(300+ statement.getTotalLength());
+		
 		if(statement.getWithClause() != null)
 			pageQuerySql.append(statement.getWithClause()).append(' ');
 		
 		pageQuerySql.append("SELECT JDB_ORM_SECOND_QUERY_.* FROM (");
 		pageQuerySql.append(statement.getSql());
 		pageQuerySql.append(") JDB_ORM_SECOND_QUERY_");
+		
+		// 追加扩展的条件sql
+		if(extendConditionSQL != null)
+			pageQuerySql.append(" WHERE ").append(extendConditionSQL); 
+		
 		pageQuerySql.append(" LIMIT ");
 		pageQuerySql.append((pageNum-1)*pageSize);
 		pageQuerySql.append(",");

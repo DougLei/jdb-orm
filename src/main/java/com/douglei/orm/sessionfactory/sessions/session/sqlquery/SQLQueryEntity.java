@@ -8,7 +8,7 @@ import com.douglei.orm.sessionfactory.sessions.session.sqlquery.impl.AbstractPar
  * 
  * @author DougLei
  */
-public class SQLQueryParameter {
+public class SQLQueryEntity {
 	private String name;
 	private List<AbstractParameter> parameters;
 
@@ -16,7 +16,7 @@ public class SQLQueryParameter {
 	 * 
 	 * @param name sql-query的映射名
 	 */
-	public SQLQueryParameter(String name) {
+	public SQLQueryEntity(String name) {
 		this.name = name;
 	}
 	/**
@@ -24,7 +24,7 @@ public class SQLQueryParameter {
 	 * @param name sql-query的映射名
 	 * @param parameters (动态)参数集合
 	 */
-	public SQLQueryParameter(String name, List<AbstractParameter> parameters) {
+	public SQLQueryEntity(String name, List<AbstractParameter> parameters) {
 		this.name = name;
 		this.parameters = parameters;
 	}

@@ -183,7 +183,6 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 		List<T> targetList = new ArrayList<T>(resultListMap.size());
 		for (Map<String, Object> resultMap : resultListMap) 
 			targetList.add(map2Class(tableMetadata, clazz, resultMap));
-		
 		return targetList;
 	}
 
@@ -201,8 +200,8 @@ public class TableSessionImpl extends SqlSessionImpl implements TableSession {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> T map2Class(TableMetadata tableMetadata, Class<T> clazz, Map<String, Object> resultMap) {
-		tableMetadata.getColumnMap4Code().forEach((code, column) -> {
-			resultMap.put(column.getCode(), resultMap.remove(column.getName()));
+		tableMetadata.getColumns().forEach(column -> {
+			resultMap.put(column.getProperty(), resultMap.remove(column.getName()));
 		});
 		
 		Object object = ClassUtil.newInstance(clazz);

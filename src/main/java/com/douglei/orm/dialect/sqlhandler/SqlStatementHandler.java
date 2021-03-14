@@ -262,8 +262,9 @@ public abstract class SqlStatementHandler {
 	 * 获取分页查询的sql语句
 	 * @param pageNum 
 	 * @param pageSize 
+	 * @param extendConditionSQL 扩展的条件sql, 可传入null
 	 * @param statement
 	 * @return
 	 */
-	public abstract String getPageQuerySql(int pageNum, int pageSize, PageSqlStatement statement);
+	public abstract String getPageQuerySql(int pageNum, int pageSize, String extendConditionSQL, PageSqlStatement statement);
 }
