@@ -80,7 +80,7 @@ class PageRecursiveQuerier extends AbstractRecursiveQuerier<PageRecursiveEntity>
 				
 				// 进行递归查询
 				RecursiveQuerier rq = new RecursiveQuerier(clazz, entity, statement, parameters, parametersInitialLength);
-				List childrenList = rq.execute(session);
+				List<Map<String, Object>> childrenList = rq.execute_(session);
 				rq.buildPCStruct(session, list, childrenList);
 			}
 			pageResult.setResultDatas((clazz == null)?list:session.listMap2listClass(clazz, list));

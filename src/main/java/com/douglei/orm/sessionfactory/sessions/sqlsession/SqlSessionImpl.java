@@ -220,6 +220,11 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	}
 
 	@Override
+	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String sql) {
+		return recursiveQuery(clazz, entity, sql, null);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String sql, List<Object> parameters) {
 		return new RecursiveQuerier(clazz, entity, sql, parameters).execute(this);
@@ -231,6 +236,11 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 		return new PageRecursiveQuerier(entity, sql, parameters).execute(this);
 	}
 
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql) {
+		return pageRecursiveQuery(clazz, entity, sql, null);
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql, List<Object> parameters) {
@@ -246,7 +256,10 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	protected <T> List<T> listMap2listClass(Class<T> clazz, List<Map<String, Object>> listMap) {
 		List<T> targetList = new ArrayList<T>(listMap.size());
 		NamePair namePair = new NamePair(listMap.get(0));
-		listMap.forEach(map -> targetList.add(map2Class(namePair, clazz, map)));
+		listMap.forEach(map -> {
+			targetList.add(map2Class(namePair, clazz, map));
+			namePair.reset();
+		});
 		return targetList;
 	}
 	
@@ -342,6 +355,9 @@ class NamePair {
 		}
 	}
 	
+	public void reset() {
+		index = columns.length;
+	}
 	public boolean next() { 
 		return --index >= 0;
 	}

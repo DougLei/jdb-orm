@@ -3,6 +3,8 @@ package com.douglei.orm.sessionfactory.sessions.session.table;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.sessionfactory.sessions.sqlsession.PageRecursiveEntity;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.RecursiveEntity;
 import com.douglei.orm.sql.query.page.PageResult;
 
 /**
@@ -222,5 +224,39 @@ public interface TableSession {
 	 */
 	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String sql, List<Object> parameters);
 	
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param parameter
+	 * @param sql
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql);
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param parameter
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql, List<Object> parameters);
 	
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param sql
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql);
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql, List<Object> parameters);
 }

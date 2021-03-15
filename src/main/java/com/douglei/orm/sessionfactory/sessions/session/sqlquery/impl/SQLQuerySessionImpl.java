@@ -12,6 +12,8 @@ import com.douglei.orm.configuration.environment.datasource.ConnectionEntity;
 import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQueryEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sqlquery.SQLQuerySession;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.PageRecursiveEntity;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.RecursiveEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.orm.sql.query.page.PageResult;
 
@@ -111,6 +113,30 @@ public class SQLQuerySessionImpl extends SqlSessionImpl implements SQLQuerySessi
 	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, SQLQueryEntity entity) {
 		ExecutableQuerySql sql = getExecutableQuerySql(entity);
 		return super.pageQuery(clazz, pageNum, pageSize, sql.getCurrentSql(), sql.getCurrentParameterValues());
+	}
+	
+	@Override
+	public List<Map<String, Object>> recursiveQuery(RecursiveEntity entity1, SQLQueryEntity entity2) {
+		ExecutableQuerySql sql = getExecutableQuerySql(entity2);
+		return super.recursiveQuery(entity1, sql.getCurrentSql(), sql.getCurrentParameterValues());
+	}
+
+	@Override
+	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity1, SQLQueryEntity entity2) {
+		ExecutableQuerySql sql = getExecutableQuerySql(entity2);
+		return super.recursiveQuery(clazz, entity1, sql.getCurrentSql(), sql.getCurrentParameterValues());
+	}
+
+	@Override
+	public PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity1, SQLQueryEntity entity2) {
+		ExecutableQuerySql sql = getExecutableQuerySql(entity2);
+		return super.pageRecursiveQuery(entity1, sql.getCurrentSql(), sql.getCurrentParameterValues());
+	}
+
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity1, SQLQueryEntity entity2) {
+		ExecutableQuerySql sql = getExecutableQuerySql(entity2);
+		return super.pageRecursiveQuery(clazz, entity1, sql.getCurrentSql(), sql.getCurrentParameterValues());
 	}
 
 	@Override

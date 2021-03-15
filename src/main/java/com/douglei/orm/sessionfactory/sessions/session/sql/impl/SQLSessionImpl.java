@@ -24,8 +24,10 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.ProcedurePurp
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.QueryPurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.UpdatePurposeEntity;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.PageRecursiveEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecuteException;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.ProcedureExecutor;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.RecursiveEntity;
 import com.douglei.orm.sessionfactory.sessions.sqlsession.SqlSessionImpl;
 import com.douglei.orm.sql.query.page.PageResult;
 import com.douglei.orm.sql.statement.AutoIncrementID;
@@ -135,6 +137,30 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	public <T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
 		return super.pageQuery(clazz, pageNum, pageSize, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+	}
+	
+	@Override
+	public List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String namespace, String name, Object sqlParameter) {
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.recursiveQuery(entity, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+	}
+
+	@Override
+	public <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String namespace, String name, Object sqlParameter) {
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.recursiveQuery(clazz, entity, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+	}
+
+	@Override
+	public PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter) {
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.pageRecursiveQuery(entity, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
+	}
+
+	@Override
+	public <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String namespace, String name, Object sqlParameter) {
+		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
+		return super.pageRecursiveQuery(clazz, entity, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}
 	
 	// 执行update, 传入的sqlParameter为null或对象

@@ -3,6 +3,8 @@ package com.douglei.orm.sessionfactory.sessions.session.sqlquery;
 import java.util.List;
 import java.util.Map;
 
+import com.douglei.orm.sessionfactory.sessions.sqlsession.PageRecursiveEntity;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.RecursiveEntity;
 import com.douglei.orm.sql.query.page.PageResult;
 
 /**
@@ -100,4 +102,36 @@ public interface SQLQuerySession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, SQLQueryEntity entity);
+	
+	/**
+	 * 递归查询
+	 * @param entity1
+	 * @param entity2
+	 * @return
+	 */
+	List<Map<String, Object>> recursiveQuery(RecursiveEntity entity1, SQLQueryEntity entity2);
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param entity1
+	 * @param entity2
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity1, SQLQueryEntity entity2);
+	
+	/**
+	 * 分页递归查询
+	 * @param entity1
+	 * @param entity2
+	 * @return
+	 */
+	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity1, SQLQueryEntity entity2);
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity1
+	 * @param entity2
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity1, SQLQueryEntity entity2);
 }

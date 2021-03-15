@@ -77,8 +77,8 @@ class RecursiveQuerier extends AbstractRecursiveQuerier<RecursiveEntity>{
 		if(statement.getWithClause() != null)
 			this.sql.append(statement.getWithClause()).append(' ');
 		this.sql.append("SELECT JDB_ORM_R_Q_.* FROM (");
-		this.sql.append(sql);
-		this.sql.append(") JDB_ORM_R_Q_ WHERE ").append(entity.getParentColumn()).append(' ');
+		this.sql.append(statement.getSql());
+		this.sql.append(") JDB_ORM_R_Q_ WHERE ");
 		
 		// 设置递归查询sql的初始长度
 		this.sqlInitialLength = this.sql.length();
@@ -109,7 +109,7 @@ class RecursiveQuerier extends AbstractRecursiveQuerier<RecursiveEntity>{
 	
 	// 获取(第二次及后续)递归查询的sql语句
 	private String getRecursiveQuerySql(List<Map<String, Object>> parentList) {
-		sql.append("IN (");
+		sql.append(entity.getParentColumn()).append(" IN (");
 		for (Map<String, Object> map : parentList) {
 			Object idValue = map.get(entity.getColumn());
 			if(idValue == null)
@@ -177,11 +177,11 @@ class RecursiveQuerier extends AbstractRecursiveQuerier<RecursiveEntity>{
 	}
 	
 	/**
-	 * 执行递归查询
+	 * 执行递归查询, 内部使用
 	 * @param session
 	 * @return
 	 */
-	public List execute(SqlSessionImpl session) {
+	List<Map<String, Object>> execute_(SqlSessionImpl session) {
 		if(entity == null)
 			return Collections.emptyList();
 		
@@ -194,6 +194,16 @@ class RecursiveQuerier extends AbstractRecursiveQuerier<RecursiveEntity>{
 		
 		List<Map<String, Object>> list = session.query(getRecursiveQuerySql(), parameters);
 		recursiveQuery(session, list);
+		return list;
+	}
+	
+	/**
+	 * 执行递归查询
+	 * @param session
+	 * @return
+	 */
+	public List execute(SqlSessionImpl session) {
+		List<Map<String, Object>> list = execute_(session);
 		return (clazz == null || list.isEmpty())?list:session.listMap2listClass(clazz, list);
 	}
 }

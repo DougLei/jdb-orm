@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentType;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.PageRecursiveEntity;
+import com.douglei.orm.sessionfactory.sessions.sqlsession.RecursiveEntity;
 import com.douglei.orm.sql.query.page.PageResult;
 
 /**
@@ -257,6 +259,90 @@ public interface SQLSession {
 	 * @return
 	 */
 	<T> PageResult<T> pageQuery(Class<T> clazz, int pageNum, int pageSize, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 递归查询
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	default List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String namespace, String name){
+		return recursiveQuery(entity, namespace, name, null);
+	}
+	/**
+	 * 递归查询
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	default <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String namespace, String name){
+		return recursiveQuery(clazz, entity, namespace, name, null);
+	}
+	/**
+	 * 递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 分页递归查询
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	default PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name){
+		return pageRecursiveQuery(entity, namespace, name, null);
+	}
+	/**
+	 * 分页递归查询
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter);
+	
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @return
+	 */
+	default <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String namespace, String name){
+		return pageRecursiveQuery(clazz, entity, namespace, name, null);
+	}
+	/**
+	 * 分页递归查询
+	 * @param clazz
+	 * @param entity
+	 * @param namespace
+	 * @param name
+	 * @param sqlParameter
+	 * @return
+	 */
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 增删改数据

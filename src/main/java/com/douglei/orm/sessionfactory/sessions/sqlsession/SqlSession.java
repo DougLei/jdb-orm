@@ -227,41 +227,39 @@ public interface SqlSession {
 	
 	/**
 	 * 递归查询
-	 * @param parameter
+	 * @param entity
 	 * @param sql
 	 * @return
 	 */
-	default List<Map<String, Object>> recursiveQuery(RecursiveEntity parameter, String sql){
-		return recursiveQuery(parameter, sql, null);
+	default List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String sql){
+		return recursiveQuery(entity, sql, null);
 	}
 	/**
 	 * 递归查询
-	 * @param parameter
+	 * @param entity
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	List<Map<String, Object>> recursiveQuery(RecursiveEntity parameter, String sql, List<Object> parameters);
+	List<Map<String, Object>> recursiveQuery(RecursiveEntity entity, String sql, List<Object> parameters);
 	
 	/**
 	 * 递归查询
 	 * @param clazz
-	 * @param parameter
+	 * @param entity
 	 * @param sql
 	 * @return
 	 */
-	default <T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql){
-		return recursiveQuery(clazz, parameter, sql, null);
-	}
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String sql);
 	/**
 	 * 递归查询
 	 * @param clazz
-	 * @param parameter
+	 * @param entity
 	 * @param sql
 	 * @param parameters
 	 * @return
 	 */
-	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity parameter, String sql, List<Object> parameters);
+	<T> List<T> recursiveQuery(Class<T> clazz, RecursiveEntity entity, String sql, List<Object> parameters);
 	
 	/**
 	 * 分页递归查询
@@ -288,9 +286,7 @@ public interface SqlSession {
 	 * @param sql
 	 * @return
 	 */
-	default <T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql){
-		return pageRecursiveQuery(clazz, entity, sql, null);
-	}
+	<T> PageResult<T> pageRecursiveQuery(Class<T> clazz, PageRecursiveEntity entity, String sql);
 	/**
 	 * 分页递归查询
 	 * @param clazz

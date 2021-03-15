@@ -59,7 +59,7 @@ public class RecursiveEntity {
 
 	/**
 	 * 设置初始条件值
-	 * @param value 可为null, Array(数组), Collection(集合)
+	 * @param value 可为null, Object(对象), Array(数组), Collection(集合)
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
@@ -74,6 +74,8 @@ public class RecursiveEntity {
 			this.values = ((Collection)value).toArray();
 		}else if(value.getClass().isArray() && ((Object[]) value).length > 0) {
 			this.values = (Object[]) value;
+		}else {
+			this.values = new Object[] {value};
 		}
 		
 		if(this.values != null) {
