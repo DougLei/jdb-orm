@@ -27,7 +27,7 @@ class RecursiveQuerier extends AbstractRecursiveQuerier<RecursiveEntity>{
 	private int sqlInitialLength; // 递归查询sql的初始长度
 	private String orderByClause; // order by子句
 	
-	private HashSet<Object> counter; // 参数值的计数器, 防止出现递归死循环
+	private HashSet<Object> counter; // 参数值的计数器, 防止数据异常导致的递归死循环; 例如id和parentId值相同等
 	
 	/**
 	 * 
