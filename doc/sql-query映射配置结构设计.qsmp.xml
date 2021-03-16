@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping-configuration>
-	<!-- 配置资源名 -->
-	<sql-query name="">
+	<!-- 映射的属性配置, 参考《table映射配置结构设计.tmp.xml》中的属性配置说明 -->
+	<property order="0" supportCover="true" supportDelete="true" extend="" />
+
+	<!-- 
+		sql-query映射配置
+		* name: 映射名
+		* oldName: 旧映射名; 如果配置, 框架会删除旧映射名的sql
+	 -->
+	<sql-query name="" oldName="">
 		<!-- content中配置具体的select sql -->
 		<content></content>
 		

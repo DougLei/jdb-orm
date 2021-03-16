@@ -12,8 +12,9 @@ public class SqlQueryMetadata extends AbstractMetadata {
 	private SqlMetadata sql;
 	private Map<String, ParameterMetadata> parameterMap;
 	
-	public SqlQueryMetadata(String name, SqlMetadata sql) {
+	public SqlQueryMetadata(String name, String oldName, SqlMetadata sql) {
 		this.name = name;
+		this.oldName = oldName;
 		this.sql = sql;
 	}
 	public void setParameterMap(Map<String, ParameterMetadata> parameterMap) {

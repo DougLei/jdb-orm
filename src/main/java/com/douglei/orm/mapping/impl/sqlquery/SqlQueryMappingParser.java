@@ -30,16 +30,16 @@ class SqlQueryMappingParser extends MappingParser{
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
 		Element rootElement = MappingParseToolContext.getMappingParseTool().getSAXReader().read(input).getRootElement();
-		Element querySqlElement = Dom4jUtil.getElement(MappingTypeNameConstants.SQL_QUERY, rootElement);
+		Element sqlQueryElement = Dom4jUtil.getElement(MappingTypeNameConstants.SQL_QUERY, rootElement);
 		
 		// 创建QuerySqlMetadata实例
-		String sql = Dom4jUtil.getElement("content", querySqlElement).getTextTrim();
+		String sql = Dom4jUtil.getElement("content", sqlQueryElement).getTextTrim();
 		if(StringUtil.isEmpty(sql))
 			throw new MetadataParseException("<content>中的sql内容不能为空");
-		SqlQueryMetadata querySqlMetadata = new SqlQueryMetadata(getName(querySqlElement), getSql(Dom4jUtil.getElement("content", querySqlElement).getTextTrim()));
+		SqlQueryMetadata querySqlMetadata = new SqlQueryMetadata(getName(sqlQueryElement), sqlQueryElement.attributeValue("oldName"), getSql(Dom4jUtil.getElement("content", sqlQueryElement).getTextTrim()));
 		
 		// 设置参数
-		Map<String, ParameterMetadata> parameterMap= parseParameterMap(querySqlElement.element("parameters"));
+		Map<String, ParameterMetadata> parameterMap= parseParameterMap(sqlQueryElement.element("parameters"));
 		querySqlMetadata.setParameterMap(parameterMap);
 		
 		return buildMappingSubjectByDom4j(entity.isEnableProperty(), new SqlQueryMapping(querySqlMetadata), rootElement);
@@ -49,7 +49,7 @@ class SqlQueryMappingParser extends MappingParser{
 	private String getName(Element element) {
 		String name = element.attributeValue("name");
 		if(StringUtil.isEmpty(name))
-			throw new MetadataParseException("<"+element.getName()+">中的name属性值不能为空");
+			throw new MetadataParseException("<"+element.getName()+">的name属性值不能为空");
 		return name;
 	}
 	
