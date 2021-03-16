@@ -60,7 +60,7 @@ public class ResultSetUtil {
 	
 	/**
 	 * 获取ResultSet ListMap
-	 * @param startRow 起始的行数, 值从1开始, 不能传入小于1的数字
+	 * @param startRow 起始的行数, 值从1开始
 	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param resultsetMetadatas
 	 * @param resultSet
@@ -76,7 +76,7 @@ public class ResultSetUtil {
 		SqlResultsetMetadata sqlResultsetMetadata = null;
 		do {
 			map = new HashMap<String, Object>();
-			for(short i=0;i<resultsetMetadatas.size();i++) {
+			for(int i=0;i<resultsetMetadatas.size();i++) {
 				sqlResultsetMetadata = resultsetMetadatas.get(i);
 				map.put(sqlResultsetMetadata.getColumnName(), sqlResultsetMetadata.getDBDataType().getValue(i+1, resultSet));
 			}

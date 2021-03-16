@@ -15,14 +15,7 @@ public class SQLQueryEntity {
 	/**
 	 * 
 	 * @param name sql-query的映射名
-	 */
-	public SQLQueryEntity(String name) {
-		this.name = name;
-	}
-	/**
-	 * 
-	 * @param name sql-query的映射名
-	 * @param parameters (动态)参数值集合
+	 * @param parameters (动态)参数值集合, 可为null
 	 */
 	public SQLQueryEntity(String name, List<AbstractParameter> parameters) {
 		this.name = name;
