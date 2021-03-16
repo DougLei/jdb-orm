@@ -66,7 +66,7 @@ class SqlQueryMappingParser extends MappingParser{
 	@SuppressWarnings("unchecked")
 	private Map<String, ParameterMetadata> parseParameterMap(Element element) {
 		if(element == null)
-			throw new MetadataParseException("<query-sql>下必须配置<parameters>");
+			throw new MetadataParseException("<sql-query>下必须配置<parameters>");
 			
 		List<Element> elements = element.elements("parameter");
 		if(elements.isEmpty())

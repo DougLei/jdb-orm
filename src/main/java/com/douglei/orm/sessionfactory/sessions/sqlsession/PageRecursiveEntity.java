@@ -5,7 +5,7 @@ package com.douglei.orm.sessionfactory.sessions.sqlsession;
  * @author DougLei
  */
 public class PageRecursiveEntity extends RecursiveEntity{
-	private int pageNum; // 页数
+	private int pageNum; // 页数(当前第几页)
 	private int pageSize; // 一页显示的数量
 	
 	/**
@@ -19,7 +19,7 @@ public class PageRecursiveEntity extends RecursiveEntity{
 	}
 
 	/**
-	 * 获取页数
+	 * 获取页数(当前第几页)
 	 * @return
 	 */
 	public int getPageNum() {

@@ -22,7 +22,7 @@ public class SQLQueryEntity {
 	/**
 	 * 
 	 * @param name sql-query的映射名
-	 * @param parameters (动态)参数集合
+	 * @param parameters (动态)参数值集合
 	 */
 	public SQLQueryEntity(String name, List<AbstractParameter> parameters) {
 		this.name = name;
@@ -37,7 +37,7 @@ public class SQLQueryEntity {
 		return name;
 	}
 	/**
-	 * 获取(动态)参数集合
+	 * 获取(动态)参数值集合
 	 * @return
 	 */
 	public List<AbstractParameter> getParameters() {
