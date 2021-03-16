@@ -111,8 +111,8 @@ public interface SqlSession {
 	
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @return 返回<列名:值>的map集合
 	 */
@@ -121,8 +121,8 @@ public interface SqlSession {
 	}
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<列名:值>的map集合
@@ -132,8 +132,8 @@ public interface SqlSession {
 	/**
 	 * 限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @return 
 	 */
@@ -141,8 +141,8 @@ public interface SqlSession {
 	/**
 	 * 限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
@@ -151,8 +151,8 @@ public interface SqlSession {
 	
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @return 返回<值>的数组
 	 */
@@ -161,8 +161,8 @@ public interface SqlSession {
 	}
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 起始的行数, 值从1开始
+	 * @param length 查询的数据长度
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 返回<值>的数组
@@ -267,7 +267,7 @@ public interface SqlSession {
 	 * @param sql
 	 * @return
 	 */
-	default PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql){
+	default PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String sql){
 		return pageRecursiveQuery(entity, sql, null);
 	}
 	/**
@@ -277,7 +277,7 @@ public interface SqlSession {
 	 * @param parameters
 	 * @return
 	 */
-	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters);
+	PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters);
 	
 	/**
 	 * 分页递归查询

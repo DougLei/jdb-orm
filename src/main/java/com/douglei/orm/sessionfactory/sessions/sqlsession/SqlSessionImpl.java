@@ -232,7 +232,7 @@ public class SqlSessionImpl extends AbstractSession implements SqlSession{
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters) {
+	public PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String sql, List<Object> parameters) {
 		return new PageRecursiveQuerier(entity, sql, parameters).execute(this);
 	}
 

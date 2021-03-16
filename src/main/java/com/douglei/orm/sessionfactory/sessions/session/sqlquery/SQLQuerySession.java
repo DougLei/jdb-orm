@@ -125,7 +125,7 @@ public interface SQLQuerySession {
 	 * @param entity2
 	 * @return
 	 */
-	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity1, SQLQueryEntity entity2);
+	PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity1, SQLQueryEntity entity2);
 	/**
 	 * 分页递归查询
 	 * @param clazz

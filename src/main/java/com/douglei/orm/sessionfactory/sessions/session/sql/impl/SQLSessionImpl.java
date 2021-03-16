@@ -152,7 +152,7 @@ public class SQLSessionImpl extends SqlSessionImpl implements SQLSession {
 	}
 
 	@Override
-	public PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter) {
+	public PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter) {
 		ExecutableSqlHolder executableSqlHolder = getExecutableSqlHolder(QueryPurposeEntity.getSingleton(), namespace, name, sqlParameter);
 		return super.pageRecursiveQuery(entity, executableSqlHolder.getCurrentSql(), executableSqlHolder.getCurrentParameterValues());
 	}

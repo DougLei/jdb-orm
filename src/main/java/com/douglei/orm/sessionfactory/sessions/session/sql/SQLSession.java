@@ -309,7 +309,7 @@ public interface SQLSession {
 	 * @param name
 	 * @return
 	 */
-	default PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name){
+	default PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name){
 		return pageRecursiveQuery(entity, namespace, name, null);
 	}
 	/**
@@ -320,7 +320,7 @@ public interface SQLSession {
 	 * @param sqlParameter
 	 * @return
 	 */
-	PageResult<List<Map<String, Object>>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter);
+	PageResult<Map<String, Object>> pageRecursiveQuery(PageRecursiveEntity entity, String namespace, String name, Object sqlParameter);
 	
 	/**
 	 * 分页递归查询
