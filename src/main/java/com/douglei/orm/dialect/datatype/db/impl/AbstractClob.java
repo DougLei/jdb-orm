@@ -32,7 +32,7 @@ public abstract class AbstractClob extends DBDataType {
 		if(!(value instanceof String))
 			value = value.toString();
 		String clob = (String)value;
-		if(clob == null) { // {@link ClobWrapper.toString()} 的值可能为null
+		if(clob == null) { // {@link ClobData.toString()} 的值可能为null
 			preparedStatement.setNull(parameterIndex, sqlType);
 		}else {
 			preparedStatement.setCharacterStream(parameterIndex, new StringReader(clob), clob.length());

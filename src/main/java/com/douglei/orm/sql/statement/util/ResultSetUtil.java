@@ -33,9 +33,8 @@ public class ResultSetUtil {
 		
 		int columnCount = resultSetMetaData.getColumnCount();
 		List<SqlResultsetMetadata> resultsetMetadatas = new ArrayList<SqlResultsetMetadata>(columnCount);
-		for(int i=1;i<=columnCount;i++) {
+		for(int i=1;i<=columnCount;i++) 
 			resultsetMetadatas.add(new SqlResultsetMetadata(resultSetMetaData.getColumnName(i).toUpperCase(), resultSetMetaData.getColumnType(i), resultSetMetaData.getColumnTypeName(i)));
-		}
 		return resultsetMetadatas;
 	}
 	
