@@ -15,7 +15,7 @@ public class SqlQueryMappingType extends MappingType {
 	private static SqlQueryMappingParser parser = new SqlQueryMappingParser();
 	
 	public SqlQueryMappingType() {
-		super(MappingTypeNameConstants.SQL_QUERY, ".sqmp.xml", 50, false);
+		super(MappingTypeNameConstants.SQL_QUERY, ".sqmp.xml", 41, false);
 	}
 
 	@Override
