@@ -123,7 +123,6 @@ public class Environment {
 	
 	
 	// 设置MappingHandler
-	@SuppressWarnings("unchecked")
 	private void setMappingHandler(Element mappingElement, MappingContainer mappingContainer) {
 		logger.debug("开始处理<environment>下的<mapping>");
 		
@@ -131,7 +130,7 @@ public class Environment {
 		MappingConfiguration configuration = parseMappingConfiguration(mappingElement);
 		
 		// 注册映射类型
-		registerMappingType(mappingElement.elements("register"));
+		registerMappingType(mappingElement);
 		
 		// 创建MappingHandler; 创建容器或清空容器
 		if(mappingContainer == null)
@@ -141,7 +140,7 @@ public class Environment {
 		this.mappingHandler = new MappingHandler(configuration, mappingContainer, dataSource);
 		
 		// 扫描配置的映射
-		scanMappings(mappingElement.elements("scanner"));
+		scanMappings(mappingElement);
 		
 		logger.debug("结束处理<environment>下的<mapping>");
 	}
@@ -151,7 +150,7 @@ public class Environment {
 		MappingConfiguration configuration = new MappingConfiguration();
 		
 		// 设置内置的sql映射配置
-		Element sqlMappingElement = mappingElement.element("sql");
+		Element sqlMappingElement = mappingElement==null?null:mappingElement.element("sql");
 		if(sqlMappingElement == null) {
 			configuration.setSqlMappingConfiguration(new SqlMappingConfiguration("#{", "}", ",", new SqlMappingParameterDefaultValueHandler()));
 		}else {
@@ -167,19 +166,23 @@ public class Environment {
 	}
 	
 	// 注册配置的映射类型
-	private void registerMappingType(List<Element> registerElements) {
-		if(registerElements.size() > 0) {
-			for (Element elem : registerElements) 
-				MappingTypeContainer.register((MappingType)ClassUtil.newInstance(elem.attributeValue("class")));
-		}
+	private void registerMappingType(Element mappingElement) {
+		if(mappingElement == null)
+			return;
+		
+		for (Object elem : mappingElement.elements("register")) 
+			MappingTypeContainer.register((MappingType)ClassUtil.newInstance(((Element)elem).attributeValue("class")));
 	}
 
 	// 扫描配置的映射
-	private void scanMappings(List<Element> scannerElements) {
-		if(scannerElements.isEmpty())
+	@SuppressWarnings("unchecked")
+	private void scanMappings(Element mappingElement) {
+		if(mappingElement == null)
 			return;
 		
-		EnvironmentContext.setEnvironment(this);
+		List<Element> scannerElements = mappingElement.elements("scanner");
+		if(scannerElements.isEmpty())
+			return;
 		
 		List<MappingEntity> entities = new ArrayList<MappingEntity>();
 		ResourceScanner scanner = new ResourceScanner(MappingTypeContainer.getFileSuffixes());
@@ -188,8 +191,11 @@ public class Environment {
 				entities.add(new AddOrCoverMappingEntity(file));
 		}
 			
-		if(entities.size() > 0) 
-			this.mappingHandler.execute(entities);
+		if(entities.size() == 0)
+			return;
+			
+		EnvironmentContext.setEnvironment(this);
+		this.mappingHandler.execute(entities);
 	}
 	
 	/**

@@ -15,12 +15,8 @@
 			<property name="maxPoolPreparedStatementPerConnectionSize" value="100" />
 		</datasource>
 		
-		<mappings>
-			<mapping path="mappings" />
-		</mappings>
+		<properties placeholderPrefix="${" placeholderSuffix="}">
+			<resource path="jdbc.properties" />
+		</properties>
 	</environment>
-	
-	<properties placeholderPrefix="${" placeholderSuffix="}">
-		<resource path="jdbc.properties" />
-	</properties>
 </configuration>

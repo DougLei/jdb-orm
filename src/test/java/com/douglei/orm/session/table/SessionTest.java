@@ -13,26 +13,15 @@ import com.douglei.orm.mapping.handler.MappingHandleException;
 import com.douglei.orm.session.SysUser;
 import com.douglei.orm.sessionfactory.SessionFactory;
 import com.douglei.orm.sessionfactory.sessions.Session;
-import com.douglei.orm.sql.query.page.PageResult;
 
 public class SessionTest {
 	
 	@Test
 	public void queryTest() {
-		PageResult<SysUser> page = session.getTableSession().pageQuery(SysUser.class, 1, 10, "with b as (select"
-				+ ""
-				+ " * from "
-				+ ""
-				+ "\nsys_user"
-				+ ""
-				+ "\n) select * from b");
-		
-		System.out.println(page.toString());
-		
-		List<SysUser> users = page.getResultDatas();
-		System.out.println(users);
-		for (SysUser sysUser : users) {
-			System.out.println(sysUser);
+		List<Map<String, Object>> list = session.getSqlSession().query("select * from bpm_ru_procinst");
+		for (Map<String, Object> map : list) {
+			System.out.println(map.get("START_TIME"));
+			System.out.println(map.get("START_TIME").getClass());
 		}
 	}
 	
