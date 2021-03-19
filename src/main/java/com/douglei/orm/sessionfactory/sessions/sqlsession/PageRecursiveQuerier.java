@@ -14,7 +14,6 @@ import com.douglei.orm.sql.statement.util.NameConvertUtil;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 class PageRecursiveQuerier extends AbstractRecursiveQuerier<PageRecursiveEntity>{
-	
 	private PageSqlStatement statement;
 	private String conditionSQL; // 查询条件sql
 	

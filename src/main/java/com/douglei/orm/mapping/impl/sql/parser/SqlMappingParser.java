@@ -18,21 +18,20 @@ import com.douglei.orm.mapping.MappingTypeNameConstants;
 import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
 import com.douglei.orm.mapping.impl.sql.SqlMapping;
 import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadata;
-import com.douglei.orm.mapping.impl.sql.metadata.SqlMetadataParser;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
 import com.douglei.orm.mapping.impl.sql.metadata.content.SqlContentMetadata;
 import com.douglei.orm.mapping.impl.sql.parser.content.ContentMetadataParser;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
 import com.douglei.orm.mapping.validator.Validator;
 import com.douglei.orm.mapping.validator.ValidatorUtil;
+import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
 public class SqlMappingParser extends MappingParser {
-	private static SqlMetadataParser sqlMetadataParser = new SqlMetadataParser();
-	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
+	protected static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
@@ -43,7 +42,7 @@ public class SqlMappingParser extends MappingParser {
 		if(sqlNodeList == null || sqlNodeList.getLength() == 0) 
 			throw new MetadataParseException("必须配置<sql>");
 		Node sqlNode = sqlNodeList.item(0);
-		SqlMetadata sqlMetadata = sqlMetadataParser.parse(sqlNode);
+		SqlMetadata sqlMetadata = parseSqlMetadata(sqlNode);
 		
 		// 记录配置的验证器Map集合
 		addValidators(sqlMetadata, sqlNode);
@@ -63,6 +62,34 @@ public class SqlMappingParser extends MappingParser {
 		}
 		
 		return buildMappingSubjectByDocumentBuilder(entity.isEnableProperty(), new SqlMapping(sqlMetadata), rootElement);
+	}
+	
+	// 解析SqlMetadata
+	private SqlMetadata parseSqlMetadata(Node sqlNode) throws MetadataParseException {
+		NamedNodeMap attributeMap = sqlNode.getAttributes();
+		
+		// 解析namespace
+		String namespace = getAttributeValue(attributeMap.getNamedItem("namespace"));
+		if(namespace == null)
+			throw new MetadataParseException("<sql>的namespace属性值不能为空");
+		
+		// 解析oldNamespace
+		String oldNamespace = getAttributeValue(attributeMap.getNamedItem("oldNamespace"));
+		return new SqlMetadata(namespace, oldNamespace);
+	}
+	
+	/**
+	 * 获取属性值
+	 * @param node 
+	 * @return
+	 */
+	protected String getAttributeValue(Node attributeNode) {
+		if(attributeNode != null) {
+			String value = attributeNode.getNodeValue();
+			if(StringUtil.unEmpty(value)) 
+				return value;
+		}
+		return null;
 	}
 	
 	/**

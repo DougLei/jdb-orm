@@ -29,7 +29,8 @@ public class MappingParseTool {
 	private DocumentBuilder documentBuilder;
 	private ContentType sqlContentType; // 解析sql映射时, 记录当前解析的sql的ContentType
 	private XPathExpression validatorNodeExpression;// 解析sql映射时, 用来获取validators下validator集合的表达式
-	private XPathExpression contentNodeExpression;// 解析sql映射时, 用来获取content集合的表达式
+	private XPathExpression parameterNodeExpression;// 解析sql-query映射时, 用来获取parameters下parameter集合的表达式
+	private XPathExpression contentNodeExpression;// 解析sql/sql-query映射时, 用来获取content集合的表达式
 	private static SqlContentMetadataParser sqlContentMetadataParser = new SqlContentMetadataParser(); // sql-content的解析器
 	private XPathExpression sqlContentNodeExpression;// 解析sql映射时, 用来获取sql-content集合的表达式
 	private Map<String, Object> sqlContentMap;// 解析sql映射时, 记录sql-content的Map集合, value为Node或SqlContentMetadata, 一开始为Node, 在第一次获取时进行解析, 并将解析的结果SqlContentMetadata覆盖Node
@@ -84,7 +85,19 @@ public class MappingParseTool {
 	}
 	
 	/**
-	 * 解析sql映射时, 获取content集合
+	 * 解析sql-query映射时, 获取parameters下parameter集合
+	 * @param sqlNode
+	 * @return
+	 * @throws XPathExpressionException 
+	 */
+	public NodeList getParameterNodeList(Node sqlNode) throws XPathExpressionException {
+		if(parameterNodeExpression == null)
+			parameterNodeExpression = XPathFactory.newInstance().newXPath().compile("parameters/parameter[@name!='']");
+		return (NodeList) parameterNodeExpression.evaluate(sqlNode, XPathConstants.NODESET);
+	}
+	
+	/**
+	 * 解析sql/sql-query映射时, 获取content集合
 	 * @param sqlNode
 	 * @return
 	 * @throws XPathExpressionException 

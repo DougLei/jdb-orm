@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSql;
 
 /**
  * 
@@ -14,16 +15,12 @@ import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
 public class QuerySqlAssembler {
 	private static final Logger logger = LoggerFactory.getLogger(QuerySqlAssembler.class);
 	private SqlQueryMetadata metadata;
+	private ExecutableSql executableSql;
 	private List<AbstractParameter> parameters;
 	
-	/**
-	 * 
-	 * @param metadata
-	 * @param parameters
-	 * @param container
-	 */
-	QuerySqlAssembler(SqlQueryMetadata metadata, List<AbstractParameter> parameters) {
+	QuerySqlAssembler(SqlQueryMetadata metadata, ExecutableSql executableSql, List<AbstractParameter> parameters) {
 		this.metadata = metadata;
+		this.executableSql = executableSql;
 		this.parameters = parameters;
 	}
 
@@ -32,7 +29,7 @@ public class QuerySqlAssembler {
 	 * @return
 	 */
 	public ExecutableQuerySql assembling() {
-		ExecutableQuerySql sql = new ExecutableQuerySql(metadata.getSql());
+		ExecutableQuerySql sql = new ExecutableQuerySql(executableSql);
 		
 		if(parameters != null) {
 			for(int i=0;i<parameters.size();i++) {

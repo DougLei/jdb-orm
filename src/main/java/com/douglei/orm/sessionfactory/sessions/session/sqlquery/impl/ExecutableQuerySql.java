@@ -4,23 +4,26 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlMetadata;
 import com.douglei.orm.sessionfactory.sessions.session.IExecutableSql;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSql;
+import com.douglei.orm.sql.query.QuerySqlStatement;
 
 /**
  * 
  * @author DougLei
  */
 public class ExecutableQuerySql implements IExecutableSql{
-	private SqlMetadata sqlMetadata; // 原sql
+	private QuerySqlStatement querySql; 
+	private List<Object> parameterValues; 
+	
 	private HashSet<String> conditionSQLMark; // 组装条件sql时, 记录每个条件的参数名(去重), 用来在最后验证是否没有传入必要的参数
 	private StringBuilder conditionSQL; // 条件sql
-	private List<Object> parameterValues; // 执行sql语句需要的参数值集合, 可为null
 	private StringBuilder resultSQL; // (查询)结果sql
 	private StringBuilder orderbySQL; // 排序sql
 
-	ExecutableQuerySql(SqlMetadata sqlMetadata) {
-		this.sqlMetadata = sqlMetadata;
+	ExecutableQuerySql(ExecutableSql executableSql) {
+		this.querySql = new QuerySqlStatement(executableSql.getSql(), false);
+		this.parameterValues = executableSql.getParameterValues();
 	}
 	
 	// 获取条件sql
@@ -29,7 +32,9 @@ public class ExecutableQuerySql implements IExecutableSql{
 			conditionSQLMark = new HashSet<String>();
 			conditionSQL = new StringBuilder(300);
 			conditionSQL.append(" WHERE ");
-			parameterValues = new ArrayList<Object>();
+			
+			if(parameterValues == null)
+				parameterValues = new ArrayList<Object>();
 		}
 		return conditionSQL;
 	}
@@ -119,11 +124,11 @@ public class ExecutableQuerySql implements IExecutableSql{
 	
 	@Override
 	public String getCurrentSql() {
-		StringBuilder sql = new StringBuilder(sqlMetadata.getTotalLength() + 500);
+		StringBuilder sql = new StringBuilder(querySql.getTotalLength() + 500);
 		
 		// append with子句
-		if(sqlMetadata.getWithClause() != null)
-			resultSQL.append(sqlMetadata.getWithClause()).append(' ');
+		if(querySql.getWithClause() != null)
+			resultSQL.append(querySql.getWithClause()).append(' ');
 		
 		// append(查询)结果sql
 		if(resultSQL == null) {
@@ -133,7 +138,7 @@ public class ExecutableQuerySql implements IExecutableSql{
 		}
 		
 		// append原sql
-		sql.append(sqlMetadata.getSql()).append(") _SUB_SQ_");
+		sql.append(querySql.getSql()).append(") _SUB_SQ_");
 		
 		// append条件sql
 		if(conditionSQL != null)
@@ -153,6 +158,6 @@ public class ExecutableQuerySql implements IExecutableSql{
 
 	@Override
 	public String toString() {
-		return "\nsqlMetadata=" + sqlMetadata + "\nconditionSQL=" + conditionSQL + "\norderbySQL=" + orderbySQL + "\nparameterValues=" + parameterValues;
+		return "\nquerySql=" + querySql + "\nconditionSQL=" + conditionSQL + "\norderbySQL=" + orderbySQL + "\nparameterValues=" + parameterValues;
 	}
 }

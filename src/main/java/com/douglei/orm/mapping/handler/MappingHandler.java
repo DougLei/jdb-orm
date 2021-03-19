@@ -34,8 +34,8 @@ import com.douglei.orm.mapping.impl.table.metadata.TableMetadata;
 import com.douglei.orm.mapping.impl.view.metadata.ViewMetadata;
 import com.douglei.orm.mapping.metadata.AbstractDBObjectMetadata;
 import com.douglei.orm.mapping.metadata.AbstractMetadata;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlEntity;
-import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlHolder;
+import com.douglei.orm.sessionfactory.sessions.session.sql.ExecutableSqlEntity;
+import com.douglei.orm.sessionfactory.sessions.session.sql.impl.ExecutableSqlList;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity;
 import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.QueryPurposeEntity;
 
@@ -353,7 +353,7 @@ public class MappingHandler {
 	 */
 	public ExecutableSqlEntity getExecutableSqlEntity(PurposeEntity purposeEntity, String namespace, String name, Object sqlParameter){
 		SqlMetadata sqlMetadata = getSqlMetadata(namespace);
-		return new ExecutableSqlEntity(new ExecutableSqlHolder(purposeEntity, sqlMetadata, name, sqlParameter));
+		return new ExecutableSqlEntity(new ExecutableSqlList(purposeEntity, sqlMetadata, name, sqlParameter));
 	}
 	
 	/**

@@ -15,12 +15,12 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity
  * 
  * @author DougLei
  */
-public class ExecutableSqlHolder extends SqlContentExtractor implements IExecutableSql{
+public class ExecutableSqlList extends SqlContentExtractor implements IExecutableSql{
 	private int executableSqlCount; // 可执行的sql的数量
 	private int currentIndex; // 当前执行的sql的下标, 从0开始
 	private List<ExecutableSql> executableSqls;
 	
-	public ExecutableSqlHolder(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
+	public ExecutableSqlList(PurposeEntity purposeEntity, SqlMetadata sqlMetadata, String name, Object sqlParameter) {
 		List<ContentMetadata> contentMetadatas = getContentMetadatas(purposeEntity.getPurpose(), name, sqlMetadata.getContents());
 		
 		this.executableSqlCount = contentMetadatas.size();
