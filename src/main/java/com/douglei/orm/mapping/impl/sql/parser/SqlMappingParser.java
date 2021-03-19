@@ -31,7 +31,7 @@ import com.douglei.tools.StringUtil;
  * @author DougLei
  */
 public class SqlMappingParser extends MappingParser {
-	protected static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
+	private static ContentMetadataParser contentMetadataParser = new ContentMetadataParser();
 	
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
@@ -78,12 +78,8 @@ public class SqlMappingParser extends MappingParser {
 		return new SqlMetadata(namespace, oldNamespace);
 	}
 	
-	/**
-	 * 获取属性值
-	 * @param node 
-	 * @return
-	 */
-	protected String getAttributeValue(Node attributeNode) {
+	// 获取属性值
+	private String getAttributeValue(Node attributeNode) {
 		if(attributeNode != null) {
 			String value = attributeNode.getNodeValue();
 			if(StringUtil.unEmpty(value)) 
@@ -92,12 +88,7 @@ public class SqlMappingParser extends MappingParser {
 		return null;
 	}
 	
-	/**
-	 * 添加验证器Map集合
-	 * @param sqlMetadata
-	 * @param sqlNode
-	 * @throws XPathExpressionException 
-	 */
+	// 添加验证器Map集合
 	private void addValidators(SqlMetadata sqlMetadata, Node sqlNode) throws XPathExpressionException{
 		NodeList list = MappingParseToolContext.getMappingParseTool().getValidatorNodeList(sqlNode);
 		if(list.getLength() == 0)
@@ -132,12 +123,7 @@ public class SqlMappingParser extends MappingParser {
 		}
 	}
 	
-	/**
-	 * 添加content
-	 * @param sqlMetadata
-	 * @param sqlNode
-	 * @throws XPathExpressionException 
-	 */
+	// 添加content
 	private void addContents(SqlMetadata sqlMetadata, Node sqlNode) throws XPathExpressionException {
 		NodeList contentNodeList = MappingParseToolContext.getMappingParseTool().getContentNodeList(sqlNode);
 		if(contentNodeList.getLength() == 0) 

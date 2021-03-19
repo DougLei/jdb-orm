@@ -20,9 +20,9 @@ import com.douglei.orm.sessionfactory.sessions.session.sql.purpose.PurposeEntity
  * @author DougLei
  */
 public class ExecutableSql {
+	private String sql;
 	private String name;
 	private ContentType type;
-	private String sql;
 	private List<ParameterNode> parameters; // sql参数集合
 	private List<Object> parameterValues; // 执行sql语句时的参数值集合
 	private AutoIncrementIDMetadata autoIncrementID; // 自增id值的配置, 用在insert类型的sql语句
@@ -53,14 +53,14 @@ public class ExecutableSql {
 		this.autoIncrementID = contentMetadata.getAutoIncrementID();
 	}
 	
+	public String getSql() {
+		return sql;
+	}
 	public String getName() {
 		return name;
 	}
 	public ContentType getType() {
 		return type;
-	}
-	public String getSql() {
-		return sql;
 	}
 	public List<ParameterNode> getParameters() {
 		return parameters;

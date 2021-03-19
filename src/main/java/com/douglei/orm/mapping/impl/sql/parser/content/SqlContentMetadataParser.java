@@ -37,15 +37,15 @@ public class SqlContentMetadataParser {
 		
 		ContentType type = parseContentType(attributeMap);
 		AutoIncrementIDMetadata autoIncrementID = getAutoIncrementID(type, attributeMap);
-		SqlContentMetadata metadata = new SqlContentMetadata(name, type, autoIncrementID);
+		SqlContentMetadata content = new SqlContentMetadata(name, type, autoIncrementID);
 		
 		NodeList children = node.getChildNodes();
 		for(int i=0;i<children.getLength();i++) {
 			SqlNode sqlNode = SqlNodeContainer.parse(children.item(i));
 			if(sqlNode != null) 
-				metadata.addSqlNode(sqlNode);
+				content.addSqlNode(sqlNode);
 		}
-		return metadata;
+		return content;
 	}
 	
 	/**

@@ -12,21 +12,24 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.douglei.orm.mapping.MappingParseToolContext;
+import com.douglei.orm.mapping.MappingParser;
 import com.douglei.orm.mapping.MappingSubject;
 import com.douglei.orm.mapping.MappingTypeNameConstants;
 import com.douglei.orm.mapping.handler.entity.AddOrCoverMappingEntity;
+import com.douglei.orm.mapping.impl.sql.SqlNodeContainer;
 import com.douglei.orm.mapping.impl.sql.metadata.content.ContentMetadata;
-import com.douglei.orm.mapping.impl.sql.parser.SqlMappingParser;
+import com.douglei.orm.mapping.impl.sql.metadata.content.node.SqlNode;
 import com.douglei.orm.mapping.impl.sqlquery.metadata.DataType;
 import com.douglei.orm.mapping.impl.sqlquery.metadata.ParameterMetadata;
 import com.douglei.orm.mapping.impl.sqlquery.metadata.SqlQueryMetadata;
 import com.douglei.orm.mapping.metadata.MetadataParseException;
+import com.douglei.tools.StringUtil;
 
 /**
  * 
  * @author DougLei
  */
-class SqlQueryMappingParser extends SqlMappingParser{
+class SqlQueryMappingParser extends MappingParser{
 	
 	@Override
 	public MappingSubject parse(AddOrCoverMappingEntity entity, InputStream input) throws Exception {
@@ -38,29 +41,27 @@ class SqlQueryMappingParser extends SqlMappingParser{
 			throw new MetadataParseException("必须配置<sql-query>");
 		
 		Node sqlNode = sqlNodeList.item(0);
-		SqlQueryMetadata querySqlMetadata = parseSqlQueryMetadata(sqlNode);
+		NamedNodeMap attributeMap = sqlNode.getAttributes();
+		String name = getAttributeValue(attributeMap.getNamedItem("name"));
+		if(name == null)
+			throw new MetadataParseException("<sql-query>的name属性值不能为空");
+		SqlQueryMetadata querySqlMetadata = new SqlQueryMetadata(name, getAttributeValue(attributeMap.getNamedItem("oldName")));
 		
-		// 设置content
+		// 设置content和parameters
 		querySqlMetadata.setContent(parseContentMetadata(sqlNode));
-		
-		// 设置parameters
 		querySqlMetadata.setParameterMap(parseParameterMap(sqlNode));
 		
 		return buildMappingSubjectByDocumentBuilder(entity.isEnableProperty(), new SqlQueryMapping(querySqlMetadata), rootElement);
 	}
 	
-	// 解析SqlQueryMetadata
-	private SqlQueryMetadata parseSqlQueryMetadata(Node sqlNode) throws MetadataParseException {
-		NamedNodeMap attributeMap = sqlNode.getAttributes();
-		
-		// 解析name
-		String name = getAttributeValue(attributeMap.getNamedItem("name"));
-		if(name == null)
-			throw new MetadataParseException("<sql-query>的name属性值不能为空");
-		
-		// 解析oldName
-		String oldName = getAttributeValue(attributeMap.getNamedItem("oldName"));
-		return new SqlQueryMetadata(name, oldName);
+	// 获取属性值
+	private String getAttributeValue(Node attributeNode) {
+		if(attributeNode != null) {
+			String value = attributeNode.getNodeValue();
+			if(StringUtil.unEmpty(value)) 
+				return value;
+		}
+		return null;
 	}
 	
 	// 解析content
@@ -68,7 +69,15 @@ class SqlQueryMappingParser extends SqlMappingParser{
 		NodeList contentNodeList = MappingParseToolContext.getMappingParseTool().getContentNodeList(sqlNode);
 		if(contentNodeList.getLength() != 1) 
 			throw new MetadataParseException("<sql-query>中必须且只能配置一个<content>");
-		return contentMetadataParser.parse(contentNodeList.item(0));
+		
+		ContentMetadata content = new ContentMetadata(null, null, null);
+		NodeList children = contentNodeList.item(0).getChildNodes();
+		for(int i=0;i<children.getLength();i++) {
+			SqlNode node = SqlNodeContainer.parse(children.item(i));
+			if(node != null) 
+				content.addSqlNode(node);
+		}
+		return content;
 	}
 	
 	// 解析parameters
