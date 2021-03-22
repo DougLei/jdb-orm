@@ -13,8 +13,8 @@ public class MappingProperty implements Serializable{
 	private String type; // mapping的类型
 	
 	private int order; // mapping的排序值
-	private boolean supportCover; // mapping是否支持被覆盖
-	private boolean supportDelete; // mapping是否支持被删除
+	private boolean supportCover=true; // mapping是否支持被覆盖, 默认为true
+	private boolean supportDelete=true; // mapping是否支持被删除, 默认为true
 	private String extend; // mapping的扩展属性, 可由第三方扩展
 	
 	public MappingProperty(String code, String type) {
