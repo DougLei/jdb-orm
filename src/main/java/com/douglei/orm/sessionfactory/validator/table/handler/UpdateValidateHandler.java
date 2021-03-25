@@ -33,7 +33,7 @@ public class UpdateValidateHandler implements ValidateHandler {
 	public ValidateFailResult validate(Map<String, Object> objectMap, TableMetadata tableMetadata) {
 		ValidatedData data = new ValidatedData();
 		for (Entry<String, Object> entry : objectMap.entrySet()) {
-			ColumnMetadata column = tableMetadata.getColumnMap4Name().get(entry.getKey());
+			ColumnMetadata column = tableMetadata.getColumnMap4Code().get(entry.getKey());
 			if(column.getValidators() == null)
 				continue;
 
