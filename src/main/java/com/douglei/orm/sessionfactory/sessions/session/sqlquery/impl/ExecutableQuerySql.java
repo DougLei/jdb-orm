@@ -128,7 +128,7 @@ public class ExecutableQuerySql implements IExecutableSql{
 		
 		// append with子句
 		if(querySql.getWithClause() != null)
-			resultSQL.append(querySql.getWithClause()).append(' ');
+			sql.append(querySql.getWithClause()).append(' ');
 		
 		// append(查询)结果sql
 		if(resultSQL == null) {

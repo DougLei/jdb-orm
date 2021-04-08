@@ -24,7 +24,6 @@ public class QuerySqlStatement {
 		this.sql = sql.trim();
 		extractWithClause();
 		extractOrderByClause(extractOrderByClause);
-
 		logger.debug("{}", this);
 	}
 	
@@ -32,8 +31,8 @@ public class QuerySqlStatement {
 	private void extractWithClause() {
 		int withClauseEndIndex = withClauseEndIndex();
 		if(withClauseEndIndex > -1) {
-			this.sql = sql.substring(withClauseEndIndex);
 			this.withClause = sql.substring(0, withClauseEndIndex);
+			this.sql = sql.substring(withClauseEndIndex);
 		}
 	}
 	
