@@ -20,7 +20,7 @@ public interface StatementHandler {
 	/**
 	 * 执行限制查询, 获取结果集
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param parameters
 	 * @return 返回<列名:值>的list-map集合
 	 * @throws StatementExecutionException

@@ -79,7 +79,7 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 	/**
 	 * 执行限制查询
 	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param length 长度, 小于1表示不限制长度, 大于等于1表示要查询的数据量
 	 * @param resultSet
 	 * @return
 	 * @throws SQLException
@@ -88,7 +88,6 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				if(startRow < 1) startRow=1;
-				if(length < 1) length=1;
 				return ResultSetUtil.getResultSetListMap(startRow, length, resultsetMetadatas, resultSet);
 			}
 			return Collections.emptyList();
@@ -151,7 +150,6 @@ public abstract class AbstractStatementHandler implements StatementHandler{
 		try {
 			if(setResutSetColumnNames(resultSet)) {
 				if(startRow < 1) startRow=1;
-				if(length < 1) length=1;
 				return ResultSetUtil.getResultSetListArray(startRow, length, resultsetMetadatas, resultSet);
 			}
 			return Collections.emptyList();

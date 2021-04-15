@@ -129,8 +129,8 @@ public interface SQLSession {
 	
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
@@ -140,8 +140,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
@@ -152,8 +152,8 @@ public interface SQLSession {
 	/**
 	 * 限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
@@ -164,8 +164,8 @@ public interface SQLSession {
 	/**
 	 * 限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter
@@ -175,8 +175,8 @@ public interface SQLSession {
 	
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @return 
@@ -186,8 +186,8 @@ public interface SQLSession {
 	}
 	/**
 	 * 限制查询
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param namespace sql元素中的namespace属性值, 不能为空
 	 * @param name sql元素中的name属性值, 如果传入null, 则表示调用该namespace资源下的第一个sql; 如果其非{@link ContentType SELECT}类型的sql语句, 则会抛出异常
 	 * @param sqlParameter

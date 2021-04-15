@@ -186,8 +186,8 @@ public interface TableSession {
 	/**
 	 * 执行限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow
+	 * @param length
 	 * @param sql
 	 * @return 
 	 */
@@ -195,8 +195,8 @@ public interface TableSession {
 	/**
 	 * 执行限制查询
 	 * @param clazz
-	 * @param startRow 起始的行数, 值从1开始, 小于1时会修正为1
-	 * @param length 长度, 小于1时会修正为1
+	 * @param startRow 
+	 * @param length 
 	 * @param sql
 	 * @param parameters 传入的参数
 	 * @return 
