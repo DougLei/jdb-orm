@@ -150,10 +150,23 @@ public class MappingParseTool {
 		if(obj == null)
 			return null;
 		
-		if(obj instanceof Node) 
-			return (SqlContentMetadata) sqlContentMap.put(name, sqlContentMetadataParser.parse((Node)obj));
+		if(obj instanceof Node) {
+			SqlContentMetadata content = sqlContentMetadataParser.parse((Node)obj);
+			sqlContentMap.put(name, content);
+			return content;
+		}
 		return (SqlContentMetadata) obj;
 	}
+	
+	public static void main(String[] args) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		
+		System.out.println(map.put("1", "douglei"));
+		System.out.println(map.put("1", "金石磊"));
+		
+	}
+	
+	
 	/**
 	 * 解析sql映射时, 获取sql-content的Map集合
 	 * @return
