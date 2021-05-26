@@ -25,6 +25,7 @@ public enum DataType {
 				case NIN:
 					
 				case ORDER:
+				case RESULT:
 					return true;
 				default:
 					return false;
@@ -64,6 +65,7 @@ public enum DataType {
 			case NIN:
 				
 			case ORDER:
+			case RESULT:
 				return true;
 			default:
 				return false;

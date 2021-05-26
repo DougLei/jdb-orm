@@ -23,6 +23,7 @@ public abstract class AbstractParameter {
 	 * 装配sql
 	 * @param entity
 	 * @param metadata
+	 * @return 装配sql后, 是否支持拼接逻辑运算符
 	 */
-	protected abstract void assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata);
+	protected abstract boolean assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata);
 }

@@ -25,16 +25,15 @@ public class ParameterGroup extends AbstractParameter{
 	}
 
 	@Override
-	protected void assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata) throws QuerySqlAssembleException {
-		if(parameters == null)
-			return;
-		
-		entity.appendConditionSQLLeftParenthesis();
-		for(int i=0;i<parameters.size();i++) {
-			parameters.get(i).assembleSQL(entity, metadata);
-			if(i < parameters.size()-1)
-				entity.appendConditionSQLNext(parameters.get(i).next);
+	protected boolean assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata) throws QuerySqlAssembleException {
+		if(parameters != null) {
+			entity.appendConditionSQLLeftParenthesis();
+			for(int i=0;i<parameters.size();i++) {
+				if(parameters.get(i).assembleSQL(entity, metadata) && i < parameters.size()-1)
+					entity.appendConditionSQLNext(parameters.get(i).next);
+			}
+			entity.appendConditionSQLRightParenthesis();
 		}
-		entity.appendConditionSQLRightParenthesis();
+		return true;
 	}
 }

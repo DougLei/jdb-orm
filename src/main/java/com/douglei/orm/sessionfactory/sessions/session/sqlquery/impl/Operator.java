@@ -38,11 +38,12 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			if(values.length == 0 || values[0] == null)
 				entity.appendConditionSQL(name + " IS NULL", name);
 			else
 				entity.appendConditionSQL(name + "=?", name, values[0]);
+			return true;
 		}
 	},
 	NE(){
@@ -57,11 +58,12 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			if(values.length == 0 || values[0] == null)
 				entity.appendConditionSQL(name + " IS NOT NULL", name);
 			else
 				entity.appendConditionSQL(name + "<>?", name, values[0]);
+			return true;
 		}
 	},
 	
@@ -74,8 +76,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + ">=?", name, values[0]);
+			return true;
 		}
 	},
 	LE(){
@@ -85,8 +88,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + "<=?", name, values[0]);
+			return true;
 		}
 	},
 	
@@ -99,8 +103,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + ">?", name, values[0]);
+			return true;
 		}
 	},
 	LT(){
@@ -110,8 +115,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + "<?", name, values[0]);
+			return true;
 		}
 	},
 	
@@ -124,8 +130,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + " LIKE ?", name, values[0]);
+			return true;
 		}
 	},
 	NLIKE(){
@@ -135,8 +142,9 @@ public enum Operator {
 		}
 		
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + " NOT LIKE ?", name, values[0]);
+			return true;
 		}
 	},
 	
@@ -170,8 +178,9 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + " BETWEEN ? AND ?", name, values[0], values[1]);
+			return true;
 		}
 	},
 	NBTN(){
@@ -192,8 +201,9 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			entity.appendConditionSQL(name + " NOT BETWEEN ? AND ?", name, values[0], values[1]);
+			return true;
 		}
 	},
 	
@@ -211,7 +221,7 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			StringBuilder sql = new StringBuilder(name.length()+5+values.length*2);
 			sql.append(name).append(" IN (");
 			for(int i=0; i<values.length;i++) {
@@ -222,6 +232,7 @@ public enum Operator {
 			sql.append(')');
 			
 			entity.appendConditionSQL(sql.toString(), name, values);
+			return true;
 		}
 	},
 	NIN(){
@@ -236,7 +247,7 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			StringBuilder sql = new StringBuilder(name.length()+9+values.length*2);
 			sql.append(name).append(" NOT IN (");
 			for(int i=0; i<values.length;i++) {
@@ -247,6 +258,7 @@ public enum Operator {
 			sql.append(')');
 			
 			entity.appendConditionSQL(sql.toString(), name, values);
+			return true;
 		}
 	},
 	
@@ -264,7 +276,7 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			String order = null;
 			if(values.length > 0 && values[0] != null) {
 				order = values[0].toString();
@@ -272,6 +284,7 @@ public enum Operator {
 					order = null;
 			}
 			entity.appendOrderbySQL(name, order);
+			return false;
 		}
 	},
 	
@@ -289,11 +302,12 @@ public enum Operator {
 		}
 
 		@Override
-		public void assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
+		public boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity) {
 			String alias = null;
 			if(values.length > 0 && values[0] != null)
 				alias = values[0].toString();
 			entity.appendResultSQL(name, alias);
+			return false;
 		}
 	};
 	
@@ -321,6 +335,7 @@ public enum Operator {
 	 * @param name
 	 * @param values
 	 * @param entity
+	 * @return 装配sql后, 是否支持拼接逻辑运算符
 	 */
-	public abstract void assembleSQL(String name, Object[] values, ExecutableQuerySql entity);
+	public abstract boolean assembleSQL(String name, Object[] values, ExecutableQuerySql entity);
 }

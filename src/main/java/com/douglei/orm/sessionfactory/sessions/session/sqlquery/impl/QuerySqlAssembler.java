@@ -33,8 +33,7 @@ public class QuerySqlAssembler {
 		
 		if(parameters != null) {
 			for(int i=0;i<parameters.size();i++) {
-				parameters.get(i).assembleSQL(sql, metadata);
-				if(i < parameters.size()-1)
+				if(parameters.get(i).assembleSQL(sql, metadata) && i < parameters.size()-1)
 					sql.appendConditionSQLNext(parameters.get(i).next);
 			}
 		}
