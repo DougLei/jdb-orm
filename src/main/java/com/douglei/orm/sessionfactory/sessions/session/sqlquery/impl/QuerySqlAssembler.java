@@ -32,9 +32,13 @@ public class QuerySqlAssembler {
 		ExecutableQuerySql sql = new ExecutableQuerySql(executableSql);
 		
 		if(parameters != null) {
+			LogicalOperator beforeNext = null;
 			for(int i=0;i<parameters.size();i++) {
-				if(parameters.get(i).assembleSQL(sql, metadata) && i < parameters.size()-1)
-					sql.appendConditionSQLNext(parameters.get(i).next);
+				if(parameters.get(i).assembleSQL(sql, metadata) && i < parameters.size()-1) {
+					if(beforeNext != null) 
+						sql.appendConditionSQLNext(beforeNext);
+					beforeNext = parameters.get(i).next;
+				}
 			}
 		}
 		

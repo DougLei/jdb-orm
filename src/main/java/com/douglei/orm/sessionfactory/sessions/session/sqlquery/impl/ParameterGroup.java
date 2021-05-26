@@ -28,10 +28,16 @@ public class ParameterGroup extends AbstractParameter{
 	protected boolean assembleSQL(ExecutableQuerySql entity, SqlQueryMetadata metadata) throws QuerySqlAssembleException {
 		if(parameters != null) {
 			entity.appendConditionSQLLeftParenthesis();
+			
+			LogicalOperator beforeNext = null;
 			for(int i=0;i<parameters.size();i++) {
-				if(parameters.get(i).assembleSQL(entity, metadata) && i < parameters.size()-1)
-					entity.appendConditionSQLNext(parameters.get(i).next);
+				if(parameters.get(i).assembleSQL(entity, metadata) && i < parameters.size()-1) {
+					if(beforeNext != null) 
+						entity.appendConditionSQLNext(beforeNext);
+					beforeNext = parameters.get(i).next;
+				}
 			}
+			
 			entity.appendConditionSQLRightParenthesis();
 		}
 		return true;
