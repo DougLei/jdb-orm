@@ -1,6 +1,7 @@
 package com.douglei.orm.mapping.impl.sqlquery;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,7 +85,7 @@ class SqlQueryMappingParser extends MappingParser{
 	private Map<String, ParameterMetadata> parseParameterMap(Node sqlNode) throws XPathExpressionException {
 		NodeList list = MappingParseToolContext.getMappingParseTool().getParameterNodeList(sqlNode);
 		if(list.getLength() == 0)
-			throw new MetadataParseException("<sql-query>下必须配置有效的<parameters>");
+			return Collections.emptyMap();
 		
 		Map<String, ParameterMetadata> parameterMap = new HashMap<String, ParameterMetadata>();
 		ParameterMetadata parameter = null;
